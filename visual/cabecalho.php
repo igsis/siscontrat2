@@ -15,7 +15,7 @@ else
 
 <html>
 	<head>
-		<title>IGSIS-CAPAC - <?= date("Y") ?> - v1.0 - Secretaria Municipal de Cultural - São Paulo</title>
+		<title>SISCONTRAT- <?= date("Y") ?> - v1.0 - Secretaria Municipal de Cultural - São Paulo</title>
 		<meta charset="utf-8" />
 		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 		<!-- css -->
@@ -32,17 +32,12 @@ else
                     <img src="images/logo_cultura_h.png">
                 </div>
                 <div class="col-md-2" style="padding: 13px">
-                    <span style="color: #fff">IGSIS-CAPAC</span>
+                    <span style="color: #fff">SISCONTRAT</span>
                 </div>
                 <div class="col-md-offset-4 col-md-4" style="padding: 5px">
-                    <span style="color: #fff">Suporte para o sistema:<br><i class="fab fa-whatsapp"></i> 96912-4884</span>
+                    <span style="color: #fff">Suporte para o sistema:<br>sistema.igsis@gmail.com</span>
                 </div>
         </div>
-		<!--<div id="bar">
-			<p id="p-bar"><img src="images/logo_cultura_h.png" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IGSIS-CAPAC
-			</p>
-		</div>-->
-
 <?php
 	# Menu progresso
 	include_once '../visual/smart_wizard.php';
