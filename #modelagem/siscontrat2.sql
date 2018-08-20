@@ -8,19 +8,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema siscontrat
+-- Schema siscontrat2
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema siscontrat
+-- Schema siscontrat2
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `siscontrat` DEFAULT CHARACTER SET utf8 ;
-USE `siscontrat` ;
+CREATE SCHEMA IF NOT EXISTS `siscontrat22` DEFAULT CHARACTER SET utf8 ;
+USE `siscontrat22` ;
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`bancos`
+-- Table `siscontrat2`.`bancos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`bancos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`bancos` (
   `id` SMALLINT(3) NOT NULL AUTO_INCREMENT COMMENT 'index',
   `banco` VARCHAR(60) NOT NULL COMMENT 'index',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -29,9 +29,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`etnias`
+-- Table `siscontrat2`.`etnias`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`etnias` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`etnias` (
   `id` TINYINT(1) NOT NULL AUTO_INCREMENT COMMENT 'index',
   `descricao` VARCHAR(15) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -40,9 +40,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`nacionalidades`
+-- Table `siscontrat2`.`nacionalidades`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`nacionalidades` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`nacionalidades` (
   `id` SMALLINT(4) NOT NULL AUTO_INCREMENT COMMENT '',
   `nacionalidade` VARCHAR(20) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -50,9 +50,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pessoa_fisicas`
+-- Table `siscontrat2`.`pessoa_fisicas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pessoa_fisicas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pessoa_fisicas` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '',
   `nome` VARCHAR(70) NOT NULL COMMENT 'index',
   `nome_artistico` VARCHAR(70) NOT NULL COMMENT '',
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`pessoa_fisicas` (
   INDEX `fk_pessoa_fisicas_nacionalidades1_idx` (`nacionalidade_id` ASC)  COMMENT '',
   CONSTRAINT `fk_pessoa_fisicas_nacionalidades`
     FOREIGN KEY (`nacionalidade_id`)
-    REFERENCES `siscontrat`.`nacionalidades` (`id`)
+    REFERENCES `siscontrat2`.`nacionalidades` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -77,9 +77,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`regiaos`
+-- Table `siscontrat2`.`regiaos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`regiaos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`regiaos` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `nome` VARCHAR(40) NOT NULL COMMENT 'index',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -88,9 +88,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`grau_instrucoes`
+-- Table `siscontrat2`.`grau_instrucoes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`grau_instrucoes` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`grau_instrucoes` (
   `id` TINYINT(1) NOT NULL AUTO_INCREMENT COMMENT '',
   `grau_instrucao` VARCHAR(15) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -98,9 +98,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pf_detalhes`
+-- Table `siscontrat2`.`pf_detalhes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pf_detalhes` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pf_detalhes` (
   `pessoa_fisica_id` INT(11) NOT NULL COMMENT 'index',
   `etnia_id` TINYINT(1) NOT NULL COMMENT '',
   `regiao_id` TINYINT(2) NOT NULL COMMENT '',
@@ -113,22 +113,22 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`pf_detalhes` (
   INDEX `fk_pessoa_fisica_detalhes_grau_instrucao_idx` (`grau_instrucao_id` ASC)  COMMENT '',
   CONSTRAINT `fk_detalhesPessoaFisica_etnias1`
     FOREIGN KEY (`etnia_id`)
-    REFERENCES `siscontrat`.`etnias` (`id`)
+    REFERENCES `siscontrat2`.`etnias` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_detalhesPessoaFisica_pessoaFisica1`
     FOREIGN KEY (`pessoa_fisica_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_detalhesPessoaFisica_regioes1`
     FOREIGN KEY (`regiao_id`)
-    REFERENCES `siscontrat`.`regiaos` (`id`)
+    REFERENCES `siscontrat2`.`regiaos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pessoa_fisica_detalhes_grau_instrucao`
     FOREIGN KEY (`grau_instrucao_id`)
-    REFERENCES `siscontrat`.`grau_instrucoes` (`id`)
+    REFERENCES `siscontrat2`.`grau_instrucoes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -136,16 +136,16 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`drts`
+-- Table `siscontrat2`.`drts`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`drts` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`drts` (
   `pessoa_fisica_id` INT NOT NULL COMMENT '',
   `drt` VARCHAR(15) NOT NULL COMMENT '',
   `publicado` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '',
   PRIMARY KEY (`pessoa_fisica_id`)  COMMENT '',
   CONSTRAINT `fk_drt_pessoa_fisica`
     FOREIGN KEY (`pessoa_fisica_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -153,16 +153,16 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`nits`
+-- Table `siscontrat2`.`nits`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`nits` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`nits` (
   `pessoa_fisica_id` INT NOT NULL COMMENT '',
   `nit` VARCHAR(45) NOT NULL COMMENT '',
   `publicado` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '',
   PRIMARY KEY (`pessoa_fisica_id`)  COMMENT '',
   CONSTRAINT `fk_nit_pessoa_fisica`
     FOREIGN KEY (`pessoa_fisica_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -170,16 +170,16 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`ombs`
+-- Table `siscontrat2`.`ombs`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`ombs` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`ombs` (
   `pessoa_fisica_id` INT NOT NULL COMMENT '',
   `omb` VARCHAR(25) NOT NULL COMMENT '',
   `publicado` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '',
   PRIMARY KEY (`pessoa_fisica_id`)  COMMENT '',
   CONSTRAINT `fk_omb_pessoa_fisica`
     FOREIGN KEY (`pessoa_fisica_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -187,9 +187,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pf_bancos`
+-- Table `siscontrat2`.`pf_bancos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pf_bancos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pf_bancos` (
   `pessoa_fisica_id` INT NOT NULL COMMENT '',
   `banco_id` SMALLINT(3) NOT NULL COMMENT '',
   `agencia` VARCHAR(12) NOT NULL COMMENT '',
@@ -199,12 +199,12 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`pf_bancos` (
   INDEX `fk_pf_bancos_bancos1_idx` (`banco_id` ASC)  COMMENT '',
   CONSTRAINT `fk_pessoa_fisica_bancos_pf`
     FOREIGN KEY (`pessoa_fisica_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pf_bancos_bancos`
     FOREIGN KEY (`banco_id`)
-    REFERENCES `siscontrat`.`bancos` (`id`)
+    REFERENCES `siscontrat2`.`bancos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -212,9 +212,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pf_enderecos`
+-- Table `siscontrat2`.`pf_enderecos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pf_enderecos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pf_enderecos` (
   `pessoa_fisica_id` INT NOT NULL COMMENT '',
   `logradouro` VARCHAR(200) NOT NULL COMMENT '',
   `numero` INT(5) NOT NULL COMMENT '',
@@ -226,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`pf_enderecos` (
   PRIMARY KEY (`pessoa_fisica_id`)  COMMENT '',
   CONSTRAINT `pessoa_fisica_enderecos_pf`
     FOREIGN KEY (`pessoa_fisica_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -234,16 +234,16 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pf_observacoes`
+-- Table `siscontrat2`.`pf_observacoes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pf_observacoes` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pf_observacoes` (
   `pessoa_fisica_id` INT NOT NULL COMMENT '',
   `observacao` LONGTEXT NOT NULL COMMENT '',
   `publicado` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '',
   PRIMARY KEY (`pessoa_fisica_id`)  COMMENT '',
   CONSTRAINT `fk_pessoa_fisica_observacao`
     FOREIGN KEY (`pessoa_fisica_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -251,15 +251,15 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pf_telefones`
+-- Table `siscontrat2`.`pf_telefones`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pf_telefones` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pf_telefones` (
   `pessoa_fisica_id` INT NOT NULL COMMENT '',
   `telefone` VARCHAR(15) NOT NULL COMMENT '',
   `publicado` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '',
   CONSTRAINT `fk_pessoa_fisica_telefones`
     FOREIGN KEY (`pessoa_fisica_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -267,9 +267,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`territorios`
+-- Table `siscontrat2`.`territorios`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`territorios` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`territorios` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `territorio` VARCHAR(15) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -277,9 +277,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`coordenadorias`
+-- Table `siscontrat2`.`coordenadorias`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`coordenadorias` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`coordenadorias` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `coordenadoria` VARCHAR(25) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -287,9 +287,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`subprefeituras`
+-- Table `siscontrat2`.`subprefeituras`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`subprefeituras` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`subprefeituras` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `subprefeitura` VARCHAR(55) NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -297,9 +297,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`programas`
+-- Table `siscontrat2`.`programas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`programas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`programas` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `programa` VARCHAR(45) NOT NULL COMMENT '',
   `verba_id` INT(5) NOT NULL COMMENT '',
@@ -311,9 +311,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`linguagens`
+-- Table `siscontrat2`.`linguagens`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`linguagens` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`linguagens` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `linguagem` VARCHAR(20) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -321,9 +321,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`projetos`
+-- Table `siscontrat2`.`projetos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`projetos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`projetos` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `projeto` VARCHAR(25) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -331,9 +331,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`formacao_cargos`
+-- Table `siscontrat2`.`formacao_cargos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`formacao_cargos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`formacao_cargos` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `cargo` VARCHAR(70) NOT NULL COMMENT '',
   `justificativa` LONGTEXT NOT NULL COMMENT '',
@@ -342,9 +342,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`formacao_vigencias`
+-- Table `siscontrat2`.`formacao_vigencias`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`formacao_vigencias` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`formacao_vigencias` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `ano` SMALLINT(4) NOT NULL COMMENT '',
   `descricao` VARCHAR(45) NOT NULL COMMENT '',
@@ -353,9 +353,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`formacao_status`
+-- Table `siscontrat2`.`formacao_status`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`formacao_status` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`formacao_status` (
   `id` TINYINT(1) NOT NULL AUTO_INCREMENT COMMENT '',
   `status` VARCHAR(15) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -363,9 +363,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`perfis`
+-- Table `siscontrat2`.`perfis`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`perfis` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`perfis` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `descricao` VARCHAR(30) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -373,9 +373,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`usuarios`
+-- Table `siscontrat2`.`usuarios`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`usuarios` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`usuarios` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `nome_completo` VARCHAR(70) NOT NULL COMMENT '',
   `usuario` CHAR(7) NOT NULL COMMENT '',
@@ -391,16 +391,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`usuarios` (
   INDEX `fk_usuarios_perfil1_idx` (`perfil_id` ASC)  COMMENT '',
   CONSTRAINT `fk_usuarios_perfil`
     FOREIGN KEY (`perfil_id`)
-    REFERENCES `siscontrat`.`perfis` (`id`)
+    REFERENCES `siscontrat2`.`perfis` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`origem_tipos`
+-- Table `siscontrat2`.`origem_tipos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`origem_tipos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`origem_tipos` (
   `id` TINYINT(1) NOT NULL AUTO_INCREMENT COMMENT '',
   `origem` VARCHAR(10) NOT NULL COMMENT '1 = Evento\n2 = Formação\n3 = EMIA',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -408,9 +408,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pessoa_tipos`
+-- Table `siscontrat2`.`pessoa_tipos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pessoa_tipos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pessoa_tipos` (
   `id` TINYINT(1) NOT NULL AUTO_INCREMENT COMMENT '',
   `pessoa` VARCHAR(8) NOT NULL COMMENT '1 = física\n2 = jurídica',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -418,9 +418,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`verbas`
+-- Table `siscontrat2`.`verbas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`verbas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`verbas` (
   `id` SMALLINT(3) NOT NULL AUTO_INCREMENT COMMENT '',
   `verba` VARCHAR(80) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -428,9 +428,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pedido_status`
+-- Table `siscontrat2`.`pedido_status`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pedido_status` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pedido_status` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `status` VARCHAR(50) NOT NULL COMMENT '',
   `ordem` TINYINT(2) NOT NULL COMMENT '',
@@ -440,9 +440,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`emia_cargos`
+-- Table `siscontrat2`.`emia_cargos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`emia_cargos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`emia_cargos` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `cargo` VARCHAR(70) NOT NULL COMMENT '',
   `justificativa` LONGTEXT NOT NULL COMMENT '',
@@ -451,9 +451,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`emia_vigencias`
+-- Table `siscontrat2`.`emia_vigencias`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`emia_vigencias` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`emia_vigencias` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `ano` SMALLINT(4) NOT NULL COMMENT '',
   `descricao` VARCHAR(45) NOT NULL COMMENT '',
@@ -462,9 +462,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`emia_status`
+-- Table `siscontrat2`.`emia_status`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`emia_status` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`emia_status` (
   `id` TINYINT(1) NOT NULL AUTO_INCREMENT COMMENT '',
   `status` VARCHAR(15) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -472,9 +472,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`instituicoes`
+-- Table `siscontrat2`.`instituicoes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`instituicoes` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`instituicoes` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `nome` VARCHAR(60) NOT NULL COMMENT '',
   `sigla` VARCHAR(8) NOT NULL COMMENT '',
@@ -483,9 +483,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`locais`
+-- Table `siscontrat2`.`locais`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`locais` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`locais` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `instituicao_id` INT NOT NULL COMMENT '',
   `local` VARCHAR(100) NOT NULL COMMENT '',
@@ -501,7 +501,7 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`locais` (
   INDEX `fk_local_instituicao1_idx` (`instituicao_id` ASC)  COMMENT '',
   CONSTRAINT `fk_local_instituicao`
     FOREIGN KEY (`instituicao_id`)
-    REFERENCES `siscontrat`.`instituicoes` (`id`)
+    REFERENCES `siscontrat2`.`instituicoes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -509,9 +509,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`emia_contratacao`
+-- Table `siscontrat2`.`emia_contratacao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`emia_contratacao` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`emia_contratacao` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `pessoa_fisica_id` INT NOT NULL COMMENT '',
   `ano` SMALLINT(4) NOT NULL COMMENT '',
@@ -537,41 +537,41 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`emia_contratacao` (
   INDEX `fk_emia_pre_pedidos_emia_usuario_idx` (`usuario_id` ASC)  COMMENT '',
   CONSTRAINT `fk_emia_pre_pedidos_pf`
     FOREIGN KEY (`pessoa_fisica_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_emia_pre_pedidos_emia_cargos`
     FOREIGN KEY (`emia_cargo_id`)
-    REFERENCES `siscontrat`.`emia_cargos` (`id`)
+    REFERENCES `siscontrat2`.`emia_cargos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_emia_pre_pedidos_emia_vigencias`
     FOREIGN KEY (`emia_vigencia_id`)
-    REFERENCES `siscontrat`.`emia_vigencias` (`id`)
+    REFERENCES `siscontrat2`.`emia_vigencias` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_emia_pre_pedidos_emia_status`
     FOREIGN KEY (`emia_status_id`)
-    REFERENCES `siscontrat`.`emia_status` (`id`)
+    REFERENCES `siscontrat2`.`emia_status` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_emia_pre_pedidos_emia_local`
     FOREIGN KEY (`local_id`)
-    REFERENCES `siscontrat`.`locais` (`id`)
+    REFERENCES `siscontrat2`.`locais` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_emia_pre_pedidos_emia_usuario`
     FOREIGN KEY (`usuario_id`)
-    REFERENCES `siscontrat`.`usuarios` (`id`)
+    REFERENCES `siscontrat2`.`usuarios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`representante_legais`
+-- Table `siscontrat2`.`representante_legais`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`representante_legais` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`representante_legais` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `nome` VARCHAR(70) NOT NULL COMMENT '',
   `rg` VARCHAR(20) NOT NULL COMMENT '',
@@ -581,9 +581,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pessoa_juridicas`
+-- Table `siscontrat2`.`pessoa_juridicas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pessoa_juridicas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pessoa_juridicas` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `razao_social` VARCHAR(100) NOT NULL COMMENT '',
   `cnpj` CHAR(18) NOT NULL COMMENT '',
@@ -598,21 +598,21 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`pessoa_juridicas` (
   INDEX `fk_pj_representante_legal2_idx` (`representante_legal2_id` ASC)  COMMENT '',
   CONSTRAINT `fk_pj_representante_legal1`
     FOREIGN KEY (`representante_legal1_id`)
-    REFERENCES `siscontrat`.`representante_legais` (`id`)
+    REFERENCES `siscontrat2`.`representante_legais` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pj_representante_legal2`
     FOREIGN KEY (`representante_legal2_id`)
-    REFERENCES `siscontrat`.`representante_legais` (`id`)
+    REFERENCES `siscontrat2`.`representante_legais` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pedidos`
+-- Table `siscontrat2`.`pedidos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pedidos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pedidos` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `origem_tipo_id` TINYINT(1) NOT NULL COMMENT '',
   `origem_id` INT NOT NULL COMMENT '',
@@ -637,51 +637,51 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`pedidos` (
   INDEX `fk_pedidos_pessoa_fisicas_idx` (`pessoa_fisica_id` ASC)  COMMENT '',
   CONSTRAINT `fk_pedidos_origem_tipos`
     FOREIGN KEY (`origem_tipo_id`)
-    REFERENCES `siscontrat`.`origem_tipos` (`id`)
+    REFERENCES `siscontrat2`.`origem_tipos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pedidos_pessoa_tipos`
     FOREIGN KEY (`pessoa_tipo_id`)
-    REFERENCES `siscontrat`.`pessoa_tipos` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_tipos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pedidos_verbas`
     FOREIGN KEY (`verba_id`)
-    REFERENCES `siscontrat`.`verbas` (`id`)
+    REFERENCES `siscontrat2`.`verbas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pedidos_status_pedidos`
     FOREIGN KEY (`status_pedido_id`)
-    REFERENCES `siscontrat`.`pedido_status` (`id`)
+    REFERENCES `siscontrat2`.`pedido_status` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pedidos_emia_pre_pedidos`
     FOREIGN KEY (`origem_id`)
-    REFERENCES `siscontrat`.`emia_contratacao` (`id`)
+    REFERENCES `siscontrat2`.`emia_contratacao` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pedidos_form_pre_pedidos`
     FOREIGN KEY (`origem_id`)
-    REFERENCES `siscontrat`.`formacao_contratacoes` (`id`)
+    REFERENCES `siscontrat2`.`formacao_contratacoes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pedidos_pessoa_juridicas`
     FOREIGN KEY (`pessoa_juridica_id`)
-    REFERENCES `siscontrat`.`pessoa_juridicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_juridicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pedidos_pessoa_fisicas`
     FOREIGN KEY (`pessoa_fisica_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`formacao_contratacoes`
+-- Table `siscontrat2`.`formacao_contratacoes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`formacao_contratacoes` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`formacao_contratacoes` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `pessoa_fisica_id` INT NOT NULL COMMENT '',
   `ano` SMALLINT(4) NOT NULL COMMENT '',
@@ -720,71 +720,71 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`formacao_contratacoes` (
   INDEX `fk_form_pre_pedidos_pedidos1_idx` (`pedido_id` ASC)  COMMENT '',
   CONSTRAINT `fk_form_pre_pedidos_pf`
     FOREIGN KEY (`pessoa_fisica_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_pre_pedidos_territorios`
     FOREIGN KEY (`territorio_id`)
-    REFERENCES `siscontrat`.`territorios` (`id`)
+    REFERENCES `siscontrat2`.`territorios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_pre_pedidos_coordenadorias`
     FOREIGN KEY (`coordenadoria_id`)
-    REFERENCES `siscontrat`.`coordenadorias` (`id`)
+    REFERENCES `siscontrat2`.`coordenadorias` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_pre_pedidos_subprefeituras`
     FOREIGN KEY (`subprefeitura_id`)
-    REFERENCES `siscontrat`.`subprefeituras` (`id`)
+    REFERENCES `siscontrat2`.`subprefeituras` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_pre_pedidos_programas`
     FOREIGN KEY (`programa_id`)
-    REFERENCES `siscontrat`.`programas` (`id`)
+    REFERENCES `siscontrat2`.`programas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_pre_pedidos_linguagem`
     FOREIGN KEY (`linguagem_id`)
-    REFERENCES `siscontrat`.`linguagens` (`id`)
+    REFERENCES `siscontrat2`.`linguagens` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_pre_pedidos_projetos`
     FOREIGN KEY (`projeto_id`)
-    REFERENCES `siscontrat`.`projetos` (`id`)
+    REFERENCES `siscontrat2`.`projetos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_pre_pedidos_form_cargos`
     FOREIGN KEY (`form_cargo_id`)
-    REFERENCES `siscontrat`.`formacao_cargos` (`id`)
+    REFERENCES `siscontrat2`.`formacao_cargos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_pre_pedidos_form_vigencias`
     FOREIGN KEY (`form_vigencia_id`)
-    REFERENCES `siscontrat`.`formacao_vigencias` (`id`)
+    REFERENCES `siscontrat2`.`formacao_vigencias` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_pre_pedidos_form_status`
     FOREIGN KEY (`form_status_id`)
-    REFERENCES `siscontrat`.`formacao_status` (`id`)
+    REFERENCES `siscontrat2`.`formacao_status` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_pre_pedidos_usuarios`
     FOREIGN KEY (`usuario_id`)
-    REFERENCES `siscontrat`.`usuarios` (`id`)
+    REFERENCES `siscontrat2`.`usuarios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_pre_pedidos_pedidos`
     FOREIGN KEY (`pedido_id`)
-    REFERENCES `siscontrat`.`pedidos` (`id`)
+    REFERENCES `siscontrat2`.`pedidos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`formacao_parcelas`
+-- Table `siscontrat2`.`formacao_parcelas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`formacao_parcelas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`formacao_parcelas` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `formacao_vigencia_id` INT NOT NULL COMMENT '',
   `numero_parcelas` TINYINT(2) NOT NULL COMMENT '',
@@ -798,22 +798,22 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`formacao_parcelas` (
   INDEX `fk_form_parcelas_form_vigencias_idx` (`formacao_vigencia_id` ASC)  COMMENT '',
   CONSTRAINT `fk_form_parcelas_form_vigencias`
     FOREIGN KEY (`formacao_vigencia_id`)
-    REFERENCES `siscontrat`.`formacao_vigencias` (`id`)
+    REFERENCES `siscontrat2`.`formacao_vigencias` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pj_telefones`
+-- Table `siscontrat2`.`pj_telefones`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pj_telefones` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pj_telefones` (
   `pessoa_juridica_id` INT NOT NULL COMMENT '',
   `telefone` VARCHAR(15) NOT NULL COMMENT '',
   `publicado` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '',
   CONSTRAINT `fk_pj_telefones_pj`
     FOREIGN KEY (`pessoa_juridica_id`)
-    REFERENCES `siscontrat`.`pessoa_juridicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_juridicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -821,16 +821,16 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pj_observacoes`
+-- Table `siscontrat2`.`pj_observacoes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pj_observacoes` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pj_observacoes` (
   `pessoa_juridica_id` INT NOT NULL COMMENT '',
   `observacao` LONGTEXT NOT NULL COMMENT '',
   `publicado` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '',
   PRIMARY KEY (`pessoa_juridica_id`)  COMMENT '',
   CONSTRAINT `fk_pj_observacao_pj`
     FOREIGN KEY (`pessoa_juridica_id`)
-    REFERENCES `siscontrat`.`pessoa_juridicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_juridicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -838,9 +838,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pj_enderecos`
+-- Table `siscontrat2`.`pj_enderecos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pj_enderecos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pj_enderecos` (
   `pessoa_juridica_id` INT NOT NULL COMMENT '',
   `logradouro` VARCHAR(200) NOT NULL COMMENT '',
   `numero` INT(5) NOT NULL COMMENT '',
@@ -852,7 +852,7 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`pj_enderecos` (
   PRIMARY KEY (`pessoa_juridica_id`)  COMMENT '',
   CONSTRAINT `fk_pj_enderecos_pj`
     FOREIGN KEY (`pessoa_juridica_id`)
-    REFERENCES `siscontrat`.`pessoa_juridicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_juridicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -860,9 +860,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pj_bancos`
+-- Table `siscontrat2`.`pj_bancos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pj_bancos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pj_bancos` (
   `pessoa_juridica_id` INT NOT NULL COMMENT '',
   `banco_id` SMALLINT(3) NOT NULL COMMENT '',
   `agencia` VARCHAR(12) NOT NULL COMMENT '',
@@ -872,12 +872,12 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`pj_bancos` (
   INDEX `fk_pf_bancos_bancos1_idx` (`banco_id` ASC)  COMMENT '',
   CONSTRAINT `fk_pj_bancos_bancos`
     FOREIGN KEY (`banco_id`)
-    REFERENCES `siscontrat`.`bancos` (`id`)
+    REFERENCES `siscontrat2`.`bancos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pj_bancos_pj`
     FOREIGN KEY (`pessoa_juridica_id`)
-    REFERENCES `siscontrat`.`pessoa_juridicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_juridicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -885,9 +885,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`modulos`
+-- Table `siscontrat2`.`modulos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`modulos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`modulos` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `sigla` VARCHAR(4) NOT NULL COMMENT '',
   `descricao` VARCHAR(20) NOT NULL COMMENT '',
@@ -896,76 +896,76 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`modulo_perfis`
+-- Table `siscontrat2`.`modulo_perfis`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`modulo_perfis` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`modulo_perfis` (
   `modulo_id` TINYINT(2) NOT NULL COMMENT '',
   `perfil_id` TINYINT(2) NOT NULL COMMENT '',
   INDEX `fk_modulo_perfil_modulos_idx` (`modulo_id` ASC)  COMMENT '',
   PRIMARY KEY (`modulo_id`, `perfil_id`)  COMMENT '',
   CONSTRAINT `fk_modulo_perfil_perfil`
     FOREIGN KEY (`perfil_id`)
-    REFERENCES `siscontrat`.`perfis` (`id`)
+    REFERENCES `siscontrat2`.`perfis` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_modulo_perfil_modulos`
     FOREIGN KEY (`modulo_id`)
-    REFERENCES `siscontrat`.`modulos` (`id`)
+    REFERENCES `siscontrat2`.`modulos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`usuario_contratos`
+-- Table `siscontrat2`.`usuario_contratos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`usuario_contratos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`usuario_contratos` (
   `usuario_id` INT NOT NULL COMMENT '',
   `nivel_acesso` TINYINT(1) NOT NULL COMMENT '',
   PRIMARY KEY (`usuario_id`)  COMMENT '',
   CONSTRAINT `fk_usuario_contratos_usuarios`
     FOREIGN KEY (`usuario_id`)
-    REFERENCES `siscontrat`.`usuarios` (`id`)
+    REFERENCES `siscontrat2`.`usuarios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`usuario_pagamentos`
+-- Table `siscontrat2`.`usuario_pagamentos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`usuario_pagamentos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`usuario_pagamentos` (
   `usuario_id` INT NOT NULL COMMENT '',
   `nivel_acesso` TINYINT(1) NOT NULL COMMENT '',
   PRIMARY KEY (`usuario_id`)  COMMENT '',
   CONSTRAINT `fk_usuario_pagamentos_usuarios`
     FOREIGN KEY (`usuario_id`)
-    REFERENCES `siscontrat`.`usuarios` (`id`)
+    REFERENCES `siscontrat2`.`usuarios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`espacos`
+-- Table `siscontrat2`.`espacos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`espacos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`espacos` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `local_id` INT NOT NULL COMMENT '',
   `espaco` VARCHAR(100) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   CONSTRAINT `fk_espacos_local`
     FOREIGN KEY (`local_id`)
-    REFERENCES `siscontrat`.`locais` (`id`)
+    REFERENCES `siscontrat2`.`locais` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`formacao_locais`
+-- Table `siscontrat2`.`formacao_locais`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`formacao_locais` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`formacao_locais` (
   `form_pre_pedido_id` INT NOT NULL COMMENT '',
   `local_id` INT NOT NULL COMMENT '',
   INDEX `fk_form_local_form_pre_pedidos_idx` (`form_pre_pedido_id` ASC)  COMMENT '',
@@ -973,21 +973,21 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`formacao_locais` (
   PRIMARY KEY (`form_pre_pedido_id`, `local_id`)  COMMENT '',
   CONSTRAINT `fk_form_local_form_pre_pedidos`
     FOREIGN KEY (`form_pre_pedido_id`)
-    REFERENCES `siscontrat`.`formacao_contratacoes` (`id`)
+    REFERENCES `siscontrat2`.`formacao_contratacoes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_local_local`
     FOREIGN KEY (`local_id`)
-    REFERENCES `siscontrat`.`locais` (`id`)
+    REFERENCES `siscontrat2`.`locais` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`local_usuarios`
+-- Table `siscontrat2`.`local_usuarios`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`local_usuarios` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`local_usuarios` (
   `local_id` INT NOT NULL COMMENT '',
   `usuario_id` INT NOT NULL COMMENT '',
   INDEX `fk_local_usuarios_local1_idx` (`local_id` ASC)  COMMENT '',
@@ -995,21 +995,21 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`local_usuarios` (
   PRIMARY KEY (`local_id`, `usuario_id`)  COMMENT '',
   CONSTRAINT `fk_local_usuarios_local`
     FOREIGN KEY (`local_id`)
-    REFERENCES `siscontrat`.`locais` (`id`)
+    REFERENCES `siscontrat2`.`locais` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_local_usuarios_usuarios`
     FOREIGN KEY (`usuario_id`)
-    REFERENCES `siscontrat`.`usuarios` (`id`)
+    REFERENCES `siscontrat2`.`usuarios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`parecer_artisticos`
+-- Table `siscontrat2`.`parecer_artisticos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`parecer_artisticos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`parecer_artisticos` (
   `pedido_id` INT NOT NULL COMMENT '',
   `topico1` LONGTEXT NULL COMMENT '',
   `topico2` LONGTEXT NULL COMMENT '',
@@ -1018,16 +1018,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`parecer_artisticos` (
   PRIMARY KEY (`pedido_id`)  COMMENT '',
   CONSTRAINT `fk_parecer_artisticos_pedidos`
     FOREIGN KEY (`pedido_id`)
-    REFERENCES `siscontrat`.`pedidos` (`id`)
+    REFERENCES `siscontrat2`.`pedidos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pedido_etapas`
+-- Table `siscontrat2`.`pedido_etapas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pedido_etapas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pedido_etapas` (
   `pedido_id` INT NOT NULL COMMENT '',
   `data_contrato` DATETIME NOT NULL COMMENT '',
   `data_proposta` DATETIME NOT NULL COMMENT '',
@@ -1039,16 +1039,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`pedido_etapas` (
   PRIMARY KEY (`pedido_id`)  COMMENT '',
   CONSTRAINT `fk_pedido_etapas_pedidos`
     FOREIGN KEY (`pedido_id`)
-    REFERENCES `siscontrat`.`pedidos` (`id`)
+    REFERENCES `siscontrat2`.`pedidos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`penalidades`
+-- Table `siscontrat2`.`penalidades`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`penalidades` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`penalidades` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `modelo` VARCHAR(40) NOT NULL COMMENT '',
   `texto` LONGTEXT NOT NULL COMMENT '',
@@ -1057,9 +1057,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`verba_detalhes`
+-- Table `siscontrat2`.`verba_detalhes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`verba_detalhes` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`verba_detalhes` (
   `verba_id` SMALLINT(3) NOT NULL COMMENT '',
   `ano` SMALLINT(4) NOT NULL COMMENT '',
   `pf` DECIMAL(7,2) NOT NULL COMMENT '',
@@ -1067,16 +1067,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`verba_detalhes` (
   PRIMARY KEY (`verba_id`, `ano`)  COMMENT '',
   CONSTRAINT `fk_verba_detalhes_verbas`
     FOREIGN KEY (`verba_id`)
-    REFERENCES `siscontrat`.`verbas` (`id`)
+    REFERENCES `siscontrat2`.`verbas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`contratos`
+-- Table `siscontrat2`.`contratos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`contratos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`contratos` (
   `pedido_id` INT NOT NULL COMMENT '',
   `pendencia_documentacao` VARCHAR(255) NULL COMMENT '',
   `penalidade_id` TINYINT(2) NULL COMMENT '',
@@ -1086,21 +1086,21 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`contratos` (
   INDEX `fk_contratos_penalidades1_idx` (`penalidade_id` ASC)  COMMENT '',
   CONSTRAINT `fk_contratos_pedidos1`
     FOREIGN KEY (`pedido_id`)
-    REFERENCES `siscontrat`.`pedidos` (`id`)
+    REFERENCES `siscontrat2`.`pedidos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_contratos_penalidades1`
     FOREIGN KEY (`penalidade_id`)
-    REFERENCES `siscontrat`.`penalidades` (`id`)
+    REFERENCES `siscontrat2`.`penalidades` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`juridicos`
+-- Table `siscontrat2`.`juridicos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`juridicos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`juridicos` (
   `pedido_id` INT NOT NULL COMMENT '',
   `amparo_legal` LONGTEXT NOT NULL COMMENT '',
   `dotacao` VARCHAR(255) NOT NULL COMMENT '',
@@ -1108,16 +1108,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`juridicos` (
   PRIMARY KEY (`pedido_id`)  COMMENT '',
   CONSTRAINT `fk_juridicos_pedidos1`
     FOREIGN KEY (`pedido_id`)
-    REFERENCES `siscontrat`.`pedidos` (`id`)
+    REFERENCES `siscontrat2`.`pedidos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`pagamentos`
+-- Table `siscontrat2`.`pagamentos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`pagamentos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`pagamentos` (
   `pedido_id` INT NOT NULL COMMENT '',
   `nota_empenho` CHAR(6) NULL COMMENT '',
   `emissao_nota_empenho` DATE NULL COMMENT '',
@@ -1126,16 +1126,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`pagamentos` (
   PRIMARY KEY (`pedido_id`)  COMMENT '',
   CONSTRAINT `fk_pagamentos_pedidos1`
     FOREIGN KEY (`pedido_id`)
-    REFERENCES `siscontrat`.`pedidos` (`id`)
+    REFERENCES `siscontrat2`.`pedidos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`tipo_documentos`
+-- Table `siscontrat2`.`tipo_documentos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`tipo_documentos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`tipo_documentos` (
   `id` TINYINT(1) NOT NULL AUTO_INCREMENT COMMENT '',
   `tipo_documento` VARCHAR(8) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -1143,9 +1143,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`lista_documentos`
+-- Table `siscontrat2`.`lista_documentos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`lista_documentos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`lista_documentos` (
   `id` SMALLINT(3) NOT NULL AUTO_INCREMENT COMMENT '',
   `tipo_documento_id` TINYINT(1) NOT NULL COMMENT '',
   `documento` VARCHAR(120) NOT NULL COMMENT '',
@@ -1160,16 +1160,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`lista_documentos` (
   INDEX `fk_documentos_tipo_documentos_idx` (`tipo_documento_id` ASC)  COMMENT '',
   CONSTRAINT `fk_documentos_tipo_documentos`
     FOREIGN KEY (`tipo_documento_id`)
-    REFERENCES `siscontrat`.`tipo_documentos` (`id`)
+    REFERENCES `siscontrat2`.`tipo_documentos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`arquivos`
+-- Table `siscontrat2`.`arquivos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`arquivos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`arquivos` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `origem_id` INT NOT NULL COMMENT '',
   `lista_documento_id` SMALLINT(3) NOT NULL COMMENT '',
@@ -1181,36 +1181,36 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`arquivos` (
   INDEX `fk_arquivos_emia_contratacao_idx` (`origem_id` ASC)  COMMENT '',
   CONSTRAINT `fk_arquivos_lista_documentos`
     FOREIGN KEY (`lista_documento_id`)
-    REFERENCES `siscontrat`.`lista_documentos` (`id`)
+    REFERENCES `siscontrat2`.`lista_documentos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_arquivos_emia_contratacao`
     FOREIGN KEY (`origem_id`)
-    REFERENCES `siscontrat`.`emia_contratacao` (`id`)
+    REFERENCES `siscontrat2`.`emia_contratacao` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_arquivos_formacao_contratacao`
     FOREIGN KEY (`origem_id`)
-    REFERENCES `siscontrat`.`formacao_contratacoes` (`id`)
+    REFERENCES `siscontrat2`.`formacao_contratacoes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_arquivos_pessoa_fisicas`
     FOREIGN KEY (`origem_id`)
-    REFERENCES `siscontrat`.`pessoa_fisicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_fisicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_arquivos_pessoa_juridicas`
     FOREIGN KEY (`origem_id`)
-    REFERENCES `siscontrat`.`pessoa_juridicas` (`id`)
+    REFERENCES `siscontrat2`.`pessoa_juridicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`relacao_juridicas`
+-- Table `siscontrat2`.`relacao_juridicas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`relacao_juridicas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`relacao_juridicas` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `relacao_juridica` VARCHAR(70) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -1218,9 +1218,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`projeto_especiais`
+-- Table `siscontrat2`.`projeto_especiais`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`projeto_especiais` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`projeto_especiais` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `projeto_especial` VARCHAR(70) BINARY NOT NULL COMMENT '',
   `publicado` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '',
@@ -1229,9 +1229,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`classificacao_indicativas`
+-- Table `siscontrat2`.`classificacao_indicativas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`classificacao_indicativas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`classificacao_indicativas` (
   `id` TINYINT(1) NOT NULL AUTO_INCREMENT COMMENT '',
   `classificacao_indicativa` VARCHAR(7) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -1239,9 +1239,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`produtores`
+-- Table `siscontrat2`.`produtores`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`produtores` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`produtores` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `nome` VARCHAR(120) NOT NULL COMMENT '',
   `email` VARCHAR(60) NOT NULL COMMENT '',
@@ -1253,9 +1253,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`evento_status`
+-- Table `siscontrat2`.`evento_status`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`evento_status` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`evento_status` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `status` VARCHAR(45) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -1263,9 +1263,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`tipo_eventos`
+-- Table `siscontrat2`.`tipo_eventos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`tipo_eventos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`tipo_eventos` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `tipo_eventos` VARCHAR(45) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -1273,9 +1273,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`eventos`
+-- Table `siscontrat2`.`eventos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`eventos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`eventos` (
   `id` INT NOT NULL COMMENT '',
   `nome_evento` VARCHAR(240) NOT NULL COMMENT '',
   `relacao_juridica_id` TINYINT(2) NULL COMMENT '',
@@ -1307,56 +1307,56 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`eventos` (
   INDEX `fk_eventos_tipo_eventos1_idx` (`tipo_evento_id` ASC)  COMMENT '',
   CONSTRAINT `fk_eventos_relacao_juridicas`
     FOREIGN KEY (`relacao_juridica_id`)
-    REFERENCES `siscontrat`.`relacao_juridicas` (`id`)
+    REFERENCES `siscontrat2`.`relacao_juridicas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_eventos_projeto_especiais`
     FOREIGN KEY (`projeto_especial_id`)
-    REFERENCES `siscontrat`.`projeto_especiais` (`id`)
+    REFERENCES `siscontrat2`.`projeto_especiais` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_eventos_usuarios_fiscal`
     FOREIGN KEY (`fiscal_id`)
-    REFERENCES `siscontrat`.`usuarios` (`id`)
+    REFERENCES `siscontrat2`.`usuarios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_eventos_usuarios_suplente`
     FOREIGN KEY (`suplente_id`)
-    REFERENCES `siscontrat`.`usuarios` (`id`)
+    REFERENCES `siscontrat2`.`usuarios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_eventos_usuarios`
     FOREIGN KEY (`usuario_id`)
-    REFERENCES `siscontrat`.`usuarios` (`id`)
+    REFERENCES `siscontrat2`.`usuarios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_eventos_classificacao_indicativas`
     FOREIGN KEY (`classificacao_indicativa_id`)
-    REFERENCES `siscontrat`.`classificacao_indicativas` (`id`)
+    REFERENCES `siscontrat2`.`classificacao_indicativas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_eventos_produtores`
     FOREIGN KEY (`produtor_id`)
-    REFERENCES `siscontrat`.`produtores` (`id`)
+    REFERENCES `siscontrat2`.`produtores` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_eventos_evento_status`
     FOREIGN KEY (`evento_status_id`)
-    REFERENCES `siscontrat`.`evento_status` (`id`)
+    REFERENCES `siscontrat2`.`evento_status` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_eventos_tipo_eventos`
     FOREIGN KEY (`tipo_evento_id`)
-    REFERENCES `siscontrat`.`tipo_eventos` (`id`)
+    REFERENCES `siscontrat2`.`tipo_eventos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`avisos`
+-- Table `siscontrat2`.`avisos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`avisos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`avisos` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `titulo` VARCHAR(70) NOT NULL COMMENT '',
   `mensagem` LONGTEXT NOT NULL COMMENT '',
@@ -1367,9 +1367,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`exposicoes`
+-- Table `siscontrat2`.`exposicoes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`exposicoes` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`exposicoes` (
   `id` INT NOT NULL COMMENT '',
   `evento_id` INT NOT NULL COMMENT '',
   `numero_contratados` TINYINT(2) NOT NULL COMMENT '',
@@ -1379,16 +1379,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`exposicoes` (
   INDEX `fk_artes_visuais_eventos_idx` (`evento_id` ASC)  COMMENT '',
   CONSTRAINT `fk_artes_visuais_eventos`
     FOREIGN KEY (`evento_id`)
-    REFERENCES `siscontrat`.`eventos` (`id`)
+    REFERENCES `siscontrat2`.`eventos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`filmes`
+-- Table `siscontrat2`.`filmes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`filmes` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`filmes` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `titulo` VARCHAR(100) NOT NULL COMMENT '',
   `titulo_original` VARCHAR(100) NULL COMMENT '',
@@ -1407,9 +1407,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`cinemas`
+-- Table `siscontrat2`.`cinemas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`cinemas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`cinemas` (
   `evento_id` INT NOT NULL COMMENT '',
   `filme_id` INT NOT NULL COMMENT '',
   INDEX `fk_cinemas_filmes1_idx` (`filme_id` ASC)  COMMENT '',
@@ -1417,21 +1417,21 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`cinemas` (
   PRIMARY KEY (`evento_id`, `filme_id`)  COMMENT '',
   CONSTRAINT `fk_cinemas_filmes`
     FOREIGN KEY (`filme_id`)
-    REFERENCES `siscontrat`.`filmes` (`id`)
+    REFERENCES `siscontrat2`.`filmes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_cinemas_eventos`
     FOREIGN KEY (`evento_id`)
-    REFERENCES `siscontrat`.`eventos` (`id`)
+    REFERENCES `siscontrat2`.`eventos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`ocorrencia_tipos`
+-- Table `siscontrat2`.`ocorrencia_tipos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`ocorrencia_tipos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`ocorrencia_tipos` (
   `id` TINYINT(1) NOT NULL AUTO_INCREMENT COMMENT '',
   `tipo_ocorrencia` VARCHAR(25) NOT NULL COMMENT '1 - evento\n2 - subevento\n3 - oficina',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -1439,9 +1439,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`subeventos`
+-- Table `siscontrat2`.`subeventos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`subeventos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`subeventos` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `evento_id` INT NOT NULL COMMENT '',
   `titulo` VARCHAR(120) NOT NULL COMMENT '',
@@ -1451,16 +1451,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`subeventos` (
   INDEX `fk_subeventos_eventos1_idx` (`evento_id` ASC)  COMMENT '',
   CONSTRAINT `fk_subeventos_eventos`
     FOREIGN KEY (`evento_id`)
-    REFERENCES `siscontrat`.`eventos` (`id`)
+    REFERENCES `siscontrat2`.`eventos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`oficinas`
+-- Table `siscontrat2`.`oficinas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`oficinas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`oficinas` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `evento_id` INT NOT NULL COMMENT '',
   `certificado` TINYINT(1) NOT NULL COMMENT '',
@@ -1476,16 +1476,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`oficinas` (
   INDEX `fk_oficinas_eventos1_idx` (`evento_id` ASC)  COMMENT '',
   CONSTRAINT `fk_oficinas_eventos1`
     FOREIGN KEY (`evento_id`)
-    REFERENCES `siscontrat`.`eventos` (`id`)
+    REFERENCES `siscontrat2`.`eventos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`retirada_ingressos`
+-- Table `siscontrat2`.`retirada_ingressos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`retirada_ingressos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`retirada_ingressos` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
   `retirada_ingresso` VARCHAR(45) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
@@ -1493,9 +1493,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`ocorrencias`
+-- Table `siscontrat2`.`ocorrencias`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`ocorrencias` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`ocorrencias` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `tipo_ocorrencia_id` TINYINT(1) NOT NULL COMMENT '',
   `origem_ocorrencia_id` INT NOT NULL COMMENT '',
@@ -1524,46 +1524,46 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`ocorrencias` (
   INDEX `fk_ocorrencias_retirada_ingressos1_idx` (`retirada_ingresso_id` ASC)  COMMENT '',
   CONSTRAINT `fk_ocorrencias_ocorrencia_tipos`
     FOREIGN KEY (`tipo_ocorrencia_id`)
-    REFERENCES `siscontrat`.`ocorrencia_tipos` (`id`)
+    REFERENCES `siscontrat2`.`ocorrencia_tipos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ocorrencias_eventos`
     FOREIGN KEY (`origem_ocorrencia_id`)
-    REFERENCES `siscontrat`.`eventos` (`id`)
+    REFERENCES `siscontrat2`.`eventos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ocorrencias_subeventos`
     FOREIGN KEY (`origem_ocorrencia_id`)
-    REFERENCES `siscontrat`.`subeventos` (`id`)
+    REFERENCES `siscontrat2`.`subeventos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ocorrencias_oficinas`
     FOREIGN KEY (`origem_ocorrencia_id`)
-    REFERENCES `siscontrat`.`oficinas` (`id`)
+    REFERENCES `siscontrat2`.`oficinas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ocorrencias_locais`
     FOREIGN KEY (`local_id`)
-    REFERENCES `siscontrat`.`locais` (`id`)
+    REFERENCES `siscontrat2`.`locais` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ocorrencias_espacos`
     FOREIGN KEY (`espaco_id`)
-    REFERENCES `siscontrat`.`espacos` (`id`)
+    REFERENCES `siscontrat2`.`espacos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ocorrencias_retirada_ingressos`
     FOREIGN KEY (`retirada_ingresso_id`)
-    REFERENCES `siscontrat`.`retirada_ingressos` (`id`)
+    REFERENCES `siscontrat2`.`retirada_ingressos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`evento_envios`
+-- Table `siscontrat2`.`evento_envios`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`evento_envios` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`evento_envios` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `evento_id` INT NOT NULL COMMENT '',
   `data_envio` DATETIME NOT NULL COMMENT '',
@@ -1571,16 +1571,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`evento_envios` (
   INDEX `fk_evento_envios_eventos_idx` (`evento_id` ASC)  COMMENT '',
   CONSTRAINT `fk_evento_envios_eventos`
     FOREIGN KEY (`evento_id`)
-    REFERENCES `siscontrat`.`eventos` (`id`)
+    REFERENCES `siscontrat2`.`eventos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`especificidades`
+-- Table `siscontrat2`.`especificidades`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`especificidades` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`especificidades` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `evento_id` INT NOT NULL COMMENT '',
   `estreia` TINYINT(1) NOT NULL COMMENT '',
@@ -1591,16 +1591,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`especificidades` (
   INDEX `fk_especificidades_eventos1_idx` (`evento_id` ASC)  COMMENT '',
   CONSTRAINT `fk_especificidades_eventos1`
     FOREIGN KEY (`evento_id`)
-    REFERENCES `siscontrat`.`eventos` (`id`)
+    REFERENCES `siscontrat2`.`eventos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`ocorrencia_excecoes`
+-- Table `siscontrat2`.`ocorrencia_excecoes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`ocorrencia_excecoes` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`ocorrencia_excecoes` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `evento_id` INT NOT NULL COMMENT '',
   `data_excecao` DATE NOT NULL COMMENT '',
@@ -1608,16 +1608,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`ocorrencia_excecoes` (
   INDEX `fk_ocorrencia_excecao_ocorrencias_idx` (`evento_id` ASC)  COMMENT '',
   CONSTRAINT `fk_ocorrencia_excecao_ocorrencias`
     FOREIGN KEY (`evento_id`)
-    REFERENCES `siscontrat`.`ocorrencias` (`id`)
+    REFERENCES `siscontrat2`.`ocorrencias` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`parcelas`
+-- Table `siscontrat2`.`parcelas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`parcelas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`parcelas` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `pedido_id` INT NOT NULL COMMENT '',
   `numero_parcelas` TINYINT(2) NOT NULL COMMENT '',
@@ -1628,16 +1628,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`parcelas` (
   INDEX `fk_parcelas_pedidos1_idx` (`pedido_id` ASC)  COMMENT '',
   CONSTRAINT `fk_parcelas_pedidos1`
     FOREIGN KEY (`pedido_id`)
-    REFERENCES `siscontrat`.`pedidos` (`id`)
+    REFERENCES `siscontrat2`.`pedidos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`parcela_complementos`
+-- Table `siscontrat2`.`parcela_complementos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`parcela_complementos` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`parcela_complementos` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `parcela_id` INT NOT NULL COMMENT '',
   `data_inicio` DATE NOT NULL COMMENT '',
@@ -1648,16 +1648,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`parcela_complementos` (
   PRIMARY KEY (`id`)  COMMENT '',
   CONSTRAINT `fk_parcela_complementos_parcelas`
     FOREIGN KEY (`parcela_id`)
-    REFERENCES `siscontrat`.`parcelas` (`id`)
+    REFERENCES `siscontrat2`.`parcelas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`emia_parcelas`
+-- Table `siscontrat2`.`emia_parcelas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`emia_parcelas` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`emia_parcelas` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `emia_vigencia_id` INT NOT NULL COMMENT '',
   `numero_parcelas` TINYINT(2) NOT NULL COMMENT '',
@@ -1672,16 +1672,16 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`emia_parcelas` (
   INDEX `fk_emia_parcelas_emia_vigencias1_idx` (`emia_vigencia_id` ASC)  COMMENT '',
   CONSTRAINT `fk_emia_parcelas_emia_vigencias1`
     FOREIGN KEY (`emia_vigencia_id`)
-    REFERENCES `siscontrat`.`emia_vigencias` (`id`)
+    REFERENCES `siscontrat2`.`emia_vigencias` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`exposicoes_comunicacoes`
+-- Table `siscontrat2`.`exposicoes_comunicacoes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`exposicoes_comunicacoes` (
+CREATE TABLE IF NOT EXISTS `siscontrat2`.`exposicoes_comunicacoes` (
   `exposicao_id` INT NOT NULL COMMENT '',
   `painel` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
   `legenda` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
@@ -1692,7 +1692,7 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`exposicoes_comunicacoes` (
   PRIMARY KEY (`exposicao_id`)  COMMENT '',
   CONSTRAINT `fk_exposicoes_comunicacoes_exposicoes1`
     FOREIGN KEY (`exposicao_id`)
-    REFERENCES `siscontrat`.`exposicoes` (`id`)
+    REFERENCES `siscontrat2`.`exposicoes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
