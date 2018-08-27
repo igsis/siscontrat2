@@ -8,8 +8,8 @@ if(isset($_POST['login']))
 {
 	$login = $_POST['login'];
 	$senha = $_POST['senha'];
-	$sql = "SELECT * FROM usuario AS usr
-	WHERE usr.email = '$login' LIMIT 0,1";
+	$sql = "SELECT * FROM usuarios AS usr
+	WHERE usr.usuario = '$login' LIMIT 0,1";
 	$con = bancoMysqli();
 	$query = mysqli_query($con,$sql);
 	//query que seleciona os campos que voltarão para na matriz
@@ -24,8 +24,8 @@ if(isset($_POST['login']))
 			{
 				// compara as senhas
 				session_start();
-				$_SESSION['login'] = $user['email'];
-				$_SESSION['nome'] = $user['nome'];
+				$_SESSION['login'] = $user['usuario'];
+				$_SESSION['nome'] = $user['nome_completo'];
 				$_SESSION['idUser'] = $user['id'];
 				$log = "Fez login.";
 				//gravarLog($log);
@@ -54,7 +54,7 @@ if(isset($_POST['login']))
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>IGSIS</title>
+		<title>Cadastro de Artistas e Profissionais de Arte e Cultura</title>
 		<link href="visual/css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<link href="visual/css/style.css" rel="stylesheet" media="screen">
 		<link href="visual/color/default.css" rel="stylesheet" media="screen">
@@ -67,10 +67,10 @@ if(isset($_POST['login']))
             <img src="visual/images/logo_cultura_h.png">
         </div>
         <div class="col-md-2" style="padding: 13px">
-            <span style="color: #fff">IGSIS</span>
+            <span style="color: #fff">SISCONTRAT</span>
         </div>
         <div class="col-md-offset-4 col-md-4" style="padding: 5px">
-            <span style="color: #fff">Suporte para o sistema:<br><i class="fab fa-whatsapp"></i> sistema.igsis@gmail.com</span>
+            <span style="color: #fff">Suporte para o sistema:<br> sistema.igsis@gmail.com</span>
         </div>
     </div>
 
@@ -78,10 +78,9 @@ if(isset($_POST['login']))
 			<div class="container">
 				<div class="row">
 					<div class="col-md-offset-1 col-md-10">
-						<p align="justify">Este sistema tem por objetivo criar um ambiente para contratação artística.</p>
+						<p align="justify">Este sistema tem por objetivo realizar contratações artísticas.</p>
 
-
-						<p align="justify">Dúvidas entre em contato com o nosso suporte através do endereço <strong>sistema.igsis@gmail.com</strong></p>
+						<p align="justify">Dúvidas entre em contato através do endereço <strong>sistema.igsis@gmail.com</strong></p>
 
 						<hr/>
 
@@ -95,7 +94,7 @@ if(isset($_POST['login']))
 								</div>
 								<div class=" col-md-6">
 									<label>Senha</label>
-									<input type="password" name="senha" class="form-control" placeholder="Senha" maxlength="60">
+									<input type="password" name="senha" class="form-control" placeholder="Senha" maxlength="90">
 								</div>
 							</div>
 
@@ -109,11 +108,11 @@ if(isset($_POST['login']))
 
 						<div class="form-group">
 							<div class="col-md-offset-2 col-md-6">
-								<p>Não possui cadastro? <a href="verifica.php">Clique aqui.</a></p>
+								<p>Não possui cadastro? <a href="https://goo.gl/dzmcfB">Clique aqui.</a></p>
 								<br />
 							</div>
 							<div class="col-md-6">
-								<p>Esqueceu a senha? <a href="recuperar_senha.php">Clique aqui.</a></p>
+								<p>Esqueceu a senha? <a href="">Clique aqui.</a></p>
 								<br />
 							</div>
 						</div>
