@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9bd48a8d-6659-4328-b560-3cac114f992a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/ajax_cep.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/ajax_refresh.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/autocomplete.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/barras_smart_wizard/barra_evento.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/barras_smart_wizard/barra_evento_pf.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/barras_smart_wizard/barra_evento_pj.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/barras_smart_wizard/barra_pf.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/barras_smart_wizard/barra_pj.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/cabecalho.php" beforeDir="false" afterPath="$PROJECT_DIR$/visual/cabecalho.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/chamado.ajax.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/color/default.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/animate.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/dlmenu.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/font-awesome.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/igsmc.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/overwrite.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/relatorio.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/simpletextrotator.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/style2.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/style_chat.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/sweetalert.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/css/template_css.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/css/smart_wizard.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/css/smart_wizard.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/css/smart_wizard_theme_arrows.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/css/smart_wizard_theme_arrows.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/css/smart_wizard_theme_circles.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/css/smart_wizard_theme_circles.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/css/smart_wizard_theme_dots.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/css/smart_wizard_theme_dots.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/js/jquery.smartWizard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/js/jquery.smartWizard.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/js/js-smartWizard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/dist/readme.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/fonts/FontAwesome.otf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/fonts/fontawesome-webfont.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/fonts/fontawesome-webfont.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/fonts/fontawesome-webfont.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/fonts/fontawesome-webfont.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/fonts/icomoon/icomoon.dev.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/fonts/icomoon/icomoon.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/fonts/icomoon/icomoon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/fonts/icomoon/icomoon.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/fonts/icomoon/icomoon.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/fonts/icomoon/license.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/get_suggestions.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/images/bg.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/images/csscheckbox.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/images/header.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/images/loading.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/images/submit_bg.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/images/submit_hover_bg.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/index.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/autocomplete.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/autocomplete_script.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/bootstrap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/custom.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/dalert.jquery.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/evento.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery-1.2.6.pack.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery-1.4.2.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery-1.8.2.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery-1.9.1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery-impromptu.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery-ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.avgrund.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.dlmenu.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.leanModal.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.lockfixed.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.magnific-popup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.magnific-popup.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.maskMoney.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.maskedinput-1.1.4.pack.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.maskedinput.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.smooth-scroll.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.uniform.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/jquery.validate.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/messi.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/messi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/modernizr.custom.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/jquery.noty.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/bottom.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/bottomCenter.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/bottomLeft.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/bottomRight.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/center.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/centerLeft.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/centerRight.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/inline.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/top.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/topCenter.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/topLeft.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/layouts/topRight.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/packaged/jquery.noty.packaged.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/packaged/jquery.noty.packaged.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/promise.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/noty/themes/default.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/shBrushJScript.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/shBrushXml.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/shCore.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/sitedx.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/stickyMojo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/sweetalert.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/langs/readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/license.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/advlist/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/anchor/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/autolink/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/autoresize/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/autosave/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/bbcode/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/charmap/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/code/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/contextmenu/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/directionality/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-cool.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-cry.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-embarassed.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-foot-in-mouth.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-frown.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-innocent.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-kiss.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-laughing.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-money-mouth.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-sealed.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-smile.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-surprised.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-tongue-out.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-undecided.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-wink.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/img/smiley-yell.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/emoticons/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/example/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/example_dependency/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/fullpage/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/fullscreen/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/hr/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/image/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/importcss/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/insertdatetime/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/layer/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/legacyoutput/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/link/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/lists/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/media/moxieplayer.swf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/media/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/nonbreaking/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/noneditable/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/pagebreak/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/paste/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/preview/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/print/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/save/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/searchreplace/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/spellchecker/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/tabfocus/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/table/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/template/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/textcolor/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/visualblocks/css/visualblocks.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/visualblocks/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/visualchars/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/plugins/wordcount/plugin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/content.inline.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/content.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/fonts/readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/fonts/tinymce-small.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/fonts/tinymce-small.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/fonts/tinymce-small.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/fonts/tinymce-small.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/fonts/tinymce.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/fonts/tinymce.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/fonts/tinymce.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/fonts/tinymce.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/img/anchor.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/img/loader.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/img/object.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/img/trans.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/img/wline.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/skin.ie7.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/skins/lightgray/skin.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/themes/modern/theme.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/tinymce/tinymce.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/js/wow.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/local.ajax.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/rodape.php" beforeDir="false" afterPath="$PROJECT_DIR$/visual/rodape.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/rodape_sistema.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/smart_wizard.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/sugestoes.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visual/teste" beforeDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/visual/composer.json</pharConfigPath>
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="2117157232">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.0" value="1" />
+          <entry key="project.open.time.5" value="1" />
+          <entry key="project.opened" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="php" value="54" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="PHP" value="54" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/index.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="729">
+              <caret line="103" column="38" selection-start-line="103" selection-start-column="38" selection-end-line="103" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/index.php" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths>
+      <path value="$PROJECT_DIR$/visual/bower_components/Flot/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/bootstrap-datepicker/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/bootstrap-daterangepicker/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/bootstrap/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/chart.js/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/ckeditor/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/eve-raphael/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/ion.rangeSlider/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/jquery-knob/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/jquery-slimscroll/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/jquery-ui/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/morris.js/package.json" />
+      <path value="$PROJECT_DIR$/visual/bower_components/select2/package.json" />
+      <path value="$PROJECT_DIR$/visual/package.json" />
+    </packageJsonPaths>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-56" />
+    <option name="y" value="-15" />
+    <option name="width" value="1400" />
+    <option name="height" value="820" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="siscontrat2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="siscontrat2" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../promac" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9bd48a8d-6659-4328-b560-3cac114f992a" name="Default Changelist" comment="" />
+      <created>1535982740305</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1535982740305</updated>
+      <workItem from="1535982741684" duration="2031000" />
+      <workItem from="1536063864129" duration="928000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="2959000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25321338" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="10" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Remote Host" order="3" />
+      <window_info anchor="right" id="Database" order="4" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="729">
+          <caret line="103" column="38" selection-start-line="103" selection-start-column="38" selection-end-line="103" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
