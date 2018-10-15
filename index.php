@@ -1,5 +1,4 @@
 <?php
-
 include "funcoes/funcoesGerais.php";
 require "funcoes/funcoesConecta.php";
 
@@ -33,23 +32,20 @@ if(isset($_POST['login']))
 				gravarLog($sql);
 			}
 			else
-
 			{
-			$mensagem = "<font color='#FF0000'><strong>A senha está incorreta!</strong></font>";
-
+			$mensagem = "<span style=\"color: #FF0000; \"><strong>A senha está incorreta!</strong></span>";
 			}
 		}
 		else
 		{
-			$mensagem = "<font color='#FF0000'><strong>O usuário não existe.</strong></font>";
+			$mensagem = "<span style=\"color: #FF0000; \"><strong>O usuário não existe.</strong></span>";
 		}
 	}
 	else
 	{
-		$mensagem = "<font color='#FF0000'><strong>Erro no banco de dados!</strong></font>";
+		$mensagem = "<span style=\"color: #FF0000; \"><strong>Erro no banco de dados!</strong></span>";
 	}
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +53,7 @@ if(isset($_POST['login']))
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 2 | Log in</title>
+  <title>SisContrat | Log in</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -83,14 +79,11 @@ if(isset($_POST['login']))
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
-    <div class="login-logo">
-        <a href="../../index2.html"><b>SisContrat</b></a>
-    </div>
+    <div class="login-logo"><b>SisContrat</b></div>
     <!-- /.login-logo -->
     <div class="login-box-body">
         <p class="login-box-msg"><?php if(isset($mensagem)){ echo $mensagem; } ?></p>
-
-        <form action="../../index2.html" method="post">
+        <form action="index.php" method="post">
             <div class="form-group has-feedback">
                 <label>Usuário</label>
                 <input type="text" name="login" class="form-control" maxlength="7">
@@ -109,10 +102,8 @@ if(isset($_POST['login']))
                 <!-- /.col -->
             </div>
         </form>
-
         <p></p>
         Não possui cadastro? <a href="https://goo.gl/dzmcfB" class="text-center">Clique aqui.</a>
-
     </div>
     <!-- /.login-box-body -->
 </div>
