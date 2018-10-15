@@ -1,3 +1,7 @@
+<?php
+//geram o insert pro framework da igsis
+$pasta = "?perfil=evento&p=";
+?>
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -6,8 +10,8 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">EVENTO</li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> <span>Novo</span></a></li>
-            <li><a href="?perfil=evento"><i class="fa fa-circle-o"></i> <span>Carregar evento gravado</span></a></li>
+            <li><a href="<?= $pasta ?>evento_add"><i class="fa fa-circle-o"></i> <span>Novo</span></a></li>
+            <li><a href="<?= $pasta ?>evento_edit"><i class="fa fa-circle-o"></i> <span>Carregar evento gravado</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Acompanhar pedidos enviados</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Acompanhar eventos enviados</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Buscar no CAPAC</span></a></li>
