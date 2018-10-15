@@ -17,7 +17,7 @@ $query_avisos = mysqli_query($con,$sql_avisos);
     <!-- Main content -->
     <section class="content">
 
-        <!-- START ACCORDION & CAROUSEL-->
+        <!-- START ACCORDION-->
         <h2 class="page-header">Mural de Atualizações</h2>
 
         <div class="row">
