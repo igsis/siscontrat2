@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9bd48a8d-6659-4328-b560-3cac114f992a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/perfil/evento.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/perfil/includes/menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/perfil/includes/menu.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/perfil/includes/menu_geral.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/perfil/inicio.php" beforeDir="false" afterPath="$PROJECT_DIR$/perfil/inicio.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/perfil/m_eventos/includes/menu_evento.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/perfil/m_eventos/includes/menu_evento_footer.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/perfil/perfil.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/perfil/evento/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/perfil/evento/index.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -63,13 +56,13 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="php" value="683" />
+          <entry key="php" value="722" />
           <entry key="txt" value="21" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PHP" value="683" />
+          <entry key="PHP" value="722" />
           <entry key="PLAIN_TEXT" value="21" />
         </counts>
       </usages-collector>
@@ -139,8 +132,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/perfil/evento/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="274">
-              <caret line="23" column="54" selection-start-line="23" selection-start-column="54" selection-end-line="23" selection-end-column="54" />
+            <state relative-caret-position="168">
+              <caret line="7" column="27" lean-forward="true" selection-start-line="7" selection-start-column="27" selection-end-line="7" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -277,6 +270,13 @@
               <item name="perfil" type="462c0819:PsiDirectoryNode" />
               <item name="evento" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="siscontrat2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="siscontrat2" type="462c0819:PsiDirectoryNode" />
+              <item name="perfil" type="462c0819:PsiDirectoryNode" />
+              <item name="evento" type="462c0819:PsiDirectoryNode" />
+              <item name="includes" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -321,23 +321,23 @@
       <updated>1535982740305</updated>
       <workItem from="1535982741684" duration="2031000" />
       <workItem from="1536063864129" duration="928000" />
-      <workItem from="1539614154322" duration="13818000" />
+      <workItem from="1539614154322" duration="14506000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16777000" />
+    <option name="totallyTimeSpent" value="17465000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17397882" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17397882" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Database Console" weight="0.3295082" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3295082" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -542,8 +542,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/perfil/evento/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="23" column="54" selection-start-line="23" selection-start-column="54" selection-end-line="23" selection-end-column="54" />
+        <state relative-caret-position="168">
+          <caret line="7" column="27" lean-forward="true" selection-start-line="7" selection-start-column="27" selection-end-line="7" selection-end-column="27" />
         </state>
       </provider>
     </entry>

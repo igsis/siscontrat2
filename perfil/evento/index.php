@@ -1,5 +1,5 @@
 <?php
-include "includes/menu.php";
+include "includes/menu_principal.php";
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -20,16 +20,14 @@ include "includes/menu.php";
                             <div class="panel box box-primary">
                                 <div class="box-header with-border">
                                     <h4 class="box-title">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                                            Evento ABC
-                                        </a>
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Evento ABC</a>
                                     </h4>
                                 </div>
                                 <div id="collapseOne" class="panel-collapse collapse in">
                                     <div class="box-body">
-                                       <p>Enviado por: Lorelei Lourenço (Secretaria Municipal de Cultura) em: 06/06/2017</p>
-                                        <p>Data: 10/06/2017</p>
-                                        <p>Local: Biblioteca Nuto Sant’anna (CSMB)</p>
+                                        <p><b>Enviado por:</b> Lorelei Lourenço (Secretaria Municipal de Cultura) <b>em:</b> 06/06/2017</p>
+                                        <p><b>Data:</b> 10/06/2017</p>
+                                        <p><b>Local:</b> Biblioteca Nuto Sant’anna (CSMB)</p>
                                     </div>
                                 </div>
                             </div>
