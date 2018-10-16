@@ -1,4 +1,11 @@
 <?php
+//Imprime erros com o banco
+@ini_set('display_errors', '1');
+error_reporting(E_ALL);
+
+//define a session como 60 min
+session_cache_expire(60);
+
 //carrega as funcoes gerais
 require "../funcoes/funcoesConecta.php";
 require "../funcoes/funcoesGerais.php";
