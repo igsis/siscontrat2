@@ -322,10 +322,15 @@ date_default_timezone_set("Brazil/East");
 	}
 
 
-	function geraOpcaoBancos($tabela,$select)
+	function geraOpcaoUsuario($tabela, $cargo,$select)
 	{
 		//gera os options de um select
-		$sql = "SELECT * FROM $tabela ORDER BY codigoBanco ASC";
+        if($cargo == 1){
+            $sql = "SELECT * FROM $tabela WHERE fiscal = 1 AND publicado = 1 ORDER BY 2";
+        }else{
+            $sql = "SELECT * FROM $tabela WHERE fiscal = 0 AND publicado = 1 ORDER BY 2";
+        }
+
 
 		$con = bancoMysqli();
 		$query = mysqli_query($con,$sql);

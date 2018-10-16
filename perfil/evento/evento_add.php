@@ -1,87 +1,116 @@
 <?php
+$con = bancoMysqli();
 include "includes/menu_principal.php";
 ?>
 
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Main content -->
     <section class="content">
 
-        <!-- START FORM-->
         <h2 class="page-header">Cadastro de Evento</h2>
 
         <div class="row">
             <div class="col-md-12">
-                <!-- general form elements -->
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Informações Gerais</h3>
                     </div>
-                    <!-- /.box-header -->
-                    <!-- form start -->
                     <form role="form">
                         <div class="box-body">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Nome do evento</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                                <label for="nomeEvento">Nome do evento</label>
+                                <input type="text" class="form-control" id="nomeEvento" name="nomeEvento"
+                                       placeholder="Digite o nome do evento" maxlength="240">
                             </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Tipo de relação jurídica</label>
+                                    <select class="form-control" name="relacaoJuridica">
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcao("relacao_juridicas", "");
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label>Projeto Especial</label>
+                                    <select class="form-control" name="projetoEspecial">
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcaoPublicado("projeto_especiais", "");
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="form-group">
-                                <label>Tipo de relação jurídica</label>
-                                <select class="form-control">
-                                    <option>option 1</option>
-                                    <option>option 2</option>
-                                    <option>option 3</option>
-                                    <option>option 4</option>
-                                    <option>option 5</option>
-                                </select>
+                                <label for="sinopse">Sinopse</label>
+                                <textarea name="sinopse" id="sinopse" class="form-control" rows="5"></textarea>
                             </div>
 
                             <div class="row ">
-                                <div class="form-group col-md-3">
-                                    <label for="exampleInputEmail1">Nome do evento</label>
-                                    <input type="text" class="form-control" placeholder=".col-xs-3">
+                                <div class="form-group col-md-4">
+                                    <label for="tipoEvento">Tipo do Evento</label>
+                                    <select class="form-control" name="tipo">
+                                        <option value="">Selecione uma opção...</option>
+                                        <option value="1">Atração</option>
+                                        <option value="2">Oficina</option>
+                                        <option value="3">Filme</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label>Fiscal</label>
+                                    <select class="form-control" name="fiscal">
+                                        <option value="">Selecione um fiscal...</option>
+                                        <?php
+                                        geraOpcaoUsuario("usuarios", 1, "");
+                                        ?>
+                                    </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="exampleInputEmail1">Nome do evento</label>
-                                    <input type="text" class="form-control" placeholder=".col-xs-4">
-                                </div>
-                                <div class="form-group col-md-5">
-                                    <label for="exampleInputEmail1">Nome do evento</label>
-                                    <input type="text" class="form-control" placeholder=".col-xs-5">
+                                    <label>Suplente</label>
+                                    <select class="form-control" name="suplente">
+                                        <option value="">Selecione um suplente...</option>
+                                        <?php
+                                        geraOpcaoUsuario("usuarios", 1, "");
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="exampleInputPassword1">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputFile">File input</label>
-                                <input type="file" id="exampleInputFile">
+                                <div class="form-group">
+                                    <label for="original">É um evento original?</label> <br>
+                                    <label><input type="radio" name="original" value="1" checked> Sim </label>
+                                    <label><input type="radio" name="original" value="0"> Não </label>
+                                </div>
 
-                                <p class="help-block">Example block-level help text here.</p>
+                                <div class="form-group">
+                                    <label for="original">É contratado?</label> <br>
+                                    <label><input type="radio" name="contratacao" value="1" checked> Sim </label>
+                                    <label><input type="radio" name="contratacao" value="0"> Não </label>
+                                </div>
                             </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox"> Check me out
-                                </label>
+
+                            <div class="form-group">
+                                <label>Status do Evento</label>
+                                <select class="form-control" name="eventoStatus">
+                                    <option value="">Selecione uma opção...</option>
+                                    <?php
+                                        geraOpcao("evento_status", "");
+                                    ?>
+                                </select>
                             </div>
                         </div>
-                        <!-- /.box-body -->
 
                         <div class="box-footer">
                             <button type="submit" class="btn btn-default">Cancel</button>
-                            <button type="submit" class="btn btn-info pull-right">Sign in</button>
+                            <button type="submit" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
                     </form>
                 </div>
-                <!-- /.box -->
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
-        <!-- END ACCORDION & CAROUSEL-->
-
     </section>
-    <!-- /.content -->
 </div>
