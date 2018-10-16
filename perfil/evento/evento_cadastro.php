@@ -1,20 +1,18 @@
 <?php
-$con = bancoMysqli();
-include "includes/menu_principal.php";
+    $con = bancoMysqli();
+    include "includes/menu_principal.php";
 ?>
 
 <div class="content-wrapper">
     <section class="content">
 
         <h2 class="page-header">Cadastro de Evento</h2>
-
-        <div class="row">
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Informações Gerais</h3>
                     </div>
-                    <form role="form">
+                    <form method="POST" action="?perfil=evento&p=evento_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="nomeEvento">Nome do evento</label>
@@ -106,7 +104,7 @@ include "includes/menu_principal.php";
 
                         <div class="box-footer">
                             <button type="submit" class="btn btn-default">Cancel</button>
-                            <button type="submit" class="btn btn-info pull-right">Cadastrar</button>
+                            <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
                     </form>
                 </div>
