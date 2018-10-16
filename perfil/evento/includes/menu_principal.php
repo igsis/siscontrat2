@@ -10,8 +10,8 @@ $pasta = "?perfil=evento&p=";
         <ul class="sidebar-menu" data-widget="tree">
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">EVENTO</li>
-            <li><a href="<?= $pasta ?>evento_add"><i class="fa fa-circle-o"></i> <span>Novo</span></a></li>
-            <li><a href="<?= $pasta ?>evento_edit"><i class="fa fa-circle-o"></i> <span>Carregar evento gravado</span></a></li>
+            <li><a href="<?= $pasta ?>evento_cadatro"><i class="fa fa-circle-o"></i> <span>Novo</span></a></li>
+            <li><a href="<?= $pasta ?>evento_edita"><i class="fa fa-circle-o"></i> <span>Carregar evento gravado</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Acompanhar pedidos enviados</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Acompanhar eventos enviados</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Buscar no CAPAC</span></a></li>
