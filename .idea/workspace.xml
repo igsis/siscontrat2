@@ -4,7 +4,6 @@
     <list default="true" id="9bd48a8d-6659-4328-b560-3cac114f992a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/#modelagem/modelagem_nova_estrutura.mwb" beforeDir="false" afterPath="$PROJECT_DIR$/#modelagem/modelagem_nova_estrutura.mwb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/#modelagem/modelagem_nova_estrutura.mwb.bak" beforeDir="false" afterPath="$PROJECT_DIR$/#modelagem/modelagem_nova_estrutura.mwb.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/funcoes/funcoesGerais.php" beforeDir="false" afterPath="$PROJECT_DIR$/funcoes/funcoesGerais.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/perfil/evento/evento_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/perfil/evento/evento_add.php" afterDir="false" />
     </list>
@@ -106,7 +105,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/perfil/evento/evento_add.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="389">
+            <state relative-caret-position="-304">
               <caret line="60" column="98" selection-start-line="60" selection-start-column="98" selection-end-line="60" selection-end-column="98" />
             </state>
           </provider>
@@ -275,12 +274,12 @@
       <workItem from="1535982741684" duration="2031000" />
       <workItem from="1536063864129" duration="928000" />
       <workItem from="1539614154322" duration="16814000" />
-      <workItem from="1539704066887" duration="5704000" />
+      <workItem from="1539704066887" duration="6396000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25477000" />
+    <option name="totallyTimeSpent" value="26169000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -451,7 +450,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/perfil/evento/evento_add.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
+        <state relative-caret-position="-304">
           <caret line="60" column="98" selection-start-line="60" selection-start-column="98" selection-end-line="60" selection-end-column="98" />
         </state>
       </provider>
