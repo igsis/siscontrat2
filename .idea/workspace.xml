@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9bd48a8d-6659-4328-b560-3cac114f992a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/perfil/evento/includes/menu_principal.php" beforeDir="false" afterPath="$PROJECT_DIR$/perfil/evento/includes/menu_principal.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visual/cabecalho.php" beforeDir="false" afterPath="$PROJECT_DIR$/visual/cabecalho.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/#modelagem/modelagem_nova_estrutura.mwb" beforeDir="false" afterPath="$PROJECT_DIR$/#modelagem/modelagem_nova_estrutura.mwb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/#modelagem/modelagem_nova_estrutura.mwb.bak" beforeDir="false" afterPath="$PROJECT_DIR$/#modelagem/modelagem_nova_estrutura.mwb.bak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/funcoes/funcoesGerais.php" beforeDir="false" afterPath="$PROJECT_DIR$/funcoes/funcoesGerais.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/perfil/evento/evento_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/perfil/evento/evento_add.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -51,19 +54,21 @@
           <entry key="project.closed" value="2" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.1" value="1" />
+          <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="php" value="868" />
+          <entry key="php" value="1715" />
           <entry key="txt" value="21" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PHP" value="868" />
+          <entry key="HTML" value="1" />
+          <entry key="PHP" value="1714" />
           <entry key="PLAIN_TEXT" value="21" />
         </counts>
       </usages-collector>
@@ -71,7 +76,7 @@
         <counts>
           <entry key="html" value="6" />
           <entry key="json" value="1" />
-          <entry key="php" value="24" />
+          <entry key="php" value="30" />
           <entry key="png" value="1" />
           <entry key="sql" value="2" />
           <entry key="usuarios" value="1" />
@@ -83,76 +88,26 @@
           <entry key="HTML" value="6" />
           <entry key="Image" value="1" />
           <entry key="JSON" value="1" />
-          <entry key="PHP" value="24" />
+          <entry key="PHP" value="30" />
           <entry key="Scratch" value="2" />
         </counts>
       </usages-collector>
+      <usages-collector id="statistics.vcs.git.usages" />
+      <usages-collector id="statistics.php.new.class" />
+      <usages-collector id="statistics.php.rename.constructor" />
+      <usages-collector id="statistics.php.composer.command.options" />
+      <usages-collector id="statistics.js.language.service.starts" />
+      <usages-collector id="statistics.php.composer.actions" />
+      <usages-collector id="statistics.php.new.test" />
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/visual/cabecalho.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
-              <caret line="48" column="66" lean-forward="true" selection-start-line="48" selection-start-column="66" selection-end-line="48" selection-end-column="66" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/perfil/inicio.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="96">
-              <caret line="19" column="8" lean-forward="true" selection-start-line="19" selection-start-column="8" selection-end-line="101" selection-end-column="40" />
-              <folding>
-                <element signature="e#524#798#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/perfil/includes/menu.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="9" column="39" selection-start-line="9" selection-start-column="39" selection-end-line="9" selection-end-column="39" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/perfil/evento/index.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="24">
-              <caret line="1" column="27" lean-forward="true" selection-start-line="1" selection-start-column="27" selection-end-line="1" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/visual/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8145">
-              <caret line="1032" column="22" selection-start-line="1032" selection-start-column="22" selection-end-line="1032" selection-end-column="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/visual/pages/forms/general.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="576" column="34" lean-forward="true" selection-start-line="576" selection-start-column="34" selection-end-line="587" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/perfil/evento/evento_add.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="466">
-              <caret line="52" column="28" selection-start-line="52" selection-start-column="28" selection-end-line="52" selection-end-column="28" />
+            <state relative-caret-position="389">
+              <caret line="60" column="98" selection-start-line="60" selection-start-column="98" selection-end-line="60" selection-end-column="98" />
             </state>
           </provider>
         </entry>
@@ -168,6 +123,7 @@
       <find>&lt;select</find>
       <find>.col-xs</find>
       <find>footer</find>
+      <find>geraOpcao</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -190,6 +146,7 @@
         <option value="$PROJECT_DIR$/perfil/evento/index.php" />
         <option value="$PROJECT_DIR$/perfil/evento/includes/menu_principal.php" />
         <option value="$PROJECT_DIR$/visual/cabecalho.php" />
+        <option value="$PROJECT_DIR$/funcoes/funcoesGerais.php" />
         <option value="$PROJECT_DIR$/perfil/evento/evento_add.php" />
       </list>
     </option>
@@ -218,11 +175,14 @@
       <path value="$PROJECT_DIR$/visual/package.json" />
     </packageJsonPaths>
   </component>
+  <component name="PhpServers">
+    <servers />
+  </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="170" />
-    <option name="y" value="90" />
-    <option name="width" value="1027" />
-    <option name="height" value="547" />
+    <option name="x" value="860" />
+    <option name="y" value="-10" />
+    <option name="width" value="975" />
+    <option name="height" value="1049" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -257,6 +217,11 @@
             <path>
               <item name="siscontrat2" type="b2602c69:ProjectViewProjectNode" />
               <item name="siscontrat2" type="462c0819:PsiDirectoryNode" />
+              <item name="funcoes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="siscontrat2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="siscontrat2" type="462c0819:PsiDirectoryNode" />
               <item name="perfil" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -264,24 +229,6 @@
               <item name="siscontrat2" type="462c0819:PsiDirectoryNode" />
               <item name="perfil" type="462c0819:PsiDirectoryNode" />
               <item name="evento" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="siscontrat2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="siscontrat2" type="462c0819:PsiDirectoryNode" />
-              <item name="visual" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="siscontrat2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="siscontrat2" type="462c0819:PsiDirectoryNode" />
-              <item name="visual" type="462c0819:PsiDirectoryNode" />
-              <item name="pages" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="siscontrat2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="siscontrat2" type="462c0819:PsiDirectoryNode" />
-              <item name="visual" type="462c0819:PsiDirectoryNode" />
-              <item name="pages" type="462c0819:PsiDirectoryNode" />
-              <item name="forms" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -328,20 +275,20 @@
       <workItem from="1535982741684" duration="2031000" />
       <workItem from="1536063864129" duration="928000" />
       <workItem from="1539614154322" duration="16814000" />
+      <workItem from="1539704066887" duration="5704000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19773000" />
+    <option name="totallyTimeSpent" value="25477000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17397882" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17651007" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Database Console" weight="0.3295082" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3295082" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -354,6 +301,7 @@
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" weight="0.3295082" />
+      <window_info anchor="bottom" id="Database Console" order="12" weight="0.3295082" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -368,39 +316,14 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/visual_a/rodape.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="4" column="4" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="169" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/visual_a/cabecalho.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-326" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/visual_a/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1728" />
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/6ff47cd6-89ce-4596-a872-4e11cba23e9f/console.sql">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/fd71fddf-7566-4b0c-8f5b-b84b38198903/console.sql">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/visual_a/rodape.php" />
+    <entry file="file://$PROJECT_DIR$/visual_a/cabecalho.php" />
+    <entry file="file://$PROJECT_DIR$/visual_a/index.html" />
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/6ff47cd6-89ce-4596-a872-4e11cba23e9f/console.sql" />
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/fd71fddf-7566-4b0c-8f5b-b84b38198903/console.sql" />
     <entry file="file://$PROJECT_DIR$/visual/composer.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-72" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/funcoes/funcoesConecta.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="18" column="21" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
-        </state>
       </provider>
     </entry>
     <entry file="das://fd71fddf-7566-4b0c-8f5b-b84b38198903/schema/siscontrat/table/usuarios">
@@ -414,11 +337,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="5" column="26" selection-start-line="5" selection-start-column="26" selection-end-line="5" selection-end-column="26" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -432,96 +350,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/m_eventos/includes/menu_evento_footer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="17" column="1" lean-forward="true" selection-start-line="17" selection-start-column="1" selection-end-line="17" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/m_eventos/includes/menu_evento.php">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/perfil/m_eventos/includes/menu_evento_footer.php" />
+    <entry file="file://$PROJECT_DIR$/perfil/m_eventos/includes/menu_evento.php" />
     <entry file="file://$PROJECT_DIR$/visual/rodape.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-614">
           <caret line="2" column="47" selection-start-line="2" selection-start-column="47" selection-end-line="2" selection-end-column="47" />
-          <folding>
-            <element signature="e#89#95#0#HTML" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/perfil.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-182" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/contratos.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="24">
-          <caret line="1" selection-start-line="1" selection-end-line="12" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/m_eventos/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/evento/includes/menu_.php">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/evento/includes/menu_geral.php">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/evento/includes/menu_evento_footer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1104">
-          <caret line="67" column="49" lean-forward="true" selection-start-line="67" selection-start-column="49" selection-end-line="67" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/includes/menu.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="9" column="39" selection-start-line="9" selection-start-column="39" selection-end-line="9" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/includes/menu_geral.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/evento/includes/menu.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="8" column="59" lean-forward="true" selection-start-line="8" selection-start-column="59" selection-end-line="8" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/inicio.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="19" column="8" lean-forward="true" selection-start-line="19" selection-start-column="8" selection-end-line="101" selection-end-column="40" />
-          <folding>
-            <element signature="e#524#798#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/perfil/perfil.php" />
+    <entry file="file://$PROJECT_DIR$/perfil/contratos.php" />
+    <entry file="file://$PROJECT_DIR$/perfil/m_eventos/index.php" />
+    <entry file="file://$PROJECT_DIR$/perfil/evento/includes/menu_.php" />
+    <entry file="file://$PROJECT_DIR$/perfil/evento/includes/menu_geral.php" />
+    <entry file="file://$PROJECT_DIR$/perfil/evento/includes/menu_evento_footer.php" />
+    <entry file="file://$PROJECT_DIR$/perfil/includes/menu_geral.php" />
+    <entry file="file://$PROJECT_DIR$/perfil/evento/includes/menu.php" />
     <entry file="file://$PROJECT_DIR$/visual/pages/UI/general.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="1050" column="6" selection-start-line="1050" selection-start-column="6" selection-end-line="1181" selection-end-column="38" />
-          <folding>
-            <element signature="n#div#5;n#section#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -532,13 +381,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/perfil/evento/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="24">
-          <caret line="1" column="27" lean-forward="true" selection-start-line="1" selection-start-column="27" selection-end-line="1" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/perfil/evento/includes/menu_principal.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="312">
@@ -546,31 +388,71 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/visual/pages/forms/general.html">
+    <entry file="file://$PROJECT_DIR$/visual/cabecalho.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="576" column="34" lean-forward="true" selection-start-line="576" selection-start-column="34" selection-end-line="587" selection-end-column="20" />
+        <state relative-caret-position="1008">
+          <caret line="48" column="65" selection-start-line="48" selection-start-column="65" selection-end-line="48" selection-end-column="65" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/visual/cabecalho.php">
+    <entry file="file://$PROJECT_DIR$/perfil/inicio.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="48" column="66" lean-forward="true" selection-start-line="48" selection-start-column="66" selection-end-line="48" selection-end-column="66" />
+        <state relative-caret-position="399">
+          <caret line="19" column="8" selection-start-line="19" selection-start-column="8" selection-end-line="101" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/perfil/includes/menu.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="9" column="39" selection-start-line="9" selection-start-column="39" selection-end-line="9" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/perfil/evento/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="21">
+          <caret line="1" column="27" selection-start-line="1" selection-start-column="27" selection-end-line="1" selection-end-column="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/visual/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8145">
+        <state relative-caret-position="21672">
           <caret line="1032" column="22" selection-start-line="1032" selection-start-column="22" selection-end-line="1032" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/visual/pages/forms/general.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12096">
+          <caret line="576" column="34" selection-start-line="576" selection-start-column="34" selection-end-line="587" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funcoes/funcoesVerifica.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-630" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funcoes/funcoesConecta.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="18" column="21" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funcoes/funcoesGerais.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="328" column="76" selection-start-line="328" selection-start-column="76" selection-end-line="328" selection-end-column="76" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/perfil/evento/evento_add.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="466">
-          <caret line="52" column="28" selection-start-line="52" selection-start-column="28" selection-end-line="52" selection-end-column="28" />
+        <state relative-caret-position="389">
+          <caret line="60" column="98" selection-start-line="60" selection-start-column="98" selection-end-line="60" selection-end-column="98" />
         </state>
       </provider>
     </entry>
