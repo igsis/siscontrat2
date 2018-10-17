@@ -1330,11 +1330,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `siscontrat`.`tipo_atracoes`
+-- Table `siscontrat`.`categoria_atracoes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siscontrat`.`tipo_atracoes` (
+CREATE TABLE IF NOT EXISTS `siscontrat`.`categoria_atracoes` (
   `id` TINYINT(2) NOT NULL AUTO_INCREMENT COMMENT '',
-  `tipo_atracao` VARCHAR(45) NOT NULL COMMENT '',
+  `categoria_atracao` VARCHAR(45) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
@@ -1345,7 +1345,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `siscontrat`.`atracoes` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `nome_atracao` VARCHAR(100) NOT NULL COMMENT '',
-  `tipo_atracacao_id` TINYINT(2) NOT NULL COMMENT '',
+  `categoria_atracacao_id` TINYINT(2) NOT NULL COMMENT '',
   `ficha_tecnica` LONGTEXT NOT NULL COMMENT '',
   `integrantes` LONGTEXT NOT NULL COMMENT '',
   `classificacao_indicativa_id` TINYINT(1) NOT NULL COMMENT '',
@@ -1358,7 +1358,7 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`atracoes` (
   PRIMARY KEY (`id`)  COMMENT '',
   INDEX `fk_atracoes_classificacao_indicativas1_idx` (`classificacao_indicativa_id` ASC)  COMMENT '',
   INDEX `fk_atracoes_produtores_idx` (`produtor_id` ASC)  COMMENT '',
-  INDEX `fk_atracoes_tipo_atracoes_idx` (`tipo_atracacao_id` ASC)  COMMENT '',
+  INDEX `fk_atracoes_tipo_atracoes_idx` (`categoria_atracacao_id` ASC)  COMMENT '',
   CONSTRAINT `fk_atracoes_classificacao_indicativas1`
     FOREIGN KEY (`classificacao_indicativa_id`)
     REFERENCES `siscontrat`.`classificacao_indicativas` (`id`)
@@ -1369,9 +1369,9 @@ CREATE TABLE IF NOT EXISTS `siscontrat`.`atracoes` (
     REFERENCES `siscontrat`.`produtores` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_atracoes_tipo_atracoes`
-    FOREIGN KEY (`tipo_atracacao_id`)
-    REFERENCES `siscontrat`.`tipo_atracoes` (`id`)
+  CONSTRAINT `fk_atracoes_categoria_atracoes`
+    FOREIGN KEY (`categoria_atracacao_id`)
+    REFERENCES `siscontrat`.`categoria_atracoes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
