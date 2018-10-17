@@ -1,55 +1,6 @@
 <?php
     $con = bancoMysqli();
     include "includes/menu_principal.php";
-
-    if (isset($_POST['cadastra'])){
-
-        $tituloFilme = $_POST['tituloFilme'];
-        $tituloOriginal = $_POST['tituloOriginal'];
-        $paisOrigem = $_POST['paisOrigem'];
-        $paisCoProducao = $_POST['paisCoProducao'];
-        $anoProducao = $_POST['anoProducao'];
-        $genero = $_POST['genero'];
-        $bitola = $_POST['bitola'];
-        $direcao = $_POST['direcao'];
-        $sinopse = $POST['sinopse'];
-        $elenco = $_POST['elenco'];
-        $duracao = $_POST['duracao'];
-        $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
-        $link = $_POST['link'];
-    }
-
-    $sql = "INSERT INTO filmes
-            (titulo,
-            titulo_original, 
-            ano_producao, 
-            genero, 
-            bitola, 
-            direcao, 
-            sinopse, 
-            elenco,
-            duracao,
-            link_trailer,
-            classificacao_indicativa_id,
-            pais_origem_id,
-            pais_origem_coproducao_id
-            )
-            VALUES
-            (
-              '$tituloFilme',
-              '$tituloOriginal',
-              '$anoProducao',
-              '$genero',
-              '$bitola',
-              '$direcao',
-              '$sinopse',
-              '$elenco',
-              '$duracao',
-              '$link',
-              '$classidicacaoIndicativa',
-              '$paisOrigem',
-              '$paisCoProducao'
-            )";
 ?>
 
 <div class="content-wrapper">
@@ -152,4 +103,57 @@
             </div>
         </div>
     </section>
+
+<?php
+
+if (isset($_POST['cadastra'])){
+
+    $tituloFilme = $_POST['tituloFilme'];
+    $tituloOriginal = $_POST['tituloOriginal'];
+    $paisOrigem = $_POST['paisOrigem'];
+    $paisCoProducao = $_POST['paisCoProducao'];
+    $anoProducao = $_POST['anoProducao'];
+    $genero = $_POST['genero'];
+    $bitola = $_POST['bitola'];
+    $direcao = $_POST['direcao'];
+    $sinopse = $_POST['sinopse'];
+    $elenco = $_POST['elenco'];
+    $duracao = $_POST['duracao'];
+    $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
+    $link = $_POST['link'];
+}
+
+$sql = "INSERT INTO filmes 
+            (titulo,
+            titulo_original, 
+            ano_producao, 
+            genero, 
+            bitola, 
+            direcao, 
+            sinopse, 
+            elenco,
+            duracao,
+            link_trailer,
+            classificacao_indicativa_id,
+            pais_origem_id,
+            pais_origem_coproducao_id
+            )
+            VALUES
+            (
+              '$tituloFilme',
+              '$tituloOriginal',
+              '$anoProducao',
+              '$genero',
+              '$bitola',
+              '$direcao',
+              '$sinopse',
+              '$elenco',
+              '$duracao',
+              '$link',
+              '$classidicacaoIndicativa',
+              '$paisOrigem',
+              '$paisCoProducao'
+            )";
+
+?>
 </div>
