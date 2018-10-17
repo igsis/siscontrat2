@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 include "includes/menu_principal.php";
 
-if (isset($_POST['cadastra'])) {
+if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $nomeEvento = $_POST['nomeEvento'];
     $relacaoJuridica = $_POST['relacaoJuridica'];
     $projetoEspecial = $_POST['projetoEspecial'];
@@ -14,6 +14,9 @@ if (isset($_POST['cadastra'])) {
     $original = $_POST['originall'];
     $contratacao = $_POST['contratacao'];
     $eventoStatus = $_POST['eventoStatus'];
+}
+
+if (isset($_POST['cadastra'])) {
 
     $sql = "INSERT INTO eventos (nome_evento,
                                  relacao_juridica_id, 
@@ -36,16 +39,39 @@ if (isset($_POST['cadastra'])) {
                                   '$usuario',
                                   '$contratacao',
                                   '$original',
-                                  '$$eventoStatus')";
+                                  '$eventoStatus')";
 
     if(mysqli_query($con, $sql))
     {
-        $mensagem = "<font color='#01DF3A'><strong>Cadastrado com sucesso!</strong></font>";
+        $idEvento = recuperaUltimo("eventos");
+        $mensagem = "
+            <div class=\"col-md-12\">
+                <div class=\"box box-success box-solid\">
+                    <div class=\"box-header with-border\">
+                        <h3 class=\"box-title\">Cadastrado com sucesso</h3>
+                        <div class=\"box-tools pull-right\">
+                            <button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"remove\"><i class=\"fa fa-times\"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>";
         //gravarLog($sql_insere);
     }else{
-        $mensagem = "<font color='#FF0000'><strong>Erro ao gravar!</strong></font>";
+         $mensagem = "
+            <div class=\"col-md-12\">
+                <div class=\"box box-danger box-solid\">
+                    <div class=\"box-header with-border\">
+                        <h3 class=\"box-title\">Erro ao gravar! Tente novamente</h3>
+                        <div class=\"box-tools pull-right\">
+                            <button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"remove\"><i class=\"fa fa-times\"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>";
     }
 }
+
+$evento = recuperaDados("eventos","id",$idEvento);
 ?>
 
 <div class="content-wrapper">
@@ -59,6 +85,11 @@ if (isset($_POST['cadastra'])) {
                     <div class="box-header with-border">
                         <h3 class="box-title">Informações Gerais</h3>
                     </div>
+
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                    </div>
+
                     <form method="POST" action="?perfil=evento&p=evento_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
