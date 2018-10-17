@@ -1,19 +1,19 @@
 <?php
 $con = bancoMysqli();
-include "includes/menu_principal.php";
+include "includes/menu_interno.php";
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $nomeEvento = $_POST['nomeEvento'];
-    $relacaoJuridica = $_POST['relacaoJuridica'];
-    $projetoEspecial = $_POST['projetoEspecial'];
+    $relacao_juridica_id = $_POST['relacaoJuridica'];
+    $projeto_especial_id = $_POST['projetoEspecial'];
     $sinopse = $_POST['sinopse'];
     $tipo = $_POST['tipo'];
-    $fiscal = $_POST['fiscal'];
-    $suplente = $_POST['suplente'];
+    $fiscal_id = $_POST['fiscal'];
+    $suplente_id = $_POST['suplente'];
     $usuario = $_SESSION['idUser'];
     $original = $_POST['originall'];
     $contratacao = $_POST['contratacao'];
-    $eventoStatus = $_POST['eventoStatus'];
+    $eventoStatus = "1";
 }
 
 if (isset($_POST['cadastra'])) {
@@ -30,12 +30,12 @@ if (isset($_POST['cadastra'])) {
                                  original, 
                                  evento_status_id) 
                           VALUES ('$nomeEvento',
-                                  '$relacaoJuridica',
-                                  '$projetoEspecial',
+                                  '$relacao_juridica_id',
+                                  '$projeto_especial_id',
                                   '$tipo',
                                   '$sinopse',
-                                  '$fiscal',
-                                  '$suplente',
+                                  '$fiscal_id',
+                                  '$suplente_id',
                                   '$usuario',
                                   '$contratacao',
                                   '$original',
@@ -44,48 +44,46 @@ if (isset($_POST['cadastra'])) {
     if(mysqli_query($con, $sql))
     {
         $idEvento = recuperaUltimo("eventos");
-        $mensagem = "
-            <div class=\"col-md-12\">
-                <div class=\"box box-success box-solid\">
-                    <div class=\"box-header with-border\">
-                        <h3 class=\"box-title\">Cadastrado com sucesso</h3>
-                        <div class=\"box-tools pull-right\">
-                            <button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"remove\"><i class=\"fa fa-times\"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>";
-        //gravarLog($sql_insere);
+        $mensagem = mensagem("success","Cadastrado com suscesso");
+        //gravarLog($sql);
     }else{
-         $mensagem = "
-            <div class=\"col-md-12\">
-                <div class=\"box box-danger box-solid\">
-                    <div class=\"box-header with-border\">
-                        <h3 class=\"box-title\">Erro ao gravar! Tente novamente</h3>
-                        <div class=\"box-tools pull-right\">
-                            <button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"remove\"><i class=\"fa fa-times\"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>";
+        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente");
+        //gravarLog($sql);
+    }
+}
+
+if(isset($_POST['edita'])){
+    $idEvento = $_POST['idEvento'];
+    $sql = "UPDATE eventos SET nome_evento='$nomeEvento', relacao_juridica_id = '$relacao_juridica_id', projeto_especial_id = '$projeto_especial_id', tipo = '$tipo', sinopse = '$sinopse', fiscal_id = '$fiscal_id', suplente_id = '$suplente_id', contratacao = '$contratacao', original = '$original' WHERE id = '$idEvento'";
+    If(mysqli_query($con,$sql)){
+        $mensagem = mensagem("success","Cadastrado com suscesso");
+        //gravarLog($sql);
+    }else{
+        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente");
+        //gravarLog($sql);
     }
 }
 
 $evento = recuperaDados("eventos","id",$idEvento);
 ?>
 
+<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
+    <!-- Main content -->
     <section class="content">
 
+        <!-- START FORM-->
         <h2 class="page-header">Cadastro de Evento</h2>
 
         <div class="row">
             <div class="col-md-12">
+                <!-- general form elements -->
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Informações Gerais</h3>
                     </div>
-
+                    <!-- /.box-header -->
+                    <!-- form start -->
                     <div class="row" align="center">
                         <?php if(isset($mensagem)){echo $mensagem;};?>
                     </div>
@@ -95,25 +93,25 @@ $evento = recuperaDados("eventos","id",$idEvento);
                             <div class="form-group">
                                 <label for="nomeEvento">Nome do evento</label>
                                 <input type="text" class="form-control" id="nomeEvento" name="nomeEvento"
-                                       placeholder="Digite o nome do evento" maxlength="240">
+                                       placeholder="Digite o nome do evento" maxlength="240" value="<?= $evento['nome_evento']?>">
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label>Tipo de relação jurídica</label>
-                                    <select class="form-control" name="relacaoJuridica">
+                                    <label for="relacaoJuridica">Tipo de relação jurídica</label>
+                                    <select class="form-control" name="relacaoJuridica" id="relacaoJuridica">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao("relacao_juridicas", "");
+                                        geraOpcao("relacao_juridicas", $evento['relacao_juridica_id']);
                                         ?>
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                    <label>Projeto Especial</label>
-                                    <select class="form-control" name="projetoEspecial">
+                                    <label for="projetoEspecial">Projeto Especial</label>
+                                    <select class="form-control" id="projetoEspecial" name="projetoEspecial">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcaoPublicado("projeto_especiais", "");
+                                        geraOpcaoPublicado("projeto_especiais", $evento['projeto_especial_id']);
                                         ?>
                                     </select>
                                 </div>
@@ -121,13 +119,13 @@ $evento = recuperaDados("eventos","id",$idEvento);
 
                             <div class="form-group">
                                 <label for="sinopse">Sinopse</label>
-                                <textarea name="sinopse" id="sinopse" class="form-control" rows="5"></textarea>
+                                <textarea name="sinopse" id="sinopse" class="form-control" rows="5"><?= $evento['sinopse'] ?></textarea>
                             </div>
 
                             <div class="row ">
                                 <div class="form-group col-md-4">
-                                    <label for="tipoEvento">Tipo do Evento</label>
-                                    <select class="form-control" name="tipo">
+                                    <label for="tipo">Tipo do Evento</label>
+                                    <select class="form-control" id="tipo" name="tipo">
                                         <option value="">Selecione uma opção...</option>
                                         <option value="1">Atração</option>
                                         <option value="2">Oficina</option>
@@ -136,20 +134,20 @@ $evento = recuperaDados("eventos","id",$idEvento);
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label>Fiscal</label>
-                                    <select class="form-control" name="fiscal">
+                                    <label for="fiscal">Fiscal</label>
+                                    <select class="form-control" id="fiscal" name="fiscal">
                                         <option value="">Selecione um fiscal...</option>
                                         <?php
-                                        geraOpcaoUsuario("usuarios", 1, "");
+                                        geraOpcaoUsuario("usuarios", 1, $evento['fiscal_id']);
                                         ?>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Suplente</label>
-                                    <select class="form-control" name="suplente">
+                                    <label for="suplente">Suplente</label>
+                                    <select class="form-control" id="suplente" name="suplente">
                                         <option value="">Selecione um suplente...</option>
                                         <?php
-                                        geraOpcaoUsuario("usuarios", 1, "");
+                                        geraOpcaoUsuario("usuarios", 1, $evento['suplente_id']);
                                         ?>
                                     </select>
                                 </div>
@@ -158,8 +156,8 @@ $evento = recuperaDados("eventos","id",$idEvento);
                             <div class="form-group">
                                 <div class="form-group">
                                     <label for="original">É um evento original?</label> <br>
-                                    <label><input type="radio" name="original" value="1" checked> Sim </label>
-                                    <label><input type="radio" name="original" value="0"> Não </label>
+                                    <label><input type="radio" name="original" value="1" <?= $evento['original'] == 1 ? checked : NULL ?>> Sim </label>
+                                    <label><input type="radio" name="original" value="0" <?= $evento['original'] == 0 ? checked : NULL ?>> Não </label>
                                 </div>
 
                                 <div class="form-group">
@@ -167,16 +165,6 @@ $evento = recuperaDados("eventos","id",$idEvento);
                                     <label><input type="radio" name="contratacao" value="1" checked> Sim </label>
                                     <label><input type="radio" name="contratacao" value="0"> Não </label>
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Status do Evento</label>
-                                <select class="form-control" name="eventoStatus">
-                                    <option value="">Selecione uma opção...</option>
-                                    <?php
-                                    geraOpcao("evento_status", "");
-                                    ?>
-                                </select>
                             </div>
                         </div>
 
@@ -186,7 +174,13 @@ $evento = recuperaDados("eventos","id",$idEvento);
                         </div>
                     </form>
                 </div>
+                <!-- /.box -->
             </div>
+            <!-- /.col -->
         </div>
+        <!-- /.row -->
+        <!-- END ACCORDION & CAROUSEL-->
+
     </section>
+    <!-- /.content -->
 </div>

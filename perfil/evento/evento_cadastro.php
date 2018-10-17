@@ -1,17 +1,25 @@
 <?php
     $con = bancoMysqli();
-    include "includes/menu_principal.php";
+    include "includes/menu_interno.php";
 ?>
 
+<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
+    <!-- Main content -->
     <section class="content">
 
+        <!-- START FORM-->
         <h2 class="page-header">Cadastro de Evento</h2>
+
+        <div class="row">
             <div class="col-md-12">
+                <!-- general form elements -->
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Informações Gerais</h3>
+                        <h3 class="box-title">Infoemações Gerais</h3>
                     </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
                     <form method="POST" action="?perfil=evento&p=evento_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
@@ -108,7 +116,13 @@
                         </div>
                     </form>
                 </div>
+                <!-- /.box -->
             </div>
+            <!-- /.col -->
         </div>
+        <!-- /.row -->
+        <!-- END ACCORDION & CAROUSEL-->
+
     </section>
+    <!-- /.content -->
 </div>
