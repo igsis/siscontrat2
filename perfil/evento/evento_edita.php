@@ -156,14 +156,14 @@ $evento = recuperaDados("eventos","id",$idEvento);
                             <div class="form-group">
                                 <div class="form-group">
                                     <label for="original">É um evento original?</label> <br>
-                                    <label><input type="radio" name="original" value="1" <?= $evento['original'] == 1 ? checked : NULL ?>> Sim </label>
-                                    <label><input type="radio" name="original" value="0" <?= $evento['original'] == 0 ? checked : NULL ?>> Não </label>
+                                    <label><input type="radio" name="original" value="1" <?= $evento['original'] == 1 ? 'checked' : NULL ?>> Sim </label>
+                                    <label><input type="radio" name="original" value="0" <?= $evento['original'] == 0 ? 'checked' : NULL ?>> Não </label>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="original">É contratado?</label> <br>
-                                    <label><input type="radio" name="contratacao" value="1" checked> Sim </label>
-                                    <label><input type="radio" name="contratacao" value="0"> Não </label>
+                                    <label><input type="radio" name="contratacao" value="1" <?= $evento['contratacao'] == 1 ? 'checked' : NULL ?>> Sim </label>
+                                    <label><input type="radio" name="contratacao" value="0" <?= $evento['contratacao'] == 0 ? 'checked' : NULL ?>> Não </label>
                                 </div>
                             </div>
                         </div>
