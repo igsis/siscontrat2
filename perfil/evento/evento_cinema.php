@@ -1,6 +1,55 @@
 <?php
     $con = bancoMysqli();
     include "includes/menu_principal.php";
+
+    if (isset($_POST['cadastra'])){
+
+        $tituloFilme = $_POST['tituloFilme'];
+        $tituloOriginal = $_POST['tituloOriginal'];
+        $paisOrigem = $_POST['paisOrigem'];
+        $paisCoProducao = $_POST['paisCoProducao'];
+        $anoProducao = $_POST['anoProducao'];
+        $genero = $_POST['genero'];
+        $bitola = $_POST['bitola'];
+        $direcao = $_POST['direcao'];
+        $sinopse = $POST['sinopse'];
+        $elenco = $_POST['elenco'];
+        $duracao = $_POST['duracao'];
+        $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
+        $link = $_POST['link'];
+    }
+
+    $sql = "INSERT INTO filmes
+            (titulo,
+            titulo_original, 
+            ano_producao, 
+            genero, 
+            bitola, 
+            direcao, 
+            sinopse, 
+            elenco,
+            duracao,
+            link_trailer,
+            classificacao_indicativa_id,
+            pais_origem_id,
+            pais_origem_coproducao_id
+            )
+            VALUES
+            (
+              '$tituloFilme',
+              '$tituloOriginal',
+              '$anoProducao',
+              '$genero',
+              '$bitola',
+              '$direcao',
+              '$sinopse',
+              '$elenco',
+              '$duracao',
+              '$link',
+              '$classidicacaoIndicativa',
+              '$paisOrigem',
+              '$paisCoProducao'
+            )";
 ?>
 
 <div class="content-wrapper">
@@ -12,7 +61,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Inserir Filme</h3>
                     </div>
-                    <form method="POST" action="?perfil=evento&p=evento_edita" role="form">
+                    <form method="POST" action="?perfil=evento&p=evento_cinema" role="form">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="tituloFilme">Título do filme *:</label>
@@ -26,10 +75,11 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label>País de origem*:</label>
-                                    <select class="form-control" name="paisOrigem" required>
-                                        <select class="form-control" id="paisOrigem" name="paisOrigem" >
-
-                                        </select>
+                                    <select class="form-control" name="paisOrigem" id="paisOrigem" required>
+                                            <option value="">Selecione uma opção...</option>
+                                            <?php
+                                                geraOpcaoPublicado("paises", "");
+                                            ?>
                                     </select>
                                 </div>
 
@@ -37,9 +87,9 @@
                                     <label>País de origem (co-produção):</label>
                                     <select class="form-control" name="paisCoProducao" id="paisCoProducao">
                                         <option value="">Selecione uma opção...</option>
-                                        /* <?php
-                                        geraOpcaoPublicado("", "");
-                                        ?> */
+                                        <?php
+                                            geraOpcaoPublicado("paises", "");
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -75,12 +125,12 @@
                                     <input type="number" class="form-control" name="duracao" id="duracao">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="duracao">Classificação indicativa:</label>
-                                    <select class="form-control" name="paisCoProducao" id="paisCoProducao">
+                                    <label for="classidicacaoIndicativa">Classificação indicativa:</label>
+                                    <select class="form-control" name="classidicacaoIndicativa" id="classidicacaoIndicativa">
                                         <option value="">Selecione uma opção...</option>
-                                        /* <?php
-                                        geraOpcaoPublicado("", "");
-                                        ?> */
+                                        <?php
+                                            geraOpcaoPublicado("classificacao_indicativas", "", "");
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -90,6 +140,8 @@
                             </div>
 
                         </div>
+
+
 
                         <div class="box-footer">
                             <button type="submit" class="btn btn-default">Cancel</button>
