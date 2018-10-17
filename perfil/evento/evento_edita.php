@@ -11,7 +11,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $fiscal_id = $_POST['fiscal'];
     $suplente_id = $_POST['suplente'];
     $usuario = $_SESSION['idUser'];
-    $original = $_POST['originall'];
+    $original = $_POST['original'];
     $contratacao = $_POST['contratacao'];
     $eventoStatus = "1";
 }
@@ -21,7 +21,7 @@ if (isset($_POST['cadastra'])) {
     $sql = "INSERT INTO eventos (nome_evento,
                                  relacao_juridica_id, 
                                  projeto_especial_id, 
-                                 tipo, 
+                                 tipo_evento_id, 
                                  sinopse, 
                                  fiscal_id, 
                                  suplente_id, 
@@ -44,22 +44,22 @@ if (isset($_POST['cadastra'])) {
     if(mysqli_query($con, $sql))
     {
         $idEvento = recuperaUltimo("eventos");
-        $mensagem = mensagem("success","Cadastrado com suscesso");
+        $mensagem = mensagem("success","Cadastrado com suscesso!");
         //gravarLog($sql);
     }else{
-        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente");
+        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
 }
 
 if(isset($_POST['edita'])){
     $idEvento = $_POST['idEvento'];
-    $sql = "UPDATE eventos SET nome_evento='$nomeEvento', relacao_juridica_id = '$relacao_juridica_id', projeto_especial_id = '$projeto_especial_id', tipo = '$tipo', sinopse = '$sinopse', fiscal_id = '$fiscal_id', suplente_id = '$suplente_id', contratacao = '$contratacao', original = '$original' WHERE id = '$idEvento'";
+    $sql = "UPDATE eventos SET nome_evento='$nomeEvento', relacao_juridica_id = '$relacao_juridica_id', projeto_especial_id = '$projeto_especial_id', tipo_evento_id = '$tipo', sinopse = '$sinopse', fiscal_id = '$fiscal_id', suplente_id = '$suplente_id', contratacao = '$contratacao', original = '$original' WHERE id = '$idEvento'";
     If(mysqli_query($con,$sql)){
-        $mensagem = mensagem("success","Cadastrado com suscesso");
+        $mensagem = mensagem("success","Gravado com suscesso!");
         //gravarLog($sql);
     }else{
-        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente");
+        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
 }
@@ -90,6 +90,29 @@ $evento = recuperaDados("eventos","id",$idEvento);
 
                     <form method="POST" action="?perfil=evento&p=evento_edita" role="form">
                         <div class="box-body">
+
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="original">É um evento original?</label> <br>
+                                    <label><input type="radio" name="original" value="1" <?= $evento['original'] == 1 ? 'checked' : NULL ?>> Sim </label>
+                                    <label><input type="radio" name="original" value="0" <?= $evento['original'] == 0 ? 'checked' : NULL ?>> Não </label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="contratacao">Haverá contratação?</label> <br>
+                                    <label><input type="radio" name="contratacao" value="1" <?= $evento['contratacao'] == 1 ? 'checked' : NULL ?>> Sim </label>
+                                    <label><input type="radio" name="contratacao" value="0" <?= $evento['contratacao'] == 0 ? 'checked' : NULL ?>> Não </label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="tipo">Tipo do Evento</label>
+                                    <select class="form-control" id="tipo" name="tipo">
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcao("tipo_eventos", $evento['tipo_evento_id']);
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="nomeEvento">Nome do evento</label>
                                 <input type="text" class="form-control" id="nomeEvento" name="nomeEvento"
@@ -118,22 +141,14 @@ $evento = recuperaDados("eventos","id",$idEvento);
                             </div>
 
                             <div class="form-group">
-                                <label for="sinopse">Sinopse</label>
+                                <label for="sinopse">Sinopse</label><br/>
+                                <i>Esse campo deve conter uma breve descrição do que será apresentado no evento.</i>
+                                <p align="justify"><span style="color: gray; "><strong><i>Texto de exemplo:</strong><br/>Ana Cañas faz o show de lançamento do seu quarto disco, “Tô na Vida” (Som Livre/Guela Records). Produzido por Lúcio Maia (Nação Zumbi) em parceria com Ana e mixado por Mario Caldato Jr, é o primeiro disco totalmente autoral da carreira da cantora e traz parcerias com Arnaldo Antunes e Dadi entre outros.</span></i></p>
                                 <textarea name="sinopse" id="sinopse" class="form-control" rows="5"><?= $evento['sinopse'] ?></textarea>
                             </div>
 
                             <div class="row ">
-                                <div class="form-group col-md-4">
-                                    <label for="tipo">Tipo do Evento</label>
-                                    <select class="form-control" id="tipo" name="tipo">
-                                        <option value="">Selecione uma opção...</option>
-                                        <option value="1">Atração</option>
-                                        <option value="2">Oficina</option>
-                                        <option value="3">Filme</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="fiscal">Fiscal</label>
                                     <select class="form-control" id="fiscal" name="fiscal">
                                         <option value="">Selecione um fiscal...</option>
@@ -142,7 +157,7 @@ $evento = recuperaDados("eventos","id",$idEvento);
                                         ?>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="suplente">Suplente</label>
                                     <select class="form-control" id="suplente" name="suplente">
                                         <option value="">Selecione um suplente...</option>
@@ -152,25 +167,12 @@ $evento = recuperaDados("eventos","id",$idEvento);
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <div class="form-group">
-                                    <label for="original">É um evento original?</label> <br>
-                                    <label><input type="radio" name="original" value="1" <?= $evento['original'] == 1 ? 'checked' : NULL ?>> Sim </label>
-                                    <label><input type="radio" name="original" value="0" <?= $evento['original'] == 0 ? 'checked' : NULL ?>> Não </label>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="original">É contratado?</label> <br>
-                                    <label><input type="radio" name="contratacao" value="1" <?= $evento['contratacao'] == 1 ? 'checked' : NULL ?>> Sim </label>
-                                    <label><input type="radio" name="contratacao" value="0" <?= $evento['contratacao'] == 0 ? 'checked' : NULL ?>> Não </label>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-default">Cancel</button>
-                            <button type="submit" class="btn btn-info pull-right">Cadastrar</button>
+                            <button type="submit" class="btn btn-default">Cancelar</button>
+                            <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                            <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>
                     </form>
                 </div>
