@@ -63,6 +63,9 @@ if(isset($_POST['edita'])){
         //gravarLog($sql);
     }
 }
+if(isset($_POST['carregar'])){
+    $idEvento = $_POST['idEvento'];
+}
 
 $evento = recuperaDados("eventos","id",$idEvento);
 ?>
