@@ -3,10 +3,10 @@ $con = bancoMysqli();
 include "includes/menu_interno.php";
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-    $nomeEvento = $_POST['nomeEvento'];
+    $nomeEvento =  addslashes($_POST['nomeEvento']);
     $relacao_juridica_id = $_POST['relacaoJuridica'];
     $projeto_especial_id = $_POST['projetoEspecial'];
-    $sinopse = $_POST['sinopse'];
+    $sinopse =  addslashes($_POST['sinopse']);
     $tipo = $_POST['tipo'];
     $fiscal_id = $_POST['fiscal'];
     $suplente_id = $_POST['suplente'];
@@ -45,7 +45,7 @@ if (isset($_POST['cadastra'])) {
     {
         $idEvento = recuperaUltimo("eventos");
         $_SESSION['idEvento'] = $idEvento;
-        $mensagem = mensagem("success","Cadastrado com suscesso!");
+        $mensagem = mensagem("success","Cadastrado com sucesso!");
         //gravarLog($sql);
     }else{
         $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
@@ -57,7 +57,7 @@ if(isset($_POST['edita'])){
     $idEvento = $_POST['idEvento'];
     $sql = "UPDATE eventos SET nome_evento='$nomeEvento', relacao_juridica_id = '$relacao_juridica_id', projeto_especial_id = '$projeto_especial_id', tipo_evento_id = '$tipo', sinopse = '$sinopse', fiscal_id = '$fiscal_id', suplente_id = '$suplente_id', contratacao = '$contratacao', original = '$original' WHERE id = '$idEvento'";
     If(mysqli_query($con,$sql)){
-        $mensagem = mensagem("success","Gravado com suscesso!");
+        $mensagem = mensagem("success","Gravado com sucesso!");
         //gravarLog($sql);
     }else{
         $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
