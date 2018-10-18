@@ -11,9 +11,21 @@ $pasta = "?perfil=evento&p=";
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">EVENTO</li>
             <li><a href="<?= $pasta ?>evento_cadastro"><i class="fa fa-circle-o"></i> <span>Evento</span></a></li>
-            <li><a href="<?= $pasta ?>atracoes_cadastro"><i class="fa fa-circle-o"></i> <span>Atração</span></a></li>
-            <li><a href="<?= $pasta ?>filme_cadastro"><i class="fa fa-circle-o"></i> <span>Filme</span></a></li>
-            <li><a href="<?= $pasta ?>oficina_cadastro"><i class="fa fa-circle-o"></i> <span>Oficina</span></a></li>
+            <?php
+            if(isset($_POST['idEvento'])){
+                $idEvento = $_POST['idEvento'];
+                $evento = recuperaDados("eventos", "id",$idEvento);
+                if($evento['tipo_evento_id'] == 1){//atração
+                    echo "<li><a href=\"<?= $pasta ?>atracoes_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Atração</span></a></li>";
+                }
+                elseif($evento['tipo_evento_id'] == 2){//oficina
+                    echo "<li><a href=\"<?= $pasta ?>oficina_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Oficina</span></a></li>";
+                }
+                else{
+                    echo "<li><a href=\"<?= $pasta ?>filme_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Filme</span></a></li>";
+                }
+            }
+            ?>
             <li><a href="<?= $pasta ?>pedido_cadastro"><i class="fa fa-circle-o"></i> <span>Pedido</span></a></li>
             <li><a href="?perfil=evento"><i class="fa fa-circle-o"></i> <span>Voltar</span></a></li>
             <li class="header">MAIS</li>
