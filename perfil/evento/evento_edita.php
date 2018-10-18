@@ -44,6 +44,7 @@ if (isset($_POST['cadastra'])) {
     if(mysqli_query($con, $sql))
     {
         $idEvento = recuperaUltimo("eventos");
+        $_SESSION['idEvento'] = $idEvento;
         $mensagem = mensagem("success","Cadastrado com suscesso!");
         //gravarLog($sql);
     }else{
@@ -65,6 +66,7 @@ if(isset($_POST['edita'])){
 }
 if(isset($_POST['carregar'])){
     $idEvento = $_POST['idEvento'];
+    $_SESSION['idEvento'] = $idEvento;
 }
 
 $evento = recuperaDados("eventos","id",$idEvento);

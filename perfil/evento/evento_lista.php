@@ -1,6 +1,10 @@
 <?php
 include "includes/menu_principal.php";
 
+unset($_SESSION['idEvento']);
+unset($_SESSION['idPj']);
+unset($_SESSION['idPf']);
+
 $con = bancoMysqli();
 
 $idUser = $_SESSION['idUser'];
