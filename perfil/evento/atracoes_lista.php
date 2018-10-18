@@ -40,6 +40,7 @@ $query = mysqli_query($con,$sql);
                             <tr>
                                 <th>Nome da atração</th>
                                 <th>Categoria da atração</th>
+                                <th>Produtor</th>
                                 <th width="10%"></th>
                                 <th width="10%"></th>
                             </tr>
@@ -51,6 +52,12 @@ $query = mysqli_query($con,$sql);
                                 echo "<tr>";
                                 echo "<td>".$atracao['nome_atracao']."</td>";
                                 echo "<td>".$atracao['categoria_atracao']."</td>";
+                                echo "<td>
+                                    <form method=\"POST\" action=\"?perfil=evento&p=atracoes_edita\" role=\"form\">
+                                    <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
+                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Produtor</button>
+                                    </form>
+                                </td>";
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=atracoes_edita\" role=\"form\">
                                     <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
@@ -68,6 +75,7 @@ $query = mysqli_query($con,$sql);
                             <tr>
                                 <th>Nome da atração</th>
                                 <th>Categoria da atração</th>
+                                <th>Produtor</th>
                                 <th width="10%"></th>
                                 <th width="10%"></th>
                             </tr>
