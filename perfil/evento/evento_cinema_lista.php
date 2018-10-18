@@ -13,7 +13,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $usuario = $_SESSION['idUser'];
     $original = $_POST['original'];
     $contratacao = $_POST['contratacao'];
-    $eventoStatus = "1";
+    $filmesStatus = "1";
 }
 
 if (isset($_POST['cadastra'])) {
@@ -39,12 +39,12 @@ if (isset($_POST['cadastra'])) {
                                   '$usuario',
                                   '$contratacao',
                                   '$original',
-                                  '$eventoStatus')";
+                                  '$filmesStatus')";
 
     if(mysqli_query($con, $sql))
     {
-        $idEvento = recuperaUltimo("eventos");
-        $_SESSION['idEvento'] = $idEvento;
+        $idFilmes = recuperaUltimo("eventos");
+        $_SESSION['idEvento'] = $idFilmes;
         $mensagem = mensagem("success","Cadastrado com suscesso!");
         //gravarLog($sql);
     }else{
@@ -54,8 +54,8 @@ if (isset($_POST['cadastra'])) {
 }
 
 if(isset($_POST['edita'])){
-    $idEvento = $_POST['idEvento'];
-    $sql = "UPDATE eventos SET nome_evento='$nomeEvento', relacao_juridica_id = '$relacao_juridica_id', projeto_especial_id = '$projeto_especial_id', tipo_evento_id = '$tipo', sinopse = '$sinopse', fiscal_id = '$fiscal_id', suplente_id = '$suplente_id', contratacao = '$contratacao', original = '$original' WHERE id = '$idEvento'";
+    $idFilmes = $_POST['idEvento'];
+    $sql = "UPDATE eventos SET nome_evento='$nomeEvento', relacao_juridica_id = '$relacao_juridica_id', projeto_especial_id = '$projeto_especial_id', tipo_evento_id = '$tipo', sinopse = '$sinopse', fiscal_id = '$fiscal_id', suplente_id = '$suplente_id', contratacao = '$contratacao', original = '$original' WHERE id = '$idFilmes'";
     If(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com suscesso!");
         //gravarLog($sql);
@@ -65,11 +65,14 @@ if(isset($_POST['edita'])){
     }
 }
 if(isset($_POST['carregar'])){
-    $idEvento = $_POST['idEvento'];
-    $_SESSION['idEvento'] = $idEvento;
+    $idFilmes = $_POST['idEvento'];
+    $_SESSION['idEvento'] = $idFilmes;
 }
 
-$evento = recuperaDados("eventos","id",$idEvento);
+$filme = recuperaDados("filmes","id",$idFilmes);
+
+$query = "SELECT 	titulo,	ano_producao, duracao, direcao FROM filmes ";
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -100,17 +103,17 @@ $evento = recuperaDados("eventos","id",$idEvento);
                                 <th width="10%"></th>
                             </tr>
                             </thead>
-
-                            <!-- <?php
+                             <!-- <?php
                             echo "<tbody>";
-                            while ($evento = mysqli_fetch_array($query)){
+                            while ($filmes = mysqli_fetch_array($query, MYSQLI_ASSOC)){
                                 echo "<tr>";
-                                echo "<td>".$evento['nome_evento']."</td>";
-                                echo "<td>".$evento['tipo_evento']."</td>";
-                                echo "<td>".$evento['status']."</td>";
+                                echo "<td>".$filmes['titulo']."</td>";
+                                echo "<td>".$filmes['ano_producao']."</td>";
+                                echo "<td>".$filmes['duracao']."</td>";
+                                echo "<td>".$filmes['direcao']."</td>";
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
-                                    <input type='hidden' name='idEvento' value='".$evento['idEvento']."'>
+                                    <input type='hidden' name='idEvento' value='".$filmes['$idFilmes']."'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\">Carregar</button>
                                     </form>
                                 </td>";
@@ -132,6 +135,13 @@ $evento = recuperaDados("eventos","id",$idEvento);
                             </tr>
                             </tfoot>
                         </table>
+
+                        <?php
+                          $teste = mysqli_fetch_array($query) or die(mysqli_error($con));
+
+                          echo $teste ?? "";
+
+                        ?>
                     </div>
                     <!-- /.box-body -->
                 </div>

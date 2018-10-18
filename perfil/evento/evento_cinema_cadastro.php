@@ -47,7 +47,7 @@
 <div class="content-wrapper">
     <section class="content">
 
-        <h2 class="page-header">Cadastro de Evento</h2>
+        <h2 class="page-header">Cadastro de Filme</h2>
         <!-- <?php
           echo $mensagem ?? '';
         ?> -->
