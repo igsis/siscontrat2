@@ -1,6 +1,5 @@
 <?php
 $con = bancoMysqli();
-include "includes/menu_interno.php";
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $nomeEvento =  addslashes($_POST['nomeEvento']);
@@ -70,6 +69,7 @@ if(isset($_POST['carregar'])){
 }
 
 $evento = recuperaDados("eventos","id",$idEvento);
+include "includes/menu_interno.php";
 ?>
 
 <!-- Content Wrapper. Contains page content -->

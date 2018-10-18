@@ -1,5 +1,5 @@
 <?php
-include "includes/menu_principal.php";
+include "includes/menu_interno.php";
 
 $con = bancoMysqli();
 
@@ -52,14 +52,14 @@ $query = mysqli_query($con,$sql);
                                 echo "<td>".$atracao['nome_atracao']."</td>";
                                 echo "<td>".$atracao['categoria_atracao']."</td>";
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento&p=atracao_edita\" role=\"form\">
-                                    <input type='hidden' name='idAtracao' value='".$atracao['idEvento']."'>
+                                    <form method=\"POST\" action=\"?perfil=evento&p=atracoes_edita\" role=\"form\">
+                                    <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\">Carregar</button>
                                     </form>
                                 </td>";
                                 echo "<td>
-                    <button type=\"button\" class=\"btn btn-block btn-danger\">Apagar</button>
-                  </td>";
+                                    <button type=\"button\" class=\"btn btn-block btn-danger\">Apagar</button>
+                                  </td>";
                                 echo "</tr>";
                             }
                             echo "</tbody>";
