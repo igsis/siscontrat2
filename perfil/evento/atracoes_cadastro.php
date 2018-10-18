@@ -1,5 +1,5 @@
 <?php
-include "includes/menu_principal.php";
+include "includes/menu_interno.php";
 ?>
 
 <!-- Content Wrapper. Contains page content -->

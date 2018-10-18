@@ -16,7 +16,7 @@ $pasta = "?perfil=evento&p=";
                 $idEvento = $_SESSION['idEvento'];
                 $evento = recuperaDados("eventos", "id",$idEvento);
                 if($evento['tipo_evento_id'] == 1){//atração
-                    echo "<li><a href=\"".$pasta."atracoes_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Atração</span></a></li>";
+                    echo "<li><a href=\"".$pasta."atracoes_lista\"><i class=\"fa fa-circle-o\"></i> <span>Atração</span></a></li>";
                 }
                 elseif($evento['tipo_evento_id'] == 2){//oficina
                     echo "<li><a href=\"".$pasta."oficina_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Oficina</span></a></li>";
