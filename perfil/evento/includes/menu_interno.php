@@ -12,7 +12,7 @@ $pasta = "?perfil=evento&p=";
             <li class="header">EVENTO</li>
             <li><a href="<?= $pasta ?>evento_cadastro"><i class="fa fa-circle-o"></i> <span>Evento</span></a></li>
             <?php
-            if(isset($_POST['idEvento'])){
+            if(isset($_SESSION['idEvento'])){
                 $idEvento = $_SESSION['idEvento'];
                 $evento = recuperaDados("eventos", "id",$idEvento);
                 if($evento['tipo_evento_id'] == 1){//atração
