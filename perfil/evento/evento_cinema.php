@@ -1,6 +1,31 @@
 <?php
     $con = bancoMysqli();
     include "includes/menu_principal.php";
+
+    
+
+    if (isset($_POST['cadastra'])) {
+       
+        $tituloFilme = $_POST['tituloFilme'];
+        $tituloOriginal = $_POST['tituloOriginal'];
+        $paisOrigem = $_POST['paisOrigem'];
+        $paisCoProducao = $_POST['paisCoProducao'];
+        $anoProducao = $_POST['anoProducao'];
+        $genero = $_POST['genero'];
+        $bitola = $_POST['bitola'];
+        $direcao = $_POST['direcao'];
+        $sinopse = $_POST['sinopse'];
+        $elenco = $_POST['elenco'];
+        $duracao = $_POST['duracao'];
+        $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
+        $link = $_POST['link'];
+
+    }
+
+    // $query = "INSERT INTO filmes ";
+    // $query .= "(titulo, titulo_original, ano_producao, genero, bitola, direcao, sinopse, elenco, duracao, link_trailer, classificacao_indicativa_id, pais_origem_id, pais_origem_coproducao_id) ";
+    // $query .= " VALUES ('$titulo','$tituloOrigem','$anoProducao','$genero','$bitola','$direcao','$sinopse','$elenco','$duracao','$classidicacaoIndicativa','$paisOrigem','$$paisCoProducao');";
+
 ?>
 
 <div class="content-wrapper">
@@ -27,9 +52,9 @@
                                 <div class="form-group col-md-6">
                                     <label>País de origem*:</label>
                                     <select class="form-control" name="paisOrigem" id="paisOrigem" required>
-                                            <option value="">Selecione uma opção...</option>
+                                            <option value="1">Selecione uma opção...</option>
                                             <?php
-                                                geraOpcaoPublicado("paises", "");
+                                                geraOpcao("paises", "");
                                             ?>
                                     </select>
                                 </div>
@@ -39,7 +64,7 @@
                                     <select class="form-control" name="paisCoProducao" id="paisCoProducao">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcaoPublicado("paises", "");
+                                            geraOpcao("paises", "");
                                         ?>
                                     </select>
                                 </div>
@@ -96,64 +121,11 @@
 
                         <div class="box-footer">
                             <button type="submit" class="btn btn-default">Cancel</button>
-                            <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
+                            <button type="submit" name="cadastra" class="btn btn-info pull-right" onclick="teste()">Cadastrar</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </section>
-
-<?php
-
-if (isset($_POST['cadastra'])){
-
-    $tituloFilme = $_POST['tituloFilme'];
-    $tituloOriginal = $_POST['tituloOriginal'];
-    $paisOrigem = $_POST['paisOrigem'];
-    $paisCoProducao = $_POST['paisCoProducao'];
-    $anoProducao = $_POST['anoProducao'];
-    $genero = $_POST['genero'];
-    $bitola = $_POST['bitola'];
-    $direcao = $_POST['direcao'];
-    $sinopse = $_POST['sinopse'];
-    $elenco = $_POST['elenco'];
-    $duracao = $_POST['duracao'];
-    $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
-    $link = $_POST['link'];
-}
-
-$sql = "INSERT INTO filmes 
-            (titulo,
-            titulo_original, 
-            ano_producao, 
-            genero, 
-            bitola, 
-            direcao, 
-            sinopse, 
-            elenco,
-            duracao,
-            link_trailer,
-            classificacao_indicativa_id,
-            pais_origem_id,
-            pais_origem_coproducao_id
-            )
-            VALUES
-            (
-              '$tituloFilme',
-              '$tituloOriginal',
-              '$anoProducao',
-              '$genero',
-              '$bitola',
-              '$direcao',
-              '$sinopse',
-              '$elenco',
-              '$duracao',
-              '$link',
-              '$classidicacaoIndicativa',
-              '$paisOrigem',
-              '$paisCoProducao'
-            )";
-
-?>
 </div>
