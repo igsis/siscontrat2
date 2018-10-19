@@ -30,7 +30,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="tipo">Tipo do Evento</label>
-                                    <select class="form-control" id="tipo" name="tipo">
+                                    <select class="form-control" id="tipo" name="tipo" required>
                                         <option value="">Selecione uma opção...</option>
                                         <?php
                                         geraOpcao("tipo_eventos", "");
@@ -42,7 +42,7 @@ include "includes/menu_interno.php";
                             <div class="form-group">
                                 <label for="nomeEvento">Nome do evento</label>
                                 <input type="text" class="form-control" id="nomeEvento" name="nomeEvento"
-                                       placeholder="Digite o nome do evento" maxlength="240">
+                                       placeholder="Digite o nome do evento" maxlength="240" required>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">

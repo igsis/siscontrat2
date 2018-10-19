@@ -114,8 +114,7 @@ include "includes/menu_interno.php";
 
                             <div class="form-group">
                                 <label for="nomeEvento">Nome do evento</label>
-                                <input type="text" class="form-control" id="nomeEvento" name="nomeEvento"
-                                       placeholder="Digite o nome do evento" maxlength="240" value="<?= $evento['nome_evento']?>">
+                                <input type="text" class="form-control" id="nomeEvento" name="nomeEvento" maxlength="240" required value="<?= $evento['nome_evento']?>">
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
