@@ -2,46 +2,6 @@
     $con = bancoMysqli();
     include "includes/menu_principal.php";
 
-
-
-    if (isset($_POST['cadastra'])) {
-
-        $tituloFilme = $_POST['tituloFilme'];
-        $tituloOriginal = $_POST['tituloOriginal'];
-        $paisOrigem = $_POST['paisOrigem'];
-        $paisCoProducao = $_POST['paisCoProducao'];
-        $anoProducao = $_POST['anoProducao'];
-        $genero = $_POST['genero'];
-        $bitola = $_POST['bitola'];
-        $direcao = $_POST['direcao'];
-        $sinopse = $_POST['sinopse'];
-        $elenco = $_POST['elenco'];
-        $duracao = $_POST['duracao'];
-        $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
-        $link = $_POST['link'];
-
-        $sql = "INSERT INTO `filmes`
-                  (titulo, titulo_original, ano_producao,
-                    genero, bitola, direcao,
-                    sinopse, elenco, duracao,
-                    link_trailer, classificacao_indicativa_id, pais_origem_id,
-                    pais_origem_coproducao_id)
-                  VALUES ('$tituloFilme','$tituloOriginal','$anoProducao',
-                            '$genero','$bitola','$direcao',
-                            '$sinopse','$elenco','$duracao',
-                            '$link','$classidicacaoIndicativa',
-                            '$paisOrigem','$paisCoProducao');";
-
-        // $mensagem = mysqli_query($con, $sql) or die(mysqli_error($con));
-        if(mysqli_query($con,$sql)){
-          $mensagem = "Adicionado ao banco de dados";
-        }else{
-          $mensagem = die(mysqli_error($con));
-        }
-    }
-
-
-
 ?>
 
 <div class="content-wrapper">
@@ -56,7 +16,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Inserir Filme</h3>
                     </div>
-                    <form method="POST" action="?perfil=evento&p=evento_cinema_cadastro" role="form">
+                    <form method="POST" action="?perfil=evento&p=evento_cinema_lista" role="form">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="tituloFilme">Título do filme *:</label>

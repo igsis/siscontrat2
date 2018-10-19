@@ -2,76 +2,51 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
-if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-    $nomeEvento = $_POST['nomeEvento'];
-    $relacao_juridica_id = $_POST['relacaoJuridica'];
-    $projeto_especial_id = $_POST['projetoEspecial'];
+$mensagem = '';
+
+$query = "SELECT 	id,titulo,	ano_producao, duracao, direcao FROM filmes WHERE publicado = 1 ";
+$resul = mysqli_query($con, $query);
+
+if (isset($_POST['cadastra']) || isset($POST['edita'])) {
+
+    $tituloFilme = $_POST['tituloFilme'];
+    $tituloOriginal = $_POST['tituloOriginal'];
+    $paisOrigem = $_POST['paisOrigem'];
+    $paisCoProducao = $_POST['paisCoProducao'];
+    $anoProducao = $_POST['anoProducao'];
+    $genero = $_POST['genero'];
+    $bitola = $_POST['bitola'];
+    $direcao = $_POST['direcao'];
     $sinopse = $_POST['sinopse'];
-    $tipo = $_POST['tipo'];
-    $fiscal_id = $_POST['fiscal'];
-    $suplente_id = $_POST['suplente'];
-    $usuario = $_SESSION['idUser'];
-    $original = $_POST['original'];
-    $contratacao = $_POST['contratacao'];
-    $filmesStatus = "1";
+    $elenco = $_POST['elenco'];
+    $duracao = $_POST['duracao'];
+    $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
+    $link = $_POST['link'];
 }
 
 if (isset($_POST['cadastra'])) {
+  $sql = "INSERT INTO `filmes`
+            (titulo, titulo_original, ano_producao,
+              genero, bitola, direcao,
+              sinopse, elenco, duracao,
+              link_trailer, classificacao_indicativa_id, pais_origem_id,
+              pais_origem_coproducao_id)
+            VALUES ('$tituloFilme','$tituloOriginal','$anoProducao',
+                      '$genero','$bitola','$direcao',
+                      '$sinopse','$elenco','$duracao',
+                      '$link','$classidicacaoIndicativa',
+                      '$paisOrigem','$paisCoProducao');";
 
-    $sql = "INSERT INTO eventos (nome_evento,
-                                 relacao_juridica_id,
-                                 projeto_especial_id,
-                                 tipo_evento_id,
-                                 sinopse,
-                                 fiscal_id,
-                                 suplente_id,
-                                 usuario_id,
-                                 contratacao,
-                                 original,
-                                 evento_status_id)
-                          VALUES ('$nomeEvento',
-                                  '$relacao_juridica_id',
-                                  '$projeto_especial_id',
-                                  '$tipo',
-                                  '$sinopse',
-                                  '$fiscal_id',
-                                  '$suplente_id',
-                                  '$usuario',
-                                  '$contratacao',
-                                  '$original',
-                                  '$filmesStatus')";
-
-    if(mysqli_query($con, $sql))
-    {
-        $idFilmes = recuperaUltimo("eventos");
-        $_SESSION['idEvento'] = $idFilmes;
-        $mensagem = mensagem("success","Cadastrado com suscesso!");
-        //gravarLog($sql);
-    }else{
-        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
-        //gravarLog($sql);
-    }
+  // $mensagem = mysqli_query($con, $sql) or die(mysqli_error($con));
+  if(mysqli_query($con,$sql)){
+    $mensagem = "Adicionado ao banco de dados";
+    $query = "SELECT 	id,titulo,	ano_producao, duracao, direcao FROM filmes WHERE publicado = 1 ";
+    $resul = mysqli_query($con, $query);
+  }else{
+    $mensagem = die(mysqli_error($con));
+  }
 }
 
-if(isset($_POST['edita'])){
-    $idFilmes = $_POST['idEvento'];
-    $sql = "UPDATE eventos SET nome_evento='$nomeEvento', relacao_juridica_id = '$relacao_juridica_id', projeto_especial_id = '$projeto_especial_id', tipo_evento_id = '$tipo', sinopse = '$sinopse', fiscal_id = '$fiscal_id', suplente_id = '$suplente_id', contratacao = '$contratacao', original = '$original' WHERE id = '$idFilmes'";
-    If(mysqli_query($con,$sql)){
-        $mensagem = mensagem("success","Gravado com suscesso!");
-        //gravarLog($sql);
-    }else{
-        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
-        //gravarLog($sql);
-    }
-}
-if(isset($_POST['carregar'])){
-    $idFilmes = $_POST['idEvento'];
-    $_SESSION['idEvento'] = $idFilmes;
-}
-
-$filme = recuperaDados("filmes","id",$idFilmes);
-
-$query = "SELECT 	titulo,	ano_producao, duracao, direcao FROM filmes ";
 
 ?>
 
@@ -92,6 +67,11 @@ $query = "SELECT 	titulo,	ano_producao, duracao, direcao FROM filmes ";
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                      <?php
+
+                      echo $mensagem;
+
+                      ?>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                             <tr>
@@ -103,9 +83,9 @@ $query = "SELECT 	titulo,	ano_producao, duracao, direcao FROM filmes ";
                                 <th width="10%"></th>
                             </tr>
                             </thead>
-                             <!-- <?php
+                            <?php
                             echo "<tbody>";
-                            while ($filmes = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+                            while ($filmes = mysqli_fetch_assoc($resul)){
                                 echo "<tr>";
                                 echo "<td>".$filmes['titulo']."</td>";
                                 echo "<td>".$filmes['ano_producao']."</td>";
@@ -113,7 +93,7 @@ $query = "SELECT 	titulo,	ano_producao, duracao, direcao FROM filmes ";
                                 echo "<td>".$filmes['direcao']."</td>";
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
-                                    <input type='hidden' name='idEvento' value='".$filmes['$idFilmes']."'>
+                                    <input type='hidden' name='idEvento' value='".$filmes['id']."''>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\">Carregar</button>
                                     </form>
                                 </td>";
@@ -123,7 +103,7 @@ $query = "SELECT 	titulo,	ano_producao, duracao, direcao FROM filmes ";
                                 echo "</tr>";
                             }
                             echo "</tbody>";
-                            ?> -->
+                            ?>
                             <tfoot>
                             <tr>
                               <th>Filme</th>
@@ -136,12 +116,6 @@ $query = "SELECT 	titulo,	ano_producao, duracao, direcao FROM filmes ";
                             </tfoot>
                         </table>
 
-                        <?php
-                          $teste = mysqli_fetch_array($query) or die(mysqli_error($con));
-
-                          echo $teste ?? "";
-
-                        ?>
                     </div>
                     <!-- /.box-body -->
                 </div>
