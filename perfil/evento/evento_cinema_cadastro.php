@@ -16,7 +16,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Inserir Filme</h3>
                     </div>
-                    <form method="POST" action="?perfil=evento&p=evento_cinema_lista" role="form">
+                    <form method="POST" action="?perfil=evento&p=evento_cinema_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="tituloFilme">Título do filme *:</label>

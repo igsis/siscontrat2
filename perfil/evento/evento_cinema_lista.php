@@ -2,51 +2,8 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
-$mensagem = '';
-
 $query = "SELECT 	id,titulo,	ano_producao, duracao, direcao FROM filmes WHERE publicado = 1 ";
 $resul = mysqli_query($con, $query);
-
-if (isset($_POST['cadastra']) || isset($POST['edita'])) {
-
-    $tituloFilme = $_POST['tituloFilme'];
-    $tituloOriginal = $_POST['tituloOriginal'];
-    $paisOrigem = $_POST['paisOrigem'];
-    $paisCoProducao = $_POST['paisCoProducao'];
-    $anoProducao = $_POST['anoProducao'];
-    $genero = $_POST['genero'];
-    $bitola = $_POST['bitola'];
-    $direcao = $_POST['direcao'];
-    $sinopse = $_POST['sinopse'];
-    $elenco = $_POST['elenco'];
-    $duracao = $_POST['duracao'];
-    $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
-    $link = $_POST['link'];
-}
-
-if (isset($_POST['cadastra'])) {
-  $sql = "INSERT INTO `filmes`
-            (titulo, titulo_original, ano_producao,
-              genero, bitola, direcao,
-              sinopse, elenco, duracao,
-              link_trailer, classificacao_indicativa_id, pais_origem_id,
-              pais_origem_coproducao_id)
-            VALUES ('$tituloFilme','$tituloOriginal','$anoProducao',
-                      '$genero','$bitola','$direcao',
-                      '$sinopse','$elenco','$duracao',
-                      '$link','$classidicacaoIndicativa',
-                      '$paisOrigem','$paisCoProducao');";
-
-  // $mensagem = mysqli_query($con, $sql) or die(mysqli_error($con));
-  if(mysqli_query($con,$sql)){
-    $mensagem = "Adicionado ao banco de dados";
-    $query = "SELECT 	id,titulo,	ano_producao, duracao, direcao FROM filmes WHERE publicado = 1 ";
-    $resul = mysqli_query($con, $query);
-  }else{
-    $mensagem = die(mysqli_error($con));
-  }
-}
-
 
 ?>
 
@@ -67,11 +24,7 @@ if (isset($_POST['cadastra'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                      <?php
 
-                      echo $mensagem;
-
-                      ?>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                             <tr>
@@ -92,8 +45,8 @@ if (isset($_POST['cadastra'])) {
                                 echo "<td>".$filmes['duracao']."</td>";
                                 echo "<td>".$filmes['direcao']."</td>";
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
-                                    <input type='hidden' name='idEvento' value='".$filmes['id']."''>
+                                    <form method=\"POST\" action=\"?perfil=evento&p=evento_cinema_edita\" role=\"form\">
+                                    <input type='hidden' name='idFilme' value='".$filmes['id']."''>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\">Carregar</button>
                                     </form>
                                 </td>";
