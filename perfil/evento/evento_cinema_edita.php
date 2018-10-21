@@ -71,6 +71,11 @@
 
     }
 
+    if (isset($_POST['carregar'])){
+        $idFilme = $_POST['idFilme'];
+        
+    }
+
     $row = recuperaDados("filmes","id", $idFilme);
 
 ?>
@@ -115,7 +120,7 @@
                                     <select class="form-control" name="paisOrigem" id="paisOrigem" required>
                                             <option value="">Selecione uma opção...</option>
                                             <?php
-                                                geraOpcao("paises", "nome_pais");
+                                                geraOpcao("paises", $row['id']);
                                             ?>
                                     </select>
                                 </div>
@@ -125,7 +130,7 @@
                                     <select class="form-control" name="paisCoProducao" id="paisCoProducao">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("paises", "nome_pais");
+                                            geraOpcao("paises", $row['id']);
                                         ?>
                                     </select>
                                 </div>
@@ -187,7 +192,7 @@
                                     <select class="form-control" name="classidicacaoIndicativa" id="classidicacaoIndicativa">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("classificacao_indicativas", "classificacao_indicativa");
+                                            geraOpcao("classificacao_indicativas", $row['id']);
                                         ?>
                                     </select>
                                 </div>

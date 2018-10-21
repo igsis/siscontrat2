@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
-$query = "SELECT 	id,titulo,	ano_producao, duracao, direcao FROM filmes WHERE publicado = 1 ";
+$query = "SELECT id,titulo,	ano_producao, duracao, direcao FROM filmes WHERE publicado = 1 ";
 $resul = mysqli_query($con, $query);
 
 ?>
