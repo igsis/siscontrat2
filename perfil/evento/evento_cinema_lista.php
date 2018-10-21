@@ -32,8 +32,12 @@ $resul = mysqli_query($con, $query);
                                 <th>Ano </th>
                                 <th>Duração</th>
                                 <th>Diretor</th>
-                                <th width="10%"></th>
-                                <th width="10%"></th>
+                                <th colspan="2">
+                                    <a class="btn btn-primary" href="?perfil=evento&p=evento_cinema_cadastro" style="margin: 0 25%;">
+                                        <span class="glyphicon glyphicon-plus" style="font-size: 12px;margin-right: 5px">        
+                                        </span>Adicionar
+                                    </a>
+                                </th>
                             </tr>
                             </thead>
                             <?php
@@ -63,8 +67,7 @@ $resul = mysqli_query($con, $query);
                               <th>Ano </th>
                               <th>Duração</th>
                               <th>Diretor</th>
-                              <th width="10%"></th>
-                              <th width="10%"></th>
+                              <th width="20%" colspan="2"></th>
                             </tr>
                             </tfoot>
                         </table>
