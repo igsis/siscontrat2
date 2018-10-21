@@ -2,14 +2,14 @@
     $con = bancoMysqli();
     include "includes/menu_principal.php";
 
-//    if (isset($_POST['carregar'])) {
-//      $idFilme = $_POST['idFilme'];
-//
-//      $query = "SELECT * FROM `filmes` WHERE id = '$idFilme'";
-//      $result = mysqli_query($con,$query);
-//
-//      $row = mysqli_fetch_assoc($result);
-//    }
+   // if (isset($_POST['carregar'])) {
+   //   $idFilme = $_POST['idFilme'];
+
+   //   $query = "SELECT * FROM `filmes` WHERE id = '$idFilme'";
+   //   $result = mysqli_query($con,$query);
+
+   //   $result = mysqli_fetch_assoc($result);
+   // }
 
     if (isset($_POST['cadastra']) || isset($POST['edita'])) {
 
@@ -120,7 +120,7 @@
                                     <select class="form-control" name="paisOrigem" id="paisOrigem" required>
                                             <option value="">Selecione uma opção...</option>
                                             <?php
-                                                geraOpcao("paises", $row['id']);
+                                                geraOpcao("paises", $row['pais_origem_id']);
                                             ?>
                                     </select>
                                 </div>
@@ -130,7 +130,7 @@
                                     <select class="form-control" name="paisCoProducao" id="paisCoProducao">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("paises", $row['id']);
+                                            geraOpcao("paises", $row['pais_origem_coproducao_id']);
                                         ?>
                                     </select>
                                 </div>
@@ -192,7 +192,7 @@
                                     <select class="form-control" name="classidicacaoIndicativa" id="classidicacaoIndicativa">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("classificacao_indicativas", $row['id']);
+                                            geraOpcao("classificacao_indicativas", $row['classificacao_indicativa_id']);
                                         ?>
                                     </select>
                                 </div>
