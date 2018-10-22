@@ -12,7 +12,7 @@ include "includes/menu_interno.php";
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Infoemações Gerais</h3>
+                        <h3 class="box-title">Informações Gerais</h3>
                     </div>
                     <form method="POST" action="?perfil=evento&p=evento_edita" role="form">
                         <div class="box-body">
