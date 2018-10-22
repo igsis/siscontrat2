@@ -2,8 +2,34 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
-if(isset($_POST['idAtracao'])){
-    $idAtracao = $_POST['idAtracao'];
+//if(isset($_POST['idAtracao'])){
+//    $idAtracao = $_POST['idAtracao'];
+//}
+
+
+if (isset($_POST['cadastra']) || isset($_POST['edita'])){
+    $idAtracoes = $_POST['idAtracao'];
+    $nome = $_POST['nome'];
+    $email = $_POST['email'];
+    $telefone1 = $_POST['telefone1'];
+    $telefone2 = $_POST['telefone2'];
+    $observacao = $_POST['observacao'];
+}
+if (isset($_POST['cadastra'])){
+    $sqlInsert = "INSERT INTO `produtores`
+                  (nome, email, telefone1, telefone2, observacao)
+                  VALUES ('$nome','$email','$telefone1','$telefone2','$observacao')";
+
+    if (mysqli_query($con,$sqlInsert)){
+        $idProdutor = recuperaUltimo("produtores");
+        $sqlUpdate = "UPDATE `atracoes`
+                      SET produtor_id = '$idProdutor' 
+                      WHERE id ='$idAtracoes'";
+        if(mysqli_query($con,$sqlUpdate)){
+            mensagem("sucess","Produtor cadastrado");
+            $idAtracao = recuperaUltimo("atracoes");
+        }
+    }
 }
 ?>
 

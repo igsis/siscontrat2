@@ -4,6 +4,14 @@ include "includes/menu_interno.php";
 
 if(isset($_POST['idAtracao'])){
     $idAtracao = $_POST['idAtracao'];
+    if ($idAtracao == NULL){
+        $idAtracao = 2;
+    }
+}
+
+#GAMBIARRA PARA TESTAR TELA
+if ($idAtracao == NULL){
+    $idAtracao = '';
 }
 ?>
 
@@ -26,7 +34,9 @@ if(isset($_POST['idAtracao'])){
                     <!-- form start -->
                     <form method="POST" action="?perfil=evento&p=produtor_edita" role="form">
                         <div class="box-body">
-
+                            <?php
+                                echo "<input type='hidden' name='idAtracoes' value='".$idAtracao."''>";
+                            ?>
                             <div class="form-group">
                                 <label for="nome">Nome</label>
                                 <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome completo" maxlength="120">
