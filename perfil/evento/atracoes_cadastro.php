@@ -89,7 +89,6 @@ include "includes/menu_interno.php";
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-default">Cancelar</button>
                             <button type="submit" name = "cadastra" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
                     </form>
