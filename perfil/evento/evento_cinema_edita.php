@@ -43,10 +43,10 @@
                           '$link','$classidicacaoIndicativa',
                           '$paisOrigem','$paisCoProducao');";
 
-        // $mensagem = mysqli_query($con, $sql) or die(mysqli_error($con));
+
         if(mysqli_query($con,$sql)){
-            mensagem("sucess","Filme criado");
-            $_SESSION["idFilme"] = recuperaUltimo("filmes");
+            $idFilme = recuperaUltimo("filmes");
+            $mensagem = mensagem("sucess","Filme criado");
         }else{
             mensagem("danger", die(mysqli_error($con)));
         }
@@ -93,10 +93,10 @@
 <div class="content-wrapper">
     <section class="content">
         <h2 class="page-header">Cadastro de Filme</h2>
-        <?php
-            if (isset($_POST['edita']))
-                echo mensagem("danger", $tituloFilme ?? 'Não tem nada');
-        ?>
+
+        <div class="row" align="center">
+            <?php if(isset($mensagem)){echo $mensagem;};?>
+        </div>
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
@@ -218,6 +218,7 @@
 
                         <div class="box-footer">
                             <button type="button" class="btn btn-default">Cancel</button>
+
                             <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
                         </div>
                     </form>
