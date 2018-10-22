@@ -38,17 +38,17 @@ if ($idAtracao == NULL){
                                 echo "<input type='hidden' name='idAtracoes' value='".$idAtracao."''>";
                             ?>
                             <div class="form-group">
-                                <label for="nome">Nome</label>
-                                <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome completo" maxlength="120">
+                                <label for="nome">Nome: *</label>
+                                <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome completo" maxlength="120" required>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="email">E-mail</label>
-                                    <input type="email" class="form-control" id="email" name="email" maxlength="60" placeholder="Digite o e-mail">
+                                    <label for="email">E-mail: *</label>
+                                    <input type="email" class="form-control" id="email" name="email" maxlength="60" placeholder="Digite o e-mail" required>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="telefone1">Telefone #1</label>
-                                    <input type="text" class="form-control" id="telefone1" name="telefone1" maxlength="15" placeholder="Digite o Telefone principal">
+                                    <label for="telefone1">Telefone #1: *</label>
+                                    <input type="text" class="form-control" id="telefone1" name="telefone1" maxlength="15" placeholder="Digite o Telefone principal" required>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone2">Telefone #2</label>

@@ -10,7 +10,7 @@
 
    //   $result = mysqli_fetch_assoc($result);
    // }
-
+    session_status();
     if (isset($_POST['cadastra']) || isset($POST['edita'])) {
 
         $tituloFilme = $_POST['tituloFilme'];
@@ -26,6 +26,8 @@
         $duracao = $_POST['duracao'];
         $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
         $link = $_POST['link'];
+
+        $mensagem = mensagem("danger", $_POST['tituloFilme']);
     }
 
     if (isset($_POST['cadastra'])) {
@@ -44,60 +46,65 @@
         // $mensagem = mysqli_query($con, $sql) or die(mysqli_error($con));
         if(mysqli_query($con,$sql)){
             mensagem("sucess","Filme criado");
-            $idFilme = recuperaUltimo("filmes");
+            $_SESSION["idFilme"] = recuperaUltimo("filmes");
         }else{
             mensagem("danger", die(mysqli_error($con)));
         }
     }
 
     if (isset($_POST['edita'])){
-        $sql = " UPDATE filmes
-                 SET  id = '".$_POST['filmes']."',
-                      titulo = '$tituloFilme',
-                      titulo_original = '$tituloOriginal',
-                      ano_producao = '$anoProducao',
-                      genero = '$genero',
-                      bitola = '$bitola',
-                      direcao = '$direcao',
-                      sinopse = '$sinopse',
-                      elenco = '$elenco',
-                      duracao = '$duracao',
-                      link_trailer = '$link',
-                      classificacao_indicativa_id = '$classidicacaoIndicativa',
-                      pais_origem_id = '$paisOrigem',
-                      pais_origem_coproducao_id = '$paisCoProducao'
-                  WHERE id = '".$_POST['filmes']."'
-        ";
+//        echo $tituloFilme;
+//        $sql = " UPDATE filmes
+//                 SET  titulo = '$tituloFilme',
+//                      titulo_original = '$tituloOriginal',
+//                      ano_producao = '$anoProducao',
+//                      genero = '$genero',
+//                      bitola = '$bitola',
+//                      direcao = '$direcao',
+//                      sinopse = '$sinopse',
+//                      elenco = '$elenco',
+//                      duracao = '$duracao',
+//                      link_trailer = '$link',
+//                      classificacao_indicativa_id = '$classidicacaoIndicativa',
+//                      pais_origem_id = '$paisOrigem',
+//                      pais_origem_coproducao_id = '$paisCoProducao'
+//                  WHERE id = '".$_SESSION["idFilme"]."'
+//        ";
+//
+//
+//        if (mysqli_query($con,$sql)){
+//            mensagem("sucess", "Cadastro atualizado!");
+//        }
+//        else{
+//            mensagem("danger","Erro ao atualizar");
+//        }
 
     }
 
     if (isset($_POST['carregar'])){
-        $idFilme = $_POST['idFilme'];
+        $_SESSION["idFilme"] = $_POST['idFilme'];
         
     }
 
-    $row = recuperaDados("filmes","id", $idFilme);
+    $row = recuperaDados("filmes","id", $_SESSION["idFilme"]);
 
 ?>
 
 <div class="content-wrapper">
     <section class="content">
-
         <h2 class="page-header">Cadastro de Filme</h2>
+        <?php
+            if (isset($_POST['edita']))
+                echo mensagem("danger", $tituloFilme ?? 'Não tem nada');
+        ?>
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Editar Filme</h3>
                     </div>
-                    <?php
 
-//                      echo $_POST['idFilme'];
-//
-//                      while ($row = mysqli_fetch_assoc($result)){
-//                          printf("%s (%s)\n", $row['titulo'], $row['ano_producao']);
-//                      }
 
-                    ?>
+
                     <form method="POST" action="?perfil=evento&p=evento_cinema_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
