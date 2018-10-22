@@ -41,6 +41,7 @@ $query = mysqli_query($con,$sql);
                                 <th>Nome da atração</th>
                                 <th>Categoria da atração</th>
                                 <th>Produtor</th>
+                                <th>Ocorrência</th>
                                 <th colspan="2" width="10%">Ação</th>
                             </tr>
                             </thead>
@@ -69,6 +70,29 @@ $query = mysqli_query($con,$sql);
                                         <form method=\"POST\" action=\"?perfil=evento&p=produtor_cadastra\" role=\"form\">
                                         <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Produtor</button>
+                                        </form>
+                                    </td>";
+                                }
+
+                                $ocorrencias = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $atracao['idAtracao']);
+
+                                if($ocorrencias > 0){
+                                    $idProdutor = $atracao['produtor_id'];
+                                    $sql_produtor = "SELECT nome FROM produtores WHERE id = '$idProdutor'";
+                                    $query_produtor = mysqli_query($con,$sql_produtor);
+                                    $produtor = mysqli_fetch_array($query_produtor);
+                                    echo "<td>
+                                              <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_lista\" role=\"form\">
+                                        <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
+                                        <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
+                                        Listar ocorrência</form>
+                                        </td>";
+                                }
+                                else{
+                                    echo "<td>
+                                        <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_cadastro\" role=\"form\">
+                                        <input type='text' name='idAtracao' value='".$atracao['idAtracao']."'>
+                                        <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Ocorrência</button>
                                         </form>
                                     </td>";
                                 }
