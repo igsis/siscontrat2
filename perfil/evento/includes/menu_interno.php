@@ -26,17 +26,20 @@ $pasta = "?perfil=evento&p=";
                 if($evento['tipo_evento_id'] == 1){//atração
                     $atracao_eventos = recuperaDados("atracao_eventos","evento_id",$idEvento);
                     $atracao = recuperaDados("atracoes","id",$atracao_eventos['atracao_id']);
+                    $idCategoriaAtracao = $atracao['categoria_atracao_id'];
 
-                    if($atracao['categoria_atracao_id'] == 1){
+                    $array_teatro = array(3,7,23,24);
+                    if(in_array($idCategoriaAtracao, $array_teatro)){
                         echo "<li><a href=\"".$pasta."especificidade_teatro_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
                     }
-                    if($atracao['categoria_atracao_id'] == 2){
+                    $array_musica = array(10,11,15,17);
+                    if(in_array($idCategoriaAtracao, $array_musica)){
                         echo "<li><a href=\"".$pasta."especificidade_musica_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
                     }
-                    if($atracao['categoria_atracao_id'] == 3){
+                    if($idCategoriaAtracao == 2){
                         echo "<li><a href=\"".$pasta."especificidade_exposicao_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
                     }
-                    if($atracao['categoria_atracao_id'] == 4){
+                    if($idCategoriaAtracao == 4 || $idCategoriaAtracao == 5){
                         echo "<li><a href=\"".$pasta."especificidade_oficinas_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
                     }
 

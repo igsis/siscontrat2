@@ -28,7 +28,7 @@ include "includes/menu_interno.php";
 
                             <div class="form-group">
                                 <label for="categoria_atracacao_id">Categoria da atração</label>
-                                <select class="form-control" id="categoria_atracacao_id" name="categoria_atracacao_id">
+                                <select class="form-control" id="categoria_atracao_id" name="categoria_atracacao_id">
                                     <option value="">Selecione...</option>
                                     <?php
                                     geraOpcao("categoria_atracoes","")

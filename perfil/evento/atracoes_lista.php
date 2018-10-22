@@ -1,14 +1,15 @@
 <?php
-include "includes/menu_interno.php";
 
 $con = bancoMysqli();
 
 $idEvento = $_SESSION['idEvento'];
 $sql = "SELECT at.id AS idAtracao, nome_atracao, a2.categoria_atracao,produtor_id FROM atracoes AS at
         INNER JOIN atracao_eventos a on at.id = a.atracao_id
-        INNER JOIN categoria_atracoes a2 on at.categoria_atracacao_id = a2.id
-        WHERE publicado = 1 AND a.evento_id = '$idEvento'";
+        INNER JOIN categoria_atracoes a2 on at.categoria_atracao_id = a2.id
+        WHERE at.publicado = 1 AND a.evento_id = '$idEvento'";
 $query = mysqli_query($con,$sql);
+
+include "includes/menu_interno.php";
 ?>
 
 <!-- Content Wrapper. Contains page content -->
