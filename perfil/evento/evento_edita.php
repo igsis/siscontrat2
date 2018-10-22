@@ -54,7 +54,17 @@ if (isset($_POST['cadastra'])) {
 
 if(isset($_POST['edita'])){
     $idEvento = $_POST['idEvento'];
-    $sql = "UPDATE eventos SET nome_evento='$nomeEvento', relacao_juridica_id = '$relacao_juridica_id', projeto_especial_id = '$projeto_especial_id', tipo_evento_id = '$tipo', sinopse = '$sinopse', fiscal_id = '$fiscal_id', suplente_id = '$suplente_id', contratacao = '$contratacao', original = '$original' WHERE id = '$idEvento'";
+    $sql = "UPDATE eventos SET
+                              nome_evento = '$nomeEvento', 
+                              relacao_juridica_id = '$relacao_juridica_id', 
+                              projeto_especial_id = '$projeto_especial_id', 
+                              tipo_evento_id = '$tipo', 
+                              sinopse = '$sinopse', 
+                              fiscal_id = '$fiscal_id', 
+                              suplente_id = '$suplente_id', 
+                              contratacao = '$contratacao', 
+                              original = '$original' 
+                              WHERE id = '$idEvento'";
     If(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com sucesso!");
         //gravarLog($sql);

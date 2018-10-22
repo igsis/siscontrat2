@@ -1,6 +1,6 @@
 <?php
     $con = bancoMysqli();
-    include "includes/menu_principal.php";
+    include "includes/menu_interno.php";
 
 ?>
 
@@ -8,9 +8,6 @@
     <section class="content">
 
         <h2 class="page-header">Cadastro de Filme</h2>
-        <!-- <?php
-          echo $mensagem ?? '';
-        ?> -->
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">

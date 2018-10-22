@@ -15,7 +15,7 @@ $pasta = "?perfil=evento&p=";
             }
             ?>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Produtor</span></a></li>
-            <li><a href="<?= $pasta ?>ocorrencia_cadastro"><i class="fa fa-circle-o"></i> <span>Ocorrência</span></a></li>
+            <li><a href="<?= $pasta ?>ocorrencia_lista"><i class="fa fa-circle-o"></i> <span>Ocorrência</span></a></li>
             <?php
             if(isset($_SESSION['idEvento'])){
                 $idEvento = $_SESSION['idEvento'];
