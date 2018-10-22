@@ -95,7 +95,7 @@
         <h2 class="page-header">Cadastro de Filme</h2>
         <?php
             if (isset($_POST['edita']))
-                echo mensagem("danger", $tituloFilme);
+                echo mensagem("danger", $tituloFilme ?? 'Não tem nada');
         ?>
             <div class="col-md-12">
                 <div class="box box-info">
