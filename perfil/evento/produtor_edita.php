@@ -20,12 +20,12 @@
                       VALUES ('$nome','$email','$telefone1','$telefone2','$observacao')";
 
         if (mysqli_query($con,$sqlInsert)){
-            $idProdutor = recuperaUltimo("produtores");
+            $_SESSION["produtor"] = recuperaUltimo("produtores");
             $sqlUpdate = "UPDATE `atracoes`
-                          SET produtor_id = '$idProdutor' 
+                          SET produtor_id = '".$produtor."'
                           WHERE id ='$idAtracoes'";
             if(mysqli_query($con,$sqlUpdate)){
-                mensagem("sucess","Produtor cadastrado");
+                $resultado = mensagem("sucess","Produtor cadastrado");
                 $idAtracao = recuperaUltimo("atracoes");
             }else{
                 mensagem("danger","Erro atrações");
@@ -33,10 +33,10 @@
         }
     }
 
+    $row = recuperaDados("produtores","id", $_SESSION["produtor"]);
 
     if (isset($_POST['edita'])){
-        $result = mysqli_query($con,$sqlSelect);
-        $sql  = "UPDATE `produtor`
+        $sql  = "UPDATE `produtores`
                  SET  nome = '$nome',
                       email = '$email',
                       telefone1 = '$telefone1',
@@ -44,15 +44,15 @@
                       observacao = '$observacao'
                  WHERE id = ".$row['id'];
         if (mysqli_query($con,$sql)){
-            mensagem("sucess","Cadastro atualizado com sucesso");
+            $resultado = mensagem("sucess","Cadastro atualizado com sucesso");
+
         }
         else{
-            mensagem("danger","Erro ao atualizar");
+            $resultado = mensagem("danger","Erro ao atualizar");
         }
 
     }
 
-    $row = recuperaDados("produtor","id", $idProdutor);
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -76,7 +76,6 @@
                         <div class="box-body">
                             <?php
                             echo "<input type='hidden' name='idAtracoes' value='".$idAtracoes."''>";
-                            echo $row;
                             ?>
                             <div class="form-group">
                                 <label for="nome">Nome: *</label>

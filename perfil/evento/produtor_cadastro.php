@@ -3,15 +3,11 @@ $con = bancoMysqli();
 include "includes/menu_interno.php";
 
 if(isset($_POST['idAtracao'])){
-    $idAtracao = $_POST['idAtracao'];
-    if ($idAtracao == NULL){
-        $idAtracao = 2;
-    }
-}
+    $_SESSION["idAtracao"] = $_POST['idAtracao'];
 
-#GAMBIARRA PARA TESTAR TELA
-if ($idAtracao == NULL){
-    $idAtracao = '';
+}
+if ($_SESSION["idAtracao"] == NULL){
+    $_SESSION["idAtracao"] = "1";
 }
 ?>
 
@@ -35,7 +31,7 @@ if ($idAtracao == NULL){
                     <form method="POST" action="?perfil=evento&p=produtor_edita" role="form">
                         <div class="box-body">
                             <?php
-                                echo "<input type='hidden' name='idAtracoes' value='".$idAtracao."''>";
+                                echo "<input type='hidden' name='idAtracoes' value='".$_SESSION["idAtracao"]."''>";
                             ?>
                             <div class="form-group">
                                 <label for="nome">Nome: *</label>
