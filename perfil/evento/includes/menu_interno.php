@@ -6,7 +6,14 @@ $pasta = "?perfil=evento&p=";
         <ul class="sidebar-menu" data-widget="tree">
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">EVENTO</li>
-            <li><a href="<?= $pasta ?>evento_cadastro"><i class="fa fa-circle-o"></i> <span>Evento</span></a></li>
+            <?php
+            if(isset($_SESSION['idEvento'])){
+                echo "<li><a href=\"<?= $pasta ?>evento_edita\"><i class=\"fa fa-circle-o\"></i> <span>Evento</span></a></li>";
+            }
+            else{
+                echo "<li><a href=\"<?= $pasta ?>evento_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Evento</span></a></li>";
+            }
+            ?>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Produtor</span></a></li>
             <li><a href="<?= $pasta ?>ocorrencia_cadastro"><i class="fa fa-circle-o"></i> <span>Ocorrência</span></a></li>
             <?php
@@ -16,11 +23,8 @@ $pasta = "?perfil=evento&p=";
                 if($evento['tipo_evento_id'] == 1){ //atração
                     echo "<li><a href=\"".$pasta."atracoes_lista\"><i class=\"fa fa-circle-o\"></i> <span>Atração</span></a></li>";
                 }
-                elseif($evento['tipo_evento_id'] == 2){ //oficina
-                    echo "<li><a href=\"".$pasta."oficina_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Oficina</span></a></li>";
-                }
                 else{ //filme
-                    echo "<li><a href=\"".$pasta."filme_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Filme</span></a></li>";
+                    echo "<li><a href=\"".$pasta."evento_cinema_lista\"><i class=\"fa fa-circle-o\"></i> <span>Filme</span></a></li>";
                 }
             }
             ?>
