@@ -13,10 +13,6 @@ $pasta = "?perfil=evento&p=";
             else{
                 echo "<li><a href=\"<?= $pasta ?>evento_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Evento</span></a></li>";
             }
-            ?>
-            <li><a href="#"><i class="fa fa-circle-o"></i> <span>Produtor</span></a></li>
-            <li><a href="<?= $pasta ?>ocorrencia_lista"><i class="fa fa-circle-o"></i> <span>Ocorrência</span></a></li>
-            <?php
             if(isset($_SESSION['idEvento'])){
                 $idEvento = $_SESSION['idEvento'];
                 $evento = recuperaDados("eventos", "id",$idEvento);
@@ -26,8 +22,29 @@ $pasta = "?perfil=evento&p=";
                 else{ //filme
                     echo "<li><a href=\"".$pasta."evento_cinema_lista\"><i class=\"fa fa-circle-o\"></i> <span>Filme</span></a></li>";
                 }
+
+                if($evento['tipo_evento_id'] == 1){//atração
+                    $atracao_eventos = recuperaDados("atracao_eventos","evento_id",$idEvento);
+                    $atracao = recuperaDados("atracoes","id",$atracao_eventos['atracao_id']);
+
+                    if($atracao['categoria_atracao_id'] == 1){
+                        echo "<li><a href=\"".$pasta."especificidade_teatro_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
+                    }
+                    if($atracao['categoria_atracao_id'] == 2){
+                        echo "<li><a href=\"".$pasta."especificidade_musica_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
+                    }
+                    if($atracao['categoria_atracao_id'] == 3){
+                        echo "<li><a href=\"".$pasta."especificidade_exposicao_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
+                    }
+                    if($atracao['categoria_atracao_id'] == 4){
+                        echo "<li><a href=\"".$pasta."especificidade_oficinas_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
+                    }
+
+                }
             }
             ?>
+            <li><a href="#"><i class="fa fa-circle-o"></i> <span>Produtor</span></a></li>
+            <li><a href="<?= $pasta ?>ocorrencia_lista"><i class="fa fa-circle-o"></i> <span>Ocorrência</span></a></li>
             <li><a href="<?= $pasta ?>pedido_cadastro"><i class="fa fa-circle-o"></i> <span>Pedido</span></a></li>
             <li><a href="?perfil=evento"><i class="fa fa-circle-o"></i> <span>Voltar</span></a></li>
             <li class="header">MAIS</li>
