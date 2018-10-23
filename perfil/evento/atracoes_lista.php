@@ -10,6 +10,9 @@ $sql = "SELECT at.id AS idAtracao, nome_atracao, a2.categoria_atracao,produtor_i
 $query = mysqli_query($con,$sql);
 
 include "includes/menu_interno.php";
+
+
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -42,6 +45,7 @@ include "includes/menu_interno.php";
                                 <th>Nome da atração</th>
                                 <th>Categoria da atração</th>
                                 <th>Produtor</th>
+                                <th>Especificidade</th>
                                 <th>Ocorrência</th>
                                 <th colspan="2" width="10%">Ação</th>
                             </tr>
@@ -54,6 +58,7 @@ include "includes/menu_interno.php";
                                 echo "<tr>";
                                 echo "<td>".$atracao['nome_atracao']."</td>";
                                 echo "<td>".$atracao['categoria_atracao']."</td>";
+                                if ($id)
                                 if($atracao['produtor_id'] > 0){
                                     $idProdutor = $atracao['produtor_id'];
                                     $sql_produtor = "SELECT id,nome FROM produtores WHERE id = '$idProdutor'";
