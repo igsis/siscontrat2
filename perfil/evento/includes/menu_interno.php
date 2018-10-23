@@ -8,10 +8,10 @@ $pasta = "?perfil=evento&p=";
             <li class="header">EVENTO</li>
             <?php
             if(isset($_SESSION['idEvento'])){
-                echo "<li><a href=\"<?= $pasta ?>evento_edita\"><i class=\"fa fa-circle-o\"></i> <span>Evento</span></a></li>";
+                echo "<li><a href=\"".$pasta."evento_edita\"><i class=\"fa fa-circle-o\"></i> <span>Evento</span></a></li>";
             }
             else{
-                echo "<li><a href=\"<?= $pasta ?>evento_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Evento</span></a></li>";
+                echo "<li><a href=\"".$pasta."evento_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Evento</span></a></li>";
             }
             if(isset($_SESSION['idEvento'])){
                 $idEvento = $_SESSION['idEvento'];
