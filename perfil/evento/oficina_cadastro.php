@@ -28,7 +28,7 @@
                     <!-- form start -->
                     <form action="?perfil=evento&p=oficina_edita" method="post" role="form">
                         <div class="box-body">
-                            <input type="hidden" name="idAtracao" value="<?= /*$idAtracao?? 1*/ '1'?>">
+                            <input type="hidden" name="idAtracao" value="<?= $idAtracao?>">
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="certificado">Certificado: *</label>
@@ -64,7 +64,7 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="dataDivulgacao">Data de Divulgação: *</label>
-                                    <input type="text" class="form-control" name="dataDivulgacao">
+                                    <input type="date" class="form-control" name="dataDivulgacao">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="cargaHoraria">Carga  Horaria: *</label>
