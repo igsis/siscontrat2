@@ -5,32 +5,67 @@ include "includes/menu_interno.php";
 $evento = recuperaDados('eventos', 'id', $idEvento);
 ?>
 <script type="text/javascript">
-    $(document).ready(function ()
-    {
+    function desmarca() {
+        $("#diasemana01").prop("checked", false);
+        $("#diasemana02").prop("checked", false);
+        $("#diasemana03").prop("checked", false);
+        $("#diasemana04").prop("checked", false);
+        $("#diasemana05").prop("checked", false);
+        $("#diasemana06").prop("checked", false);
+        $("#diasemana07").prop("checked", false);
+    }
+
+    function mudaData(valor) {
+        $("#diasemana01").prop("disabled", valor);
+        $("#diasemana02").prop("disabled", valor);
+        $("#diasemana03").prop("disabled", valor);
+        $("#diasemana04").prop("disabled", valor);
+        $("#diasemana05").prop("disabled", valor);
+        $("#diasemana06").prop("disabled", valor);
+        $("#diasemana07").prop("disabled", valor);
+
+        desmarca();
+    }
+
+    $(document).ready(function () {
         validate();
         $('#datepicker11').change(validate);
     });
-    function validate()
-    {
-        if ($('#datepicker11').val().length > 0)
-        {
-            $("#diasemana01").prop("disabled", false);
-            $("#diasemana02").prop("disabled", false);
-            $("#diasemana03").prop("disabled", false);
-            $("#diasemana04").prop("disabled", false);
-            $("#diasemana05").prop("disabled", false);
-            $("#diasemana06").prop("disabled", false);
-            $("#diasemana07").prop("disabled", false);
+
+    function validate() {
+        if ($('#datepicker11').val().length > 0) {
+            mudaData(false);
         }
-        else
-        {
-            $("#diasemana01").prop("disabled", true);
-            $("#diasemana02").prop("disabled", true);
-            $("#diasemana03").prop("disabled", true);
-            $("#diasemana04").prop("disabled", true);
-            $("#diasemana05").prop("disabled", true);
-            $("#diasemana06").prop("disabled", true);
-            $("#diasemana07").prop("disabled", true);
+        else {
+            mudaData(true);
+
+            var data = document.querySelector('input[name="data_inicio"]').value;
+            data = new Date(data);
+            dayName = new Array("0", "1", "2", "3", "4", "5", "6", "0");
+            let dia = dayName[data.getDay() + 1];
+
+            if (dia == 0) {
+                $("#diasemana07").prop("disabled", false);
+                $("#diasemana07").prop("checked", true);
+            } else if (dia == 1) {
+                $("#diasemana01").prop("disabled", false);
+                $("#diasemana01").prop("checked", true);
+            } else if (dia == 2) {
+                $("#diasemana02").prop("disabled", false);
+                $("#diasemana02").prop("checked", true);
+            } else if (dia == 3) {
+                $("#diasemana03").prop("disabled", false);
+                $("#diasemana03").prop("checked", true);
+            } else if (dia == 4) {
+                $("#diasemana04").prop("disabled", false);
+                $("#diasemana04").prop("checked", true);
+            } else if (dia == 5) {
+                $("#diasemana05").prop("disabled", false);
+                $("#diasemana05").prop("checked", true);
+            } else if (dia == 6) {
+                $("#diasemana06").prop("disabled", false);
+                $("#diasemana06").prop("checked", true);
+            }
         }
     }
 </script>
