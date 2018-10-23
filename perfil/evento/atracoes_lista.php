@@ -3,16 +3,13 @@
 $con = bancoMysqli();
 
 $idEvento = $_SESSION['idEvento'];
-$sql = "SELECT at.id AS idAtracao, nome_atracao, a2.categoria_atracao,produtor_id FROM atracoes AS at
+$sql = "SELECT at.id AS idAtracao, nome_atracao, a2.categoria_atracao,produtor_id,at.categoria_atracao_id FROM atracoes AS at
         INNER JOIN atracao_eventos a on at.id = a.atracao_id
         INNER JOIN categoria_atracoes a2 on at.categoria_atracao_id = a2.id
         WHERE at.publicado = 1 AND a.evento_id = '$idEvento'";
 $query = mysqli_query($con,$sql);
 
 include "includes/menu_interno.php";
-
-
-
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -58,7 +55,6 @@ include "includes/menu_interno.php";
                                 echo "<tr>";
                                 echo "<td>".$atracao['nome_atracao']."</td>";
                                 echo "<td>".$atracao['categoria_atracao']."</td>";
-                                if ($id)
                                 if($atracao['produtor_id'] > 0){
                                     $idProdutor = $atracao['produtor_id'];
                                     $sql_produtor = "SELECT id,nome FROM produtores WHERE id = '$idProdutor'";
@@ -79,7 +75,52 @@ include "includes/menu_interno.php";
                                         </form>
                                     </td>";
                                 }
-
+                                /*
+                                 * Especificidades
+                                 */
+                                $idCategoriaAtracao = $atracao['categoria_atracao_id'];
+                                $array_teatro = array(3,7,23,24);
+                                if(in_array($idCategoriaAtracao, $array_teatro)){
+                                    echo "<li><a href=\"".$pasta."especificidade_teatro_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
+                                }
+                                else{
+                                    $array_musica = array(10,11,15,17);
+                                    if(in_array($idCategoriaAtracao, $array_musica)){
+                                        echo "<li><a href=\"".$pasta."especificidade_musica_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
+                                    }
+                                    else{
+                                        if($idCategoriaAtracao == 2){
+                                            echo "<li><a href=\"".$pasta."especificidade_exposicao_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
+                                        }
+                                        else{
+                                            if($idCategoriaAtracao == 4 || $idCategoriaAtracao == 5){
+                                                $oficina = recuperaDados("oficinas","atracao_id",$atracao['idAtracao']);
+                                                if($oficina != NULL){
+                                                    echo "<td>
+                                                    <form method=\"POST\" action=\"?perfil=evento&p=oficina_edita\" role=\"form\">
+                                                    <input type='hidden' name='idOficina' value='".$oficina['id']."'>
+                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
+                                                    ".$oficina['id']."</form>
+                                                    </td>";
+                                                }
+                                                else{
+                                                    echo "<td>
+                                                    <form method=\"POST\" action=\"?perfil=evento&p=oficina_cadastro\" role=\"form\">
+                                                    <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
+                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Especificidade</button>
+                                                    </form>
+                                                    </td>";
+                                                }
+                                            }
+                                            else{
+                                                echo "<td>Não há especificidades.</td>";
+                                            }
+                                        }
+                                    }
+                                }
+                                /*
+                                 * Ocorrência
+                                 */
                                 $ocorrencias = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $atracao['idAtracao']);
 
                                 if($ocorrencias > 0){
