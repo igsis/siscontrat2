@@ -20,7 +20,7 @@
                       VALUES ('$nome','$email','$telefone1','$telefone2','$observacao')";
 
         if (mysqli_query($con,$sqlInsert)){
-            $_SESSION["produtor"] = recuperaUltimo("produtores");
+            $idProdutor = recuperaUltimo("produtores");
             $sqlUpdate = "UPDATE `atracoes`
                           SET produtor_id = '".$produtor."'
                           WHERE id ='$idAtracoes'";
@@ -28,7 +28,7 @@
                 $resultado = mensagem("sucess","Produtor cadastrado");
                 $idAtracao = recuperaUltimo("atracoes");
             }else{
-                mensagem("danger","Erro atrações");
+                $resultado = mensagem("danger","Erro atrações");
             }
         }
     }
@@ -36,6 +36,7 @@
     $row = recuperaDados("produtores","id", $_SESSION["produtor"]);
 
     if (isset($_POST['edita'])){
+        $idProdutor = $_POST['idProdutor'];
         $sql  = "UPDATE `produtores`
                  SET  nome = '$nome',
                       email = '$email',
@@ -74,41 +75,30 @@
                     <!-- form start -->
                     <form method="POST" action="?perfil=evento&p=produtor_edita" role="form">
                         <div class="box-body">
-                            <?php
-                            echo "<input type='hidden' name='idAtracoes' value='".$idAtracoes."''>";
-                            ?>
+                            <input type='hidden' name='idProdutor' value="<?= $idProdutor ?>">
+                            
                             <div class="form-group">
                                 <label for="nome">Nome: *</label>
-                                <?php
-                                    echo "<input type='text' class='form-control' id='nome' name='nome' maxlength='120' value='".$row['nome']."' required>";
-                                ?>
+                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value='<?= $row['nome']?>' required>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="email">E-mail</label>
-                                    <?php
-                                        echo "<input type='email' class='form-control' id='email' name='email' maxlength='60' placeholder='Digite o e-mail' value='".$row['email']."' required>";
-                                    ?>
-
+                                    <input type='email' class='form-control' id='email' name='email' maxlength='60' placeholder='Digite o e-mail' value='<?= $row['email']?>' required>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone1">Telefone #1</label>
-                                    <?php
-                                        echo "<input type='text' class='form-control' id='telefone1' name='telefone1' maxlength='15' placeholder='Digite o Telefone principal' required value='".$row['telefone1']."'>";
+                                    <input type='text' class='form-control' id='telefone1' name='telefone1' maxlength='15' placeholder='Digite o Telefone principal' required value='<?= $row['telefone1']?>'>
                                     ?>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone2">Telefone #2</label>
-                                    <?php
-                                        echo "<input type='text' class='form-control' id='telefone2' name='telefone2' maxlength='15' placeholder='Digite o Telefone secundário' value='".$row['telefone2']."'>";
-                                    ?>
+                                    <input type='text' class='form-control' id='telefone2' name='telefone2' maxlength='15' placeholder='Digite o Telefone secundário' value='<?= $row['telefone2']?>'>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="observacao">Observação</label>
-                                <?php
-                                    echo "<textarea name='observacao' id='observacao' class='form-control' rows='5'>".$row['observacao']."</textarea>";
-                                ?>
+                                <textarea name='observacao' id='observacao' class='form-control' rows='5'><?=$row['observacao'] ?></textarea>
                             </div>
                         </div>
                         <div class="box-footer">

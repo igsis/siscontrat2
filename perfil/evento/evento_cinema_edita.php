@@ -11,7 +11,7 @@
    //   $result = mysqli_fetch_assoc($result);
    // }
     session_status();
-    if (isset($_POST['cadastra']) || isset($POST['edita'])) {
+    if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
         $tituloFilme = $_POST['tituloFilme'];
         $tituloOriginal = $_POST['tituloOriginal'];
@@ -53,40 +53,41 @@
     }
 
     if (isset($_POST['edita'])){
-//        echo $tituloFilme;
-//        $sql = " UPDATE filmes
-//                 SET  titulo = '$tituloFilme',
-//                      titulo_original = '$tituloOriginal',
-//                      ano_producao = '$anoProducao',
-//                      genero = '$genero',
-//                      bitola = '$bitola',
-//                      direcao = '$direcao',
-//                      sinopse = '$sinopse',
-//                      elenco = '$elenco',
-//                      duracao = '$duracao',
-//                      link_trailer = '$link',
-//                      classificacao_indicativa_id = '$classidicacaoIndicativa',
-//                      pais_origem_id = '$paisOrigem',
-//                      pais_origem_coproducao_id = '$paisCoProducao'
-//                  WHERE id = '".$_SESSION["idFilme"]."'
-//        ";
-//
-//
-//        if (mysqli_query($con,$sql)){
-//            mensagem("sucess", "Cadastro atualizado!");
-//        }
-//        else{
-//            mensagem("danger","Erro ao atualizar");
-//        }
+
+       $idFilme = $_POST['idFilme'];
+
+       $sql = " UPDATE `filmes`
+                SET  titulo = '$tituloFilme',
+                     titulo_original = '$tituloOriginal',
+                     ano_producao = '$anoProducao',
+                     genero = '$genero',
+                     bitola = '$bitola',
+                     direcao = '$direcao',
+                     sinopse = '$sinopse',
+                     elenco = '$elenco',
+                     duracao = '$duracao',
+                     link_trailer = '$link',
+                     classificacao_indicativa_id = '$classidicacaoIndicativa',
+                     pais_origem_id = '$paisOrigem',
+                     pais_origem_coproducao_id = '$paisCoProducao'
+                 WHERE id = '$idFilme'";
+
+
+       if (mysqli_query($con,$sql)){
+           mensagem("sucess", "Cadastro atualizado!");
+       }
+       else{
+           mensagem("danger","Erro ao atualizar");
+       }
 
     }
 
     if (isset($_POST['carregar'])){
-        $_SESSION["idFilme"] = $_POST['idFilme'];
+        $idFilme = $_POST['idFilme'];
         
     }
 
-    $row = recuperaDados("filmes","id", $_SESSION["idFilme"]);
+    $row = recuperaDados("filmes","id", $idFilme);
 
 ?>
 
@@ -109,21 +110,17 @@
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="tituloFilme">Título do filme *:</label>
-                                <?php
-                                    echo "<input type='text' class='form-control' id='tituloFilme' name='tituloFilme'
-                                    maxlength='100' required value='".$row['titulo']."'>";
-                                ?>
+                                <input type='text' class='form-control' id='tituloFilme' name='tituloFilme'
+                                    maxlength='100' required value='<?= $row['titulo']?>'>
                             </div>
                             <div class="form-group">
                                  <label for="tituloOriginal">Título original:</label>
-<!--                                 <input type="text" class="form-control" id="tituloOriginal" name="tituloOriginal" placeholder="Digite o título original" maxlength="100">-->
-                                <?php
-                                    echo "<input type='text' class='form-control' id='tituloOriginal' name='tituloOriginal' maxlength='100' value='".$row['titulo_original']."'>"
-                                ?>
+                                 <input type="text" class="form-control" id="tituloOriginal" name="tituloOriginal" placeholder="Digite o título original" maxlength="100" value='<?= $row['titulo_original']?>'>
+                                
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label>País de origem*:</label>
+                                    <label>País de origem *:</label>
                                     <select class="form-control" name="paisOrigem" id="paisOrigem" required>
                                             <option value="">Selecione uma opção...</option>
                                             <?php
@@ -145,54 +142,35 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="anoProducao">Ano de produção: *</label>
-<!--                                    <input type="text" class="form-control" id="anoProducao" name="anoProducao" placeholder="Ex: 1995" maxlength="4" required>-->
-                                    <?php
-                                        echo "<input type='text' class='form-control' id='anoProducao' name='anoProducao' placeholder='Ex: 1995'  maxlength='4' required value='".$row['ano_producao']."'>";
-                                    ?>
+                                    <input type="text" class="form-control" id="anoProducao" name="anoProducao" placeholder="Ex: 1995" maxlength="4" required value="<?= $row['ano_producao'] ?>">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="genero">Gênero:</label>
-<!--                                    <input type="text" class="form-control" id="genero" name="genero" placeholder="Digite o Gênero" maxlength="20">-->
-                                    <?php
-                                        echo "<input type='text' class='form-control' id='genero' name='genero' placeholder='Digite o Gênero' maxlength='20' value ='".$row['genero']."'>";
-                                    ?>
+                                    <input type="text" class="form-control" id="genero" name="genero" placeholder="Digite o Gênero" maxlength="20" value="<?= $row['genero'] ?>"/>
+                                    
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="bitola">Bitola:</label>
-<!--                                <input type="text" class="form-control" maxlength="30" id="bitola" name="bitola">-->
-                                <?php
-                                    echo "<input type='text' class='form-control' maxlength='30' id='bitola' name='bitola' value='".$row['bitola']."'>";
-                                ?>
+                                <input type="text" class="form-control" maxlength="30" id="bitola" name="bitola" value="<?= $row['bitola'] ?>">
+                                
                             </div>
                             <div class="form-group">
                                 <label for="direcao">Direção:</label>
-<!--                                <textarea class="form-control" name="direcao" id="direcao" rows="5"></textarea>-->
-                                <?php
-                                    echo "<textarea class='form-control' name='direcao' id='direcao' rows='5'>".$row['direcao']."</textarea>";
-                                ?>
+                                <textarea class="form-control" name="direcao" id="direcao" rows="5"><?= $row['direcao'] ?></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="sinopse">Sinopse:</label>
-<!--                                <textarea class="form-control" name="sinopse" id="sinopse" rows="10"></textarea>-->
-                                <?php
-                                    echo "<textarea class='form-control' name='sinopse' id='sinopse' rows='10' >".$row['sinopse']."</textarea>";
-                                ?>
+                                <textarea class="form-control" name="sinopse" id="sinopse" rows="10"><?= $row['sinopse'] ?></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="elenco">Elenco:</label>
-<!--                                <textarea class="form-control" name="elenco" id="elenco" rows="10"></textarea>-->
-                                <?php
-                                    echo"<textarea class=\"form-control\" name=\"elenco\" id=\"elenco\" rows=\"10\">".$row['elenco']."</textarea>";
-                                ?>
+                                <textarea class="form-control" name="elenco" id="elenco" rows="10"><?= $row['elenco'] ?> </textarea>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="duracao">Duração (em minutos):</label>
-<!--                                    <input type="number" class="form-control" name="duracao" id="duracao">-->
-                                    <?php
-                                        echo "<input type=\"number\" class=\"form-control\" name=\"duracao\" id=\"duracao\" value='".$row['duracao']."'>"
-                                    ?>
+                                    <input type="number" class="form-control" name="duracao" id="duracao" value="<?= $row['duracao'] ?>">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="classidicacaoIndicativa">Classificação indicativa: *</label>
@@ -206,19 +184,16 @@
                             </div>
                             <div class="form-group">
                                 <label for="link">Link para Trailer:</label>
-<!--                                <input type="text" class="form-control" name="link" id="link" placeholder="Cole aqui o link para o trailer">-->
-                                <?php
-                                    echo "<input type=\"text\" class=\"form-control\" name=\"link\" id=\"link\" placeholder=\"Cole aqui o link para o trailer\" value='".$row['link_trailer']."'>";
-                                ?>
+                                <input type="text" class="form-control" name="link" id="link" placeholder="Cole aqui o link para o trailer" value="<?= $row['link_trailer'] ?>">
                             </div>
-
+                            <input type="hidden" name="idFilme" value="<?= $idFilme ?>">
                         </div>
 
 
 
                         <div class="box-footer">
                             <button type="button" class="btn btn-default">Cancel</button>
-
+                            
                             <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
                         </div>
                     </form>
