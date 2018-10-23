@@ -4,6 +4,36 @@ include "includes/menu_interno.php";
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 ?>
+<script type="text/javascript">
+    $(document).ready(function ()
+    {
+        validate();
+        $('#datepicker11').change(validate);
+    });
+    function validate()
+    {
+        if ($('#datepicker11').val().length > 0)
+        {
+            $("#diasemana01").prop("disabled", false);
+            $("#diasemana02").prop("disabled", false);
+            $("#diasemana03").prop("disabled", false);
+            $("#diasemana04").prop("disabled", false);
+            $("#diasemana05").prop("disabled", false);
+            $("#diasemana06").prop("disabled", false);
+            $("#diasemana07").prop("disabled", false);
+        }
+        else
+        {
+            $("#diasemana01").prop("disabled", true);
+            $("#diasemana02").prop("disabled", true);
+            $("#diasemana03").prop("disabled", true);
+            $("#diasemana04").prop("disabled", true);
+            $("#diasemana05").prop("disabled", true);
+            $("#diasemana06").prop("disabled", true);
+            $("#diasemana07").prop("disabled", true);
+        }
+    }
+</script>
 
 <div class="content-wrapper">
     <section class="content">
@@ -28,21 +58,21 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="data_fim">Data Encerramento (apenas se for temporada)</label> <br>
-                                    <input type="date" name="data_fim" class="form-control" id="datepicker10"
-                                           placeholder="DD/MM/AAAA" onblur="verificaCampoVazio()">
+                                    <input type="date" name="data_fim" class="form-control" id="datepicker11"
+                                           placeholder="DD/MM/AAAA" onblur="validate()">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label>
-                                        <input type="checkbox" name="domingo" id="domingo" value="1"> Domingo &nbsp;
-                                        <input type="checkbox" name="segunda" id="segunda" value="1"> Segunda &nbsp;
-                                        <input type="checkbox" name="terca" id="terca" value="1"> Terça &nbsp;
-                                        <input type="checkbox" name="quarta" id="quarta" value="1"> Quarta &nbsp;
-                                        <input type="checkbox" name="quinta" id="quinta" value="1"> Quinta &nbsp;
-                                        <input type="checkbox" name="sexta" id="sexta" value="1"> Sexta &nbsp;
-                                        <input type="checkbox" name="sabado" id="sabado" value="1"> Sábado &nbsp;
+                                        <input type="checkbox" name="domingo" id="diasemana07" value="1"> Domingo &nbsp;
+                                        <input type="checkbox" name="segunda" id="diasemana01" value="1"> Segunda &nbsp;
+                                        <input type="checkbox" name="terca" id="diasemana02" value="1"> Terça &nbsp;
+                                        <input type="checkbox" name="quarta" id="diasemana03" value="1"> Quarta &nbsp;
+                                        <input type="checkbox" name="quinta" id="diasemana04" value="1"> Quinta &nbsp;
+                                        <input type="checkbox" name="sexta" id="diasemana05" value="1"> Sexta &nbsp;
+                                        <input type="checkbox" name="sabado" id="diasemana06" value="1"> Sábado &nbsp;
                                     </label>
                                 </div>
                             </div>
@@ -131,90 +161,3 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         </div>
     </section>
 </div>
-
-<script type="text/javascript">
-    var domingo = document.getElementById("domingo");
-    var segunda = document.getElementById("segunda");
-    var terca = document.getElementById("terca");
-    var quarta = document.getElementById("quarta");
-    var quinta = document.getElementById("quinta");
-    var sexta = document.getElementById("sexta");
-    var sabado = document.getElementById("sabado");
-
-    function resetCheckBox() {
-        domingo.checked = false;
-        segunda.checked = false;
-        terca.checked = false;
-        quarta.checked = false;
-        quinta.checked = false;
-        sexta.checked = false;
-        sabado.checked = false;
-
-
-    }
-
-    function mudaCheckBox(valor) {
-        domingo.setAttribute('disabled', valor);
-        segunda.setAttribute('disabled', valor);
-        terca.setAttribute('disabled', valor);
-        quarta.setAttribute('disabled', valor);
-        quinta.setAttribute('disabled', valor);
-        sexta.setAttribute('disabled', valor);
-        sabado.setAttribute('disabled', valor);
-    }
-
-    function arrumaData() {
-        resetCheckBox();
-        var data = document.querySelector('input[name="data_inicio"]').value;
-
-        data = new Date(data);
-
-        dayName = new Array("0", "1", "2", "3", "4", "5", "6", "0");
-
-        let dia = dayName[data.getDay() + 1];
-
-        resetCheckBox();
-        mudaCheckBox(true);
-
-        if (dia == 0) {
-            resetCheckBox();
-            mudaCheckBox(true);
-            domingo.checked = true;
-        } else if (dia == 1) {
-            resetCheckBox();
-            mudaCheckBox(true);
-            segunda.checked = true;
-        } else if (dia == 2) {
-            resetCheckBox();
-            mudaCheckBox(true);
-            terca.checked = true;
-        } else if (dia == 3) {
-            resetCheckBox();
-            mudaCheckBox(true);
-            quarta.checked = true;
-        } else if (dia == 4) {
-            resetCheckBox();
-            mudaCheckBox(true);
-            quinta.checked = true;
-        } else if (dia == 5) {
-            resetCheckBox();
-            mudaCheckBox(true);
-            sexta.checked = true;
-        } else if (dia == 6) {
-            resetCheckBox();
-            mudaCheckBox(true);
-            sabado.checked = true;
-        }
-    }
-
-    function verificaCampoVazio() {
-        if (document.getElementsByName("data_fim").value != "") {
-            resetCheckBox();
-            mudaCheckBox(false);
-        }
-    }
-
-    window.onload = arrumaData();
-    window.onload = verificaCampoVazio();
-
-</script>
