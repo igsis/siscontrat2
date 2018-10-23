@@ -21,8 +21,18 @@
     }
 
     if (isset($_POST['cadastra'])){
-        $sql = "INSERT INTO `oficinas`";
-        $sql .= "(atracao_id, certificado, vagas, publico_alvo, material, inscricao,)";
+
+        $sql = "INSERT INTO `oficinas` ";
+        $sql .= "(atracao_id, certificado, vagas, publico_alvo, material, inscricao, valor_hora, venda, data_divulgacao, carga_horaria) ";
+        $sql .= "VALUES('$idAtracao','$certificado','$vagas','$publicoAlvo','$material','$inscricao','$valorHora','$venda','$dataDivulgacao','$cargaHoraria')";
+
+        if (mysqli_query($con,$sql)){
+            $resultado = mensagem("success", "Oficina cadastrada!");
+        }else{
+            $erro = die(mysqli_error($con));
+            $resultado = mensagem("danger", "[COD2] Erro ao gravar! Tente novamente.\n".$erro);
+        }
+
     }
 ?>
 
@@ -33,7 +43,10 @@
 
         <!-- START FORM-->
         <h2 class="page-header">Cadastro de Evento</h2>
-
+        <?php
+            echo $resultado;
+        ?>
+        ?>
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->

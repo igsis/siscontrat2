@@ -58,6 +58,7 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
         <!-- START FORM-->
         <h2 class="page-header">Cadastro de Evento</h2>
 
+        ?>
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
