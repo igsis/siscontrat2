@@ -52,22 +52,10 @@ include "includes/menu_interno.php";
                                     <textarea name="material" id="material" class="form-control" rows="2"></textarea>
                                 </div>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="inicio_inscricao">Início de inscrição: </label> <br/>
-                                <input type="date" name="inicio_inscricao" onkeyup="barraData(this);"/>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="encerramento_inscricao">Encerramento de inscrição: </label>
-                                <input type="date" name="encerramento_inscricao" onkeyup="barraData(this);"/>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="divulgacao">Divulgação de inscrição: </label> <br/>
-                                <input type="date" name="divulgacao" onkeyup="barraData(this);"/>
-                            </div>
                             <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="forma_inscricao">Forma de inscrição: </label>
-                                    <select class="form-control" id="forma_inscricao" name="forma_inscricao">
+                                <div class="form-group col-md-4">
+                                    <label for="forma_inscricao">Forma de inscrição: </label><br>
+                                    <select id="forma_inscricao" name="forma_inscricao">
                                         <option value="1">Sem necessidade</option>
                                         <option value="2">Pelo site - ficha de inscrição</option>
                                         <option value="3">Pelo site - por email</option>
@@ -75,7 +63,7 @@ include "includes/menu_interno.php";
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="carga_horaria">Carga Horária (em horas): </label>
+                                    <label for="carga_horaria">Carga Horária (em horas): </label><br>
                                     <input type="number" name="carga_horaria"/>
                                 </div>
                                 <div class="form-group col-md-4">
@@ -83,6 +71,20 @@ include "includes/menu_interno.php";
                                     <input type="number" name="valor_aula"/>
                                 </div>
 
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="inicio_inscricao">Início de inscrição: </label> <br/>
+                                    <input type="date" name="inicio_inscricao" onkeyup="barraData(this);"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="encerramento_inscricao">Encerramento de inscrição: </label>
+                                    <input type="date" name="encerramento_inscricao" onkeyup="barraData(this);"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="divulgacao">Divulgação de inscrição: </label> <br/>
+                                    <input type="date" name="divulgacao" onkeyup="barraData(this);"/>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
