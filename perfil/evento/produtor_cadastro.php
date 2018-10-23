@@ -3,12 +3,10 @@ $con = bancoMysqli();
 include "includes/menu_interno.php";
 
 if(isset($_POST['idAtracao'])){
-    $_SESSION["idAtracao"] = $_POST['idAtracao'];
+    $idAtracao = $_POST['idAtracao'];
 
 }
-if ($_SESSION["idAtracao"] == NULL){
-    $_SESSION["idAtracao"] = "1";
-}
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -30,9 +28,8 @@ if ($_SESSION["idAtracao"] == NULL){
                     <!-- form start -->
                     <form method="POST" action="?perfil=evento&p=produtor_edita" role="form">
                         <div class="box-body">
-                            <?php
-                                echo "<input type='hidden' name='idAtracoes' value='".$_SESSION["idAtracao"]."''>";
-                            ?>
+                            <input type='hidden' name='idAtracoes' value='<?= $idAtracao?>'>
+
                             <div class="form-group">
                                 <label for="nome">Nome: *</label>
                                 <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome completo" maxlength="120" required>
