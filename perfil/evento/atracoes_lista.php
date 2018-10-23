@@ -56,12 +56,12 @@ include "includes/menu_interno.php";
                                 echo "<td>".$atracao['categoria_atracao']."</td>";
                                 if($atracao['produtor_id'] > 0){
                                     $idProdutor = $atracao['produtor_id'];
-                                    $sql_produtor = "SELECT nome FROM produtores WHERE id = '$idProdutor'";
+                                    $sql_produtor = "SELECT id,nome FROM produtores WHERE id = '$idProdutor'";
                                     $query_produtor = mysqli_query($con,$sql_produtor);
                                     $produtor = mysqli_fetch_array($query_produtor);
                                     echo "<td>
                                               <form method=\"POST\" action=\"?perfil=evento&p=produtor_edita\" role=\"form\">
-                                        <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
+                                        <input type='hidden' name='idProdutor' value='".$produtor['id']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
                                         ".$produtor['nome']."</form>
                                         </td>";
