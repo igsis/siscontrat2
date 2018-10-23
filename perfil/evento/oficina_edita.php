@@ -83,7 +83,11 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="certificado">Certificado: *</label>
-                                    <input type="number" class="form-control" name="certificado" required value="<?= $row['certificado']?>">
+                                    <selec class="form-control" name="certificado" required>
+                                        <option value="1">Sim</option>
+                                        <option value="2">Não</option>
+                                    </selec>
+<!--                                    <input type="number" class="form-control" name="certificado" required value="--><?//= $row['certificado']?><!--">-->
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="vagas">Vagas: *</label>

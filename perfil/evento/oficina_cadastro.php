@@ -32,7 +32,10 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="certificado">Certificado: *</label>
-                                    <input type="number" class="form-control" name="certificado" required>
+                                    <selec class="form-control" name="certificado" required>
+                                        <option value="1">Sim</option>
+                                        <option value="2">Não</option>
+                                    </selec>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="vagas">Vagas: *</label>
@@ -50,7 +53,10 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="inscricao">Inscrição: *</label>
-                                    <input type="number" class="form-control" name="inscricao">
+                                    <selec class="form-control" name="inscricao" required>
+                                        <option value="1">Sim</option>
+                                        <option value="2">Não</option>
+                                    </selec>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="valorHora">Valor Hora: *</label>
@@ -58,7 +64,10 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="venda">Venda: *</label>
-                                    <input type="number" class="form-control" name="venda">
+                                    <selec class="form-control" name="venda" required>
+                                        <option value="1">Sim</option>
+                                        <option value="2">Não</option>
+                                    </selec>
                                 </div>
                             </div>
                             <div class="row">
