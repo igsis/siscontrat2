@@ -6,8 +6,6 @@
     if (isset($_POST['idAtracao'])){
         $idAtracao = $_POST['idAtracao'];
 
-        if ($idAtracao == NULL)
-            $idAtracao = 1;
     }
 
     if (isset($_POST['cadastra']) || isset($_POST['edita'])){
@@ -31,10 +29,10 @@
 
         if (mysqli_query($con,$sql)){
             $idOficina = recuperaUltimo("oficinas");
-            $resultado = mensagem("success", "Oficina cadastrada!");
+            $mensagem = mensagem("success", "Oficina cadastrada!");
         }else{
             $erro = die(mysqli_error($con));
-            $resultado = mensagem("danger", "[COD2] Erro ao gravar! Tente novamente.\n".$erro);
+            $mensagem = mensagem("danger", "[COD2] Erro ao gravar! Tente novamente.\n".$erro);
         }
 
     }
@@ -46,11 +44,15 @@
         $sql .= "WHERE atracao_id ='$idAtracao' AND id = '$idOficina'";
 
         if (mysqli_query($con, $sql)){
-            $resultado = mensagem("success", "Cadastro alterado!");
+            $mensagem = mensagem("success", "Cadastro alterado!");
         }else{
             $erro = die(mysqli_error($con));
-            $resultado = mensagem("danger","Erro ao Alterar o cadastro! ".$erro);
+            $mensagem = mensagem("danger","Erro ao Alterar o cadastro! ".$erro);
         }
+    }
+
+    if (isset($_POST['carregar'])){
+        $idOficina = $_POST['idOficina'];
     }
 
     $row = recuperaDados("oficinas","id", $idOficina);
@@ -64,7 +66,7 @@
         <!-- START FORM-->
         <h2 class="page-header">Cadastro de Evento</h2>
         <?php
-            echo $resultado;
+           echo $mensagem;
         ?>
         <div class="row">
             <div class="col-md-12">
