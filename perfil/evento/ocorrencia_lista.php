@@ -22,6 +22,7 @@ $query = mysqli_query($con,$sql);
                     <button type="submit" class="btn btn-block btn-info"><i class="fa fa-plus"></i> Adiciona</button>
                 </form>
             </div>
+
         </div>
         <br/>
 

@@ -23,11 +23,13 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="data_inicio">Data Início*</label> <br>
-                                    <input type="date" name="data_inicio" class="form-control" id="datepicker10" required placeholder="DD/MM/AAAA">
+                                    <input type="date" name="data_inicio" class="form-control" id="datepicker10"
+                                           required placeholder="DD/MM/AAAA" onblur="arrumaData()">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="data_fim">Data Encerramento (apenas se for temporada)</label> <br>
-                                    <input type="date" name="data_fim" class="form-control" id="datepicker10" placeholder="DD/MM/AAAA">
+                                    <input type="date" name="data_fim" class="form-control" id="datepicker10"
+                                           placeholder="DD/MM/AAAA" onblur="verificaCampoVazio()">
                                 </div>
                             </div>
 
@@ -48,14 +50,16 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="horaInicio">Hora de Início*</label> <br>
-                                    <input type="time" name="horaInicio" class="form-control" id="horaInicio" required placeholder="hh:mm"/>
+                                    <input type="time" name="horaInicio" class="form-control" id="horaInicio" required
+                                           placeholder="hh:mm"/>
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
-                                    <input type="time" name="horaFim" class="form-control" id="horaFim" required placeholder="hh:mm"/>
+                                    <input type="time" name="horaFim" class="form-control" id="horaFim" required
+                                           placeholder="hh:mm"/>
                                 </div>
-                                
+
                                 <div class="form-group col-md-3">
                                     <label for="retiradaIngresso">Retirada de Ingresso</label>
                                     <select name="retiradaIngresso" id="retiradaIngresso" class="form-control">
@@ -68,7 +72,8 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
                                 <div class="form-group col-md-3">
                                     <label for="valor_ingresso">Valor Ingresso*</label> <br>
-                                    <input type="text" name="valor_ingresso" class="form-control" required id="valor_ingresso"
+                                    <input type="text" name="valor_ingresso" class="form-control" required
+                                           id="valor_ingresso"
                                            placeholder="Em reais"/>
                                 </div>
                             </div>
@@ -80,7 +85,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
-                                            geraOpcao("instituicoes", "");
+                                        geraOpcao("instituicoes", "");
                                         ?>
                                     </select>
                                 </div>
@@ -91,7 +96,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
-                                            geraOpcao("locais", "");
+                                        geraOpcao("locais", "");
                                         ?>
                                     </select>
                                 </div>
@@ -102,7 +107,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
-                                            geraOpcao("espacos", "");
+                                        geraOpcao("espacos", "");
                                         ?>
                                     </select>
                                 </div>
@@ -126,3 +131,90 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         </div>
     </section>
 </div>
+
+<script type="text/javascript">
+    var domingo = document.getElementById("domingo");
+    var segunda = document.getElementById("segunda");
+    var terca = document.getElementById("terca");
+    var quarta = document.getElementById("quarta");
+    var quinta = document.getElementById("quinta");
+    var sexta = document.getElementById("sexta");
+    var sabado = document.getElementById("sabado");
+
+    function resetCheckBox() {
+        domingo.checked = false;
+        segunda.checked = false;
+        terca.checked = false;
+        quarta.checked = false;
+        quinta.checked = false;
+        sexta.checked = false;
+        sabado.checked = false;
+
+
+    }
+
+    function mudaCheckBox(valor) {
+        domingo.setAttribute('disabled', valor);
+        segunda.setAttribute('disabled', valor);
+        terca.setAttribute('disabled', valor);
+        quarta.setAttribute('disabled', valor);
+        quinta.setAttribute('disabled', valor);
+        sexta.setAttribute('disabled', valor);
+        sabado.setAttribute('disabled', valor);
+    }
+
+    function arrumaData() {
+        resetCheckBox();
+        var data = document.querySelector('input[name="data_inicio"]').value;
+
+        data = new Date(data);
+
+        dayName = new Array("0", "1", "2", "3", "4", "5", "6", "0");
+
+        let dia = dayName[data.getDay() + 1];
+
+        resetCheckBox();
+        mudaCheckBox(true);
+
+        if (dia == 0) {
+            resetCheckBox();
+            mudaCheckBox(true);
+            domingo.checked = true;
+        } else if (dia == 1) {
+            resetCheckBox();
+            mudaCheckBox(true);
+            segunda.checked = true;
+        } else if (dia == 2) {
+            resetCheckBox();
+            mudaCheckBox(true);
+            terca.checked = true;
+        } else if (dia == 3) {
+            resetCheckBox();
+            mudaCheckBox(true);
+            quarta.checked = true;
+        } else if (dia == 4) {
+            resetCheckBox();
+            mudaCheckBox(true);
+            quinta.checked = true;
+        } else if (dia == 5) {
+            resetCheckBox();
+            mudaCheckBox(true);
+            sexta.checked = true;
+        } else if (dia == 6) {
+            resetCheckBox();
+            mudaCheckBox(true);
+            sabado.checked = true;
+        }
+    }
+
+    function verificaCampoVazio() {
+        if (document.getElementsByName("data_fim").value != "") {
+            resetCheckBox();
+            mudaCheckBox(false);
+        }
+    }
+
+    window.onload = arrumaData();
+    window.onload = verificaCampoVazio();
+
+</script>
