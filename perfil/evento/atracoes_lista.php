@@ -68,7 +68,7 @@ include "includes/menu_interno.php";
                                 }
                                 else{
                                     echo "<td>
-                                        <form method=\"POST\" action=\"?perfil=evento&p=produtor_cadastra\" role=\"form\">
+                                        <form method=\"POST\" action=\"?perfil=evento&p=produtor_cadastro\" role=\"form\">
                                         <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Produtor</button>
                                         </form>
