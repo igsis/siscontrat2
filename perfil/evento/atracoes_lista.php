@@ -85,14 +85,14 @@ include "includes/menu_interno.php";
                                     echo "<td>
                                               <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_lista\" role=\"form\">
                                         <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                        <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
-                                        Listar ocorrência</form>
+                                        <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i> Listar ocorrência</button>
+                                        </form>
                                         </td>";
                                 }
                                 else{
                                     echo "<td>
                                         <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_cadastro\" role=\"form\">
-                                        <input type='text' name='idAtracao' value='".$atracao['idAtracao']."'>
+                                        <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Ocorrência</button>
                                         </form>
                                     </td>";
