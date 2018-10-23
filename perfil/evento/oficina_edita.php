@@ -66,7 +66,6 @@
         <?php
             echo $resultado;
         ?>
-        ?>
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
@@ -100,25 +99,25 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="inscricao">Inscrição: *</label>
-                                    <input type="number" class="form-control" name="inscricao" required <?= $row['inscricao']?>>
+                                    <input type="number" class="form-control" name="inscricao" required value="<?= $row['inscricao']?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="valorHora">Valor Hora: *</label>
-                                    <input type="text" class="form-control" name="valorHora" required <?= $row['valor_hora']?>>
+                                    <input type="text" class="form-control" name="valorHora" required value="<?= $row['valor_hora']?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="venda">Venda: *</label>
-                                    <input type="number" class="form-control" name="venda" required <?= $row['venda']?> >
+                                    <input type="number" class="form-control" name="venda" required value="<?= $row['venda']?>" >
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="dataDivulgacao">Data de Divulgação: *</label>
-                                    <input type="text" class="form-control" name="dataDivulgacao" required <?= $row['data_divulgacao']?>>
+                                    <input type="text" class="form-control" name="dataDivulgacao" required value="<?= $row['data_divulgacao']?>">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="cargaHoraria">Carga  Horaria: *</label>
-                                    <input type="number" class="form-control" name="cargaHoraria" required <?= $row['carga_horaria']?>>
+                                    <input type="number" class="form-control" name="cargaHoraria" required value="<?= $row['carga_horaria']?>">
                                 </div>
                             </div>
                         </div>
