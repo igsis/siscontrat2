@@ -4,9 +4,10 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 
 $idAtracao = $_POST['idAtracao'];
-$sql = "SELECT * FROM ocorrencias o
-        INNER JOIN locais l ON o.local_id = l.id
-        WHERE o.origem_ocorrencia_id = '$idAtracao' ";
+
+$sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim FROM ocorrencias as o
+        INNER JOIN  locais as l ON o.local_id = l.id
+        WHERE o.origem_ocorrencia_id = '$idAtracao'";
 
 $query = mysqli_query($con,$sql);
 ?>
@@ -41,11 +42,12 @@ $query = mysqli_query($con,$sql);
                                 <th>Horario início</th>
                                 <th>Horario final</th>
                                 <th>Local</th>
-                                <th colspan="2" width="10%">Ação</th>
+                                <th colspan="3" width="10%">Ação</th>
                             </tr>
                             </thead>
 
                             <?php
+                            $idOcorrenciaDuplica = 0;
                             echo "<tbody>";
                             while ($ocorrencia = mysqli_fetch_array($query)){
 
@@ -62,6 +64,12 @@ $query = mysqli_query($con,$sql);
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\">Carregar</button>
                                     </form>
                                 </td>";
+                                $idOcorrenciaDuplica = $ocorrencia['id'];
+                                echo "<td>
+
+                                    <input type='hidden' name='idOcorrencia' value='".$idOcorrenciaDuplica."'>
+                                    <buttonn class='btn btn-info' data-toggle='modal' data-target='#duplica' data-tittle='Duplicando ocorrência' data-message='Digite o número de vezes que deseja duplicar a ocorrência: '>Duplicar</buttonn>
+                                </td>";
                                 echo "<td>
                                     <button type=\"button\" class=\"btn btn-block btn-danger\">Apagar</button>
                                   </td>";
@@ -75,20 +83,36 @@ $query = mysqli_query($con,$sql);
                                 <th>Horario início</th>
                                 <th>Horario final</th>
                                 <th>Local</th>
-                                <th colspan="2" width="10%">Ação</th>
+                                <th colspan="3" width="10%">Ação</th>
                             </tr>
                             </tfoot>
                         </table>
                     </div>
-                    <!-- /.box-body -->
                 </div>
-                <!-- /.box -->
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
-        <!-- END ACCORDION & CAROUSEL-->
-
     </section>
-    <!-- /.content -->
+</div>
+
+<!-- Duplicando o correncias -->
+<div class="modal fade" id="duplica" role="dialog" aria-labelledby="duplicar" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" id='cancelarProjeto' action="?perfil=smc_detalhes_projeto" class="form-horizontal" role="form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><p> Duplicando ocorrência</p></h4>
+                </div>
+                <div class="modal-body">
+                    <p>Digite o número de vezes que deseja duplicar a ocorrência: </p>
+                    <input type="number" min="1" max="10" name="numeroDuplica" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <input type='hidden' name='idProjeto' value='<?php echo "sasd" ?>'>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type='submit' class='btn btn-info btn-sm' style="border-radius: 10px;" name="duplicar">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
