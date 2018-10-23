@@ -6,7 +6,7 @@ $idEvento = $_SESSION['idEvento'];
 
 if(isset($_POST['cadastra']) || isset($_POST['edita'])){
     $nome_atracao = addslashes($_POST['nome_atracao']);
-    $categoria_atracacao_id = $_POST['categoria_atracacao_id'];
+    $categoria_atracao_id = $_POST['categoria_atracao_id'];
     $ficha_tecnica = addslashes($_POST['ficha_tecnica']);
     $integrantes = addslashes($_POST['integrantes']);
     $classificacao_indicativa_id = $_POST['classificacao_indicativa_id'];
@@ -16,7 +16,7 @@ if(isset($_POST['cadastra']) || isset($_POST['edita'])){
     $valor_individual = $_POST['valor_individual'];
 }
 if(isset($_POST['cadastra'])){
-    $sql_atracoes = "INSERT INTO atracoes(nome_atracao, categoria_atracao_id, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$nome_atracao', '$categoria_atracacao_id', '$ficha_tecnica', '$integrantes', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
+    $sql_atracoes = "INSERT INTO atracoes(nome_atracao, categoria_atracao_id, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$nome_atracao', '$categoria_atracao_id', '$ficha_tecnica', '$integrantes', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
     if(mysqli_query($con,$sql_atracoes)){
         $idAtracao = recuperaUltimo("atracoes");
         $sql_atracoes_evento = "INSERT INTO atracao_eventos (atracao_id, evento_id) VALUES ('$idAtracao','$idEvento')";
@@ -34,7 +34,7 @@ if(isset($_POST['cadastra'])){
 
 if(isset($_POST['edita'])){
     $idAtracao = $_POST['idAtracao'];
-    $sql_atracoes = "UPDATE atracoes SET nome_atracao = '$nome_atracao', categoria_atracao_id = '$categoria_atracacao_id', ficha_tecnica = '$ficha_tecnica', integrantes = '$integrantes', classificacao_indicativa_id = '$classificacao_indicativa_id', release_comunicacao = '$release_comunicacao', links = '$links', quantidade_apresentacao = '$quantidade_apresentacao', valor_individual = '$valor_individual' WHERE id = '$idAtracao'";
+    $sql_atracoes = "UPDATE atracoes SET nome_atracao = '$nome_atracao', categoria_atracao_id = '$categoria_atracao_id', ficha_tecnica = '$ficha_tecnica', integrantes = '$integrantes', classificacao_indicativa_id = '$classificacao_indicativa_id', release_comunicacao = '$release_comunicacao', links = '$links', quantidade_apresentacao = '$quantidade_apresentacao', valor_individual = '$valor_individual' WHERE id = '$idAtracao'";
     if(mysqli_query($con,$sql_atracoes)){
         $mensagem = mensagem("success","Atualizado com sucesso!");
     }
@@ -78,8 +78,8 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
                             </div>
 
                             <div class="form-group">
-                                <label for="categoria_atracacao_id">Tipo de atração</label>
-                                <select class="form-control" id="categoria_atracao_id" name="categoria_atracacao_id">
+                                <label for="categoria_atracao_id">Tipo de atração</label>
+                                <select class="form-control" id="categoria_atracao_id" name="categoria_atracao_id">
                                     <option value="">Selecione...</option>
                                     <?php
                                     geraOpcao("categoria_atracoes",$atracao['categoria_atracao_id'])
