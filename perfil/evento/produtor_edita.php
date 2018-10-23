@@ -45,13 +45,16 @@
                       observacao = '$observacao'
                  WHERE id = '$idProdutor'";
         if (mysqli_query($con,$sql)){
-            $resultado = mensagem("sucess","Cadastro atualizado com sucesso");
+            $resultado = mensagem("success","Cadastro atualizado com sucesso");
 
         }
         else{
             $resultado = mensagem("danger","Erro ao atualizar");
         }
+    }
 
+    if(isset($_POST['carregar'])){
+        $idProdutor = $_POST['idProdutor'];
     }
 
     $row = recuperaDados("produtores","id", $idProdutor);
@@ -72,6 +75,9 @@
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Produtor do Evento</h3>
+                    </div>
+                    <div class="row" align="center">
+                        <?php if(isset($resultado)){echo $resultado;};?>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
