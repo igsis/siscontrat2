@@ -64,7 +64,7 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="dataDivulgacao">Data de Divulgação: *</label>
-                                    <input type="text" class="form-control" name="dataDivulgacao">
+                                    <input type="date" class="form-control" name="dataDivulgacao">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="cargaHoraria">Carga  Horaria: *</label>

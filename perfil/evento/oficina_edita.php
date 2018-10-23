@@ -5,6 +5,9 @@
 
     if (isset($_POST['idAtracao'])){
         $idAtracao = $_POST['idAtracao'];
+
+        if ($idAtracao == NULL)
+            $idAtracao = 1;
     }
 
     if (isset($_POST['cadastra']) || isset($_POST['edita'])){
@@ -27,6 +30,7 @@
         $sql .= "VALUES('$idAtracao','$certificado','$vagas','$publicoAlvo','$material','$inscricao','$valorHora','$venda','$dataDivulgacao','$cargaHoraria')";
 
         if (mysqli_query($con,$sql)){
+            $idOficina = recuperaUltimo("oficinas");
             $resultado = mensagem("success", "Oficina cadastrada!");
         }else{
             $erro = die(mysqli_error($con));
@@ -34,6 +38,22 @@
         }
 
     }
+
+    if(isset($_POST['edita'])){
+        $idOficina = $_POST['idOficina'];
+        $sql =  "UPDATE `oficinas` ";
+        $sql .= "SET certificado = '$certificado', vagas = '$vagas', publico_alvo='$publicoAlvo', material='$material',inscricao='$inscricao',valor_hora='$valorHora',venda='$venda', data_divulgacao='$dataDivulgacao',carga_horaria='$cargaHoraria' ";
+        $sql .= "WHERE atracao_id ='$idAtracao' AND id = '$idOficina'";
+
+        if (mysqli_query($con, $sql)){
+            $resultado = mensagem("success", "Cadastro alterado!");
+        }else{
+            $erro = die(mysqli_error($con));
+            $resultado = mensagem("danger","Erro ao Alterar o cadastro! ".$erro);
+        }
+    }
+
+    $row = recuperaDados("oficinas","id", $idOficina);
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -45,7 +65,6 @@
         <h2 class="page-header">Cadastro de Evento</h2>
         <?php
             echo $resultado;
-        ?>
         ?>
         <div class="row">
             <div class="col-md-12">
@@ -62,49 +81,50 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="certificado">Certificado: *</label>
-                                    <input type="number" class="form-control" name="certificado" required>
+                                    <input type="number" class="form-control" name="certificado" required value="<?= $row['certificado']?>">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="vagas">Vagas: *</label>
-                                    <input type="number" class="form-control" name="vagas" required>
+                                    <input type="number" class="form-control" name="vagas" required value="<?= $row['vagas']?>">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="publicoAlvo">Público Alvo: *</label>
-                                <textarea name="publicoAlvo" cols="30" rows="10" class="form-control"></textarea>
+                                <textarea name="publicoAlvo" cols="30" rows="5" class="form-control"><?= $row['publico_alvo']?></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="material">Material: </label>
-                                <textarea name="material" id="" cols="30" rows="10" class="form-control"></textarea>
+                                <textarea name="material" id="" cols="30" rows="5" class="form-control"><?= $row['material']?></textarea>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="inscricao">Inscrição: *</label>
-                                    <input type="number" class="form-control" name="inscricao">
+                                    <input type="number" class="form-control" name="inscricao" required value="<?= $row['inscricao']?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="valorHora">Valor Hora: *</label>
-                                    <input type="text" class="form-control" name="valorHora">
+                                    <input type="text" class="form-control" name="valorHora" required value="<?= $row['valor_hora']?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="venda">Venda: *</label>
-                                    <input type="number" class="form-control" name="venda">
+                                    <input type="number" class="form-control" name="venda" required value="<?= $row['venda']?>" >
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="dataDivulgacao">Data de Divulgação: *</label>
-                                    <input type="text" class="form-control" name="dataDivulgacao">
+                                    <input type="text" class="form-control" name="dataDivulgacao" required value="<?= $row['data_divulgacao']?>">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="cargaHoraria">Carga  Horaria: *</label>
-                                    <input type="number" class="form-control" name="cargaHoraria">
+                                    <input type="number" class="form-control" name="cargaHoraria" required value="<?= $row['carga_horaria']?>">
                                 </div>
                             </div>
                         </div>
                         <div class="box-footer">
                             <button type="submit" class="btn btn-default">Cancelar</button>
-                            <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
+                            <input type="hidden" name="idOficina" value="<?= $row['id']?>">
+                            <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
                         </div>
                     </form>
                 </div>
