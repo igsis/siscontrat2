@@ -78,7 +78,7 @@ include "includes/menu_interno.php";
                                     <input type="date" name="inicio_inscricao" onkeyup="barraData(this);"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="encerramento_inscricao">Encerramento de inscrição: </label>
+                                    <label for="encerramento_inscricao">Encerramento de inscrição: </label> <br>
                                     <input type="date" name="encerramento_inscricao" onkeyup="barraData(this);"/>
                                 </div>
                                 <div class="form-group col-md-4">
