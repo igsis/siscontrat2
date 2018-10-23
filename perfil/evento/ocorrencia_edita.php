@@ -125,6 +125,72 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
 ?>
 
+<script type="text/javascript">
+    function desmarca() {
+        $("#diasemana01").prop("checked", false);
+        $("#diasemana02").prop("checked", false);
+        $("#diasemana03").prop("checked", false);
+        $("#diasemana04").prop("checked", false);
+        $("#diasemana05").prop("checked", false);
+        $("#diasemana06").prop("checked", false);
+        $("#diasemana07").prop("checked", false);
+    }
+
+    function mudaData(valor) {
+        $("#diasemana01").prop("disabled", valor);
+        $("#diasemana02").prop("disabled", valor);
+        $("#diasemana03").prop("disabled", valor);
+        $("#diasemana04").prop("disabled", valor);
+        $("#diasemana05").prop("disabled", valor);
+        $("#diasemana06").prop("disabled", valor);
+        $("#diasemana07").prop("disabled", valor);
+
+        desmarca();
+    }
+
+    $(document).ready(function () {
+        validate();
+        $('#datepicker11').change(validate);
+    });
+
+    function validate() {
+        if ($('#datepicker11').val().length > 0) {
+            mudaData(false);
+        }
+        else {
+            mudaData(true);
+
+            var data = document.querySelector('input[name="data_inicio"]').value;
+            data = new Date(data);
+            dayName = new Array("0", "1", "2", "3", "4", "5", "6", "0");
+            let dia = dayName[data.getDay() + 1];
+
+            if (dia == 0) {
+                $("#diasemana07").prop("disabled", false);
+                $("#diasemana07").prop("checked", true);
+            } else if (dia == 1) {
+                $("#diasemana01").prop("disabled", false);
+                $("#diasemana01").prop("checked", true);
+            } else if (dia == 2) {
+                $("#diasemana02").prop("disabled", false);
+                $("#diasemana02").prop("checked", true);
+            } else if (dia == 3) {
+                $("#diasemana03").prop("disabled", false);
+                $("#diasemana03").prop("checked", true);
+            } else if (dia == 4) {
+                $("#diasemana04").prop("disabled", false);
+                $("#diasemana04").prop("checked", true);
+            } else if (dia == 5) {
+                $("#diasemana05").prop("disabled", false);
+                $("#diasemana05").prop("checked", true);
+            } else if (dia == 6) {
+                $("#diasemana06").prop("disabled", false);
+                $("#diasemana06").prop("checked", true);
+            }
+        }
+    }
+</script>
+
 <div class="content-wrapper">
     <section class="content">
 
@@ -152,8 +218,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="data_fim">Data Encerramento (apenas se for temporada)</label> <br>
-                                    <input type="date" name="data_fim" class="form-control" id="datepicker10"
-                                           value="<?= isset($ocorrencia['horario_fim']) ? $ocorrencia['horario_fim'] : NULL ?>"
+                                    <input type="date" name="data_fim" class="form-control" id="datepicker11"
+                                           value="<?= isset($ocorrencia['data_fim']) ? $ocorrencia['data_fim'] : NULL ?>"
                                            placeholder="DD/MM/AAAA">
                                 </div>
                             </div>
@@ -161,26 +227,26 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label>
-                                        <input type="checkbox" name="domingo" id="domingo"
-                                               value="1" <?= $ocorrencia['domingo'] == 1 ? 'checked' : NULL ?>> Domingo
+                                        <input type="checkbox" name="domingo" id="diasemana07"
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['domingo']) ?> > Domingo
                                         &nbsp;
-                                        <input type="checkbox" name="segunda" id="segunda"
-                                               value="1" <?= $ocorrencia['segunda'] == 1 ? 'checked' : NULL ?>> Segunda
+                                        <input type="checkbox" name="segunda" id="diasemana01"
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['segunda']) ?> > Segunda
                                         &nbsp;
-                                        <input type="checkbox" name="terca" id="terca"
-                                               value="1" <?= $ocorrencia['terca'] == 1 ? 'checked' : NULL ?>> Terça
+                                        <input type="checkbox" name="terca" id="diasemana02"
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['terca']) ?> > Terça
                                         &nbsp;
-                                        <input type="checkbox" name="quarta" id="quarta"
-                                               value="1" <?= $ocorrencia['quarta'] == 1 ? 'checked' : NULL ?>> Quarta
+                                        <input type="checkbox" name="quarta" id="diasemana03"
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['quarta']) ?> > Quarta
                                         &nbsp;
-                                        <input type="checkbox" name="quinta" id="quinta"
-                                               value="1" <?= $ocorrencia['quinta'] == 1 ? 'checked' : NULL ?>> Quinta
+                                        <input type="checkbox" name="quinta" id="diasemana04"
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['quinta']) ?>> Quinta
                                         &nbsp;
-                                        <input type="checkbox" name="sexta" id="sexta"
-                                               value="1" <?= $ocorrencia['sexta'] == 1 ? 'checked' : NULL ?>> Sexta
+                                        <input type="checkbox" name="sexta" id="diasemana05"
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['sexta']) ?> > Sexta
                                         &nbsp;
-                                        <input type="checkbox" name="sabado" id="sabado"
-                                               value="1" <?= $ocorrencia['sabado'] == 1 ? 'checked' : NULL ?>> Sábado
+                                        <input type="checkbox" name="sabado" id="diasemana06"
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['sabado']) ?> > Sábado
                                         &nbsp;
                                     </label>
                                 </div>
