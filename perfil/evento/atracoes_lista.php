@@ -49,7 +49,7 @@ include "includes/menu_interno.php";
                             </thead>
 
                             <?php
-                            echo "<tbody>";
+                            echo "<body>";
                             while ($atracao = mysqli_fetch_array($query)){
 
                                 echo "<tr>";

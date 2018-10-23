@@ -19,7 +19,7 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="contratados">Quantidade de contratados</label><br/>
-                                    <input class="form-control" type="number" name="contratados" id="contratados" >
+                                    <label><input class="form-control" type="number" name="contratados" id="contratados"></label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="cache">Valor do cache *</label> <br>
@@ -27,12 +27,15 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="tipo_contratacao">Tipo de contratação</label> <br>
-                                        <select class="form-control" id="tipo_contratacao" name="tipo_contratacao">
-                                            <option value="1">Edital</option>
-                                            <option value="2">Selecionado</option>
-                                            <option value="3">Jurado</option>
-                                        </select>
-                                    </div>
+                                    <label><select class="form-control" id="tipo_contratacao" name="tipo_contratacao">
+                                        <option value="1">Edital</option>
+                                        <option value="2">Selecionado</option>
+                                        <option value="3">Jurado</option>
+                                    </select>
+                                </label>
+                                </div>
+
+
                             </div>
                             <div class="row">
                             <div class="form-group col-md-4">
