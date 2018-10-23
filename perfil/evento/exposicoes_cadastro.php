@@ -27,7 +27,7 @@ if (isset($_POST['idAtracao'])){
                     <!-- form start -->
                     <form action="?perfil=evento&p=oficina_edita" method="post" role="form">
                         <div class="box-body">
-                            
+
                         </div>
                         <div class="box-footer">
                             <button type="submit" class="btn btn-default">Cancelar</button>
