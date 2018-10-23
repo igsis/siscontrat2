@@ -7,7 +7,6 @@
     //}
 
     if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-        $idAtracoes = $_POST['idAtracoes'];
         $nome = $_POST['nome'];
         $email = $_POST['email'];
         $telefone1 = $_POST['telefone1'];
@@ -15,6 +14,7 @@
         $observacao = $_POST['observacao'];
     }
     if (isset($_POST['cadastra'])){
+        $idAtracoes = $_POST['idAtracoes'];
         $sqlInsert = "INSERT INTO `produtores`
                       (nome, email, telefone1, telefone2, observacao)
                       VALUES ('$nome','$email','$telefone1','$telefone2','$observacao')";
@@ -22,7 +22,7 @@
         if (mysqli_query($con,$sqlInsert)){
             $idProdutor = recuperaUltimo("produtores");
             $sqlUpdate = "UPDATE `atracoes`
-                          SET produtor_id = '".$produtor."'
+                          SET produtor_id = '$idProdutor'
                           WHERE id ='$idAtracoes'";
             if(mysqli_query($con,$sqlUpdate)){
                 $resultado = mensagem("sucess","Produtor cadastrado");
@@ -33,7 +33,7 @@
         }
     }
 
-    $row = recuperaDados("produtores","id", $_SESSION["produtor"]);
+    
 
     if (isset($_POST['edita'])){
         $idProdutor = $_POST['idProdutor'];
@@ -43,7 +43,7 @@
                       telefone1 = '$telefone1',
                       telefone2 = '$telefone2',
                       observacao = '$observacao'
-                 WHERE id = ".$row['id'];
+                 WHERE id = '$idProdutor'";
         if (mysqli_query($con,$sql)){
             $resultado = mensagem("sucess","Cadastro atualizado com sucesso");
 
@@ -53,6 +53,8 @@
         }
 
     }
+
+    $row = recuperaDados("produtores","id", $idProdutor);
 
 ?>
 
@@ -89,7 +91,7 @@
                                 <div class="form-group col-md-3">
                                     <label for="telefone1">Telefone #1</label>
                                     <input type='text' class='form-control' id='telefone1' name='telefone1' maxlength='15' placeholder='Digite o Telefone principal' required value='<?= $row['telefone1']?>'>
-                                    ?>
+                                    
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone2">Telefone #2</label>
