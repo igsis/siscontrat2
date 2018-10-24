@@ -230,25 +230,25 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-12">
                                     <label>
                                         <input type="checkbox" name="domingo" id="diasemana07"
-                                               value="1" <?php checar($ocorrencia['domingo']) ?> > Domingo
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['domingo']) ?> > Domingo
                                         &nbsp;
                                         <input type="checkbox" name="segunda" id="diasemana01"
-                                               value="1" <?php checar($ocorrencia['segunda']) ?> > Segunda
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['segunda']) ?> > Segunda
                                         &nbsp;
                                         <input type="checkbox" name="terca" id="diasemana02"
-                                               value="1" <?php checar($ocorrencia['terca']) ?> > Terça
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['terca']) ?> > Terça
                                         &nbsp;
                                         <input type="checkbox" name="quarta" id="diasemana03"
-                                               value="1" <?php checar($ocorrencia['quarta']) ?> > Quarta
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['quarta']) ?> > Quarta
                                         &nbsp;
                                         <input type="checkbox" name="quinta" id="diasemana04"
-                                               value="1" <?php checar($ocorrencia['quinta']) ?>> Quinta
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['quinta']) ?>> Quinta
                                         &nbsp;
                                         <input type="checkbox" name="sexta" id="diasemana05"
-                                               value="1" <?php checar($ocorrencia['sexta']) ?> > Sexta
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['sexta']) ?> > Sexta
                                         &nbsp;
                                         <input type="checkbox" name="sabado" id="diasemana06"
-                                               value="1" <?php checar($ocorrencia['sabado']) ?> > Sábado
+                                               value="1" disabled="disabled" <?php checar($ocorrencia['sabado']) ?> > Sábado
                                         &nbsp;
                                     </label>
                                 </div>
