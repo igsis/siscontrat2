@@ -8,25 +8,25 @@ include "includes/menu_interno.php";
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
     $tipo_evento_id = $evento['tipo_evento_id'];
-    $origem_ocorrencia_id = isset($_POST['idAtracao']) ? $_POST['idAtracao'] : NULL;
+    $origem_ocorrencia_id = $_POST['idAtracao'] ?? NULL;
     $instituicao_id = $_POST['instituicao'];
     $local_id = $_POST['local'];
     $espaco_id = $_POST['espaco'];
     $data_inicio = $_POST['data_inicio'];
-    $data_fim = isset($_POST['data_fim']) ? $_POST['data_fim'] : NULL;
-    $segunda = isset($_POST['segunda']) ? $_POST['segunda'] : 0;
-    $terca = isset($_POST['terca']) ? $_POST['terca'] : 0;
-    $quarta = isset($_POST['quarta']) ? $_POST['quarta'] : 0;
-    $quinta = isset($_POST['quinta']) ? $_POST['quinta'] : 0;
-    $sexta = isset($_POST['sexta']) ? $_POST['sexta'] : 0;
-    $sabado = isset($_POST['sabado']) ? $_POST['sabado'] : 0;
-    $domingo = isset($_POST['domingo']) ? $_POST['domingo'] : 0;
+    $data_fim   = $_POST['data_fim'] ?? NULL;
+    $segunda    = $_POST['segunda'] ?? 0;
+    $terca      = $_POST['terca']   ?? 0;
+    $quarta     = $_POST['quarta']  ?? 0;
+    $quinta     = $_POST['quinta']  ?? 0;
+    $sexta      = $_POST['sexta']   ?? 0;
+    $sabado     = $_POST['sabado']  ?? 0;
+    $domingo    = $_POST['domingo'] ?? 0;
     $horario_inicio = $_POST['horaInicio'];
     $horario_fim = $_POST['horaFim'];
     $retirada_ingresso_id = $_POST['retiradaIngresso'];
     $valor_ingresso = $_POST['valor_ingresso'];
-    $observacao = isset($_POST['observacao']) ? addslashes($_POST['observacao']) : NULL;
-    $idOcorrencia = isset($_POST['idOcorrencia']) ? $_POST['idOcorrencia'] : NULL;
+    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $idOcorrencia =  $_POST['idOcorrencia'] ?? NULL;
 
 }
 
@@ -67,10 +67,10 @@ if (isset($_POST['cadastra'])) {
                                   '$domingo',
                                   '$horario_inicio',
                                   '$horario_fim',
-                                   '$retirada_ingresso_id',
+                                  '$retirada_ingresso_id',
                                   '$valor_ingresso',
                                   '$observacao')";
-    echo $sql;
+
     if (mysqli_query($con, $sql)) {
         $idOcorrencia = recuperaUltimo('ocorrencias');
 
@@ -80,6 +80,8 @@ if (isset($_POST['cadastra'])) {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
+
+
 }
 
 if (isset($_POST['edita'])) {
@@ -228,25 +230,25 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-12">
                                     <label>
                                         <input type="checkbox" name="domingo" id="diasemana07"
-                                               value="1" disabled="disabled" <?php checar($ocorrencia['domingo']) ?> > Domingo
+                                               value="1" <?php checar($ocorrencia['domingo']) ?> > Domingo
                                         &nbsp;
                                         <input type="checkbox" name="segunda" id="diasemana01"
-                                               value="1" disabled="disabled" <?php checar($ocorrencia['segunda']) ?> > Segunda
+                                               value="1" <?php checar($ocorrencia['segunda']) ?> > Segunda
                                         &nbsp;
                                         <input type="checkbox" name="terca" id="diasemana02"
-                                               value="1" disabled="disabled" <?php checar($ocorrencia['terca']) ?> > Terça
+                                               value="1" <?php checar($ocorrencia['terca']) ?> > Terça
                                         &nbsp;
                                         <input type="checkbox" name="quarta" id="diasemana03"
-                                               value="1" disabled="disabled" <?php checar($ocorrencia['quarta']) ?> > Quarta
+                                               value="1" <?php checar($ocorrencia['quarta']) ?> > Quarta
                                         &nbsp;
                                         <input type="checkbox" name="quinta" id="diasemana04"
-                                               value="1" disabled="disabled" <?php checar($ocorrencia['quinta']) ?>> Quinta
+                                               value="1" <?php checar($ocorrencia['quinta']) ?>> Quinta
                                         &nbsp;
                                         <input type="checkbox" name="sexta" id="diasemana05"
-                                               value="1" disabled="disabled" <?php checar($ocorrencia['sexta']) ?> > Sexta
+                                               value="1" <?php checar($ocorrencia['sexta']) ?> > Sexta
                                         &nbsp;
                                         <input type="checkbox" name="sabado" id="diasemana06"
-                                               value="1" disabled="disabled" <?php checar($ocorrencia['sabado']) ?> > Sábado
+                                               value="1" <?php checar($ocorrencia['sabado']) ?> > Sábado
                                         &nbsp;
                                     </label>
                                 </div>
