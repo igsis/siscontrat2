@@ -31,7 +31,7 @@ include "includes/menu_interno.php";
                                     <label><input type="radio" name="certificado" value="0"> Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="Vagas">Vagas</label> <br>
+                                    <label for="vagas">Vagas</label> <br>
                                     <input type="number" name="vagas">
                                 </div>
                                 <div class="form-group col-md-4">
@@ -43,7 +43,7 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="publico_alvo">Público-alvo *</label>
-                                    <textarea name="publico-alvo" id="publico-alvo" class="form-control" rows="5"></textarea>
+                                    <textarea name="publico_alvo" id="publico_alvo" class="form-control" rows="5"></textarea>
                                 </div>
                             </div>
                             <div class="row">
@@ -54,8 +54,8 @@ include "includes/menu_interno.php";
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="forma_inscricao">Forma de inscrição: </label><br>
-                                    <select id="forma_inscricao" name="forma_inscricao">
+                                    <label for="inscricao">Forma de inscrição: </label><br>
+                                    <select id="inscricao" name="inscricao">
                                         <option value="1">Sem necessidade</option>
                                         <option value="2">Pelo site - ficha de inscrição</option>
                                         <option value="3">Pelo site - por email</option>
@@ -67,8 +67,8 @@ include "includes/menu_interno.php";
                                     <input type="number" name="carga_horaria"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="valor_aula">Valor hora/aula: </label><br>
-                                    <input type="number" name="valor_aula"/>
+                                    <label for="valor_hora">Valor hora/aula: </label><br>
+                                    <input type="number" name="valor_hora"/>
                                 </div>
 
                             </div>
@@ -96,7 +96,7 @@ include "includes/menu_interno.php";
                             </div>
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancelar</button>
-                                <button type="submit" name="salvar" class="btn btn-info pull-right">Salvar</button>
+                                <button type="submit" name="salvar" class="btn btn-info pull-right" formaction="?perfil=evento&p=oficina_edita">Salvar</button>
                             </div>
 
                         </div>
