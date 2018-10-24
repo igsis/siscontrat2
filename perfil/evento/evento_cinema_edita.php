@@ -2,6 +2,10 @@
     $con = bancoMysqli();
     include "includes/menu_interno.php";
 
+    $idEvento= $_SESSION['idEvento'];
+
+
+
     if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
         $tituloFilme = $_POST['tituloFilme'];
@@ -33,7 +37,14 @@
                           '$paisOrigem','$paisCoProducao');";
         if(mysqli_query($con,$sql)){
             $idFilme = recuperaUltimo("filmes");
-            $mensagem = mensagem("success","Filme gravado com sucesso.");
+            $sql = "INSERT INTO `filme_eventos`
+                    VALUES('$fdFilme','$idEvento')";
+            if (mysqli_query($con,$sql)){
+                $mensagem = mensagem("success","Filme gravado com sucesso.");
+            }
+            else{
+                $mensagem = mensagem("danger", "Erro ao gravar o filme. Tente novamente.");
+            }
         }else{
             $mensagem = mensagem("danger", "Erro ao gravar o filme. Tente novamente.");
         }

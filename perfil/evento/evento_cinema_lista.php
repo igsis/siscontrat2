@@ -2,7 +2,12 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
-$query = "SELECT id,titulo,	ano_producao, duracao, direcao FROM filmes WHERE publicado = 1 ";
+$idEvento = $_SESSION['idEvento'];
+
+$query = "SELECT f.id, f.titulo, f.ano_producao, f.duracao, f.direcao 
+          FROM filmes f
+          INNER JOIN filme_eventos fe ON fe.filme_id = f.id
+          WHERE f.publicado = 1 AND fe.evento_id='$idEvento'";
 $resul = mysqli_query($con, $query);
 
 ?>
@@ -33,7 +38,7 @@ $resul = mysqli_query($con, $query);
                                 <th>Duração</th>
                                 <th>Diretor</th>
                                 <th colspan="2">
-                                    <a class="btn btn-primary" href="?perfil=evento&p=evento_cinema_cadastro" style="margin: 0 25%;">
+                                    <a class="btn btn-primary" href="?perfil=evento&p=evento_cinema_procura" style="margin: 0 25%;">
                                         <span class="glyphicon glyphicon-plus" style="font-size: 12px;margin-right: 5px">        
                                         </span>Adicionar
                                     </a>
