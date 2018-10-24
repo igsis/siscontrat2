@@ -216,13 +216,13 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-6">
                                     <label for="data_inicio">Data Início*</label> <br>
                                     <input type="date" name="data_inicio" class="form-control" id="datepicker10"
-                                           placeholder="DD/MM/AAAA" required value="<?= $ocorrencia['data_inicio'] ?>">
+                                           placeholder="DD/MM/AAAA" required value="<?= $ocorrencia['data_inicio'] ?>" onblur="arrumaData()">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="data_fim">Data Encerramento (apenas se for temporada)</label> <br>
                                     <input type="date" name="data_fim" class="form-control" id="datepicker11"
                                            value="<?= isset($ocorrencia['data_fim']) ? $ocorrencia['data_fim'] : NULL ?>"
-                                           placeholder="DD/MM/AAAA">
+                                           placeholder="DD/MM/AAAA" onblur="validate()">
                                 </div>
                             </div>
 
