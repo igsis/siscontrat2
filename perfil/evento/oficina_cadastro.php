@@ -1,7 +1,10 @@
 <?php
 $con = bancoMysqli();
 include "includes/menu_interno.php";
+
+$_SESSION['idAtracao'] = $_POST['idAtracao'];
 ?>
+
 <script language="JavaScript" >
     function barraData(n){
         if(n.value.length==2)
@@ -22,7 +25,7 @@ include "includes/menu_interno.php";
                     <div class="box-header with-border">
                         <h3 class="box-title">Atração - Especificidades de Área</h3>
                     </div>
-                    <form method="POST" action="?perfil=evento&p=evento_edita" role="form">
+                    <form method="POST" action="?perfil=evento&p=oficina_edita" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -82,21 +85,22 @@ include "includes/menu_interno.php";
                                     <input type="date" name="encerramento_inscricao" onkeyup="barraData(this);"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="divulgacao">Divulgação de inscrição: </label> <br/>
-                                    <input type="date" name="divulgacao" onkeyup="barraData(this);"/>
+                                    <label for="data_divulgacao">Divulgação de inscrição: </label> <br/>
+                                    <input type="date" name="data_divulgacao" onkeyup="barraData(this);"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="Descrição">Descrição</label><br/>
+                                    <label for="descricao">Descrição</label><br/>
                                     <i>Esse campo deve conter uma breve descrição do que será apresentado no evento.</i>
                                     <p align="justify"><span style="color: gray; "><strong><i>Texto de exemplo:</strong>Ana Cañas faz o show de lançamento do seu quarto disco, “Tô na Vida” (Som Livre/Guela Records). Produzido por Lúcio Maia (Nação Zumbi) em parceria com Ana e mixado por Mario Caldato Jr, é o primeiro disco totalmente autoral da carreira da cantora e traz parcerias com Arnaldo Antunes e Dadi entre outros.</span></i></p>
-                                    <textarea name="sinopse" id="sinopse" class="form-control" rows="5"></textarea>
+                                    <textarea name="descricao" id="descricao" class="form-control" rows="5"></textarea>
                                 </div>
                             </div>
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancelar</button>
-                                <button type="submit" name="salvar" class="btn btn-info pull-right" formaction="?perfil=evento&p=oficina_edita">Salvar</button>
+                                <input type="hidden" name="idAtracao" value="<?= $_SESSION['idAtracao']; ?>">
+                                <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                             </div>
 
                         </div>
