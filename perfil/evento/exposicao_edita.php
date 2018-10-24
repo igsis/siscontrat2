@@ -1,5 +1,84 @@
 <?php
 $con = bancoMysqli();
+
+if (isset($_POST['cadastra']) || isset($_POST['edita'])){
+    $idAtracao = $_POST['idAtracao'];
+    $certificado =  ($_POST['certificado']);
+    $vagas = $_POST['vagas'];
+    $venda =  ($_POST['venda']);
+    $publico_alvo = addslashes ($_POST['publico_alvo']);
+    $material = $_POST['material'];
+    $inscricao = $_POST['inscricao'];
+    $carga_horaria = $_POST['carga_horaria'];
+    $valor_hora = $_POST['valor_hora'];
+    $inicio = $_POST ['inicio_inscricao'];
+    $encerramento = $_POST ['encerramento_inscricao'];
+    $divulgacao = $_POST['data_divulgacao'];
+    $descricao = $_POST ['descricao'];
+}
+
+if (isset($_POST['cadastra'])) {
+
+    $sql = "INSERT INTO oficinas (atracao_id, 
+                                  certificado,
+                                  vagas,
+                                  venda,
+                                  publico_alvo,
+                                  material,
+                                  inscricao,
+                                  carga_horaria,
+                                  valor_hora,
+                                  data_divulgacao) 
+                          VALUES ('$idAtracao',
+                                  '$certificado',
+                                  '$vagas',
+                                  '$venda',
+                                  '$publico_alvo',
+                                  '$material',
+                                  '$inscricao',
+                                  '$carga_horaria',
+                                  '$valor_hora',
+                                  '$divulgacao')";
+
+    if(mysqli_query($con, $sql)) {
+
+        $idOficina = recuperaUltimo("oficinas");
+
+        $mensagem = mensagem("success","Cadastrado com sucesso!");
+        //gravarLog($sql);
+    }else{
+        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
+        //gravarLog($sql);
+    }
+}
+
+if(isset($_POST['edita'])){
+    $sql = "UPDATE oficinas SET
+                            certificado = '$certificado',
+                            vagas = '$vagas',
+                            venda = '$venda',
+                            publico_alvo = '$publico_alvo',
+                            material = '$material',
+                            inscricao = '$inscricao',
+                            carga_horaria = '$carga_horaria',
+                            valor_hora = '$valor_hora',
+                            data_divulgacao = '$divulgacao'
+                            WHERE id = '$idAtracao'";
+    if(mysqli_query($con,$sql)){
+        $mensagem = mensagem("success","Gravado com sucesso!");
+        //gravarLog($sql);
+    }else{
+        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
+        //gravarLog($sql);
+    }
+}
+if(isset($_POST['carregar'])){
+    $idOficina = $_POST['idOficina'];
+}
+
+$oficina = recuperaDados("oficinas","id",$idOficina);
+
+
 include "includes/menu_interno.php";
 ?>
 

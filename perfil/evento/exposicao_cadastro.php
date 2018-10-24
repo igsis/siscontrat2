@@ -1,3 +1,4 @@
+@@ -1,95 +0,0 @@
 <?php
 $con = bancoMysqli();
 include "includes/menu_interno.php";
@@ -12,7 +13,7 @@ include "includes/menu_interno.php";
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                      <h3 class="box-title">Atração - Especificidades de Área</h3>
+                        <h3 class="box-title">Atração - Especificidades de Área</h3>
                     </div>
                     <form method="POST" action="?perfil=evento&p=evento_edita" role="form">
                         <div class="box-body">
@@ -28,26 +29,26 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-4">
                                     <label for="tipo_contratacao">Tipo de contratação</label> <br>
                                     <label><select class="form-control" id="tipo_contratacao" name="tipo_contratacao">
-                                        <option value="1">Edital</option>
-                                        <option value="2">Selecionado</option>
-                                        <option value="3">Jurado</option>
-                                    </select>
-                                </label>
+                                            <option value="1">Edital</option>
+                                            <option value="2">Selecionado</option>
+                                            <option value="3">Jurado</option>
+                                        </select>
+                                    </label>
                                 </div>
 
 
                             </div>
                             <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="painel">Confecção de painéis</label> <br>
-                                <label><input type="radio" name="venda" value="1" checked> Sim </label>
-                                <label><input type="radio" name="venda" value="0"> Não </label>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="legenda">Confecção de legendas</label> <br>
-                                <label><input type="radio" name="venda" value="1" checked> Sim </label>
-                                <label><input type="radio" name="venda" value="0"> Não </label>
-                            </div>
+                                <div class="form-group col-md-4">
+                                    <label for="painel">Confecção de painéis</label> <br>
+                                    <label><input type="radio" name="venda" value="1" checked> Sim </label>
+                                    <label><input type="radio" name="venda" value="0"> Não </label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="legenda">Confecção de legendas</label> <br>
+                                    <label><input type="radio" name="venda" value="1" checked> Sim </label>
+                                    <label><input type="radio" name="venda" value="0"> Não </label>
+                                </div>
                             </div>
 
                             <div class="row">
@@ -71,13 +72,13 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <div class="row">
-                            <div class="form-group col-md-12">
-                                <center><label for="acervo">Acervo </label><br></center>
-                                <select class="form-control" id="acervo" name="acervo">
-                                    <option value="1">A exposição NÃO possui peças que fazem parte da coleção da instituição.</option>
-                                    <option value="2">A exposição POSSUI peças que fazem parte da coleção da instituição.</option>
-                                </select>
-                            </div>
+                                <div class="form-group col-md-12">
+                                    <center><label for="acervo">Acervo </label><br></center>
+                                    <select class="form-control" id="acervo" name="acervo">
+                                        <option value="1">A exposição NÃO possui peças que fazem parte da coleção da instituição.</option>
+                                        <option value="2">A exposição POSSUI peças que fazem parte da coleção da instituição.</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="box-footer">
@@ -86,10 +87,10 @@ include "includes/menu_interno.php";
                             </div>
                         </div>
 
-                        </div>
-                    </form>
                 </div>
+                </form>
             </div>
         </div>
-    </section>
+</div>
+</section>
 </div>
