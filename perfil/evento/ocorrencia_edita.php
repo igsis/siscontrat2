@@ -35,14 +35,14 @@ if (isset($_POST['cadastra'])) {
     $sql = "INSERT INTO ocorrencias (tipo_ocorrencia_id,
                                  origem_ocorrencia_id,
                                  instituicao_id, 
-                                 local_id, 
-                                 espaco_id, 
+                                 local_id,
+                                 espaco_id,
                                  data_inicio, 
                                  data_fim, 
-                                 segunda, 
-                                 terca, 
-                                 quarta, 
-                                 quinta, 
+                                 segunda,
+                                 terca,
+                                 quarta,
+                                 quinta,
                                  sexta,
                                  sabado,
                                  domingo,
@@ -71,9 +71,9 @@ if (isset($_POST['cadastra'])) {
                                   '$valor_ingresso',
                                   '$observacao')";
 
-    if (mysqli_query($con, $sql)) {
+    if (mysqli_query($con, $sql)) 
+    {
         $idOcorrencia = recuperaUltimo('ocorrencias');
-
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
     } else {
@@ -345,15 +345,15 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
     let data_fim = document.querySelector("input[name='data_fim']");
     
-    if(data_fim.value != ''){
+    if(data_fim.value != '')
+    {
         let dias = document.querySelectorAll("input[type='checkbox']");
     
-        for(dia of dias){
-
+        for(dia of dias)
+        {
             dia.disabled = false;
         }
 
     }
-
 
 </script>

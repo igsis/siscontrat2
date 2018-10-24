@@ -86,7 +86,23 @@ include "includes/menu_interno.php";
                                 else{
                                     $array_musica = array(10,11,15,17);
                                     if(in_array($idCategoriaAtracao, $array_musica)){
-
+                                        $exposicao = recuperaDados("exposicoes","atracao_id",$atracao['idAtracao']);
+                                        if($exposicao != NULL){
+                                            echo "<td>
+                                                    <form method=\"POST\" action=\"?perfil=evento&p=oficina_edita\" role=\"form\">
+                                                    <input type=\"hidden\" name='idExposicao' value='".$exposicao['id']."'>
+                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
+                                                    ".$exposicao['id']."</form>
+                                                    </td>";
+                                        }
+                                        else{
+                                            echo "<td>
+                                                    <form method=\"POST\" action=\"?perfil=evento&p=oficina_cadastro\" role=\"form\">
+                                                    <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
+                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Especificidade</button>
+                                                    </form>
+                                                    </td>";
+                                        }
                                         echo "<li><a href=\"".$pasta."especificidade_musica_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
                                     }
                                     else{
@@ -102,13 +118,12 @@ include "includes/menu_interno.php";
                                             }
                                             else{
                                                 echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento&p=oficina_cadastro\" role=\"form\">
+                                                    <form method=\"POST\" action=\"?perfil=evento&p=exposicao_cadastro\" role=\"form\">
                                                     <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
                                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Especificidade</button>
                                                     </form>
                                                     </td>";
                                             }
-                                            echo "<li><a href=\"".$pasta."especificidade_exposicao_lista\"><i class=\"fa fa-circle-o\"></i> <span>Especificidade</span></a></li>";
                                         }
                                         else{
                                             if($idCategoriaAtracao == 4 || $idCategoriaAtracao == 5){
@@ -117,8 +132,8 @@ include "includes/menu_interno.php";
                                                     echo "<td>
                                                     <form method=\"POST\" action=\"?perfil=evento&p=oficina_edita\" role=\"form\">
                                                     <input type='hidden' name='idOficina' value='".$oficina['id']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
-                                                    ".$oficina['id']."</form>
+                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i>Especificidade</button>
+                                                    </form>
                                                     </td>";
                                                 }
                                                 else{

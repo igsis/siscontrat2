@@ -47,7 +47,7 @@ $query = mysqli_query($con,$sql);
                             </thead>
 
                             <?php
-                            $idOcorrenciaDuplica = 0;
+
                             echo "<tbody>";
                             while ($ocorrencia = mysqli_fetch_array($query)){
 
@@ -57,19 +57,18 @@ $query = mysqli_query($con,$sql);
                                 echo "<td>".exibirHora($ocorrencia['horario_fim'])."</td>";
                                 echo "<td>".$ocorrencia['local']."</td>";
 
-
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_edita\" role=\"form\">
                                     <input type='hidden' name='idOcorrencia' value='".$ocorrencia['id']."'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\">Carregar</button>
                                     </form>
                                 </td>";
-                                $idOcorrenciaDuplica = $ocorrencia['id'];
+                                
                                 echo "<td>
-
-                                    <input type='hidden' name='idOcorrencia' value='".$idOcorrenciaDuplica."'>
-                                    <buttonn class='btn btn-info' data-toggle='modal' data-target='#duplica' data-tittle='Duplicando ocorrência' data-message='Digite o número de vezes que deseja duplicar a ocorrência: '>Duplicar</buttonn>
+                                    <input type='hidden' name='idOcorrencia'>
+                                    <buttonn class='btn btn-info' data-toggle='modal' data-target='#duplica' data-ocorrencia-id='".$ocorrencia['id']."' data-tittle='Duplicando ocorrência' data-message='Digite o número de vezes que deseja duplicar a ocorrência: '>Duplicar</buttonn>
                                 </td>";
+
                                 echo "<td>
                                     <button type=\"button\" class=\"btn btn-block btn-danger\">Apagar</button>
                                   </td>";
@@ -88,7 +87,7 @@ $query = mysqli_query($con,$sql);
                             </tfoot>
                         </table>
                     </div>
-                </div>
+            </div>
             </div>
         </div>
     </section>
@@ -116,3 +115,13 @@ $query = mysqli_query($con,$sql);
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+
+    $('#duplicar').on('show.bs.modal', function (e)
+    {
+        let id = $(e.relatedTarget).attr('data-ocorrencia-id');
+        console.log(id);
+    });
+
+</script>
