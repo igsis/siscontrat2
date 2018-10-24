@@ -531,6 +531,18 @@ date_default_timezone_set("Brazil/East");
 		}
 	}
 
+	function checarOcorrencia($id)
+	{
+		//funcao para imprimir checked ou disabled do checkbox
+		if($id == 1)
+		{
+			echo "checked";
+		}else{
+			echo "disabled";
+		}
+	}
+	
+
 	function valorPorExtenso($valor=0)
 	{
 		//retorna um valor por extenso
