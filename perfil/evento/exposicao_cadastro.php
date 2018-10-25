@@ -2,6 +2,9 @@
 <?php
 $con = bancoMysqli();
 include "includes/menu_interno.php";
+
+$_SESSION['idAtracao'] = $_POST['idAtracao'];
+
 ?>
 
 <div class="content-wrapper">
@@ -15,7 +18,7 @@ include "includes/menu_interno.php";
                     <div class="box-header with-border">
                         <h3 class="box-title">Atração - Especificidades de Área</h3>
                     </div>
-                    <form method="POST" action="?perfil=evento&p=evento_edita" role="form">
+                    <form method="POST" action="?perfil=evento&p=exposicao_edita" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -23,8 +26,8 @@ include "includes/menu_interno.php";
                                     <label><input class="form-control" type="number" name="contratados" id="contratados"></label>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="cache">Valor do cache *</label> <br>
-                                    <label><input class="form-control" type="number" name="cache" id="cache"></label>
+                                    <label for="valor">Valor do cache *</label> <br>
+                                    <label><input class="form-control" type="number" name="valor" id="cache"></label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="tipo_contratacao">Tipo de contratação</label> <br>
@@ -41,26 +44,26 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="painel">Confecção de painéis</label> <br>
-                                    <label><input type="radio" name="venda" value="1" checked> Sim </label>
-                                    <label><input type="radio" name="venda" value="0"> Não </label>
+                                    <label><input type="radio" name="painel" value="1" checked> Sim </label>
+                                    <label><input type="radio" name="painel" value="0"> Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="legenda">Confecção de legendas</label> <br>
-                                    <label><input type="radio" name="venda" value="1" checked> Sim </label>
-                                    <label><input type="radio" name="venda" value="0"> Não </label>
+                                    <label><input type="radio" name="legenda" value="1" checked> Sim </label>
+                                    <label><input type="radio" name="legenda" value="0"> Não </label>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="identidade">Criação de Identidade Visual</label> <br>
-                                    <label><input type="radio" name="venda" value="1" checked> Sim </label>
-                                    <label><input type="radio" name="venda" value="0"> Não </label>
+                                    <label><input type="radio" name="identidade" value="1" checked> Sim </label>
+                                    <label><input type="radio" name="identidade" value="0"> Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="suporte">Suporte extra (exposição)</label> <br>
-                                    <label><input type="radio" name="venda" value="1" checked> Sim </label>
-                                    <label><input type="radio" name="venda" value="0"> Não </label>
+                                    <label><input type="radio" name="suporte" value="1" checked> Sim </label>
+                                    <label><input type="radio" name="suporte" value="0"> Não </label>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-3">
@@ -83,7 +86,8 @@ include "includes/menu_interno.php";
 
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancelar</button>
-                                <button type="submit" name="salvar" class="btn btn-info pull-right">Salvar</button>
+                                <input type="hidden" name="idAtracao" value="<?= $_SESSION['idAtracao']; ?>">
+                                <button type="submit" name="cadastra" class="btn btn-info pull-right">Salvar</button>
                             </div>
                         </div>
 

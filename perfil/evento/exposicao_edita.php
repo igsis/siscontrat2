@@ -3,46 +3,44 @@ $con = bancoMysqli();
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $idAtracao = $_POST['idAtracao'];
-    $certificado =  ($_POST['certificado']);
-    $vagas = $_POST['vagas'];
-    $venda =  ($_POST['venda']);
-    $publico_alvo = addslashes ($_POST['publico_alvo']);
-    $material = $_POST['material'];
-    $inscricao = $_POST['inscricao'];
-    $carga_horaria = $_POST['carga_horaria'];
-    $valor_hora = $_POST['valor_hora'];
-    $inicio = $_POST ['inicio_inscricao'];
-    $encerramento = $_POST ['encerramento_inscricao'];
-    $divulgacao = $_POST['data_divulgacao'];
-    $descricao = $_POST ['descricao'];
+    $contratados =  ($_POST['contratados']);
+    $valor =  ($_POST['valor']);
+    $tipo_contratacao = $_POST['tipo_contratacao'];
+    $painel = addslashes ($_POST['painel']);
+    $legenda = $_POST['legenda'];
+    $identidade = $_POST['identidade'];
+    $suporte = $_POST['suporte'];
+    $documentacao = $_POST['documentacao'];
+    $acervo = $_POST ['acervo'];
+
 }
 
 if (isset($_POST['cadastra'])) {
 
-    $sql = "INSERT INTO oficinas (atracao_id, 
-                                  certificado,
-                                  vagas,
-                                  venda,
-                                  publico_alvo,
-                                  material,
-                                  inscricao,
-                                  carga_horaria,
-                                  valor_hora,
-                                  data_divulgacao) 
+    $sql = "INSERT INTO exposicoes (atracao_id, 
+                                  numero_contratados,
+                                  valor,
+                                  tipo_contratacao,
+                                  painel,
+                                  legendas,
+                                  identidade,
+                                  suporte,
+                                  documentacao,
+                                  acervo) 
                           VALUES ('$idAtracao',
-                                  '$certificado',
-                                  '$vagas',
-                                  '$venda',
-                                  '$publico_alvo',
-                                  '$material',
-                                  '$inscricao',
-                                  '$carga_horaria',
-                                  '$valor_hora',
-                                  '$divulgacao')";
+                                  '$contratados',
+                                  '$valor',
+                                  '$tipo_contratacao',
+                                  '$painel',
+                                  '$legenda',
+                                  '$identidade',
+                                  '$suporte',
+                                  '$documentacao',
+                                  '$acervo')";
 
     if(mysqli_query($con, $sql)) {
 
-        $idOficina = recuperaUltimo("oficinas");
+        $idExposicao = recuperaUltimo("exposicoes");
 
         $mensagem = mensagem("success","Cadastrado com sucesso!");
         //gravarLog($sql);
@@ -53,17 +51,17 @@ if (isset($_POST['cadastra'])) {
 }
 
 if(isset($_POST['edita'])){
-    $sql = "UPDATE oficinas SET
-                            certificado = '$certificado',
-                            vagas = '$vagas',
-                            venda = '$venda',
-                            publico_alvo = '$publico_alvo',
-                            material = '$material',
-                            inscricao = '$inscricao',
-                            carga_horaria = '$carga_horaria',
-                            valor_hora = '$valor_hora',
-                            data_divulgacao = '$divulgacao'
-                            WHERE id = '$idAtracao'";
+    $sql = "UPDATE exposicoes SET
+                            numero_contratados = '$contratados',
+                            valor = '$valor',
+                            tipo_contratacao = '$tipo_contratacao',
+                            painel = '$painel',
+                            legendas = '$legenda',
+                            identidade = '$identidade',
+                            suporte = '$suporte',
+                            documentacao = '$documentacao',
+                            acervo = '$acervo'
+                            WHERE id = '$idExposicao'";
     if(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com sucesso!");
         //gravarLog($sql);
@@ -73,10 +71,10 @@ if(isset($_POST['edita'])){
     }
 }
 if(isset($_POST['carregar'])){
-    $idOficina = $_POST['idOficina'];
+    $idExposicao = $_POST['idExposicao'];
 }
 
-$oficina = recuperaDados("oficinas","id",$idOficina);
+$exposicao = recuperaDados("exposicoes","id",$idExposicao);
 
 
 include "includes/menu_interno.php";
@@ -93,16 +91,16 @@ include "includes/menu_interno.php";
                     <div class="box-header with-border">
                         <h3 class="box-title">Atração - Especificidades de Área</h3>
                     </div>
-                    <form method="POST" action="?perfil=evento&p=evento_edita" role="form">
+                    <form method="POST" action="?perfil=evento&p=exposicao_edita" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="contratados">Quantidade de contratados</label><br/>
-                                    <label><input class="form-control" type="number" name="contratados" id="contratados"></label>
+                                    <label><input class="form-control" type="number" name="contratados" id="contratados" value="<?= $exposicao['numero_contratados'] ?>"></label>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="cache">Valor do cache *</label> <br>
-                                    <label><input class="form-control" type="number" name="cache" id="cache"></label>
+                                    <label for="valor">Valor do cache *</label> <br>
+                                    <label><input class="form-control" type="number" name="valor" id="cache" value="<?= $exposicao['valor']?>"></label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="tipo_contratacao">Tipo de contratação</label> <br>
@@ -119,31 +117,31 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="painel">Confecção de painéis</label> <br>
-                                    <label><input type="radio" name="venda" value="1" checked> Sim </label>
-                                    <label><input type="radio" name="venda" value="0"> Não </label>
+                                    <label><input type="radio" name="painel" value="1"> Sim </label>
+                                    <label><input type="radio" name="painel" value="0"> Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="legenda">Confecção de legendas</label> <br>
-                                    <label><input type="radio" name="venda" value="1" checked> Sim </label>
-                                    <label><input type="radio" name="venda" value="0"> Não </label>
+                                    <label><input type="radio" name="legenda" value="1"> Sim </label>
+                                    <label><input type="radio" name="legenda" value="0"> Não </label>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="identidade">Criação de Identidade Visual</label> <br>
-                                    <label><input type="radio" name="venda" value="1" checked> Sim </label>
+                                    <label><input type="radio" name="venda" value="1"> Sim </label>
                                     <label><input type="radio" name="venda" value="0"> Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="suporte">Suporte extra (exposição)</label> <br>
-                                    <label><input type="radio" name="venda" value="1" checked> Sim </label>
+                                    <label><input type="radio" name="venda" value="1"> Sim </label>
                                     <label><input type="radio" name="venda" value="0"> Não </label>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-3">
                                         <label for="documentacao">Pedido de documentação</label> <br>
-                                        <label><input type="radio" name="documentacao" id="fotografia"  value="2" checked> Fotografia </label>
+                                        <label><input type="radio" name="documentacao" id="fotografia" value="2"> Fotografia </label>
                                         <label><input type="radio" name="documentacao" id="audio" value="1"> Áudio </label>
                                         <label><input type="radio" name="documentacao" id="video" value="0"> Vídeo </label>
                                     </div>
@@ -161,7 +159,7 @@ include "includes/menu_interno.php";
 
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancelar</button>
-                                <button type="submit" name="salvar" class="btn btn-info pull-right">Salvar</button>
+                                <button type="submit" name="edita" class="btn btn-info pull-right">Salvar</button>
                             </div>
                         </div>
 
