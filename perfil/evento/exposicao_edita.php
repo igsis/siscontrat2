@@ -100,7 +100,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="valor">Valor do cache *</label> <br>
-                                    <label><input class="form-control" type="number" name="valor" id="cache" value="<?= $exposicao['valor']?>"></label>
+                                    <label><input class="form-control" type="number" name="valor" id="valor" value="<?= $exposicao['valor']?>"></label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="tipo_contratacao">Tipo de contratação</label> <br>
@@ -117,33 +117,33 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="painel">Confecção de painéis</label> <br>
-                                    <label><input type="radio" name="painel" value="1"> Sim </label>
-                                    <label><input type="radio" name="painel" value="0"> Não </label>
+                                    <label><input type="radio" name="painel" value="1" <?= $exposicao['painel'] == 1 ? NULL ?>> Sim </label>
+                                    <label><input type="radio" name="painel" value="0" <?= $exposicao['painel'] == 0 ? NULL ?>> Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="legenda">Confecção de legendas</label> <br>
-                                    <label><input type="radio" name="legenda" value="1"> Sim </label>
-                                    <label><input type="radio" name="legenda" value="0"> Não </label>
+                                    <label><input type="radio" name="legenda" value="1" <?= $exposicao['legenda'] == 1 ? NULL ?>> Sim </label>
+                                    <label><input type="radio" name="legenda" value="0" <?= $exposicao['legenda'] == 0 ? NULL ?>> Não </label>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="identidade">Criação de Identidade Visual</label> <br>
-                                    <label><input type="radio" name="venda" value="1"> Sim </label>
-                                    <label><input type="radio" name="venda" value="0"> Não </label>
+                                    <label><input type="radio" name="identidade" value="1" <?= $exposicao['identidade'] == 1 ? NULL ?>> Sim </label>
+                                    <label><input type="radio" name="identidade" value="0" <?= $exposicao['identidade'] == 0 ? NULL ?>> Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="suporte">Suporte extra (exposição)</label> <br>
-                                    <label><input type="radio" name="venda" value="1"> Sim </label>
-                                    <label><input type="radio" name="venda" value="0"> Não </label>
+                                    <label><input type="radio" name="suporte" value="1" <?= $exposicao['suporte'] == 1 ? NULL ?>> Sim </label>
+                                    <label><input type="radio" name="suporte" value="0" <?= $exposicao['suporte'] == 0 ? NULL ?>> Não </label>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-3">
                                         <label for="documentacao">Pedido de documentação</label> <br>
-                                        <label><input type="radio" name="documentacao" id="fotografia" value="2"> Fotografia </label>
-                                        <label><input type="radio" name="documentacao" id="audio" value="1"> Áudio </label>
-                                        <label><input type="radio" name="documentacao" id="video" value="0"> Vídeo </label>
+                                        <label><input type="radio" name="documentacao" id="fotografia" value="2" <?= $exposicao['documentacao'] == 2 ? NULL ?>> Fotografia </label>
+                                        <label><input type="radio" name="documentacao" id="audio" value="1" <?= $exposicao['documentacao'] == 1 ? NULL ?>> Áudio </label>
+                                        <label><input type="radio" name="documentacao" id="video" value="0" <?= $exposicao['documentacao'] == 0 ? NULL ?>> Vídeo </label>
                                     </div>
                                 </div>
                             </div>
@@ -151,8 +151,8 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-12">
                                     <center><label for="acervo">Acervo </label><br></center>
                                     <select class="form-control" id="acervo" name="acervo">
-                                        <option value="1">A exposição NÃO possui peças que fazem parte da coleção da instituição.</option>
-                                        <option value="2">A exposição POSSUI peças que fazem parte da coleção da instituição.</option>
+                                        <option value="1" <?= $exposicao['acervo'] == 1 ? NULL ?> >A exposição NÃO possui peças que fazem parte da coleção da instituição.</option>
+                                        <option value="2" <?= $exposicao['acervo'] == 2 ? NULL ?> >A exposição POSSUI peças que fazem parte da coleção da instituição.</option>
                                     </select>
                                 </div>
                             </div>
