@@ -6,6 +6,8 @@ include "includes/menu_interno.php";
 $exibir = ' ';
 $resultado = "<td></td>";
 $idEvento = $_SESSION['idEvento'];
+$procurar = NULL;
+
 
 if (isset($_POST['procurar'])){
     $procurar = $_POST['procurar'];
@@ -20,12 +22,29 @@ if (isset($_POST['procurar'])){
         if ($filmes['qtd'] > 0) {
             $exibir = true;
 
-            $sql = "SELECT  id, titulo, ano_producao, duracao, diretor
+            $sql = "SELECT  id, titulo, ano_producao, duracao, direcao
                     FROM `filmes`
-                    WHERE titulo LIKE '%$procurar%' AND publicado =1";
-            $resultado = mnysqli_query($con,$sql);
+                    WHERE titulo LIKE '%$procurar%' AND publicado = 1";
+            $query = mysqli_query($con,$sql);
 
-        } else {
+            $resultado = "";
+
+            while($filmes = mysqli_fetch_array($query)){
+                $resultado .= "<tr>";
+                $resultado .= "<td>".$filmes['titulo']."</td>";
+                $resultado .= "<td>".$filmes['ano_producao']."</td>";
+                $resultado .= "<td>".$filmes['duracao']."</td>";
+                $resultado .= "<td>".$filmes['direcao']."</td>";
+                $resultado .= "<td>
+                                     <form action='?perfil=evento&p=evento_cinema_lista' method='post'>
+                                        <input type='hidden' name='idFilme' value='".$filmes['id']."'>
+                                        <input class='btn btn-primary' type='submit' name='selecionar' value='Selecionar'>
+                                     </form>
+                               </td>";
+                $resultado .= "</tr>";
+            }
+
+        }else {
             $exibir = false;
             $resultado = "<td colspan='4'>
                         <span style='margin: 50% 40%;'>Sem resultados</span>
@@ -64,15 +83,13 @@ if (isset($_POST['procurar'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="procurar" placeholder="Digite o nome do filme..." value="<?=$_POST['procurar'] != NULL?$procurar:"";?>" >
+                                    <input type="text" class="form-control" name="procurar" placeholder="Digite o nome do filme..." value="<?=$procurar?>" >
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
                                 </div>
                             </div>
                         </form>
-
-
 
                             <div class="panel panel-default">
                                 <!-- Default panel contents -->
@@ -89,23 +106,10 @@ if (isset($_POST['procurar'])){
                                     </thead>
                                     <tbody>
                                         <?php
-                                            if (!$exibir){
+                                            if ($exibir){
                                                 echo $resultado;
-                                            }elseif($exibir){
-                                                while($filmes = mysqli_fetch_array($resultado)){
-                                                    echo "<tr>";
-                                                    echo "<td>".$filmes['titulo']."</td>";
-                                                    echo "<td>".$filmes['ano_producao']."</td>";
-                                                    echo "<td>".$filmes['duracao']."</td>";
-                                                    echo "<td>".$filmes['diretor']."</td>";
-                                                    echo "<td>
-                                                    <form action='?perfil=evento&p=evento_cinema_lista'>
-                                                        <input type='hidden' name='idFilme' value='".$filmes['id']."'>
-                                                        <input class='btn btn-primary' type='submit' value='Selecionar'>
-                                                    </form>
-                                                    </td>";
-                                                    echo "</tr>";
-                                                }
+                                            }elseif(!$exibir){
+                                                echo $resultado;
                                             }else{
                                                 echo $resultado;
                                             }

@@ -38,7 +38,7 @@
         if(mysqli_query($con,$sql)){
             $idFilme = recuperaUltimo("filmes");
             $sql = "INSERT INTO `filme_eventos`
-                    VALUES('$fdFilme','$idEvento')";
+                    VALUES('$idFilme','$idEvento')";
             if (mysqli_query($con,$sql)){
                 $mensagem = mensagem("success","Filme gravado com sucesso.");
             }

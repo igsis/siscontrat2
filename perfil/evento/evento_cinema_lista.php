@@ -4,6 +4,22 @@ include "includes/menu_interno.php";
 
 $idEvento = $_SESSION['idEvento'];
 
+
+if (isset($_POST['selecionar'])){
+    $idFilme = $_POST['idFilme'];
+
+    $sql = "INSERT INTO filme_eventos 
+            VALUES ('$idFilme','$idEvento')";
+
+    if (mysqli_query($con,$sql)){
+        $mensagem = mensagem("success","Filme adicionado a lista!");
+    }else{
+        $mensagem = mensagem("danger",die(mysqli_error($con)));
+    }
+
+}
+
+
 $query = "SELECT f.id, f.titulo, f.ano_producao, f.duracao, f.direcao 
           FROM filmes f
           INNER JOIN filme_eventos fe ON fe.filme_id = f.id
@@ -22,6 +38,13 @@ $resul = mysqli_query($con, $query);
         <h2 class="page-header">Cinema</h2>
 
         <div class="row">
+            <?php
+                if(isset($mensagem))
+                    echo $mensagem;
+
+
+
+            ?>
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
