@@ -63,7 +63,13 @@ if(isset($_POST['edita'])){
                             carga_horaria = '$carga_horaria',
                             valor_hora = '$valor_hora',
                             data_divulgacao = '$divulgacao'
-                            WHERE id = '$idAtracao'";
+                            WHERE id = '$idOficina'";
+
+    echo "<pre>";
+    echo $sql;
+    echo"</pre>";
+
+
     if(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com sucesso!");
         //gravarLog($sql);
@@ -80,15 +86,8 @@ $oficina = recuperaDados("oficinas","id",$idOficina);
 
 
 include "includes/menu_interno.php";
+
 ?>
-<script language="JavaScript" >
-    function barraData(n){
-        if(n.value.length==2)
-            c.value += '/';
-        if(n.value.length==5)
-            c.value += '/';
-    }
-</script>
 
 <div class="content-wrapper">
     <section class="content">
@@ -111,7 +110,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="Vagas">Vagas</label> <br>
-                                    <input type="number" name="vagas">
+                                    <input type="number" name="vagas" value="<?= $oficina['vagas'] ?>">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="venda">Venda de material?</label> <br>
@@ -135,7 +134,10 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-4">
                                     <label for="forma_inscricao">Forma de inscrição: </label><br>
                                     <select id="forma_inscricao" name="forma_inscricao">
-                                       <?php  ?>
+                                        <option value="1">Sem necessidade</option>
+                                        <option value="2">Pelo site - ficha de inscrição</option>
+                                        <option value="3">Pelo site - por email</option>
+                                        <option value="4">Pessoalmente</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
@@ -172,6 +174,7 @@ include "includes/menu_interno.php";
                             </div>
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancelar</button>
+                                <input type="hidden" name="idOficina" value="<?= $idOficina ?>">
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Salvar</button>
                             </div>
 

@@ -2,7 +2,8 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
-$_SESSION['idAtracao'] = $_POST['idAtracao'];
+$idAtracao = $_POST['idAtracao'];
+
 ?>
 
 <script language="JavaScript" >
@@ -99,7 +100,7 @@ $_SESSION['idAtracao'] = $_POST['idAtracao'];
                             </div>
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancelar</button>
-                                <input type="hidden" name="idAtracao" value="<?= $_SESSION['idAtracao']; ?>">
+                                <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
                                 <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                             </div>
 
