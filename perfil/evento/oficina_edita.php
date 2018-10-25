@@ -2,7 +2,8 @@
 $con = bancoMysqli();
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-    $idAtracao = $_POST['idAtracao'];
+    $idAtracao = $_POST['idAtracao'] ?? NULL;
+    $idOficina = $_POST['idOficina'] ?? NULL;
     $certificado =  ($_POST['certificado']);
     $vagas = $_POST['vagas'];
     $venda =  ($_POST['venda']);
@@ -64,10 +65,6 @@ if(isset($_POST['edita'])){
                             valor_hora = '$valor_hora',
                             data_divulgacao = '$divulgacao'
                             WHERE id = '$idOficina'";
-
-    echo "<pre>";
-    echo $sql;
-    echo"</pre>";
 
 
     if(mysqli_query($con,$sql)){
