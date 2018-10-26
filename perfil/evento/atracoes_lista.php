@@ -81,11 +81,11 @@ include "includes/menu_interno.php";
                                 $idCategoriaAtracao = $atracao['categoria_atracao_id'];
                                 $array_teatro = array(3,7,23,24);
                                 if(in_array($idCategoriaAtracao, $array_teatro)){
-                                    $teatro = recuperaDados("especificidades","atracao_id",$atracao['idAtracao']);
+                                    $teatro = recuperaDados("teatro","atracao_id",$atracao['idAtracao']);
                                     if($teatro != NULL){
                                         echo "<td>
                                                 <form method=\"POST\" action=\"?perfil=evento&p=teatro_edita\" role=\"form\">
-                                                <input type=\"hidden\" name='idMusica' value='".$teatro['id']."'>
+                                                <input type=\"hidden\" name='idTeatro' value='".$teatro['id']."'>
                                                 <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
                                                 </form>
                                                 </td>";
