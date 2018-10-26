@@ -20,8 +20,6 @@ if (isset($_POST['cadastra'])) {
                                   '$venda',
                                   '$descricao')";
 
-    echo "<pre>" . $sql . "</pre>";
-
     if(mysqli_query($con, $sql)) {
 
         $idMusica = recuperaUltimo("musica");
