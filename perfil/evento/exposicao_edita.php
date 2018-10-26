@@ -2,7 +2,9 @@
 $con = bancoMysqli();
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-    $idAtracao = $_POST['idAtracao'];
+    $idAtracao = $_POST['idAtracao'] ?? NULL;
+    $idExposicao = $_POST['idexposicao'] ?? NULL;
+    $tipo_contratacao_id = $_POST['tipo_contratacao'] ?? NULL;
     $contratados =  ($_POST['contratados']);
     $valor =  ($_POST['valor']);
     $tipo_contratacao = $_POST['tipo_contratacao'];
@@ -20,7 +22,7 @@ if (isset($_POST['cadastra'])) {
     $sql = "INSERT INTO exposicoes (atracao_id, 
                                   numero_contratados,
                                   valor,
-                                  tipo_contratacao,
+                                  tipo_contratacao_id,
                                   painel,
                                   legendas,
                                   identidade,
@@ -30,13 +32,17 @@ if (isset($_POST['cadastra'])) {
                           VALUES ('$idAtracao',
                                   '$contratados',
                                   '$valor',
-                                  '$tipo_contratacao',
+                                  '$tipo_contratacao_id',
                                   '$painel',
                                   '$legenda',
                                   '$identidade',
                                   '$suporte',
                                   '$documentacao',
                                   '$acervo')";
+
+    echo "<pre>" . $sql . "</pre>";
+
+
 
     if(mysqli_query($con, $sql)) {
 
@@ -54,7 +60,7 @@ if(isset($_POST['edita'])){
     $sql = "UPDATE exposicoes SET
                             numero_contratados = '$contratados',
                             valor = '$valor',
-                            tipo_contratacao = '$tipo_contratacao',
+                            tipo_contratacao_id = '$tipo_contratacao',
                             painel = '$painel',
                             legendas = '$legenda',
                             identidade = '$identidade',
@@ -99,15 +105,10 @@ include "includes/menu_interno.php";
                                     <label><input class="form-control" type="number" name="contratados" id="contratados" value="<?= $exposicao['numero_contratados'] ?>"></label>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="valor">Valor do cache *</label> <br>
-                                    <label><input class="form-control" type="number" name="valor" id="valor" value="<?= $exposicao['valor']?>"></label>
-                                </div>
-                                <div class="form-group col-md-4">
                                     <label for="tipo_contratacao">Tipo de contratação</label> <br>
                                     <label><select class="form-control" id="tipo_contratacao" name="tipo_contratacao">
-                                            <option value="1">Edital</option>
-                                            <option value="2">Selecionado</option>
-                                            <option value="3">Jurado</option>
+                                            <option value="0">Selecione</option>
+                                            <?php geraOpcao('tipo_contratacao', $exposicao['tipo_contratacao_id']) ?>
                                         </select>
                                     </label>
                                 </div>
@@ -141,9 +142,9 @@ include "includes/menu_interno.php";
                                 <div class="row">
                                     <div class="form-group col-md-3">
                                         <label for="documentacao">Pedido de documentação</label> <br>
-                                        <label><input type="radio" name="documentacao" id="fotografia" value="2" <?= $exposicao['documentacao'] == 2 ? NULL ?>> Fotografia </label>
-                                        <label><input type="radio" name="documentacao" id="audio" value="1" <?= $exposicao['documentacao'] == 1 ? NULL ?>> Áudio </label>
-                                        <label><input type="radio" name="documentacao" id="video" value="0" <?= $exposicao['documentacao'] == 0 ? NULL ?>> Vídeo </label>
+                                        <label><input type="radio" name="documentacao" id="fotografia" value="2" <?= $exposicao['documentacao'] == 2 ? 'checked' : NULL ?>> Fotografia </label>
+                                        <label><input type="radio" name="documentacao" id="audio" value="1" <?= $exposicao['documentacao'] == 1 ? 'checked' : NULL ?>> Áudio </label>
+                                        <label><input type="radio" name="documentacao" id="video" value="0" <?= $exposicao['documentacao'] == 0 ? 'checked' : NULL ?>> Vídeo </label>
                                     </div>
                                 </div>
                             </div>

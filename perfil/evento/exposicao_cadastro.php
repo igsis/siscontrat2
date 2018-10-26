@@ -21,20 +21,15 @@ $_SESSION['idAtracao'] = $_POST['idAtracao'];
                     <form method="POST" action="?perfil=evento&p=exposicao_edita" role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="contratados">Quantidade de contratados</label><br/>
                                     <label><input class="form-control" type="number" name="contratados" id="contratados"></label>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="valor">Valor do cache *</label> <br>
-                                    <label><input class="form-control" type="number" name="valor" id="cache"></label>
-                                </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="tipo_contratacao">Tipo de contratação</label> <br>
                                     <label><select class="form-control" id="tipo_contratacao" name="tipo_contratacao">
-                                            <option value="1">Edital</option>
-                                            <option value="2">Selecionado</option>
-                                            <option value="3">Jurado</option>
+                                            <option value="0">Selecione</option>
+                                            <?php geraOpcao('tipo_contratacao', '') ?>
                                         </select>
                                     </label>
                                 </div>
