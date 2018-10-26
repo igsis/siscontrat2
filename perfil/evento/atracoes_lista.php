@@ -102,7 +102,7 @@ include "includes/menu_interno.php";
                                 else{
                                     $array_musica = array(10,11,15,17);
                                     if(in_array($idCategoriaAtracao, $array_musica)){
-                                        $musica = recuperaDados("especificidades","atracao_id",$atracao['idAtracao']);
+                                        $musica = recuperaDados("musica","atracao_id",$atracao['idAtracao']);
                                         if($musica != NULL){
                                             echo "<td>
                                                     <form method=\"POST\" action=\"?perfil=evento&p=musica_edita\" role=\"form\">
