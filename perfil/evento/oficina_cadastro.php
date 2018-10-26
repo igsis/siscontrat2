@@ -61,7 +61,7 @@ $idAtracao = $_POST['idAtracao'];
                                     <label for="inscricao">Forma de inscrição: </label><br>
                                     <select id="inscricao" name="inscricao">
                                         <option value="">Selecione</option>
-                                        <?php geraOpcao(forma_inscricao, '') ?>
+                                        <?php geraOpcao('forma_inscricao', '') ?>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">

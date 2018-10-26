@@ -139,7 +139,7 @@ include "includes/menu_interno.php";
                                     <label for="inscricao">Forma de inscrição: </label><br>
                                     <select id="inscricao" name="inscricao">
                                         <option value="0">Selecione</option>
-                                        <?php geraOpcao(forma_inscricao, $oficina['forma_inscricao_id']) ?>
+                                        <?php geraOpcao('forma_inscricao', $oficina['forma_inscricao_id']) ?>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
