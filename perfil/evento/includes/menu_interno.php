@@ -23,7 +23,7 @@ $pasta = "?perfil=evento&p=";
                     echo "<li><a href=\"".$pasta."evento_cinema_lista\"><i class=\"fa fa-circle-o\"></i> <span>Filme</span></a></li>";
                 }
                 if($evento['contratacao'] == 1){
-                    echo "<li><a href=\"<?= $pasta ?>pedido_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Pedido</span></a></li>";
+                    echo "<li><a href=\"".$pasta."pedido_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Pedido</span></a></li>";
                 }
             }
             ?>
