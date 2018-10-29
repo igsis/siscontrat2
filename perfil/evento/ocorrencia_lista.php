@@ -3,11 +3,15 @@ include "includes/menu_interno.php";
 
 $con = bancoMysqli();
 
-$idAtracao = $_POST['idAtracao'];
+$evento = recuperaDados('eventos', 'id', $_SESSION['idEvento']);
+
+$tipo_ocorrencia_id = $evento['tipo_evento_id'];
+
+$idOrigem = $_POST['idOrigem'];
 
 $sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim FROM ocorrencias as o
         INNER JOIN  locais as l ON o.local_id = l.id
-        WHERE o.origem_ocorrencia_id = '$idAtracao'";
+        WHERE o.origem_ocorrencia_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id'";
 
 $query = mysqli_query($con,$sql);
 ?>
@@ -19,7 +23,7 @@ $query = mysqli_query($con,$sql);
         <div class="row">
             <div class="col-md-2">
                 <form method="POST" action="?perfil=evento&p=ocorrencia_cadastro">
-                    <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
+                    <input type="hidden" name="idOrigem" value="<?= $idOrigem ?>">
                     <button type="submit" class="btn btn-block btn-info"><i class="fa fa-plus"></i> Adiciona</button>
                 </form>
             </div>

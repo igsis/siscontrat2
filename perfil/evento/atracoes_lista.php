@@ -3,6 +3,9 @@
 $con = bancoMysqli();
 
 $idEvento = $_SESSION['idEvento'];
+
+$evento = recuperaDados('eventos', 'id', $idEvento);
+    
 $sql = "SELECT at.id AS idAtracao, nome_atracao, a2.categoria_atracao,produtor_id,at.categoria_atracao_id FROM atracoes AS at
         INNER JOIN atracao_eventos a on at.id = a.atracao_id
         INNER JOIN categoria_atracoes a2 on at.categoria_atracao_id = a2.id
@@ -169,7 +172,7 @@ include "includes/menu_interno.php";
                                 /*
                                  * Ocorrência
                                  */
-                                $ocorrencias = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $atracao['idAtracao']);
+                                $ocorrencias = recuperaOcorrenciaDados($atracao['idAtracao'], $evento['tipo_evento_id']);
 
                                 if($ocorrencias > 0){
                                     $idProdutor = $atracao['produtor_id'];
@@ -178,7 +181,7 @@ include "includes/menu_interno.php";
                                     $produtor = mysqli_fetch_array($query_produtor);
                                     echo "<td>
                                               <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_lista\" role=\"form\">
-                                        <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
+                                        <input type='hidden' name='idOrigem' value='".$atracao['idAtracao']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i> Listar ocorrência</button>
                                         </form>
                                         </td>";
@@ -186,7 +189,7 @@ include "includes/menu_interno.php";
                                 else{
                                     echo "<td>
                                         <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_cadastro\" role=\"form\">
-                                        <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
+                                        <input type='hidden' name='idOrigem' value='".$atracao['idAtracao']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Ocorrência</button>
                                         </form>
                                     </td>";

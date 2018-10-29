@@ -8,7 +8,7 @@ include "includes/menu_interno.php";
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
     $tipo_evento_id = $evento['tipo_evento_id'];
-    $origem_ocorrencia_id = $_POST['idAtracao'] ?? NULL;
+    $origem_ocorrencia_id = $_POST['idOrigem'] ?? NULL;
     $instituicao_id = $_POST['instituicao'];
     $local_id = $_POST['local'];
     $espaco_id = $_POST['espaco'];
