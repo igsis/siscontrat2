@@ -25,10 +25,10 @@
                           SET produtor_id = '$idProdutor'
                           WHERE id ='$idAtracoes'";
             if(mysqli_query($con,$sqlUpdate)){
-                $resultado = mensagem("sucess","Produtor cadastrado");
+                $resultado = mensagem("success","Produtor cadastrado");
                 $idAtracao = recuperaUltimo("atracoes");
             }else{
-                $resultado = mensagem("danger","Erro atrações");
+                $resultado = mensagem("danger","Erro ao cadastrar");
             }
         }
     }
