@@ -2,8 +2,8 @@
 $con = bancoMysqli();
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-    $idAtracao = $_POST['idAtracao'] ?? NULL;
-    $idExposicao = $_POST['idexposicao'] ?? NULL;
+    $idAtracao = $_POST['idAtracao'];
+    $idExposicao = $_POST['idExposicao'] ?? NULL;
     $contratados =  ($_POST['contratados']);
     $tipo_contratacao = $_POST['tipo_contratacao'];
     $painel = addslashes ($_POST['painel']);
@@ -35,10 +35,6 @@ if (isset($_POST['cadastra'])) {
                                     '$suporte',
                                     '$documentacao',
                                     '$acervo')";
-
-    echo "<pre>" . $sql . "</pre><br>".$idAtracao;
-
-
 
     if(mysqli_query($con, $sql)) {
 
@@ -121,14 +117,15 @@ include "includes/menu_interno.php";
                                     <label><input type="radio" name="legenda" value="1" <?= $exposicao['legendas'] == 1 ? 'checked' : NULL ?>> Sim </label>
                                     <label><input type="radio" name="legenda" value="0" <?= $exposicao['legendas'] == 0 ? 'checked' : NULL ?>> Não </label>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="identidade">Criação de Identidade Visual</label> <br>
                                     <label><input type="radio" name="identidade" value="1" <?= $exposicao['identidade'] == 1 ? 'checked' : NULL ?>> Sim </label>
                                     <label><input type="radio" name="identidade" value="0" <?= $exposicao['identidade'] == 0 ? 'checked' : NULL ?>> Não </label>
                                 </div>
+                            </div>
+
+                            <div class="row">
+
                                 <div class="form-group col-md-4">
                                     <label for="suporte">Suporte extra (exposição)</label> <br>
                                     <label><input type="radio" name="suporte" value="1" <?= $exposicao['suporte'] == 1 ? 'checked' : NULL ?>> Sim </label>
