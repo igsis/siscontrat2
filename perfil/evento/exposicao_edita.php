@@ -4,7 +4,7 @@ $con = bancoMysqli();
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $idAtracao = $_POST['idAtracao'] ?? NULL;
     $idExposicao = $_POST['idexposicao'] ?? NULL;
-    $tipo_contratacao_id = $_POST['tipo_contratacao'] ?? NULL;
+    $tipo_exposicao_id = $_POST['tipo_exposicao'] ?? NULL;
     $contratados =  ($_POST['contratados']);
     $valor =  ($_POST['valor']);
     $tipo_contratacao = $_POST['tipo_contratacao'];
@@ -21,8 +21,7 @@ if (isset($_POST['cadastra'])) {
 
     $sql = "INSERT INTO exposicoes (atracao_id, 
                                   numero_contratados,
-                                  valor,
-                                  tipo_contratacao_id,
+                                  tipo_exposicao_id,
                                   painel,
                                   legendas,
                                   identidade,
@@ -31,8 +30,7 @@ if (isset($_POST['cadastra'])) {
                                   acervo) 
                           VALUES ('$idAtracao',
                                   '$contratados',
-                                  '$valor',
-                                  '$tipo_contratacao_id',
+                                  '$tipo_exposicao_id',
                                   '$painel',
                                   '$legenda',
                                   '$identidade',
@@ -60,7 +58,7 @@ if(isset($_POST['edita'])){
     $sql = "UPDATE exposicoes SET
                             numero_contratados = '$contratados',
                             valor = '$valor',
-                            tipo_contratacao_id = '$tipo_contratacao',
+                            tipo_exposicao_id = '$tipo_exposicao_id',
                             painel = '$painel',
                             legendas = '$legenda',
                             identidade = '$identidade',
@@ -108,10 +106,10 @@ include "includes/menu_interno.php";
                                     <label><input class="form-control" type="number" name="contratados" id="contratados" value="<?= $exposicao['numero_contratados'] ?>"></label>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="tipo_contratacao">Tipo de contratação</label> <br>
-                                    <label><select class="form-control" id="tipo_contratacao" name="tipo_contratacao">
+                                    <label for="tipo_exposicao">Tipo de Exposição</label> <br>
+                                    <label><select class="form-control" id="tipo_exposicao" name="tipo_exposicao">
                                             <option value="0">Selecione</option>
-                                            <?php geraOpcao('tipo_contratacao', $exposicao['tipo_contratacao_id']) ?>
+                                            <?php geraOpcao('tipo_exposicao', $exposicao['tipo_exposicao_id']) ?>
                                         </select>
                                     </label>
                                 </div>
