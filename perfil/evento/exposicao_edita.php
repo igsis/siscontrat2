@@ -144,8 +144,8 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-12">
                                     <center><label for="acervo">Acervo </label><br></center>
                                     <select class="form-control" id="acervo" name="acervo">
-                                        <option value="1" <?= $exposicao['acervo'] == 1 ? 'checked' : NULL ?> >A exposição NÃO possui peças que fazem parte da coleção da instituição.</option>
-                                        <option value="2" <?= $exposicao['acervo'] == 2 ? 'checked' : NULL ?> >A exposição POSSUI peças que fazem parte da coleção da instituição.</option>
+                                        <option value="1" <?= $exposicao['acervo'] == 1 ? 'selected' : '' ?> >A exposição NÃO possui peças que fazem parte da coleção da instituição.</option>
+                                        <option value="2" <?= $exposicao['acervo'] == 2 ? 'selected' : '' ?> >A exposição POSSUI peças que fazem parte da coleção da instituição.</option>
                                     </select>
                                 </div>
                             </div>
