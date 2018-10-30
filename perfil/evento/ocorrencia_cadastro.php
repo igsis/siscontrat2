@@ -3,6 +3,7 @@ $con = bancoMysqli();
 include "includes/menu_interno.php";
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
+
 ?>
 <script type="text/javascript">
     function desmarca() {
@@ -187,7 +188,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
                         <div class="box-footer">
                             <button type="submit" class="btn btn-default">Cancelar</button>
-                            <input type="hidden" name="idAtracao" value="<?= $_POST['idAtracao'] ?>">
+                            <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
                             <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
                     </form>

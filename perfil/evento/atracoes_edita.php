@@ -17,6 +17,7 @@ if(isset($_POST['cadastra']) || isset($_POST['edita'])){
 }
 if(isset($_POST['cadastra'])){
     $sql_atracoes = "INSERT INTO atracoes(nome_atracao, categoria_atracao_id, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$nome_atracao', '$categoria_atracao_id', '$ficha_tecnica', '$integrantes', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
+
     if(mysqli_query($con,$sql_atracoes)){
         $idAtracao = recuperaUltimo("atracoes");
         $sql_atracoes_evento = "INSERT INTO atracao_eventos (atracao_id, evento_id) VALUES ('$idAtracao','$idEvento')";

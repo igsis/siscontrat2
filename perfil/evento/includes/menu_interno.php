@@ -22,9 +22,11 @@ $pasta = "?perfil=evento&p=";
                 else{ //filme
                     echo "<li><a href=\"".$pasta."evento_cinema_lista\"><i class=\"fa fa-circle-o\"></i> <span>Filme</span></a></li>";
                 }
+                if($evento['contratacao'] == 1){
+                    echo "<li><a href=\"".$pasta."pedido_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Pedido</span></a></li>";
+                }
             }
             ?>
-            <li><a href="<?= $pasta ?>pedido_cadastro"><i class="fa fa-circle-o"></i> <span>Pedido</span></a></li>
             <li><a href="?perfil=evento"><i class="fa fa-circle-o"></i> <span>Voltar</span></a></li>
             <li class="header">MAIS</li>
             <li><a href="../includes/ajuda.php"><i class="fa fa-user"></i><span>Minha Conta</span></a></li>

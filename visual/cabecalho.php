@@ -70,4 +70,3 @@ else
             </a>
         </nav>
     </header>
-<?php include "../include/script.php"; ?>

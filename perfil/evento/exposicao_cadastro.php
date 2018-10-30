@@ -3,7 +3,12 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
-$_SESSION['idAtracao'] = $_POST['idAtracao'];
+//$_SESSION['idAtracao'] = $_POST['idAtracao'];
+
+if (isset($_POST['carregar'])){
+    $idAtracao = $_POST['idAtracao'];
+
+}
 
 ?>
 
@@ -17,16 +22,17 @@ $_SESSION['idAtracao'] = $_POST['idAtracao'];
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Atração - Especificidades de Área</h3>
+                        <?= $_SESSION['idAtracao']?>
                     </div>
                     <form method="POST" action="?perfil=evento&p=exposicao_edita" role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
                                     <label for="contratados">Quantidade de contratados</label><br/>
                                     <label><input class="form-control" type="number" name="contratados" id="contratados"></label>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="tipo_contratacao">Tipo de contratação</label> <br>
+                                <div class="form-group col-md-4">
+                                    <label for="tipo_contratacao">Tipo de Exposição</label> <br>
                                     <label><select class="form-control" id="tipo_contratacao" name="tipo_contratacao">
                                             <option value="0">Selecione</option>
                                             <?php geraOpcao('tipo_contratacao', '') ?>
@@ -47,14 +53,15 @@ $_SESSION['idAtracao'] = $_POST['idAtracao'];
                                     <label><input type="radio" name="legenda" value="1" checked> Sim </label>
                                     <label><input type="radio" name="legenda" value="0"> Não </label>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="identidade">Criação de Identidade Visual</label> <br>
                                     <label><input type="radio" name="identidade" value="1" checked> Sim </label>
                                     <label><input type="radio" name="identidade" value="0"> Não </label>
                                 </div>
+                            </div>
+
+                            <div class="row">
+
                                 <div class="form-group col-md-4">
                                     <label for="suporte">Suporte extra (exposição)</label> <br>
                                     <label><input type="radio" name="suporte" value="1" checked> Sim </label>
