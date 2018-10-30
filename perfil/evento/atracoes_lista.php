@@ -110,7 +110,7 @@ include "includes/menu_interno.php";
                                             echo "<td>
                                                     <form method=\"POST\" action=\"?perfil=evento&p=musica_edita\" role=\"form\">
                                                     <input type=\"hidden\" name='idMusica' value='".$musica['id']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
+                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i>Especificidade</button>
                                                     </form>
                                                     </td>";
                                         }
@@ -118,7 +118,7 @@ include "includes/menu_interno.php";
                                             echo "<td>
                                                     <form method=\"POST\" action=\"?perfil=evento&p=musica_cadastro\" role=\"form\">
                                                     <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Especificidade</button>
+                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i>Especificidade</button>
                                                     </form>
                                                     </td>";
                                         }
@@ -130,7 +130,7 @@ include "includes/menu_interno.php";
                                                 echo "<td>
                                                     <form method=\"POST\" action=\"?perfil=evento&p=exposicao_edita\" role=\"form\">
                                                     <input type='hidden' name='idExposicao' value='".$exposicao['id']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
+                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i>Especificidade</button>
                                                     </form>
                                                     </td>";
                                             }
@@ -138,7 +138,7 @@ include "includes/menu_interno.php";
                                                 echo "<td>
                                                     <form method=\"POST\" action=\"?perfil=evento&p=exposicao_cadastro\" role=\"form\">
                                                     <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Especificidade</button>
+                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i>Especificidade</button>
                                                     </form>
                                                     </td>";
                                             }

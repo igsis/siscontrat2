@@ -3,11 +3,9 @@ $con = bancoMysqli();
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $idAtracao = $_POST['idAtracao'] ?? NULL;
-    $idExposicao = $_POST['idexposicao'] ?? NULL;
+    $idExposicao = $_POST['idExposicao'] ?? NULL;
     $tipo_exposicao_id = $_POST['tipo_exposicao'] ?? NULL;
     $contratados =  ($_POST['contratados']);
-    $valor =  ($_POST['valor']);
-    $tipo_contratacao = $_POST['tipo_contratacao'];
     $painel = addslashes ($_POST['painel']);
     $legenda = $_POST['legenda'];
     $identidade = $_POST['identidade'];
@@ -38,10 +36,6 @@ if (isset($_POST['cadastra'])) {
                                   '$documentacao',
                                   '$acervo')";
 
-    echo "<pre>" . $sql . "</pre>";
-
-
-
     if(mysqli_query($con, $sql)) {
 
         $idExposicao = recuperaUltimo("exposicoes");
@@ -57,7 +51,6 @@ if (isset($_POST['cadastra'])) {
 if(isset($_POST['edita'])){
     $sql = "UPDATE exposicoes SET
                             numero_contratados = '$contratados',
-                            valor = '$valor',
                             tipo_exposicao_id = '$tipo_exposicao_id',
                             painel = '$painel',
                             legendas = '$legenda',
@@ -66,6 +59,12 @@ if(isset($_POST['edita'])){
                             documentacao = '$documentacao',
                             acervo = '$acervo'
                             WHERE id = '$idExposicao'";
+
+
+    echo "<pre>" . $sql . "</pre>";
+
+
+
     if(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com sucesso!");
         //gravarLog($sql);
@@ -124,8 +123,8 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="legenda">Confecção de legendas</label> <br>
-                                    <label><input type="radio" name="legenda" value="1" <?= $exposicao['legenda'] == 1 ? 'checked' : NULL ?>> Sim </label>
-                                    <label><input type="radio" name="legenda" value="0" <?= $exposicao['legenda'] == 0 ? 'checked' : NULL ?>> Não </label>
+                                    <label><input type="radio" name="legenda" value="1" <?= $exposicao['legendas'] == 1 ? 'checked' : NULL ?>> Sim </label>
+                                    <label><input type="radio" name="legenda" value="0" <?= $exposicao['legendas'] == 0 ? 'checked' : NULL ?>> Não </label>
                                 </div>
                             </div>
 
