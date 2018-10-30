@@ -97,6 +97,9 @@ include "includes/menu_interno.php";
                     <div class="box-header with-border">
                         <h3 class="box-title">Atração - Especificidades de Área</h3>
                     </div>
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                    </div>
                     <form method="POST" action="?perfil=evento&p=exposicao_edita" role="form">
                         <div class="box-body">
                             <div class="row">
@@ -152,14 +155,15 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-12">
                                     <center><label for="acervo">Acervo </label><br></center>
                                     <select class="form-control" id="acervo" name="acervo">
-                                        <option value="1" <?= $exposicao['acervo'] == 1 ? 'checked' : NULL ?> >A exposição NÃO possui peças que fazem parte da coleção da instituição.</option>
-                                        <option value="2" <?= $exposicao['acervo'] == 2 ? 'checked' : NULL ?> >A exposição POSSUI peças que fazem parte da coleção da instituição.</option>
+                                        <option value="1" <?= $exposicao['acervo'] == 1 ? 'selected' : NULL ?> >A exposição NÃO possui peças que fazem parte da coleção da instituição.</option>
+                                        <option value="2" <?= $exposicao['acervo'] == 2 ? 'selected' : NULL ?> >A exposição POSSUI peças que fazem parte da coleção da instituição.</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancelar</button>
+                                <input type="hidden" name="idExposicao" value="<?= $idExposicao ?>">
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Salvar</button>
                             </div>
                         </div>

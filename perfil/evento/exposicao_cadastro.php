@@ -81,7 +81,7 @@ $_SESSION['idAtracao'] = $_POST['idAtracao'];
 
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancelar</button>
-                                <input type="hidden" name="idAtracao" value="<?= $_SESSION['idAtracao']; ?>">
+                                <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
                                 <button type="submit" name="cadastra" class="btn btn-info pull-right">Salvar</button>
                             </div>
                         </div>

@@ -72,6 +72,9 @@ include "includes/menu_interno.php";
                     <div class="box-header with-border">
                         <h3 class="box-title">Atração - Especificidades de Área</h3>
                     </div>
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                    </div>
                     <form method="POST" action="?perfil=evento&p=teatro_edita" role="form">
                         <div class="box-body">
                             <div class="row">
