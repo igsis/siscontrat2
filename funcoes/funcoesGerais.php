@@ -281,11 +281,11 @@ date_default_timezone_set("Brazil/East");
 		$mysqli->query($sql);
 	}
 
-	function geraOpcao($tabela,$select)
+	function geraOpcao($tabela,$select,$where='')
 	{
 		//gera os options de um select
-		$sql = "SELECT * FROM $tabela ORDER BY 2";
-
+		$sql = "SELECT * FROM $tabela $where ORDER BY 2";
+//SELECT FROM ig_local WHERE idInstituicao = 5 ORDER BY 2
 		$con = bancoMysqli();
 		$query = mysqli_query($con,$sql);
 		while($option = mysqli_fetch_row($query))
