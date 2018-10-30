@@ -4,9 +4,7 @@ $con = bancoMysqli();
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $idAtracao = $_POST['idAtracao'] ?? NULL;
     $idExposicao = $_POST['idexposicao'] ?? NULL;
-    $tipo_contratacao_id = $_POST['tipo_contratacao'] ?? NULL;
     $contratados =  ($_POST['contratados']);
-    $valor =  ($_POST['valor']);
     $tipo_contratacao = $_POST['tipo_contratacao'];
     $painel = addslashes ($_POST['painel']);
     $legenda = $_POST['legenda'];
@@ -19,28 +17,26 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
 
 if (isset($_POST['cadastra'])) {
 
-    $sql = "INSERT INTO exposicoes (atracao_id, 
-                                  numero_contratados,
-                                  valor,
-                                  tipo_contratacao_id,
-                                  painel,
-                                  legendas,
-                                  identidade,
-                                  suporte,
-                                  documentacao,
-                                  acervo) 
-                          VALUES ('$idAtracao',
-                                  '$contratados',
-                                  '$valor',
-                                  '$tipo_contratacao_id',
-                                  '$painel',
-                                  '$legenda',
-                                  '$identidade',
-                                  '$suporte',
-                                  '$documentacao',
-                                  '$acervo')";
+    $sql = "INSERT INTO exposicoes (atracao_id,
+                                    tipo_contratacao_id, 
+                                    numero_contratados,
+                                    painel,
+                                    legendas,
+                                    identidade,
+                                    suporte,
+                                    documentacao,
+                                    acervo) 
+                            VALUES ('$idAtracao',
+                                    '$tipo_contratacao',
+                                    '$contratados',
+                                    '$painel',
+                                    '$legenda',
+                                    '$identidade',
+                                    '$suporte',
+                                    '$documentacao',
+                                    '$acervo')";
 
-    echo "<pre>" . $sql . "</pre>";
+    echo "<pre>" . $sql . "</pre><br>".$idAtracao;
 
 
 
@@ -59,8 +55,7 @@ if (isset($_POST['cadastra'])) {
 if(isset($_POST['edita'])){
     $sql = "UPDATE exposicoes SET
                             numero_contratados = '$contratados',
-                            valor = '$valor',
-                            tipo_contratacao_id = '$tipo_contratacao',
+                            tippo_contratacao_id ='$tipo_contratacao',
                             painel = '$painel',
                             legendas = '$legenda',
                             identidade = '$identidade',
@@ -105,7 +100,7 @@ include "includes/menu_interno.php";
                                     <label><input class="form-control" type="number" name="contratados" id="contratados" value="<?= $exposicao['numero_contratados'] ?>"></label>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="tipo_contratacao">Tipo de contratação</label> <br>
+                                    <label for="tipo_contratacao">Tipo de Exposição</label> <br>
                                     <label><select class="form-control" id="tipo_contratacao" name="tipo_contratacao">
                                             <option value="0">Selecione</option>
                                             <?php geraOpcao('tipo_contratacao', $exposicao['tipo_contratacao_id']) ?>
@@ -123,8 +118,8 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="legenda">Confecção de legendas</label> <br>
-                                    <label><input type="radio" name="legenda" value="1" <?= $exposicao['legenda'] == 1 ? 'checked' : NULL ?>> Sim </label>
-                                    <label><input type="radio" name="legenda" value="0" <?= $exposicao['legenda'] == 0 ? 'checked' : NULL ?>> Não </label>
+                                    <label><input type="radio" name="legenda" value="1" <?= $exposicao['legendas'] == 1 ? 'checked' : NULL ?>> Sim </label>
+                                    <label><input type="radio" name="legenda" value="0" <?= $exposicao['legendas'] == 0 ? 'checked' : NULL ?>> Não </label>
                                 </div>
                             </div>
 

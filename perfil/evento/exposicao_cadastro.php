@@ -17,6 +17,7 @@ $_SESSION['idAtracao'] = $_POST['idAtracao'];
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Atração - Especificidades de Área</h3>
+                        <?= $_SESSION['idAtracao']?>
                     </div>
                     <form method="POST" action="?perfil=evento&p=exposicao_edita" role="form">
                         <div class="box-body">
@@ -26,7 +27,7 @@ $_SESSION['idAtracao'] = $_POST['idAtracao'];
                                     <label><input class="form-control" type="number" name="contratados" id="contratados"></label>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="tipo_contratacao">Tipo de contratação</label> <br>
+                                    <label for="tipo_contratacao">Tipo de Exposição</label> <br>
                                     <label><select class="form-control" id="tipo_contratacao" name="tipo_contratacao">
                                             <option value="0">Selecione</option>
                                             <?php geraOpcao('tipo_contratacao', '') ?>
