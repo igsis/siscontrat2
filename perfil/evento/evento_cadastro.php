@@ -33,7 +33,7 @@ include "includes/menu_interno.php";
                                     <select class="form-control" id="tipo" name="tipo" required>
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao("tipo_eventos", "");
+                                        geraOpcao("tipo_eventos");
                                         ?>
                                     </select>
                                 </div>
@@ -50,7 +50,7 @@ include "includes/menu_interno.php";
                                     <select class="form-control" name="relacaoJuridica" id="relacaoJuridica">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao("relacao_juridicas", "");
+                                        geraOpcao("relacao_juridicas");
                                         ?>
                                     </select>
                                 </div>

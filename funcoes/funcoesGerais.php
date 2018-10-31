@@ -281,11 +281,22 @@ date_default_timezone_set("Brazil/East");
 		$mysqli->query($sql);
 	}
 
-	function geraOpcao($tabela,$select,$where='')
+/**
+ * Preenche um select com os dados da tabela especificada
+ * @param string $tabela <p>
+ * Nome da tabela no banco de dados
+ * </p>
+ * @param string|int $select [opcional] <p>
+ * Opção que deve ser exibida caso já haja um valor
+ * </p>
+ * @param string $where [opcional] <p>
+ * Clausula WHERE para especificar um campo
+ * </p>
+ */
+function geraOpcao($tabela, $select = '', $where = '')
 	{
 		//gera os options de um select
 		$sql = "SELECT * FROM $tabela $where ORDER BY 2";
-//SELECT FROM ig_local WHERE idInstituicao = 5 ORDER BY 2
 		$con = bancoMysqli();
 		$query = mysqli_query($con,$sql);
 		while($option = mysqli_fetch_row($query))
@@ -480,7 +491,7 @@ date_default_timezone_set("Brazil/East");
 /**
  * <p>Busca um registro na tabela passada no primeiro parametro onde a coluna passada no segundo parametro
  * é igual ao valor passado no terceiro parametro. Deve ser atribuído a uma variavel</p>
- * 
+ *
  * <p>Ex: SELECT * FROM $tabela WHERE $campo = $variavelCampo</p>
  * @param string $tabela <p>
  * Nome da tabela no banco de dados

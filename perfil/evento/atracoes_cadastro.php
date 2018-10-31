@@ -31,7 +31,7 @@ include "includes/menu_interno.php";
                                 <select class="form-control" id="categoria_atracao_id" name="categoria_atracao_id">
                                     <option value="">Selecione...</option>
                                     <?php
-                                    geraOpcao("categoria_atracoes","")
+                                    geraOpcao("categoria_atracoes")
                                     ?>
                                 </select>
                             </div>
@@ -56,7 +56,7 @@ include "includes/menu_interno.php";
                                 <select class="form-control" id="classificacao_indicativa_id" name="classificacao_indicativa_id">
                                     <option value="">Selecione...</option>
                                     <?php
-                                    geraOpcao("classificacao_indicativas","")
+                                    geraOpcao("classificacao_indicativas")
                                     ?>
                                 </select>
                             </div>

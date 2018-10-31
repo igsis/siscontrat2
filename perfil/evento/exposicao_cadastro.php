@@ -34,7 +34,7 @@ if (isset($_POST['carregar'])){
                                     <label for="tipo_exposicao">Tipo de Exposição</label> <br>
                                     <label><select class="form-control" id="tipo_exposicao" name="tipo_exposicao">
                                             <option value="0">Selecione</option>
-                                            <?php geraOpcao('tipo_exposicao', '') ?>
+                                            <?php geraOpcao('tipo_exposicao') ?>
                                         </select>
                                     </label>
                                 </div>
