@@ -15,7 +15,7 @@ if (isset($_POST['procurar'])){
 
         $sql = "SELECT COUNT(cpf) 'qtd'
                 FROM   `pessoa_fisicas`
-                WHERE cpf = '$procurar'";
+                WHERE cpf = '$procurar' OR passaporte = '$procurar'";
 //        $query = mysqli_query($con, $sql);
         $pessoa = mysqli_fetch_assoc(mysqli_query($con, $sql));
 
@@ -24,7 +24,7 @@ if (isset($_POST['procurar'])){
 
             $sql = "SELECT  id, nome, cpf, email
                     FROM `pessoa_fisicas`
-                    WHERE cpf = '$procurar'";
+                    WHERE cpf = '$procurar' OR passaporte = '$procurar'";
             $query = mysqli_query($con,$sql);
 
             $resultado = "";
@@ -49,10 +49,13 @@ if (isset($_POST['procurar'])){
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <a class=\"btn btn-primary\" href=\"?perfil=evento&p=pf_cadastro\">
-                            <i class=\"glyphicon glyphicon-plus\">        
-                            </i>Adicionar
-                         </a>
+                        <form method='post' action='?perfil=evento&p=pf_cadastro'>
+                            <input type='hidden' name='cpf-' value='$procurar'>
+                            <button class=\"btn btn-primary\" type='submit'>
+                                <i class=\"glyphicon glyphicon-plus\">        
+                                </i>Adicionar
+                            </button>
+                        </form>
                       </td>";
 
         }

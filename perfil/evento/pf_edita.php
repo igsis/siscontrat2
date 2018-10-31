@@ -3,6 +3,17 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
+if (isset($_POST['cadastra']) || isset($_POST['edita'])){
+    $nome = $_POST['nome'];
+    $nomeArtistico = $_POST['nomeArtistico'];
+    $tipoDocumento = $_POST['tipoDocumento'];
+    $documento = $_POST['documento'];
+    $cpf = $_POST['cpf'];
+
+
+
+}
+
 ?>
 
 <script language="JavaScript" >
@@ -191,8 +202,8 @@ include "includes/menu_interno.php";
                             </div>
 
                             <div class="box-footer">
-                                <button type="reset" class="btn btn-default">Cancelar</button>
-                                <button type="submit" name="cadastra" class="btn btn-info pull-right">Salvar</button>
+                                <button type="submit" class="btn btn-default">Cancelar</button>
+                                <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
                             </div>
                         </form>
                     </div>
