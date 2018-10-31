@@ -61,9 +61,6 @@ if(isset($_POST['edita'])){
                             WHERE id = '$idExposicao'";
 
 
-    echo "<pre>" . $sql . "</pre>";
-
-
 
     if(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com sucesso!");
