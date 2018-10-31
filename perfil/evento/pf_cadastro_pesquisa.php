@@ -78,11 +78,11 @@ if (isset($_POST['procurar'])){
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=evento&p=evento_cinema_procura" method="post">
+                        <form action="?perfil=evento&p=pf_cadastro_pesquisa" method="post">
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="procurar" placeholder="Digite o nome do filme..." value="<?=$procurar?>" >
+                                    <input type="text" class="form-control" name="procurar" placeholder="Digite o CPF da pessoa..." value="<?=$procurar?>" >
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
