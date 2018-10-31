@@ -477,7 +477,25 @@ date_default_timezone_set("Brazil/East");
 		}
 	}
 
-	function recuperaDados($tabela,$campo,$variavelCampo)
+/**
+ * <p>Busca um registro na tabela passada no primeiro parametro onde a coluna passada no segundo parametro
+ * é igual ao valor passado no terceiro parametro. Deve ser atribuído a uma variavel</p>
+ * 
+ * <p>Ex: SELECT * FROM $tabela WHERE $campo = $variavelCampo</p>
+ * @param string $tabela <p>
+ * Nome da tabela no banco de dados
+ * </p>
+ * @param string $campo <p>
+ * Nome da coluna na tabela
+ * </p>
+ * @param int|string $variavelCampo <p>
+ * Valor a ser comparado para a clausula WHERE
+ * </p>
+ * @return array|null <p>
+ * Retorna o registro como um array
+ * </p>
+ */
+function recuperaDados($tabela, $campo, $variavelCampo)
 	{
 		//retorna uma array com os dados de qualquer tabela. serve apenas para 1 registro.
 		$con = bancoMysqli();
