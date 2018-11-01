@@ -41,7 +41,7 @@ if (isset($_POST['atualizar'])) {
             //gravarLog($sql);
         }
     } else {
-        $mensagem = mensagem("danger", "Erro ao gravar! Senha incorreta!.");
+        $mensagem = mensagem("danger", "Erro ao gravar! Senha incorreta!");
     }
 }
 
@@ -70,16 +70,22 @@ $usuario = recuperaDados('usuarios', 'id', $idUser);
                         <div class="box-body">
 
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-5">
                                     <label for="nome_completo">Nome: </label>
                                     <input type="text" class="form-control" id="nome_completo" name="nome_completo"
                                            maxlength="70" required value="<?= $usuario['nome_completo'] ?>">
                                 </div>
 
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-5">
                                     <label for="email">Email: </label>
                                     <input type="text" class="form-control" id="email" name="email" maxlength="60"
                                            required value="<?= $usuario['email'] ?>">
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <label for="telefone">Telefone: </label>
+                                    <input type="text" class="form-control" id="telefone" name="telefone"
+                                           value="<?= $usuario['telefone'] ?>">
                                 </div>
                             </div>
 
@@ -102,19 +108,11 @@ $usuario = recuperaDados('usuarios', 'id', $idUser);
                                 </div>
                             </div>
 
-                            <div class="row ">
-                                <div class="form-group col-md-6">
-                                    <label for="telefone">Telefone: </label>
-                                    <input type="text" class="form-control" id="telefone" name="telefone"
-                                           value="<?= $usuario['telefone'] ?>">
-                                </div>
-
-                                <div class="form-group col-md-6">
+                                <div class="form-group">
                                     <label for="ultimo_acesso">Último acesso: </label>
                                     <input type="text" readonly class="form-control" id="ultimo_acesso"
                                            name="ultimo_acesso" value="<?= exibirDataBr($usuario['ultimo_acesso']) ?>">
                                 </div>
-                            </div>
 
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancelar</button>
