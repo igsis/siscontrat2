@@ -13,23 +13,24 @@ if (isset($_POST['procurar'])){
     $procurar = $_POST['procurar'];
     if ($procurar != NULL) {
 
-        $sql = "SELECT COUNT(cpf) 'qtd'
-                FROM   `pessoa_fisicas`
-                WHERE cpf = '$procurar' OR passaporte = '$procurar'";
-//        $query = mysqli_query($con, $sql);
-        $pessoa = mysqli_fetch_assoc(mysqli_query($con, $sql));
+        $queryCPF = "SELECT  id, nome, cpf, email
+                    FROM siscontrat.`pessoa_fisicas`
+                    WHERE cpf = '$procurar'";
 
-        if ($pessoa['qtd'] > 0) {
+        $queryPassaporte = "SELECT id,nome,passaporte,email
+                            FROM siscontrat.`pessoa_fisicas`
+                            WHERE passaporte = '$procurar'";
+
+        if ($result = mysqli_query($con,$queryCPF)) {
+            $resultCPF = mysqli_num_rows($queryCPF);
+        }elseif ($result = mysqli_query($con,$queryPassaporte)){
+            $resultPassaporte=mysqli_num_rows($queryPassaporte);
+        }
+
+        if (isset($result) && $resultCPF  > 0){
             $exibir = true;
-
-            $sql = "SELECT  id, nome, cpf, email
-                    FROM `pessoa_fisicas`
-                    WHERE cpf = '$procurar' OR passaporte = '$procurar'";
-            $query = mysqli_query($con,$sql);
-
             $resultado = "";
-
-            while($pessoa = mysqli_fetch_array($query)){
+            while($pessoa = mysqli_fetch_array($queryCPF)){
                 $resultado .= "<tr>";
                 $resultado .= "<td>".$pessoa['nome']."</td>";
                 $resultado .= "<td>".$pessoa['cpf']."</td>";
@@ -43,6 +44,24 @@ if (isset($_POST['procurar'])){
                 $resultado .= "</tr>";
             }
 
+        }
+        elseif($resultPassaporte > 0){
+            $exibir = true;
+            $resultado = "";
+
+            while($pessoa = mysqli_fetch_array($queryPassaporte)){
+                $resultado .= "<tr>";
+                $resultado .= "<td>".$pessoa['nome']."</td>";
+                $resultado .= "<td>".$pessoa['passaporte']."</td>";
+                $resultado .= "<td>".$pessoa['email']."</td>";
+                $resultado .= "<td>
+                                     <form action='?perfil=evento&p=pf_cadastro_pesquisa' method='post'>
+                                        <input type='hidden' name='idPessoa' value='".$pessoa['id']."'>
+                                        <input class='btn btn-primary' type='submit' name='selecionar' value='Selecionar'>
+                                     </form>
+                               </td>";
+                $resultado .= "</tr>";
+            }
         }else {
             $exibir = false;
             $resultado = "<td colspan='4'>
@@ -85,7 +104,7 @@ if (isset($_POST['procurar'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="procurar" placeholder="Digite o CPF da pessoa..." value="<?=$procurar?>" >
+                                    <input type="text" class="form-control" name="procurar" placeholder="Digite CPF ou Passaporte da pessoa..." value="<?=$procurar?>" >
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>

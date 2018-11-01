@@ -4,7 +4,6 @@ $con = bancoMysqli();
 include "includes/menu_interno.php";
 
 ?>
-
 <script language="JavaScript" >
     function barraData(n){
         if(n.value.length==2)
@@ -112,15 +111,15 @@ include "includes/menu_interno.php";
                                     <input type="email" name="email" class="form-control" maxlength="60" placeholder="Digite o E-mail" required>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="telefone">Telefone :</label>
-                                    <input type="text" name="telefone" class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                            <div class="row" id="telefones">
+                                <div id="phone1" class="form-group col-md-12">
+                                    <label for="telefone1">Telefone :</label>
+                                    <input type="text" name="telefone1" id="phone1" class="form-control" placeholder="Digite o telefone" required maxlength="15">
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" >
                                 <div class="col-md-3"></div>
-                                <button class="col-md-6 btn btn-primary">Adicionar mais um telefone</button>
+                                <span class="col-md-6 btn btn-primary" id="adcTelefone">Adicionar mais um telefone</span>
                                 <div class="col-md-3"></div>
                             </div>
                             <div class="row">
@@ -201,4 +200,7 @@ include "includes/menu_interno.php";
     </section>
     <!-- /.content -->
 </div>
+<script>
+
+</script>
 
