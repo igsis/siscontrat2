@@ -3,6 +3,38 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
+if (isset($_POST['cadastra']) || isset($_POST['edita'])){
+
+    $nome = $_POST['nome'];
+    $nomeArtistico = $_POST['nomeArtistico'];
+    $rg = $_POST['rg'];
+    $documento = $_POST['documento'];
+    $ccm = $_POST['ccm'];
+    $dtNascimento = $_POST['dtNascimento'];
+    $nacionalidade = $_POST['nacionalidade'];
+    $cep = $_POST['cep'];
+    $endereco = $_POST['endereco'];
+    $numero = $_POST['numero'];
+    $completo = $_POST['completo'];
+    $cidade = $_POST['cidade'];
+    $estado = $_POST['estado'];
+    $email = $_POST['email'];
+    $telefone[] = $_POST['telefone[]'];
+    $drt = $_POST['drt'];
+    $funcao = $_POST['funcao'];
+    $incricoes = $_POST['inscricaoPissInss'];
+    $omb = $_POST['omb'];
+    $observacao = $_POST['observacao'];
+    $banco = $_POST['banco'];
+    $agencia = $_POST['agencia'];
+    $conta = $_POST['conta'];
+    $observacaoConta = $_POST['observacaoConta'];
+
+
+
+
+}
+
 ?>
 <script language="JavaScript" >
     function barraData(n){
@@ -44,14 +76,14 @@ include "includes/menu_interno.php";
                             </div>
                             <div class="row">
                                 <div class="form-group col-sm-12">
-                                    <label for="documento">RG: *</label>
-                                    <input type="text" class="form-control" placeholder="Digite o documento" maxlength="20" required>
+                                    <label for="rg">RG: *</label>
+                                    <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="cpf">CPF:</label>
-                                    <input type="text" class="form-control" disabled>
+                                    <label for="documento">CPF:</label>
+                                    <input type="text" name="documento" class="form-control" disabled>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="ccm">CCM: *</label>
@@ -111,17 +143,25 @@ include "includes/menu_interno.php";
                                     <input type="email" name="email" class="form-control" maxlength="60" placeholder="Digite o E-mail" required>
                                 </div>
                             </div>
-                            <div class="row" id="telefones">
-                                <div id="phone1" class="form-group col-md-12">
-                                    <label for="telefone1">Telefone :</label>
-                                    <input type="text" name="telefone1" id="phone1" class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="telefone[]">Telefone #1:</label>
+                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15">
                                 </div>
                             </div>
-                            <div class="row" >
-                                <div class="col-md-3"></div>
-                                <span class="col-md-6 btn btn-primary" id="adcTelefone">Adicionar mais um telefone</span>
-                                <div class="col-md-3"></div>
+                            <div class="row" id="telefones">
+                                <div id="phone1" class="form-group col-md-12">
+                                    <label for="telefone[]">Telefone #2:</label>
+                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                </div>
                             </div>
+                            <div class="row" id="telefones">
+                                <div class="form-group col-md-12">
+                                    <label for="telefone[]">Telefone #3:</label>
+                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="drt">DRT: </label>

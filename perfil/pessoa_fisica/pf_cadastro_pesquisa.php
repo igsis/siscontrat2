@@ -70,7 +70,7 @@ if (isset($_POST['procurar'])){
                       <td>
                         <form method='post' action='?perfil=evento&p=pf_cadastro'>
                             <input type='hidden' name='documentacao' value='$procurar'>
-                            <button class=\"btn btn-primary\" type='submit'>
+                            <button class=\"btn btn-primary\" name='adicionar' type='submit'>
                                 <i class=\"glyphicon glyphicon-plus\">        
                                 </i>Adicionar
                             </button>

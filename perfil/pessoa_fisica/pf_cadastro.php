@@ -3,19 +3,11 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
-if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-    $nome = $_POST['nome'];
-    $nomeArtistico = $_POST['nomeArtistico'];
-    $tipoDocumento = $_POST['tipoDocumento'];
-    $documento = $_POST['documento'];
-    $cpf = $_POST['cpf'];
-
-
-
+if(isset($_POST['adicionar'])){
+    $documento = $_POST['documentacao'] ?? NULL;
 }
 
 ?>
-
 <script language="JavaScript" >
     function barraData(n){
         if(n.value.length==2)
@@ -55,23 +47,15 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
                             </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-sm-6">
-                                    <label for="tipoDocumento">Tipo de Documento: *</label>
-                                    <select name="tipoDocumento" class="form-control">
-                                        <option value="rg">RG</option>
-                                        <option value="passaporte">Passaporte</option>
-                                        <option value="rne">RNE</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="documento">Documento: *</label>
-                                    <input type="text" class="form-control" placeholder="Digite o documento" maxlength="20" required>
+                                <div class="form-group col-sm-12">
+                                    <label for="rg">RG: *</label>
+                                    <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="cpf">CPF:</label>
-                                    <input type="text" class="form-control" disabled>
+                                    <label for="documento" id="documento">CPF:</label>
+                                    <input type="text" name="documento" class="form-control" value="<?= $documento?>">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="ccm">CCM: *</label>
@@ -133,15 +117,23 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="telefone">Telefone :</label>
-                                    <input type="text" name="telefone" class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                    <label for="telefone[]">Telefone #1:</label>
+                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-3"></div>
-                                <button class="col-md-6 btn btn-primary">Adicionar mais um telefone</button>
-                                <div class="col-md-3"></div>
+                            <div class="row" id="telefones">
+                                <div id="phone1" class="form-group col-md-12">
+                                    <label for="telefone[]">Telefone #2:</label>
+                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                </div>
                             </div>
+                            <div class="row" id="telefones">
+                                <div class="form-group col-md-12">
+                                    <label for="telefone[]">Telefone #3:</label>
+                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="drt">DRT: </label>
@@ -155,11 +147,11 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="inscricaoPissInss">Inscrição do INSS ou PIS/PASEP:</label>
-                                    <input type="text" class="form-control" placeholder="Digite a inscrição do INSS ou PISS/PASEP">
+                                    <input type="text" class="form-control" name="inscricaoPissInss" placeholder="Digite a inscrição do INSS ou PISS/PASEP">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="OMB">OMB:</label>
-                                    <input type="text" class="form-control" placeholder="Digite o OMB">
+                                    <input type="text" name="omb" class="form-control" placeholder="Digite o OMB">
                                 </div>
                             </div>
                             <div class="row">
@@ -185,11 +177,11 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
                                </div>
                                <div class="row">
                                    <div class="form-group col-md-6">
-                                       <label for="agencia">Agência: </label>
-                                       <input type="text" class="form-control" placeholder="Digite a Agência" maxlength="12" required>
+                                       <label for="agencia">Agência: *</label>
+                                       <input type="text" name="agencia" class="form-control" placeholder="Digite a Agência" maxlength="12" required>
                                    </div>
                                    <div class="form-group col-md-6">
-                                       <label for="conta">Conta: </label>
+                                       <label for="conta">Conta: *</label>
                                        <input type="text" class="form-control" placeholder="Digite a Conta" maxlength="12" required>
                                    </div>
                                </div>
@@ -202,8 +194,8 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
                             </div>
 
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-default">Cancelar</button>
-                                <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
+                                <button type="reset" class="btn btn-default">Cancelar</button>
+                                <button type="submit" name="cadastra" class="btn btn-info pull-right">Salvar</button>
                             </div>
                         </form>
                     </div>
@@ -220,4 +212,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     </section>
     <!-- /.content -->
 </div>
+<script>
+
+</script>
 
