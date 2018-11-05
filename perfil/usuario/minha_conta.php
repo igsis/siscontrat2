@@ -78,7 +78,7 @@ $usuario = recuperaDados('usuarios', 'id', $idUser);
 
                                 <div class="form-group col-md-5">
                                     <label for="email">Email: </label>
-                                    <input type="text" class="form-control" id="email" name="email" maxlength="60"
+                                    <input type="email" class="form-control" id="email" name="email" maxlength="60"
                                            required value="<?= $usuario['email'] ?>">
                                 </div>
 
