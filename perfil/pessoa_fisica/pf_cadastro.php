@@ -1,10 +1,12 @@
 <?php
 
 $con = bancoMysqli();
-include "includes/menu_interno.php";
+//include ".../includes/menu_interno.php";
 
 if(isset($_POST['adicionar'])){
     $documento = $_POST['documentacao'] ?? NULL;
+}else{
+    $documento = "";
 }
 
 ?>
@@ -46,7 +48,7 @@ if(isset($_POST['adicionar'])){
                                 <input type="text" class="form-control" name="nomeArtistico" placeholder="Digite o nome artistico" maxlength="70" required>
                             </div>
                             </div>
-                            <div class="row">
+                            <div class="row" id="rg">
                                 <div class="form-group col-sm-12">
                                     <label for="rg">RG: *</label>
                                     <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" required>
@@ -65,7 +67,7 @@ if(isset($_POST['adicionar'])){
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="dataNascimento">Data de Nascimento: *</label>
-                                    <input type="date" class="form-control" name="dataNascimento" onkeyup="barraData(this);"/>
+                                    <input type="date" class="form-control" name="dataNascimento" onkeyup="barraData(this);" required/>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="nacionalidade">Nacionalidade: </label>
@@ -80,23 +82,23 @@ if(isset($_POST['adicionar'])){
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="cep">CEP: *</label>
-                                    <input type="text" class="form-control" maxlength="9" placeholder="Digite o CEP" required>
+                                    <input type="text" name="cep" class="form-control" maxlength="9" placeholder="Digite o CEP" required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="endereco">Endereço: *</label>
-                                    <input type="text" class="form-control" placeholder="Digite o endereço" maxlength="200" required>
+                                    <input type="text" name="endereco" class="form-control" placeholder="Digite o endereço" maxlength="200" required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" class="form-control" placeholder="Digite o número" required>
+                                    <input type="number" name="numero" class="form-control" placeholder="Digite o número" required>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="complemento">Complemento: *</label>
-                                    <input type="text" class="form-control" maxlength="20" placeholder="Digite o complemento">
+                                    <input type="text" name="complemento" class="form-control" maxlength="20" placeholder="Digite o complemento">
                                 </div>
                             </div>
                             <div class="row">
@@ -182,7 +184,7 @@ if(isset($_POST['adicionar'])){
                                    </div>
                                    <div class="form-group col-md-6">
                                        <label for="conta">Conta: *</label>
-                                       <input type="text" class="form-control" placeholder="Digite a Conta" maxlength="12" required>
+                                       <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12" required>
                                    </div>
                                </div>
                                <div class="row">
