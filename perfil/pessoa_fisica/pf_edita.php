@@ -7,8 +7,9 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
 
     $nome = $_POST['nome'];
     $nomeArtistico = $_POST['nomeArtistico'];
-    $rg = $_POST['rg'];
-    $documento = $_POST['documento'];
+    $rg = $_POST['rg'] ?? NULL;
+    $cpf = isset($_POST['CPF']) ?? NULL;
+    $passporte = isset($_POST['Passaporte']) ?? NULL;
     $ccm = $_POST['ccm'];
     $dtNascimento = $_POST['dtNascimento'];
     $nacionalidade = $_POST['nacionalidade'];
@@ -16,10 +17,11 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $endereco = $_POST['endereco'];
     $numero = $_POST['numero'];
     $complemento = $_POST['completo'];
+    $bairro = $_POST['bairro'];
     $cidade = $_POST['cidade'];
     $estado = $_POST['estado'];
     $email = $_POST['email'];
-    $telefone[] = $_POST['telefone[]'];
+    $telefone = $_POST['telefone'];
     $drt = $_POST['drt'] ?? NULL;
     $funcao = $_POST['funcao'] ?? NULL;
     $incricoes = $_POST['inscricaoPissInss'];
@@ -34,8 +36,53 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
 }
 
 if (isset($_POST['cadastra'])){
+    date_default_timezone_set('America/Sao_Paulo');
+    $data = date("y-m-d h:i:s");
+    $sql = "INSERT INTO siscontrat.`pessoa_fisicas`
+            (nome, nome_artistico, rg, passaporte, cpf, ccm, data_nascimento, nacionalidade_id, email, ultima_atualizacao)
+            VALUES ('$nome','$nomeArtistico','$rg','$passporte','$cpf','$ccm','$dtNascimento','$nacionalidade','$email','$data')";
+    if (mysqli_query($con,$sql)){
+        $idPf = recuperaUltimo("pessoa_fisicas");
+        $sqlEnd = "INSERT INTO siscontrat.pf_enderecos
+                   (pessoa_fisica_id, logradouro, numero,complemento, bairro, cidade, uf, cep)
+                   VALUES ('$idPf','$endereco','$numero','$complemento','$bairro','$cidade','$estado','$cep')";
+        if (mysqli_query($con,$sqlEnd)){
+            foreach ($telefone AS $telefones){
+                if (!empty($telefones)) {
+                    $sqlTel = "INSERT INTO siscontrat.`pf_telefones`
+                               (pessoa_fisica_id, telefone, publicado)
+                               VALUES ('$idPf','$telefones',1)";
+                    mysqli_query($con,$sqlTel);
+                }
+            }
 
-    $sql = "INSERT INTO ``";
+            $sqlDRT = "INSERT INTO siscontrat.`drts`
+                       (pessoa_fisica_id, drt, publicado) 
+                       VALUES ('$idPf','$drt',1)";
+            mysqli_query($con,$sqlDRT);
+
+            $sqlOmbs = "INSERT INTO siscontrat.`ombs`
+                        (pessoa_fisica_id, omb,publicado)
+                        VALUES ('$idPf','$omb',1)";
+            mysqli_query($con,$sqlOmbs);
+
+            $sqlObservacao = "INSERT INTO siscontrat.`pf_observacoes`
+                              (pessoa_fisica_id, observacao)
+                              VALUES ('$idPf','$observacao',1)";
+            mysqli_query($con,$sqlObservacao);
+
+            $sqlBanco = "INSERT INTO siscontrat.`pf_bancos`
+                         (pessoa_fisica_id, banco_id, agencia, conta)
+                         VALUES ('$idPf','$banco','$agencia','$conta')";
+            mysqli_query($con,$sqlBanco);
+
+
+        }
+    }
+}
+
+if (isset($_POST['edita'])){
+
 }
 
 ?>
@@ -79,8 +126,8 @@ if (isset($_POST['cadastra'])){
                             </div>
                             <div class="row">
                                 <div class="form-group col-sm-12">
-                                    <label for="rg">RG: *</label>
-                                    <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" required value="<?= $rg?>">
+                                    <label for="rg">RG: </label>
+                                    <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" value="<?= $rg?>">
                                 </div>
                             </div>
                             <div class="row">
@@ -103,7 +150,7 @@ if (isset($_POST['cadastra'])){
                                     <select class="form-control" name="nacionalidade">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("nacionalidades",'$idPf');
+                                            geraOpcao("nacionalidades",$idPf);
                                         ?>
                                     </select>
                                 </div>
@@ -201,7 +248,7 @@ if (isset($_POST['cadastra'])){
                                    <select name="banco" class="form-control">
                                      <option value="">Selecione um banco...</option>
                                         <?php
-                                          geraOpcao("bancos",'$idPf');
+                                          geraOpcao("bancos",$idPf);
                                         ?>
                                    </select>
                                  </div>

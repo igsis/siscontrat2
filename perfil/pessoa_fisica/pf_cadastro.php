@@ -4,7 +4,16 @@ $con = bancoMysqli();
 //include ".../includes/menu_interno.php";
 
 if(isset($_POST['adicionar'])){
+
     $documento = $_POST['documentacao'] ?? NULL;
+    $tipoDocumento = $_POST['tipoDocumento'];
+
+    if ($tipoDocumento == 1){
+        $tipoDoc = 'CPF';
+    }else{
+        $tipoDoc = 'Passaporte';
+    }
+
 }else{
     $documento = "";
 }
@@ -50,14 +59,14 @@ if(isset($_POST['adicionar'])){
                             </div>
                             <div class="row" id="rg">
                                 <div class="form-group col-sm-12">
-                                    <label for="rg">RG: *</label>
-                                    <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" required>
+                                    <label for="rg">RG: </label>
+                                    <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" >
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="documento" id="documento">CPF:</label>
-                                    <input type="text" name="documento" class="form-control" value="<?= $documento?>">
+                                    <label for="<?= $tipoDoc?>" id="documento"><?= $tipoDoc?>:</label>
+                                    <input type="text" name="<?= $tipoDoc?>" class="form-control" value="<?= $documento?>">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="ccm">CCM: *</label>
@@ -102,11 +111,15 @@ if(isset($_POST['adicionar'])){
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
+                                    <label for="bairro">Bairro: *</label>
+                                    <input type="text" name="bairro" class="form-control" placeholder="Digite o Bairro" maxlength="80" required>
+                                </div>
+                                <div class="form-group col-md-4">
                                     <label for="cidade">Cidade: *</label>
                                     <input type="text" name="cidade" class="form-control" placeholder="Digite a cidade" maxlength="50" required>
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
                                     <input type="text" name="estado" class="form-control" maxlength="2" placeholder="Digite o estado ex: (SP)">
                                 </div>
