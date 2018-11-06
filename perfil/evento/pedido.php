@@ -21,7 +21,7 @@ $num = mysqli_num_rows($query);
                 <!-- general form elements -->
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Escolha um tipo de cadastro de pedido</h3>
+                        <h3 class="box-title">Escolha um tipo de pessoa</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
@@ -57,6 +57,7 @@ $num = mysqli_num_rows($query);
                                     <th>Pedido</th>
                                     <th>Proponente</th>
                                     <th>Atração</th>
+                                    <th>Anexos</th>
                                     <th colspan="2" width="10%">Ação</th>
                                 </tr>
                                 </thead>
@@ -73,6 +74,7 @@ $num = mysqli_num_rows($query);
                                     <th>Pedido</th>
                                     <th>Proponente</th>
                                     <th>Atração</th>
+                                    <th>Anexos</th>
                                     <th colspan="2" width="10%">Ação</th>
                                 </tr>
                                 </tfoot>
