@@ -7,7 +7,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $ccm = $_POST['ccm'] ?? NULL;
     $email =  $_POST['email'];
     $telefone = $_POST['telefone'];
-    $representante_legal1_id = $_POST['representante_legal1_id'];
+    $representante_legal1_id = $_POST['representante_legal1_id'] ?? NULL;
     $representante_legal2_id = $_POST['representante_legal2_id'] ?? NULL;
     $cep = $_POST['cep'];
     $logradouro = $_POST['logradouro'];
@@ -26,15 +26,11 @@ if (isset($_POST['cadastra'])) {
                                  cnpj, 
                                  ccm,
                                  email,
-                                 representante_legal1_id,
-                                 representante_legal2_id,
                                  ultima_atualizacao) 
                           VALUES ('$razao_social',
                                   '$cnpj',
                                   '$ccm',
                                   '$email',
-                                  '$representante_legal1_id',
-                                  '$representante_legal2_id',
                                   '$ultima_atualizacao')";
 
     if(mysqli_query($con, $sql))
@@ -86,8 +82,6 @@ if(isset($_POST['edita'])){
                               cnpj = '$cnpj', 
                               ccm = '$ccm',
                               email = '$email',
-                              representante_legal1_id = '$representante_legal1_id',
-                              representante_legal2_id = '$representante_legal2_id',
                               ultima_atualizacao = '$ultima_atualizacao'
                               WHERE id = '$idPessoaJuridica'";
 
@@ -141,7 +135,7 @@ include "includes/menu_interno.php";
                         <?php if(isset($mensagem)){echo $mensagem;};?>
                     </div>
 
-                    <form method="POST" action="?perfil=pessoa_juridica/pj_edita" role="form">
+                    <form method="POST" action="?perfil=evento/pessoa_juridica/pj_edita" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">

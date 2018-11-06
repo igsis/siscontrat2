@@ -15,7 +15,7 @@ $con = bancoMysqli();
                         <h3 class="box-title">Informações Pessoa Jurídica</h3>
                     </div>
 
-                    <form method="POST" action="?perfil=pessoa_juridica/pj_edita" role="form">
+                    <form method="POST" action="?perfil=evento/pessoa_juridica/pj_edita" role="form">
                         <div class="box-body">
 
                             <div class="row">
@@ -36,7 +36,7 @@ $con = bancoMysqli();
                                 <div class="form-group col-md-4">
                                     <label for="cnpj">CNPJ: </label>
                                     <input type="text" class="form-control" id="cnpj" name="cnpj"
-                                           required>
+                                           required readonly value="<?= $_SESSION['cnpj'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -50,29 +50,6 @@ $con = bancoMysqli();
                                 </div>
                             </div>
 
-                            <div class="row ">
-                                <div class="form-group col-md-6">
-                                    <label for="representante_legal1_id">Representante Legal 1: </label>
-                                    <select name="representante_legal1_id" id="representante_legal1_id"
-                                            class="form-control">
-                                        <option value="">Selecione uma opção...</option>
-                                        <?php
-                                        geraOpcao("representante_legais");
-                                        ?>
-                                    </select>
-                                </div>
-
-                                <div class="form-group col-md-6">
-                                    <label for="representante_legal2_id">Representante Legal 2: </label>
-                                    <select name="representante_legal2_id" id="representante_legal2_id"
-                                            class="form-control">
-                                        <option value="">Selecione uma opção...</option>
-                                        <?php
-                                        geraOpcao("representante_legais");
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
 
                             <div class="row">
                                 <div class="form-group col-md-3">
