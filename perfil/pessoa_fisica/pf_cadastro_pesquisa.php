@@ -46,68 +46,9 @@ if (isset($_POST['procurar'])){
                    }
 
 
-               }
-
-            }
-        }elseif($tipoDocumento == 2){
-
-            $queryPassaporte = "SELECT id,nome,passaporte,email
-                            FROM siscontrat.`pessoa_fisicas`
-                            WHERE passaporte = '$procurar'";
-
-            if ($result = mysqli_query($con,$queryPassaporte)){
-
-                $resultPassaporte=mysqli_num_rows($queryPassaporte);
-
-                if ($resultPassaporte > 0){
-
-                    $exibir = true;
-                    $resultado = "";
-
-                    foreach(mysqli_fetch_array($queryPassaporte) AS $pessoa){
-                        $resultado .= "<tr>";
-                        $resultado .= "<td>".$pessoa['nome']."</td>";
-                        $resultado .= "<td>".$pessoa['passaporte']."</td>";
-                        $resultado .= "<td>".$pessoa['email']."</td>";
-                        $resultado .= "<td>
-                                     <form action='?perfil=evento&p=pf_cadastro_pesquisa' method='post'>
-                                        <input type='hidden' name='idPessoa' value='".$pessoa['id']."'>
-                                        <input class='btn btn-primary' type='submit' name='selecionar' value='Selecionar'>
-                                     </form>
-                               </td>";
-                        $resultado .= "</tr>";
-                    }
-                }
-
-            }
-        }
-
-
-
-        if (isset($result) && $resultCPF  > 0){
-
-
-        }
-        elseif($resultPassaporte > 0){
-            $exibir = true;
-            $resultado = "";
-
-            while($pessoa = mysqli_fetch_array($queryPassaporte)){
-                $resultado .= "<tr>";
-                $resultado .= "<td>".$pessoa['nome']."</td>";
-                $resultado .= "<td>".$pessoa['passaporte']."</td>";
-                $resultado .= "<td>".$pessoa['email']."</td>";
-                $resultado .= "<td>
-                                     <form action='?perfil=evento&p=pf_cadastro_pesquisa' method='post'>
-                                        <input type='hidden' name='idPessoa' value='".$pessoa['id']."'>
-                                        <input class='btn btn-primary' type='submit' name='selecionar' value='Selecionar'>
-                                     </form>
-                               </td>";
-                $resultado .= "</tr>";
-            }
-        }else {
-            $exibir = false;
-            $resultado = "<td colspan='4'>
+               }else {
+                   $exibir = false;
+                   $resultado = "<td colspan='4'>
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
@@ -121,6 +62,58 @@ if (isset($_POST['procurar'])){
                         </form>
                       </td>";
 
+               }
+
+            }
+        }else {
+            if ($tipoDocumento == 2) {
+
+                $queryPassaporte = "SELECT id,nome,passaporte,email
+                            FROM siscontrat.`pessoa_fisicas`
+                            WHERE passaporte = '$procurar'";
+
+                if ($result = mysqli_query($con, $queryPassaporte)) {
+
+                    $resultPassaporte = mysqli_num_rows($result);
+
+                    if ($resultPassaporte > 0) {
+
+                        $exibir = true;
+                        $resultado = "";
+
+                        foreach (mysqli_fetch_array($queryPassaporte) AS $pessoa) {
+                            $resultado .= "<tr>";
+                            $resultado .= "<td>" . $pessoa['nome'] . "</td>";
+                            $resultado .= "<td>" . $pessoa['passaporte'] . "</td>";
+                            $resultado .= "<td>" . $pessoa['email'] . "</td>";
+                            $resultado .= "<td>
+                                     <form action='?perfil=evento&p=pf_cadastro_pesquisa' method='post'>
+                                        <input type='hidden' name='idPessoa' value='" . $pessoa['id'] . "'>
+                                        <input class='btn btn-primary' type='submit' name='selecionar' value='Selecionar'>
+                                     </form>
+                               </td>";
+                            $resultado .= "</tr>";
+                        }
+                    }else {
+                        $exibir = false;
+                        $resultado = "<td colspan='4'>
+                        <span style='margin: 50% 40%;'>Sem resultados</span>
+                      </td>
+                      <td>
+                        <form method='post' action='?perfil=evento&p=pf_cadastro'>
+                            <input type='hidden' name='documentacao' value='$procurar'>
+                            <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
+                            <button class=\"btn btn-primary\" name='adicionar' type='submit'>
+                                <i class=\"glyphicon glyphicon-plus\">        
+                                </i>Adicionar
+                            </button>
+                        </form>
+                      </td>";
+
+                    }
+
+                }
+            }
         }
     }
 
@@ -144,7 +137,7 @@ if (isset($_POST['procurar'])){
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=evento&p=pf_cadastro_pesquisa" method="post">
+                        <form action="?perfil=pessoa_fisica/pf_cadastro_pesquisa" method="post">
                             <label for="tipoDocumento">Tipo de documento: </label>
                             <label class="radio-inline">
                                <input type="radio" name="tipoDocumento" value="1" checked>CPF
