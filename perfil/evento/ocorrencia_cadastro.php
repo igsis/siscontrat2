@@ -162,7 +162,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
-                                        geraOpcao("locais");
+                                        geraOpcaoLocais("locais");
                                         ?>
                                     </select>
                                 </div>
@@ -173,7 +173,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
-                                        geraOpcao("espacos");
+                                        geraOpcaoLocais("espacos");
                                         ?>
                                     </select>
                                 </div>
@@ -197,3 +197,16 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         </div>
     </section>
 </div>
+
+<script>
+    $(document).ready(function () {
+
+        function carregar_json(id, )
+
+    })
+
+
+
+</script>
+
+

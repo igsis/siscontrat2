@@ -293,10 +293,10 @@ date_default_timezone_set("Brazil/East");
  * Clausula WHERE para especificar um campo
  * </p>
  */
-function geraOpcao($tabela, $select = '', $where = '')
+function geraOpcao($tabela, $select = '')
 	{
 		//gera os options de um select
-		$sql = "SELECT * FROM $tabela $where ORDER BY 2";
+		$sql = "SELECT * FROM $tabela ORDER BY 2";
 		$con = bancoMysqli();
 		$query = mysqli_query($con,$sql);
 		while($option = mysqli_fetch_row($query))
@@ -311,6 +311,29 @@ function geraOpcao($tabela, $select = '', $where = '')
 			}
 		}
 	}
+
+function geraOpcaoLocais ($tabela, $select = '')
+{
+    //gera os options de um select
+    $sql = "SELECT * FROM $tabela ORDER BY 3";
+    $con = bancoMysqli();
+    $query = mysqli_query($con,$sql);
+    while($option = mysqli_fetch_row($query))
+    {
+        if($option[0] == $select)
+        {
+            echo "<option value='".$option[0]."' selected >".$option[2]."</option>";
+        }
+        else
+        {
+            echo "<option value='".$option[0]."'>".$option[2]."</option>";
+        }
+    }
+}
+
+
+
+
 
 	function geraOpcaoPublicado($tabela,$select)
 	{
