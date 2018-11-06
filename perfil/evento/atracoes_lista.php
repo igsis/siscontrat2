@@ -212,6 +212,8 @@ include "includes/menu_interno.php";
                                 <th>Nome da atração</th>
                                 <th>Categoria da atração</th>
                                 <th>Produtor</th>
+                                <th>Especificidade</th>
+                                <th>Ocorrência</th>
                                 <th colspan="2" width="10%">Ação</th>
                             </tr>
                             </tfoot>
