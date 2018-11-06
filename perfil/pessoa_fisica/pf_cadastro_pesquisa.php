@@ -121,12 +121,6 @@ if (isset($_POST['procurar'])){
 
 ?>
 
-<script type="text/javascript">
-    $(document).ready(function(){
-        $("#cpf").mask("999.999.999-99");
-    });
-</script>
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
@@ -201,3 +195,8 @@ if (isset($_POST['procurar'])){
     </section>
     <!-- /.content -->
 </div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#cpf').mask('000.000.000-00');
+    });
+</script>
