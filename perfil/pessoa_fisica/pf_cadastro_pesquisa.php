@@ -30,14 +30,14 @@ if (isset($_POST['procurar'])){
                    $exibir = true;
                    $resultado = "";
 
-                   foreach(mysqli_fetch_array($queryCPF) AS $pessoa){
+                   foreach(mysqli_fetch_array($queryCPF, MYSQLI_ASSOC) as $pessoa){
 
                        $resultado .= "<tr>";
                        $resultado .= "<td>".$pessoa['nome']."</td>";
                        $resultado .= "<td>".$pessoa['cpf']."</td>";
                        $resultado .= "<td>".$pessoa['email']."</td>";
                        $resultado .= "<td>
-                                     <form action='?perfil=evento&p=pf_cadastro_pesquisa' method='post'>
+                                     <form action='?perfil=pessoa_fisica/pf_cadastro' method='post'>
                                         <input type='hidden' name='idPessoa' value='".$pessoa['id']."'>
                                         <input class='btn btn-primary' type='submit' name='selecionar' value='Selecionar'>
                                      </form>
@@ -52,7 +52,7 @@ if (isset($_POST['procurar'])){
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=evento&p=pf_cadastro'>
+                        <form method='post' action='?perfil=pessoa_fisica/pf_cadastro'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             <button class=\"btn btn-primary\" name='adicionar' type='submit'>
@@ -81,7 +81,7 @@ if (isset($_POST['procurar'])){
                         $exibir = true;
                         $resultado = "";
 
-                        foreach (mysqli_fetch_array($queryPassaporte) AS $pessoa) {
+                        foreach(mysqli_fetch_array($queryPassaporte, MYSQLI_ASSOC) as $pessoa) {
                             $resultado .= "<tr>";
                             $resultado .= "<td>" . $pessoa['nome'] . "</td>";
                             $resultado .= "<td>" . $pessoa['passaporte'] . "</td>";
@@ -100,7 +100,7 @@ if (isset($_POST['procurar'])){
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=evento&p=pf_cadastro'>
+                        <form method='post' action='?perfil=pessoa_fisica/pf_cadastro'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             <button class=\"btn btn-primary\" name='adicionar' type='submit'>

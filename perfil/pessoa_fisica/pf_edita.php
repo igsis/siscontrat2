@@ -9,14 +9,14 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $nomeArtistico = $_POST['nomeArtistico'];
     $rg = $_POST['rg'] ?? NULL;
     $cpf = isset($_POST['CPF']) ?? NULL;
-    $passporte = isset($_POST['Passaporte']) ?? NULL;
-    $ccm = $_POST['ccm'];
+    $passaporte = isset($_POST['Passaporte']) ?? NULL;
+    $ccm = $_POST['ccm'] ?? NULL;
     $dtNascimento = $_POST['dtNascimento'];
     $nacionalidade = $_POST['nacionalidade'];
     $cep = $_POST['cep'];
     $endereco = $_POST['endereco'];
     $numero = $_POST['numero'];
-    $complemento = $_POST['completo'];
+    $complemento = $_POST['complemento'];
     $bairro = $_POST['bairro'];
     $cidade = $_POST['cidade'];
     $estado = $_POST['estado'];
@@ -40,7 +40,7 @@ if (isset($_POST['cadastra'])){
     $data = date("y-m-d h:i:s");
     $sql = "INSERT INTO siscontrat.`pessoa_fisicas`
             (nome, nome_artistico, rg, passaporte, cpf, ccm, data_nascimento, nacionalidade_id, email, ultima_atualizacao)
-            VALUES ('$nome','$nomeArtistico','$rg','$passporte','$cpf','$ccm','$dtNascimento','$nacionalidade','$email','$data')";
+            VALUES ('$nome','$nomeArtistico','$rg','$passaporte','$cpf','$ccm','$dtNascimento','$nacionalidade','$email','$data')";
     if (mysqli_query($con,$sql)){
         $idPf = recuperaUltimo("pessoa_fisicas");
         $sqlEnd = "INSERT INTO siscontrat.pf_enderecos
@@ -55,35 +55,62 @@ if (isset($_POST['cadastra'])){
                     mysqli_query($con,$sqlTel);
                 }
             }
-
             $sqlDRT = "INSERT INTO siscontrat.`drts`
                        (pessoa_fisica_id, drt, publicado) 
                        VALUES ('$idPf','$drt',1)";
-            mysqli_query($con,$sqlDRT);
+            if (mysqli_query($con,$sqlDRT)) {
 
-            $sqlOmbs = "INSERT INTO siscontrat.`ombs`
+                $sqlOmbs = "INSERT INTO siscontrat.`ombs`
                         (pessoa_fisica_id, omb,publicado)
                         VALUES ('$idPf','$omb',1)";
-            mysqli_query($con,$sqlOmbs);
+                if (mysqli_query($con, $sqlOmbs)) {
 
-            $sqlObservacao = "INSERT INTO siscontrat.`pf_observacoes`
+                    $sqlObservacao = "INSERT INTO siscontrat.`pf_observacoes`
                               (pessoa_fisica_id, observacao)
                               VALUES ('$idPf','$observacao',1)";
-            mysqli_query($con,$sqlObservacao);
-
-            $sqlBanco = "INSERT INTO siscontrat.`pf_bancos`
-                         (pessoa_fisica_id, banco_id, agencia, conta)
-                         VALUES ('$idPf','$banco','$agencia','$conta')";
-            mysqli_query($con,$sqlBanco);
-
-
+                    if (mysqli_query($con, $sqlObservacao)){
+                        $sqlBanco = "INSERT INTO siscontrat.`pf_bancos`
+                             (pessoa_fisica_id, banco_id, agencia, conta)
+                             VALUES ('$idPf','$banco','$agencia','$conta')";
+                        if (mysqli_query($con, $sqlBanco)){
+                            mensagem("success","Cadastro realizado com sucesso.");
+                        }else{
+                            mensagem("danger","Erro: ". die(mysqli_error($con)));
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
 if (isset($_POST['edita'])){
 
+    $idPf = $_POST['idPf'];
+    date_default_timezone_set('America/Sao_Paulo');
+    $data = date("y-m-d h:i:s");
+    $sql = "UPDATE siscontrat.`pessoa_fisicas` SET 
+                   nome = '$nome',
+                   nome_artistico = '$nomeArtistico',
+                   rg = '$rg',
+                   passaporte = '$passaporte',
+                   cpf = '$cpf',
+                   ccm = '$ccm',
+                   data_nascimento = '$dtNascimento',
+                   nacionalidade_id = '$nacionalidade',
+                   email = '$email',
+                   ultima_atualizacao = '$data'
+                   WHERE id = '$idPf'";
+
+    if (mysqli_query($con, $sql)){
+        mensagem("success","Dados atualizado");
+    }else{
+        mensagem("danger","Erro: ".die(mysqli_error($con)));
+    }
+
 }
+
+$pessoaFisica = recuperaDados("pessoa_fisicas","id",$idPf);
 
 ?>
 <script language="JavaScript" >
@@ -124,20 +151,30 @@ if (isset($_POST['edita'])){
                                     <input type="text" class="form-control" name="nomeArtistico" placeholder="Digite o nome artistico" maxlength="70" required value="<?= $nomeArtistico?>">
                                 </div>
                             </div>
+                            <?php if (!empty($_POST['rg'])){?>
                             <div class="row">
                                 <div class="form-group col-sm-12">
                                     <label for="rg">RG: </label>
                                     <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" value="<?= $rg?>">
                                 </div>
                             </div>
+                            <?php } ?>
+
                             <div class="row">
+                                <?php if (!empty($_POST['CPF'])){?>
                                 <div class="form-group col-md-6">
-                                    <label for="documento" id="documento">CPF:</label>
-                                    <input type="text" name="documento" class="form-control" value="<?= $documento?>">
+                                    <label for="cpf" id="cpf">CPF:</label>
+                                    <input type="text" name="CPF" class="form-control" value="<?= $cpf?>" disabled>
                                 </div>
+                                <?php }else{?>
+                                <div class="form-group col-md-6">
+                                    <label for="passaporte" >Passaporte:</label>
+                                    <input type="text" name="Passaporte" class="form-control" value="<?= $passaporte?>" disabled>
+                                </div>
+                                <?php }?>
                                 <div class="form-group col-md-6">
                                     <label for="ccm">CCM: *</label>
-                                    <input type="text" class="form-control" placeholder="Digite o CCM" maxlength="11" required value="<?= $ccm?>">
+                                    <input type="text" name="ccm" class="form-control" placeholder="Digite o CCM" maxlength="11" required value="<?= $ccm?>">
                                 </div>
                             </div>
                             <div class="row">
@@ -150,7 +187,7 @@ if (isset($_POST['edita'])){
                                     <select class="form-control" name="nacionalidade">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("nacionalidades",$idPf);
+                                            geraOpcao("nacionalidades","$idPf");
                                         ?>
                                     </select>
                                 </div>
@@ -248,7 +285,7 @@ if (isset($_POST['edita'])){
                                    <select name="banco" class="form-control">
                                      <option value="">Selecione um banco...</option>
                                         <?php
-                                          geraOpcao("bancos",$idPf);
+                                          geraOpcao("bancos","$idPf");
                                         ?>
                                    </select>
                                  </div>
