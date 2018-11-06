@@ -30,16 +30,16 @@ if (isset($_POST['procurar'])){
                    $exibir = true;
                    $resultado = "";
 
-                   foreach(mysqli_fetch_array($queryCPF, MYSQLI_ASSOC) as $pessoa){
+                   foreach($result as $pessoa){
 
                        $resultado .= "<tr>";
                        $resultado .= "<td>".$pessoa['nome']."</td>";
                        $resultado .= "<td>".$pessoa['cpf']."</td>";
                        $resultado .= "<td>".$pessoa['email']."</td>";
                        $resultado .= "<td>
-                                     <form action='?perfil=pessoa_fisica/pf_cadastro' method='post'>
+                                     <form action='#' method='post'>
                                         <input type='hidden' name='idPessoa' value='".$pessoa['id']."'>
-                                        <input class='btn btn-primary' type='submit' name='selecionar' value='Selecionar'>
+                                        <input class='btn btn-primary' name='selecionar' value='Selecionar'>
                                      </form>
                                </td>";
                        $resultado .= "</tr>";
@@ -81,15 +81,15 @@ if (isset($_POST['procurar'])){
                         $exibir = true;
                         $resultado = "";
 
-                        foreach(mysqli_fetch_array($queryPassaporte, MYSQLI_ASSOC) as $pessoa) {
+                        foreach($result as $pessoa) {
                             $resultado .= "<tr>";
                             $resultado .= "<td>" . $pessoa['nome'] . "</td>";
                             $resultado .= "<td>" . $pessoa['passaporte'] . "</td>";
                             $resultado .= "<td>" . $pessoa['email'] . "</td>";
                             $resultado .= "<td>
-                                     <form action='?perfil=evento&p=pf_cadastro_pesquisa' method='post'>
+                                     <form action='#' method='post'>
                                         <input type='hidden' name='idPessoa' value='" . $pessoa['id'] . "'>
-                                        <input class='btn btn-primary' type='submit' name='selecionar' value='Selecionar'>
+                                        <input class='btn btn-primary' name='selecionar' value='Selecionar'>
                                      </form>
                                </td>";
                             $resultado .= "</tr>";
@@ -121,6 +121,12 @@ if (isset($_POST['procurar'])){
 
 ?>
 
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#cpf").mask("999.999.999-99");
+    });
+</script>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
@@ -148,7 +154,7 @@ if (isset($_POST['procurar'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="procurar" placeholder="Digite CPF ou Passaporte da pessoa..." value="<?=$procurar?>" >
+                                    <input type="text" class="form-control" name="procurar" value="<?=$procurar?>" id="cpf">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
