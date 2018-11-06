@@ -30,7 +30,7 @@
                                     <select class="form-control" name="paisOrigem" id="paisOrigem" required>
                                             <option value="1">Selecione uma opção...</option>
                                             <?php
-                                                geraOpcao("paises", "");
+                                                geraOpcao("paises");
                                             ?>
                                     </select>
                                 </div>
@@ -40,7 +40,7 @@
                                     <select class="form-control" name="paisCoProducao" id="paisCoProducao">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("paises", "");
+                                            geraOpcao("paises");
                                         ?>
                                     </select>
                                 </div>
@@ -81,7 +81,7 @@
                                     <select class="form-control" name="classidicacaoIndicativa" id="classidicacaoIndicativa">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("classificacao_indicativas", "");
+                                            geraOpcao("classificacao_indicativas");
                                         ?>
                                     </select>
                                 </div>

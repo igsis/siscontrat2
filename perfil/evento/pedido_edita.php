@@ -1,31 +1,45 @@
 <?php
 include "includes/menu_interno.php";
-?>
 
+$idPedido = $_SESSION['idEvento'];//provisório
+//$idPedido = $_POST['idPedido'];
+$pedido = recuperaDados("pedidos","id",$idPedido);
+?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Cadastro de Evento</h2>
+        <h2 class="page-header">Pedido de Contratação</h2>
 
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Atração</h3>
+                        <h3 class="box-title">Cadastro de Pedido</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form method="POST" action="?perfil=evento&p=atracoes_edita" role="form">
-                        <div class="box-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="proponente">Proponente</label>
+                            <input type="text" id="proponente" name="proponente" class="form-control" disabled>
+                            <form method="POST" action="?perfil=evento&p=###" role="form">
+                                <button type="submit" name = "trocar" class="btn btn-info pull-right">Trocar de Proponente</button>
+                            </form>
+                        </div>
+                        <?php
+                        if($pedido['pessoa_tipo_id'] == 2){
+                        ?>
                             <div class="form-group">
-                                <label for="nome_atracao">Nome da atração</label>
-                                <input type="text" id="nome_atracao" name="nome_atracao" class="form-control" maxlength="100">
+                                <label for="lideres">Líderes</label>
                             </div>
-
+                        <?php
+                        }
+                        ?>
+                        <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
                             <div class="form-group">
                                 <label for="categoria_atracao_id">Categoria da atração</label>
                                 <select class="form-control" id="categoria_atracao_id" name="categoria_atracao_id">

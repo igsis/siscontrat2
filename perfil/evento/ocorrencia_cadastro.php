@@ -131,7 +131,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                     <select name="retiradaIngresso" id="retiradaIngresso" class="form-control">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao("retirada_ingressos", "");
+                                        geraOpcao("retirada_ingressos");
                                         ?>
                                     </select>
                                 </div>
@@ -151,7 +151,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
-                                        geraOpcao("instituicoes", "");
+                                        geraOpcao("instituicoes");
                                         ?>
                                     </select>
                                 </div>
@@ -162,7 +162,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
-                                        geraOpcao("locais", "");
+                                        geraOpcao("locais");
                                         ?>
                                     </select>
                                 </div>
@@ -173,7 +173,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
-                                        geraOpcao("espacos", "");
+                                        geraOpcao("espacos");
                                         ?>
                                     </select>
                                 </div>
