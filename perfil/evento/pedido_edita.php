@@ -104,13 +104,13 @@ $pedido = recuperaDados("pedidos","id",$idPedido);
                         </div>
                         <div class="row">
                             <div class="form-group col-md-offset-4 col-md-2">
-                                <form method="POST" action="?perfil=evento&p=parecer_artista_local" role="form">
-                                    <button type="submit" name = "idPedido" value="<?= 1 ?>" class="btn btn-primary btn-block">Artista Local</button>
+                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local" role="form">
+                                    <button type="submit" name = "idPedido" value="<?= $idPedido ?>" class="btn btn-primary btn-block">Artista Local</button>
                                 </form>
                             </div>
                             <div class="form-group col-md-2">
-                                <form method="POST" action="?perfil=evento&p=parecer_artista_consagrado" role="form">
-                                    <button type="submit" name = "idPedido" value="<?= 1 ?>" class="btn btn-primary btn-block">Artista Consagrado</button>
+                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local" role="form">
+                                    <button type="submit" name = "idPedido" value="<?= $idPedido ?>" class="btn btn-primary btn-block">Artista Consagrado</button>
                                 </form>
                             </div>
                         </div>
