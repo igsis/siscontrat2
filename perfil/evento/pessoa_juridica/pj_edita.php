@@ -1,14 +1,12 @@
 <?php
 $con = bancoMysqli();
 
-if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-    $razao_social =  addslashes($_POST['razao_social']);
+if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
+    $razao_social = addslashes($_POST['razao_social']);
     $cnpj = $_POST['cnpj'];
     $ccm = $_POST['ccm'] ?? NULL;
-    $email =  $_POST['email'];
+    $email = $_POST['email'];
     $telefone = $_POST['telefone'];
-    $representante_legal1_id = $_POST['representante_legal1_id'] ?? NULL;
-    $representante_legal2_id = $_POST['representante_legal2_id'] ?? NULL;
     $cep = $_POST['cep'];
     $logradouro = $_POST['logradouro'];
     $bairro = $_POST['bairro'];
@@ -33,8 +31,7 @@ if (isset($_POST['cadastra'])) {
                                   '$email',
                                   '$ultima_atualizacao')";
 
-    if(mysqli_query($con, $sql))
-    {
+    if (mysqli_query($con, $sql)) {
         $idPessoaJuridica = recuperaUltimo('pessoa_juridicas');
         $_SESSION['idPessoaJuridica'] = $idPessoaJuridica;
 
@@ -45,6 +42,7 @@ if (isset($_POST['cadastra'])) {
                                           VALUES ('$idPessoaJuridica',
                                                   '$telefone')";
         mysqli_query($con, $sqlTelefone);
+
         // cadastrar endereco de pj
         $sqlEndereco = "INSERT INTO pj_enderecos
                                                 (pessoa_juridica_id,
@@ -66,15 +64,15 @@ if (isset($_POST['cadastra'])) {
 
         mysqli_query($con, $sqlEndereco);
 
-        $mensagem = mensagem("success","Cadastrado com sucesso!");
+        $mensagem = mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
-    }else{
-        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
+    } else {
+        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
 }
 
-if(isset($_POST['edita'])){
+if (isset($_POST['edita'])) {
     $ultima_atualizacao = date('Y-m-d H:i:s');
     $idPessoaJuridica = $_POST['idPessoaJuridica'];
     $sql = "UPDATE pessoa_juridicas SET
@@ -99,21 +97,43 @@ if(isset($_POST['edita'])){
                                           complemento = '$complemento'
                                           WHERE pessoa_juridica_id = '$idPessoaJuridica'";
 
-    If(mysqli_query($con,$sql) && mysqli_query($con, $sqlTelefone) && mysqli_query($con, $sqlEndereco)){
-        $mensagem = mensagem("success","Atualizado com sucesso!");
+    If (mysqli_query($con, $sql) && mysqli_query($con, $sqlTelefone) && mysqli_query($con, $sqlEndereco)) {
+        $mensagem = mensagem("success", "Atualizado com sucesso!");
         //gravarLog($sql);
-    }else{
-        $mensagem = mensagem("danger","Erro ao atualizar! Tente novamente.");
+    } else {
+        $mensagem = mensagem("danger", "Erro ao atualizar! Tente novamente.");
         //gravarLog($sql);
     }
 }
 
-if(isset($_POST['carregar'])){
+if (isset($_POST['carregar'])) {
     $idPessoaJuridica = $_POST['idPessoaJuridica'];
     $_SESSION['idPessoaJuridica'] = $idPessoaJuridica;
 }
 
-$pessoa_juridica = recuperaDados("pessoa_juridicas","id", $idPessoaJuridica);
+if (isset($_POST['inserir'])){
+    $idPessoaJuridica = $_SESSION['idPessoaJuridica'];
+
+    $representante = $_SESSION['tipo_representante'];
+
+    if($representante == 1){
+        $representante = "representante_legal1_id";
+    } else if($representante == 2){
+        $representante = "representante_legal2_id";
+    }
+
+    $idRepresentante = $_SESSION['idRepresentante'];
+
+    $sqlPessoaJuridica = "UPDATE pessoa_juridicas SET $representante = $idRepresentante WHERE id = '$idPessoaJuridica'";
+    if(mysqli_query($con, $sqlPessoaJuridica)){
+        $mensagem = mensagem("success", "Representante legal inserido");
+        //gravarLog($sql);
+    }else{
+        $mensagem = $mensagem("danger", "Erro ao inserir presentante");
+    }
+}
+
+$pessoa_juridica = recuperaDados("pessoa_juridicas", "id", $idPessoaJuridica);
 $pj_telefone = recuperaDados("pj_telefones", "pessoa_juridica_id", $idPessoaJuridica);
 $pj_endereco = recuperaDados("pj_enderecos", "pessoa_juridica_id", $idPessoaJuridica);
 include "includes/menu_interno.php";
@@ -132,7 +152,9 @@ include "includes/menu_interno.php";
                     </div>
 
                     <div class="row" align="center">
-                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
                     </div>
 
                     <form method="POST" action="?perfil=evento/pessoa_juridica/pj_edita" role="form">
@@ -147,7 +169,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="email">Email: </label>
                                     <input type="email" class="form-control" id="email" name="email" maxlength="60"
-                                           required value="<?= $pessoa_juridica['email'] ?>" >
+                                           required value="<?= $pessoa_juridica['email'] ?>">
                                 </div>
                             </div>
 
@@ -155,40 +177,56 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-4">
                                     <label for="cnpj">CNPJ: </label>
                                     <input type="text" class="form-control" id="cnpj" name="cnpj"
-                                           required value="<?= $pessoa_juridica['cnpj'] ?>">
+                                           required value="<?= $pessoa_juridica['cnpj'] ?>" readonly>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="ccm">CCM: </label>
-                                    <input type="text" class="form-control" id="ccm" name="ccm" value="<?= $pessoa_juridica['ccm'] ?>">
+                                    <input type="text" class="form-control" id="ccm" name="ccm"
+                                           value="<?= $pessoa_juridica['ccm'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="telefone">Telefone: </label>
-                                    <input type="text" class="form-control" id="telefone" name="telefone" required value="<?= $pj_telefone['telefone'] ?>"  >
+                                    <input type="text" class="form-control" id="telefone" name="telefone" required
+                                           value="<?= $pj_telefone['telefone'] ?>">
                                 </div>
                             </div>
 
                             <div class="row ">
-                                <div class="form-group col-md-6">
-                                    <label for="representante_legal1_id">Representante Legal 1: </label>
-                                    <select name="representante_legal1_id" id="representante_legal1_id" class="form-control">
-                                        <option value="">Selecione uma opção...</option>
+                                <?php
+                                if (isset($pessoa_juridica['representante_legal1_id'])) {
+                                    ?>
+                                    <div class="form-group col-md-offset-3 col-md-3">
+                                        <label for="nome_representante">Representante Legal 1: </label>
                                         <?php
-                                        geraOpcao("representante_legais", $pessoa_juridica['representante_legal1_id']);
+                                        $representante1 = recuperaDados('representante_legais', 'id',
+                                            $pessoa_juridica['representante_legal1_id']);
                                         ?>
-                                    </select>
-                                </div>
+                                        <input type="text" readonly name="nome_representante" id="nome_representante"
+                                               value="
+                                <?= $representante1['nome'] ?>" class="form-control">
+                                    </div>
+                                    <?php
+                                }
 
-                                <div class="form-group col-md-6">
-                                    <label for="representante_legal2_id">Representante Legal 2: </label>
-                                    <select name="representante_legal2_id" id="representante_legal2_id" class="form-control">
-                                        <option value="">Selecione uma opção...</option>
+                                if (isset($pessoa_juridica['representante_legal2_id'])) {
+                                    ?>
+                                    <div class="form-group col-lg-offset- col-md-3">
+                                        <label for="nome_representante">Representante Legal 2: </label>
                                         <?php
-                                        geraOpcao("representante_legais", $pessoa_juridica['representante_legal2_id']);
+                                        $representante2 = recuperaDados('representante_legais', 'id',
+                                            $pessoa_juridica['representante_legal2_id']);
                                         ?>
-                                    </select>
-                                </div>
+                                        <input type="text" readonly name="nome_representante" id="nome_representante"
+                                               value="
+                                <?= $representante2['nome'] ?>" class="form-control">
+                                    </div>
+                                    <?php
+                                }
+                                ?>
+
+
                             </div>
 
                             <div class="row">
@@ -200,35 +238,41 @@ include "includes/menu_interno.php";
 
                                 <div class="form-group col-md-5">
                                     <label for="logradouro">Rua: </label>
-                                    <input type="text" class="form-control" id="logradouro" name="logradouro" maxlength="200"
+                                    <input type="text" class="form-control" id="logradouro" name="logradouro"
+                                           maxlength="200"
                                            required value="<?= $pj_endereco['logradouro'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="bairro">Bairro:</label>
-                                    <input type="text" class="form-control" id="bairro" name="bairro" required value="<?= $pj_endereco['bairro'] ?>">
+                                    <input type="text" class="form-control" id="bairro" name="bairro" required
+                                           value="<?= $pj_endereco['bairro'] ?>">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: </label>
-                                    <input type="number" class="form-control" id="numero" name="numero" required value="<?= $pj_endereco['numero'] ?>">
+                                    <input type="number" class="form-control" id="numero" name="numero" required
+                                           value="<?= $pj_endereco['numero'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="complemento">Complemento: </label>
-                                    <input type="text" class="form-control" id="complemento" name="complemento" maxlength="20" value="<?= $pj_endereco['complemento'] ?>">
+                                    <input type="text" class="form-control" id="complemento" name="complemento"
+                                           maxlength="20" value="<?= $pj_endereco['complemento'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="cidade">Cidade:</label>
-                                    <input type="text" class="form-control" id="cidade" name="cidade" required value="<?= $pj_endereco['cidade'] ?>">
+                                    <input type="text" class="form-control" id="cidade" name="cidade" required
+                                           value="<?= $pj_endereco['cidade'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="uf">Estado:</label>
-                                    <input type="text" class="form-control" id="uf" name="uf" required value="<?= $pj_endereco['uf'] ?>">
+                                    <input type="text" class="form-control" id="uf" name="uf" required
+                                           value="<?= $pj_endereco['uf'] ?>">
                                 </div>
                             </div>
 
@@ -240,6 +284,29 @@ include "includes/menu_interno.php";
                                 </button>
                             </div>
                     </form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form method="POST" action="?perfil=evento/pessoa_juridica/representante_busca"
+                                  role="form">
+                                <input type="hidden" name="tipo_representante" id="tipo_representante"
+                                       value="1">
+                                <button type="submit" name="busca" id="busca"
+                                        class="btn btn-block btn-primary btn-lg"> Buscar Representante Legal 1
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="col-md-6">
+                            <form method="POST" action="?perfil=evento/pessoa_juridica/representante_busca"
+                                  role="form">
+                                <input type="hidden" name="tipo_representante" id="tipo_representante"
+                                       value="2">
+                                <button type="submit" name="busca" id="busca"
+                                        class="btn btn-block btn-primary btn-lg"> Buscar Representante Legal 2
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

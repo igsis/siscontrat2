@@ -1,10 +1,21 @@
 <?php
 $con = bancoMysqli();
 
+$idPessoaJuridica = $_SESSION['idPessoaJuridica'];
+
+$pessoa_juridica = recuperaDados('pessoa_juridicas', 'id', $idPessoaJuridica);
+
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $nome =  addslashes($_POST['nome']);
     $rg = $_POST['rg'];
     $cpf = $_POST['cpf'];
+    $representante = $_SESSION['tipo_representante'];
+
+    if($representante == 1){
+        $representante = "representante_legal1_id";
+    } else if($representante == 2){
+        $representante = "representante_legal2_id";
+    }
 }
 
 if (isset($_POST['cadastra'])) {
@@ -20,6 +31,9 @@ if (isset($_POST['cadastra'])) {
     if(mysqli_query($con, $sql))
     {
         $idRepresentante = recuperaUltimo('representante_legais');
+        // salvar o represente na pessoa juridica
+        $sqlPessoaJuridica = "UPDATE pessoa_juridicas SET $representante = $idRepresentante WHERE id = '$idPessoaJuridica'";
+        mysqli_query($con, $sqlPessoaJuridica);
         $mensagem = mensagem("success","Cadastrado com sucesso!");
         //gravarLog($sql);
     }else{
