@@ -134,20 +134,20 @@ if(isset($_POST['adicionar'])){
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="telefone[]">Telefone #1:</label>
+                                    <label>Telefone #1:</label>
                                     <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15">
                                 </div>
                             </div>
                             <div class="row" id="telefones">
                                 <div id="phone1" class="form-group col-md-12">
-                                    <label for="telefone[]">Telefone #2:</label>
-                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                    <label>Telefone #2:</label>
+                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" maxlength="15">
                                 </div>
                             </div>
                             <div class="row" id="telefones">
                                 <div class="form-group col-md-12">
-                                    <label for="telefone[]">Telefone #3:</label>
-                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                    <label>Telefone #3:</label>
+                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" maxlength="15">
                                 </div>
                             </div>
 

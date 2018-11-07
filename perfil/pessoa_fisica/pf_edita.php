@@ -75,12 +75,22 @@ if (isset($_POST['cadastra'])){
                         if (mysqli_query($con, $sqlBanco)){
                             mensagem("success","Cadastro realizado com sucesso.");
                         }else{
-                            mensagem("danger","Erro: ". die(mysqli_error($con)));
+                            mensagem("danger","Erro ao inserir banco: ". die(mysqli_error($con)));
                         }
+                    }else{
+                        mensagem("danger", "Error ao inserir a observação: ".die(mysqli_error($con)));
                     }
+                }else{
+                    mensagem("danger","Erro ao inserir OMBS: ".die(mysqli_error($con)));
                 }
+            }else{
+                mensagem("danger","Erro ao inserir DRT ". die(mysqli_error($con)));
             }
+        }else{
+            mensagem("danger","Erro inserir endereço: ".die(mysqli_error($con)));
         }
+    }else{
+        mensagem("danger","Erro inserir pessoa fisica: ".die(mysqli_error($con)));
     }
 }
 
