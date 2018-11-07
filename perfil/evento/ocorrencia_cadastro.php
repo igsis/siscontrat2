@@ -159,22 +159,14 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 <div class="form-group col-md-4">
                                     <label for="local">Local</label>
                                     <select class="form-control" id="local" name="local">
-                                        <option value="">Selecione uma opção...</option>
-
-                                        <?php
-                                        geraOpcaoLocais("locais");
-                                        ?>
+                                        <!-- Populando pelo js -->
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="espaco">Espaço</label>
                                     <select class="form-control" id="espaco" name="espaco">
-                                        <option value="">Selecione uma opção...</option>
-
-                                        <?php
-                                        geraOpcaoLocais("espacos");
-                                        ?>
+                                        <!-- Populando pelo js -->
                                     </select>
                                 </div>
                             </div>
@@ -199,13 +191,51 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 </div>
 
 <script>
-    $(document).ready(function () {
+   const url = 'http://localhost/siscontrat2/funcoes/api_locais_espacos.php';
 
-        function carregar_json(id, )
+   let instituicao = document.querySelector('#instituicao');
+
+    instituicao.addEventListener('change', async e => {
+        let idInstituicao = $('#instituicao option:checked').val();
+
+        fetch(`${url}?instituicao_id=${idInstituicao}`)
+            .then(response => response.json())
+            .then(locais => {                
+                $('#local option').remove();
+                $('#local').append('<option value="">Selecione uma opção...</option>');
+
+                for (const local of locais) {
+                    $('#local').append(`<option value='${local.id}'>${local.local}</option>`).focus();;
+                }                
+            })
 
     })
+    
+    let local = document.querySelector('#local');
 
-
+    local.addEventListener('change', async e => {        
+        let idLocal = $('#local option:checked').val();
+        
+        fetch(`${url}?espaco_id=${idLocal}`)
+            .then(response => response.json() )
+            .then(espacos => {
+                $('#espaco option').remove();
+                if(espacos.length < 1){
+                    $('#espaco').append('<option value="">Não há espaço para esse local</option>')
+                    .attr('required',false)
+                    .focus();
+                }else{
+                    $('#espaco').append('<option value="">Selecione uma opção...</option>')
+                    .attr('required',true)
+                    .focus();
+                }
+                
+                for (const espaco of espacos) {
+                    $('#espaco').append(`<option value='${espaco.id}'>${espaco.espaco}</option>`)
+                }
+             
+            })
+    })
 
 </script>
 
