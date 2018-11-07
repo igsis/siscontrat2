@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 
 $evento = recuperaDados('eventos', 'id', $_SESSION['idEvento']);
-$url = 'http://'.$_SERVER['HTTP_HOST'].':'.$_SERVER['SERVER_PORT'].'/siscontrat2/funcoes/api_locais_espacos.php';
+$url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.php';
 
 include "includes/menu_interno.php";
 
