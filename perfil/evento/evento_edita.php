@@ -1,5 +1,6 @@
 <?php
 $con = bancoMysqli();
+$idEvento = isset($_SESSION['idEvento']) ?? null;
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $nomeEvento =  addslashes($_POST['nomeEvento']);
