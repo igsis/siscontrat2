@@ -5,19 +5,10 @@ include "includes/menu_interno.php";
 
 if(isset($_POST['adicionar'])){
 
-    $documento = $_POST['documentacao'] ?? NULL;
+    $documento = $_POST['documentacao'];
     $tipoDocumento = $_POST['tipoDocumento'];
 
-    if ($tipoDocumento == 1){
-        $tipoDoc = 'CPF';
-    }else{
-        $tipoDoc = 'Passaporte';
-    }
-
-}else{
-    $documento = "";
 }
-
 ?>
 <script language="JavaScript" >
     function barraData(n){
@@ -44,7 +35,7 @@ if(isset($_POST['adicionar'])){
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=pessoa_fisica/pf_edita" method="post">
+                        <form action="?perfil=evento&p=pessoa_fisica/pf_edita" method="post">
                             <div class="row">
                             <div class="col-md-12 form-group">
                                 <label for="nome">Nome: *</label>
@@ -64,12 +55,18 @@ if(isset($_POST['adicionar'])){
                                     <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" >
                                 </div>
                             </div>
-                            <?php }?>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="<?= $tipoDoc?>" id="documento"><?= $tipoDoc?>:</label>
-                                    <input type="text" name="<?= $tipoDoc?>" class="form-control" value="<?= $documento?>" disabled>
+                                    <label for="cpf">CPF: </label>
+                                    <input type="text" name="cpf" class="form-control" id="cpf" value="<?= $documento?>" >
                                 </div>
+                            <?php }else{ ?>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="passaporte" id="documento">Passaporte: </label>
+                                    <input type="text" name="passaporte" class="form-control" value="<?= $documento?>">
+                                </div>
+                                <?php }?>
                                 <div class="form-group col-md-6">
                                     <label for="ccm">CCM: *</label>
                                     <input type="text" name="ccm" class="form-control" placeholder="Digite o CCM" maxlength="11" required>
@@ -98,8 +95,8 @@ if(isset($_POST['adicionar'])){
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="endereco">Rua: *</label>
-                                    <input type="text" name="endereco" class="form-control" placeholder="Digite o endereço" maxlength="200" required>
+                                    <label for="rua">Rua: *</label>
+                                    <input type="text" name="rua" class="form-control" placeholder="Digite a rua" maxlength="200" required>
                                 </div>
                             </div>
                             <div class="row">
@@ -152,13 +149,9 @@ if(isset($_POST['adicionar'])){
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12">
                                     <label for="drt">DRT: </label>
                                     <input type="text" name="drt" class="form-control" maxlength="15" placeholder="Digite o DRT">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="funcao">Função:</label>
-                                    <input type="text" class="form-control" name="funcao" >
                                 </div>
                             </div>
                             <div class="row">
@@ -202,12 +195,7 @@ if(isset($_POST['adicionar'])){
                                        <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12" required>
                                    </div>
                                </div>
-                               <div class="row">
-                                   <div class="form-group col-md-12">
-                                       <label for="observacaoConta">Observação:</label>
-                                       <textarea name="observacaoConta" rows="5" class="form-control"></textarea>
-                                   </div>
-                               </div>
+
                             </div>
 
                             <div class="box-footer">

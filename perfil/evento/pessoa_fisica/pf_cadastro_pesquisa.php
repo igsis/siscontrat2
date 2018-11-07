@@ -52,7 +52,7 @@ if (isset($_POST['procurar'])){
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=pessoa_fisica/pf_cadastro'>
+                        <form method='post' action='?perfil=evento&p=pessoa_fisica/pf_cadastro'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             <button class=\"btn btn-primary\" name='adicionar' type='submit'>
@@ -100,7 +100,7 @@ if (isset($_POST['procurar'])){
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=pessoa_fisica/pf_cadastro'>
+                        <form method='post' action='?perfil=evento&p=pessoa_fisica/pf_cadastro'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             <button class=\"btn btn-primary\" name='adicionar' type='submit'>
@@ -137,7 +137,7 @@ if (isset($_POST['procurar'])){
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=pessoa_fisica/pf_cadastro_pesquisa" method="post">
+                        <form action="?perfil=evento&p=pessoa_fisica/pf_cadastro_pesquisa" method="post">
                             <label for="tipoDocumento">Tipo de documento: </label>
                             <label class="radio-inline">
                                <input type="radio" name="tipoDocumento" value="1" checked>CPF
