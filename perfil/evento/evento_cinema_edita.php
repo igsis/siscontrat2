@@ -2,7 +2,7 @@
     $con = bancoMysqli();
     include "includes/menu_interno.php";
 
-    $idEvento= $_SESSION['idEvento'];
+    $idEvento = $_SESSION['idEvento'];
 
 
 
