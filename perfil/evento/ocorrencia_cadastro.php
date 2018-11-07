@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
 include "includes/menu_interno.php";
+$url = 'http://'.$_SERVER['HTTP_HOST'].':'.$_SERVER['SERVER_PORT'].'/siscontrat2/funcoes/api_locais_espacos.php';
+
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
@@ -191,7 +193,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 </div>
 
 <script>
-   const url = 'http://localhost/siscontrat2/funcoes/api_locais_espacos.php';
+   const url = `<?=$url?>`;
 
    let instituicao = document.querySelector('#instituicao');
 

@@ -2,6 +2,7 @@
 $con = bancoMysqli();
 
 $evento = recuperaDados('eventos', 'id', $_SESSION['idEvento']);
+$url = 'http://'.$_SERVER['HTTP_HOST'].':'.$_SERVER['SERVER_PORT'].'/siscontrat2/funcoes/api_locais_espacos.php';
 
 include "includes/menu_interno.php";
 
@@ -350,7 +351,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
 </script>
 <script>
-   const url = 'http://localhost/siscontrat2/funcoes/api_locais_espacos.php';
+   const url = `<?=$url?>`;
 
    let instituicao = document.querySelector('#instituicao');
    let local_id = <?=$ocorrencia['local_id']?>;
