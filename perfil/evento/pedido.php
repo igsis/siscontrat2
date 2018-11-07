@@ -34,7 +34,7 @@ $num = mysqli_num_rows($query);
                         ?>
                             <div class="row">
                                 <div class="form-group col-md-offset-3 col-md-3">
-                                    <form method="POST" action="?perfil=pf_cadastro_pesquisa" role="form">
+                                    <form method="POST" action="?perfil=evento&p=pessoa_fisica/pf_cadastro_pesquisa" role="form">
                                         <button type="submit" name = "pessoa_fisica" class="btn btn-block btn-primary btn-lg">Pessoa Física</button>
                                     </form>
                                 </div>
