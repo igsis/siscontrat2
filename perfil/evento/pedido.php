@@ -21,66 +21,68 @@ $num = mysqli_num_rows($query);
                 <!-- general form elements -->
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Escolha um tipo de cadastro de pedido</h3>
+                        <h3 class="box-title">Escolha um tipo de pessoa</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
                     <div class="box-body">
-                        <div class="row">
-                            <?php
-                            /*
-                             * Caso não haja pedido de contratação registrado
-                             */
-                            if($num < 0){
-                            ?>
-                                <div class="row">
-                                    <div class="form-group col-md-offset-3 col-md-3">
-                                        <form method="POST" action="?perfil=pf_cadastro_pesquisa" role="form">
-                                            <button type="submit" name = "pessoa_fisica" class="btn btn-block btn-primary btn-lg">Pessoa Física</button>
-                                        </form>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <form method="POST" action="?perfil=pj_cadastro_pesquisa" role="form">
-                                            <button type="submit" name = "pessoa_juridica" class="btn btn-block btn-primary btn-lg">Pessoa Jurídica</button>
-                                        </form>
-                                    </div>
+                        <?php
+                        /*
+                         * Caso não haja pedido de contratação registrado
+                         */
+                        if($num == 0){
+                        ?>
+                            <div class="row">
+                                <div class="form-group col-md-offset-3 col-md-3">
+                                    <form method="POST" action="?perfil=pf_cadastro_pesquisa" role="form">
+                                        <button type="submit" name = "pessoa_fisica" class="btn btn-block btn-primary btn-lg">Pessoa Física</button>
+                                    </form>
                                 </div>
-                            <?php
-                            }
-                            else{
-                                /*
-                                 * Caso haja pedido de contratração
-                                 */
-                            ?>
-                                <table id="example1" class="table table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>Pedido</th>
-                                        <th>Proponente</th>
-                                        <th>Atração</th>
-                                        <th colspan="2" width="10%">Ação</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Início da preparação da lista -->
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Pedido</th>
-                                        <th>Proponente</th>
-                                        <th>Atração</th>
-                                        <th colspan="2" width="10%">Ação</th>
-                                    </tr>
-                                    </tfoot>
-                            <?php
-                            }
-                            ?>
-                        </div>
+                                <div class="form-group col-md-3">
+                                    <form method="POST" action="?perfil=evento/pessoa_juridica/pj_pesquisa" role="form">
+                                        <button type="submit" name = "pesquisar_pessoa_juridica" class="btn btn-block btn-primary btn-lg">Pessoa Jurídica</button>
+                                    </form>
+                                </div>
+                            </div>
+                        <?php
+                        }
+                        else{
+                            /*
+                             * Caso haja pedido de contratração
+                             */
+                        ?>
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Pedido</th>
+                                    <th>Proponente</th>
+                                    <th>Atração</th>
+                                    <th>Anexos</th>
+                                    <th colspan="2" width="10%">Ação</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Início da preparação da lista -->
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>Pedido</th>
+                                    <th>Proponente</th>
+                                    <th>Atração</th>
+                                    <th>Anexos</th>
+                                    <th colspan="2" width="10%">Ação</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        <?php
+                        }
+                        ?>
+
                     </div>
                 </div>
                 <!-- /.box -->

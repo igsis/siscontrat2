@@ -1,5 +1,6 @@
 <?php
 include "includes/menu_interno.php";
+$con = bancoMysqli();
 
 $idPedido = $_SESSION['idEvento'];//provisório
 //$idPedido = $_POST['idPedido'];
@@ -16,94 +17,156 @@ $pedido = recuperaDados("pedidos","id",$idPedido);
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
+                <!-- proponente -->
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Cadastro de Pedido</h3>
+                        <h3 class="box-title">Cadastro de Proponente</h3>
                     </div>
-                    <!-- /.box-header -->
-                    <!-- form start -->
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="form-group col-md-10">
+                                <label for="proponente">Proponente</label>
+                                <input type="text" id="proponente" name="proponente" class="form-control" disabled>
+                            </div>
+                            <div class="form-group col-md-2"><br>
+                                <form method="POST" action="?perfil=evento&p=###" role="form">
+                                    <button type="submit" name = "trocar" class="btn btn-primary pull-right">Trocar de Proponente</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- líderes -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Líderes</h3>
+                    </div>
+                    <div class="box-body">
+                        <?php
+                        //if($pedido['pessoa_tipo_id'] == 2){
+                            $sql_atracao = "SELECT * FROM atracao_eventos AS e 
+                                            INNER JOIN atracoes a on e.atracao_id = a.id 
+                                            LEFT JOIN lideres l on a.id = l.atracao_id
+                                            left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
+                                            WHERE evento_id = '".$_SESSION['idEvento']."'";
+                            $query_atracao = mysqli_query($con,$sql_atracao);
+                        ?>
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Atração</th>
+                                    <th>Proponente</th>
+                                    <th width="10%">Ação</th>
+                                </tr>
+                                </thead>
+                                <?php
+                                echo "<tbody>";
+                                while($atracao = mysqli_fetch_array($query_atracao)){
+                                    //analisaArray($atracao);
+                                    echo "<tr>";
+                                    echo "<td>".$atracao['nome_atracao']."</td>";
+                                    if($atracao['pessoa_fisica_id'] > 0){
+                                        echo "<td>".$atracao['nome']."</td>";
+                                        echo "<td>
+                                            <form method=\"POST\" action=\"?perfil=evento&p=pessoa_fisica\" role=\"form\">
+                                            <input type='hidden' name='idAtracao' value='".$atracao['id']."'>
+                                            <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class='fa fa-refresh'></i> Trocar</button>
+                                            </form>
+                                        </td>";
+                                    }
+                                    else{
+                                        echo "<td>
+                                            <form method=\"POST\" action=\"?perfil=evento&p=pessoa_fisica\" role=\"form\">
+                                            <input type='hidden' name='idAtracao' value='".$atracao['id']."'>
+                                            <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-plus'></i> Adicionar</button>
+                                            </form>
+                                        </td>";
+                                        echo "<td></td>";
+                                    }
+                                    echo "</tr>";
+                                }
+                                echo "</tbody>";
+                                ?>
+                            </table>
+                        <?php
+                        //}
+                        ?>
+                    </div>
+                </div>
+                <!-- parecer -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Parecer artístico</h3>
+                    </div>
                     <div class="box-body">
                         <div class="form-group">
-                            <label for="proponente">Proponente</label>
-                            <input type="text" id="proponente" name="proponente" class="form-control" disabled>
-                            <form method="POST" action="?perfil=evento&p=###" role="form">
-                                <button type="submit" name = "trocar" class="btn btn-info pull-right">Trocar de Proponente</button>
-                            </form>
+                            Aqui vai o parecer
                         </div>
-                        <?php
-                        if($pedido['pessoa_tipo_id'] == 2){
-                        ?>
-                            <div class="form-group">
-                                <label for="lideres">Líderes</label>
+                        <div class="row">
+                            <div class="form-group col-md-offset-4 col-md-2">
+                                <form method="POST" action="?perfil=evento&p=parecer_artista_local" role="form">
+                                    <button type="submit" name = "idPedido" value="<?= 1 ?>" class="btn btn-primary btn-block">Artista Local</button>
+                                </form>
                             </div>
-                        <?php
-                        }
-                        ?>
-                        <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                            <div class="form-group">
-                                <label for="categoria_atracao_id">Categoria da atração</label>
-                                <select class="form-control" id="categoria_atracao_id" name="categoria_atracao_id">
-                                    <option value="">Selecione...</option>
-                                    <?php
-                                    geraOpcao("categoria_atracoes")
-                                    ?>
-                                </select>
+                            <div class="form-group col-md-2">
+                                <form method="POST" action="?perfil=evento&p=parecer_artista_consagrado" role="form">
+                                    <button type="submit" name = "idPedido" value="<?= 1 ?>" class="btn btn-primary btn-block">Artista Consagrado</button>
+                                </form>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- pedido -->
 
-                            <div class="row ">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Demais informações</h3>
+                    </div>
+                    <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                        <div class="box-body">
+                            <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="ficha_tecnica">Ficha técnica completa</label><br/>
-                                    <i>Esse campo deve conter a listagem de pessoas envolvidas no espetáculo, como elenco, técnicos, e outros profissionais envolvidos na realização do mesmo.</i>
-                                    <p align="justify"><span style="color: gray; "><strong><i>Elenco de exemplo:</strong><br/>Lúcio Silva (guitarra e vocal)<br/>Fabio Sá (baixo)<br/>Marco da Costa (bateria)<br/>Eloá Faria (figurinista)<br/>Leonardo Kuero (técnico de som)</span></i></p>
-                                    <textarea id="ficha_tecnica" name="ficha_tecnica" class="form-control" rows="8"></textarea>
+                                    <label for="verba_id">Verba</label>
+                                    <select class="form-control" id="verba_id" name="verba_id">
+                                        <option value="">Selecione...</option>
+                                        <?php
+                                        geraOpcao("verbas","")
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="valor_total">Valor Total</label>
+                                    <input type="text" id="valor_total" name="valor_total" class="form-control">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="numero_parcelas">Número de Parcelas</label>
+                                    <select class="form-control" id="numero_parcelas" name="numero_parcelas">
+                                        <option value="">Selecione...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="data_kit_pagamento">Data Kit Pagamento</label>
+                                    <input type="date" id="data_kit_pagamento" name="data_kit_pagamento" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="forma_pagamento">Forma de pagamento</label><br/>
+                                    <textarea id="forma_pagamento" name="forma_pagamento" class="form-control" rows="8"></textarea>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="integrantes">Integrantes</label><br/>
-                                    <i>Esse campo deve conter a listagem de pessoas envolvidas no espetáculo <span style="color: #FF0000; ">incluindo o líder do grupo</span>.<br/>Apenas o <span style="color: #FF0000; ">nome civil, RG e CPF</span> de quem irá se apresentar, excluindo técnicos.</i>
-                                    <p align="justify"><span style="color: gray; "><strong><i>Elenco de exemplo:</strong><br/>Ana Cañas RG 00000000-0 CPF 000.000.000-00<br/>Lúcio Maia RG 00000000-0 CPF 000.000.000-00<br/>Fabá Jimenez RG 00000000-0 CPF 000.000.000-00<br/>Fabio Sá RG 00000000-0 CPF 000.000.000-00<br/>Marco da Costa RG 00000000-0 CPF 000.000.000-00</span></i></p>
-                                    <textarea id="integrantes" name="integrantes" class="form-control" rows="8"></textarea>
+                                    <label for="justificativa">Justificativa</label><br/>
+                                    <textarea id="justificativa" name="justificativa" class="form-control" rows="8"></textarea>
                                 </div>
                             </div>
-
                             <div class="form-group">
-                                <label for="classificacao_indicativa_id">Classificação indicativa</label>
-                                <select class="form-control" id="classificacao_indicativa_id" name="classificacao_indicativa_id">
-                                    <option value="">Selecione...</option>
-                                    <?php
-                                    geraOpcao("classificacao_indicativas")
-                                    ?>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="release_comunicacao">Release</label><br/>
-                                <i>Esse campo deve abordar informações relacionadas ao artista, abordando breves marcos na carreira e ações realizadas anteriormente.</i>
-                                <p align="justify"><span style="color: gray; "><strong><i>Texto de exemplo:</strong><br/>A cantora e compositora paulistana lançou, em 2007, o seu primeiro disco, "Amor e Caos". Dois anos depois, lançou "Hein?", disco produzido por Liminha e que contou com "Esconderijo", canção composta por Ana, eleita entre as melhores do ano pela revista Rolling Stone e que alcançou repercussão nacional por integrar a trilha sonora da novela "Viver a Vida" de Manoel Carlos, na Rede Globo. Ainda em 2009, grava, a convite do cantor e compositor Nando Reis, a bela canção "Pra Você Guardei o Amor". Em 2012, Ana lança o terceiro disco de inéditas, "Volta", com versões para Led Zeppelin ("Rock'n'Roll") e Edith Piaf ("La Vie en Rose"), além das inéditas autorais "Urubu Rei" (que ganhou clipe dirigido por Vera Egito) e "Será Que Você Me Ama?". Em 2013, veio o primeiro DVD, "Coração Inevitável", registrando o show que contou com a direção e iluminação de Ney Matogrosso.</span></i></p>
-                                <textarea id="release_comunicacao" name="release_comunicacao" class="form-control" rows="5"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="links">Links</label><br/>
-                                <i>Esse campo deve conter os links relacionados ao espetáculo, ao artista/grupo que auxiliem na divulgação do evento.</i>
-                                <p align="justify"><span style="color: gray; "><strong><i>Links de exemplo:</i></strong><br/> https://www.facebook.com/anacanasoficial/<br/>https://www.youtube.com/user/anacanasoficial</span></i></p>
-                                <textarea id="links" name="links" class="form-control" rows="5"></textarea>
-                            </div>
-
-                            <div class="row ">
-                                <div class="form-group col-md-6">
-                                    <label for="quantidade_apresentacao">Quantidade de Apresentação</label>
-                                    <input type="number" class="form-control" id="quantidade_apresentacao" name="quantidade_apresentacao" maxlength="2">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="valor_individual">Valor</label>
-                                    <input type="text" id="valor_individual" name="valor_individual" class="form-control">
-                                </div>
+                                <label for="observacao">Observação</label>
+                                <input type="text" id="observacao" name="observacao" class="form-control" maxlength="255">
                             </div>
                         </div>
                         <!-- /.box-body -->
-
                         <div class="box-footer">
-                            <button type="submit" name = "cadastra" class="btn btn-info pull-right">Cadastrar</button>
+                            <button type="submit" name = "edita" class="btn btn-info pull-right">Gravar</button>
                         </div>
                     </form>
                 </div>
