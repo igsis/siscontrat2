@@ -381,26 +381,6 @@ function geraOpcaoLocais ($tabela, $select = '')
 		}
 	}
 
-	function geraCombobox($tabela,$campo,$order,$select)
-	{
-		//gera os options de um select
-		$sql = "SELECT * FROM $tabela ORDER BY $order";
-
-		$con = bancoMysqli();
-		$query = mysqli_query($con,$sql);
-		while($option = mysqli_fetch_row($query))
-		{
-			if($option[0] == $select)
-			{
-				echo "<option value='".$option[0]."' selected >".$option[$campo]."</option>";
-			}
-			else
-			{
-				echo "<option value='".$option[0]."'>".$option[$campo]."</option>";
-			}
-		}
-	}
-
 	function retornaTipo($id)
 	{
 		//retorna o tipo de evento
@@ -410,6 +390,46 @@ function geraOpcaoLocais ($tabela, $select = '')
 		$x = mysqli_fetch_array($query);
 		return $x['tipoEvento'];
 	}
+
+	function retornaObjeto($idPedido){
+        $con = bancoMysqli();
+        $sql = "SELECT nome_evento, FROM pedidos AS ped 
+                INNER JOIN eventos AS eve ON ped.origem_id = eve.id
+                WHERE ped.origem_tipo_id = 1 AND eve.publicado = 1 AND ped.publicado = 1 AND ped.id = '$idPedido'";
+        $query = mysqli_query($con,$sql);
+        $array = mysqli_fetch_array($query);
+        return $array['nome_evento'];
+    }
+
+    function retornaPeriodo($idEvento){
+        $con = bancoMysqli();
+        $sql_data_inicio = "SELECT data_inicio FROM ocorrencias AS oco
+                            INNER JOIN atracoes AS atr ON oco.origem_ocorrencia_id = atr.id
+                            INNER JOIN atracao_eventos AS ae on atr.id = ae.atracao_id
+                            INNER JOIN eventos AS eve on ae.evento_id = eve.id
+                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND atr.publicado = 1 AND eve.id = '$idEvento'
+                            ORDER BY data_inicio ASC LIMIT 0,1";
+        $query_data_inicio = mysqli_query($con,$sql_data_inicio);
+        $array_inicio = mysqli_fetch_array($query_data_inicio);
+        $data_inicio = $array_inicio['data_inicio'];
+
+        $sql_data_fim = "SELECT data_fim FROM ocorrencias AS oco
+                            INNER JOIN atracoes AS atr ON oco.origem_ocorrencia_id = atr.id
+                            INNER JOIN atracao_eventos AS ae on atr.id = ae.atracao_id
+                            INNER JOIN eventos AS eve on ae.evento_id = eve.id
+                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND atr.publicado = 1 AND eve.id = '$idEvento'
+                            ORDER BY data_fim ASC LIMIT 0,1";
+        $query_data_fim = mysqli_query($con,$sql_data_fim);
+        $array_fim = mysqli_fetch_array($query_data_fim);
+
+        $data_fim = $array_fim['data_fim'];
+        if($data_fim == '0000-00-00' OR $data_fim == NULL){
+            return "Dia ".$data_inicio.".";
+        }
+        else{
+            return "De ".$data_inicio." até ".$data_fim;
+        }
+    }
 
 	function recuperaModulo($pag)
 	{
@@ -464,52 +484,6 @@ function geraOpcaoLocais ($tabela, $select = '')
 		}
 	}
 
-	function listaModulosAlfa($perfil)
-	{
-		//gera as tds dos módulos a carregar
-		$con = bancoMysqli();
-		// recupera os módulos do sistema
-		$sql_modulos = "SELECT pagina FROM modulo ORDER BY nome";
-		$query_modulos = mysqli_query($con,$sql_modulos);
-		while($modulos = mysqli_fetch_array($query_modulos))
-		{
-			$sql = "SELECT * FROM perfil WHERE id = $perfil"; 
-			$query = mysqli_query($con,$sql);
-			$campoFetch = mysqli_fetch_array($query);
-			if(($campoFetch[$modulos['pagina']] == 1) AND ($campoFetch[$modulos['pagina']] != 'perfil.id'))
-			{
-				$descricao = recuperaModulo($modulos['pagina']);
-				echo "<tr>";
-				echo "<td class='list_description'><b>".$descricao['nome']."</b></td>";
-				echo "<td class='list_description'>".$descricao['descricao']."</td>";
-				echo "
-					<td class='list_description'>
-						<form method='POST' action='?perfil=".$modulos['pagina']."' >
-							<input type ='submit' class='btn btn-theme btn-lg btn-block' value='carregar'></td></form>"	;
-				echo "</tr>";
-			}
-		}
-	}
-
-	function recuperaUsuarioCompleto($id)
-	{
-		//retorna dados do usuário
-		$recupera = recuperaDados('usuario_pf','id',$id);
-		if($recupera)
-		{
-			$x = array(
-				"nome" => $recupera['nome'],
-				"email" => $recupera['email'],
-				"login" => $recupera['login'],
-				"telefone1" => $recupera['telefone1'],
-				"telefone2" => $recupera['telefone2']);
-			return $x;
-		}
-		else
-		{
-			return NULL;
-		}
-	}
 
 /**
  * <p>Busca um registro na tabela passada no primeiro parametro onde a coluna passada no segundo parametro
