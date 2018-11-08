@@ -1,9 +1,10 @@
 <?php
-include "includes/menu_interno.php";
 
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
+include "includes/menu_pj.php";
+
 
 $con = bancoMysqli();
 

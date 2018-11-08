@@ -1,5 +1,5 @@
 <?php
-include "includes/menu_interno.php";
+include "includes/menu_pj.php";
 $con = bancoMysqli();
 ?>
 
@@ -36,7 +36,7 @@ $con = bancoMysqli();
                                 <div class="form-group col-md-4">
                                     <label for="cnpj">CNPJ: </label>
                                     <input type="text" class="form-control" id="cnpj" name="cnpj"
-                                           required readonly value="<?= $_SESSION['cnpj'] ?>">
+                                           required readonly value="<?= $_POST['cnpj'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">

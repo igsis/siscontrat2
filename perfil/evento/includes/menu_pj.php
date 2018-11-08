@@ -11,8 +11,12 @@ $pasta = "?perfil=evento&p=";
                 $idEvento = $_SESSION['idEvento'];
                 $evento = recuperaDados("eventos", "id",$idEvento);
                 if($evento['contratacao'] == 1){
-                    echo "<li><a href=\"".$pasta."pedido\"><i class=\"fa fa-circle-o\"></i> <span>Pedido</span></a></li>";
+                    // echo "<li><a href=\"".$pasta."pedido\"><i class=\"fa fa-circle-o\"></i> <span>Pedido</span></a></li>";
                     
+                }
+                echo "<li><a href=\"".$pasta."pj_pesquisa\"><i class=\"fa fa-circle-o\"></i> <span>Pesquisar</span></a></li>";
+                if (isset($_SESSION['idPj_pedido'])) {
+                    echo "<li><a href=\"".$pasta."pj_edita\"><i class=\"fa fa-circle-o\"></i> <span>Editar</span></a></li>";
                 }
             }
             ?>

@@ -1,5 +1,6 @@
 <?php
 $con = bancoMysqli();
+$idPessoaJuridica = $_SESSION['idPj_pedido'] ?? NULL;
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $razao_social = addslashes($_POST['razao_social']);
@@ -34,6 +35,7 @@ if (isset($_POST['cadastra'])) {
     if (mysqli_query($con, $sql)) {
         $idPessoaJuridica = recuperaUltimo('pessoa_juridicas');
         $_SESSION['idPessoaJuridica'] = $idPessoaJuridica;
+       
 
         // cadastrar o telefone de pj
         $sqlTelefone = "INSERT INTO pj_telefones
@@ -107,8 +109,9 @@ if (isset($_POST['edita'])) {
 }
 
 if (isset($_POST['carregar'])) {
-    $idPessoaJuridica = $_POST['idPessoaJuridica'];
+    $idPessoaJuridica = $_POST['idPj'];
     $_SESSION['idPessoaJuridica'] = $idPessoaJuridica;
+    $_SESSION['idPj_pedido'] = $_POST['idPj'];
 }
 
 if (isset($_POST['inserir'])){
@@ -136,7 +139,7 @@ if (isset($_POST['inserir'])){
 $pessoa_juridica = recuperaDados("pessoa_juridicas", "id", $idPessoaJuridica);
 $pj_telefone = recuperaDados("pj_telefones", "pessoa_juridica_id", $idPessoaJuridica);
 $pj_endereco = recuperaDados("pj_enderecos", "pessoa_juridica_id", $idPessoaJuridica);
-include "includes/menu_interno.php";
+include "includes/menu_pj.php";
 ?>
 
 <div class="content-wrapper">
