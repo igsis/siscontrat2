@@ -89,13 +89,13 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <div class="form-group col-md-8">
                                     <label for="Descrição">Descrição</label>
-                                    <textarea name="sinopse" id="sinopse" class="form-control" rows="5"> <?= $musica['descricao'] ?> </textarea>
+                                    <textarea name="descricao" id="descricao" class="form-control" rows="5"> <?= $musica['descricao'] ?> </textarea>
                                 </div>
                             </div>
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancelar</button>
                                 <input type="hidden" name="idMusica" value="<?= $idMusica ?>">
-                                <button type="submit" name="edita" class="btn btn-info pull-right">Salvar</button>
+                                <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
                             </div>
                         </div>
                     </form>
