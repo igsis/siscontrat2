@@ -24,19 +24,19 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
     $ccm = $_POST['ccm'] ?? NULL;
-    $dtNascimento = $_POST['dtNascimento'];
+    $dtNascimento = $_POST['dtNascimento'] ?? NULL;
     $nacionalidade = $_POST['nacionalidade'];
     $cep = $_POST['cep'];
     $rua = $_POST['rua'];
     $numero = $_POST['numero'];
     $complemento = $_POST['complemento'];
-    $bairro = $_POST['bairro'];
+    $bairro = $_POST['bairro'] ?? NULL;
     $cidade = $_POST['cidade'];
     $estado = $_POST['estado'];
     $email = $_POST['email'];
     $telefone = $_POST['telefone'];
     $drt = $_POST['drt'] ?? NULL;
-    $incricoes = $_POST['inscricaoPissInss'];
+    $incricoes = $_POST['inscricaoPissInss'] ?? NULL;
     $omb = $_POST['omb'];
     $observacao = $_POST['observacao'] ?? NULL;
     $banco = $_POST['banco'];
@@ -134,6 +134,10 @@ if (isset($_POST['edita'])){
         $mensagem = mensagem("danger","Erro: ".die(mysqli_error($con)));
     }
 
+}
+
+if(isset($_POST['carregar'])){
+    $idPf = $_POST['idPf'];
 }
 
 $pessoaFisica = recuperaDados("pessoa_fisicas","id",$idPf);

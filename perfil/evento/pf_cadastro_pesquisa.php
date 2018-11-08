@@ -38,9 +38,9 @@ if (isset($_POST['procurar'])){
                        $resultado .= "<td>".$pessoa['cpf']."</td>";
                        $resultado .= "<td>".$pessoa['email']."</td>";
                        $resultado .= "<td>
-                                     <form action='#' method='post'>
-                                        <input type='hidden' name='idPessoa' value='".$pessoa['id']."'>
-                                        <input class='btn btn-primary' name='selecionar' value='Selecionar'>
+                                     <form action='?perfil=evento&p=pf_edita' method='post'>
+                                        <input type='hidden' name='idPf' value='".$pessoa['id']."'>
+                                        <input type='submit' name='carregar' class='btn btn-primary' name='selecionar' value='Selecionar'>
                                      </form>
                                </td>";
                        $resultado .= "</tr>";
