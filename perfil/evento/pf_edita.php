@@ -1,5 +1,5 @@
 <?php
-
+$idPf = $_SESSION['idPf_pedido'] ?? NULL;
 function recuperaTelefones($id,$tabela,$campo,$campoWhere){
 
     $con = bancoMysqli();
@@ -14,7 +14,7 @@ function recuperaTelefones($id,$tabela,$campo,$campoWhere){
 }
 
 $con = bancoMysqli();
-include "includes/menu_interno.php";
+
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
 
@@ -57,6 +57,8 @@ if (isset($_POST['cadastra'])){
     if (mysqli_query($con,$sql)){
 
         $idPf = recuperaUltimo("pessoa_fisicas");
+
+        $_SESSION['idPf_pedido'] =  $idPf;
 
         $sqlEnd = "INSERT INTO siscontrat.pf_enderecos
                           (pessoa_fisica_id, logradouro, numero,complemento, bairro, cidade, uf, cep)
@@ -138,7 +140,10 @@ if (isset($_POST['edita'])){
 
 if(isset($_POST['carregar'])){
     $idPf = $_POST['idPf'];
+    $_SESSION['idPf_pedido'] =  $idPf;
 }
+
+include "includes/menu_pf.php";
 
 $pessoaFisica = recuperaDados("pessoa_fisicas","id",$idPf);
 $endereco = recuperaDados("pf_enderecos","pessoa_fisica_id",$idPf);

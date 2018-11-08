@@ -15,6 +15,9 @@ $pasta = "?perfil=evento&p=";
                 }
 
                 echo "<li><a href=\"".$pasta."pf_cadastro_pesquisa\"><i class=\"fa fa-circle-o\"></i> <span>Pesquisar</span></a></li>";
+                if (isset($_SESSION['idPf_pedido'])) {
+                    echo "<li><a href=\"".$pasta."pf_edita\"><i class=\"fa fa-circle-o\"></i> <span>Editar</span></a></li>";
+                }
             }
             ?>
             <li><a href="?perfil=evento&p=pedido"><i class="fa fa-circle-o"></i> <span>Voltar</span></a></li>

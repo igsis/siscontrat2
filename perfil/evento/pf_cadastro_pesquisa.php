@@ -1,12 +1,16 @@
 <?php
 
 $con = bancoMysqli();
-include "includes/menu_interno.php";
+// include "includes/menu_interno.php";
+unset($_SESSION['idPf_pedido']);
+
 include "includes/menu_pf.php";
 
 $exibir = ' ';
 $resultado = "<td></td>";
 $procurar = NULL;
+
+
 
 
 if (isset($_POST['procurar'])){
