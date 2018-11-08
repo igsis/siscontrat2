@@ -35,6 +35,7 @@ if (isset($_POST['cadastra'])) {
     if (mysqli_query($con, $sql)) {
         $idPessoaJuridica = recuperaUltimo('pessoa_juridicas');
         $_SESSION['idPessoaJuridica'] = $idPessoaJuridica;
+        $_SESSION['idPj_pedido']  = $idPessoaJuridica;
        
 
         // cadastrar o telefone de pj
