@@ -161,6 +161,8 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
         if(n.value.length==5)
             c.value += '/';
     }
+
+    $("#cep").mask('00000-000', {reverse: true});
 </script>
 
 <!-- Content Wrapper. Contains page content -->
@@ -238,13 +240,13 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="cep">CEP: *</label>
-                                    <input type="text" name="cep" class="form-control" maxlength="9" placeholder="Digite o CEP" required value="<?=$endereco['cep']?>">
+                                    <input type="text" class="form-control" name="cep" id="cep" maxlength="9" placeholder="Digite o CEP" required value="<?=$endereco['cep']?>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="rua">Rua: *</label>
-                                    <input type="text" name="rua" class="form-control" placeholder="Digite o endereço" maxlength="200" required value="<?= $endereco['logradouro']?>">
+                                    <input type="text" class="form-control" name="rua" id="rua" placeholder="Digite o endereço" maxlength="200" readonly value="<?= $endereco['logradouro']?>">
                                 </div>
                             </div>
                             <div class="row">
@@ -258,13 +260,17 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="cidade">Cidade: *</label>
-                                    <input type="text" name="cidade" class="form-control" placeholder="Digite a cidade" maxlength="50" required value="<?= $endereco['cidade']?>">
+                                <div class="form-group col-md-4">
+                                    <label for="bairro">Bairro: *</label>
+                                    <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Digite o Bairro" maxlength="80" readonly value="<?= $endereco['bairro'] ?>">
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
+                                    <label for="cidade">Cidade: *</label>
+                                    <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Digite a cidade" maxlength="50" readonly value="<?= $endereco['cidade']?>">
+                                </div>
+                                <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
-                                    <input type="text" name="estado" class="form-control" maxlength="2" placeholder="Digite o estado ex: (SP)" required value="<?= $endereco['uf']?>">
+                                    <input type="text" class="form-control" name="estado" id="estado" maxlength="2" placeholder="Digite o estado ex: (SP)" readonly value="<?= $endereco['uf']?>">
                                 </div>
                             </div>
                             <div class="row">

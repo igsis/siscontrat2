@@ -2,7 +2,9 @@
 include "includes/menu_pj.php";
 $con = bancoMysqli();
 ?>
-
+<script language="JavaScript" >
+    $("#cep").mask('00000-000', {reverse: true});
+</script>
 <div class="content-wrapper">
     <section class="content">
 
@@ -60,14 +62,14 @@ $con = bancoMysqli();
 
                                 <div class="form-group col-md-5">
                                     <label for="logradouro">Rua: </label>
-                                    <input type="text" class="form-control" id="logradouro" name="logradouro"
+                                    <input type="text" class="form-control" id="rua" name="logradouro"
                                            maxlength="200"
-                                           required>
+                                           readonly>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="bairro">Bairro:</label>
-                                    <input type="text" class="form-control" id="bairro" name="bairro" required>
+                                    <input type="text" class="form-control" id="bairro" name="bairro" readonly>
                                 </div>
                             </div>
 
@@ -85,12 +87,12 @@ $con = bancoMysqli();
 
                                 <div class="form-group col-md-3">
                                     <label for="uf">Estado:</label>
-                                    <input type="text" class="form-control" id="uf" name="uf" required>
+                                    <input type="text" class="form-control" id="estado" name="uf" readonly>
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="cidade">Cidade:</label>
-                                    <input type="text" class="form-control" id="cidade" name="cidade" required>
+                                    <input type="text" class="form-control" id="cidade" name="cidade" readonly>
                                 </div>
                             </div>
 

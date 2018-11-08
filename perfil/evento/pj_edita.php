@@ -142,7 +142,9 @@ $pj_telefone = recuperaDados("pj_telefones", "pessoa_juridica_id", $idPessoaJuri
 $pj_endereco = recuperaDados("pj_enderecos", "pessoa_juridica_id", $idPessoaJuridica);
 include "includes/menu_pj.php";
 ?>
-
+<script language="JavaScript" >
+    $("#cep").mask('00000-000', {reverse: true});
+</script>
 <div class="content-wrapper">
     <section class="content">
 
@@ -242,14 +244,14 @@ include "includes/menu_pj.php";
 
                                 <div class="form-group col-md-5">
                                     <label for="logradouro">Rua: </label>
-                                    <input type="text" class="form-control" id="logradouro" name="logradouro"
+                                    <input type="text" class="form-control" id="rua" name="logradouro"
                                            maxlength="200"
-                                           required value="<?= $pj_endereco['logradouro'] ?>">
+                                           readonly value="<?= $pj_endereco['logradouro'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="bairro">Bairro:</label>
-                                    <input type="text" class="form-control" id="bairro" name="bairro" required
+                                    <input type="text" class="form-control" id="bairro" name="bairro" readonly
                                            value="<?= $pj_endereco['bairro'] ?>">
                                 </div>
                             </div>
@@ -269,13 +271,13 @@ include "includes/menu_pj.php";
 
                                 <div class="form-group col-md-3">
                                     <label for="cidade">Cidade:</label>
-                                    <input type="text" class="form-control" id="cidade" name="cidade" required
+                                    <input type="text" class="form-control" id="cidade" name="cidade" readonly
                                            value="<?= $pj_endereco['cidade'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="uf">Estado:</label>
-                                    <input type="text" class="form-control" id="uf" name="uf" required
+                                    <input type="text" class="form-control" id="estado" name="uf" readonly
                                            value="<?= $pj_endereco['uf'] ?>">
                                 </div>
                             </div>
