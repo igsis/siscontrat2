@@ -35,7 +35,7 @@ if(isset($_POST['adicionar'])){
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=evento&p=pessoa_fisica/pf_edita" method="post">
+                        <form action="?perfil=evento&p=pf_edita" method="post">
                             <div class="row">
                             <div class="col-md-12 form-group">
                                 <label for="nome">Nome: *</label>

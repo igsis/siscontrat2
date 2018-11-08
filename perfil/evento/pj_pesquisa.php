@@ -41,7 +41,7 @@ if (isset($_POST['pesquisa'])) {
                         if ($cadastrar == true) {
                             ?>
                             <div class="form-group col-md-3 col-md-offset-4">
-                                <form method="POST" action="?perfil=evento/pessoa_juridica/pj_cadastro" role="form">
+                                <form method="POST" action="?perfil=evento&p=pj_cadastro" role="form">
                                     <button type="submit" name="pesquisar_pessoa_juridica"
                                             class="btn btn-block btn-primary btn-lg">Cadastrar
                                     </button>
@@ -52,7 +52,7 @@ if (isset($_POST['pesquisa'])) {
                         } else {
                         ?>
                         <div class="form-group col-md-3 col-md-offset-4">
-                            <form method="POST" action="?perfil=evento/pessoa_juridica/pj_edita" role="form">
+                            <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
                                 <input type="hidden" name="idPessoaJuridica" id="idPessoaJuridica" value="<?= $pessoa_juridica['id']; ?>">
                                 <button type="submit" name="carregar"
                                         class="btn btn-block btn-primary btn-lg"> Inserir
@@ -63,7 +63,7 @@ if (isset($_POST['pesquisa'])) {
                             }
                             ?>
                         </div>
-                        <form method="POST" action="?perfil=evento/pessoa_juridica/pj_pesquisa" role="form">
+                        <form method="POST" action="?perfil=evento&p=pj_pesquisa" role="form">
                             <div class="box-body">
 
                                 <div class="form-group col-md-offset-4 col-md-3">

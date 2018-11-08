@@ -17,7 +17,7 @@ $cpf = $_SESSION['cpfRepresentante'];
                         <h3 class="box-title">Informações Presentante</h3>
                     </div>
 
-                    <form method="POST" action="?perfil=evento/pessoa_juridica/representante_edita" role="form">
+                    <form method="POST" action="?perfil=evento&p=representante_edita" role="form">
                         <div class="box-body">
 
                             <div class="row">

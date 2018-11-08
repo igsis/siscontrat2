@@ -15,7 +15,7 @@ $con = bancoMysqli();
                         <h3 class="box-title">Informações Pessoa Jurídica</h3>
                     </div>
 
-                    <form method="POST" action="?perfil=evento/pessoa_juridica/pj_edita" role="form">
+                    <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
                         <div class="box-body">
 
                             <div class="row">

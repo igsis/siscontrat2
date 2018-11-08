@@ -34,12 +34,12 @@ $num = mysqli_num_rows($query);
                         ?>
                             <div class="row">
                                 <div class="form-group col-md-offset-3 col-md-3">
-                                    <form method="POST" action="?perfil=evento&p=pessoa_fisica/pf_cadastro_pesquisa" role="form">
+                                    <form method="POST" action="?perfil=evento&p=pf_cadastro_pesquisa" role="form">
                                         <button type="submit" name = "pessoa_fisica" class="btn btn-block btn-primary btn-lg">Pessoa Física</button>
                                     </form>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <form method="POST" action="?perfil=evento/pessoa_juridica/pj_pesquisa" role="form">
+                                    <form method="POST" action="?perfil=evento&p=pj_pesquisa" role="form">
                                         <button type="submit" name = "pesquisar_pessoa_juridica" class="btn btn-block btn-primary btn-lg">Pessoa Jurídica</button>
                                     </form>
                                 </div>

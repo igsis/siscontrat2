@@ -157,7 +157,7 @@ include "includes/menu_interno.php";
                         }; ?>
                     </div>
 
-                    <form method="POST" action="?perfil=evento/pessoa_juridica/pj_edita" role="form">
+                    <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -286,7 +286,7 @@ include "includes/menu_interno.php";
                     </form>
                     <div class="row">
                         <div class="col-md-6">
-                            <form method="POST" action="?perfil=evento/pessoa_juridica/representante_busca"
+                            <form method="POST" action="?perfil=evento&p=representante_busca"
                                   role="form">
                                 <input type="hidden" name="tipo_representante" id="tipo_representante"
                                        value="1">
@@ -297,7 +297,7 @@ include "includes/menu_interno.php";
                         </div>
 
                         <div class="col-md-6">
-                            <form method="POST" action="?perfil=evento/pessoa_juridica/representante_busca"
+                            <form method="POST" action="?perfil=evento&p=representante_busca"
                                   role="form">
                                 <input type="hidden" name="tipo_representante" id="tipo_representante"
                                        value="2">
