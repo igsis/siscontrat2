@@ -149,15 +149,12 @@ if(isset($_POST['adicionar'])){
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="drt">DRT: </label>
-                                    <input type="text" name="drt" class="form-control" maxlength="15" placeholder="Digite o DRT">
-                                </div>
+
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="inscricaoPissInss">Inscrição do INSS ou PIS/PASEP:</label>
-                                    <input type="text" class="form-control" name="inscricaoPissInss" placeholder="Digite a inscrição do INSS ou PISS/PASEP">
+                                    <label for="drt">DRT: </label>
+                                    <input type="text" name="drt" class="form-control" maxlength="15" placeholder="Digite o DRT">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="OMB">OMB:</label>

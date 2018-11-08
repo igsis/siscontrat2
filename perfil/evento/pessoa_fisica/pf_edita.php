@@ -264,24 +264,25 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                                     <input type="email" name="email" class="form-control" maxlength="60" placeholder="Digite o E-mail" required value="<?= $pessoaFisica['email']?>">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="telefone[]">Telefone #1:</label>
-                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15" value="<?= $telefones[0]?>">
+                            <?php
+                            $id = $pessoaFisica["id"];
+                            $sql = "SELECT * FROM pf_telefones
+                                    WHERE pessoa_fisica_id = '$id'";
+
+                            $query = mysqli_query($con,$sql);
+                            //                                $resultado = mysqli_fetch_array($query);
+                            $x = 1;
+                            while ($telefone = mysqli_fetch_assoc($query)){?>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label for="telefone[]">Telefone #<?=$x?>:</label>
+                                        <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15" value="<?= $telefone['telefone']?>">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row" id="telefones">
-                                <div id="phone1" class="form-group col-md-12">
-                                    <label for="telefone[]">Telefone #2:</label>
-                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone"  maxlength="15" value="<?=$telefones[1]?>">
-                                </div>
-                            </div>
-                            <div class="row" id="telefones">
-                                <div class="form-group col-md-12">
-                                    <label for="telefone[]">Telefone #3:</label>
-                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone"  maxlength="15" value="<?= $telefones[2]?>">
-                                </div>
-                            </div>
+                                <?php
+                                $x++;
+                            }
+                            ?>
 
                             <div class="row">
                                 <div class="form-group col-md-6">
