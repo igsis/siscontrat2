@@ -1,9 +1,10 @@
 <?php
-include "includes/menu_interno.php";
 
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
+include "includes/menu_pj.php";
+
 
 $con = bancoMysqli();
 
@@ -45,7 +46,7 @@ $query = mysqli_query($con,$sql);
                                 echo "<td>".$pj['cnpj']."</td>";
                                 echo "<td>".exibirDataBr(retornaDataSemHora($pj['ultima_atualizacao']))."</td>";
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento/pessoa_juridica/pj_edita\" role=\"form\">
+                                    <form method=\"POST\" action=\"?perfil=evento&p=pj_edita\" role=\"form\">
                                     <input type='hidden' name='idPessoaJuridica' value='".$pj['id']."'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\">Carregar</button>
                                     </form>

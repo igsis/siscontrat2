@@ -1,5 +1,5 @@
 <?php
-
+$idPf = $_SESSION['idPf_pedido'] ?? NULL;
 function recuperaTelefones($id,$tabela,$campo,$campoWhere){
 
     $con = bancoMysqli();
@@ -14,7 +14,7 @@ function recuperaTelefones($id,$tabela,$campo,$campoWhere){
 }
 
 $con = bancoMysqli();
-include "includes/menu_interno.php";
+
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
 
@@ -24,19 +24,19 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
     $ccm = $_POST['ccm'] ?? NULL;
-    $dtNascimento = $_POST['dtNascimento'];
+    $dtNascimento = $_POST['dtNascimento'] ?? NULL;
     $nacionalidade = $_POST['nacionalidade'];
     $cep = $_POST['cep'];
     $rua = $_POST['rua'];
     $numero = $_POST['numero'];
     $complemento = $_POST['complemento'];
-    $bairro = $_POST['bairro'];
+    $bairro = $_POST['bairro'] ?? NULL;
     $cidade = $_POST['cidade'];
     $estado = $_POST['estado'];
     $email = $_POST['email'];
     $telefone = $_POST['telefone'];
     $drt = $_POST['drt'] ?? NULL;
-    $incricoes = $_POST['inscricaoPissInss'];
+    $incricoes = $_POST['inscricaoPissInss'] ?? NULL;
     $omb = $_POST['omb'];
     $observacao = $_POST['observacao'] ?? NULL;
     $banco = $_POST['banco'];
@@ -57,6 +57,8 @@ if (isset($_POST['cadastra'])){
     if (mysqli_query($con,$sql)){
 
         $idPf = recuperaUltimo("pessoa_fisicas");
+
+        $_SESSION['idPf_pedido'] =  $idPf;
 
         $sqlEnd = "INSERT INTO siscontrat.pf_enderecos
                           (pessoa_fisica_id, logradouro, numero,complemento, bairro, cidade, uf, cep)
@@ -136,6 +138,13 @@ if (isset($_POST['edita'])){
 
 }
 
+if(isset($_POST['carregar'])){
+    $idPf = $_POST['idPf'];
+    $_SESSION['idPf_pedido'] =  $idPf;
+}
+
+include "includes/menu_pf.php";
+
 $pessoaFisica = recuperaDados("pessoa_fisicas","id",$idPf);
 $endereco = recuperaDados("pf_enderecos","pessoa_fisica_id",$idPf);
 $telefones = recuperaTelefones($pessoaFisica['id'],"pf_telefones","telefone","pessoa_fisica_id");
@@ -172,7 +181,7 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=evento&p=pessoa_fisica/pf_edita" method="post">
+                        <form action="?perfil=evento&p=pf_edita" method="post">
                             <div class="row">
                                 <div class="col-md-12 form-group">
                                     <label for="nome">Nome: *</label>

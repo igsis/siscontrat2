@@ -3,17 +3,24 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
+if(isset($_POST['tipo_representante'])){
+    $tipo_representante = $_POST['tipo_representante'];
+
+    $_SESSION['tipo_representante'] = $_POST['tipo_representante'];
+}
+
 if (isset($_POST['pesquisa'])) {
-    $cnpj = $_POST['cnpj'];
+    $cpf = $_POST['cpf'];
 
-    $pessoa_juridica = recuperaDados("pessoa_juridicas", "cnpj", $cnpj);
+    $representante_legal = recuperaDados("representante_legais", "cpf", $cpf);
 
-    if ($pessoa_juridica == NULL) {
-        $_SESSION['cnpj'] = $cnpj;
-        $mensagem = mensagem("info", "Pessoa jurídica não cadastrada");
+    if ($representante_legal == NULL) {
+        $_SESSION['cpfRepresentante'] = $cpf;
+        $mensagem = mensagem("info", "Representante ainda não cadastrado");
         $cadastrar = true;
     } else {
-        $mensagem = mensagem("info", $pessoa_juridica['razao_social']. " já cadastrada");
+        $mensagem = mensagem("info", $representante_legal['nome']. " já cadastrado");
+        $_SESSION['idRepresentante'] = $representante_legal['id'];
         $cadastrar = false;
     }
 }
@@ -23,7 +30,7 @@ if (isset($_POST['pesquisa'])) {
 <div class="content-wrapper">
     <section class="content">
 
-        <h2 class="page-header">Pesquisar Pessoa Jurídica</h2>
+        <h2 class="page-header">Pesquisar Representante</h2>
 
         <div class="row">
             <div class="col-md-12">
@@ -41,9 +48,9 @@ if (isset($_POST['pesquisa'])) {
                         if ($cadastrar == true) {
                             ?>
                             <div class="form-group col-md-3 col-md-offset-4">
-                                <form method="POST" action="?perfil=evento/pessoa_juridica/pj_cadastro" role="form">
+                                <form method="POST" action="?perfil=evento&p=representante_cadastro" role="form">
                                     <button type="submit" name="pesquisar_pessoa_juridica"
-                                            class="btn btn-block btn-primary btn-lg">Cadastrar
+                                            class="btn btn-block btn-primary btn-lg"> Cadastrar
                                     </button>
                                 </form>
                             </div>
@@ -52,9 +59,8 @@ if (isset($_POST['pesquisa'])) {
                         } else {
                         ?>
                         <div class="form-group col-md-3 col-md-offset-4">
-                            <form method="POST" action="?perfil=evento/pessoa_juridica/pj_edita" role="form">
-                                <input type="hidden" name="idPessoaJuridica" id="idPessoaJuridica" value="<?= $pessoa_juridica['id']; ?>">
-                                <button type="submit" name="carregar"
+                            <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
+                                <button type="submit" name="inserir"
                                         class="btn btn-block btn-primary btn-lg"> Inserir
                                 </button>
                             </form>
@@ -63,13 +69,13 @@ if (isset($_POST['pesquisa'])) {
                             }
                             ?>
                         </div>
-                        <form method="POST" action="?perfil=evento/pessoa_juridica/pj_pesquisa" role="form">
+                        <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
                             <div class="box-body">
 
                                 <div class="form-group col-md-offset-4 col-md-3">
-                                    <h2 for="cnpj">CNPJ:</h2>
+                                    <h2 for="cpf">CPF:</h2>
                                     <div class="row">
-                                        <input type="text" name="cnpj" id="cnpj" class="form-control">
+                                        <input type="text" name="cpf" id="cpf" class="form-control">
 
                                         <button type="submit" name="pesquisa" id="pesquisa"
                                                 class="btn btn-info pull-right">

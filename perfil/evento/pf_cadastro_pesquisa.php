@@ -1,11 +1,16 @@
 <?php
 
 $con = bancoMysqli();
-include "includes/menu_interno.php";
+// include "includes/menu_interno.php";
+unset($_SESSION['idPf_pedido']);
+
+include "includes/menu_pf.php";
 
 $exibir = ' ';
 $resultado = "<td></td>";
 $procurar = NULL;
+
+
 
 
 if (isset($_POST['procurar'])){
@@ -37,9 +42,9 @@ if (isset($_POST['procurar'])){
                        $resultado .= "<td>".$pessoa['cpf']."</td>";
                        $resultado .= "<td>".$pessoa['email']."</td>";
                        $resultado .= "<td>
-                                     <form action='#' method='post'>
-                                        <input type='hidden' name='idPessoa' value='".$pessoa['id']."'>
-                                        <input class='btn btn-primary' name='selecionar' value='Selecionar'>
+                                     <form action='?perfil=evento&p=pf_edita' method='post'>
+                                        <input type='hidden' name='idPf' value='".$pessoa['id']."'>
+                                        <input type='submit' name='carregar' class='btn btn-primary' name='selecionar' value='Selecionar'>
                                      </form>
                                </td>";
                        $resultado .= "</tr>";
@@ -52,7 +57,7 @@ if (isset($_POST['procurar'])){
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=evento&p=pessoa_fisica/pf_cadastro'>
+                        <form method='post' action='?perfil=evento&p=pf_cadastro'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             <button class=\"btn btn-primary\" name='adicionar' type='submit'>
@@ -100,7 +105,7 @@ if (isset($_POST['procurar'])){
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=evento&p=pessoa_fisica/pf_cadastro'>
+                        <form method='post' action='?perfil=evento&p=pf_cadastro'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             <button class=\"btn btn-primary\" name='adicionar' type='submit'>
@@ -137,7 +142,7 @@ if (isset($_POST['procurar'])){
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=evento&p=pessoa_fisica/pf_cadastro_pesquisa" method="post">
+                        <form action="?perfil=evento&p=pf_cadastro_pesquisa" method="post">
                             <label for="tipoDocumento">Tipo de documento: </label>
                             <label class="radio-inline">
                                <input type="radio" name="tipoDocumento" value="1" checked>CPF
@@ -148,7 +153,7 @@ if (isset($_POST['procurar'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="procurar" value="<?=$procurar?>" id="cpf">
+                                    <input type="text" class="form-control" id="CPF" name="procurar" value="<?=$procurar?>" id="cpf">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
@@ -195,8 +200,9 @@ if (isset($_POST['procurar'])){
     </section>
     <!-- /.content -->
 </div>
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('#cpf').mask('000.000.000-00');
-    });
+
+<script>
+
+    $("#CPF").mask('000.000.000-00', {reverse: true});
+    
 </script>

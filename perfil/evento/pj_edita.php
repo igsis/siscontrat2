@@ -1,5 +1,6 @@
 <?php
 $con = bancoMysqli();
+$idPessoaJuridica = $_SESSION['idPj_pedido'] ?? NULL;
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $razao_social = addslashes($_POST['razao_social']);
@@ -34,6 +35,8 @@ if (isset($_POST['cadastra'])) {
     if (mysqli_query($con, $sql)) {
         $idPessoaJuridica = recuperaUltimo('pessoa_juridicas');
         $_SESSION['idPessoaJuridica'] = $idPessoaJuridica;
+        $_SESSION['idPj_pedido']  = $idPessoaJuridica;
+       
 
         // cadastrar o telefone de pj
         $sqlTelefone = "INSERT INTO pj_telefones
@@ -107,8 +110,9 @@ if (isset($_POST['edita'])) {
 }
 
 if (isset($_POST['carregar'])) {
-    $idPessoaJuridica = $_POST['idPessoaJuridica'];
+    $idPessoaJuridica = $_POST['idPj'];
     $_SESSION['idPessoaJuridica'] = $idPessoaJuridica;
+    $_SESSION['idPj_pedido'] = $_POST['idPj'];
 }
 
 if (isset($_POST['inserir'])){
@@ -136,7 +140,7 @@ if (isset($_POST['inserir'])){
 $pessoa_juridica = recuperaDados("pessoa_juridicas", "id", $idPessoaJuridica);
 $pj_telefone = recuperaDados("pj_telefones", "pessoa_juridica_id", $idPessoaJuridica);
 $pj_endereco = recuperaDados("pj_enderecos", "pessoa_juridica_id", $idPessoaJuridica);
-include "includes/menu_interno.php";
+include "includes/menu_pj.php";
 ?>
 
 <div class="content-wrapper">
@@ -157,7 +161,7 @@ include "includes/menu_interno.php";
                         }; ?>
                     </div>
 
-                    <form method="POST" action="?perfil=evento/pessoa_juridica/pj_edita" role="form">
+                    <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -286,7 +290,7 @@ include "includes/menu_interno.php";
                     </form>
                     <div class="row">
                         <div class="col-md-6">
-                            <form method="POST" action="?perfil=evento/pessoa_juridica/representante_busca"
+                            <form method="POST" action="?perfil=evento&p=representante_busca"
                                   role="form">
                                 <input type="hidden" name="tipo_representante" id="tipo_representante"
                                        value="1">
@@ -297,7 +301,7 @@ include "includes/menu_interno.php";
                         </div>
 
                         <div class="col-md-6">
-                            <form method="POST" action="?perfil=evento/pessoa_juridica/representante_busca"
+                            <form method="POST" action="?perfil=evento&p=representante_busca"
                                   role="form">
                                 <input type="hidden" name="tipo_representante" id="tipo_representante"
                                        value="2">

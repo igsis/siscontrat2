@@ -49,7 +49,9 @@ else
     <![endif]-->
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-
+    <!-- JQUEY Mask -->
+    <script src="dist/js/jquery-1.12.4.min.js"></script>
+    <script src="dist/js/jquery.mask.js"></script>
   </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">

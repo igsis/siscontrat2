@@ -78,7 +78,7 @@ include "includes/menu_interno.php";
                         <?php if(isset($mensagem)){echo $mensagem;};?>
                     </div>
 
-                    <form method="POST" action="?perfil=evento/pessoa_juridica/representante_edita" role="form">
+                    <form method="POST" action="?perfil=evento&p=representante_edita" role="form">
                         <div class="box-body">
 
                             <div class="row">
