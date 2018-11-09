@@ -157,3 +157,9 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
     </section>
     <!-- /.content -->
 </div>
+
+<script>
+
+    $('#valor_individual').mask('000.000.000.000.000,00', {reverse: true});
+
+</script>
