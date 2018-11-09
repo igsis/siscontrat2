@@ -13,12 +13,12 @@ $procurar = NULL;
 
 
 
-if (isset($_POST['procurar'])){
+if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
 
-    $procurar = $_POST['procurar'];
+    $procurar = $_POST['procurar'] ?? $_POST['passaporte'];
     $tipoDocumento = $_POST['tipoDocumento'];
 
-    if ($procurar != NULL) {
+    if ($procurar != NULL ) {
 
         if ($tipoDocumento == 1){
 
@@ -76,6 +76,8 @@ if (isset($_POST['procurar'])){
                 $queryPassaporte = "SELECT id,nome,passaporte,email
                             FROM siscontrat.`pessoa_fisicas`
                             WHERE passaporte = '$procurar'";
+
+                            echo "<pre>".$queryPassaporte ."</pre>";
 
                 if ($result = mysqli_query($con, $queryPassaporte)) {
 
@@ -153,7 +155,8 @@ if (isset($_POST['procurar'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="CPF" name="procurar" value="<?=$procurar?>" id="cpf">
+                                    <input type="text" class="form-control" name="procurar" value="<?=$procurar?>" id="cpf">
+                                    <input type="text" class="form-control" name="passaporte" value="<?=$procurar?>" >
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
@@ -203,6 +206,28 @@ if (isset($_POST['procurar'])){
 
 <script>
 
-    $("#CPF").mask('000.000.000-00', {reverse: true});
-    
+    let tipos = document.querySelectorAll("input[type='radio'][name='tipoDocumento']");
+    let passaporte = document.querySelector("input[name='passaporte']");
+    let procurar = document.querySelector("input[name='procurar']");
+
+    passaporte.style.display = 'none' 
+
+    for (const tipo of tipos) {
+        tipo.addEventListener('change', e => {
+
+            passaporte.value = ''
+            procurar.value = ''
+
+            if(e.target.value == 1){
+                passaporte.style.display = 'none'
+                procurar.style.display = 'block'
+            }else{
+                passaporte.style.display = 'block'
+                procurar.style.display = 'none'
+            }            
+        })
+    }
+
+    $("input[name='procurar']").mask('000.000.000-00', {reverse: true});
+  
 </script>
