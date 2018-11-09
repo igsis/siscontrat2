@@ -46,8 +46,8 @@ if(isset($_POST['adicionar'])){
                             </div>
                             <div class="row">
                             <div class="col-md-12 form-group">
-                                <label for="nomeArtistico">Nome Artistico: *</label>
-                                <input type="text" class="form-control" name="nomeArtistico" placeholder="Digite o nome artistico" maxlength="70" required>
+                                <label for="nomeArtistico">Nome Artistico:</label>
+                                <input type="text" class="form-control" name="nomeArtistico" placeholder="Digite o nome artistico" maxlength="70">
                             </div>
                             </div>
                             <?php if ($tipoDocumento == 1){ ?>
@@ -70,8 +70,8 @@ if(isset($_POST['adicionar'])){
                                 </div>
                                 <?php }?>
                                 <div class="form-group col-md-6">
-                                    <label for="ccm">CCM: *</label>
-                                    <input type="text" name="ccm" class="form-control" placeholder="Digite o CCM" maxlength="11" required>
+                                    <label for="ccm">CCM:</label>
+                                    <input type="text" name="ccm" class="form-control" placeholder="Digite o CCM" maxlength="11">
                                 </div>
                             </div>
                             <div class="row">
@@ -107,7 +107,7 @@ if(isset($_POST['adicionar'])){
                                     <input type="number" name="numero" class="form-control" placeholder="Digite o número" required>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="complemento">Complemento: *</label>
+                                    <label for="complemento">Complemento:</label>
                                     <input type="text" name="complemento" class="form-control" maxlength="20" placeholder="Digite o complemento">
                                 </div>
                             </div>
@@ -154,16 +154,20 @@ if(isset($_POST['adicionar'])){
 
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-6">
                                     <label for="drt">DRT: </label>
                                     <input type="text" name="drt" class="form-control" maxlength="15" placeholder="Digite o DRT">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="drt">NIT: </label>
+                                    <input type="text" name="nit" class="form-control" maxlength="45" placeholder="Digite o NIT">
                                 </div>
 
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
-                                    <textarea name="observacao" rows="5" class="form-control"></textarea>
+                                    <textarea name="observacao" rows="3" class="form-control"></textarea>
                                 </div>
                             </div>
                             <div class="box-header">
@@ -183,19 +187,18 @@ if(isset($_POST['adicionar'])){
                                </div>
                                <div class="row">
                                    <div class="form-group col-md-6">
-                                       <label for="agencia">Agência: *</label>
-                                       <input type="text" name="agencia" class="form-control" placeholder="Digite a Agência" maxlength="12" required>
+                                       <label for="agencia">Agência:</label>
+                                       <input type="text" name="agencia" class="form-control" placeholder="Digite a Agência" maxlength="12">
                                    </div>
                                    <div class="form-group col-md-6">
-                                       <label for="conta">Conta: *</label>
-                                       <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12" required>
+                                       <label for="conta">Conta:</label>
+                                       <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12">
                                    </div>
                                </div>
 
                             </div>
 
                             <div class="box-footer">
-                                <button type="reset" class="btn btn-default">Cancelar</button>
                                 <button type="submit" name="cadastra" class="btn btn-info pull-right">Salvar</button>
                             </div>
                         </form>
