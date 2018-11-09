@@ -141,7 +141,6 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-default">Cancelar</button>
                             <input type="hidden" name="idAtracao" value="<?= $atracao['id'] ?>">
                             <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>

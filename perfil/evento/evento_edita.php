@@ -113,13 +113,9 @@ include "includes/menu_interno.php";
                                     <label><input type="radio" name="contratacao" value="0" <?= $evento['contratacao'] == 0 ? 'checked' : NULL ?>> Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="tipo">Tipo do Evento</label>
-                                    <select class="form-control" id="tipo" name="tipo">
-                                        <option value="">Selecione uma opção...</option>
-                                        <?php
-                                        geraOpcao("tipo_eventos", $evento['tipo_evento_id']);
-                                        ?>
-                                    </select>
+                                    <label for="tipo">Este evento é cinema?</label> <br>
+                                    <label><input type="radio" name="tipo" value="3" <?= $evento['tipo_evento_id'] == 3 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="tipo" value="1" <?= $evento['tipo_evento_id'] == 1 ? 'checked' : NULL ?>> Não </label>
                                 </div>
                             </div>
 
