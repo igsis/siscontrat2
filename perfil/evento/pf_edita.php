@@ -37,7 +37,6 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $telefone = $_POST['telefone'];
     $drt = $_POST['drt'] ?? NULL;
     $incricoes = $_POST['inscricaoPissInss'] ?? NULL;
-    $omb = $_POST['omb'];
     $observacao = $_POST['observacao'] ?? NULL;
     $banco = $_POST['banco'];
     $agencia = $_POST['agencia'];
@@ -75,12 +74,8 @@ if (isset($_POST['cadastra'])){
             $sqlDRT = "INSERT INTO siscontrat.`drts`
                        (pessoa_fisica_id, drt, publicado) 
                        VALUES ('$idPf','$drt',1)";
-            if (mysqli_query($con,$sqlDRT)) {
 
-                $sqlOmbs = "INSERT INTO siscontrat.`ombs`
-                        (pessoa_fisica_id,omb,publicado)
-                        VALUES ('$idPf','$omb',1)";
-                if (mysqli_query($con, $sqlOmbs)) {
+            if (mysqli_query($con,$sqlDRT)) {
 
                     $sqlObservacao = "INSERT INTO siscontrat.`pf_observacoes`
                               (pessoa_fisica_id,observacao,publicado)
@@ -98,9 +93,6 @@ if (isset($_POST['cadastra'])){
                     }else{
                         $mensagem = mensagem("danger", "Error ao inserir a observação: ".die(mysqli_error($con)));
                     }
-                }else{
-                    $mensagem = mensagem("danger","Erro ao inserir OMBS: ".die(mysqli_error($con)));
-                }
             }else{
                 $mensagem =  mensagem("danger","Erro ao inserir DRT ". die(mysqli_error($con)));
             }
@@ -149,7 +141,6 @@ $pessoaFisica = recuperaDados("pessoa_fisicas","id",$idPf);
 $endereco = recuperaDados("pf_enderecos","pessoa_fisica_id",$idPf);
 $telefones = recuperaTelefones($pessoaFisica['id'],"pf_telefones","telefone","pessoa_fisica_id");
 $drts = recuperaDados("drts","pessoa_fisica_id",$idPf);
-$ombs = recuperaDados("ombs","pessoa_fisica_id",$idPf);
 $observacao = recuperaDados("pf_observacoes","pessoa_fisica_id",$idPf);
 $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
 
@@ -300,13 +291,9 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                             ?>
 
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12">
                                     <label for="drt">DRT: </label>
                                     <input type="text" name="drt" class="form-control" maxlength="15" placeholder="Digite o DRT" value="<?= $drts['drt']?>">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="OMB">OMB:</label>
-                                    <input type="text" name="omb" class="form-control" placeholder="Digite o OMB" value="<?= $ombs['omb']?>">
                                 </div>
                             </div>
                             <div class="row">

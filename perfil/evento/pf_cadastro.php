@@ -154,14 +154,11 @@ if(isset($_POST['adicionar'])){
 
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12">
                                     <label for="drt">DRT: </label>
                                     <input type="text" name="drt" class="form-control" maxlength="15" placeholder="Digite o DRT">
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="OMB">OMB:</label>
-                                    <input type="text" name="omb" class="form-control" placeholder="Digite o OMB">
-                                </div>
+
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
