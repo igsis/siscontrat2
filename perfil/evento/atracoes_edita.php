@@ -74,13 +74,13 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
                     <form method="POST" action="?perfil=evento&p=atracoes_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
-                                <label for="nome_atracao">Nome da atração</label>
-                                <input type="text" id="nome_atracao" name="nome_atracao" class="form-control" maxlength="100" value="<?= $atracao['nome_atracao'] ?>">
+                                <label for="nome_atracao">Nome da atração *</label>
+                                <input type="text" id="nome_atracao" name="nome_atracao" class="form-control" maxlength="100" required value="<?= $atracao['nome_atracao'] ?>">
                             </div>
 
                             <div class="form-group">
-                                <label for="categoria_atracao_id">Tipo de atração</label>
-                                <select class="form-control" id="categoria_atracao_id" name="categoria_atracao_id">
+                                <label for="categoria_atracao_id">Categoria da atração *</label>
+                                <select class="form-control" id="categoria_atracao_id" name="categoria_atracao_id" required>
                                     <option value="">Selecione...</option>
                                     <?php
                                     geraOpcao("categoria_atracoes",$atracao['categoria_atracao_id'])
@@ -104,8 +104,8 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
                             </div>
 
                             <div class="form-group">
-                                <label for="classificacao_indicativa_id">Classificação indicativa</label>
-                                <select class="form-control" id="classificacao_indicativa_id" name="classificacao_indicativa_id">
+                                <label for="classificacao_indicativa_id">Classificação indicativa *</label>
+                                <select class="form-control" id="classificacao_indicativa_id" name="classificacao_indicativa_id" required>
                                     <option value="">Selecione...</option>
                                     <?php
                                     geraOpcao("classificacao_indicativas",$atracao['classificacao_indicativa_id'])
@@ -129,12 +129,12 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
 
                             <div class="row ">
                                 <div class="form-group col-md-6">
-                                    <label for="quantidade_apresentacao">Quantidade de Apresentação</label>
-                                    <input type="number" class="form-control" id="quantidade_apresentacao" name="quantidade_apresentacao" maxlength="2" value="<?= $atracao['quantidade_apresentacao'] ?>">
+                                    <label for="quantidade_apresentacao">Quantidade de Apresentação *</label>
+                                    <input type="number" class="form-control" id="quantidade_apresentacao" name="quantidade_apresentacao" maxlength="2" required value="<?= $atracao['quantidade_apresentacao'] ?>">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="valor_individual">Valor</label>
-                                    <input type="text" id="valor_individual" name="valor_individual" class="form-control" value="<?= $atracao['valor_individual'] ?>">
+                                    <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não houver valor</i>
+                                    <input type="text" id="valor_individual" name="valor_individual" class="form-control" required value="<?= $atracao['valor_individual'] ?>">
                                 </div>
                             </div>
                         </div>

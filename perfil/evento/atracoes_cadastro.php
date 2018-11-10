@@ -22,13 +22,13 @@ include "includes/menu_interno.php";
                     <form method="POST" action="?perfil=evento&p=atracoes_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
-                                <label for="nome_atracao">Nome da atração</label>
-                                <input type="text" id="nome_atracao" name="nome_atracao" class="form-control" maxlength="100">
+                                <label for="nome_atracao">Nome da atração *</label>
+                                <input type="text" id="nome_atracao" name="nome_atracao" class="form-control" maxlength="100" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="categoria_atracao_id">Categoria da atração</label>
-                                <select class="form-control" id="categoria_atracao_id" name="categoria_atracao_id">
+                                <label for="categoria_atracao_id">Categoria da atração *</label>
+                                <select class="form-control" id="categoria_atracao_id" name="categoria_atracao_id" required>
                                     <option value="">Selecione...</option>
                                     <?php
                                     geraOpcao("categoria_atracoes")
@@ -52,8 +52,8 @@ include "includes/menu_interno.php";
                             </div>
 
                             <div class="form-group">
-                                <label for="classificacao_indicativa_id">Classificação indicativa</label>
-                                <select class="form-control" id="classificacao_indicativa_id" name="classificacao_indicativa_id">
+                                <label for="classificacao_indicativa_id">Classificação indicativa *</label>
+                                <select class="form-control" id="classificacao_indicativa_id" name="classificacao_indicativa_id" required>
                                     <option value="">Selecione...</option>
                                     <?php
                                     geraOpcao("classificacao_indicativas")
@@ -77,12 +77,12 @@ include "includes/menu_interno.php";
 
                             <div class="row ">
                                 <div class="form-group col-md-6">
-                                    <label for="quantidade_apresentacao">Quantidade de Apresentação</label>
-                                    <input type="number" class="form-control" id="quantidade_apresentacao" name="quantidade_apresentacao" maxlength="2">
+                                    <label for="quantidade_apresentacao">Quantidade de Apresentação *</label>
+                                    <input type="number" class="form-control" id="quantidade_apresentacao" name="quantidade_apresentacao" maxlength="2" required>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="valor_individual">Valor</label>
-                                    <input type="text" id="valor_individual" name="valor_individual" class="form-control">
+                                    <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não houver valor</i>
+                                    <input type="text" id="valor_individual" name="valor_individual" class="form-control" required>
                                 </div>
                             </div>
                         </div>
