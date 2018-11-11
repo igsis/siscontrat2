@@ -86,7 +86,8 @@ if (isset($_POST['cadastra'])){
                              (pessoa_fisica_id, banco_id, agencia, conta)
                              VALUES ('$idPf','$banco','$agencia','$conta')";
                         if (mysqli_query($con, $sqlBanco)){
-                            $sql_pedido = "INSERT INTO pedidos (origem_tipo_id,pessoa_tipo_id,pessoa_fisica_id) VALUES ('1','1','$idPf')";
+                            $idEvento = $_SESSION['idEvento'];
+                            $sql_pedido = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id,pessoa_fisica_id) VALUES ('1', '$idEvento','1','$idPf')";
                             if(mysqli_query($con,$sql_pedido)){
                                 $idPedido = recuperaUltimo("pedidos");
                                 $_SESSION['idPedido'] = $idPedido;
