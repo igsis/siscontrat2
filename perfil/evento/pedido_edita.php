@@ -2,9 +2,27 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
-$idPedido = $_SESSION['idEvento'];//provisório
+$idPedido = $_SESSION['idPedido'];//provisório
 //$idPedido = $_POST['idPedido'];
 $pedido = recuperaDados("pedidos","id",$idPedido);
+if($pedido['pessoa_tipo_id'] == 2){
+    $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
+    $proponente = $pj['razao_social'];
+    $idProponente = $pj['id'];
+    $link_edita = "?perfil=evento&p=pj_edita";
+    $link_troca = "?perfil=evento&p=pj_pesquisa";
+}
+else{
+    $pf = recuperaDados("pessoa_fisicas","id",$pedido['pessoa_fisica_id']);
+    $proponente = $pf['nome'];
+    $idProponente = $pf['id'];
+    $link_edita = "?perfil=evento&p=pj_edita";
+    $link_troca = "?perfil=evento&p=pj_pesquisa";
+}
+
+if(isset($_POST['edita'])){
+    
+}
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -24,33 +42,38 @@ $pedido = recuperaDados("pedidos","id",$idPedido);
                     </div>
                     <div class="box-body">
                         <div class="row">
-                            <div class="form-group col-md-10">
+                            <div class="form-group col-md-8">
                                 <label for="proponente">Proponente</label>
-                                <input type="text" id="proponente" name="proponente" class="form-control" disabled>
+                                <input type="text" id="proponente" name="proponente" class="form-control" disabled value="<?= $proponente ?>">
                             </div>
-                            <div class="form-group col-md-2"><br>
-                                <form method="POST" action="?perfil=evento&p=###" role="form">
-                                    <button type="submit" name = "trocar" class="btn btn-primary pull-right">Trocar de Proponente</button>
+                            <div class="form-group col-md-2"><label><br></label>
+                                <form method="POST" action="<?= $link_edita ?>" role="form">
+                                    <button type="submit" name = "trocar" class="btn btn-primary btn-block">Editar Proponente</button>
+                                </form>
+                            </div>
+                            <div class="form-group col-md-2"><label><br></label>
+                                <form method="POST" action="<?= $link_troca ?>" role="form">
+                                    <button type="submit" name = "trocar" class="btn btn-primary btn-block">Trocar de Proponente</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- líderes -->
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Líderes</h3>
-                    </div>
-                    <div class="box-body">
-                        <?php
-                        //if($pedido['pessoa_tipo_id'] == 2){
-                            $sql_atracao = "SELECT * FROM atracao_eventos AS e 
+                <?php
+                //if($pedido['pessoa_tipo_id'] == 2){
+                $sql_atracao = "SELECT * FROM atracao_eventos AS e 
                                             INNER JOIN atracoes a on e.atracao_id = a.id 
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
                                             WHERE evento_id = '".$_SESSION['idEvento']."'";
-                            $query_atracao = mysqli_query($con,$sql_atracao);
-                        ?>
+                $query_atracao = mysqli_query($con,$sql_atracao);
+                ?>
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Líder</h3>
+                        </div>
+                        <div class="box-body">
                             <table class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
@@ -88,11 +111,11 @@ $pedido = recuperaDados("pedidos","id",$idPedido);
                                 echo "</tbody>";
                                 ?>
                             </table>
-                        <?php
-                        //}
-                        ?>
+                        </div>
                     </div>
-                </div>
+                <?php
+                //}
+                ?>
                 <!-- parecer -->
                 <div class="box box-info">
                     <div class="box-header with-border">
@@ -142,6 +165,7 @@ $pedido = recuperaDados("pedidos","id",$idPedido);
                                     <label for="numero_parcelas">Número de Parcelas</label>
                                     <select class="form-control" id="numero_parcelas" name="numero_parcelas">
                                         <option value="">Selecione...</option>
+                                        <option value="1">Única</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
@@ -166,7 +190,7 @@ $pedido = recuperaDados("pedidos","id",$idPedido);
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="submit" name = "edita" class="btn btn-info pull-right">Gravar</button>
+                            <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>
                     </form>
                 </div>

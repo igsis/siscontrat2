@@ -80,8 +80,8 @@ include "includes/menu_interno.php";
                                     </select>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="suplente">Suplente</label>
-                                    <select class="form-control" id="suplente" name="suplente">
+                                    <label for="suplente">Suplente *</label>
+                                    <select class="form-control" id="suplente" name="suplente" required>
                                         <option value="">Selecione um suplente...</option>
                                         <?php
                                         geraOpcaoUsuario("usuarios", 1, "");
