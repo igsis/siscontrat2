@@ -1,10 +1,10 @@
 <?php
 
 $con = bancoMysqli();
-// include "includes/menu_interno.php";
+include "includes/menu_interno.php";
 unset($_SESSION['idPf_pedido']);
 
-include "includes/menu_pf.php";
+//include "includes/menu_pf.php";
 
 $exibir = ' ';
 $resultado = "<td></td>";

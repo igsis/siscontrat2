@@ -1,7 +1,7 @@
 <?php
 
 $con = bancoMysqli();
-include "includes/menu_pf.php";
+include "includes/menu_interno.php";
 
 if(isset($_POST['adicionar'])){
 

@@ -57,7 +57,7 @@ if (isset($_POST['cadastra'])){
 
         $idPf = recuperaUltimo("pessoa_fisicas");
 
-        $_SESSION['idPf_pedido'] =  $idPf;
+        //$_SESSION['idPf_pedido'] =  $idPf;
 
         $sqlEnd = "INSERT INTO siscontrat.pf_enderecos
                           (pessoa_fisica_id, logradouro, numero,complemento, bairro, cidade, uf, cep)
@@ -86,7 +86,17 @@ if (isset($_POST['cadastra'])){
                              (pessoa_fisica_id, banco_id, agencia, conta)
                              VALUES ('$idPf','$banco','$agencia','$conta')";
                         if (mysqli_query($con, $sqlBanco)){
-                            $mensagem = mensagem("success","Cadastro realizado com sucesso.");
+                            $sql_pedido = "INSERT INTO pedidos (origem_tipo_id,pessoa_tipo_id,pessoa_fisica_id) VALUES ('1','1','$idPf')";
+                            if(mysqli_query($con,$sql_pedido)){
+                                $idPedido = recuperaUltimo("pedidos");
+                                $_SESSION['idPedido'] = $idPedido;
+                                $mensagem = mensagem("success","Cadastro realizado com sucesso.");
+                                echo "<meta http-equiv='refresh' content='0.5, url=?perfil=evento&p=pedido_edita'>";
+                            }
+                            else{
+                                $mensagem = mensagem("danger","Erro ao inserir banco: ". die(mysqli_error($con)));
+                            }
+
                         }else{
                             $mensagem = mensagem("danger","Erro ao inserir banco: ". die(mysqli_error($con)));
                         }
