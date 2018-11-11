@@ -4,6 +4,29 @@ $con = bancoMysqli();
 
 $idPedido = $_SESSION['idPedido'];//provisório
 //$idPedido = $_POST['idPedido'];
+
+if(isset($_POST['edita'])){
+    $verba_id = $_POST['verba_id'];
+    $valor_total = dinheiroDeBr($_POST['valor_total']);
+    $numero_parcelas = $_POST['numero_parcelas'];
+    $data_kit_pagamento = $_POST['data_kit_pagamento'];
+    $forma_pagamento = $_POST['forma_pagamento'];
+    $justificativa = $_POST['justificativa'];
+    $observacao = $_POST['observacao'];
+
+    $sql_edita = "UPDATE pedidos SET verba_id = '$verba_id', valor_total = '$valor_total', numero_parcelas = '$numero_parcelas', data_kit_pagamento = '$data_kit_pagamento', forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
+    if(mysqli_query($con,$sql_edita)){
+        $mensagem = mensagem("success","Gravado com sucesso.");
+    }
+    else{
+        $mensagem = mensagem("danger","Erro ao gravar: ". die(mysqli_error($con)));
+    }
+}
+
+if(isset($_POST['carregar'])){
+    $idPedido = $_POST['idPedido'];
+}
+
 $pedido = recuperaDados("pedidos","id",$idPedido);
 if($pedido['pessoa_tipo_id'] == 2){
     $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
@@ -18,10 +41,6 @@ else{
     $idProponente = $pf['id'];
     $link_edita = "?perfil=evento&p=pj_edita";
     $link_troca = "?perfil=evento&p=pj_pesquisa";
-}
-
-if(isset($_POST['edita'])){
-    
 }
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -39,6 +58,9 @@ if(isset($_POST['edita'])){
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Cadastro de Proponente</h3>
+                    </div>
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem)){echo $mensagem;};?>
                     </div>
                     <div class="box-body">
                         <div class="row">
@@ -153,13 +175,13 @@ if(isset($_POST['edita'])){
                                     <select class="form-control" id="verba_id" name="verba_id">
                                         <option value="">Selecione...</option>
                                         <?php
-                                        geraOpcao("verbas","")
+                                        geraOpcao("verbas",$pedido['verba_id'])
                                         ?>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="valor_total">Valor Total</label>
-                                    <input type="text" id="valor_total" name="valor_total" class="form-control">
+                                    <input type="text" id="valor_total" name="valor_total" class="form-control" value="<?= $pedido['valor_total'] ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="numero_parcelas">Número de Parcelas</label>
@@ -170,22 +192,22 @@ if(isset($_POST['edita'])){
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="data_kit_pagamento">Data Kit Pagamento</label>
-                                    <input type="date" id="data_kit_pagamento" name="data_kit_pagamento" class="form-control">
+                                    <input type="date" id="data_kit_pagamento" name="data_kit_pagamento" class="form-control" value="<?= $pedido['data_kit_pagamento'] ?>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="forma_pagamento">Forma de pagamento</label><br/>
-                                    <textarea id="forma_pagamento" name="forma_pagamento" class="form-control" rows="8"></textarea>
+                                    <textarea id="forma_pagamento" name="forma_pagamento" class="form-control" rows="8"><?= $pedido['forma_pagamento'] ?></textarea>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="justificativa">Justificativa</label><br/>
-                                    <textarea id="justificativa" name="justificativa" class="form-control" rows="8"></textarea>
+                                    <textarea id="justificativa" name="justificativa" class="form-control" rows="8"><?= $pedido['justificativa'] ?></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="observacao">Observação</label>
-                                <input type="text" id="observacao" name="observacao" class="form-control" maxlength="255">
+                                <input type="text" id="observacao" name="observacao" class="form-control" maxlength="255" value="<?= $pedido['observacao'] ?>">
                             </div>
                         </div>
                         <!-- /.box-body -->
@@ -204,3 +226,7 @@ if(isset($_POST['edita'])){
     </section>
     <!-- /.content -->
 </div>
+
+<script>
+    $('#valor_total').mask('000.000.000.000.000,00', {reverse: true});
+</script>

@@ -3,7 +3,7 @@ include "includes/menu_interno.php";
 
 $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
-$sql = "SELECT id FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
+$sql = "SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
 $query = mysqli_query($con,$sql);
 $num = mysqli_num_rows($query);
 ?>
@@ -51,33 +51,46 @@ $num = mysqli_num_rows($query);
                              * Caso haja pedido de contratração
                              */
                         ?>
-                            <table id="example1" class="table table-bordered table-striped">
+                            <table class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>Pedido</th>
                                     <th>Proponente</th>
                                     <th>Atração</th>
-                                    <th>Anexos</th>
-                                    <th colspan="2" width="10%">Ação</th>
+                                    <th width="15%">Anexos</th>
+                                    <th width="15%">Ação</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                    <!-- Início da preparação da lista -->
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tbody>
-                                <tfoot>
-                                <tr>
-                                    <th>Pedido</th>
-                                    <th>Proponente</th>
-                                    <th>Atração</th>
-                                    <th>Anexos</th>
-                                    <th colspan="2" width="10%">Ação</th>
-                                </tr>
-                                </tfoot>
+                                <?php
+                                echo "<body>";
+                                while ($pedido = mysqli_fetch_array($query)) {
+                                    echo "<tr>";
+                                    echo "<td>" . $pedido['id'] . "</td>";
+                                    if($pedido['pessoa_tipo_id'] == 2){
+                                        $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
+                                        echo "<td>".$pj['razao_social']."</td>";
+                                    }
+                                    else{
+                                        $pf = recuperaDados("pessoa_fisicas","id",$pedido['pessoa_fisica_id']);
+                                        echo "<td>".$pf['nome']."</td>";
+                                    }
+                                    echo "<td>ATRAÇÃO AQUI</td>";
+                                    echo "<td>
+                                        <form method=\"POST\" action=\"?perfil=evento&p=pedido_anexo\" role=\"form\">
+                                        <input type='hidden' name='idPedido' value='".$pedido['id']."'>
+                                        <button type=\"submit\" name='carregar' class=\"btn btn-primary btn-block\">Anexos do pedido</button>
+                                        </form>
+                                        </td>";
+                                    echo "<td>
+                                        <form method=\"POST\" action=\"?perfil=evento&p=pedido_edita\" role=\"form\">
+                                        <input type='hidden' name='idPedido' value='".$pedido['id']."'>
+                                        <button type=\"submit\" name='carregar' class=\"btn btn-primary btn-block\">Editar pedido</button>
+                                        </form>
+                                        </td>";
+                                    echo "</tr>";
+                                }
+                                echo "</body>";
+                                ?>
                             </table>
                         <?php
                         }
