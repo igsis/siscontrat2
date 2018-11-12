@@ -66,7 +66,7 @@ if(isset($_POST['adicionar'])){
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="passaporte" id="documento">Passaporte: </label>
-                                    <input type="text" name="passaporte" class="form-control" value="<?= $documento?>">
+                                    <input type="text" name="passaporte" class="form-control" value="<?= $documento?>" readonly>
                                 </div>
                                 <?php }?>
                                 <div class="form-group col-md-6">

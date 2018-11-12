@@ -4,19 +4,17 @@ $con = bancoMysqli();
 include "includes/menu_interno.php";
 unset($_SESSION['idPf_pedido']);
 
-//include "includes/menu_pf.php";
 
 $exibir = ' ';
 $resultado = "<td></td>";
 $procurar = NULL;
-
-
+$tipoDocumento = null;
 
 
 if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
 
     $procurar = $_POST['procurar'] ?? $_POST['passaporte'];
-    $tipoDocumento = $_POST['tipoDocumento'];
+    $tipoDocumento = $_POST['tipoDocumento'] ?? false;
 
     if ($procurar != NULL ) {
 
@@ -77,8 +75,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                             FROM siscontrat.`pessoa_fisicas`
                             WHERE passaporte = '$procurar'";
 
-                            echo "<pre>".$queryPassaporte ."</pre>";
-
                 if ($result = mysqli_query($con, $queryPassaporte)) {
 
                     $resultPassaporte = mysqli_num_rows($result);
@@ -94,9 +90,9 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                             $resultado .= "<td>" . $pessoa['passaporte'] . "</td>";
                             $resultado .= "<td>" . $pessoa['email'] . "</td>";
                             $resultado .= "<td>
-                                     <form action='#' method='post'>
+                                     <form action='?perfil=evento&p=pf_edita' method='post'>
                                         <input type='hidden' name='idPessoa' value='" . $pessoa['id'] . "'>
-                                        <input class='btn btn-primary' name='selecionar' value='Selecionar'>
+                                        <input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>
                                      </form>
                                </td>";
                             $resultado .= "</tr>";
@@ -155,7 +151,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="procurar" value="<?=$procurar?>" id="cpf">
+                                    <input type="text" class="form-control" minlength=14 name="procurar" value="<?=$procurar?>" id="cpf">
                                     <input type="text" class="form-control" name="passaporte" value="<?=$procurar?>" >
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
@@ -171,7 +167,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                                     <thead>
                                         <tr>
                                             <th>Nome</th>
-                                            <th>CPF</th>
+                                            <th id="trocaDoc">CPF</th>
                                             <th>E-mail</th>
                                         </tr>
                                     </thead>
@@ -205,12 +201,26 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
 </div>
 
 <script>
-
     let tipos = document.querySelectorAll("input[type='radio'][name='tipoDocumento']");
     let passaporte = document.querySelector("input[name='passaporte']");
     let procurar = document.querySelector("input[name='procurar']");
+    let trocaDoc = document.querySelector("#trocaDoc");
 
-    passaporte.style.display = 'none' 
+    
+    if (`<?=$tipoDocumento?>` == 2) {
+        trocaDoc.innerHTML = 'Passaporte'
+        tipos[1].checked = true
+        passaporte.style.display = 'block'
+        passaporte.disabled = false
+        procurar.disabled = true
+        procurar.style.display = 'none'
+
+    }else{
+        passaporte.style.display = 'none' 
+        passaporte.disabled = true   
+
+    }
+
 
     for (const tipo of tipos) {
         tipo.addEventListener('change', e => {
@@ -220,10 +230,15 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
 
             if(e.target.value == 1){
                 passaporte.style.display = 'none'
+                procurar.disabled = false
+                passaporte.disabled = true                
                 procurar.style.display = 'block'
             }else{
                 passaporte.style.display = 'block'
+                passaporte.disabled = false
+                procurar.disabled = true
                 procurar.style.display = 'none'
+                
             }            
         })
     }
