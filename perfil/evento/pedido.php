@@ -74,7 +74,24 @@ $num = mysqli_num_rows($query);
                                         $pf = recuperaDados("pessoa_fisicas","id",$pedido['pessoa_fisica_id']);
                                         echo "<td>".$pf['nome']."</td>";
                                     }
-                                    echo "<td>ATRAÇÃO AQUI</td>";
+                                    echo "<td>";
+                                        $idAtracao = $pedido['origem_id'];
+                                        $atracao_evento = recuperaDados("atracao_eventos","atracao_id",$idAtracao);
+                                        $atracao_id = $atracao_evento['atracao_id'];
+                                        $sql_atracao = "SELECT nome_atracao FROM atracoes WHERE id = '$atracao_id'";
+                                        $query_atracao = mysqli_query($con,$sql_atracao);
+                                        //$arr_atracao = mysqli_fetch_array($query_atracao);
+                                        while ($arr = mysqli_fetch_array($query_atracao)){
+                                            $nome = $arr['nome_atracao'];
+                                            echo $nome."<br/>";
+                                        }
+                                        //var_dump( $arr_atracao);
+                                        /*foreach ($arr_atracao as $idAtracao) {
+                                            $atracao = recuperaDados("atracoes", "id",$idAtracao);
+                                            $nome = $atracao['nome_atracao'];
+                                            echo $nome."<br>";
+                                        }*/
+                                    echo "</td>";
                                     echo "<td>
                                         <form method=\"POST\" action=\"?perfil=evento&p=pedido_anexo\" role=\"form\">
                                         <input type='hidden' name='idPedido' value='".$pedido['id']."'>
