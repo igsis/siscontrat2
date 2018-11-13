@@ -30,7 +30,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="tipo">Este evento é cinema?</label> <br>
-                                    <label><input type="radio" name="tipo" value="3"> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="tipo" value="2"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="tipo" value="1" checked> Não </label>
                                 </div>
                             </div>
