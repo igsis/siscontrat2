@@ -2,16 +2,41 @@
 include "includes/menu_interno.php";
 
 $con = bancoMysqli();
+$conn = bancoPDO();
+
+if(isset($_POST['duplicar'])){
+    $idProjeto = $_POST['idProjeto'];
+    $numeroDuplica = $_POST['numeroDuplica'];
+    
+    $sqlProjeto = "SELECT * FROM siscontrat.ocorrencias WHERE id = :id";
+
+    $stmt = $conn->prepare($sqlProjeto);
+    $stmt->bindValue(':id', $idProjeto);
+    $stmt->execute();
+    $cloneOcorrencia = $stmt->fetch();
+    // echo "<pre>";
+    // $inserir = "INSERT INTO tbl_name (tipo_ocorrencia_id, origem_ocorrencia_id, instituicao_id, local_id, espaco_id, data_inicio, data_fim, segunda, terca, quarta, quinta, sexta, sabado, domingo, horario_inicio, horario_fim, retirada_ingresso_id, valor_ingresso, observacao, publicado) "; 
+
+    // $stmt2 = $conn->prepare($inserir);
+    // $stmt2->bindParam(':cmp1',$campo1);
+    
+
+    // print_r(($cloneOcorrencia));
+    // print_r($cloneOcorrencia);
+    // echo "</pre>";
+
+}
 
 $evento = recuperaDados('eventos', 'id', $_SESSION['idEvento']);
 
 $tipo_ocorrencia_id = $evento['tipo_evento_id'];
 
-$idOrigem = $_POST['idOrigem'];
+$idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
 
 $sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim FROM ocorrencias as o
         INNER JOIN  locais as l ON o.local_id = l.id
         WHERE o.origem_ocorrencia_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id'";
+        
 
 $query = mysqli_query($con,$sql);
 ?>
@@ -70,7 +95,7 @@ $query = mysqli_query($con,$sql);
                                 
                                 echo "<td>
                                     <input type='hidden' name='idOcorrencia'>
-                                    <buttonn class='btn btn-info' data-toggle='modal' data-target='#duplica' data-ocorrencia-id='".$ocorrencia['id']."' data-tittle='Duplicando ocorrência' data-message='Digite o número de vezes que deseja duplicar a ocorrência: '>Duplicar</buttonn>
+                                    <buttonn class='btn btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='".$ocorrencia['id']."' data-tittle='Duplicando ocorrência' data-message='Digite o número de vezes que deseja duplicar a ocorrência: '>Duplicar</buttonn>
                                 </td>";
 
                                 echo "<td>
@@ -98,10 +123,10 @@ $query = mysqli_query($con,$sql);
 </div>
 
 <!-- Duplicando o correncias -->
-<div class="modal fade" id="duplica" role="dialog" aria-labelledby="duplicar" aria-hidden="true">
+<div class="modal fade" id="duplicar" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" id='cancelarProjeto' action="?perfil=smc_detalhes_projeto" class="form-horizontal" role="form">
+            <form method="POST" id='formDuplicar' action="?perfil=evento&p=ocorrencia_lista" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title"><p> Duplicando ocorrência</p></h4>
@@ -111,9 +136,10 @@ $query = mysqli_query($con,$sql);
                     <input type="number" min="1" max="10" name="numeroDuplica" class="form-control" required>
                 </div>
                 <div class="modal-footer">
-                    <input type='hidden' name='idProjeto' value='<?php echo "sasd" ?>'>
+                    <input type='hidden' name='idProjeto'> <!-- vem pelo js -->
+                    <input type='hidden' name='idOrigemModal' value="<?=$idOrigem?>">                     
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type='submit' class='btn btn-info btn-sm' style="border-radius: 10px;" name="duplicar">Confirmar</button>
+                    <button type='submit' class='btn btn-info btn-sm' name="duplicar">Confirmar</button>
                 </div>
             </form>
         </div>
@@ -122,10 +148,10 @@ $query = mysqli_query($con,$sql);
 
 <script type="text/javascript">
 
-    $('#duplicar').on('show.bs.modal', function (e)
+    $('#duplicar').on('show.bs.modal', (e) =>
     {
-        let id = $(e.relatedTarget).attr('data-ocorrencia-id');
-        console.log(id);
+        document.querySelector('#formDuplicar input[name="idProjeto"]').value = e.relatedTarget.dataset.ocorrenciaId
+
     });
 
 </script>
