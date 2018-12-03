@@ -4,6 +4,10 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
 
+if(isset($_POST['apagarOcorrencia'])){
+
+}
+
 if(isset($_POST['duplicar'])){
     $idProjeto = $_POST['idProjeto'];
     $numeroDuplica = $_POST['numeroDuplica'];
@@ -14,16 +18,26 @@ if(isset($_POST['duplicar'])){
     $stmt->bindValue(':id', $idProjeto);
     $stmt->execute();
     $cloneOcorrencia = $stmt->fetch();
-    // echo "<pre>";
-    // $inserir = "INSERT INTO tbl_name (tipo_ocorrencia_id, origem_ocorrencia_id, instituicao_id, local_id, espaco_id, data_inicio, data_fim, segunda, terca, quarta, quinta, sexta, sabado, domingo, horario_inicio, horario_fim, retirada_ingresso_id, valor_ingresso, observacao, publicado) "; 
 
-    // $stmt2 = $conn->prepare($inserir);
-    // $stmt2->bindParam(':cmp1',$campo1);
+    array_shift($cloneOcorrencia);
+    $inserir = "INSERT INTO siscontrat.ocorrencias 
+            (" . implode(',', array_keys($cloneOcorrencia)). ") VALUES 
+            (" . sprintf( "'%s'", implode( "','", $cloneOcorrencia )).")";
+
+    for ($i=0; $i < $numeroDuplica; $i++) { 
+        if($conn->exec($inserir)){
+            $sucesso = true;
+        }else{
+            $sucesso = false;
+        }
+    }
+
+    if($sucesso){
+        $mensagem = mensagem("success","$numeroDuplica Ocorrência(s) replicada(s) com sucesso!");
     
-
-    // print_r(($cloneOcorrencia));
-    // print_r($cloneOcorrencia);
-    // echo "</pre>";
+    }else{
+        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
+    }
 
 }
 
@@ -62,7 +76,9 @@ $query = mysqli_query($con,$sql);
                     <div class="box-header">
                         <h3 class="box-title">Listagem</h3>
                     </div>
-
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                    </div>
                     <div class="box-body">
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
