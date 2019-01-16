@@ -5,6 +5,19 @@ $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
+
+if(isset($_POST['apagar'])){
+
+    $idAtracao = $_POST['idAtracao'];
+
+    $consulta = "UPDATE atracoes SET publicado = 0 WHERE id = '$idAtracao'";
+
+    if($query = mysqli_query($con,$consulta)){
+        $mensagem = mensagem("success","Atração apagada com sucesso");
+    }else{
+        $mensagem = mensagem("danger","Erro ao tentar executar operação na atração");
+    }
+}
     
 $sql = "SELECT at.id AS idAtracao, nome_atracao, a2.categoria_atracao,produtor_id,at.categoria_atracao_id FROM atracoes AS at
         INNER JOIN atracao_eventos a on at.id = a.atracao_id
@@ -13,6 +26,7 @@ $sql = "SELECT at.id AS idAtracao, nome_atracao, a2.categoria_atracao,produtor_i
 $query = mysqli_query($con,$sql);
 
 include "includes/menu_interno.php";
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -36,6 +50,7 @@ include "includes/menu_interno.php";
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">Listagem</h3>
+                        <?php if (isset($mensagem)){echo $mensagem;} ?>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -201,7 +216,10 @@ include "includes/menu_interno.php";
                                     </form>
                                 </td>";
                                 echo "<td>
-                                    <button type=\"button\" class=\"btn btn-block btn-danger\">Apagar</button>
+                                    <form method='post' action='?perfil=evento&p=atracoes_lista'>
+                                        <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
+                                        <button type='submit' name='apagar' class=\"btn btn-block btn-danger\">Apagar</button>
+                                    </form>
                                   </td>";
                                 echo "</tr>";
                             }
