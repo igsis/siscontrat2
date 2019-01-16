@@ -4,7 +4,17 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-if(isset($_POST['apagarOcorrencia'])){
+if(isset($_POST['apagar'])){
+
+    $idOcorrencia = $_POST['idOcorrenciaApaga'];
+
+    $sql ="UPDATE siscontrat.ocorrencias SET publicado = 0 WHERE id = '$idOcorrencia'";
+
+    if (mysqli_query($con,$sql)){
+        $mensagem = mensagem("success","Ocorrência apagada com sucesso");
+    }else{
+        $mensagem = mensagem("danger","Erro ao tentar apagar ocorrência. Tente novamente!");
+    }
 
 }
 
@@ -49,7 +59,7 @@ $idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
 
 $sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim FROM ocorrencias as o
         INNER JOIN  locais as l ON o.local_id = l.id
-        WHERE o.origem_ocorrencia_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id'";
+        WHERE o.origem_ocorrencia_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id' AND o.publicado = 1";
         
 
 $query = mysqli_query($con,$sql);
@@ -115,7 +125,7 @@ $query = mysqli_query($con,$sql);
                                 </td>";
 
                                 echo "<td>
-                                    <button type=\"button\" class=\"btn btn-block btn-danger\">Apagar</button>
+                                    <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-id='".$ocorrencia['id']."' data-tittle='Apagar ocorrência' data-message='Deseja mesmo pagar está ocorrências' onClick='setarIdOcorrencia(".$ocorrencia['id'].")'>Apagar</button>
                                   </td>";
                                 echo "</tr>";
                             }
@@ -138,7 +148,7 @@ $query = mysqli_query($con,$sql);
     </section>
 </div>
 
-<!-- Duplicando o correncias -->
+<!-- Duplicando ocorrencias -->
 <div class="modal fade" id="duplicar" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -153,9 +163,32 @@ $query = mysqli_query($con,$sql);
                 </div>
                 <div class="modal-footer">
                     <input type='hidden' name='idProjeto'> <!-- vem pelo js -->
-                    <input type='hidden' name='idOrigemModal' value="<?=$idOrigem?>">                     
+                    <input type='hidden' name='idOrigemModal' value="<?=$idOrigem?>">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                     <button type='submit' class='btn btn-info btn-sm' name="duplicar">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Apagar ocorrência-->
+<div class="modal fade" id="apagar" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" id='formApagar' action="?perfil=evento&p=ocorrencia_lista" class="form-horizontal" role="form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><p> Apagar ocorrência</p></h4>
+                </div>
+                <div class="modal-body">
+                    <p>Deseja mesmo pagar está ocorrências? </p>
+                </div>
+                <div class="modal-footer">
+                        <input type="hidden" name="idOcorrenciaApaga">
+                        <input type='hidden' name='idOrigemModal' value="<?=$idOrigem?>">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type='submit' class='btn btn-info btn-sm' name="apagar">Confirmar</button>
                 </div>
             </form>
         </div>
@@ -169,5 +202,10 @@ $query = mysqli_query($con,$sql);
         document.querySelector('#formDuplicar input[name="idProjeto"]').value = e.relatedTarget.dataset.ocorrenciaId
 
     });
+
+    function setarIdOcorrencia(valor) {
+        document.querySelector('#formApagar input[name="idOcorrenciaApaga"]').value = valor;
+    }
+
 
 </script>
