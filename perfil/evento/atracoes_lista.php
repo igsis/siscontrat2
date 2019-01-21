@@ -50,8 +50,9 @@ include "includes/menu_interno.php";
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">Listagem</h3>
-                        <?php if (isset($mensagem)){echo $mensagem;} ?>
                     </div>
+
+                    <?php if (isset($mensagem)){echo $mensagem;} ?>
                     <!-- /.box-header -->
                     <div class="box-body">
                         <table id="example1" class="table table-bordered table-striped">
@@ -216,10 +217,8 @@ include "includes/menu_interno.php";
                                     </form>
                                 </td>";
                                 echo "<td>
-                                    <form method='post' action='?perfil=evento&p=atracoes_lista'>
-                                        <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                        <button type='submit' name='apagar' class=\"btn btn-block btn-danger\">Apagar</button>
-                                    </form>
+                                        
+                                        <buttonn class='btn btn-danger' data-toggle='modal' data-target='#apagar' data-ocorrencia-id='".$atracao['idAtracao']."' data-tittle='Apagar Atração' data-message='Você deseja mesmo apagar essa atração?' onclick ='passarId(".$atracao['idAtracao'].")'>Apagar</buttonn>
                                   </td>";
                                 echo "</tr>";
                             }
@@ -249,3 +248,32 @@ include "includes/menu_interno.php";
     </section>
     <!-- /.content -->
 </div>
+
+<!--Apagar ocorrência-->
+<div class="modal fade" id="apagar" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" id='formApagar' action="?perfil=evento&p=atracoes_lista" class="form-horizontal" role="form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><p> Apagar atração</p></h4>
+                </div>
+                <div class="modal-body">
+                    <p>Deseja mesmo pagar está atração? </p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="idAtracao">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type='submit' class='btn btn-info btn-sm' name="apagar">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function passarId(id) {
+        document.querySelector('#formApagar input[name="idAtracao"]').value = id;
+    }
+</script>
