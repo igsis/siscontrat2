@@ -2,8 +2,13 @@
 include "includes/menu_pj.php";
 $con = bancoMysqli();
 ?>
-<script language="JavaScript" >
-    $("#cep").mask('00000-000', {reverse: true});
+
+<script>
+    $(document).ready(function () {
+        $("#cep").mask('00000-000', {reverse: true});
+        $("#telefone").mask('(00) 0000-00009', {reverse: true});
+    });
+
 </script>
 <div class="content-wrapper">
     <section class="content">
@@ -48,7 +53,7 @@ $con = bancoMysqli();
 
                                 <div class="form-group col-md-4">
                                     <label for="telefone">Telefone: </label>
-                                    <input type="text" class="form-control" id="telefone" name="telefone" required>
+                                    <input type="text" class="form-control" id="telefone" name="telefone" required data-mask="(00) 0000-00000">
                                 </div>
                             </div>
 
@@ -57,7 +62,7 @@ $con = bancoMysqli();
                                 <div class="form-group col-md-3">
                                     <label for="cep">CEP: </label>
                                     <input type="text" class="form-control" id="cep" name="cep"
-                                           maxlength="100" required>
+                                           maxlength="100" required data-mask="00000-000">
                                 </div>
 
                                 <div class="form-group col-md-5">

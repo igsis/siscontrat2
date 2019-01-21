@@ -156,6 +156,14 @@ $observacao = recuperaDados("pf_observacoes","pessoa_fisica_id",$idPf);
 $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
 
 ?>
+
+<script>
+    $(document).ready(function () {
+        $("#cep").mask('00000-000', {reverse: true});
+        $("#telefone").mask('(00) 0000-00009', {reverse: true});
+    });
+
+</script>
 <script language="JavaScript" >
     function barraData(n){
         if(n.value.length==2)
@@ -163,8 +171,6 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
         if(n.value.length==5)
             c.value += '/';
     }
-
-    $("#cep").mask('00000-000', {reverse: true});
 </script>
 
 <!-- Content Wrapper. Contains page content -->
@@ -242,7 +248,7 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="cep">CEP: *</label>
-                                    <input type="text" class="form-control" name="cep" id="cep" maxlength="9" placeholder="Digite o CEP" required value="<?=$endereco['cep']?>">
+                                    <input type="text" class="form-control" name="cep" id="cep" maxlength="9" placeholder="Digite o CEP" required value="<?=$endereco['cep']?>" data-mask="00000-000">
                                 </div>
                             </div>
                             <div class="row">
@@ -293,7 +299,7 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label for="telefone[]">Telefone #<?=$x?>:</label>
-                                        <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15" value="<?= $telefone['telefone']?>">
+                                        <input type="text" name="telefone[]" id="telefone" class="form-control" placeholder="Digite o telefone" required maxlength="15" value="<?= $telefone['telefone']?>" data-mask="(00) 0000-00009">
                                     </div>
                                 </div>
                                 <?php

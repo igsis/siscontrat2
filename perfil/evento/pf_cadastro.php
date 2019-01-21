@@ -10,6 +10,14 @@ if(isset($_POST['adicionar'])){
 
 }
 ?>
+
+<script>
+    $(document).ready(function () {
+        $("#cep").mask('00000-000', {reverse: true});
+        $("#telefone").mask('(00) 90000-0000', {reverse: true});
+    });
+
+</script>
 <script language="JavaScript" >
     function barraData(n){
         if(n.value.length==2)
@@ -18,7 +26,7 @@ if(isset($_POST['adicionar'])){
             c.value += '/';
     }
 
-    $("#cep").mask('00000-000', {reverse: true});
+
 </script>
 
 <!-- Content Wrapper. Contains page content -->
@@ -92,7 +100,7 @@ if(isset($_POST['adicionar'])){
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="cep">CEP: *</label>
-                                    <input type="text" class="form-control" name="cep" id="cep" maxlength="9" placeholder="Digite o CEP" required>
+                                    <input type="text" class="form-control" name="cep" id="cep" maxlength="9" placeholder="Digite o CEP" required data-mask="00000-000">
                                 </div>
                             </div>
                             <div class="row">
@@ -134,19 +142,19 @@ if(isset($_POST['adicionar'])){
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label>Telefone #1:</label>
-                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                    <input type="text" name="telefone[]" id="telefone" class="form-control" placeholder="Digite o telefone" required maxlength="15" data-mask="(00) 0000-00009">
                                 </div>
                             </div>
                             <div class="row" id="telefones">
                                 <div id="phone1" class="form-group col-md-12">
                                     <label>Telefone #2:</label>
-                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" maxlength="15">
+                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" maxlength="15" data-mask="(00) 0000-00009">
                                 </div>
                             </div>
                             <div class="row" id="telefones">
                                 <div class="form-group col-md-12">
                                     <label>Telefone #3:</label>
-                                    <input type="text" name="telefone[]" class="form-control" placeholder="Digite o telefone" maxlength="15">
+                                    <input type="text" name="telefone[]" class="form-control telefone" placeholder="Digite o telefone" maxlength="15" data-mask="(00) 0000-00009">
                                 </div>
                             </div>
 
@@ -156,11 +164,11 @@ if(isset($_POST['adicionar'])){
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="drt">DRT: </label>
-                                    <input type="text" name="drt" class="form-control" maxlength="15" placeholder="Digite o DRT">
+                                    <input type="text" name="drt" class="form-control telefone" maxlength="15" placeholder="Digite o DRT">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="drt">NIT: </label>
-                                    <input type="text" name="nit" class="form-control" maxlength="45" placeholder="Digite o NIT">
+                                    <input type="text" name="nit" class="form-control telefone" maxlength="45" placeholder="Digite o NIT">
                                 </div>
 
                             </div>
@@ -216,7 +224,3 @@ if(isset($_POST['adicionar'])){
     </section>
     <!-- /.content -->
 </div>
-<script>
-
-</script>
-

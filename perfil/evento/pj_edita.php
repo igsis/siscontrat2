@@ -142,8 +142,11 @@ $pj_telefone = recuperaDados("pj_telefones", "pessoa_juridica_id", $idPessoaJuri
 $pj_endereco = recuperaDados("pj_enderecos", "pessoa_juridica_id", $idPessoaJuridica);
 include "includes/menu_pj.php";
 ?>
-<script language="JavaScript" >
-    $("#cep").mask('00000-000', {reverse: true});
+<script>
+    $(document).ready(function () {
+        $("#cep").mask('00000-000', {reverse: true});
+        $("#telefone").mask('(00) 0000-00009', {reverse: true});
+    });
 </script>
 <div class="content-wrapper">
     <section class="content">
@@ -195,7 +198,7 @@ include "includes/menu_pj.php";
                                 <div class="form-group col-md-4">
                                     <label for="telefone">Telefone: </label>
                                     <input type="text" class="form-control" id="telefone" name="telefone" required
-                                           value="<?= $pj_telefone['telefone'] ?>">
+                                           value="<?= $pj_telefone['telefone'] ?>" data-mask="(00) 0000-00000">
                                 </div>
                             </div>
 
@@ -239,7 +242,7 @@ include "includes/menu_pj.php";
                                 <div class="form-group col-md-3">
                                     <label for="cep">CEP: </label>
                                     <input type="text" class="form-control" id="cep" name="cep"
-                                           maxlength="100" required value="<?= $pj_endereco['cep'] ?>">
+                                           maxlength="100" required value="<?= $pj_endereco['cep'] ?>" data-mask="00000-000">
                                 </div>
 
                                 <div class="form-group col-md-5">
