@@ -2,9 +2,6 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
-$idPedido = $_SESSION['idPedido'];//provisório
-//$idPedido = $_POST['idPedido'];
-
 if(isset($_POST['cadastra']) || isset($_POST['edita'])){
     $verba_id = $_POST['verba_id'];
     $valor_total = dinheiroDeBr($_POST['valor_total']);
@@ -20,6 +17,8 @@ if(isset($_POST['cadastra'])){
 }
 
 if(isset($_POST['edita'])){
+
+    $idPedido = $_SESSION['idPedido'];
     $sql_edita = "UPDATE pedidos SET verba_id = '$verba_id', valor_total = '$valor_total', numero_parcelas = '$numero_parcelas', data_kit_pagamento = '$data_kit_pagamento', forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
     if(mysqli_query($con,$sql_edita)){
         $mensagem = mensagem("success","Gravado com sucesso.");
@@ -31,6 +30,7 @@ if(isset($_POST['edita'])){
 
 if(isset($_POST['carregar'])){
     $idPedido = $_POST['idPedido'];
+    $_SESSION['idPedido'] = $idPedido;
 }
 
 $pedido = recuperaDados("pedidos","id",$idPedido);
@@ -56,7 +56,9 @@ else{
 
         <!-- START FORM-->
         <h2 class="page-header">Pedido de Contratação</h2>
-
+        <div class="row" align="center">
+            <?php if(isset($mensagem)){echo $mensagem;};?>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
@@ -121,9 +123,7 @@ else{
                     <div class="box-header with-border">
                         <h3 class="box-title">Cadastro de Proponente</h3>
                     </div>
-                    <div class="row" align="center">
-                        <?php if(isset($mensagem)){echo $mensagem;};?>
-                    </div>
+
                     <div class="box-body">
                         <div class="row">
                             <div class="form-group col-md-8">
@@ -132,7 +132,8 @@ else{
                             </div>
                             <div class="form-group col-md-2"><label><br></label>
                                 <form method="POST" action="<?= $link_edita ?>" role="form">
-                                    <button type="submit" name = "trocar" class="btn btn-primary btn-block">Editar Proponente</button>
+                                    <input type="text" name="idProponente" value="<?= $idProponente ?>">
+                                    <button type="submit" name="editProponente" class="btn btn-primary btn-block">Editar Proponente</button>
                                 </form>
                             </div>
                             <div class="form-group col-md-2"><label><br></label>

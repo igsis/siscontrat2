@@ -70,6 +70,11 @@ if (isset($_POST['procurar'])){
 }
 
 ?>
+<script>
+    $(document).ready(function () {
+        $("#cnpj").mask('00.000.000/0000-00', {reverse: true});
+    });
+</script>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -91,7 +96,7 @@ if (isset($_POST['procurar'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="CNPJ" name="procurar" value="<?=$procurar?>" id="cnpj">
+                                    <input type="text" class="form-control" id="CNPJ" name="procurar" value="<?=$procurar?>" id="cnpj" data-mask="00.000.000/0000-00">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>

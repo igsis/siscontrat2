@@ -5,6 +5,18 @@ $idPessoaJuridica = $_SESSION['idPessoaJuridica'];
 
 $pessoa_juridica = recuperaDados('pessoa_juridicas', 'id', $idPessoaJuridica);
 
+if (isset($_POST['carregar'])){
+    $idRepresentante = $_POST['idRepresentante'];
+    $tipo_representante = $_POST['tipo_representante'];
+
+    if($tipo_representante == 1){
+        $representante = "representante_legal1_id";
+    } else if($tipo_representante == 2){
+        $representante = "representante_legal2_id";
+    }
+
+}
+
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $nome =  addslashes($_POST['nome']);
     $rg = $_POST['rg'];
@@ -30,7 +42,9 @@ if (isset($_POST['cadastra'])) {
 
     if(mysqli_query($con, $sql))
     {
-        $idRepresentante = recuperaUltimo('representante_legais');
+        if ($idRepresentante != NULL) {
+            $idRepresentante = recuperaUltimo('representante_legais');
+        }
         // salvar o represente na pessoa juridica
         $sqlPessoaJuridica = "UPDATE pessoa_juridicas SET $representante = $idRepresentante WHERE id = '$idPessoaJuridica'";
         mysqli_query($con, $sqlPessoaJuridica);
@@ -61,7 +75,11 @@ if(isset($_POST['edita'])){
 $representante = recuperaDados("representante_legais","id",$idRepresentante);
 include "includes/menu_interno.php";
 ?>
-
+<script>
+    $(document).ready(function () {
+       $('#cpf').mask('000.000.000-00',{reverse:true});
+    });
+</script>
 <div class="content-wrapper">
     <section class="content">
 
@@ -95,7 +113,7 @@ include "includes/menu_interno.php";
 
                                 <div class="form-group col-md-3">
                                     <label for="cpf">CPF: </label>
-                                    <input type="text" class="form-control" id="cpf" name="cpf" required value="<?= $representante['cpf']?>" >
+                                    <input type="text" class="form-control" id="cpf" name="cpf" required value="<?= $representante['cpf']?>" data-mask="000.000.000-00" disabled>
                                 </div>
                             </div>
 

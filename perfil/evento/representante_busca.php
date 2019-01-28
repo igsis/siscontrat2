@@ -2,7 +2,7 @@
 
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-
+$idPedido = $_SESSION['idPedido'];
 if(isset($_POST['tipo_representante'])){
     $tipo_representante = $_POST['tipo_representante'];
 
@@ -10,86 +10,103 @@ if(isset($_POST['tipo_representante'])){
 }
 
 if (isset($_POST['pesquisa'])) {
+
     $cpf = $_POST['cpf'];
+    $sql = "SELECT * FROM siscontrat.representante_legais WHERE cpf ='$cpf' LIMIT 1";
+    $query = mysqli_query($con,$sql);
 
-    $representante_legal = recuperaDados("representante_legais", "cpf", $cpf);
+    if(mysqli_num_rows($query)>0){
+        $resultado = mysqli_fetch_array($query);
+        $mensagem = "<form method='post' action='?perfil=evento&p=pj_edita'>
+                        <tr>
+                            <td>".$resultado['nome']."</td>
+                            <td>".$resultado['cpf']."</td>
+                            <td>".$resultado['rg']."</td>
+                            <td>
+                                <input type='text' value='".$resultado['id']."'>
+                                <button type='submit' class='btn btn-primary' name=''>Selecionar</button>
+                            </td>
+                        </tr>
+                    </form>";
 
-    if ($representante_legal == NULL) {
-        $_SESSION['cpfRepresentante'] = $cpf;
-        $mensagem = mensagem("info", "Representante ainda não cadastrado");
-        $cadastrar = true;
-    } else {
-        $mensagem = mensagem("info", $representante_legal['nome']. " já cadastrado");
-        $_SESSION['idRepresentante'] = $representante_legal['id'];
-        $cadastrar = false;
+    }else{
+        $mensagem = "<form action='?perfil=evento&p=representante_cadastro' method='post'>
+                        <tr>
+                            <td>Representante não cadastrado</td>
+                            <td>
+                                <input type='hidden' name='documentacao' value='".$cpf."'>
+                                <button type='submit' class='btn btn-primary' name='adicionar'><i class='glyphicon glyphicon-plus'></i> Adicionar</button>
+                            </td>
+                        </tr>
+                     </form>";
     }
 }
 
 ?>
-
+<script>
+    $(document).ready(function () {
+        $('#cpf').mask('000.000.000-00', {reverse: true});
+    });
+</script>
+<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
+    <!-- Main content -->
     <section class="content">
 
-        <h2 class="page-header">Pesquisar Representante</h2>
+        <!-- START FORM-->
+        <h2 class="page-header">Busca de representante</h2>
 
         <div class="row">
             <div class="col-md-12">
-                <div class="box box-info">
-
-                    <div align="center">
-                        <h3 class="box-title"><?php if (isset($mensagem)) {
-                                echo $mensagem;
-                            }; ?></h3>
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Procurar pessoa fisica</h3>
                     </div>
-
-                    <div class="box-body row">
-                        <?php
-                        if (isset($cadastrar)) {
-                        if ($cadastrar == true) {
-                            ?>
-                            <div class="form-group col-md-3 col-md-offset-4">
-                                <form method="POST" action="?perfil=evento&p=representante_cadastro" role="form">
-                                    <button type="submit" name="pesquisar_pessoa_juridica"
-                                            class="btn btn-block btn-primary btn-lg"> Cadastrar
-                                    </button>
-                                </form>
-                            </div>
-
-                            <?php
-                        } else {
-                        ?>
-                        <div class="form-group col-md-3 col-md-offset-4">
-                            <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
-                                <button type="submit" name="inserir"
-                                        class="btn btn-block btn-primary btn-lg"> Inserir
-                                </button>
-                            </form>
-                            <?php
-                            }
-                            }
-                            ?>
-                        </div>
-                        <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
-                            <div class="box-body">
-
-                                <div class="form-group col-md-offset-4 col-md-3">
-                                    <h2 for="cpf">CPF:</h2>
-                                    <div class="row">
-                                        <input type="text" name="cpf" id="cpf" class="form-control">
-
-                                        <button type="submit" name="pesquisa" id="pesquisa"
-                                                class="btn btn-info pull-right">
-                                            Pesquisa
-                                        </button>
-
-                                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <form action="?perfil=evento&p=representante_busca" method="post">
+                            <div class="form-group">
+                                <label for="procurar">Pesquisar:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" minlength=14 name="cpf" value="<?= empty($cpf)?'':$cpf ?>" id="cpf" data-mask="000.000.000-00" placeholder="Digite o CPF aqui. . . . ">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" name="pesquisa" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
+                                    </span>
                                 </div>
                             </div>
-
                         </form>
+
+                        <div class="panel panel-default">
+                            <!-- Default panel contents -->
+                            <!-- Table -->
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>RG</th>
+                                    <tr></tr>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (isset($mensagem)){
+                                        echo $mensagem;
+                                    } ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+
                     </div>
+                    <!-- /.box-body -->
                 </div>
+                <!-- /.box -->
             </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        <!-- END ACCORDION & CAROUSEL-->
 
     </section>
+    <!-- /.content -->
 </div>

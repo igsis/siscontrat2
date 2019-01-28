@@ -2,7 +2,12 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
-$cpf = $_SESSION['cpfRepresentante'];
+if (isset($_SESSION['cpfRepresentante'])) {
+    $cpf = $_SESSION['cpfRepresentante'];
+}else{
+    $cpf = $_POST['documentacao'];
+    $_SESSION['cpfRepresentante'] = $_POST['documentacao'];
+}
 ?>
 
 <div class="content-wrapper">
@@ -29,7 +34,7 @@ $cpf = $_SESSION['cpfRepresentante'];
 
                                 <div class="form-group col-md-3">
                                     <label for="rg">RG: </label>
-                                    <input type="text" class="form-control" id="rg" name="rg" required>
+                                    <input type="text" class="form-control" id="rg" name="rg" required maxlength="12">
                                 </div>
 
                                 <div class="form-group col-md-3">

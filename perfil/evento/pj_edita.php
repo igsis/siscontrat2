@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$idPessoaJuridica = $_SESSION['idPj_pedido'] ?? NULL;
+//$idPessoaJuridica = $_SESSION['idPj_pedido'] ?? null;
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $razao_social = addslashes($_POST['razao_social']);
@@ -16,6 +16,12 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $uf = $_POST['uf'];
     $cidade = $_POST['cidade'];
 
+}
+
+if (isset($_POST['editProponente'])){
+    $idPessoaJuridica = $_POST['idProponente'];
+    $_SESSION['idPessoaJuridica'] = $idPessoaJuridica;
+    $_SESSION['idPj_pedido'] = $_POST['idProponente'];
 }
 
 if (isset($_POST['cadastra'])) {
@@ -294,7 +300,9 @@ include "includes/menu_pj.php";
                             </div>
                     </form>
                     <div class="row">
+                        
                         <div class="col-md-6">
+                            <?php if ($pessoa_juridica['representante_legal1_id'] == null){ ?>
                             <form method="POST" action="?perfil=evento&p=representante_busca"
                                   role="form">
                                 <input type="hidden" name="tipo_representante" id="tipo_representante"
@@ -303,8 +311,17 @@ include "includes/menu_pj.php";
                                         class="btn btn-block btn-primary btn-lg"> Buscar Representante Legal 1
                                 </button>
                             </form>
+                            <?php }else{ ?>
+                                <form method="post" action="?perfil=evento&p=representante_edita" role="form">
+                                    <input type="hidden" name="tipo_representante" id="tipo_representante"
+                                           value="1">
+                                    <input type="hidden" name="idRepresentante" id="idRepresentante" value="<?= $pessoa_juridica['representante_legal1_id'] ?>">
+                                    <button type="submit" name="carregar" id="carregar"
+                                            class="btn btn-block btn-primary btn-lg"> Editar Representante Legal 1
+                                    </button>
+                                </form>
+                            <?php } ?>
                         </div>
-
                         <div class="col-md-6">
                             <form method="POST" action="?perfil=evento&p=representante_busca"
                                   role="form">
