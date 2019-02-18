@@ -82,7 +82,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não houver valor</i>
-                                    <input type="text" id="valor_individual" name="valor_individual" class="form-control" required>
+                                    <input type="text" id="valor_individual" name="valor_individual" class="form-control" required onKeyPress="return(moeda(this,'.',',',event))">
                                 </div>
                             </div>
                         </div>
@@ -103,9 +103,3 @@ include "includes/menu_interno.php";
     </section>
     <!-- /.content -->
 </div>
-
-<script>
-
-$('#valor_individual').mask('000.000.000.000.000,00', {reverse: true});
-
-</script>
