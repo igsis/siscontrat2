@@ -4,7 +4,7 @@ $con = bancoMysqli();
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $idAtracao = $_POST['idAtracao'] ?? NULL;
     $idMusica = $_POST['idMusica'] ?? NULL;
-    $genero = $_POST['genero'];
+    $genero = addslashes($_POST['genero']);
     $venda =  ($_POST['venda']);
     $descricao = addslashes($_POST['descricao']);
     }
@@ -76,24 +76,21 @@ include "includes/menu_interno.php";
                     <form method="POST" action="?perfil=evento&p=musica_edita" role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="gereno">Gênero</label><br/>
-                                    <input type="text" name="genero" size="30" value="<?= $musica['genero']?>">
+                                <div class="form-group col-md-2">
+                                    <label for="genero">Gênero</label><br/>
+                                    <input type="text" class="form-control" id="genero" name="genero" size="30" value="<?= $musica['genero']?>">
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-2">
                                     <label for="venda">Venda de material?</label> <br>
-                                    <label><input type="radio" name="venda" value="1" <?= $musica['venda'] == 1 ? 'checked' : NULL ?> > Sim </label>
                                     <label><input type="radio" name="venda" value="0" <?= $musica['venda'] == 0 ? 'checked' : NULL ?> > Não </label>
+                                    <label><input type="radio" name="venda" value="1" <?= $musica['venda'] == 1 ? 'checked' : NULL ?> > Sim </label>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="form-group col-md-8">
-                                    <label for="Descrição">Descrição</label>
-                                    <textarea name="descricao" id="descricao" class="form-control" rows="5"> <?= $musica['descricao'] ?> </textarea>
+                                    <label for="descricao">Descrição do material</label>
+                                    <input type="text" class="form-control" name="descricao" id="descricao" maxlength="255" value="<?= $musica['descricao'] ?>">
                                 </div>
                             </div>
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-default">Cancelar</button>
                                 <input type="hidden" name="idMusica" value="<?= $idMusica ?>">
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
                             </div>
