@@ -44,6 +44,7 @@
 <!-- <script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script> -->
 <!-- API Consulta CEP -->
 <script src="./dist/js/cep_api.js"></script>
+<script src="./dist/js/scripts.js"></script>
 
 <!-- page script -->
 <script>
