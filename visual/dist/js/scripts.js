@@ -53,6 +53,12 @@ function moeda(a, e, r, t) {
 }
 
 // Mascara CPF
-
+$(document).ready(function(){	$("#cpf").mask("999.999.999-99");});
 
 // Mascara CNPJ
+$(document).ready(function(){	$("#cnpj").mask("99.999.999/9999-99");});
+
+// Máscara Processo
+$(function(){
+    $( ".processo" ).mask("9999.9999/9999999-9");
+});
