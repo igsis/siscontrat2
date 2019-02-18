@@ -96,17 +96,17 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone1">Telefone #1</label>
-                                    <input type='text' class='form-control' id='telefone1' name='telefone1' maxlength='15' placeholder='Digite o Telefone principal' required value='<?= $row['telefone1']?>'>
+                                    <input type="text" class="form-control" id='telefone' name='telefone1' maxlength='15' onkeyup="mascara( this, mtel );" placeholder='Digite o Telefone principal' required value='<?= $row['telefone1']?>'>
                                     
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone2">Telefone #2</label>
-                                    <input type='text' class='form-control' id='telefone2' name='telefone2' maxlength='15' placeholder='Digite o Telefone secundário' value='<?= $row['telefone2']?>'>
+                                    <input type="text" class="form-control" id='telefone' name='telefone2' onkeyup="mascara( this, mtel );" maxlength="15" placeholder='Digite o Telefone secundário' value='<?= $row['telefone2']?>'>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="observacao">Observação</label>
-                                <textarea name='observacao' id='observacao' class='form-control' rows='5'><?=$row['observacao'] ?></textarea>
+                                <textarea name='observacao' id='observacao' class='form-control' rows='3'><?=$row['observacao'] ?></textarea>
                             </div>
                         </div>
                         <div class="box-footer">

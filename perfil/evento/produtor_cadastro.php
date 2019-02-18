@@ -41,16 +41,16 @@ if(isset($_POST['idAtracao'])){
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone1">Telefone #1: *</label>
-                                    <input type="text" class="form-control" id="telefone1" name="telefone1" maxlength="15" placeholder="Digite o Telefone principal" required>
+                                    <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone" name="telefone1" maxlength="15" onkeyup="mascara( this, mtel );" placeholder="Digite o Telefone principal" required>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone2">Telefone #2</label>
-                                    <input type="text" class="form-control" id="telefone2" name="telefone2" maxlength="15" placeholder="Digite o Telefone secundário">
+                                    <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone" name="telefone2" maxlength="15" onkeyup="mascara( this, mtel );" placeholder="Digite o Telefone secundário">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="observacao">Observação</label>
-                                <textarea name="observacao" id="observacao" class="form-control" rows="5"></textarea>
+                                <textarea name="observacao" id="observacao" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="box-footer">
