@@ -151,9 +151,9 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <div class="form-group" id="divCPF">
+                                    <div class="form-group col-md-2 has-feedback" id="divCPF">
                                         <label for="cpf">CPF *</label>
-                                        <input type="text" class="form-control" minlength=14 name="procurar" value="<?=$procurar?>" id="cpf" data-mask="000.000.000-00" onblur="validacao()">
+                                        <input type="text" class="form-control" minlength=14 name="procurar" value="<?=$procurar?>" id="cpf" data-mask="000.000.000-00">
                                         <span class="help-block" id="spanHelp"></span>
                                     </div>
                                     <input type="text" class="form-control" name="passaporte" value="<?=$procurar?>" >
@@ -298,10 +298,14 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
         }else{
            divCPF.classList.remove("has-error");
            document.getElementById("spanHelp").innerHTML = "";
-
             document.querySelector("#adicionar").disabled = false;
         }
     }
 
+    $(document).ready(function () {
+        if(document.querySelector("#cpf").value != ""){
+            validacao();
+        }
+    });
 
 </script>

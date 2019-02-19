@@ -55,7 +55,7 @@ if (isset($_POST['procurar'])){
                       <td>
                         <form method='post' action='?perfil=evento&p=pj_cadastro'>
                             <input type='hidden' name='cnpj' value='$procurar'>
-                            <button class=\"btn btn-primary\" name='adicionar' type='submit'>
+                            <button class=\"btn btn-primary\" name='adicionar' type='submit' id='adicionar'>
                                 <i class=\"glyphicon glyphicon-plus\">        
                                 </i>Adicionar
                             </button>
@@ -96,7 +96,12 @@ if (isset($_POST['procurar'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="CNPJ" name="procurar" value="<?=$procurar?>" id="cnpj" data-mask="00.000.000/0000-00">
+                                    <div class="form-group col-md-3 has-feedback" id="divCNPJ">
+                                        <label for="cnpj">CNPJ *</label>
+                                        <input type="text" class="form-control" id="cnpj" name="procurar" value="<?=$procurar?>" data-mask="00.000.000/0000-00">
+                                        <span class="help-block" id="spanHelp"></span>
+                                    </div>
+
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
@@ -145,7 +150,79 @@ if (isset($_POST['procurar'])){
 </div>
 
 <script>
+    function validarCNPJ(cnpj) {
+        if (cnpj.length !== 14)
+        {
+            return false;
+        }
+        // Elimina CNPJs invalidos conhecidos
+        if (cnpj == "00000000000000" ||
+            cnpj == "11111111111111" ||
+            cnpj == "22222222222222" ||
+            cnpj == "33333333333333" ||
+            cnpj == "44444444444444" ||
+            cnpj == "55555555555555" ||
+            cnpj == "66666666666666" ||
+            cnpj == "77777777777777" ||
+            cnpj == "88888888888888" ||
+            cnpj == "99999999999999")
+            return false;
 
-    $("#CNPJ").mask('99.999.999/9999-99', {reverse: true});
-    
+        // Valida DVs
+        tamanho = cnpj.length - 2
+        numeros = cnpj.substring(0,tamanho);
+        digitos = cnpj.substring(tamanho);
+        soma = 0;
+        pos = tamanho - 7;
+        for (i = tamanho; i >= 1; i--) {
+            soma += numeros.charAt(tamanho - i) * pos--;
+            if (pos < 2)
+                pos = 9;
+        }
+        resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+        if (resultado != digitos.charAt(0))
+            return false;
+
+        tamanho = tamanho + 1;
+        numeros = cnpj.substring(0,tamanho);
+        soma = 0;
+        pos = tamanho - 7;
+        for (i = tamanho; i >= 1; i--) {
+            soma += numeros.charAt(tamanho - i) * pos--;
+            if (pos < 2)
+                pos = 9;
+        }
+        resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+        if (resultado != digitos.charAt(1))
+            return false;
+
+        return true;
+
+    }
+
+    function validacao(){
+        var divCNPJ = document.querySelector('#divCNPJ');
+        var cnpj = document.querySelector('#cnpj').value;
+
+        // tira os pontos do valor, ficando apenas os numeros
+        cnpj = cnpj.replace(/[^\d]+/g,'');
+
+        var validado = validarCNPJ(cnpj);
+
+        if(!validado){
+            divCNPJ.classList.add('has-error');
+            document.getElementById("spanHelp").innerHTML = "CNPJ Inválido";
+            document.querySelector("#adicionar").disabled = true;
+        }else if(validado){
+            divCNPJ.classList.remove('has-error');
+            document.getElementById("spanHelp").innerHTML = "";
+            document.querySelector("#adicionar").disabled = false;
+        }
+    }
+
+    $(document).ready(function () {
+        if(document.querySelector("#cnpj").value != ""){
+            validacao();
+        }
+    });
 </script>
