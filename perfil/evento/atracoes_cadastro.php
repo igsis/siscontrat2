@@ -34,7 +34,7 @@ include "includes/menu_interno.php";
                                     geraOpcao("categoria_atracoes")
                                     ?>
                                 </select>
-                            </div>
+<!--                            </div>-->
 
                             <div class="row ">
                                 <div class="form-group col-md-6">

@@ -58,7 +58,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                         <form method='post' action='?perfil=evento&p=pf_cadastro'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
-                            <button class=\"btn btn-primary\" name='adicionar' type='submit'>
+                            <button class=\"btn btn-primary\" name='adicionar' type='submit' id='adicionar'>
                                 <i class=\"glyphicon glyphicon-plus\">        
                                 </i>Adicionar
                             </button>
@@ -106,7 +106,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                         <form method='post' action='?perfil=evento&p=pf_cadastro'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
-                            <button class=\"btn btn-primary\" name='adicionar' type='submit'>
+                            <button class=\"btn btn-primary\" name='adicionar' type='submit' d>
                                 <i class=\"glyphicon glyphicon-plus\">        
                                 </i>Adicionar
                             </button>
@@ -151,7 +151,11 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" minlength=14 name="procurar" value="<?=$procurar?>" id="cpf">
+                                    <div class="form-group col-md-2 has-feedback" id="divCPF">
+                                        <label for="cpf">CPF *</label>
+                                        <input type="text" class="form-control" minlength=14 name="procurar" value="<?=$procurar?>" id="cpf" data-mask="000.000.000-00">
+                                        <span class="help-block" id="spanHelp"></span>
+                                    </div>
                                     <input type="text" class="form-control" name="passaporte" value="<?=$procurar?>" >
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
@@ -244,5 +248,64 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
     }
 
     $("input[name='procurar']").mask('000.000.000-00', {reverse: true});
-  
+
+    function TestaCPF(cpf) {
+        var Soma;
+        var Resto;
+        var strCPF = cpf;
+        Soma = 0;
+
+        if (strCPF == "00000000000" ||
+            strCPF == "11111111111" ||
+            strCPF == "22222222222" ||
+            strCPF == "33333333333" ||
+            strCPF == "44444444444" ||
+            strCPF == "55555555555" ||
+            strCPF == "66666666666" ||
+            strCPF == "77777777777" ||
+            strCPF == "88888888888" ||
+            strCPF == "99999999999")
+            return false;
+
+        for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
+        Resto = (Soma * 10) % 11;
+
+        if ((Resto == 10) || (Resto == 11))  Resto = 0;
+        if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
+
+        Soma = 0;
+        for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
+        Resto = (Soma * 10) % 11;
+
+        if ((Resto == 10) || (Resto == 11))  Resto = 0;
+        if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
+        return true;
+    }
+
+    function validacao(){
+        var divCPF = document.querySelector('#divCPF');
+        var strCPF = document.querySelector('#cpf').value;
+
+        // tira os pontos do valor, ficando apenas os numeros
+        strCPF = strCPF.replace(/[^0-9]/g, '');
+
+        var validado = TestaCPF(strCPF);
+
+        if(!validado){
+           divCPF.classList.add("has-error");
+           document.getElementById("spanHelp").innerHTML = "CPF Inválido";
+           document.querySelector("#adicionar").disabled = true;
+        }else{
+           divCPF.classList.remove("has-error");
+           document.getElementById("spanHelp").innerHTML = "";
+            document.querySelector("#adicionar").disabled = false;
+        }
+    }
+
+    $(document).ready(function () {
+        if(document.querySelector("#cpf").value != ""){
+            validacao();
+        }
+    });
+
 </script>
