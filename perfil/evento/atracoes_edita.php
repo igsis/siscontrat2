@@ -134,7 +134,7 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não houver valor</i>
-                                    <input type="text" id="valor_individual" name="valor_individual" class="form-control" required value="<?= $atracao['valor_individual'] ?>">
+                                    <input type="text" id="valor_individual" name="valor_individual" class="form-control" required value="<?= dinheiroParaBr($atracao['valor_individual']) ?>" onKeyPress="return(moeda(this,'.',',',event))">
                                 </div>
                             </div>
                         </div>
