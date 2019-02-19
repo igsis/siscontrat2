@@ -204,40 +204,46 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                                     <input type="text" class="form-control" name="nomeArtistico" placeholder="Digite o nome artistico" maxlength="70" required value="<?= $pessoaFisica['nome_artistico']?>">
                                 </div>
                             </div>
-                            <?php if ($pessoaFisica['rg'] != NULL){?>
-                            <div class="row">
-                                <div class="form-group col-sm-12">
-                                    <label for="rg">RG: </label>
-                                    <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" value="<?= $pessoaFisica['rg']?>">
-                                </div>
-                            </div>
-                            <?php } ?>
 
-                            <div class="row">
-                                <?php if (!empty($pessoaFisica['cpf'])){?>
-                                <div class="form-group col-md-6">
-                                    <label for="cpf" id="cpf">CPF:</label>
-                                    <input type="text" name="cpf" class="form-control" value="<?= $pessoaFisica['cpf']?>" disabled>
+                            <?php
+                            if(empty($pessoaFisica['cpf'])){
+                            ?>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label for="passaporte" >Passaporte:</label>
+                                        <input type="text" name="passaporte" class="form-control" value="<?= $pessoaFisica['passaporte']?>" disabled>
+                                    </div>
                                 </div>
-                                <?php }else{?>
-                                <div class="form-group col-md-6">
-                                    <label for="passaporte" >Passaporte:</label>
-                                    <input type="text" name="passaporte" class="form-control" value="<?= $pessoaFisica['passaporte']?>" disabled>
+                            <?php
+                            }
+                            else{
+                                ?>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="rg">RG: </label>
+                                        <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" value="<?= $pessoaFisica['rg']?>">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="cpf" id="cpf">CPF:</label>
+                                        <input type="text" id="cpf" name="cpf" class="form-control" value="<?= $pessoaFisica['cpf']?>" disabled>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="ccm">CCM: *</label>
+                                        <input type="text" name="ccm" class="form-control" placeholder="Digite o CCM" maxlength="11" required value="<?= $pessoaFisica['ccm']?>">
+                                    </div>
                                 </div>
-                                <?php }?>
-                                <div class="form-group col-md-6">
-                                    <label for="ccm">CCM: *</label>
-                                    <input type="text" name="ccm" class="form-control" placeholder="Digite o CCM" maxlength="11" required value="<?= $pessoaFisica['ccm']?>">
-                                </div>
-                            </div>
+                            <?php
+                            }
+                            ?>
+
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="dataNascimento">Data de Nascimento: *</label>
-                                    <input type="date" class="form-control" name="dataNascimento" onkeyup="barraData(this);" value="<?= $pessoaFisica['data_nascimento']?>"/>
+                                    <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" onkeyup="barraData(this);" value="<?= $pessoaFisica['data_nascimento']?>"/>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="nacionalidade">Nacionalidade: *</label>
-                                    <select class="form-control" name="nacionalidade">
+                                    <select class="form-control" id="nacionalidade" name="nacionalidade">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
                                             geraOpcao("nacionalidades",$pessoaFisica['nacionalidade_id']);
@@ -326,7 +332,7 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                                <div class="row">
                                  <div class="form-group col-md-12">
                                    <label for="banco">Banco:</label>
-                                   <select name="banco" class="form-control">
+                                   <select id="banco" name="banco" class="form-control">
                                      <option value="">Selecione um banco...</option>
                                         <?php
                                           geraOpcao("bancos",$banco['banco_id']);
@@ -347,7 +353,6 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                             </div>
 
                             <div class="box-footer">
-                                <button type="reset" class="btn btn-default">Cancelar</button>
                                 <input type="hidden" name="idPf" value="<?=$idPf?>">
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
                             </div>
