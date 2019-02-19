@@ -13,7 +13,7 @@ if(isset($_POST['cadastra']) || isset($_POST['edita'])){
     $release_comunicacao = addslashes($_POST['release_comunicacao']);
     $links = $_POST['links'];
     $quantidade_apresentacao = $_POST['quantidade_apresentacao'];
-    $valor_individual = $_POST['valor_individual'];
+    $valor_individual = dinheiroDeBr($_POST['valor_individual']);
 }
 if(isset($_POST['cadastra'])){
     $sql_atracoes = "INSERT INTO atracoes(nome_atracao, categoria_atracao_id, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$nome_atracao', '$categoria_atracao_id', '$ficha_tecnica', '$integrantes', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";

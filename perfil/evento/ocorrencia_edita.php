@@ -25,7 +25,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $horario_inicio = $_POST['horaInicio'];
     $horario_fim = $_POST['horaFim'];
     $retirada_ingresso_id = $_POST['retiradaIngresso'];
-    $valor_ingresso = $_POST['valor_ingresso'];
+    $valor_ingresso = dinheiroDeBr($_POST['valor_ingresso']);
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $idOcorrencia =  $_POST['idOcorrencia'] ?? NULL;
 
