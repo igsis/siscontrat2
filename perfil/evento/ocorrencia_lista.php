@@ -13,7 +13,7 @@ if(isset($_POST['apagar'])){
     if (mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Ocorrência apagada com sucesso");
     }else{
-        $mensagem = mensagem("danger","Erro ao tentar apagar ocorrência. Tente novamente!");
+        $mensagem = mensagem("danger","Erro ao apagar a ocorrência. Tente novamente!");
     }
 
 }
@@ -57,10 +57,10 @@ $tipo_ocorrencia_id = $evento['tipo_evento_id'];
 
 $idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
 
-$sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim FROM ocorrencias as o
+$sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim 
+        FROM ocorrencias as o
         INNER JOIN  locais as l ON o.local_id = l.id
         WHERE o.origem_ocorrencia_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id' AND o.publicado = 1";
-        
 
 $query = mysqli_query($con,$sql);
 ?>
@@ -121,7 +121,7 @@ $query = mysqli_query($con,$sql);
                                 
                                 echo "<td>
                                     <input type='hidden' name='idOcorrencia'>
-                                    <buttonn class='btn btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='".$ocorrencia['id']."' data-tittle='Duplicando ocorrência' data-message='Digite o número de vezes que deseja duplicar a ocorrência: '>Duplicar</buttonn>
+                                    <buttonn class='btn btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='".$ocorrencia['id']."' data-tittle='Replicando ocorrência' data-message='Digite o número de vezes que deseja replicar a ocorrência: '>Replicar</buttonn>
                                 </td>";
 
                                 echo "<td>
@@ -155,10 +155,10 @@ $query = mysqli_query($con,$sql);
             <form method="POST" id='formDuplicar' action="?perfil=evento&p=ocorrencia_lista" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"><p> Duplicando ocorrência</p></h4>
+                    <h4 class="modal-title">Replicando ocorrência</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Digite o número de vezes que deseja duplicar a ocorrência: </p>
+                    <p>Digite o número de vezes que deseja replicar a ocorrência: </p>
                     <input type="number" min="1" max="10" name="numeroDuplica" class="form-control" required>
                 </div>
                 <div class="modal-footer">
@@ -179,10 +179,10 @@ $query = mysqli_query($con,$sql);
             <form method="POST" id='formApagar' action="?perfil=evento&p=ocorrencia_lista" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"><p> Apagar ocorrência</p></h4>
+                    <h4 class="modal-title">Apagar ocorrência</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Deseja mesmo pagar está ocorrências? </p>
+                    <p>Deseja mesmo apagar esta ocorrência?</p>
                 </div>
                 <div class="modal-footer">
                         <input type="hidden" name="idOcorrenciaApaga">
