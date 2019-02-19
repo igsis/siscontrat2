@@ -142,7 +142,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                     <label for="valor_ingresso">Valor Ingresso*</label> <br>
                                     <input type="text" name="valor_ingresso" class="form-control" required
                                            id="valor_ingresso"
-                                           placeholder="Em reais"/>
+                                           placeholder="Em reais" onkeypress="return(moeda(this, '.', ',', event))"/>
                                 </div>
                             </div>
 

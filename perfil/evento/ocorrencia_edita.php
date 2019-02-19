@@ -280,8 +280,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-3">
                                     <label for="valor_ingresso">Valor Ingresso*</label> <br>
                                     <input type="text" name="valor_ingresso" class="form-control"
-                                           value="<?= $ocorrencia['valor_ingresso'] ?>" required id="valor_ingresso"
-                                           placeholder="Em reais"/>
+                                           value="<?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>" required id="valor_ingresso"
+                                           placeholder="Em reais" onkeypress="return(moeda(this, '.', ',', event))"/>
                                 </div>
                             </div>
 
@@ -320,9 +320,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
                         </div>
 
-
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-default">Cancelar</button>
                             <input type="hidden" name="idOcorrencia" value="<?= $idOcorrencia ?>">
                             <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>
