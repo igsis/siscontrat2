@@ -106,7 +106,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                         <form method='post' action='?perfil=evento&p=pf_cadastro'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
-                            <button class=\"btn btn-primary\" name='adicionar' type='submit' d>
+                            <button class=\"btn btn-primary\" name='adicionar' type='submit'>
                                 <i class=\"glyphicon glyphicon-plus\">        
                                 </i>Adicionar
                             </button>
@@ -151,12 +151,10 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <div class="form-group col-md-2 has-feedback" id="divCPF">
-                                        <label for="cpf">CPF *</label>
-                                        <input type="text" class="form-control" minlength=14 name="procurar" value="<?=$procurar?>" id="cpf" data-mask="000.000.000-00">
-                                        <span class="help-block" id="spanHelp"></span>
-                                    </div>
+                                    <label for="cpf">CPF *</label>
+                                    <input type="text" class="form-control" minlength=14 name="procurar" value="<?=$procurar?>" id="cpf" data-mask="000.000.000-00" >
                                     <input type="text" class="form-control" name="passaporte" value="<?=$procurar?>" >
+
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
@@ -205,6 +203,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
 </div>
 
 <script>
+
     let tipos = document.querySelectorAll("input[type='radio'][name='tipoDocumento']");
     let passaporte = document.querySelector("input[name='passaporte']");
     let procurar = document.querySelector("input[name='procurar']");
@@ -246,8 +245,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
             }            
         })
     }
-
-    $("input[name='procurar']").mask('000.000.000-00', {reverse: true});
 
     function TestaCPF(cpf) {
         var Soma;
@@ -292,12 +289,9 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
         var validado = TestaCPF(strCPF);
 
         if(!validado){
-           divCPF.classList.add("has-error");
-           document.getElementById("spanHelp").innerHTML = "CPF Inválido";
+            alert("CPF inválido!");
            document.querySelector("#adicionar").disabled = true;
         }else{
-           divCPF.classList.remove("has-error");
-           document.getElementById("spanHelp").innerHTML = "";
             document.querySelector("#adicionar").disabled = false;
         }
     }
@@ -307,5 +301,4 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
             validacao();
         }
     });
-
 </script>
