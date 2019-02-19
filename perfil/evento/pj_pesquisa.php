@@ -96,12 +96,7 @@ if (isset($_POST['procurar'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <div class="form-group col-md-3 has-feedback" id="divCNPJ">
-                                        <label for="cnpj">CNPJ *</label>
-                                        <input type="text" class="form-control" id="cnpj" name="procurar" value="<?=$procurar?>" data-mask="00.000.000/0000-00">
-                                        <span class="help-block" id="spanHelp"></span>
-                                    </div>
-
+                                    <input type="text" class="form-control" id="cnpj" name="procurar" value="<?=$procurar?>" data-mask="00.000.000/0000-00">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
@@ -210,12 +205,9 @@ if (isset($_POST['procurar'])){
         var validado = validarCNPJ(cnpj);
 
         if(!validado){
-            divCNPJ.classList.add('has-error');
-            document.getElementById("spanHelp").innerHTML = "CNPJ Inválido";
+            alert("CNPJ inválido!");
             document.querySelector("#adicionar").disabled = true;
         }else if(validado){
-            divCNPJ.classList.remove('has-error');
-            document.getElementById("spanHelp").innerHTML = "";
             document.querySelector("#adicionar").disabled = false;
         }
     }
