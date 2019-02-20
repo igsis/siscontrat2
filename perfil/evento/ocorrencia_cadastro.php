@@ -36,6 +36,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
     });
 
     function validate() {
+        comparaData(); 
         if ($('#datepicker11').val().length > 0) {
             mudaData(false);
         }
@@ -71,6 +72,26 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
             }
         }
     }
+
+    function comparaData(){
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var dataFim = document.querySelector('#datepicker11').value;
+
+
+        var dataInicio = parseInt(dataInicio.split("-")[2].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[0].toString());
+        if(dataFim != ""){
+            var dataFim = parseInt(dataFim.split("-")[2].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[0].toString());
+
+            if(dataFim <= dataInicio){
+                alert("Data final menor que a data inicial");
+                $('#cadastra').attr("disabled", true);
+            }else{
+                $('#cadastra').attr("disabled", false);
+            }
+        }
+
+
+    }
 </script>
 
 <div class="content-wrapper">
@@ -92,7 +113,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 <div class="form-group col-md-6">
                                     <label for="data_inicio">Data Início*</label> <br>
                                     <input type="date" name="data_inicio" class="form-control" id="datepicker10"
-                                           required placeholder="DD/MM/AAAA" onblur="arrumaData()">
+                                           required placeholder="DD/MM/AAAA" onblur="mudaData()">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="data_fim">Data Encerramento (apenas se for temporada)</label> <br>
@@ -183,7 +204,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                         <div class="box-footer">
                             <button type="submit" class="btn btn-default">Cancelar</button>
                             <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
-                            <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
+                            <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
                     </form>
                 </div>

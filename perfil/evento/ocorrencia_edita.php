@@ -156,6 +156,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     });
 
     function validate() {
+        comparaData();
         if ($('#datepicker11').val().length > 0) {
             mudaData(false);
         }
@@ -190,6 +191,26 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                 $("#diasemana06").prop("checked", true);
             }
         }
+    }
+
+        function comparaData(){
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var dataFim = document.querySelector('#datepicker11').value;
+
+
+        var dataInicio = parseInt(dataInicio.split("-")[2].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[0].toString());
+        if(dataFim != ""){
+            var dataFim = parseInt(dataFim.split("-")[2].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[0].toString());
+
+            if(dataFim <= dataInicio){
+                alert("Data final menor que a data inicial");
+                $('#edita').attr("disabled", true);
+            }else{
+                $('#edita').attr("disabled", false);
+            }
+        }
+
+
     }
 </script>
 
@@ -322,7 +343,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
                         <div class="box-footer">
                             <input type="hidden" name="idOcorrencia" value="<?= $idOcorrencia ?>">
-                            <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
+                            <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>
                     </form>
                 </div>
