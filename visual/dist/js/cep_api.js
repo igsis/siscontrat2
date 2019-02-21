@@ -44,7 +44,6 @@ $(document).ready(function() {
                         $("#estado").val(dados.uf);
 
                         if(dados.logradouro == ""){
-                            limpa_formulário_cep();
                             alert("Por favor preencha o formulário");
                             $("#rua").prop('readonly', false);
                             $("#bairro").prop('readonly', false);
@@ -56,10 +55,6 @@ $(document).ready(function() {
                         //CEP pesquisado não foi encontrado.
                         limpa_formulário_cep();
                         alert("CEP não encontrado.");
-                        $("#rua").prop('readonly', false);
-                        $("#bairro").prop('readonly', false);
-                        $("#cidade").prop('readonly', false);
-                        $("#estado").prop('readonly', false);
                     }
                 });
             }
