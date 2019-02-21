@@ -90,6 +90,10 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
             }
         }
 
+        if(dataFim == ""){
+            $('#cadastra').attr("disabled", false);
+        }
+
 
     }
 </script>

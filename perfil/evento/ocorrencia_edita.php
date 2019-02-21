@@ -12,7 +12,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $origem_ocorrencia_id = $_POST['idOrigem'] ?? NULL;
     $instituicao_id = $_POST['instituicao'];
     $local_id = $_POST['local'];
-    $espaco_id = $_POST['espaco'];
+    $espaco_id = $_POST['espaco'] ?? NULL;
     $data_inicio = $_POST['data_inicio'];
     $data_fim   = $_POST['data_fim'] ?? NULL;
     $segunda    = $_POST['segunda'] ?? 0;
@@ -119,10 +119,6 @@ if (isset($_POST['carregar'])) {
     $idOcorrencia = $_POST['idOcorrencia'];
 }
 
-if (isset($_POST['cadastra'])) {
-    $idOcorrencia = recuperaUltimo('ocorrencias');
-}
-
 $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
 ?>
@@ -193,13 +189,12 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         }
     }
 
-        function comparaData(){
+    function comparaData(){
         var dataInicio = document.querySelector('#datepicker10').value;
         var dataFim = document.querySelector('#datepicker11').value;
 
-
-        var dataInicio = parseInt(dataInicio.split("-")[2].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[0].toString());
-        if(dataFim != ""){
+        if((dataInicio != "") && (dataFim != "")){
+            var dataInicio = parseInt(dataInicio.split("-")[2].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[0].toString());
             var dataFim = parseInt(dataFim.split("-")[2].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[0].toString());
 
             if(dataFim <= dataInicio){
@@ -210,6 +205,10 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             }
         }
 
+        if(dataFim == ""){
+            $('#edita').attr("disabled", false);
+        }
+
 
     }
 </script>
@@ -217,7 +216,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 <div class="content-wrapper">
     <section class="content">
 
-        <h2 class="page-header">Cadastro de Ocorrência</h2>
+        <h2 class="page-header">Edição de Ocorrência</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-info">
