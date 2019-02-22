@@ -146,10 +146,10 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         desmarca();
     }
 
-    $(document).ready(function () {
-        validate();
-        $('#datepicker11').change(validate);
-    });
+    // $(document).ready(function () {
+    //     validate();
+    //     $('#datepicker11').change(validate);
+    // });
 
     function validate() {
         comparaData();
