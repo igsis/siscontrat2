@@ -1,18 +1,55 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-$idEvento = $_SESSION['idEvento'];
 
-$sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'";
-$atracao = mysqli_query($con,$sql);
+if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
+    $razao_social = addslashes($_POST['razao_social']);
+    $cnpj = $_POST['cnpj'];
+    $ccm = $_POST['ccm'] ?? NULL;
+    $email = $_POST['email'];
+    $telefone = $_POST['telefone'];
+    $cep = $_POST['cep'];
+    $logradouro = $_POST['logradouro'];
+    $bairro = $_POST['bairro'];
+    $numero = $_POST['numero'];
+    $complemento = $_POST['complemento'] ?? NULL;
+    $uf = $_POST['uf'];
+    $cidade = $_POST['cidade'];
+}
+
+if(isset($_POST['cadastra'])) {
+    $ultima_atualizacao = date('Y-m-d H:i:s');
+    $sql = "INSERT INTO pessoa_juridicas (razao_social, cnpj, ccm, email, ultima_atualizacao) VALUES ('$razao_social', '$cnpj', '$ccm', '$email', '$ultima_atualizacao')";
+    if(mysqli_query($con, $sql)) {
+        $idPj = recuperaUltimo('pessoa_juridicas');
+        // cadastrar o telefone de pj
+        foreach ($telefone AS $telefones){
+            if (!empty($telefones)){
+                $sqlTel = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone, publicado) VALUES ('$idPj','$telefones',1)";
+                mysqli_query($con,$sqlTel);
+            }
+        }
+        // cadastrar endereco de pj
+        $sqlEndereco = "INSERT INTO pj_enderecos (pessoa_juridica_id, logradouro, numero, complemento, bairro, cidade, uf, cep) VALUES ('$idPessoaJuridica','$logradouro','$numero', '$complemento', '$bairro', '$cidade', '$uf', '$cep')";
+        mysqli_query($con, $sqlEndereco);
+
+        $mensagem = mensagem("success", "Cadastrado com sucesso!");
+        //gravarLog($sql);
+    } else {
+        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+        //gravarLog($sql);
+    }
+}
+
+$pj = recuperaDados("pessoa_juridicas","id",$idPj);
 ?>
 
 <script>
     $(document).ready(function () {
         $("#cep").mask('00000-000', {reverse: true});
     });
-</script>
 
+</script>
 <div class="content-wrapper">
     <section class="content">
 
@@ -29,39 +66,52 @@ $atracao = mysqli_query($con,$sql);
                         <div class="box-body">
 
                             <div class="row">
-                                <div class="form-group col-md-8">
+                                <div class="form-group col-md-12">
                                     <label for="razao_social">Razão Social: *</label>
                                     <input type="text" class="form-control" id="razao_social" name="razao_social"
-                                           maxlength="100" required>
+                                           maxlength="100" required value="<?= $pj[''] ?>">
                                 </div>
+                            </div>
+
+                            <div class="row ">
                                 <div class="form-group col-md-2">
                                     <label for="cnpj">CNPJ: *</label>
                                     <input type="text" class="form-control" id="cnpj" name="cnpj"
-                                           required readonly value="<?= $_POST['cnpj'] ?>">
+                                           required readonly value="<?= $pj[''] ?>">
+
                                 </div>
+                                <div class="form-group col-md-4">
+                                    <label>Anexo do Cartão CNPJ</label><br>
+                                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-cnpj">Clique aqui para anexar</button>
+                                </div>
+
                                 <div class="form-group col-md-2">
                                     <label for="ccm">CCM: </label>
-                                    <input type="text" class="form-control" id="ccm" name="ccm">
+                                    <input type="text" class="form-control" id="ccm" name="ccm" value="<?= $pj[''] ?>">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Anexo FDC - CCM ou CPOM</label><br>
+                                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-ccm">Clique aqui para anexar</button>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="email">E-mail: *</label>
-                                    <input type="email" name="email" class="form-control" maxlength="60" placeholder="Digite o E-mail" required>
+                                    <input type="email" name="email" class="form-control" maxlength="60" placeholder="Digite o E-mail" required value="<?= $pj[''] ?>">
                                 </div>
-                                <div class="form-group col-md-2">
-                                    <label>Telefone #1: *</label>
-                                    <input type="text" id="telefone" name="telefone[]" onkeyup="mascara( this, mtel );"  class="form-control" placeholder="Digite o telefone" required maxlength="15">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label>Telefone #2:</label>
-                                    <input type="text" id="telefone" name="telefone[]" onkeyup="mascara( this, mtel );"  class="form-control" placeholder="Digite o telefone" maxlength="15">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label>Telefone #3:</label>
-                                    <input type="text" id="telefone" name="telefone[]" onkeyup="mascara( this, mtel );"  class="form-control telefone" placeholder="Digite o telefone" maxlength="15">
-                                </div>
+                                <?php
+                                $sql1 = $con->query("SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'");
+                                $x = 1;
+                                while ($telefone = mysqli_fetch_assoc($query)){?>
+                                    <div class="form-group col-md-2">
+                                        <label for="telefone[]">Telefone #<?=$x?>:</label>
+                                        <input type="text" name="telefone[]" id="telefone" onkeyup="mascara( this, mtel );"  class="form-control" placeholder="Digite o telefone" required maxlength="15" value="<?= $telefone['telefone']?>">
+                                    </div>
+                                    <?php
+                                    $x++;
+                                }
+                                ?>
                             </div>
                             <hr/>
                             <div class="row">
@@ -101,35 +151,40 @@ $atracao = mysqli_query($con,$sql);
                                 </div>
                             </div>
                             <hr/>
-                            <?php
-                            foreach($atracao as $row)
-                            {
-                                if($row['valor_individual'] != 0.00){
-                            ?>
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="banco">Banco:</label>
-                                            <select id="banco" name="banco" class="form-control">
-                                                <option value="">Selecione um banco...</option>
-                                                <?php
-                                                geraOpcao("bancos", "");
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="agencia">Agência:</label>
-                                            <input type="text" name="agencia" class="form-control"  placeholder="Digite a Agência" maxlength="12">
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="conta">Conta:</label>
-                                            <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12">
-                                        </div>
-                                    </div>
-                                    <hr/>
-                            <?php
-                                }
-                            }
-                            ?>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="banco">Banco:</label>
+                                    <select id="banco" name="banco" class="form-control">
+                                        <option value="">Selecione um banco...</option>
+                                        <?php
+                                        geraOpcao("bancos", "");
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="agencia">Agência:</label>
+                                    <input type="text" name="agencia" class="form-control"  placeholder="Digite a Agência" maxlength="12">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="conta">Conta:</label>
+                                    <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label>Gerar FACC</label><br>
+                                    <button type="button" class="btn btn-primary btn-block">Clique aqui para gerar a FACC</button>
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label>&nbsp;</label><br>
+                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema no campo correspondente.</p>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Anexo FACC</label><br>
+                                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-facc">Clique aqui para anexar</button>
+                                </div>
+                            </div>
+                            <hr/>
 
                             <div class="row">
                                 <div class="form-group col-md-12">
