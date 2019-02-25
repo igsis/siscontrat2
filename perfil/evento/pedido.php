@@ -51,7 +51,7 @@ $num = mysqli_num_rows($query);
                              * Caso haja pedido de contratração
                              */
                         ?>
-                            <table class="table table-bordered table-striped">
+                        <table id="tblPedido" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>Pedido</th>
@@ -123,3 +123,20 @@ $num = mysqli_num_rows($query);
     </section>
     <!-- /.content -->
 </div>
+
+<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+        $(function () {
+        $('#tblPedido').DataTable({
+            "language": {
+                "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
+            },
+            "responsive": true,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+        });
+    });
+</script>
