@@ -1,9 +1,8 @@
 <?php
+include "includes/menu_interno.php";
 
 $con = bancoMysqli();
-
 $idEvento = $_SESSION['idEvento'];
-
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
 if(isset($_POST['apagar'])){
@@ -24,8 +23,6 @@ $sql = "SELECT at.id AS idAtracao, nome_atracao, a2.categoria_atracao,produtor_i
         INNER JOIN categoria_atracoes a2 on at.categoria_atracao_id = a2.id
         WHERE at.publicado = 1 AND a.evento_id = '$idEvento'";
 $query = mysqli_query($con,$sql);
-
-include "includes/menu_interno.php";
 
 ?>
 
@@ -55,7 +52,7 @@ include "includes/menu_interno.php";
                     <?php if (isset($mensagem)){echo $mensagem;} ?>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="example1" class="table table-bordered table-striped">
+                        <table id="tblAtracao" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>Nome da atração</th>
@@ -63,7 +60,9 @@ include "includes/menu_interno.php";
                                 <th>Produtor</th>
                                 <th>Especificidade</th>
                                 <th>Ocorrência</th>
-                                <th colspan="2" width="10%">Ação</th>
+                                <th></th>
+                                <th></th>
+
                             </tr>
                             </thead>
 
@@ -270,6 +269,23 @@ include "includes/menu_interno.php";
         </div>
     </div>
 </div>
+
+<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+        $(function () {
+        $('#tblAtracao').DataTable({
+            "language": {
+                "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
+            },
+            "responsive": true,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+        });
+    });
+</script>
 
 <script>
 
