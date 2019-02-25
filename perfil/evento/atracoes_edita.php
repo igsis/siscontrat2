@@ -16,20 +16,13 @@ if(isset($_POST['cadastra']) || isset($_POST['edita'])){
     $valor_individual = dinheiroDeBr($_POST['valor_individual']);
 }
 if(isset($_POST['cadastra'])){
-    $sql_atracoes = "INSERT INTO atracoes(nome_atracao, categoria_atracao_id, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$nome_atracao', '$categoria_atracao_id', '$ficha_tecnica', '$integrantes', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
+    $sql_atracoes = "INSERT INTO atracoes(evento_id, nome_atracao, categoria_atracao_id, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$idEvento','$nome_atracao', '$categoria_atracao_id', '$ficha_tecnica', '$integrantes', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
 
     if(mysqli_query($con,$sql_atracoes)){
-        $idAtracao = recuperaUltimo("atracoes");
-        $sql_atracoes_evento = "INSERT INTO atracao_eventos (atracao_id, evento_id) VALUES ('$idAtracao','$idEvento')";
-        if(mysqli_query($con,$sql_atracoes_evento)){
-            $mensagem = mensagem("success","Cadastrado com sucesso!");
-        }
-        else{
-            $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.").$sql_atracoes_evento;
-        }
+        $mensagem = mensagem("success","Cadastrado com sucesso!");
     }
     else{
-        $mensagem = mensagem("danger","[COD2] Erro ao gravar! Tente novamente.").$sql_atracoes;
+        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
     }
 }
 
