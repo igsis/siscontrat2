@@ -90,14 +90,16 @@ $query = mysqli_query($con,$sql);
                         <?php if(isset($mensagem)){echo $mensagem;};?>
                     </div>
                     <div class="box-body">
-                        <table id="example1" class="table table-bordered table-striped">
+                        <table id="tblOcorrencia" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>Data início</th>
                                 <th>Horario início</th>
                                 <th>Horario final</th>
                                 <th>Local</th>
-                                <th colspan="3" width="10%">Ação</th>
+                                <th>Visualizar</th>
+                                <th>Replicar</th>
+                                <th>Apagar</th>
                             </tr>
                             </thead>
 
@@ -115,17 +117,17 @@ $query = mysqli_query($con,$sql);
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_edita\" role=\"form\">
                                     <input type='hidden' name='idOcorrencia' value='".$ocorrencia['id']."'>
-                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\">Carregar</button>
+                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
                                 
                                 echo "<td>
                                     <input type='hidden' name='idOcorrencia'>
-                                    <buttonn class='btn btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='".$ocorrencia['id']."' data-tittle='Replicando ocorrência' data-message='Digite o número de vezes que deseja replicar a ocorrência: '>Replicar</buttonn>
+                                    <buttonn class='btn btn-block btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='".$ocorrencia['id']."' data-tittle='Replicando ocorrência' data-message='Digite o número de vezes que deseja replicar a ocorrência: '><span class='glyphicon glyphicon-retweet'></span></buttonn>
                                 </td>";
 
                                 echo "<td>
-                                    <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-id='".$ocorrencia['id']."' data-tittle='Apagar ocorrência' data-message='Deseja mesmo pagar está ocorrências' onClick='setarIdOcorrencia(".$ocorrencia['id'].")'>Apagar</button>
+                                    <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-id='".$ocorrencia['id']."' data-tittle='Apagar ocorrência' data-message='Deseja mesmo pagar está ocorrências' onClick='setarIdOcorrencia(".$ocorrencia['id'].")'><span class='glyphicon glyphicon-trash'></span></button>
                                   </td>";
                                 echo "</tr>";
                             }
@@ -137,7 +139,7 @@ $query = mysqli_query($con,$sql);
                                 <th>Horario início</th>
                                 <th>Horario final</th>
                                 <th>Local</th>
-                                <th colspan="3" width="10%">Ação</th>
+                                <th colspan="3" width="15%"></th>
                             </tr>
                             </tfoot>
                         </table>
@@ -194,6 +196,24 @@ $query = mysqli_query($con,$sql);
         </div>
     </div>
 </div>
+
+
+<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+        $(function () {
+        $('#tblOcorrencia').DataTable({
+            "language": {
+                "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
+            },
+            "responsive": true,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+        });
+    });
+</script>
 
 <script type="text/javascript">
 

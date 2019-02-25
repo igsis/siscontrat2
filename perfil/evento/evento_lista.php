@@ -37,8 +37,8 @@ $query = mysqli_query($con,$sql);
                                 <th>Nome do evento</th>
                                 <th>Tipo do evento</th>
                                 <th>Status</th>
-                                <th width="10%"></th>
-                                <th width="10%"></th>
+                                <th>Visualizar</th>
+                                <th>Apagar</th>
                             </tr>
                             </thead>
 
@@ -52,11 +52,11 @@ $query = mysqli_query($con,$sql);
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='".$evento['idEvento']."'>
-                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\">Carregar</button>
+                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
                                 echo "<td>
-                    <button type=\"button\" class=\"btn btn-block btn-danger\">Apagar</button>
+                    <button type=\"button\" class=\"btn btn-block btn-danger\"><span class='glyphicon glyphicon-trash'></span></button>
                   </td>";
                                 echo "</tr>";
                             }
@@ -67,8 +67,7 @@ $query = mysqli_query($con,$sql);
                                 <th>Nome do evento</th>
                                 <th>Tipo do evento</th>
                                 <th>Status</th>
-                                <th width="10%"></th>
-                                <th width="10%"></th>
+                                <th colspan="2" width="15%"></th>
                             </tr>
                             </tfoot>
                         </table>

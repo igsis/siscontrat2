@@ -60,8 +60,8 @@ $query = mysqli_query($con,$sql);
                                 <th>Produtor</th>
                                 <th>Especificidade</th>
                                 <th>Ocorrência</th>
-                                <th></th>
-                                <th></th>
+                                <th>Visualizar</th>
+                                <th>Apagar</th>
 
                             </tr>
                             </thead>
@@ -212,12 +212,12 @@ $query = mysqli_query($con,$sql);
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=atracoes_edita\" role=\"form\">
                                     <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\">Carregar</button>
+                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
                                 echo "<td>
                                         
-                                        <buttonn class='btn btn-danger' data-toggle='modal' data-target='#apagar' data-ocorrencia-id='".$atracao['idAtracao']."' data-tittle='Apagar Atração' data-message='Você deseja mesmo apagar essa atração?' onclick ='passarId(".$atracao['idAtracao'].")'>Apagar</buttonn>
+                                        <buttonn class='btn btn-danger' data-toggle='modal' data-target='#apagar' data-ocorrencia-id='".$atracao['idAtracao']."' data-tittle='Apagar Atração' data-message='Você deseja mesmo apagar essa atração?' onclick ='passarId(".$atracao['idAtracao'].")'><span class='glyphicon glyphicon-trash'></span></buttonn>
                                   </td>";
                                 echo "</tr>";
                             }
@@ -230,7 +230,7 @@ $query = mysqli_query($con,$sql);
                                 <th>Produtor</th>
                                 <th>Especificidade</th>
                                 <th>Ocorrência</th>
-                                <th colspan="2" width="10%">Ação</th>
+                                <th colspan="2" width="10%"></th>
                             </tr>
                             </tfoot>
                         </table>
