@@ -34,7 +34,6 @@ if(isset($_POST['carregar'])){
 }
 
 $pedido = recuperaDados("pedidos","id",$idPedido);
-print_r($pedido);
 
 if($pedido['pessoa_tipo_id'] == 2){
     $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
