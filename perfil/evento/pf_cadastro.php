@@ -7,6 +7,25 @@ if(isset($_POST['adicionar'])){
     $documento = $_POST['documentacao'];
     $tipoDocumento = $_POST['tipoDocumento'];
 }
+
+$idEvento = $_SESSION['idEvento'];
+
+$evento = recuperaDados('eventos', 'id', $idEvento);
+
+if($evento['tipo_evento_id'] == 1){
+    $atracoesTipo = array('3', '7', '11', '13', '23');
+
+    $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
+    $categoria_atracao_id = $atracao['categoria_atracao_id'];
+
+    if(in_array($categoria_atracao_id, $atracoesTipo)){
+        $mostraDRT = true;
+    }else{
+        $mostraDRT = false;
+    }
+}else{
+    $mostraDRT = false;
+}
 ?>
 
 <script>
@@ -148,12 +167,22 @@ if(isset($_POST['adicionar'])){
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <?php
+                                    if($mostraDRT){
+                                    ?>
+                           <div class="form-group col-md-6">
                                     <label for="drt">DRT: </label>
                                     <input type="text" name="drt" class="form-control telefone" maxlength="15" placeholder="Digite o DRT">
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="drt">NIT: </label>
+                                <div class="form-group col-md-6">                               
+<?php
+                                    }else{
+                                        ?>
+                                        <div class="form-group col-md-12">
+                                        <?php
+                                    }
+                                 ?>
+                                    <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45" placeholder="Digite o NIT">
                                 </div>
                             </div>
