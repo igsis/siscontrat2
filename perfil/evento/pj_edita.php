@@ -12,7 +12,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $cnpj = $_POST['cnpj'];
     $ccm = $_POST['ccm'] ?? NULL;
     $email = $_POST['email'];
-    $telefone = $_POST['telefone'];
+    $telefones = $_POST['telefone'];
     $cep = $_POST['cep'];
     $logradouro = addslashes($_POST['rua']);
     $numero = $_POST['numero'];
@@ -33,9 +33,9 @@ if(isset($_POST['cadastra'])) {
     if(mysqli_query($con, $sql)) {
         $idPj = recuperaUltimo('pessoa_juridicas');
         // cadastrar o telefone de pj
-        foreach ($telefone AS $telefones){
-            if (!empty($telefones)){
-                $sqlTel = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone, publicado) VALUES ('$idPj','$telefones',1)";
+        foreach ($telefones AS $telefone){
+            if (!empty($telefone)){
+                $sqlTel = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone, publicado) VALUES ('$idPj','$telefone',1)";
                 mysqli_query($con,$sqlTel);
             }
         }
@@ -74,12 +74,38 @@ if(isset($_POST['edita'])){
 
 
     if(mysqli_query($con, $sql)) {
-        foreach ($telefone AS $telefones){
-            if (!empty($telefones)){
-                $sqlTel = "UPDATE pj_telefones SET telefone = '$telefones' WHERE pessoa_juridica_id = '$idPj'";
-                mysqli_query($con,$sqlTel);
-            }
+        if (isset($_POST['telefone2'])) {
+            $telefone2 = $_POST['telefone2'];
+            $sqlTelefone2 = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone) VALUES ('$idPessoaJuridica', '$telefone2')";
+            $query = mysqli_query($con, $sqlTelefone2);
         }
+
+        if (isset($_POST['telefone3'])) {
+            $telefone3 = $_POST['telefone3'];
+            $sqlTelefone3 = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone) VALUES ('$idPessoaJuridica', '$telefone3')";
+            $query = mysqli_query($con, $sqlTelefone3);
+        }
+
+        if (mysqli_query($con, $sql)) {
+
+            foreach ($telefones as $idTelefone => $telefone) {
+
+                if (!strlen($telefone)) {
+                    // Deletar telefone do banco se for apagado.
+                    $sqlDelete = "DELETE FROM pj_telefones WHERE id = '$idTelefone'";
+                    mysqli_query($con, $sqlDelete);
+                    gravarLog($sqlDelete);
+                }
+
+                if ($telefone != '') {
+                    // editar o telefone de pj
+                    $sqlTelefone = "UPDATE  pj_telefones SET
+                                          telefone = '$telefone'
+                                  WHERE id = '$idTelefone'";
+                    mysqli_query($con, $sqlTelefone);
+                    gravarLog($sqlTelefone);
+                }
+            }
 
         $sqlEndereco = "UPDATE pj_enderecos SET logradouro = '$logradouro', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', uf = '$uf', cep = '$cep' WHERE pessoa_juridica_id = '$idPj'";
         if(!mysqli_query($con, $sqlEndereco)){
@@ -121,6 +147,9 @@ if(isset($_POST['edita'])){
         $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
 }
+
+$sqlTelefones = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
+$arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 
 $pj = recuperaDados("pessoa_juridicas","id",$idPj);
 $end = recuperaDados("pj_enderecos","pessoa_juridica_id",$idPj);
@@ -187,6 +216,40 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                                 <div class="form-group col-md-6">
                                     <label for="email">E-mail: *</label>
                                     <input type="email" name="email" class="form-control" maxlength="60" placeholder="Digite o E-mail" required value="<?= $pj['email'] ?>">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="telefone">Telefone #1 * </label>
+                                    <input type="text" data-mask="(00) 0000-0000" required class="form-control" id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]" value="<?= $arrayTelefones[0]['telefone']; ?>">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="celular">Telefone #2 </label>
+                                    <?php
+                                    if (isset($arrayTelefones[1])) {
+                                        ?>
+                                        <input type="text" data-mask="(00)00000-0000" class="form-control" id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]" value="<?= $arrayTelefones[1]['telefone']; ?>">
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone1" name="telefone1">
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="recado">Telefone #3</label>
+                                    <?php if (isset($arrayTelefones[2])) {
+                                        ?>
+                                        <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]" value="<?=  $arrayTelefones[2]['telefone']; ?>">
+
+                                        <?php
+                                    } else {
+                                        ?>
+
+                                        <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone2" name="telefone2">
+
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
                                 <?php
                                 $tel = $con->query("SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'");
