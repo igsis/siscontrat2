@@ -34,6 +34,8 @@ if(isset($_POST['carregar'])){
 }
 
 $pedido = recuperaDados("pedidos","id",$idPedido);
+print_r($pedido);
+
 if($pedido['pessoa_tipo_id'] == 2){
     $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
     $proponente = $pj['razao_social'];
@@ -45,8 +47,8 @@ else{
     $pf = recuperaDados("pessoa_fisicas","id",$pedido['pessoa_fisica_id']);
     $proponente = $pf['nome'];
     $idProponente = $pf['id'];
-    $link_edita = "?perfil=evento&p=pj_edita";
-    $link_troca = "?perfil=evento&p=pj_pesquisa";
+    $link_edita = "?perfil=evento&p=pf_edita";
+    $link_troca = "?perfil=evento&p=pf_pesquisa";
 }
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -132,7 +134,7 @@ else{
                             </div>
                             <div class="form-group col-md-2"><label><br></label>
                                 <form method="POST" action="<?= $link_edita ?>" role="form">
-                                    <input type="text" name="idProponente" value="<?= $idProponente ?>">
+                                    <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
                                     <button type="submit" name="editProponente" class="btn btn-primary btn-block">Editar Proponente</button>
                                 </form>
                             </div>
@@ -147,8 +149,7 @@ else{
                 <!-- líderes -->
                 <?php
                 //if($pedido['pessoa_tipo_id'] == 2){
-                $sql_atracao = "SELECT * FROM atracao_eventos AS e 
-                                            INNER JOIN atracoes a on e.atracao_id = a.id 
+                $sql_atracao = "SELECT * FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
                                             WHERE evento_id = '".$_SESSION['idEvento']."'";

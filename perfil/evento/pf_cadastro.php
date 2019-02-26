@@ -1,5 +1,4 @@
 <?php
-
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
@@ -26,6 +25,8 @@ if($evento['tipo_evento_id'] == 1){
 }else{
     $mostraDRT = false;
 }
+
+
 ?>
 
 <script>

@@ -15,6 +15,10 @@ function recuperaTelefones($id,$tabela,$campo,$campoWhere){
 
 $con = bancoMysqli();
 
+if(isset($_POST['idPf']) || isset($_POST['idProponente'])){
+    $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
+}
+
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
 

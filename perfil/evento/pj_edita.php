@@ -3,8 +3,8 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 date_default_timezone_set('America/Sao_Paulo');
 
-if(isset($_POST['idPj'])){
-    $idPj = $_POST['idPj'];
+if(isset($_POST['idPj']) || isset($_POST['idProponente'])){
+    $idPj = $_POST['idPj'] ?? $_POST['idProponente'];
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
@@ -145,7 +145,9 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                         <h3 class="box-title">Informações Pessoa Jurídica</h3>
                     </div>
                     <div class="row" align="center">
-                        <?= $mensagem ?? NULL ?>
+                        <?= $mensagem ?? NULL;
+                        echo $idPj;
+                        ?>
                     </div>
 
                     <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
