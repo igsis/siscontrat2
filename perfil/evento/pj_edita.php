@@ -1,6 +1,7 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
+$conn = bancoPDO();
 date_default_timezone_set('America/Sao_Paulo');
 
 if(isset($_POST['idPj']) || isset($_POST['idProponente'])){
@@ -41,6 +42,7 @@ if(isset($_POST['cadastra'])) {
         }
         // cadastrar endereco de pj
         $sqlEndereco = "INSERT INTO pj_enderecos (pessoa_juridica_id, logradouro, numero, complemento, bairro, cidade, uf, cep) VALUES ('$idPj','$logradouro','$numero', '$complemento', '$bairro', '$cidade', '$uf', '$cep')";
+
         if(!mysqli_query($con, $sqlEndereco)){
             $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.").$sqlEndereco;
         }
@@ -67,22 +69,22 @@ if(isset($_POST['cadastra'])) {
     }
 }
 
-if(isset($_POST['edita'])){
+if(isset($_POST['edita'])) {
     $idPj = $_POST['edita'];
     $mensagem = "";
     $sql = "UPDATE pessoa_juridicas SET razao_social = '$razao_social', cnpj = '$cnpj', ccm = '$ccm', email = '$email' WHERE id = '$idPj'";
 
 
-    if(mysqli_query($con, $sql)) {
+    if (mysqli_query($con, $sql)) {
         if (isset($_POST['telefone2'])) {
             $telefone2 = $_POST['telefone2'];
-            $sqlTelefone2 = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone) VALUES ('$idPessoaJuridica', '$telefone2')";
+            $sqlTelefone2 = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone) VALUES ('$idPj', '$telefone2')";
             $query = mysqli_query($con, $sqlTelefone2);
         }
 
         if (isset($_POST['telefone3'])) {
             $telefone3 = $_POST['telefone3'];
-            $sqlTelefone3 = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone) VALUES ('$idPessoaJuridica', '$telefone3')";
+            $sqlTelefone3 = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone) VALUES ('$idPj', '$telefone3')";
             $query = mysqli_query($con, $sqlTelefone3);
         }
 
@@ -107,44 +109,42 @@ if(isset($_POST['edita'])){
                 }
             }
 
-        $sqlEndereco = "UPDATE pj_enderecos SET logradouro = '$logradouro', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', uf = '$uf', cep = '$cep' WHERE pessoa_juridica_id = '$idPj'";
-        if(!mysqli_query($con, $sqlEndereco)){
-            $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[E]").$sqlEndereco;
-        }
-
-        $banco_existe = verificaExiste("pj_bancos","pessoa_juridica_id",$idPj,0);
-        if($banco_existe['numero'] > 0){
-            $sqlBanco = "UPDATE pj_bancos SET banco_id = '$banco', agencia = '$agencia', conta = '$conta' WHERE pessoa_juridica_id = '$idPj'";
-            if(!mysqli_query($con, $sqlBanco)){
-                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]").$sqlBanco;
+            $sqlEndereco = "UPDATE pj_enderecos SET logradouro = '$logradouro', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', uf = '$uf', cep = '$cep' WHERE pessoa_juridica_id = '$idPj'";
+            if (!mysqli_query($con, $sqlEndereco)) {
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[E]") . $sqlEndereco;
             }
-        }
-        else{
-            $sqlBanco = "INSERT INTO pj_bancos (pessoa_juridica_id, banco_id, agencia, conta) VALUES ('$idPj', '$banco', '$agencia', '$conta')";
-            if(!mysqli_query($con, $sqlBanco)){
-                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.").$sqlBanco;
-            }
-        }
 
-        if($observacao != NULL){
-            $obs_existe = verificaExiste("pj_observacoes","pessoa_juridica_id",$idPj,0);
-            if($obs_existe['numero'] > 0){
-                $sqlObs = "UPDATE pj_observacoes SET observacao = 'observacao' WHERE pessoa_juridica_id = '$idPj'";
-                if(!mysqli_query($con, $sqlObs)){
-                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]").$sqlObs;
+            $banco_existe = verificaExiste("pj_bancos", "pessoa_juridica_id", $idPj, 0);
+            if ($banco_existe['numero'] > 0) {
+                $sqlBanco = "UPDATE pj_bancos SET banco_id = '$banco', agencia = '$agencia', conta = '$conta' WHERE pessoa_juridica_id = '$idPj'";
+                if (!mysqli_query($con, $sqlBanco)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlBanco;
+                }
+            } else {
+                $sqlBanco = "INSERT INTO pj_bancos (pessoa_juridica_id, banco_id, agencia, conta) VALUES ('$idPj', '$banco', '$agencia', '$conta')";
+                if (!mysqli_query($con, $sqlBanco)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlBanco;
                 }
             }
-            else{
-                $sqlObs = "INSERT INTO pj_observacoes (pessoa_juridica_id, observacao) VALUES ('$idPj','$observacao')";
-                if(!mysqli_query($con, $sqlObs)){
-                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.").$sqlObs;
+
+            if ($observacao != NULL) {
+                $obs_existe = verificaExiste("pj_observacoes", "pessoa_juridica_id", $idPj, 0);
+                if ($obs_existe['numero'] > 0) {
+                    $sqlObs = "UPDATE pj_observacoes SET observacao = 'observacao' WHERE pessoa_juridica_id = '$idPj'";
+                    if (!mysqli_query($con, $sqlObs)) {
+                        $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlObs;
+                    }
+                } else {
+                    $sqlObs = "INSERT INTO pj_observacoes (pessoa_juridica_id, observacao) VALUES ('$idPj','$observacao')";
+                    if (!mysqli_query($con, $sqlObs)) {
+                        $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlObs;
+                    }
                 }
             }
+            $mensagem .= mensagem("success", "Gravado com sucesso!");
+        } else {
+            $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
         }
-        $mensagem .= mensagem("success", "Gravado com sucesso!");
-    }
-    else {
-        $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
 }
 
@@ -251,18 +251,6 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                                     }
                                     ?>
                                 </div>
-                                <?php
-                                $tel = $con->query("SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'");
-                                $x = 1;
-                                while ($telefone = mysqli_fetch_assoc($tel)){?>
-                                    <div class="form-group col-md-2">
-                                        <label for="telefone[]">Telefone #<?=$x?>:</label>
-                                        <input type="text" name="telefone[]" id="telefone" onkeyup="mascara( this, mtel );"  class="form-control" placeholder="Digite o telefone" required maxlength="15" value="<?= $telefone['telefone']?>">
-                                    </div>
-                                    <?php
-                                    $x++;
-                                }
-                                ?>
                             </div>
                             <hr/>
                             <div class="row">
