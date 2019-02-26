@@ -4,7 +4,7 @@ $con = bancoMysqli();
 // include "includes/menu_interno.php";
 unset($_SESSION['idPj_pedido']);
 
-include "includes/menu_pj.php";
+include "includes/menu_interno.php";
 
 $exibir = ' ';
 $resultado = "<td></td>";

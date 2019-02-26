@@ -1,6 +1,11 @@
 <?php
+include "includes/menu_interno.php";
 $con = bancoMysqli();
-//$idPessoaJuridica = $_SESSION['idPj_pedido'] ?? null;
+date_default_timezone_set('America/Sao_Paulo');
+
+if(isset($_POST['idPj'])){
+    $idPj = $_POST['idPj'];
+}
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $razao_social = addslashes($_POST['razao_social']);
@@ -9,150 +14,124 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $email = $_POST['email'];
     $telefone = $_POST['telefone'];
     $cep = $_POST['cep'];
-    $logradouro = $_POST['logradouro'];
-    $bairro = $_POST['bairro'];
+    $logradouro = addslashes($_POST['rua']);
     $numero = $_POST['numero'];
     $complemento = $_POST['complemento'] ?? NULL;
-    $uf = $_POST['uf'];
-    $cidade = $_POST['cidade'];
-
-}
-
-if (isset($_POST['editProponente'])){
-    $idPessoaJuridica = $_POST['idProponente'];
-    $_SESSION['idPessoaJuridica'] = $idPessoaJuridica;
-    $_SESSION['idPj_pedido'] = $_POST['idProponente'];
-}
-
-if (isset($_POST['cadastra'])) {
+    $bairro = addslashes($_POST['bairro']);
+    $cidade = addslashes($_POST['cidade']);
+    $uf = $_POST['estado'];
+    $banco = $_POST['banco'] ?? NULL;
+    $agencia = $_POST['agencia'] ?? NULL;
+    $conta = $_POST['conta'] ?? NULL;
+    $observacao = addslashes($_POST['observacao']) ?? NULL;
     $ultima_atualizacao = date('Y-m-d H:i:s');
-    $sql = "INSERT INTO pessoa_juridicas 
-                                (razao_social,
-                                 cnpj, 
-                                 ccm,
-                                 email,
-                                 ultima_atualizacao) 
-                          VALUES ('$razao_social',
-                                  '$cnpj',
-                                  '$ccm',
-                                  '$email',
-                                  '$ultima_atualizacao')";
+}
 
-    if (mysqli_query($con, $sql)) {
-        $idPessoaJuridica = recuperaUltimo('pessoa_juridicas');
-        $_SESSION['idPessoaJuridica'] = $idPessoaJuridica;
-        $_SESSION['idPj_pedido']  = $idPessoaJuridica;
-       
-
+if(isset($_POST['cadastra'])) {
+    $mensagem = "";
+    $sql = "INSERT INTO pessoa_juridicas (razao_social, cnpj, ccm, email, ultima_atualizacao) VALUES ('$razao_social', '$cnpj', '$ccm', '$email', '$ultima_atualizacao')";
+    if(mysqli_query($con, $sql)) {
+        $idPj = recuperaUltimo('pessoa_juridicas');
         // cadastrar o telefone de pj
-        $sqlTelefone = "INSERT INTO pj_telefones
-                                                (pessoa_juridica_id,
-                                                 telefone) 
-                                          VALUES ('$idPessoaJuridica',
-                                                  '$telefone')";
-        mysqli_query($con, $sqlTelefone);
-
+        foreach ($telefone AS $telefones){
+            if (!empty($telefones)){
+                $sqlTel = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone, publicado) VALUES ('$idPj','$telefones',1)";
+                mysqli_query($con,$sqlTel);
+            }
+        }
         // cadastrar endereco de pj
-        $sqlEndereco = "INSERT INTO pj_enderecos
-                                                (pessoa_juridica_id,
-                                                 logradouro,
-                                                 numero,
-                                                 complemento,
-                                                 bairro,
-                                                 cidade,
-                                                 uf,
-                                                 cep)
-                                          VALUES ('$idPessoaJuridica',
-                                                  '$logradouro',
-                                                  '$numero',
-                                                  '$complemento',
-                                                  '$bairro',
-                                                  '$cidade',
-                                                  '$uf',
-                                                  '$cep')";
+        $sqlEndereco = "INSERT INTO pj_enderecos (pessoa_juridica_id, logradouro, numero, complemento, bairro, cidade, uf, cep) VALUES ('$idPj','$logradouro','$numero', '$complemento', '$bairro', '$cidade', '$uf', '$cep')";
+        if(!mysqli_query($con, $sqlEndereco)){
+            $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.").$sqlEndereco;
+        }
 
-        mysqli_query($con, $sqlEndereco);
+        if($banco != NULL){
+            $sqlBanco = "INSERT INTO pj_bancos (pessoa_juridica_id, banco_id, agencia, conta) VALUES ('$idPj', '$banco', '$agencia', '$conta')";
+            if(!mysqli_query($con, $sqlBanco)){
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.").$sqlBanco;
+            }
+        }
 
-        $mensagem = mensagem("success", "Cadastrado com sucesso!");
+        if($observacao != NULL){
+            $sqlObs = "INSERT INTO pj_observacoes (pessoa_juridica_id, observacao) VALUES ('$idPj','$observacao')";
+            if(!mysqli_query($con, $sqlObs)){
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.").$sqlObs;
+            }
+        }
+
+        $mensagem .= mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
     } else {
-        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+        $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
 }
 
-if (isset($_POST['edita'])) {
-    $ultima_atualizacao = date('Y-m-d H:i:s');
-    $idPessoaJuridica = $_POST['idPessoaJuridica'];
-    $sql = "UPDATE pessoa_juridicas SET
-                              razao_social = '$razao_social',
-                              cnpj = '$cnpj', 
-                              ccm = '$ccm',
-                              email = '$email',
-                              ultima_atualizacao = '$ultima_atualizacao'
-                              WHERE id = '$idPessoaJuridica'";
+if(isset($_POST['edita'])){
+    $idPj = $_POST['edita'];
+    $mensagem = "";
+    $sql = "UPDATE pessoa_juridicas SET razao_social = '$razao_social', cnpj = '$cnpj', ccm = '$ccm', email = '$email' WHERE id = '$idPj'";
 
-    $sqlTelefone = "UPDATE pj_telefones SET
-                                          telefone = '$telefone'
-                                          WHERE pessoa_juridica_id = '$idPessoaJuridica'";
 
-    $sqlEndereco = "UPDATE pj_enderecos SET
-                                          cep = '$cep',
-                                          logradouro = '$logradouro',
-                                          uf = '$uf',
-                                          cidade = '$cidade',
-                                          bairro = '$bairro',
-                                          numero = '$numero',
-                                          complemento = '$complemento'
-                                          WHERE pessoa_juridica_id = '$idPessoaJuridica'";
+    if(mysqli_query($con, $sql)) {
+        foreach ($telefone AS $telefones){
+            if (!empty($telefones)){
+                $sqlTel = "UPDATE pj_telefones SET telefone = '$telefones' WHERE pessoa_juridica_id = '$idPj'";
+                mysqli_query($con,$sqlTel);
+            }
+        }
 
-    If (mysqli_query($con, $sql) && mysqli_query($con, $sqlTelefone) && mysqli_query($con, $sqlEndereco)) {
-        $mensagem = mensagem("success", "Atualizado com sucesso!");
-        //gravarLog($sql);
-    } else {
-        $mensagem = mensagem("danger", "Erro ao atualizar! Tente novamente.");
-        //gravarLog($sql);
+        $sqlEndereco = "UPDATE pj_enderecos SET logradouro = '$logradouro', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', uf = '$uf', cep = '$cep' WHERE pessoa_juridica_id = '$idPj'";
+        if(!mysqli_query($con, $sqlEndereco)){
+            $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[E]").$sqlEndereco;
+        }
+
+        $banco_existe = verificaExiste("pj_bancos","pessoa_juridica_id",$idPj,0);
+        if($banco_existe['numero'] > 0){
+            $sqlBanco = "UPDATE pj_bancos SET banco_id = '$banco', agencia = '$agencia', conta = '$conta' WHERE pessoa_juridica_id = '$idPj'";
+            if(!mysqli_query($con, $sqlBanco)){
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]").$sqlBanco;
+            }
+        }
+        else{
+            $sqlBanco = "INSERT INTO pj_bancos (pessoa_juridica_id, banco_id, agencia, conta) VALUES ('$idPj', '$banco', '$agencia', '$conta')";
+            if(!mysqli_query($con, $sqlBanco)){
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.").$sqlBanco;
+            }
+        }
+
+        if($observacao != NULL){
+            $obs_existe = verificaExiste("pj_observacoes","pessoa_juridica_id",$idPj,0);
+            if($obs_existe['numero'] > 0){
+                $sqlObs = "UPDATE pj_observacoes SET observacao = 'observacao' WHERE pessoa_juridica_id = '$idPj'";
+                if(!mysqli_query($con, $sqlObs)){
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]").$sqlObs;
+                }
+            }
+            else{
+                $sqlObs = "INSERT INTO pj_observacoes (pessoa_juridica_id, observacao) VALUES ('$idPj','$observacao')";
+                if(!mysqli_query($con, $sqlObs)){
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.").$sqlObs;
+                }
+            }
+        }
+        $mensagem .= mensagem("success", "Gravado com sucesso!");
+    }
+    else {
+        $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
 }
 
-if (isset($_POST['carregar'])) {
-    $idPessoaJuridica = $_POST['idPj'];
-    $_SESSION['idPessoaJuridica'] = $idPessoaJuridica;
-    $_SESSION['idPj_pedido'] = $_POST['idPj'];
-}
-
-if (isset($_POST['inserir'])){
-    $idPessoaJuridica = $_SESSION['idPessoaJuridica'];
-
-    $representante = $_SESSION['tipo_representante'];
-
-    if($representante == 1){
-        $representante = "representante_legal1_id";
-    } else if($representante == 2){
-        $representante = "representante_legal2_id";
-    }
-
-    $idRepresentante = $_SESSION['idRepresentante'];
-
-    $sqlPessoaJuridica = "UPDATE pessoa_juridicas SET $representante = $idRepresentante WHERE id = '$idPessoaJuridica'";
-    if(mysqli_query($con, $sqlPessoaJuridica)){
-        $mensagem = mensagem("success", "Representante legal inserido");
-        //gravarLog($sql);
-    }else{
-        $mensagem = $mensagem("danger", "Erro ao inserir presentante");
-    }
-}
-
-$pessoa_juridica = recuperaDados("pessoa_juridicas", "id", $idPessoaJuridica);
-$pj_telefone = recuperaDados("pj_telefones", "pessoa_juridica_id", $idPessoaJuridica);
-$pj_endereco = recuperaDados("pj_enderecos", "pessoa_juridica_id", $idPessoaJuridica);
-include "includes/menu_pj.php";
+$pj = recuperaDados("pessoa_juridicas","id",$idPj);
+$end = recuperaDados("pj_enderecos","pessoa_juridica_id",$idPj);
+$obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
 ?>
+
 <script>
     $(document).ready(function () {
         $("#cep").mask('00000-000', {reverse: true});
-        $("#telefone").mask('(00) 0000-00009', {reverse: true});
     });
+
 </script>
 <div class="content-wrapper">
     <section class="content">
@@ -165,177 +144,213 @@ include "includes/menu_pj.php";
                     <div class="box-header with-border">
                         <h3 class="box-title">Informações Pessoa Jurídica</h3>
                     </div>
-
                     <div class="row" align="center">
-                        <?php if (isset($mensagem)) {
-                            echo $mensagem;
-                        }; ?>
+                        <?= $mensagem ?? NULL ?>
                     </div>
 
                     <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
                         <div class="box-body">
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="razao_social">Razão Social: *</label>
+                                    <input type="text" class="form-control" id="razao_social" name="razao_social"
+                                           maxlength="100" required value="<?= $pj['razao_social'] ?>">
+                                </div>
+                            </div>
+
+                            <div class="row ">
+                                <div class="form-group col-md-2">
+                                    <label for="cnpj">CNPJ: *</label>
+                                    <input type="text" class="form-control" id="cnpj" name="cnpj"
+                                           required readonly value="<?= $pj['cnpj'] ?>">
+
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Anexo do Cartão CNPJ</label><br>
+                                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-cnpj">Clique aqui para anexar</button>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <label for="ccm">CCM: </label>
+                                    <input type="text" class="form-control" id="ccm" name="ccm" value="<?= $pj['ccm'] ?>">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Anexo FDC - CCM ou CPOM</label><br>
+                                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-ccm">Clique aqui para anexar</button>
+                                </div>
+                            </div>
+                            <hr/>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="razao_social">Razão Social: </label>
-                                    <input type="text" class="form-control" id="razao_social" name="razao_social"
-                                           maxlength="100" required value="<?= $pessoa_juridica['razao_social'] ?>">
+                                    <label for="email">E-mail: *</label>
+                                    <input type="email" name="email" class="form-control" maxlength="60" placeholder="Digite o E-mail" required value="<?= $pj['email'] ?>">
                                 </div>
-
-                                <div class="form-group col-md-6">
-                                    <label for="email">Email: </label>
-                                    <input type="email" class="form-control" id="email" name="email" maxlength="60"
-                                           required value="<?= $pessoa_juridica['email'] ?>">
-                                </div>
-                            </div>
-
-                            <div class="row ">
-                                <div class="form-group col-md-4">
-                                    <label for="cnpj">CNPJ: </label>
-                                    <input type="text" class="form-control" id="cnpj" name="cnpj"
-                                           required value="<?= $pessoa_juridica['cnpj'] ?>" readonly>
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label for="ccm">CCM: </label>
-                                    <input type="text" class="form-control" id="ccm" name="ccm"
-                                           value="<?= $pessoa_juridica['ccm'] ?>">
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label for="telefone">Telefone: </label>
-                                    <input type="text" class="form-control" id="telefone" name="telefone" required
-                                           value="<?= $pj_telefone['telefone'] ?>" data-mask="(00) 0000-00000">
-                                </div>
-                            </div>
-
-                            <div class="row ">
                                 <?php
-                                if (isset($pessoa_juridica['representante_legal1_id'])) {
-                                    ?>
-                                    <div class="form-group col-md-offset-3 col-md-3">
-                                        <label for="nome_representante">Representante Legal 1: </label>
-                                        <?php
-                                        $representante1 = recuperaDados('representante_legais', 'id',
-                                            $pessoa_juridica['representante_legal1_id']);
-                                        ?>
-                                        <input type="text" readonly name="nome_representante" id="nome_representante"
-                                               value="
-                                <?= $representante1['nome'] ?>" class="form-control">
+                                $tel = $con->query("SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'");
+                                $x = 1;
+                                while ($telefone = mysqli_fetch_assoc($tel)){?>
+                                    <div class="form-group col-md-2">
+                                        <label for="telefone[]">Telefone #<?=$x?>:</label>
+                                        <input type="text" name="telefone[]" id="telefone" onkeyup="mascara( this, mtel );"  class="form-control" placeholder="Digite o telefone" required maxlength="15" value="<?= $telefone['telefone']?>">
                                     </div>
                                     <?php
-                                }
-
-                                if (isset($pessoa_juridica['representante_legal2_id'])) {
-                                    ?>
-                                    <div class="form-group col-lg-offset- col-md-3">
-                                        <label for="nome_representante">Representante Legal 2: </label>
-                                        <?php
-                                        $representante2 = recuperaDados('representante_legais', 'id',
-                                            $pessoa_juridica['representante_legal2_id']);
-                                        ?>
-                                        <input type="text" readonly name="nome_representante" id="nome_representante"
-                                               value="
-                                <?= $representante2['nome'] ?>" class="form-control">
-                                    </div>
-                                    <?php
+                                    $x++;
                                 }
                                 ?>
-
-
                             </div>
-
+                            <hr/>
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label for="cep">CEP: </label>
-                                    <input type="text" class="form-control" id="cep" name="cep"
-                                           maxlength="100" required value="<?= $pj_endereco['cep'] ?>" data-mask="00000-000">
+                                    <label for="cep">CEP: *</label>
+                                    <input type="text" class="form-control" name="cep" id="cep" maxlength="9" placeholder="Digite o CEP" required data-mask="00000-000" value="<?= $end['cep'] ?>">
                                 </div>
-
-                                <div class="form-group col-md-5">
-                                    <label for="logradouro">Rua: </label>
-                                    <input type="text" class="form-control" id="rua" name="logradouro"
-                                           maxlength="200"
-                                           readonly value="<?= $pj_endereco['logradouro'] ?>">
+                                <div class="form-group col-md-2">
+                                    <label>&nbsp;</label><br>
+                                    <input type="button" class="btn btn-primary" value="Carregar">
                                 </div>
-
+                            </div>
+                            <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="bairro">Bairro:</label>
-                                    <input type="text" class="form-control" id="bairro" name="bairro" readonly
-                                           value="<?= $pj_endereco['bairro'] ?>">
+                                    <label for="rua">Rua: *</label>
+                                    <input type="text" class="form-control" name="rua" id="rua" placeholder="Digite a rua" maxlength="200" readonly value="<?= $end['logradouro'] ?>">
+                                </div>
+                                <div class="form-group col-md-1">
+                                    <label for="numero">Número: *</label>
+                                    <input type="number" name="numero" class="form-control" placeholder="Ex.: 10" required value="<?= $end['numero'] ?>">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="complemento">Complemento:</label>
+                                    <input type="text" name="complemento" class="form-control" maxlength="20" placeholder="Digite o complemento" value="<?= $end['complemento'] ?>">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="bairro">Bairro: *</label>
+                                    <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Digite o Bairro" maxlength="80" readonly value="<?= $end['bairro'] ?>">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="cidade">Cidade: *</label>
+                                    <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Digite a cidade" maxlength="50" readonly value="<?= $end['cidade'] ?>">
+                                </div>
+                                <div class="form-group col-md-1">
+                                    <label for="estado">Estado: *</label>
+                                    <input type="text" class="form-control" name="estado" id="estado" maxlength="2" placeholder="Ex.: SP" readonly value="<?= $end['uf'] ?>">
                                 </div>
                             </div>
-
+                            <hr/>
+                            <?php
+                            $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'");
+                            foreach($atracao as $row)
+                            {
+                                if($row['valor_individual'] != 0.00){
+                                    $banco = recuperaDados("pj_bancos","pessoa_juridica_id",$idPj);
+                                ?>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="banco">Banco:</label>
+                                            <select id="banco" name="banco" class="form-control">
+                                                <option value="">Selecione um banco...</option>
+                                                <?php
+                                                geraOpcao("bancos", $banco['banco_id']);
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="agencia">Agência:</label>
+                                            <input type="text" name="agencia" class="form-control"  placeholder="Digite a Agência" maxlength="12" value="<?= $banco['agencia'] ?>">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="conta">Conta:</label>
+                                            <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12" value="<?= $banco['conta'] ?>">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-3">
+                                            <label>Gerar FACC</label><br>
+                                            <button type="button" class="btn btn-primary btn-block">Clique aqui para gerar a FACC</button>
+                                        </div>
+                                        <div class="form-group col-md-5">
+                                            <label>&nbsp;</label><br>
+                                            <p>A FACC deve ser impressa, datada e assinada nos campos indicados no documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema no campo correspondente.</p>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Anexo FACC</label><br>
+                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-facc">Clique aqui para anexar</button>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <?php
+                                }
+                            }
+                            ?>
                             <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="numero">Número: </label>
-                                    <input type="number" class="form-control" id="numero" name="numero" required
-                                           value="<?= $pj_endereco['numero'] ?>">
-                                </div>
-
-                                <div class="form-group col-md-3">
-                                    <label for="complemento">Complemento: </label>
-                                    <input type="text" class="form-control" id="complemento" name="complemento"
-                                           maxlength="20" value="<?= $pj_endereco['complemento'] ?>">
-                                </div>
-
-                                <div class="form-group col-md-3">
-                                    <label for="cidade">Cidade:</label>
-                                    <input type="text" class="form-control" id="cidade" name="cidade" readonly
-                                           value="<?= $pj_endereco['cidade'] ?>">
-                                </div>
-
-                                <div class="form-group col-md-3">
-                                    <label for="uf">Estado:</label>
-                                    <input type="text" class="form-control" id="estado" name="uf" readonly
-                                           value="<?= $pj_endereco['uf'] ?>">
+                                <div class="form-group col-md-12">
+                                    <label for="observacao">Observação: </label>
+                                    <textarea id="observacao" name="observacao" rows="3" class="form-control"><?= $obs['observacao'] ?? NULL ?></textarea>
                                 </div>
                             </div>
 
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-default">Cancelar</button>
-                                <input type="hidden" name="idPessoaJuridica" value="<?= $idPessoaJuridica ?>">
-                                <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">
-                                    Atualizar
-                                </button>
+                                <button type="submit" name="edita" value="<?= $pj['id'] ?>" class="btn btn-info pull-right">Atualizar</button>
                             </div>
+                        </div>
                     </form>
-                    <div class="row">
-                        
-                        <div class="col-md-6">
-                            <?php if ($pessoa_juridica['representante_legal1_id'] == null){ ?>
-                            <form method="POST" action="?perfil=evento&p=representante_busca"
-                                  role="form">
-                                <input type="hidden" name="tipo_representante" id="tipo_representante"
-                                       value="1">
-                                <button type="submit" name="busca" id="busca"
-                                        class="btn btn-block btn-primary btn-lg"> Buscar Representante Legal 1
-                                </button>
-                            </form>
-                            <?php }else{ ?>
-                                <form method="post" action="?perfil=evento&p=representante_edita" role="form">
-                                    <input type="hidden" name="tipo_representante" id="tipo_representante"
-                                           value="1">
-                                    <input type="hidden" name="idRepresentante" id="idRepresentante" value="<?= $pessoa_juridica['representante_legal1_id'] ?>">
-                                    <button type="submit" name="carregar" id="carregar"
-                                            class="btn btn-block btn-primary btn-lg"> Editar Representante Legal 1
-                                    </button>
-                                </form>
-                            <?php } ?>
-                        </div>
-                        <div class="col-md-6">
-                            <form method="POST" action="?perfil=evento&p=representante_busca"
-                                  role="form">
-                                <input type="hidden" name="tipo_representante" id="tipo_representante"
-                                       value="2">
-                                <button type="submit" name="busca" id="busca"
-                                        class="btn btn-block btn-primary btn-lg"> Buscar Representante Legal 2
-                                </button>
-                            </form>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-default">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <button type="submit" name="edita" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Demais Anexos</button>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
+                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Representante 01</button>
+                                </form>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
+                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Representante 02</button>
+                                </form>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
+                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Ir ao pedido de contratação</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /. box-body -->
+                </div>
+            </div>
+
+        <!-- /.modal cartão cnpj -->
+        <div class="modal fade" id="modal-cnpj">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Upload do Cartão CNPJ</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <input type="file">
+                            <br/>
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal cartão cnpj -->
 
     </section>
 </div>
