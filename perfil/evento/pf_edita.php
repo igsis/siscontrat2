@@ -1,5 +1,7 @@
 <?php
 date_default_timezone_set('America/Sao_Paulo');
+$con = bancoMysqli();
+$conn = bancoPDO();
 $idPf = $_SESSION['idPf_pedido'] ?? NULL;
 /*function recuperaTelefones($id,$tabela,$campo,$campoWhere){
 
@@ -13,10 +15,6 @@ $idPf = $_SESSION['idPf_pedido'] ?? NULL;
 
 //    return $resultado;
 }*/
-
-
-
-$con = bancoMysqli();
 
 if(isset($_POST['idPf']) || isset($_POST['idProponente'])){
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
@@ -196,7 +194,7 @@ $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 
 $pessoaFisica = recuperaDados("pessoa_fisicas","id",$idPf);
 $endereco = recuperaDados("pf_enderecos","pessoa_fisica_id",$idPf);
-$telefones = recuperaTelefones($pessoaFisica['id'],"pf_telefones","telefone","pessoa_fisica_id");
+//$telefones = recuperaTelefones($pessoaFisica['id'],"pf_telefones","telefone","pessoa_fisica_id");
 $drts = recuperaDados("drts","pessoa_fisica_id",$idPf);
 $observacao = recuperaDados("pf_observacoes","pessoa_fisica_id",$idPf);
 $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
@@ -223,7 +221,6 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
         <!-- START FORM-->
         <h2 class="page-header">Evento</h2>
         <div class="row">
@@ -250,75 +247,75 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                                     <input type="text" class="form-control" name="nomeArtistico" placeholder="Digite o nome artistico" maxlength="70" required value="<?= $pessoaFisica['nome_artistico']?>">
                                 </div>
                             </div>
-
-                            <?php
-                            if(empty($pessoaFisica['cpf'])){
-                            ?>
-                                <div class="row">
-                                    <div class="form-group col-md-12">
+                            <div class="row">
+                                <?php
+                                if(empty($pessoaFisica['cpf'])){
+                                    ?>
+                                    <div class="form-group col-md-6">
                                         <label for="passaporte" >Passaporte:</label>
                                         <input type="text" name="passaporte" class="form-control" value="<?= $pessoaFisica['passaporte']?>" disabled>
                                     </div>
-                                </div>
-                            <?php
-                            }
-                            else{
-                                ?>
-                                <div class="row">
-                                    <div class="form-group col-md-4">
+                                    <?php
+                                }
+                                else{
+                                    ?>
+                                    <div class="form-group col-md-2">
                                         <label for="rg">RG: </label>
-                                        <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" value="<?= $pessoaFisica['rg']?>">
+                                        <input type="text" class="form-control" name="rg" placeholder="Digite o RG" maxlength="20" value="<?= $pessoaFisica['rg']?>">
                                     </div>
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-2">
                                         <label for="cpf" id="cpf">CPF:</label>
                                         <input type="text" id="cpf" name="cpf" class="form-control" value="<?= $pessoaFisica['cpf']?>" disabled>
                                     </div>
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-2">
                                         <label for="ccm">CCM: *</label>
                                         <input type="text" name="ccm" class="form-control" placeholder="Digite o CCM" maxlength="11" required value="<?= $pessoaFisica['ccm']?>">
                                     </div>
-                                </div>
-                            <?php
-                            }
-                            ?>
-
-                            <div class="row">
-                                <div class="form-group col-md-6">
+                                    <?php
+                                }
+                                ?>
+                                <div class="form-group col-md-3">
                                     <label for="dtNascimento">Data de Nascimento: *</label>
                                     <input type="date" class="form-control" id="dtNascimento" name="dtNascimento" onkeyup="barraData(this);" value="<?=$pessoaFisica['data_nascimento']?>"/>
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-3">
                                     <label for="nacionalidade">Nacionalidade: *</label>
                                     <select class="form-control" id="nacionalidade" name="nacionalidade">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("nacionalidades",$pessoaFisica['nacionalidade_id']);
+                                        geraOpcao("nacionalidades",$pessoaFisica['nacionalidade_id']);
                                         ?>
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-4">
                                     <label for="cep">CEP: *</label>
-                                    <input type="text" class="form-control" name="cep" id="cep" maxlength="9" placeholder="Digite o CEP" required value="<?=$endereco['cep']?>" data-mask="00000-000">
+                                    <input type="text" class="form-control" name="cep" id="cep" maxlength="9" placeholder="Digite o CEP" required data-mask="00000-000" value="<?= $endereco['cep']?>">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>&nbsp;</label><br>
+                                    <input type="button" class="btn btn-primary" value="Carregar">
+                                </div>
+                                <div style="margin-top: 10px;" class="form-group col-md-6">
+                                    <h4 class="text-center col-md-12"><em>Insira seu CEP e aperte a tecla "TAB" para seu endereço carregar automaticamente</em></h4>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-6">
                                     <label for="rua">Rua: *</label>
                                     <input type="text" class="form-control" name="rua" id="rua" placeholder="Digite o endereço" maxlength="200" readonly value="<?= $endereco['logradouro']?>">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
                                     <input type="number" name="numero" class="form-control" placeholder="Digite o número" required value="<?= $endereco['numero']?>">
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-3">
                                     <label for="complemento">Complemento: </label>
                                     <input type="text" name="complemento" class="form-control" maxlength="20" placeholder="Digite o complemento" value="<?= $endereco['complemento']?>">
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="bairro">Bairro: *</label>
@@ -333,6 +330,7 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                                     <input type="text" class="form-control" name="estado" id="estado" maxlength="2" placeholder="Digite o estado ex: (SP)" readonly value="<?= $endereco['uf']?>">
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="email">E-mail: *</label>
@@ -373,52 +371,51 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                                     ?>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="drt">DRT: </label>
                                     <input type="text" name="drt" class="form-control" maxlength="15" placeholder="Digite o DRT" value="<?= $drts['drt']?>">
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
-                                    <textarea name="observacao" rows="5" class="form-control"><?= $observacao['observacao'] ?></textarea>
+                                    <textarea name="observacao" rows="3" class="form-control"><?= $observacao['observacao'] ?></textarea>
                                 </div>
                             </div>
-                            <div class="box-header">
-                                <h3 class="box-title">Dados Bancários</h3>
-                            </div>
-                            <div class="box-body">
-                               <div class="row">
-                                 <div class="form-group col-md-12">
-                                   <label for="banco">Banco:</label>
-                                   <select id="banco" name="banco" class="form-control">
-                                     <option value="">Selecione um banco...</option>
-                                        <?php
-                                          geraOpcao("bancos",$banco['banco_id']);
-                                        ?>
-                                   </select>
-                                 </div>
-                               </div>
-                               <div class="row">
-                                   <div class="form-group col-md-6">
-                                       <label for="agencia">Agência: *</label>
-                                       <input type="text" name="agencia" class="form-control" placeholder="Digite a Agência" maxlength="12" required value="<?= $banco['agencia']?>">
-                                   </div>
-                                   <div class="form-group col-md-6">
-                                       <label for="conta">Conta: *</label>
-                                       <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12" required value="<?= $banco['conta']?>">
-                                   </div>
-                               </div>
+                            <hr/>
+
+                            <div class="row">
+                                <h4 class="text-bold text-warning text-center col-md-12">Dados Bancários</h4>
                             </div>
 
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="banco">Banco:</label>
+                                        <select id="banco" name="banco" class="form-control">
+                                            <option value="">Selecione um banco...</option>
+                                            <?php
+                                            geraOpcao("bancos",$banco['banco_id']);
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="agencia">Agência: *</label>
+                                        <input type="text" name="agencia" class="form-control" placeholder="Digite a Agência" maxlength="12" required value="<?= $banco['agencia']?>">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="conta">Conta: *</label>
+                                        <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12" required value="<?= $banco['conta']?>">
+                                    </div>
+                                </div>
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?=$idPf?>">
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
                             </div>
                         </form>
                     </div>
-                </div>
                     <!-- /.box-body -->
                 </div>
                 <!-- /.box -->
@@ -427,11 +424,7 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
         </div>
         <!-- /.row -->
         <!-- END ACCORDION & CAROUSEL-->
-
     </section>
     <!-- /.content -->
 </div>
-<!--<script>
-
-</script>-->
 
