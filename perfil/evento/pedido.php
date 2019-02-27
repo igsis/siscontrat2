@@ -77,7 +77,7 @@ $num = mysqli_num_rows($query);
                                     echo "<td>";
                                         $idAtracao = $pedido['origem_id'];
                                         $atracao_evento = recuperaDados("atracoes","id",$idAtracao);
-                                        $atracao_id = $atracao_evento['atracao_id'];
+                                        $atracao_id = $atracao_evento['id'];
                                         $sql_atracao = "SELECT nome_atracao FROM atracoes WHERE id = '$atracao_id'";
                                         $query_atracao = mysqli_query($con,$sql_atracao);
                                         //$arr_atracao = mysqli_fetch_array($query_atracao);
