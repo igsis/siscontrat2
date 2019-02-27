@@ -123,14 +123,14 @@ if(isset($_POST['edita'])) {
             } else {
                 $sqlBanco = "INSERT INTO pj_bancos (pessoa_juridica_id, banco_id, agencia, conta) VALUES ('$idPj', '$banco', '$agencia', '$conta')";
                 if (!mysqli_query($con, $sqlBanco)) {
-                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlBanco;
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlBanco;
                 }
             }
 
             if ($observacao != NULL) {
                 $obs_existe = verificaExiste("pj_observacoes", "pessoa_juridica_id", $idPj, 0);
                 if ($obs_existe['numero'] > 0) {
-                    $sqlObs = "UPDATE pj_observacoes SET observacao = 'observacao' WHERE pessoa_juridica_id = '$idPj'";
+                    $sqlObs = "UPDATE pj_observacoes SET observacao = '$observacao' WHERE pessoa_juridica_id = '$idPj'";
                     if (!mysqli_query($con, $sqlObs)) {
                         $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlObs;
                     }
@@ -291,7 +291,7 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                             </div>
                             <hr/>
                             <?php
-                            $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'");
+                            $atracao = $conn->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'");
                             foreach($atracao as $row)
                             {
                                 if($row['valor_individual'] != 0.00){
@@ -369,7 +369,7 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                                 </form>
                             </div>
                             <div class="form-group col-md-3">
-                                <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
+                                <form method="POST" action="?perfil=evento&p=pedido_cadastro" role="form">
                                     <button type="submit" name="edita" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Ir ao pedido de contratação</button>
                                 </form>
                             </div>

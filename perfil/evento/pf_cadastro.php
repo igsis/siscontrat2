@@ -154,16 +154,16 @@ if($evento['tipo_evento_id'] == 1){
                                     <input type="email" name="email" class="form-control" maxlength="60" placeholder="Digite o E-mail" required>
                                 </div>
                                 <div class="form-group col-md-2">
-                                    <label>Telefone #1:</label>
-                                    <input type="text" id="telefone" name="telefone[]" onkeyup="mascara( this, mtel );"  class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                    <label>Telefone #1: *</label>
+                                    <input type="text" id="telefone" name="telefone[0]" onkeyup="mascara( this, mtel );"  class="form-control" placeholder="Digite o telefone" required maxlength="15">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Telefone #2:</label>
-                                    <input type="text" id="telefone" name="telefone[]" onkeyup="mascara( this, mtel );"  class="form-control" placeholder="Digite o telefone" maxlength="15">
+                                    <input type="text" id="telefone1" name="telefone[1]" onkeyup="mascara( this, mtel );"  class="form-control" placeholder="Digite o telefone" maxlength="15">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Telefone #3:</label>
-                                    <input type="text" id="telefone" name="telefone[]" onkeyup="mascara( this, mtel );"  class="form-control telefone" placeholder="Digite o telefone" maxlength="15">
+                                    <input type="text" id="telefone2" name="telefone[2]" onkeyup="mascara( this, mtel );"  class="form-control telefone" placeholder="Digite o telefone" maxlength="15">
                                 </div>
                             </div>
 
@@ -191,7 +191,7 @@ if($evento['tipo_evento_id'] == 1){
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="banco">Banco:</label>
-                                    <select id="banco" name="banco" class="form-control">
+                                    <select required id="banco" name="banco" class="form-control">
                                         <option value="">Selecione um banco...</option>
                                         <?php
                                         geraOpcao("bancos", "");

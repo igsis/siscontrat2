@@ -1,6 +1,7 @@
 <?php
+date_default_timezone_set('America/Sao_Paulo');
 $idPf = $_SESSION['idPf_pedido'] ?? NULL;
-function recuperaTelefones($id,$tabela,$campo,$campoWhere){
+/*function recuperaTelefones($id,$tabela,$campo,$campoWhere){
 
     $con = bancoMysqli();
 
@@ -11,7 +12,9 @@ function recuperaTelefones($id,$tabela,$campo,$campoWhere){
 //    $resultado = mysqli_fetch_array($query);
 
 //    return $resultado;
-}
+}*/
+
+
 
 $con = bancoMysqli();
 
@@ -38,7 +41,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $cidade = $_POST['cidade'];
     $estado = $_POST['estado'];
     $email = $_POST['email'];
-    $telefone = $_POST['telefone'];
+    $telefones = $_POST['telefone'];
     $drt = $_POST['drt'] ?? NULL;
     $incricoes = $_POST['inscricaoPissInss'] ?? NULL;
     $observacao = $_POST['observacao'] ?? NULL;
@@ -67,11 +70,11 @@ if (isset($_POST['cadastra'])){
                           (pessoa_fisica_id, logradouro, numero,complemento, bairro, cidade, uf, cep)
                    VALUES ('$idPf','$rua','$numero','$complemento','$bairro','$cidade','$estado','$cep')";
         if (mysqli_query($con,$sqlEnd)){
-            foreach ($telefone AS $telefones){
-                if (!empty($telefones)){
+            foreach ($telefones AS $telefone){
+                if (!empty($telefone)){
                     $sqlTel = "INSERT INTO siscontrat.`pf_telefones`
                                (pessoa_fisica_id, telefone, publicado)
-                               VALUES ('$idPf','$telefones',1)";
+                               VALUES ('$idPf','$telefone',1)";
                     mysqli_query($con,$sqlTel);
                 }
             }
@@ -96,7 +99,7 @@ if (isset($_POST['cadastra'])){
                                 $idPedido = recuperaUltimo("pedidos");
                                 $_SESSION['idPedido'] = $idPedido;
                                 $mensagem = mensagem("success","Cadastro realizado com sucesso.");
-                                echo "<meta http-equiv='refresh' content='0.5, url=?perfil=evento&p=pedido_edita'>";
+                               // echo "<meta http-equiv='refresh' content='0.5, url=?perfil=evento&p=pedido_edita'>";
                             }
                             else{
                                 $mensagem = mensagem("danger","Erro ao inserir banco: ". die(mysqli_error($con)));
@@ -119,7 +122,7 @@ if (isset($_POST['cadastra'])){
     }
 }
 
-if (isset($_POST['edita'])){
+if (isset($_POST['edita'])) {
 
     $idPf = $_POST['idPf'];
     date_default_timezone_set('America/Sao_Paulo');
@@ -137,12 +140,48 @@ if (isset($_POST['edita'])){
                    ultima_atualizacao = '$data'
                    WHERE id = '$idPf'";
 
-    if (mysqli_query($con, $sql)){
-        $mensagem = mensagem("success","Dados atualizado");
-    }else{
-        $mensagem = mensagem("danger","Erro: ".die(mysqli_error($con)));
-    }
+    if (mysqli_query($con, $sql)) {
 
+        if (isset($_POST['telefone2'])) {
+            $telefone2 = $_POST['telefone2'];
+            $sqlTelefone2 = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone) VALUES ('$idPf', '$telefone2')";
+            $query = mysqli_query($con, $sqlTelefone2);
+        }
+
+        if (isset($_POST['telefone3'])) {
+            $telefone3 = $_POST['telefone3'];
+            $sqlTelefone3 = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone) VALUES ('$idPf', '$telefone3')";
+            $query = mysqli_query($con, $sqlTelefone3);
+        }
+
+        if (mysqli_query($con, $sql)) {
+
+            foreach ($telefones as $idTelefone => $telefone) {
+
+                if (!strlen($telefone)) {
+                    // Deletar telefone do banco se for apagado.
+                    $sqlDelete = "DELETE FROM pf_telefones WHERE id = '$idTelefone'";
+                    mysqli_query($con, $sqlDelete);
+                    gravarLog($sqlDelete);
+                }
+
+                if ($telefone != '') {
+                    // editar o telefone de pf
+                    $sqlTelefone = "UPDATE  pf_telefones SET
+                                          telefone = '$telefone'
+                                  WHERE id = '$idTelefone'";
+                    mysqli_query($con, $sqlTelefone);
+                    gravarLog($sqlTelefone);
+                }
+            }
+
+
+            $mensagem = mensagem("success", "Dados atualizado");
+        } else {
+            $mensagem = mensagem("danger", "Erro: " . die(mysqli_error($con)));
+        }
+
+    }
 }
 
 if(isset($_POST['carregar'])){
@@ -151,6 +190,9 @@ if(isset($_POST['carregar'])){
 }
 
 include "includes/menu_pf.php";
+
+$sqlTelefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 
 $pessoaFisica = recuperaDados("pessoa_fisicas","id",$idPf);
 $endereco = recuperaDados("pf_enderecos","pessoa_fisica_id",$idPf);
@@ -184,26 +226,26 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
 
         <!-- START FORM-->
         <h2 class="page-header">Evento</h2>
-        <?php if (isset($mensagem)) {
-            echo $mensagem;
-        }; ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Cadastro de pessoa física</h3>
+                    <div class="row" align="center">
+                        <?= $mensagem ?? NULL;
+                        ?>
                     </div>
+                    <div class="box-header">
+                        <h3 class="box-title">Edição de pessoa física</h3>
+                    </div>
+
                     <!-- /.box-header -->
                     <div class="box-body">
                         <form action="?perfil=evento&p=pf_edita" method="post">
                             <div class="row">
-                                <div class="col-md-12 form-group">
+                                <div class="col-md-6 form-group">
                                     <label for="nome">Nome: *</label>
                                     <input type="text" class="form-control" name="nome" placeholder="Digite o nome" maxlength="70" required value="<?= $pessoaFisica['nome']?>">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 form-group">
+                                <div class="col-md-6 form-group">
                                     <label for="nomeArtistico">Nome Artistico: *</label>
                                     <input type="text" class="form-control" name="nomeArtistico" placeholder="Digite o nome artistico" maxlength="70" required value="<?= $pessoaFisica['nome_artistico']?>">
                                 </div>
@@ -242,8 +284,8 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
 
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="dataNascimento">Data de Nascimento: *</label>
-                                    <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" onkeyup="barraData(this);" value="<?= $pessoaFisica['data_nascimento']?>"/>
+                                    <label for="dtNascimento">Data de Nascimento: *</label>
+                                    <input type="date" class="form-control" id="dtNascimento" name="dtNascimento" onkeyup="barraData(this);" value="<?=$pessoaFisica['data_nascimento']?>"/>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="nacionalidade">Nacionalidade: *</label>
@@ -292,31 +334,45 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-6">
                                     <label for="email">E-mail: *</label>
                                     <input type="email" name="email" class="form-control" maxlength="60" placeholder="Digite o E-mail" required value="<?= $pessoaFisica['email']?>">
                                 </div>
-                            </div>
-                            <?php
-                            $id = $pessoaFisica["id"];
-                            $sql = "SELECT * FROM pf_telefones
-                                    WHERE pessoa_fisica_id = '$id'";
-
-                            $query = mysqli_query($con,$sql);
-                            //                                $resultado = mysqli_fetch_array($query);
-                            $x = 1;
-                            while ($telefone = mysqli_fetch_assoc($query)){?>
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <label for="telefone[]">Telefone #<?=$x?>:</label>
-                                        <input type="text" name="telefone[]" id="telefone" class="form-control" placeholder="Digite o telefone" required maxlength="15" value="<?= $telefone['telefone']?>" data-mask="(00) 0000-00009">
-                                    </div>
+                                <div class="form-group col-md-2">
+                                    <label for="telefone">Telefone #1 * </label>
+                                    <input type="text" data-mask="(00) 0000-0000" required class="form-control" id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]" value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
-                                <?php
-                                $x++;
-                            }
-                            ?>
+                                <div class="form-group col-md-2">
+                                    <label for="celular">Telefone #2 </label>
+                                    <?php
+                                    if (isset($arrayTelefones[1])) {
+                                        ?>
+                                        <input type="text" data-mask="(00)00000-0000" class="form-control" id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]" value="<?= $arrayTelefones[1]['telefone']; ?>">
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone1" name="telefone1">
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="recado">Telefone #3</label>
+                                    <?php if (isset($arrayTelefones[2])) {
+                                        ?>
+                                        <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]" value="<?=  $arrayTelefones[2]['telefone']; ?>">
 
+                                        <?php
+                                    } else {
+                                        ?>
+
+                                        <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone2" name="telefone2">
+
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="drt">DRT: </label>
@@ -375,7 +431,7 @@ $banco = recuperaDados("pf_bancos","pessoa_fisica_id", $idPf);
     </section>
     <!-- /.content -->
 </div>
-<script>
+<!--<script>
 
-</script>
+</script>-->
 
