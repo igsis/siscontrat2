@@ -1,28 +1,31 @@
 <?php
+include "includes/menu_interno.php";
 $con = bancoMysqli();
+$idPedido = $_POST['idPedido'];
 $idPessoa = $_POST['idPessoa'];
 $tipoPessoa = $_POST['tipoPessoa'];
 
 if(isset($_POST["enviar"]))
 {
-    $sql_arquivos = "SELECT * FROM arquivos";
+    /*$sql_arquivos = "SELECT * FROM lista_documentos";
     $query_arquivos = mysqli_query($con,$sql_arquivos);
     while($arq = mysqli_fetch_array($query_arquivos))
     {
-        $y = $arq['idTipoDoc'];
-        $x = $arq['sigla'];
-        $nome_arquivo = $_FILES['arquivo']['name'][$x];
+        print_r($arq);
+        $y = $arq['id'];
+        $x = $arq['sigla'];*/
+        $nome_arquivo = $_FILES['arquivo']['name'];
 
         if($nome_arquivo != "")
         {
-            $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
+            $nome_temporario = $_FILES['arquivo']['tmp_name'];
             $new_name = date("YmdHis")."_".semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
             $hoje = date("Y-m-d H:i:s");
             $dir = '../uploadsdocs/'; //Diretório para uploads
 
             if(move_uploaded_file($nome_temporario, $dir.$new_name))
             {
-                $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPessoa', '$new_name', '$hoje', '1', '$y'); ";
+                $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPedido', '$new_name', '$hoje', '1'); ";
                 $query = mysqli_query($con,$sql_insere_arquivo);
 
                 if($query)
@@ -40,14 +43,14 @@ if(isset($_POST["enviar"]))
                 $mensagem = "Erro no upload";
             }
         }
-    }
+
 }
 
 
 if(isset($_POST['apagar']))
 {
     $idArquivo = $_POST['apagar'];
-    $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE idArquivosPessoa = '$idArquivo'";
+    $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
     if(mysqli_query($con,$sql_apagar_arquivo))
     {
         $arq = recuperaDados("arquivos",$idArquivo,"id");
@@ -60,103 +63,121 @@ if(isset($_POST['apagar']))
     }
 }
 
-$campo = recuperaPessoa($_REQUEST['idPessoa'],$_REQUEST['tipoPessoa']);
+// $campo = recuperaPessoa($_REQUEST['idPessoa'],$_REQUEST['tipoPessoa']);
 
 ?>
-
-<?php
-include 'includes/menu.php';
-?>
-
-
-<section id="list_items" class="home-section bg-white">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-offset-2 col-md-8">
-                <div class="section-heading">
-                    <h3><?php echo $campo["nome"] ?>  </h3>
-                    <h5><?php echo $campo["tipo"] ?></h5>
-                    <p>&nbsp;</p>
-                    <h4>Arquivos anexados</h4>
-                    <p><strong>Se na lista abaixo, o seu arquivo começar com "http://", por favor, clique, grave em seu computador, faça o upload novamente e apague a ocorrência citada.</strong></p>
-                </div>
-                <div class="table-responsive list_info">
-                    <?php if($tipoPessoa == 4){$tipo = 1; } ?>
-                    <?php if($tipoPessoa == 2){$tipo = 2; } ?>
-                    <?php if($tipoPessoa == 1){$tipo = 1; } ?>
-                    <?php //if($tipoPessoa == 3){$tipo = 3; } ?>
-                    <?php $pag = "contratos"; ?>
-                    <?php listaArquivosPessoaSiscontrat($idPessoa,$tipo,$_SESSION['idPedido'],$p,$pag); ?>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-8">
-                        <a href="../perfil/m_contratos/frm_arquivos_todos.php?idPessoa=<?php echo $idPessoa ?>&tipo=<?php echo $tipo ?>" class="btn btn-theme btn-lg btn-block" target="_blank">Baixar todos os arquivos de uma vez</a>
-                    </div>
-                </div>
-            </div>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <!-- START FORM-->
+        <h2 class="page-header">Pedido</h2>
+        <div class="row" align="center">
+            <?php if(isset($mensagem)){echo $mensagem;};?>
         </div>
-    </div>
-
-    <div class="col-md-offset-2 col-md-8"><h1>&nbsp;</h1>
-    </div>
-
-    <div class="container">
         <div class="row">
-            <div class="col-md-offset-2 col-md-8">
-                <hr>
-                <div class="section-heading">
-                    <h4>Envio de Arquivos</h4>
-                    <p><?php if(isset($mensagem)){echo $mensagem;} ?></p>
-                    <p>Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 60MB.</p>
-                    <br />
-                    <div class = "center">
-                        <form method="POST" action="?<?php echo $_SERVER['QUERY_STRING'] ?>" enctype="multipart/form-data">
-                            <table>
-                                <tr>
-                                    <td width="50%"><td>
-                                </tr>
-                                <?php
-                                $sql_arquivos = "SELECT * FROM igsis_upload_docs WHERE tipoUpload = '$tipoPessoa'";
-                                $query_arquivos = mysqli_query($con,$sql_arquivos);
-                                while($arq = mysqli_fetch_array($query_arquivos))
-                                {
-                                    ?>
-                                    <tr>
-                                        <td><label><?php echo $arq['documento']?></label></td><td><input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'></td>
-                                    </tr>
-                                    <?php
-                                }
-                                ?>
-
-                            </table>
-                            <br>
-                            <input type="hidden" name="idPessoa" value="<?php echo $idPessoa; ?>"  />
-                            <input type="hidden" name="tipoPessoa" value="<?php echo $tipoPessoa; ?>"  />
-                            <?php
-                            if(isset($_POST['volta']))
-                            {
-                                echo "<input type='hidden' name='volta' value='".$_POST['volta']."' />";
-                            }
-                            ?>
-                            <input type='hidden' name='<?php echo $p; ?>' value='1' />
-                            <input type="hidden" name="enviar" value="1"  />
-                            <input type="submit" class="btn btn-theme btn-lg btn-block" value='Enviar'>
-                        </form>
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <!-- pedido -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Arquivos anexados</h3>
                     </div>
-                    <br />
-                    <div class="center">
-                        <?php echo $form ?>
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-8">
-                                <input type="hidden" name="idPessoa" value="<?php echo $idPessoa; ?>"  />
-                                <input type="hidden" name="tipoPessoa" value="<?php echo $tipoPessoa; ?>"  />
-                                <input type="submit" class="btn btn-theme btn-block" value='Voltar ao Cadastro de Pessoa'>
-                            </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-10 text-center col-md-offset-1">
+                                <h4><strong>Se na lista abaixo, o seu arquivo começar com "http://", por favor, clique, grave em seu computador, faça o upload novamente e apague a ocorrência citada.</strong></h4>
 
+                            <?php
+
+                            //lista arquivos de determinado pedido
+                            $con = bancoMysqli();
+                            $sql = "SELECT * FROM arquivos WHERE origem_id = '$idPedido' AND publicado = '1'";
+                            $query = mysqli_query($con,$sql);
+                            $num = mysqli_num_rows($query);
+                            //if ($num > 0) {
+                                echo "
+                    <div class='table-responsive list-group-item-info'>
+                    <table class='table table-condensed'>
+                        <thead>
+                        <tr class='list_menu'>                      
+                            <td>Tipo de arquivo</td>
+                            <td>Nome do arquivo</td>
+                        </tr>
+                        </thead>
+                        <tbody>";
+                                while ($campo = mysqli_fetch_array($query)) {
+                                    echo "<tr>";
+                                    echo "<td class='list_description'><a href='../uploads/" . $campo['arquivo'] . "' target='_blank'>" . $campo['arquivo'] . "</a></td>";
+                                    echo "
+                            <td class='list_description'>
+                                <form id='apagarArq' method='POST' action='?perfil=arquivos_com_prod'>
+                                    <input type='hidden' name='apagar' value='" . $campo['id'] . "' />
+                                    <button class='btn btn-theme' type='button' data-toggle='modal' data-target='#confirmApagar' data-title='Excluir Arquivo?' data-message='Desejar realmente excluir o arquivo " . $campo['arquivo'] . "?'>Apagar
+                                    </button></td></form>";
+                                    echo "</tr>";
+                                }
+                                if ($num > 0) {
+                                    echo "
+                            <div class=\"form-group\">
+                                <div class=\"col-md-offset-2 col-md-8\">
+                                    <a href=\"../perfil/m_contratos/frm_arquivos_todos.php?idPessoa=<?php echo $idPessoa ?>&tipo=<?php echo $tipoPessoa ?>\" class=\"btn btn-theme btn-lg btn-block\" target=\"_blank\">Baixar todos os arquivos de uma vez</a>
+                                </div>
+                            </div>"; }
+                                echo "
+                        </tbody>
+                    </table></div></div></div>";
+
+                                    ?>
+
+                            <div class="row">
+                                <div class="col-md-offset-2 col-md-8">
+                                    <hr>
+                                    <br />
+                                    <div class="center">
+                                        <form method="POST" action="?<?php echo $_SERVER['QUERY_STRING'] ?>" enctype="multipart/form-data">
+                                            <table class="table text-center table-striped">
+                                                <tbody>
+                                                <tr>
+                                                    <h1 class="text-center">Envio de Arquivos</h1>
+                                                </tr>
+                                                <tr>
+                                                    <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 60MB.</h4>
+                                                </tr>
+                                                <?php
+                                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                $query_arquivos = mysqli_query($con,$sql_arquivos);
+                                                while($arq = mysqli_fetch_array($query_arquivos))
+                                                {
+                                                    ?>
+                                                    <tr>
+                                                        <td><label><?php echo $arq['documento']?></label></td><td><input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                                ?>
+
+                                                </tbody>
+                                            </table>
+                                            <br>
+                                            <input type="hidden" name="idPessoa" value="<?php echo $idPessoa; ?>"  />
+                                            <input type="hidden" name="tipoPessoa" value="<?php echo $tipoPessoa; ?>"  />
+                                            <?php
+                                            if(isset($_POST['volta']))
+                                            {
+                                                echo "<input type='hidden' name='volta' value='".$_POST['volta']."' />";
+                                            }
+                                            ?>
+                                            <input type='hidden' name='idPedido' value='<?=$idPedido?>' />
+                                            <input type="submit" class="btn btn-primary btn-lg btn-block" name="enviar" value='Enviar'>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</div>
