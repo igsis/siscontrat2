@@ -34,13 +34,13 @@ $num = mysqli_num_rows($query);
                         ?>
                             <div class="row">
                                 <div class="form-group col-md-offset-3 col-md-3">
-                                    <form method="POST" action="?perfil=evento&p=pf_cadastro_pesquisa" role="form">
-                                        <button type="submit" name = "pessoa_fisica" class="btn btn-block btn-primary btn-lg">Pessoa Física</button>
+                                    <form method="POST" action="?perfil=evento&p=pf_pesquisa" role="form">
+                                        <button type="submit" name ="pessoa_fisica" class="btn btn-block btn-primary btn-lg">Pessoa Física</button>
                                     </form>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <form method="POST" action="?perfil=evento&p=pj_pesquisa" role="form">
-                                        <button type="submit" name = "pesquisar_pessoa_juridica" class="btn btn-block btn-primary btn-lg">Pessoa Jurídica</button>
+                                        <button type="submit" name ="pesquisar_pessoa_juridica" class="btn btn-block btn-primary btn-lg">Pessoa Jurídica</button>
                                     </form>
                                 </div>
                             </div>
@@ -69,10 +69,12 @@ $num = mysqli_num_rows($query);
                                     if($pedido['pessoa_tipo_id'] == 2){
                                         $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
                                         echo "<td>".$pj['razao_social']."</td>";
+                                        echo "<input type='hidden' name='idPessoa' value='".$pj['id']."'>";
                                     }
                                     else{
                                         $pf = recuperaDados("pessoa_fisicas","id",$pedido['pessoa_fisica_id']);
                                         echo "<td>".$pf['nome']."</td>";
+                                        echo "<input type='text' name='idPessoa' value='".$pf['id']."'>";
                                     }
                                     echo "<td>";
                                         $idAtracao = $pedido['origem_id'];
@@ -95,6 +97,7 @@ $num = mysqli_num_rows($query);
                                     echo "<td>
                                         <form method=\"POST\" action=\"?perfil=evento&p=pedido_anexo\" role=\"form\">
                                         <input type='hidden' name='idPedido' value='".$pedido['id']."'>
+                                        <input type='hidden' name='tipoPessoa' value='".$pedido['pessoa_tipo_id']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-primary btn-block\">Anexos do pedido</button>
                                         </form>
                                         </td>";
