@@ -73,15 +73,15 @@ if($evento['tipo_evento_id'] == 1){
                                 <?php
                                 if ($tipoDocumento == 1){
                                 ?>
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-2">
                                         <label for="rg">RG: </label>
-                                        <input type="text" class="form-control" name="rg" placeholder="Digite o documento" maxlength="20" >
+                                        <input type="text" class="form-control" name="rg" placeholder="Digite o RG" maxlength="20" >
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="cpf">CPF: </label>
                                         <input type="text" name="cpf" class="form-control" id="cpf" value="<?= $documento?>" readonly>
                                     </div>
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-2">
                                         <label for="ccm">CCM:</label>
                                         <input type="text" name="ccm" class="form-control" placeholder="Digite o CCM" maxlength="11">
                                     </div>
@@ -89,18 +89,18 @@ if($evento['tipo_evento_id'] == 1){
                                 }
                                 else{
                                 ?>
-                                    <div class="form-group col-md-8">
+                                    <div class="form-group col-md-6">
                                         <label for="passaporte" id="documento">Passaporte: </label>
                                         <input type="text" id="passaporte" name="passaporte" class="form-control" value="<?= $documento?>" readonly>
                                     </div>
                                 <?php
                                 }
                                 ?>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-3">
                                     <label for="dataNascimento">Data de Nascimento: *</label>
                                     <input type="date" class="form-control" id="dataNascimento" name="dtNascimento" onkeyup="barraData(this);" required/>
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-3">
                                     <label for="nacionalidade">Nacionalidade: </label>
                                     <select class="form-control" id="nacionalidade" name="nacionalidade" required>
                                         <option value="">Selecione uma opção...</option>
@@ -112,7 +112,7 @@ if($evento['tipo_evento_id'] == 1){
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="cep">CEP: *</label>
                                     <input type="text" class="form-control" name="cep" id="cep" maxlength="9" placeholder="Digite o CEP" required data-mask="00000-000">
                                 </div>
@@ -120,29 +120,34 @@ if($evento['tipo_evento_id'] == 1){
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
                                 </div>
+                                <div style="margin-top: 10px;" class="form-group col-md-6">
+                                    <h4 class="text-center col-md-12"><em>Insira seu CEP e aperte a tecla "TAB" para seu endereço carregar automaticamente</em></h4>
+                                </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="rua">Rua: *</label>
                                     <input type="text" class="form-control" name="rua" id="rua" placeholder="Digite a rua" maxlength="200" readonly>
                                 </div>
-                                <div class="form-group col-md-1">
+                                <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
                                     <input type="number" name="numero" class="form-control" placeholder="Ex.: 10" required>
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-3">
                                     <label for="complemento">Complemento:</label>
                                     <input type="text" name="complemento" class="form-control" maxlength="20" placeholder="Digite o complemento">
                                 </div>
-                                <div class="form-group col-md-2">
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
                                     <label for="bairro">Bairro: *</label>
                                     <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Digite o Bairro" maxlength="80" readonly>
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-4">
                                     <label for="cidade">Cidade: *</label>
                                     <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Digite a cidade" maxlength="50" readonly>
                                 </div>
-                                <div class="form-group col-md-1">
+                                <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
                                     <input type="text" class="form-control" name="estado" id="estado" maxlength="2" placeholder="Ex.: SP" readonly>
                                 </div>
@@ -187,6 +192,16 @@ if($evento['tipo_evento_id'] == 1){
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45" placeholder="Digite o NIT">
                                 </div>
                             </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label for="observacao">Observação: </label>
+                                        <textarea id="observacao" name="observacao" rows="3" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <h4 class="text-bold text-warning text-center col-md-12">Dados Bancários</h4>
+                                </div>
 
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -207,14 +222,6 @@ if($evento['tipo_evento_id'] == 1){
                                     <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12">
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="observacao">Observação: </label>
-                                    <textarea id="observacao" name="observacao" rows="3" class="form-control"></textarea>
-                                </div>
-                            </div>
-
                             <div class="box-footer">
                                 <button type="submit" name="cadastra" class="btn btn-info pull-right">Salvar</button>
                             </div>
