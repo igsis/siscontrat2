@@ -1,10 +1,60 @@
+<?php
+$con = bancoMysqli();
+
+if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
+    $nome = $_POST['nome'];
+    $jovemMonitor = $_POST['jovem_monitor'];
+    $rgRf = $_POST['rgrf_usuario'];
+    $telefone = $_POST['tel_usuario'];
+    $email = $_POST['email'];
+    $usuario = $_POST['usuario'];
+    $perfil = $_POST['perfil'];
+
+    if($jovemMonitor == 0){
+        // fazer um in_array() depois que ficar definido os modulos que terá acesso a eventos
+        $fiscal = 1;
+    }else{
+        $fiscal = 0;
+    }
+
+    if(isset($_POST['cadastra'])){
+        $sql = "INSERT INTO usuarios (nome_completo, jovem_monitor, rf_rg, usuario, email, telefone, perfil_id, fiscal)
+        VALUES ('$nome', '$jovemMonitor','$rgRf', '$usuario', '$email', '$telefone', '$perfil', '$fiscal')";
+
+        if (mysqli_query($con, $sql)) {
+            gravarLog($sql);
+            $mensagem = mensagem("success", "Usuário cadastrado com sucesso!");
+            $idUsuario = recuperaUltimo('usuarios');
+        } else {
+            $mensagem = mensagem("danger", "Erro no cadastro de usuário! Tente novamente.");
+        }
+    }
+
+    if(isset($_POST['edita'])){
+        $idUsuario = $_POST['idUsuario'];
+
+        $sql = "UPDATE usuarios SET nome_completo = '$nome', jovem_monitor = '$jovemMonitor', rf_rg = '$rgRf', usuario = '$usuario', email = '$email',
+        telefone = '$telefone', perfil_id = '$perfil', fiscal = '$fiscal' WHERE id = '$idUsuario'";
+
+        if(mysqli_query($con, $sql)){
+            gravarLog($sql);
+            $mensagem = mensagem("success", "Usuário editado com sucesso!");
+        }else{
+            $mensagem = mensagem("danger", "Erro ao salvar o usuário! Tente novamente.");
+        }
+    }
+}
+
+$usuario = recuperaDados('usuarios', 'id', $idUsuario);
+?>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Cadastro de Usuário</h2>
+        <h2 class="page-header">Edição de Usuário</h2>
 
         <div class="row">
             <div class="col-md-12">
@@ -13,44 +63,53 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Usuários</h3>
                     </div>
+
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                    </div>
+
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form method="POST" action="?perfil=administrativo&p=pesquisa&sp=pesquisa_usuario" role="form">
+                    <form method="POST" action="?perfil=administrativo/usuario/edita_usuario" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="nome">Nome Completo *</label>
-                                    <input type="text" id="nome" name="nome" class="form-control" required>
+                                    <input type="text" id="nome" name="nome" class="form-control" required value="<?= $usuario['nome_completo'] ?>">
                                 </div>
+
                                 <div class="form-group col-md-2">
-                                    <label for="rf_usuario">RG</label>
-                                    <input type="text" id="rg_usuario" name="rg_usuario" class="form-control" minlength="12" onkeypress="geraUsuarioRg()" onblur="geraUsuarioRg()">
+                                    <label for="tipo">É jovem monitor?</label> <br>
+                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" <?= $usuario['jovem_monitor'] == 1 ? 'checked' : NULL ?> value="1"> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0" <?= $usuario['jovem_monitor'] == 0 ? 'checked' : NULL ?> value="1"> Não </label>
                                 </div>
+
                                 <div class="form-group col-md-2">
-                                    <label for="rf_usuario">RF</label>
-                                    <input data-mask="000.000.0" type="text" id="rf_usuario" name="rf_usuario" class="form-control" minlength="9" onkeypress="geraUsuarioRf()" onblur="geraUsuarioRf()">
+                                    <label for="rf_usuario">RF/RG</label>
+                                    <input type="text" id="rgrf_usuario" name="rgrf_usuario" class="form-control" value="<?= $usuario['rf_rg'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="tel_usuario">Telefone *</label>
-                                    <input data-mask="(00) 0000-00000" type="text" id="tel_usuario" name="tel_usuario" class="form-control" maxlength="100" required>
+                                    <label for="rf_usuario">Usuário *</label>
+                                    <input type="text" id="usuario" name="usuario" class="form-control" maxlength="7" required readonly value="<?= $usuario['usuario'] ?>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="email">E-mail *</label>
-                                    <input type="email" id="email" name="email" class="form-control" maxlength="100" required>
+                                    <input type="email" id="email" name="email" class="form-control" maxlength="100" required value="<?= $usuario['email'] ?>">
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="tel_usuario">Telefone *</label>
+                                    <input data-mask="(00) 0000-00000" type="text" id="tel_usuario" name="tel_usuario" class="form-control" required value="<?= $usuario['telefone'] ?>">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="rf_usuario">Usuário *</label>
-                                    <input type="text" id="usuario" name="usuario" class="form-control" maxlength="7" required readonly>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="nivel_acesso">Nível de acesso </label> <br>
+                                    <label for="perfil">Perfil </label> <br>
                                     <select class="form-control" id="perfil" name="perfil">
                                         <option value="">Selecione...</option>
                                         <?php
-                                        geraOpcao("perfis");
+                                        geraOpcao("perfis", $usuario['perfil_id']);
                                         ?>
                                     </select>
                                 </div>
@@ -59,7 +118,8 @@
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <button type="submit" name="cadastra" class="btn btn-primary pull-right">Cadastrar</button>
+                            <input type="hidden" name="idUsuario" id="idUsuario" value="<?= $idUsuario ?>">
+                            <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">Salvar</button>
                         </div>
                     </form>
                 </div>
@@ -74,12 +134,7 @@
     <!-- /.content -->
 </div>
 
-
 <script>
-
-    $('#num_processo').mask('0000.0000/0000000-0', {reverse: true});
-
-
     function habilitaCampo(id) {
         if(document.getElementById(id).disabled==true){document.getElementById(id).disabled=false}
     }
@@ -99,17 +154,7 @@
     function geraUsuarioRf() {
 
         // pega o valor que esta escrito no RF
-        let usuarioRf = document.querySelector("#rf_usuario").value;
-
-        if(usuarioRf != ''){
-            $("#rg_usuario").attr('disabled', true);
-            $("#rg_usuario").attr('required', false);
-        }
-
-        if(usuarioRf == ''){
-            $("#rg_usuario").attr('disabled', false);
-            $("#rg_usuario").attr('required', true);
-        }
+        let usuarioRf = document.querySelector("#rgrf_usuario").value;
 
         // tira os pontos do valor, ficando apenas os numeros
         usuarioRf = usuarioRf.replace(/[^0-9]/g, '');
@@ -125,18 +170,11 @@
         document.querySelector("[name='usuario']").value = usuario;
     }
 
+
     function geraUsuarioRg() {
 
         // pega o valor que esta escrito no RG
-        let usuarioRg = document.querySelector("#rg_usuario").value;
-
-        if(usuarioRg != ''){
-            $("#rf_usuario").attr('disabled', true);
-            $("#rf_usuario").attr('required', false);
-        }else{
-            $("#rf_usuario").attr('disabled', false);
-            $("#rf_usuario").attr('required', true);
-        }
+        let usuarioRg = document.querySelector("#rgrf_usuario").value;
 
         // tira os pontos do valor, ficando apenas os numeros
         usuarioRg = usuarioRg.replace(/[^0-9]/g, '');
@@ -152,5 +190,40 @@
         document.querySelector("[name='usuario']").value = usuario;
 
     }
+
+    $("input[name='jovem_monitor']").change(function () {
+        $('#rgrf_usuario').attr("disabled", false);
+
+        var jovemMonitor = document.getElementsByName("jovem_monitor");
+
+        for (var i = 0; i < jovemMonitor.length; i++){
+            if(jovemMonitor[i].checked){
+                var escolhido = jovemMonitor[i].value;
+
+                if(escolhido == 1){
+                    $('#rgrf_usuario').val('');
+                    $('#rgrf_usuario').focus();
+                    $('#rgrf_usuario').keypress(function(event) {
+                        geraUsuarioRg();
+                    });
+                    $('#rgrf_usuario').blur(function(event) {
+                        geraUsuarioRg();
+                    });
+
+                } else if(escolhido == 0){
+                    $('#rgrf_usuario').val('');
+                    $('#rgrf_usuario').focus();
+                    $('#rgrf_usuario').mask('000.000.0');
+                    $('#rgrf_usuario').keypress(function(event) {
+                        geraUsuarioRf();
+                    });
+                    $('#rgrf_usuario').blur(function(event) {
+                        geraUsuarioRf();
+                    });
+                }
+            }
+        }
+    })
+
 
 </script>
