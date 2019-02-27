@@ -15,25 +15,27 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form method="POST" action="?perfil=administrativo&p=pesquisa&sp=pesquisa_usuario" role="form">
+                    <form method="POST" action="?perfil=administrativo/usuario/edita_usuario" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="nome">Nome Completo *</label>
                                     <input type="text" id="nome" name="nome" class="form-control" required>
                                 </div>
+
                                 <div class="form-group col-md-2">
-                                    <label for="rf_usuario">RG</label>
-                                    <input type="text" id="rg_usuario" name="rg_usuario" class="form-control" minlength="12" onkeypress="geraUsuarioRg()" onblur="geraUsuarioRg()">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="rf_usuario">RF</label>
-                                    <input data-mask="000.000.0" type="text" id="rf_usuario" name="rf_usuario" class="form-control" minlength="9" onkeypress="geraUsuarioRf()" onblur="geraUsuarioRf()">
+                                    <label for="tipo">É jovem monitor?</label> <br>
+                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="1"> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0"> Não </label>
                                 </div>
 
+                                <div class="form-group col-md-2">
+                                    <label for="rf_usuario">RF/RG</label>
+                                    <input type="text" id="rgrf_usuario" name="rgrf_usuario" class="form-control" disabled>
+                                </div>
                                 <div class="form-group col-md-4">
-                                    <label for="tel_usuario">Telefone *</label>
-                                    <input data-mask="(00) 0000-00000" type="text" id="tel_usuario" name="tel_usuario" class="form-control" maxlength="100" required>
+                                    <label for="rf_usuario">Usuário *</label>
+                                    <input type="text" id="usuario" name="usuario" class="form-control" maxlength="7" required readonly>
                                 </div>
                             </div>
                             <div class="row">
@@ -41,12 +43,13 @@
                                     <label for="email">E-mail *</label>
                                     <input type="email" id="email" name="email" class="form-control" maxlength="100" required>
                                 </div>
+
                                 <div class="form-group col-md-4">
-                                    <label for="rf_usuario">Usuário *</label>
-                                    <input type="text" id="usuario" name="usuario" class="form-control" maxlength="7" required readonly>
+                                    <label for="tel_usuario">Telefone *</label>
+                                    <input data-mask="(00) 0000-00000" type="text" id="tel_usuario" name="tel_usuario" class="form-control" maxlength="100" required>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="nivel_acesso">Nível de acesso </label> <br>
+                                    <label for="perfil">Perfil </label> <br>
                                     <select class="form-control" id="perfil" name="perfil">
                                         <option value="">Selecione...</option>
                                         <?php
@@ -59,7 +62,7 @@
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <button type="submit" name="cadastra" class="btn btn-primary pull-right">Cadastrar</button>
+                            <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">Cadastrar</button>
                         </div>
                     </form>
                 </div>
@@ -74,12 +77,7 @@
     <!-- /.content -->
 </div>
 
-
 <script>
-
-    $('#num_processo').mask('0000.0000/0000000-0', {reverse: true});
-
-
     function habilitaCampo(id) {
         if(document.getElementById(id).disabled==true){document.getElementById(id).disabled=false}
     }
@@ -99,17 +97,7 @@
     function geraUsuarioRf() {
 
         // pega o valor que esta escrito no RF
-        let usuarioRf = document.querySelector("#rf_usuario").value;
-
-        if(usuarioRf != ''){
-            $("#rg_usuario").attr('disabled', true);
-            $("#rg_usuario").attr('required', false);
-        }
-
-        if(usuarioRf == ''){
-            $("#rg_usuario").attr('disabled', false);
-            $("#rg_usuario").attr('required', true);
-        }
+        let usuarioRf = document.querySelector("#rgrf_usuario").value;
 
         // tira os pontos do valor, ficando apenas os numeros
         usuarioRf = usuarioRf.replace(/[^0-9]/g, '');
@@ -125,18 +113,11 @@
         document.querySelector("[name='usuario']").value = usuario;
     }
 
+
     function geraUsuarioRg() {
 
         // pega o valor que esta escrito no RG
-        let usuarioRg = document.querySelector("#rg_usuario").value;
-
-        if(usuarioRg != ''){
-            $("#rf_usuario").attr('disabled', true);
-            $("#rf_usuario").attr('required', false);
-        }else{
-            $("#rf_usuario").attr('disabled', false);
-            $("#rf_usuario").attr('required', true);
-        }
+        let usuarioRg = document.querySelector("#rgrf_usuario").value;
 
         // tira os pontos do valor, ficando apenas os numeros
         usuarioRg = usuarioRg.replace(/[^0-9]/g, '');
@@ -152,5 +133,40 @@
         document.querySelector("[name='usuario']").value = usuario;
 
     }
+
+    $("input[name='jovem_monitor']").change(function () {
+        $('#rgrf_usuario').attr("disabled", false);
+
+        var jovemMonitor = document.getElementsByName("jovem_monitor");
+
+        for (var i = 0; i < jovemMonitor.length; i++){
+            if(jovemMonitor[i].checked){
+                var escolhido = jovemMonitor[i].value;
+
+                if(escolhido == 1){
+                    $('#rgrf_usuario').val('');
+                    $('#rgrf_usuario').focus();
+                    $('#rgrf_usuario').keypress(function(event) {
+                        geraUsuarioRg();
+                    });
+                    $('#rgrf_usuario').blur(function(event) {
+                        geraUsuarioRg();
+                    });
+
+                } else if(escolhido == 0){
+                    $('#rgrf_usuario').val('');
+                    $('#rgrf_usuario').focus();
+                    $('#rgrf_usuario').mask('000.000.0');
+                    $('#rgrf_usuario').keypress(function(event) {
+                        geraUsuarioRf();
+                    });
+                    $('#rgrf_usuario').blur(function(event) {
+                        geraUsuarioRf();
+                    });
+                }
+            }
+        }
+    })
+
 
 </script>
