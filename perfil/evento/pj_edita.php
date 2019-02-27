@@ -378,6 +378,7 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                     <!-- /. box-body -->
                 </div>
             </div>
+        </div>
 
         <!-- /.modal cartão cnpj -->
         <div class="modal fade" id="modal-cnpj">
