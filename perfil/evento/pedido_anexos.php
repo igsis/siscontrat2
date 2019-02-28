@@ -2,7 +2,6 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idPedido = $_SESSION['idPedido'];
-//$idPessoa = $_POST['idPessoa'];
 $tipoPessoa = $_POST['tipoPessoa'];
 
 if(isset($_POST["enviar"])) {
@@ -31,7 +30,7 @@ if(isset($_POST["enviar"])) {
                         $mensagem = mensagem("success", "Arquivo recebido com sucesso");
                         gravarLog($sql_insere_arquivo);
                     } else {
-                        $mensagem = mensagem("danger", "Erro ao gravar no banco <br>" . $sql_insere_arquivo);
+                        $mensagem = mensagem("danger", "Erro ao gravar no banco");
                     }
                 } else {
                     $mensagem = mensagem("danger", "Erro no upload");
@@ -45,7 +44,7 @@ if(isset($_POST["enviar"])) {
 
 if(isset($_POST['apagar']))
 {
-    $idArquivo = $_POST['apagar'];
+    $idArquivo = $_POST['idArquivo'];
     $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
     if(mysqli_query($con,$sql_apagar_arquivo))
     {
@@ -55,7 +54,7 @@ if(isset($_POST['apagar']))
     }
     else
     {
-        $mensagem = "Erro ao apagar o arquivo. Tente novamente!";
+        $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
     }
 }
 
@@ -79,9 +78,8 @@ if(isset($_POST['apagar']))
                     </div>
                     <div class="box-body">
                         <div class="row">
-                            <div class="col-md-10 text-center col-md-offset-1">
-                                <h4><strong>Se na lista abaixo, o seu arquivo começar com "http://", por favor, clique, grave em seu computador, faça o upload novamente e apague a ocorrência citada.</strong></h4>
-                                <div class="table-responsive list_info"><h6>Listas de Projetos Aprovados</h6>
+                            <div class="col-md-10 col-md-offset-1 text-center">
+                                <div class="table-responsive list_info"><h4><strong>Se na lista abaixo, o seu arquivo começar com "http://", por favor, clique, grave em seu computador, faça o upload novamente e apague a ocorrência citada.</strong></h4><br>
                             <?php
                             //lista arquivos de determinado pedido
                             $sql = "SELECT * FROM lista_documentos as list
@@ -94,9 +92,9 @@ if(isset($_POST['apagar']))
                             if ($linhas > 0)
                             {
                                 echo "
-                                    <table class='table table-condensed'>
+                                    <table class='table text-center table-striped table-bordered table-condensed'>
                                         <thead>
-                                            <tr class='list_menu'>
+                                            <tr class='bg-info text-bold'>
                                                 <td>Tipo de arquivo</td>
                                                 <td>Nome do documento</td>
                                                 <td>Data de envio</td>
@@ -109,13 +107,11 @@ if(isset($_POST['apagar']))
                                     echo "<tr>";
                                     echo "<td class='list_description'> " .$arquivo['documento'] ."</td>";
                                     echo "<td class='list_description'><a href='uploadsdocs/".$arquivo['arquivo']."' target='_blank'>". mb_strimwidth($arquivo['arquivo'], 15 ,25,"..." )."</a></td>";
-                                    echo "<td class='list_description'>(".exibirDataHoraBr($arquivo['data']).")</td>";
+                                    echo "<td class='list_description'>(".exibirDataBr($arquivo['data']).")</td>";
                                     echo "
                                           <td class='list_description'>
-                                                    <form id='apagarArq' method='POST' action='?perfil=evento&p=pedido_anexos'>
-                                                        <input type='hidden' name='tipoPessoa' value='".$tipoPessoa."' />
-                                                        <input type='hidden' name='apagar' value='".$arquivo['id']."' />
-                                                        <button class='btn btn-danger' type='submit' data-toggle='modal' data-target='#confirmApagar' data-title='Remover Arquivo?' data-message='Deseja realmente excluir o arquivo ".$arquivo['arquivo']."?'>Remover
+                                                    <form id='formExcliuir' method='POST'>
+                                                        <button class='btn btn-danger' type='button' data-toggle='modal' data-target='#exclusao' data-nome='" . $arquivo['arquivo'] . "' data-id='". $arquivo['id'] ."' data-pessoa='". $tipoPessoa."'>Remover
                                                         </button></td>
                                                     </form>";
                                     echo "</tr>";
@@ -131,10 +127,10 @@ if(isset($_POST['apagar']))
 
                             ?>
                                 </div>
+                                <hr/>
 
                             <div class="row">
-                                <div class="col-md-offset-2 col-md-8">
-                                    <hr>
+                                <div class="col-md-10 col-md-offset-1">
                                     <br />
                                     <div class="center">
                                         <form method="POST" action="?perfil=evento&p=pedido_anexos" enctype="multipart/form-data">
@@ -162,8 +158,6 @@ if(isset($_POST['apagar']))
                                                 </tbody>
                                             </table>
                                             <br>
-                                            <input type="hidden" name="idPessoa" value="<?php echo $idPessoa; ?>"  />
-                                            <input type="hidden" name="tipoPessoa" value="<?php echo $tipoPessoa; ?>"  />
                                             <?php
                                             if(isset($_POST['volta']))
                                             {
@@ -171,30 +165,38 @@ if(isset($_POST['apagar']))
                                             }
                                             ?>
                                             <input type='hidden' name='idPedido' value='<?=$idPedido?>' />
+                                            <input type="hidden" name="tipoPessoa" value="<?php echo $tipoPessoa; ?>"  />
                                             <input type="submit" class="btn btn-primary btn-lg btn-block" name="enviar" value='Enviar'>
                                         </form>
                                     </div>
                                 </div>
-                                <!-- Fim Upload de arquivo -->
-                                <!-- Confirmação de Exclusão -->
-                                <div class="modal fade" id="confirmApagar" role="dialog" aria-labelledby="confirmApagarLabel" aria-hidden="true">
+                                <!--.modal-->
+                                <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
                                     <div class="modal-dialog">
+                                        <!-- Modal content-->
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                <h4 class="modal-title">Excluir Arquivo?</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title">Confirmação de Exclusão</h4>
                                             </div>
                                             <div class="modal-body">
-                                                <p>Confirma?</p>
+                                                <p>Tem certeza que deseja excluir este arquivo?</p>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                                <button type="button" class="btn btn-danger" id="confirm">Remover</button>
+                                                <form action="?perfil=evento&p=pedido_anexos" method="post">
+                                                    <input type="hidden" name="idArquivo" id="idArquivo" value="">
+                                                    <input type="hidden" name="tipoPessoa" id="tipoPessoa" value="">
+                                                    <input type="hidden" name="apagar" id="apagar">
+                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                                                    </button>
+                                                    <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Apagar">
+                                                </form>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
-                                <!-- Fim Confirmação de Exclusão -->
+                                <!--  Fim Modal de Upload de arquivo  -->
                             </div>
                         </div>
                     </div>
@@ -203,3 +205,16 @@ if(isset($_POST['apagar']))
         </div>
     </section>
 </div>
+
+<script type="text/javascript">
+    $('#exclusao').on('show.bs.modal', function (e) {
+        let nome = $(e.relatedTarget).attr('data-nome');
+        let id = $(e.relatedTarget).attr('data-id');
+        let pessoa = $(e.relatedTarget).attr('data-pessoa');
+
+        $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
+        $(this).find('#idArquivo').attr('value', `${id}`);
+        $(this).find('#tipoPessoa').attr('value', `${pessoa}`);
+
+    })
+</script>
