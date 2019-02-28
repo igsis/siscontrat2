@@ -1,3 +1,6 @@
+<?php
+    $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_verifica_email.php';
+?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
@@ -35,6 +38,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="rf_usuario">Usuário *</label>
+                                    <div id='resposta'></div>
                                     <input type="text" id="usuario" name="usuario" class="form-control" maxlength="7" required readonly>
                                 </div>
                             </div>
@@ -168,5 +172,19 @@
         }
     })
 
+    const url = `<?=$url?>`;
 
+    var email = $("#email");
+    email.blur(function() {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data:{"email" : email.val()},
+            success: function(data) {
+                console.log(data);
+                data = $.parseJSON(data);
+                $("#resposta").text(data.email);
+            }
+        });
+    });
 </script>
