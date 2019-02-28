@@ -174,9 +174,7 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                         <h3 class="box-title">Informações Pessoa Jurídica</h3>
                     </div>
                     <div class="row" align="center">
-                        <?= $mensagem ?? NULL;
-                        echo $idPj;
-                        ?>
+                        <?= $mensagem ?? NULL ?>
                     </div>
 
                     <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
@@ -369,8 +367,10 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                                 </form>
                             </div>
                             <div class="form-group col-md-3">
-                                <form method="POST" action="?perfil=evento&p=pedido_cadastro" role="form">
-                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Ir ao pedido de contratação</button>
+                                <form method="POST" action="?perfil=evento&p=pedido_pagamento" role="form">
+                                    <input type="hidden" name="pessoa_tipo_id" value="2">
+                                    <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
+                                    <button type="submit" class="btn btn-info btn-block">Ir ao pedido de contratação</button>
                                 </form>
                             </div>
                         </div>
