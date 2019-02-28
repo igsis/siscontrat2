@@ -5,46 +5,42 @@ $idPedido = $_POST['idPedido'];
 $idPessoa = $_POST['idPessoa'];
 $tipoPessoa = $_POST['tipoPessoa'];
 
-if(isset($_POST["enviar"]))
-{
-    /*$sql_arquivos = "SELECT * FROM lista_documentos";
-    $query_arquivos = mysqli_query($con,$sql_arquivos);
-    while($arq = mysqli_fetch_array($query_arquivos))
-    {
-        print_r($arq);
+if(isset($_POST["enviar"])) {
+    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+    $query_arquivos = mysqli_query($con, $sql_arquivos);
+    while ($arq = mysqli_fetch_array($query_arquivos)) {
         $y = $arq['id'];
-        $x = $arq['sigla'];*/
-        $nome_arquivo = $_FILES['arquivo']['name'];
+        $x = $arq['sigla'];
+        $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
+        $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
 
-        if($nome_arquivo != "")
-        {
-            $nome_temporario = $_FILES['arquivo']['tmp_name'];
-            $new_name = date("YmdHis")."_".semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
-            $hoje = date("Y-m-d H:i:s");
-            $dir = '../uploadsdocs/'; //Diretório para uploads
+        if ($f_size > 5242880) {
+            $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
+        } else {
+            if ($nome_arquivo != "") {
+                $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
+                $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
+                $hoje = date("Y-m-d H:i:s");
+                $dir = '../uploadsdocs/'; //Diretório para uploads
 
-            if(move_uploaded_file($nome_temporario, $dir.$new_name))
-            {
-                $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPedido', '$new_name', '$hoje', '1'); ";
-                $query = mysqli_query($con,$sql_insere_arquivo);
+                if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
+                    $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPedido', '$y', '$new_name', '$hoje', '1'); ";
+                    $query = mysqli_query($con, $sql_insere_arquivo);
 
-                if($query)
-                {
-                    $mensagem = "Arquivo recebido com sucesso";
+                    if ($query) {
+                        $mensagem = mensagem("success", "Arquivo recebido com sucesso");
+                        gravarLog($sql_insere_arquivo);
+                    } else {
+                        $mensagem = mensagem("danger", "Erro ao gravar no banco <br>" . $sql_insere_arquivo);
+                    }
+                } else {
+                    $mensagem = mensagem("danger", "Erro no upload");
                 }
-                else
-                {
-                    $mensagem = "Erro ao gravar no banco";
-                }
-
-            }
-            else
-            {
-                $mensagem = "Erro no upload";
             }
         }
-
+    }
 }
+
 
 
 if(isset($_POST['apagar']))
@@ -135,7 +131,7 @@ if(isset($_POST['apagar']))
                                     <hr>
                                     <br />
                                     <div class="center">
-                                        <form method="POST" action="?<?php echo $_SERVER['QUERY_STRING'] ?>" enctype="multipart/form-data">
+                                        <form method="POST" action="?perfil=evento&p=pedido_anexos" enctype="multipart/form-data">
                                             <table class="table text-center table-striped">
                                                 <tbody>
                                                 <tr>
