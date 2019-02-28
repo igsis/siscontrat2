@@ -6,7 +6,7 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">MÓDULOS</li>
-            <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Administrador</span></a></li>
+            <li><a href="?perfil=administrativo"><i class="fa fa-circle-o text-red"></i> <span>Administrador</span></a></li>
             <li><a href="?perfil=evento"><i class="fa fa-circle-o text-yellow"></i> <span>Evento</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Contratos</span></a></li>
             <li class="header">MAIS</li>

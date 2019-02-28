@@ -45,6 +45,10 @@ if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
     }
 }
 
+if(isset($_POST['carregar'])){
+    $idUsuario = $_POST['idUsuario'];
+}
+
 $usuario = recuperaDados('usuarios', 'id', $idUsuario);
 ?>
 
@@ -196,13 +200,15 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
 
         var jovemMonitor = document.getElementsByName("jovem_monitor");
 
-        for (var i = 0; i < jovemMonitor.length; i++){
+        for (let i = 0; i < jovemMonitor.length; i++){
             if(jovemMonitor[i].checked){
                 var escolhido = jovemMonitor[i].value;
 
+                var mascara = '000.000.0';
                 if(escolhido == 1){
                     $('#rgrf_usuario').val('');
                     $('#rgrf_usuario').focus();
+                    $('#rgrf_usuario').unmask(mascara);
                     $('#rgrf_usuario').keypress(function(event) {
                         geraUsuarioRg();
                     });
@@ -213,7 +219,7 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
                 } else if(escolhido == 0){
                     $('#rgrf_usuario').val('');
                     $('#rgrf_usuario').focus();
-                    $('#rgrf_usuario').mask('000.000.0');
+                    $('#rgrf_usuario').mask(mascara);
                     $('#rgrf_usuario').keypress(function(event) {
                         geraUsuarioRf();
                     });

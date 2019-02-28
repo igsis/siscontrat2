@@ -11,8 +11,8 @@ $query = mysqli_query($con,$sql);
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Evento</h2>
-
+        <h3 class="box-title">Lista de Usuário</h3>
+        <a href="?perfil=administrativo&p=usuario&sp=cadastro_usuario" class="text-right btn btn-success" style="float: right">Adicionar Usuario</a>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -21,7 +21,7 @@ $query = mysqli_query($con,$sql);
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblEvento" class="table table-bordered table-striped">
+                        <table id="tblUsuario" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>Nome</th>
@@ -42,8 +42,8 @@ $query = mysqli_query($con,$sql);
                                 echo "<td>".$usuario['email']."</td>";
                                 echo "<td>".$usuario['telefone']."</td>";
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
-                                    <input type='hidden' name='idEvento' value='".$usuario['id']."'>
+                                    <form method=\"POST\" action=\"?perfil=administrativo&p=usuario&sp=edita_usuario\" role=\"form\">
+                                    <input type='hidden' name='idUsuario' value='".$usuario['id']."'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
@@ -83,7 +83,7 @@ $query = mysqli_query($con,$sql);
 
 <script type="text/javascript">
         $(function () {
-        $('#tblEvento').DataTable({
+        $('#tblUsuario').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },
