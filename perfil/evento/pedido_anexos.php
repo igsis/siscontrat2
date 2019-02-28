@@ -2,7 +2,7 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idPedido = $_SESSION['idPedido'];
-$tipoPessoa = $_POST['tipoPessoa'];
+$tipoPessoa = 3; // arquivos necessarios para pedidos
 
 if(isset($_POST["enviar"])) {
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
