@@ -29,6 +29,9 @@ if(isset($_POST['cadastra'])){
             header('Location: ?perfil=evento&p=parcelas_cadastro');
         }
     }
+    else{
+        $mensagem = mensagem("danger","Erro ao gravar: ". die(mysqli_error($con)));
+    }
     mysqli_close($con);
 }
 
@@ -41,6 +44,9 @@ include "includes/menu_interno.php";
 
         <!-- START FORM-->
         <h2 class="page-header">Pedido de Contratação</h2>
+        <div class="row" align="center">
+            <?= $mensagem ?? NULL ?>
+        </div>
 
         <div class="row">
             <div class="col-md-12">

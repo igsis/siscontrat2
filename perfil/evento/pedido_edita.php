@@ -2,23 +2,29 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
+$idPedido = $_SESSION['idPedido'];
+
 if(isset($_POST['cadastra']) || isset($_POST['edita'])){
     $verba_id = $_POST['verba_id'];
-    $valor_total = dinheiroDeBr($_POST['valor_total']);
-    $numero_parcelas = $_POST['numero_parcelas'];
-    $data_kit_pagamento = $_POST['data_kit_pagamento'];
-    $forma_pagamento = $_POST['forma_pagamento'];
-    $justificativa = $_POST['justificativa'];
-    $observacao = $_POST['observacao'];
+    $forma_pagamento = addslashes($_POST['forma_pagamento']);
+    $justificativa = addslashes($_POST['justificativa']);
+    $observacao = addslashes($_POST['observacao']);
 }
 
 if(isset($_POST['cadastra'])){
-    $sql_cadastra = "";
+    $sql_cadastra = "UPDATE pedidos SET verba_id = '$verba_id', forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
+    if(mysqli_query($con,$sql_cadastra)){
+        $mensagem = mensagem("success", "Gravado com sucesso!");
+    }
+    else{
+        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+    }
 }
 
 if(isset($_POST['edita'])){
+    $valor_total = dinheiroDeBr($_POST['valor_total']);
+    $numero_parcelas = $_POST['numero_parcelas'];
 
-    $idPedido = $_SESSION['idPedido'];
     $sql_edita = "UPDATE pedidos SET verba_id = '$verba_id', valor_total = '$valor_total', numero_parcelas = '$numero_parcelas', data_kit_pagamento = '$data_kit_pagamento', forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
     if(mysqli_query($con,$sql_edita)){
         $mensagem = mensagem("success","Gravado com sucesso.");
@@ -28,9 +34,15 @@ if(isset($_POST['edita'])){
     }
 }
 
-if(isset($_POST['carregar'])){
-    $idPedido = $_POST['idPedido'];
-    $_SESSION['idPedido'] = $idPedido;
+if(isset($_POST['data_kit_pagamento'])){
+    $data_kit_pagamento = $_POST['data_kit_pagamento'];
+    $sql_edita = "UPDATE pedidos SET data_kit_pagamento = '$data_kit_pagamento' WHERE id = '$idPedido'";
+    if(mysqli_query($con,$sql_edita)){
+        $mensagem = mensagem("success","Gravado com sucesso.");
+    }
+    else{
+        $mensagem = mensagem("danger","Erro ao gravar: ". die(mysqli_error($con)));
+    }
 }
 
 $pedido = recuperaDados("pedidos","id",$idPedido);
@@ -83,7 +95,7 @@ else{
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="valor_total">Valor Total</label>
-                                    <input type="text" id="valor_total" name="valor_total" class="form-control" value="<?= $pedido['valor_total'] ?>">
+                                    <input type="text" id="valor_total" name="valor_total" class="form-control" value="<?= dinheiroParaBr($pedido['valor_total']) ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="numero_parcelas">Número de Parcelas</label>
@@ -92,10 +104,21 @@ else{
                                         <option value="1">Única</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-2">
-                                    <label for="data_kit_pagamento">Data Kit Pagamento</label>
-                                    <input type="date" id="data_kit_pagamento" name="data_kit_pagamento" class="form-control" value="<?= $pedido['data_kit_pagamento'] ?>">
-                                </div>
+                                <?php
+                                if($pedido['numero_parcelas'] != 0){
+                                    ?>
+                                    <button>Editar parcelas</button>
+                                <?php
+                                }
+                                else{
+                                ?>
+                                    <div class="form-group col-md-2">
+                                        <label for="data_kit_pagamento">Data Kit Pagamento</label>
+                                        <input type="date" id="data_kit_pagamento" name="data_kit_pagamento" class="form-control" value="<?= $pedido['data_kit_pagamento'] ?>">
+                                    </div>
+                                <?php
+                                }
+                                ?>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">

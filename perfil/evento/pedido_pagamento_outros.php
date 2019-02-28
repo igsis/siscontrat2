@@ -1,9 +1,33 @@
 <?php
-
-$idPedido = $_SESSION['idPedido'];
-
 $con = bancoMysqli();
 
+$idEvento = $_SESSION['idEvento'];
+$idPedido = $_SESSION['idPedido'];
+
+$sql = "SELECT sum(valor_individual) AS valor_total FROM atracoes WHERE evento_id = '$idEvento'";
+$query = mysqli_query($con,$sql);
+$atracao = mysqli_fetch_array($query);
+$valor_total = $atracao['valor_total'];
+if($valor_total > 0.00){
+    $valor_total = $atracao['valor_total'];
+}
+else{
+    $valor_total = 0.00;
+}
+
+if(isset($_POST['cadastra'])){
+    $valor_total = $_POST['valor_total'];
+    $data_kit_pagamento = $_POST['data_kit_pagamento'];
+    $sql_cadastra = "UPDATE pedidos SET valor_total = '$valor_total', data_kit_pagamento = '$data_kit_pagamento' WHERE id = '$idPedido'";
+    if(mysqli_query($con,$sql_cadastra)){
+        header('Location: ?perfil=evento&p=pedido_cadastro');
+    }
+    else{
+        $mensagem = mensagem("danger","Erro ao gravar: ". die(mysqli_error($con)));
+    }
+}
+
+mysqli_close($con);
 include "includes/menu_interno.php";
 ?>
 <!-- Content Wrapper. Contains page content -->
