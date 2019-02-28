@@ -140,7 +140,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=evento&p=pf_cadastro_pesquisa" method="post">
+                        <form action="?perfil=evento&p=pf_pesquisa" method="post">
                             <label for="tipoDocumento">Tipo de documento: </label>
                             <label class="radio-inline">
                                <input type="radio" name="tipoDocumento" value="1" checked>CPF

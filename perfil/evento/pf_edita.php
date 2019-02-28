@@ -97,7 +97,7 @@ if (isset($_POST['cadastra'])){
                                 $idPedido = recuperaUltimo("pedidos");
                                 $_SESSION['idPedido'] = $idPedido;
                                 $mensagem = mensagem("success","Cadastro realizado com sucesso.");
-                               // echo "<meta http-equiv='refresh' content='0.5, url=?perfil=evento&p=pedido_edita'>";
+                                echo "<meta http-equiv='refresh' content='0.5, url=?perfil=evento&p=pedido_edita'>";
                             }
                             else{
                                 $mensagem = mensagem("danger","Erro ao inserir banco: ". die(mysqli_error($con)));

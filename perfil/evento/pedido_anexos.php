@@ -1,8 +1,8 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-$idPedido = $_POST['idPedido'];
-$idPessoa = $_POST['idPessoa'];
+$idPedido = $_SESSION['idPedido'];
+//$idPessoa = $_POST['idPessoa'];
 $tipoPessoa = $_POST['tipoPessoa'];
 
 if(isset($_POST["enviar"])) {
@@ -50,7 +50,7 @@ if(isset($_POST['apagar']))
     if(mysqli_query($con,$sql_apagar_arquivo))
     {
         $arq = recuperaDados("arquivos",$idArquivo,"id");
-        $mensagem =	"Arquivo ".$arq['arquivo']."apagado com sucesso!";
+        $mensagem = mensagem("success", "Arquivo ".$arq['arquivo']."apagado com sucesso!");
         gravarLog($sql_apagar_arquivo);
     }
     else
@@ -68,63 +68,69 @@ if(isset($_POST['apagar']))
     <section class="content">
         <!-- START FORM-->
         <h2 class="page-header">Pedido</h2>
-        <div class="row" align="center">
-            <?php if(isset($mensagem)){echo $mensagem;};?>
-        </div>
         <div class="row">
             <div class="col-md-12">
-                <!-- general form elements -->
-                <!-- pedido -->
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Arquivos anexados</h3>
+                    </div>
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem)){echo $mensagem;};?>
                     </div>
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-10 text-center col-md-offset-1">
                                 <h4><strong>Se na lista abaixo, o seu arquivo começar com "http://", por favor, clique, grave em seu computador, faça o upload novamente e apague a ocorrência citada.</strong></h4>
-
+                                <div class="table-responsive list_info"><h6>Listas de Projetos Aprovados</h6>
                             <?php
-
                             //lista arquivos de determinado pedido
-                            $con = bancoMysqli();
-                            $sql = "SELECT * FROM arquivos WHERE origem_id = '$idPedido' AND publicado = '1'";
+                            $sql = "SELECT * FROM lista_documentos as list
+			                        INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
+                                    WHERE arq.origem_id = '$idPedido'
+                                    AND arq.publicado = '1' ORDER BY arq.id";
                             $query = mysqli_query($con,$sql);
-                            $num = mysqli_num_rows($query);
-                            //if ($num > 0) {
+                            $linhas = mysqli_num_rows($query);
+
+                            if ($linhas > 0)
+                            {
                                 echo "
-                    <div class='table-responsive list-group-item-info'>
-                    <table class='table table-condensed'>
-                        <thead>
-                        <tr class='list_menu'>                      
-                            <td>Tipo de arquivo</td>
-                            <td>Nome do arquivo</td>
-                        </tr>
-                        </thead>
-                        <tbody>";
-                                while ($campo = mysqli_fetch_array($query)) {
+                                    <table class='table table-condensed'>
+                                        <thead>
+                                            <tr class='list_menu'>
+                                                <td>Tipo de arquivo</td>
+                                                <td>Nome do documento</td>
+                                                <td>Data de envio</td>
+                                                <td width='15%'></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>";
+                                while($arquivo = mysqli_fetch_array($query))
+                                {
                                     echo "<tr>";
-                                    echo "<td class='list_description'><a href='../uploads/" . $campo['arquivo'] . "' target='_blank'>" . $campo['arquivo'] . "</a></td>";
+                                    echo "<td class='list_description'> " .$arquivo['documento'] ."</td>";
+                                    echo "<td class='list_description'><a href='uploadsdocs/".$arquivo['arquivo']."' target='_blank'>". mb_strimwidth($arquivo['arquivo'], 15 ,25,"..." )."</a></td>";
+                                    echo "<td class='list_description'>(".exibirDataHoraBr($arquivo['data']).")</td>";
                                     echo "
-                            <td class='list_description'>
-                                <form id='apagarArq' method='POST' action='?perfil=arquivos_com_prod'>
-                                    <input type='hidden' name='apagar' value='" . $campo['id'] . "' />
-                                    <button class='btn btn-theme' type='button' data-toggle='modal' data-target='#confirmApagar' data-title='Excluir Arquivo?' data-message='Desejar realmente excluir o arquivo " . $campo['arquivo'] . "?'>Apagar
-                                    </button></td></form>";
+                                          <td class='list_description'>
+                                                    <form id='apagarArq' method='POST' action='?perfil=evento&p=pedido_anexos'>
+                                                        <input type='hidden' name='tipoPessoa' value='".$tipoPessoa."' />
+                                                        <input type='hidden' name='apagar' value='".$arquivo['id']."' />
+                                                        <button class='btn btn-danger' type='submit' data-toggle='modal' data-target='#confirmApagar' data-title='Remover Arquivo?' data-message='Deseja realmente excluir o arquivo ".$arquivo['arquivo']."?'>Remover
+                                                        </button></td>
+                                                    </form>";
                                     echo "</tr>";
                                 }
-                                if ($num > 0) {
-                                    echo "
-                            <div class=\"form-group\">
-                                <div class=\"col-md-offset-2 col-md-8\">
-                                    <a href=\"../perfil/m_contratos/frm_arquivos_todos.php?idPessoa=<?php echo $idPessoa ?>&tipo=<?php echo $tipoPessoa ?>\" class=\"btn btn-theme btn-lg btn-block\" target=\"_blank\">Baixar todos os arquivos de uma vez</a>
-                                </div>
-                            </div>"; }
                                 echo "
-                        </tbody>
-                    </table></div></div></div>";
+                                        </tbody>
+                                        </table>";
+                            }
+                            else
+                            {
+                                echo "<p>Não há listas disponíveis no momento.<p/><br/>";
+                            }
 
-                                    ?>
+                            ?>
+                                </div>
 
                             <div class="row">
                                 <div class="col-md-offset-2 col-md-8">
@@ -169,6 +175,26 @@ if(isset($_POST['apagar']))
                                         </form>
                                     </div>
                                 </div>
+                                <!-- Fim Upload de arquivo -->
+                                <!-- Confirmação de Exclusão -->
+                                <div class="modal fade" id="confirmApagar" role="dialog" aria-labelledby="confirmApagarLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title">Excluir Arquivo?</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Confirma?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                                <button type="button" class="btn btn-danger" id="confirm">Remover</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Fim Confirmação de Exclusão -->
                             </div>
                         </div>
                     </div>
