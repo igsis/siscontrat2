@@ -1,6 +1,7 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
+$idPedido = $_SESSION['idPedido'];
 
 $idPedido = $_SESSION['idPedido'];
 
