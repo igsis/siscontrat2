@@ -93,7 +93,7 @@ $num = mysqli_num_rows($query);
                                         }*/
                                     echo "</td>";
                                     echo "<td>
-                                        <form method=\"POST\" action=\"?perfil=evento&p=pedido_anexos\" role=\"form\">
+                                        <form method=\"POST\" action=\"?perfil=evento&p=pedido_anexo\" role=\"form\">
                                         <input type='hidden' name='idPedido' value='".$pedido['id']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-primary btn-block\">Anexos do pedido</button>
                                         </form>
