@@ -3,17 +3,22 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idPedido = $_SESSION['idPedido'];
 
-$idPedido = $_SESSION['idPedido'];
-
 if(isset($_POST['cadastra']) || isset($_POST['edita'])){
     $verba_id = $_POST['verba_id'];
     $forma_pagamento = addslashes($_POST['forma_pagamento']);
     $justificativa = addslashes($_POST['justificativa']);
     $observacao = addslashes($_POST['observacao']);
+    $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
+    $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? NULL;
 }
 
 if(isset($_POST['cadastra'])){
-    $sql_cadastra = "UPDATE pedidos SET verba_id = '$verba_id', forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
+    if (isset($data_kit_pagamento)) {
+        $sql_cadastra = "UPDATE pedidos SET verba_id = '$verba_id', forma_pagamento = '$forma_pagamento', data_kit_pagamento = '$data_kit_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
+    } else {
+        $sql_cadastra = "UPDATE pedidos SET verba_id = '$verba_id', forma_pagamento = '$forma_pagamento', numero_parcelas = '$numero_parcelas', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
+    }
+
     if(mysqli_query($con,$sql_cadastra)){
         $mensagem = mensagem("success", "Gravado com sucesso!");
     }
@@ -26,7 +31,7 @@ if(isset($_POST['edita'])){
     $valor_total = dinheiroDeBr($_POST['valor_total']);
     $numero_parcelas = $_POST['numero_parcelas'];
 
-    $sql_edita = "UPDATE pedidos SET verba_id = '$verba_id', valor_total = '$valor_total', numero_parcelas = '$numero_parcelas', data_kit_pagamento = '$data_kit_pagamento', forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
+    $sql_edita = "UPDATE pedidos SET verba_id = '$verba_id', valor_total = '$valor_total', numero_parcelas = '$numero_parcelas', data_kit_pagamento = null, forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
     if(mysqli_query($con,$sql_edita)){
         $mensagem = mensagem("success","Gravado com sucesso.");
     }
@@ -62,6 +67,16 @@ else{
     $link_edita = "?perfil=evento&p=pf_edita";
     $link_troca = "?perfil=evento&p=pf_pesquisa";
 }
+
+
+if ($pedido['numero_parcelas'] != 1) {
+    $displayEditar = "display: block";
+    $displayKit = "display: none";
+} else {
+    $displayEditar = "display: none";
+    $displayKit = "display: block";
+}
+
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -78,11 +93,11 @@ else{
                 <!-- general form elements -->
 
                 <!-- pedido -->
-                <div class="box box-info">
+                <div class="box box-info" onload="ocultarBotao()">
                     <div class="box-header with-border">
                         <h3 class="box-title">Detalhes</h3>
                     </div>
-                    <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                    <form method="POST" action="?perfil=evento&p=pedido_edita" name="form_principal" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -100,8 +115,8 @@ else{
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="numero_parcelas">Número de Parcelas</label>
-                                    <select class="form-control" id="numero_parcelas" name="numero_parcelas">
-                                        <option value="">Selecione...</option>
+                                    <select onchange="ocultarBotao()" class="form-control" id="numero_parcelas" name="numero_parcelas">
+                                        <option value="<?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : 0?>"><?=$pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "Selecione"?></option>
                                         <option value="1">Parcela Única</option>
                                         <option value="2">2 parcelas</option>
                                         <option value="3">3 parcelas</option>
@@ -116,21 +131,13 @@ else{
                                         <option value="12">12 parcelas</option>
                                     </select>
                                 </div>
-                                <?php
-                                if($pedido['numero_parcelas'] != 1){
-                                    ?>
-                                    <button>Editar parcelas</button>
-                                <?php
-                                }
-                                else{
-                                ?>
-                                    <div class="form-group col-md-2">
-                                        <label for="data_kit_pagamento">Data Kit Pagamento</label>
-                                        <input type="date" id="data_kit_pagamento" name="data_kit_pagamento" class="form-control" value="<?= $pedido['data_kit_pagamento'] ?>">
+                                    <div class="form-group col-md-2" id="editarParcelas" style="<?=$displayEditar?>">
+                                        <input type="submit" value="Editar Parcelas" formaction="?perfil=evento&p=parcelas_cadastro" onclick="alteraPagina()" name="editarParcelas" class="btn btn-info btn-block" style="margin-top: 24px">
                                     </div>
-                                <?php
-                                }
-                                ?>
+                                    <div class="form-group col-md-2" id="data_kit_pagamento" style="<?=$displayKit?>">
+                                        <label for="data_kit_pagamento">Data Kit Pagamento</label>
+                                        <input type="date" id="data_kit_pagamento" name="data_kit_pagamento" class="form-control" value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
+                                    </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -149,7 +156,7 @@ else{
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
+                            <button type="submit" onClick="document.form_principal.submit()"  name="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>
                     </form>
                 </div>
@@ -273,31 +280,70 @@ else{
 <script>
     $('#valor_total').mask('000.000.000.000.000,00', {reverse: true});
 
-
     function ocultarBotao() {
-        let parcelas = document.querySelector("#quantidade_parcelas").value;
+        var optionPHP = "<?=$pedido['numero_parcelas']?>";
+        var optionSelect = document.querySelector("#numero_parcelas").value;
         console.log(optionSelect);
+        var editarParcelas = document.querySelector('#editarParcelas');
+        var dataKit = document.querySelector("#data_kit_pagamento");
 
-        let valorAprovado = document.querySelector("#valorAprovado").value;
-        console.log(valorAprovado);
-
-        let grava = document.querySelector('#gravarAdm');
-
-        if (optionSelect != "1") {
-            document.querySelector("#valorAprovado").required = false;
-            grava.disabled = false;
-        } else if (optionSelect == "1") {
-            document.querySelector("#valorAprovado").required = true;
-            if ((valorAprovado == '') || (valorAprovado == "0,00")){
-                alert ("Informe o valor aprovado antes de gravar!");
-                grava.disabled = true;
-            }else{
-                grava.disabled = false;
-            }
+        if (optionSelect == "1") {
+            editarParcelas.style.display = "none";
+            dataKit.style.display = "block";
+        } else {
+            editarParcelas.style.display = "block";
+            dataKit.style.display = "none";
         }
     }
 
+    function AjaxF()
+    {
+        var ajax;
 
+        try
+        {
+            ajax = new XMLHttpRequest();
+        }
+        catch(e)
+        {
+            try
+            {
+                ajax = new ActiveXObject("Msxml2.XMLHTTP");
+            }
+            catch(e)
+            {
+                try
+                {
+                    ajax = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                catch(e)
+                {
+                    alert("Seu browser não da suporte à AJAX!");
+                    return false;
+                }
+            }
+        }
+        return ajax;
+    }
+
+    function alteraPagina()
+    {
+        var ajax = AjaxF();
+
+        ajax.onreadystatechange = function(){
+            if(ajax.readyState == 4)
+            {
+                document.getElementById('numero_parcelas').innerHTML = ajax.responseText;
+            }
+        }
+
+        // Variável com os dados que serão enviados ao PHP
+        var parcelas = "parcelas="+document.getElementById('numero_parcelas').value;
+
+        ajax.open("POST", "?perfil=evento&p=parcelas_cadastro"+parcelas, false);
+        ajax.setRequestHeader("Content-Type", "text/html");
+        ajax.send();
+    }
 
 
 </script>

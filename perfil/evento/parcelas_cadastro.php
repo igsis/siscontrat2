@@ -3,6 +3,7 @@
 $idPedido = $_SESSION['idPedido'];
 
 $con = bancoMysqli();
+$parcelas = $_POST['parcelas'];
 
 mysqli_close($con);
 include "includes/menu_interno.php";
