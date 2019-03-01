@@ -102,11 +102,22 @@ else{
                                     <label for="numero_parcelas">Número de Parcelas</label>
                                     <select class="form-control" id="numero_parcelas" name="numero_parcelas">
                                         <option value="">Selecione...</option>
-                                        <option value="1">Única</option>
+                                        <option value="1">Parcela Única</option>
+                                        <option value="2">2 parcelas</option>
+                                        <option value="3">3 parcelas</option>
+                                        <option value="4">4 parcelas</option>
+                                        <option value="5">5 parcelas</option>
+                                        <option value="6">6 parcelas</option>
+                                        <option value="7">7 parcelas</option>
+                                        <option value="8">8 parcelas</option>
+                                        <option value="9">9 parcelas</option>
+                                        <option value="10">10 parcelas</option>
+                                        <option value="11">11 parcelas</option>
+                                        <option value="12">12 parcelas</option>
                                     </select>
                                 </div>
                                 <?php
-                                if($pedido['numero_parcelas'] != 0){
+                                if($pedido['numero_parcelas'] != 1){
                                     ?>
                                     <button>Editar parcelas</button>
                                 <?php
@@ -261,4 +272,32 @@ else{
 
 <script>
     $('#valor_total').mask('000.000.000.000.000,00', {reverse: true});
+
+
+    function ocultarBotao() {
+        let parcelas = document.querySelector("#quantidade_parcelas").value;
+        console.log(optionSelect);
+
+        let valorAprovado = document.querySelector("#valorAprovado").value;
+        console.log(valorAprovado);
+
+        let grava = document.querySelector('#gravarAdm');
+
+        if (optionSelect != "1") {
+            document.querySelector("#valorAprovado").required = false;
+            grava.disabled = false;
+        } else if (optionSelect == "1") {
+            document.querySelector("#valorAprovado").required = true;
+            if ((valorAprovado == '') || (valorAprovado == "0,00")){
+                alert ("Informe o valor aprovado antes de gravar!");
+                grava.disabled = true;
+            }else{
+                grava.disabled = false;
+            }
+        }
+    }
+
+
+
+
 </script>
