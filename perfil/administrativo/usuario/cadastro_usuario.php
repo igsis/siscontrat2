@@ -43,9 +43,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-4" id="divEmail">
                                     <label for="email">E-mail *</label>
                                     <input type="email" id="email" name="email" class="form-control" maxlength="100" required>
+                                    <span class="help-block" id="spanHelp"></span>
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -175,15 +176,30 @@
     const url = `<?=$url?>`;
 
     var email = $("#email");
+
+    // adiciona o evento de onblur no campo de email
     email.blur(function() {
         $.ajax({
             url: url,
             type: 'POST',
             data:{"email" : email.val()},
+
             success: function(data) {
-                console.log(data);
-                data = $.parseJSON(data);
-                $("#resposta").text(data.email);
+                // console.log(data);
+                // console.log(data.ok);
+
+                var divEmail = document.querySelector('#divEmail');
+
+                // verifica se o que esta sendo retornado é 1 ou 0
+                if(data.ok){
+                    divEmail.classList.remove("has-error");
+                    document.getElementById("spanHelp").innerHTML = '';
+                    $('#cadastra').attr('disabled', false);
+                }else{
+                    divEmail.classList.add("has-error");
+                    document.getElementById("spanHelp").innerHTML = "Email em uso!";
+                    $('#cadastra').attr('disabled', true);
+                }
             }
         });
     });

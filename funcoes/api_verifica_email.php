@@ -17,7 +17,10 @@ if(isset($_POST['email'])){
 
     #Se o retorno for maior do que zero, diz que já existe um.
     if(mysqli_num_rows($sql)>0)
-        echo json_encode(array('email' => 'Ja existe um usuario cadastrado com este email'));
+        $email =  json_encode(array('email' => 'Email em uso!', 'ok' => 0));
     else
-        echo json_encode(array('email' => 'Usuário valido.' ));
+        $email = json_encode(array('email' => 'Email ok', 'ok' => 1));
+
+    print_r($email);
 }
+
