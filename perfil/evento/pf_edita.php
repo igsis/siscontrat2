@@ -144,12 +144,14 @@ if (isset($_POST['edita'])) {
             $telefone2 = $_POST['telefone2'];
             $sqlTelefone2 = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone) VALUES ('$idPf', '$telefone2')";
             $query = mysqli_query($con, $sqlTelefone2);
+            gravarLog($sqlTelefone2);
         }
 
         if (isset($_POST['telefone3'])) {
             $telefone3 = $_POST['telefone3'];
             $sqlTelefone3 = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone) VALUES ('$idPf', '$telefone3')";
             $query = mysqli_query($con, $sqlTelefone3);
+            gravarLog($sqlTelefone3);
         }
 
         if (mysqli_query($con, $sql)) {
