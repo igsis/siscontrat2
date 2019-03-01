@@ -68,7 +68,6 @@ else{
     $link_troca = "?perfil=evento&p=pf_pesquisa";
 }
 
-
 if ($pedido['numero_parcelas'] != 1) {
     $displayEditar = "display: block";
     $displayKit = "display: none";
@@ -116,7 +115,7 @@ if ($pedido['numero_parcelas'] != 1) {
                                 <div class="form-group col-md-2">
                                     <label for="numero_parcelas">Número de Parcelas</label>
                                     <select onchange="ocultarBotao()" class="form-control" id="numero_parcelas" name="numero_parcelas">
-                                        <option value="<?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : 0?>"><?=$pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "Selecione"?></option>
+                                        <option value="<?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : 0?>"><?=$pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "Selecione..."?></option>
                                         <option value="1">Parcela Única</option>
                                         <option value="2">2 parcelas</option>
                                         <option value="3">3 parcelas</option>
