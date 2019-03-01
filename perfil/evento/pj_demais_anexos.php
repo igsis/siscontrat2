@@ -67,7 +67,7 @@ if(isset($_POST['apagar']))
     <!-- Main content -->
     <section class="content">
         <!-- START FORM-->
-        <h2 class="page-header">Pessoa Juridica</h2>
+        <h2 class="page-header">Pessoa Jurídica</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-info">
@@ -107,7 +107,7 @@ if(isset($_POST['apagar']))
                                         {
                                             echo "<tr>";
                                             echo "<td class='list_description'> " .$arquivo['documento'] ."</td>";
-                                            echo "<td class='list_description'><a href='uploadsdocs/".$arquivo['arquivo']."' target='_blank'>". mb_strimwidth($arquivo['arquivo'], 15 ,25,"..." )."</a></td>";
+                                            echo "<td class='list_description'><a href='../uploadsdocs/".$arquivo['arquivo']."' target='_blank'>". mb_strimwidth($arquivo['arquivo'], 15 ,25,"..." )."</a></td>";
                                             echo "<td class='list_description'>(".exibirDataBr($arquivo['data']).")</td>";
                                             echo "
                                           <td class='list_description'>
