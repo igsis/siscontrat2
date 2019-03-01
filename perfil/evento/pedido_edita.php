@@ -68,13 +68,19 @@ else{
     $link_troca = "?perfil=evento&p=pf_pesquisa";
 }
 
-if ($pedido['numero_parcelas'] != 1) {
-    $displayEditar = "display: block";
-    $displayKit = "display: none";
-} else {
-    $displayEditar = "display: none";
-    $displayKit = "display: block";
+$displayEditar = "display: none";
+$displayKit = "display: block";
+
+if (isset($pedido['numero_parcelas'])) {
+    if ($pedido['numero_parcelas'] != 1 || $pedido['numero_parcelas'] != "") {
+        $displayEditar = "display: block";
+        $displayKit = "display: none";
+    } else {
+        $displayEditar = "display: none";
+        $displayKit = "display: block";
+    }
 }
+
 
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -115,7 +121,9 @@ if ($pedido['numero_parcelas'] != 1) {
                                 <div class="form-group col-md-2">
                                     <label for="numero_parcelas">Número de Parcelas</label>
                                     <select onchange="ocultarBotao()" class="form-control" id="numero_parcelas" name="numero_parcelas">
-                                        <option value="<?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : 0?>"><?=$pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "Selecione..."?></option>
+                                        <option value="<?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "0"?>">
+                                            <?=$pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "Selecione..."?>
+                                        </option>
                                         <option value="1">Parcela Única</option>
                                         <option value="2">2 parcelas</option>
                                         <option value="3">3 parcelas</option>
@@ -280,13 +288,13 @@ if ($pedido['numero_parcelas'] != 1) {
     $('#valor_total').mask('000.000.000.000.000,00', {reverse: true});
 
     function ocultarBotao() {
-        var optionPHP = "<?=$pedido['numero_parcelas']?>";
+
         var optionSelect = document.querySelector("#numero_parcelas").value;
         console.log(optionSelect);
         var editarParcelas = document.querySelector('#editarParcelas');
         var dataKit = document.querySelector("#data_kit_pagamento");
 
-        if (optionSelect == "1") {
+        if (optionSelect == "1" || optionSelect == 0) {
             editarParcelas.style.display = "none";
             dataKit.style.display = "block";
         } else {
