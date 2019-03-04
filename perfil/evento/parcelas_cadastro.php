@@ -3,9 +3,8 @@
 $idPedido = $_SESSION['idPedido'];
 
 $con = bancoMysqli();
-$parcelas = $_POST['parcelas'];
+$parcelas = $_POST['parcelas'] ?? NULL;
 
-mysqli_close($con);
 include "includes/menu_interno.php";
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -19,7 +18,7 @@ include "includes/menu_interno.php";
                 <!-- general form elements -->
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Parcelas</h3>
+                        <h3 class="box-title">Parcelas teste variavel : <?=$parcelas?></h3>
                     </div>
                     <form method="POST" action="?perfil=evento&p=parcelas_edita" role="form">
                         <div class="box-body">

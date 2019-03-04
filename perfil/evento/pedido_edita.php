@@ -72,7 +72,7 @@ $displayEditar = "display: none";
 $displayKit = "display: block";
 
 if (isset($pedido['numero_parcelas'])) {
-    if ($pedido['numero_parcelas'] != 1 || $pedido['numero_parcelas'] != "") {
+    if ($pedido['numero_parcelas'] != 1) {
         $displayEditar = "display: block";
         $displayKit = "display: none";
     } else {
@@ -98,11 +98,11 @@ if (isset($pedido['numero_parcelas'])) {
                 <!-- general form elements -->
 
                 <!-- pedido -->
-                <div class="box box-info" onload="ocultarBotao()">
+                <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Detalhes</h3>
                     </div>
-                    <form method="POST" action="?perfil=evento&p=pedido_edita" name="form_principal" role="form">
+                    <div method="POST" action="?perfil=evento&p=pedido_edita" name="form_principal" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -138,8 +138,66 @@ if (isset($pedido['numero_parcelas'])) {
                                         <option value="12">12 parcelas</option>
                                     </select>
                                 </div>
-                                    <div class="form-group col-md-2" id="editarParcelas" style="<?=$displayEditar?>">
-                                        <input type="submit" value="Editar Parcelas" formaction="?perfil=evento&p=parcelas_cadastro" onclick="alteraPagina()" name="editarParcelas" class="btn btn-info btn-block" style="margin-top: 24px">
+                                <!-- Button trigger modal -->
+                                    <button type="button" style="margin-top: 24px; <?=$displayEditar?>" id="editarParcelas" class="btn btn-info" data-toggle="modal" data-target="#modalParcelas">
+                                        Editar Parcelas
+                                    </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                    <form class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Editar Parcelas</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="teste">
+                                                    <?php
+                                                    $i = 0;
+                                                    //$teste = $_POST['parcelas'];
+
+                                                    define("ValorJquery", "<p id='parcela'></p>");
+                                                    $parcelas = constant('ValorJquery');
+                                                    $nums = $parcelas;
+
+                                                    while ($i <= count($nums)) {
+                                                        echo $nums;
+                                                        //echo "parcela 1:  " . $parcelas . "     Jquery 1:  " . ValorJquery .  "    parcela 2: " . $parcelas .  "Jquery 2: " . ValorJquery;
+                                                        ?>
+                                                    <div class='row'>
+                                                        <div class='form-group col-md-2'>
+                                                            <label for='parcela'>Parcela </label>
+                                                            <input type='number' id='parcela' name='parcela' class='form-control'>
+                                                        </div>
+                                                    <div class='form-group col-md-3'>
+                                                        <label for='valor'>Valor </label>
+                                                        <input type='number' id='valor' name='valor' class='form-control'>
+                                                    </div>
+                                                    <div class='form-group col-md-4'>
+                                                        <label for='modal_data_kit_pagamento'>Data Kit
+                                                            Pagamento</label>
+                                                        <input type='date' id='modal_data_kit_pagamento'
+                                                               name='modal_data_kit_pagamento'
+                                                               class='form-control'>
+                                                    </div>
+                                                        </div>
+                                            <?php
+
+                                                        $i++;
+                                                       // echo $i;
+                                                    }
+                                                    ?>
+                                                </div>
+                                                <div id="teste2">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                                <button type="button" class="btn btn-primary">Salvar</button>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-group col-md-2" id="data_kit_pagamento" style="<?=$displayKit?>">
                                         <label for="data_kit_pagamento">Data Kit Pagamento</label>
@@ -284,8 +342,7 @@ if (isset($pedido['numero_parcelas'])) {
     <!-- /.content -->
 </div>
 
-<script>
-    $('#valor_total').mask('000.000.000.000.000,00', {reverse: true});
+<script type="text/javascript">
 
     function ocultarBotao() {
 
@@ -303,54 +360,97 @@ if (isset($pedido['numero_parcelas'])) {
         }
     }
 
-    function AjaxF()
-    {
-        var ajax;
+    $(function() {
+        $("#editarParcelas").click(function() {
 
-        try
-        {
-            ajax = new XMLHttpRequest();
-        }
-        catch(e)
-        {
-            try
-            {
-                ajax = new ActiveXObject("Msxml2.XMLHTTP");
+            var parcelas = $("#numero_parcelas").val();
+
+            $(".modal-body p").html(parcelas);
+
+            //$.post("", {parcelas: parcelas})
+
+            var clone = document.getElementById('#teste').cloneNode(true);
+            var destino = document.getElementById('#teste2');
+
+
+
+            let i = 0;
+            //var original = $(this).closest(".modal-body");
+
+            while (i <= parcelas) {
+
+                destino.appendChild(clone);
+
             }
-            catch(e)
-            {
-                try
-                {
-                    ajax = new ActiveXObject("Microsoft.XMLHTTP");
-                }
-                catch(e)
-                {
-                    alert("Seu browser não da suporte à AJAX!");
-                    return false;
-                }
+        });
+    });
+
+
+    $("#editarParcelas").click(function(){
+        var parcelas = $("#numero_parcelas").val();
+        //$(".modal-body").append("<input type='text' value='" + parcelas + "'>");
+    });
+
+    function abreModal(){
+        $.ajax({
+            type: 'POST',
+            //Caminho do arquivo do seu modal
+            url: '../modal_parcelas',
+
+            success: function(data){
+                var parcelas = $("#numero_parcelas").val();
+
+                $("#parcela").html(parcelas);
+                $('.modal-body').html(data);
+                $('#modalParcelas').modal('show');
             }
-        }
-        return ajax;
+        });
     }
 
-    function alteraPagina()
-    {
-        var ajax = AjaxF();
 
-        ajax.onreadystatechange = function(){
-            if(ajax.readyState == 4)
-            {
-                document.getElementById('numero_parcelas').innerHTML = ajax.responseText;
-            }
+
+/*    function adicionarCampos () {
+
+        option =  document.querySelector('#numero_parcelas');
+
+        parcelas = document.querySelector('#parcelas');
+
+
+        let i;
+        for (i = 0; i <= option; i++ ) {
+
+            parcelas.style.display = "block";
+
+            document.querySelector('#parcelas').innerHTML = "                 <label for='parcelas'>Parcela " + i + "</label>\n" +
+                "                                        <input type='text' id='valor' name='valor' class='form-control'>\n" +
+                "                                        <input type='date' id='parcelas' name='parcelas' class='form-control'>\n";
+
         }
 
-        // Variável com os dados que serão enviados ao PHP
-        var parcelas = "parcelas="+document.getElementById('numero_parcelas').value;
+    }*/
 
-        ajax.open("POST", "?perfil=evento&p=parcelas_cadastro"+parcelas, false);
-        ajax.setRequestHeader("Content-Type", "text/html");
-        ajax.send();
+
+
+
+
+    function alterarPagina () {
+        var parcelas = $("#numero_parcelas").val();
+        $.post("?perfil=evento&p=parcelas_cadastro", {parcelas: parcelas});
     }
+
+
+/*
+    $(function() {
+        $("#editarParcelas").click(function() {
+
+
+            var parcelas = $("#numero_parcelas").val();
+
+            $.post("?perfil=evento&p=parcelas_cadastro", {parcelas: parcelas})
+
+        });
+    });
+*/
 
 
 </script>
