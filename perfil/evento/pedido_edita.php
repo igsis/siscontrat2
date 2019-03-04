@@ -139,7 +139,7 @@ if (isset($pedido['numero_parcelas'])) {
                                     </select>
                                 </div>
                                 <!-- Button trigger modal -->
-                                    <button type="button" style="margin-top: 24px; <?=$displayEditar?>" id="editarParcelas" class="btn btn-info" data-toggle="modal" data-target="#modalParcelas">
+                                    <button type="button" style="margin-top: 24px; <?=$displayEditar?>" id="editarParcelas" class="btn btn-info" >
                                         Editar Parcelas
                                     </button>
                                 <!-- Modal -->
@@ -153,49 +153,13 @@ if (isset($pedido['numero_parcelas'])) {
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <div id="teste">
-                                                    <?php
-                                                    $i = 0;
-                                                    //$teste = $_POST['parcelas'];
+                                                <form action="#" id="formParcela">
 
-                                                    define("ValorJquery", "<p id='parcela'></p>");
-                                                    $parcelas = constant('ValorJquery');
-                                                    $nums = $parcelas;
-
-                                                    while ($i <= count($nums)) {
-                                                        echo $nums;
-                                                        //echo "parcela 1:  " . $parcelas . "     Jquery 1:  " . ValorJquery .  "    parcela 2: " . $parcelas .  "Jquery 2: " . ValorJquery;
-                                                        ?>
-                                                    <div class='row'>
-                                                        <div class='form-group col-md-2'>
-                                                            <label for='parcela'>Parcela </label>
-                                                            <input type='number' id='parcela' name='parcela' class='form-control'>
-                                                        </div>
-                                                    <div class='form-group col-md-3'>
-                                                        <label for='valor'>Valor </label>
-                                                        <input type='number' id='valor' name='valor' class='form-control'>
-                                                    </div>
-                                                    <div class='form-group col-md-4'>
-                                                        <label for='modal_data_kit_pagamento'>Data Kit
-                                                            Pagamento</label>
-                                                        <input type='date' id='modal_data_kit_pagamento'
-                                                               name='modal_data_kit_pagamento'
-                                                               class='form-control'>
-                                                    </div>
-                                                        </div>
-                                            <?php
-
-                                                        $i++;
-                                                       // echo $i;
-                                                    }
-                                                    ?>
-                                                </div>
-                                                <div id="teste2">
-                                                </div>
+                                                </form>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                                                <button type="button" class="btn btn-primary">Salvar</button>
+                                                <button type="button" class="btn btn-primary" id="">Salvar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -223,7 +187,6 @@ if (isset($pedido['numero_parcelas'])) {
                         <div class="box-footer">
                             <button type="submit" onClick="document.form_principal.submit()"  name="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>
-                    </form>
                 </div>
                 <!-- /.pedido -->
                 <!-- proponente -->
@@ -342,6 +305,26 @@ if (isset($pedido['numero_parcelas'])) {
     <!-- /.content -->
 </div>
 
+<script type="text/x-handlebars-template" id="templateParcela">
+    <div class='row'>
+        <div class='form-group col-md-2'>
+            <label for='parcela'>Parcela </label>
+            <input type='number' value="{{count}}" class='form-control' disabled>
+        </div>
+        <div class='form-group col-md-3'>
+            <label for='valor'>Valor </label>
+            <input type='number' id='valor' name='valor[{{count}}]' class='form-control'>
+        </div>
+        <div class='form-group col-md-4'>
+            <label for='modal_data_kit_pagamento'>Data Kit
+                Pagamento</label>
+            <input type='date' id='modal_data_kit_pagamento'
+                   name='modal_data_kit_pagamento[{{count}}]'
+                   class='form-control'>
+        </div>
+    </div>
+</script>
+
 <script type="text/javascript">
 
     function ocultarBotao() {
@@ -362,26 +345,21 @@ if (isset($pedido['numero_parcelas'])) {
 
     $(function() {
         $("#editarParcelas").click(function() {
+            var source   = document.getElementById("templateParcela").innerHTML;
+            var template = Handlebars.compile(source);
 
             var parcelas = $("#numero_parcelas").val();
 
-            $(".modal-body p").html(parcelas);
-
-            //$.post("", {parcelas: parcelas})
-
-            var clone = document.getElementById('#teste').cloneNode(true);
-            var destino = document.getElementById('#teste2');
-
-
-
-            let i = 0;
-            //var original = $(this).closest(".modal-body");
-
-            while (i <= parcelas) {
-
-                destino.appendChild(clone);
-
+            var html = '';
+            for (var count = 1; count <= parcelas; count++) {
+                html   += template({
+                    count: count
+                });
             }
+
+            $('#modalParcelas').find('#formParcela').html(html);
+
+            $('#modalParcelas').modal('show');
         });
     });
 

@@ -45,11 +45,13 @@ else
     <script src="dist/js/jquery-1.12.4.min.js"></script>
     <script src="dist/js/jquery.mask.js"></script>
     <!-- jQuery 3 -->
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+
       <script src="jquery-3.0.0.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+      <!-- Bootstrap 3.3.7 -->
+      <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+      <script src="dist/js/handlebars-v4.1.0.js"></script>
   </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
