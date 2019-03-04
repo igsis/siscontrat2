@@ -142,27 +142,6 @@ if (isset($pedido['numero_parcelas'])) {
                                     <button type="button" style="margin-top: 24px; <?=$displayEditar?>" id="editarParcelas" class="btn btn-info" >
                                         Editar Parcelas
                                     </button>
-                                <!-- Modal -->
-                                <div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                    <form class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLongTitle">Editar Parcelas</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="#" id="formParcela">
-
-                                                </form>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                                                <button type="button" class="btn btn-primary" id="">Salvar</button>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="form-group col-md-2" id="data_kit_pagamento" style="<?=$displayKit?>">
                                         <label for="data_kit_pagamento">Data Kit Pagamento</label>
                                         <input type="date" id="data_kit_pagamento" name="data_kit_pagamento" class="form-control" value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
@@ -187,6 +166,7 @@ if (isset($pedido['numero_parcelas'])) {
                         <div class="box-footer">
                             <button type="submit" onClick="document.form_principal.submit()"  name="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>
+                    </form>
                 </div>
                 <!-- /.pedido -->
                 <!-- proponente -->
@@ -300,10 +280,29 @@ if (isset($pedido['numero_parcelas'])) {
         </div>
         <!-- /.row -->
         <!-- END ACCORDION & CAROUSEL-->
-
     </section>
     <!-- /.content -->
 </div>
+<!-- Modal -->
+<div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="margin-top: 15px;" class="modal-title text-bold" id="exampleModalLongTitle">Editar Parcelas</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="formParcela">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
 
 <script type="text/x-handlebars-template" id="templateParcela">
     <div class='row'>
@@ -316,11 +315,8 @@ if (isset($pedido['numero_parcelas'])) {
             <input type='number' id='valor' name='valor[{{count}}]' class='form-control'>
         </div>
         <div class='form-group col-md-4'>
-            <label for='modal_data_kit_pagamento'>Data Kit
-                Pagamento</label>
-            <input type='date' id='modal_data_kit_pagamento'
-                   name='modal_data_kit_pagamento[{{count}}]'
-                   class='form-control'>
+            <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
+            <input type='date' id='modal_data_kit_pagamento' name='modal_data_kit_pagamento[{{count}}]' class='form-control'>
         </div>
     </div>
 </script>
@@ -352,7 +348,7 @@ if (isset($pedido['numero_parcelas'])) {
 
             var html = '';
             for (var count = 1; count <= parcelas; count++) {
-                html   += template({
+                html    += template({
                     count: count
                 });
             }
@@ -361,6 +357,12 @@ if (isset($pedido['numero_parcelas'])) {
 
             $('#modalParcelas').modal('show');
         });
+        $('#salvarParcelas').click(function () {
+            $.post("pedido")
+
+        });
+
+        }
     });
 
 
