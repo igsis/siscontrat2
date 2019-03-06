@@ -5,8 +5,6 @@ $idPedido = $_POST['idPedido'];
 
 $arrayParcelas = $_POST['array'] ?? NULL;
 
-echo "testeee" . $arrayParcelas;
-
 if(isset($arrayParcelas)) {
     print_r($arrayParcelas);
 }
