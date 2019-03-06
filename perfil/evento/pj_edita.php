@@ -260,29 +260,34 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
                                 </div>
+                                <div style="margin-top: 10px;" class="form-group col-md-6">
+                                    <h4 class="text-center col-md-12"><em>Insira seu CEP e aperte a tecla "TAB" para seu endereço carregar automaticamente</em></h4>
+                                </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="rua">Rua: *</label>
                                     <input type="text" class="form-control" name="rua" id="rua" placeholder="Digite a rua" maxlength="200" readonly value="<?= $end['logradouro'] ?>">
                                 </div>
-                                <div class="form-group col-md-1">
+                                <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
                                     <input type="number" name="numero" class="form-control" placeholder="Ex.: 10" required value="<?= $end['numero'] ?>">
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-3">
                                     <label for="complemento">Complemento:</label>
                                     <input type="text" name="complemento" class="form-control" maxlength="20" placeholder="Digite o complemento" value="<?= $end['complemento'] ?>">
                                 </div>
-                                <div class="form-group col-md-2">
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
                                     <label for="bairro">Bairro: *</label>
                                     <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Digite o Bairro" maxlength="80" readonly value="<?= $end['bairro'] ?>">
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-4">
                                     <label for="cidade">Cidade: *</label>
                                     <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Digite a cidade" maxlength="50" readonly value="<?= $end['cidade'] ?>">
                                 </div>
-                                <div class="form-group col-md-1">
+                                <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
                                     <input type="text" class="form-control" name="estado" id="estado" maxlength="2" placeholder="Ex.: SP" readonly value="<?= $end['uf'] ?>">
                                 </div>
@@ -354,7 +359,9 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                     <div class="box-body">
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <button type="submit" name="edita" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Demais Anexos</button>
+                                <form method="POST" action="?perfil=evento&p=pj_demais_anexos" role="form">
+                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Demais Anexos</button>
+                                </form>
                             </div>
                             <div class="form-group col-md-3">
                                 <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
