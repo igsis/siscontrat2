@@ -52,6 +52,7 @@ else
       <!-- Bootstrap 3.3.7 -->
       <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
       <script src="dist/js/handlebars-v4.1.0.js"></script>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
