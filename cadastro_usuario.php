@@ -1,5 +1,61 @@
 <?php
-    $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_verifica_email.php';
+include "funcoes/funcoesGerais.php";
+require "funcoes/funcoesConecta.php";
+
+$con = bancoMysqli();
+
+$url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_verifica_email.php';
+
+if(isset($_POST['cadastra'])){
+    $nome = $_POST['nome'];
+    $jovemMonitor = $_POST['jovem_monitor'];
+    $rgRf = $_POST['rgrf_usuario'];
+    $telefone = $_POST['tel_usuario'];
+    $email = $_POST['email'];
+    $usuario = $_POST['usuario'];
+    $perfil = $_POST['perfil'];
+
+    $sql_perfil = "SELECT * FROM perfis WHERE token = '$perfil'";
+    echo $sql_perfil;
+    $query_perfil = mysqli_query($con, $sql_perfil);
+
+    if(mysqli_num_rows($query_perfil) > 0){
+        $perfilSelecioado = mysqli_fetch_assoc($query_perfil);
+        echo $perfilSelecioado['id'];
+        $perfil = $perfilSelecioado['id'];
+        $acertou = 1;
+    }else{
+        $acertou = 0;
+    }
+
+    if($acertou){
+
+        if($jovemMonitor == 0){
+            // fazer um in_array() depois que ficar definido os modulos que terá acesso a eventos
+            $fiscal = 1;
+        }else{
+            $fiscal = 0;
+        }
+
+        if(isset($_POST['cadastra'])){
+            $sql = "INSERT INTO usuarios (nome_completo, jovem_monitor, rf_rg, usuario, email, telefone, perfil_id, fiscal)
+        VALUES ('$nome', '$jovemMonitor','$rgRf', '$usuario', '$email', '$telefone', '$perfil', '$fiscal')";
+
+            if (mysqli_query($con, $sql)) {
+                gravarLog($sql);
+                $mensagem = mensagem("success", "Usuário cadastrado com sucesso! Você está sendo redirecionado para a tela de login.");
+                echo "<script type=\"text/javascript\">
+						  window.setTimeout(\"location.href='index.php';\", 4000);
+					  </script>";
+
+            } else {
+                $mensagem = mensagem("danger", "Erro no cadastro de usuário! Tente novamente.");
+            }
+        }
+    }else{
+        $mensagem = mensagem("danger", "Código inválido!");
+    }
+}
 ?>
 <html ng-app="sisContrat">
 <head>
@@ -35,7 +91,9 @@
 
         <!-- START FORM-->
         <h2 class="page-header">Cadastro de Usuário</h2>
-
+        <div class="row" align="center">
+            <?php if(isset($mensagem)){echo $mensagem;};?>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
@@ -45,7 +103,7 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form method="POST" action="?perfil=administrativo&p=usuario&sp=edita_usuario" role="form">
+                    <form method="POST" action="cadastro_usuario.php" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -81,7 +139,7 @@
                                     <input type="text" data-mask="(00) 00000-0000" id="tel_usuario" name="tel_usuario" class="form-control" required>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="perfil">Perfil* </label> <br>
+                                    <label for="perfil">Código* </label> <br>
                                     <input type="text" required name="perfil" id="perfil" class="form-control" maxlength="9" minlength="9">
                                 </div>
                             </div>
