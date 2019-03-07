@@ -3,30 +3,31 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idPedido = $_SESSION['idPedido'];
 
-$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido'";
-$query = mysqli_query($con, $sqlParcelas);
-$nums = mysqli_num_rows($query);
-$array = range(1, $nums);
-
-
 if(isset($_POST['salvar'])) {
+    $parcelas = $_POST['parcela'];
     $valor = $_POST['valor'];
     $dataPagamento = $_POST['data_kit_pagamento'];
 
-    $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido'";
+    foreach ($parcelas as $num_parcela) {
+
+        $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido' AND numero_parcelas = '$num_parcela'";
+        mysqli_query($con, $sqlUpdate);
+        gravarLog($sqlUpdate);
+        echo $num_parcela;
+    }
 
     if (mysqli_query($con, $sqlUpdate)) {
-        gravarLog($sqlUpdate);
+
         $mensagem = mensagem("success", "Parcelas editadas com sucesso!");
 
     } else {
         $mensagem = mensagem("danger", "Erro ao atualizar! Tente novamente.");
     }
-
-
 }
 
-
+$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido'";
+$query = mysqli_query($con, $sqlParcelas);
+$nums = mysqli_num_rows($query);
 
 ?>
 <div class="content-wrapper">
@@ -51,7 +52,7 @@ if(isset($_POST['salvar'])) {
                                 <div class='row'>
                                     <div class='form-group col-md-offset-3 col-md-1'>
                                         <label for='parcela'>Parcela </label>
-                                        <input type='number' value="<?=$parcela['numero_parcelas']?>" class='form-control' disabled>
+                                        <input type='number' id="parcela" name="parcela[]" value="<?=$parcela['numero_parcelas']?>" class='form-control' readonly>
                                     </div>
                                     <div class='form-group col-md-2'>
                                         <label for='valor'>Valor </label>
