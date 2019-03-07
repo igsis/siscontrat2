@@ -1,15 +1,10 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-$idPedido = $_POST['idPedido'];
-
-$arrayParcelas = $_POST['array'] ?? NULL;
-
-if(isset($arrayParcelas)) {
-    print_r($arrayParcelas);
+if(isset($_POST['carregar'])){
+    $_SESSION['idPedido'] = $_POST['idPedido'];
 }
-
-
+$idPedido = $_SESSION['idPedido'];
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $verba_id = $_POST['verba_id'];
@@ -146,11 +141,10 @@ if (isset($pedido['numero_parcelas'])) {
                                     </select>
                                 </div>
                                 <!-- Button trigger modal -->
-                                <button type="button" style="margin-left: 10px; margin-top: 24px; <?= $displayEditar ?>"
-                                        id="editarParcelas" class="btn btn-info">
+                                <button type="button" style="margin-top: 24px; <?= $displayEditar ?>" id="editarParcelas" class="btn btn-info">
                                     Editar Parcelas
                                 </button>
-                                <div class="form-group col-md-2" id="data_kit_pagamento" style="<?= $displayKit ?>">
+                                <div class="form-group col-md-2" id="data_kit_pagamento" style="margin-left: -10px; <?= $displayKit ?>">
                                     <label for="data_kit_pagamento">Data Kit Pagamento</label>
                                     <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
                                            class="form-control" value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
@@ -338,7 +332,7 @@ if (isset($pedido['numero_parcelas'])) {
             </div>
             <div class='form-group col-md-3'>
                 <label for='valor'>Valor </label>
-                <input type='number' id='valor' name='valor[{{count}}]' class='form-control'>
+                <input type='text' id='valor' name='valor[{{count}}]' placeholder="Valor em reais" onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
             </div>
             <div class='form-group col-md-4'>
                 <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
@@ -392,79 +386,39 @@ if (isset($pedido['numero_parcelas'])) {
                 var parcelas = $("#numero_parcelas").val();
 
                 var formParcela = document.querySelector("#formParcela");
+                var idPedido = "<?php echo $idPedido; ?>";
+
+                console.log(idPedido);
 
                 var arrayKit = [];
                 var arrayValor = [];
-                var arrayTeste = []
-
 
                 for(var i = 1; i <= parcelas; i++) {
                     arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
                     arrayValor [i] = $("input[name='valor[" + i + "]']").val();
 
-                    arrayTeste[i] = [arrayValor[i], arrayKit[i]];
+                    //arrayTeste[i] = [arrayValor[i], arrayKit[i]];
 
-                    //console.log(arrayKit[i]);
-                    console.log(arrayTeste[i]);
-                    //console.log(arrayValor[i]);
+                    console.log(arrayKit[i]);
+                    //console.log(arrayTeste[i]);
+                    console.log(arrayValor[i]);
 
                 }
 
                 $.ajax({
-                    url: 'http://localhost/siscontrat2/visual/index.php?perfil=evento&p=pedido_edita.php',
+                    url: 'http://localhost/siscontrat2/visual/index.php?perfil=evento&p=parcela_cadastro',
                     type: 'POST', // Tipo de requisição, podendo alterar para GET, POST, PUT , DELETE e outros metodos http
-                    data: {array: arrayTeste},
+                    data: {parcelas: parcelas, idPedido: idPedido, arrayValor: arrayValor, arrayKit: arrayKit},
                     success: function(){
                         $('#modalParcelas').modal('hide');
-                        swal("Parcelas salvas com sucesso!");
-                        window.location.reload();
+                        sweetAlert("Parcelas editadas com sucesso!");
+                        window.location.href = "http://localhost/siscontrat2/visual/index.php?perfil=evento&p=parcela_cadastro";
                     },
                     error: function(){
                         swal("Erro ao gravar");
                     }
-                })
-
-
-
-
-
-               /* $.post('http://localhost/siscontrat2/visual/index.php?perfil=evento&p=pedido_edita.php', {'data[]' : arrayTeste} , function(data){
-                    $('#modalParcelas').modal('hide');
-                    swal("Parcelas salvas com sucesso!");
-
-                });*/
-
-                //console.log(arrayTeste);
-
-
-                //console.log(formParcela);
-               // console.log(kitTeste);
-                //console.log(arrayKit);
-
-
-
-
-
-               // $.post('?perfil=evento&p=pedido_edita',$('#formParcela").serialize());
-
-               /* var arrayValor = [];
-                var arrayKit = [];
-
-               $("input[type=number][name='valor[]']").each(function(){
-                    arrayValor.push($(this).val());
                 });
-
-                $("input[type=date][name='modal_data_kit_pagamento[]']").each(function(){
-                    arrayKit.push($(this).val());
-                });
-
-                arrayValor.push($(this).attr('valor'));
-                arrayKit.push($(this).attr('modal_data_kit_pagamento'));
-
-                console.log(arrayValor);
-                console.log(arrayKit); */
             });
-
         });
 
 
