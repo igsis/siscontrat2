@@ -49,40 +49,40 @@
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="nome">Nome Completo *</label>
+                                    <label for="nome">Nome Completo* </label>
                                     <input type="text" id="nome" name="nome" class="form-control" required>
                                 </div>
 
                                 <div class="form-group col-md-2">
-                                    <label for="tipo">É jovem monitor?</label> <br>
+                                    <label for="tipo">É jovem monitor?* </label> <br>
                                     <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="1"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0"> Não </label>
                                 </div>
 
                                 <div class="form-group col-md-2">
-                                    <label for="rf_usuario">RF/RG</label>
+                                    <label for="rf_usuario">RF/RG* </label>
                                     <input type="text" id="rgrf_usuario" name="rgrf_usuario" class="form-control" disabled>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="rf_usuario">Usuário *</label>
+                                    <label for="rf_usuario">Usuário* </label>
                                     <div id='resposta'></div>
                                     <input type="text" id="usuario" name="usuario" class="form-control" maxlength="7" required readonly>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-4" id="divEmail">
-                                    <label for="email">E-mail *</label>
+                                    <label for="email">E-mail* </label>
                                     <input type="email" id="email" name="email" class="form-control" maxlength="100" required>
                                     <span class="help-block" id="spanHelp"></span>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="tel_usuario">Telefone *</label>
-                                    <input data-mask="(00) 0000-00000" type="text" id="tel_usuario" name="tel_usuario" class="form-control" maxlength="100" required>
+                                    <label for="tel_usuario">Telefone* </label>
+                                    <input type="text" data-mask="(00) 00000-0000" id="tel_usuario" name="tel_usuario" class="form-control" required>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="perfil">Perfil </label> <br>
-                                    <input type="text" name="perfil" id="perfil" class="form-control" maxlength="9" minlength="9">
+                                    <label for="perfil">Perfil* </label> <br>
+                                    <input type="text" required name="perfil" id="perfil" class="form-control" maxlength="9" minlength="9">
                                 </div>
                             </div>
                         </div>
@@ -109,23 +109,9 @@
 <script src="visual/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- iCheck -->
 <script src="visual/plugins/iCheck/icheck.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
 
 <script>
-    function habilitaCampo(id) {
-        if(document.getElementById(id).disabled==true){document.getElementById(id).disabled=false}
-    }
-
-    function desabilitarCampo(id){
-        if(document.getElementById(id).disabled==false){document.getElementById(id).disabled=true}
-    }
-
-    /* function habilitarRadio (valor) {
-         if (valor == 2) {
-             document.status.disabled = false;
-         } else {
-             document.status.disabled = true;
-         }
-     }*/
 
     function geraUsuarioRf() {
 
@@ -170,15 +156,17 @@
     $("input[name='jovem_monitor']").change(function () {
         $('#rgrf_usuario').attr("disabled", false);
 
-        var jovemMonitor = document.getElementsByName("jovem_monitor");
+        let jovemMonitor = document.getElementsByName("jovem_monitor");
 
-        for (var i = 0; i < jovemMonitor.length; i++){
+        for (i = 0; i < jovemMonitor.length; i++){
             if(jovemMonitor[i].checked){
-                var escolhido = jovemMonitor[i].value;
+                let escolhido = jovemMonitor[i].value;
 
                 if(escolhido == 1){
                     $('#rgrf_usuario').val('');
                     $('#rgrf_usuario').focus();
+                    $('#rgrf_usuario').unmask();
+                    $('#rgrf_usuario').attr('maxlength', '');
                     $('#rgrf_usuario').keypress(function(event) {
                         geraUsuarioRg();
                     });
@@ -213,10 +201,8 @@
             data:{"email" : email.val()},
 
             success: function(data) {
-                // console.log(data);
-                // console.log(data.ok);
 
-                var divEmail = document.querySelector('#divEmail');
+                let divEmail = document.querySelector('#divEmail');
 
                 // verifica se o que esta sendo retornado é 1 ou 0
                 if(data.ok){
