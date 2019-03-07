@@ -106,7 +106,7 @@ if(isset($_POST['login']))
             </div>
         </form>
         <p></p>
-        Não possui cadastro? <a href="https://goo.gl/dzmcfB" class="text-center">Clique aqui.</a>
+        Não possui cadastro? <a href="cadastro_usuario.php" class="text-center">Clique aqui.</a>
     </div>
     <!-- /.login-box-body -->
 </div>
