@@ -40,6 +40,7 @@ $query = mysqli_query($con, $sql);
                             <thead>
                             <tr>
                                 <th>Nome</th>
+                                <th>Usuário</th>
                                 <th>RF/RG</th>
                                 <th>email</th>
                                 <th>telefone</th>
@@ -53,6 +54,7 @@ $query = mysqli_query($con, $sql);
                             while ($usuario = mysqli_fetch_array($query)) {
                                 echo "<tr>";
                                 echo "<td>" . $usuario['nome_completo'] . "</td>";
+                                echo "<td>" . $usuario['usuario'] . "</td>";
                                 echo "<td>" . $usuario['rf_rg'] . "</td>";
                                 echo "<td>" . $usuario['email'] . "</td>";
                                 echo "<td>" . $usuario['telefone'] . "</td>";
@@ -80,6 +82,7 @@ $query = mysqli_query($con, $sql);
                             <tfoot>
                             <tr>
                                 <th>Nome</th>
+                                <th>Usuário</th>
                                 <th>RF/RG</th>
                                 <th>email</th>
                                 <th>telefone</th>

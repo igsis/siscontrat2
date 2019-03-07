@@ -83,21 +83,6 @@
 </div>
 
 <script>
-    function habilitaCampo(id) {
-        if(document.getElementById(id).disabled==true){document.getElementById(id).disabled=false}
-    }
-
-    function desabilitarCampo(id){
-        if(document.getElementById(id).disabled==false){document.getElementById(id).disabled=true}
-    }
-
-    /* function habilitarRadio (valor) {
-         if (valor == 2) {
-             document.status.disabled = false;
-         } else {
-             document.status.disabled = true;
-         }
-     }*/
 
     function geraUsuarioRf() {
 
@@ -142,15 +127,17 @@
     $("input[name='jovem_monitor']").change(function () {
         $('#rgrf_usuario').attr("disabled", false);
 
-        var jovemMonitor = document.getElementsByName("jovem_monitor");
+        let jovemMonitor = document.getElementsByName("jovem_monitor");
 
-        for (var i = 0; i < jovemMonitor.length; i++){
+        for (i = 0; i < jovemMonitor.length; i++){
             if(jovemMonitor[i].checked){
-                var escolhido = jovemMonitor[i].value;
+                let escolhido = jovemMonitor[i].value;
 
                 if(escolhido == 1){
                     $('#rgrf_usuario').val('');
                     $('#rgrf_usuario').focus();
+                    $('#rgrf_usuario').unmask();
+                    $('#rgrf_usuario').attr('maxlength', '');
                     $('#rgrf_usuario').keypress(function(event) {
                         geraUsuarioRg();
                     });

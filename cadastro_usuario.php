@@ -16,12 +16,10 @@ if(isset($_POST['cadastra'])){
     $perfil = $_POST['perfil'];
 
     $sql_perfil = "SELECT * FROM perfis WHERE token = '$perfil'";
-    echo $sql_perfil;
     $query_perfil = mysqli_query($con, $sql_perfil);
 
     if(mysqli_num_rows($query_perfil) > 0){
         $perfilSelecioado = mysqli_fetch_assoc($query_perfil);
-        echo $perfilSelecioado['id'];
         $perfil = $perfilSelecioado['id'];
         $acertou = 1;
     }else{
@@ -42,7 +40,6 @@ if(isset($_POST['cadastra'])){
         VALUES ('$nome', '$jovemMonitor','$rgRf', '$usuario', '$email', '$telefone', '$perfil', '$fiscal')";
 
             if (mysqli_query($con, $sql)) {
-                gravarLog($sql);
                 $mensagem = mensagem("success", "Usuário cadastrado com sucesso! Você está sendo redirecionado para a tela de login.");
                 echo "<script type=\"text/javascript\">
 						  window.setTimeout(\"location.href='index.php';\", 4000);
