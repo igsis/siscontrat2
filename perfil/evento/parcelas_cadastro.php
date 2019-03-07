@@ -1,43 +1,40 @@
+<style>
+    .load {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        top: 30%;
+        left: 45%;
+        color: blue;
+    }
+</style>
+<div class="load"><img src="..\visual\images\loading.gif"></div>
 <?php
+$con = bancoMysqli();
 
 $idPedido = $_SESSION['idPedido'];
-
-$con = bancoMysqli();
 $parcelas = $_POST['parcelas'] ?? NULL;
+$arrayValor = $_POST['arrayValor'] ?? NULL;
+$arrayKit = $_POST['arrayKit'] ?? NULL;
 
-include "includes/menu_interno.php";
-?>
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-    <!-- Main content -->
-    <section class="content">
-        <!-- START FORM-->
-        <h2 class="page-header">Pedido de Contratação</h2>
-        <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Parcelas teste variavel : <?=$parcelas?></h3>
-                    </div>
-                    <form method="POST" action="?perfil=evento&p=parcelas_edita" role="form">
-                        <div class="box-body">
-                            <div class="row">
-                                <div class="form-group col-md-2">
-                                    <label for="numero_parcelas">Parcelas</label>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.box-body -->
-                        <div class="box-footer">
-                            <button type="submit" name="cadastra" class="btn btn-info pull-right">Gravar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <!-- /.col -->
-        </div>
-        <!-- /.row -->
-    </section>
-    <!-- /.content -->
-</div>
+if(isset($arrayValor) && isset($arrayKit)) {
+
+    for($i = 1; $i <= $parcelas; $i++) {
+        $valor = $arrayValor[$i];
+        $pagamento = $arrayKit[$i];
+
+        $sql = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento, publicado) VALUES ('$idPedido', '$i', '$valor', '$pagamento', 1)";
+
+        if (mysqli_query($con, $sql)){
+            gravarLog($sql);
+        }
+    }
+}
+
+//echo "<meta http-equiv='refresh' content='0, url=?perfil=evento&p=pedido_edita'>";
+echo "
+    <script>
+        //swal('Parcelas editadas com sucesso!');
+        setTimeout(" . "document.location='?perfil=evento&p=pedido_edita'". ",100000);
+    </script>";
+
