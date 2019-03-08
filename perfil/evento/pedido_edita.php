@@ -5,6 +5,7 @@ if (isset($_POST['carregar'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
 }
 $idPedido = $_SESSION['idPedido'];
+$idEvento = $_SESSION['idEvento'];
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $verba_id = $_POST['verba_id'];
@@ -86,13 +87,13 @@ if (isset($pedido['numero_parcelas'])) {
     }
 }
 
+$atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
         <!-- START FORM-->
         <h2 class="page-header">Pedido de Contratação</h2>
         <div class="row" align="center">
@@ -122,7 +123,7 @@ if (isset($pedido['numero_parcelas'])) {
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="valor_total">Valor Total</label>
-                                    <input type="text" id="valor_total" name="valor_total" class="form-control"
+                                    <input type="text" onkeypress="return(moeda(this, '.', ',', event))" id="valor_total" name="valor_total" class="form-control"
                                            value="<?= dinheiroParaBr($pedido['valor_total']) ?>">
                                 </div>
 
@@ -136,6 +137,35 @@ if (isset($pedido['numero_parcelas'])) {
                                         </a>
                                     </div>
                                     <?php
+                                } else if ($atracao['categoria_atracao_id'] == 4) {
+                                    ?>
+
+                                    <div class="form-group col-md-2">
+                                        <label for="numero_parcelas">Número de Parcelas</label>
+                                        <select onchange="ocultarBotao()" class="form-control" id="numero_parcelas"
+                                                name="numero_parcelas">
+                                            <option value="0">
+                                                Selecione...
+                                            </option>
+                                            <?php
+                                            geraOpcaoParcelas("oficina_opcoes", $pedido['numero_parcelas']);
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" style="margin-top: 24px; <?= $displayEditar ?>"
+                                            id="editarParcelas" class="btn btn-primary">
+                                        Editar Parcelas
+                                    </button>
+                                    <div class="form-group col-md-2" id="data_kit_pagamento"
+                                         style="margin-left: -10px; <?= $displayKit ?>">
+                                        <label for="data_kit_pagamento">Data Kit Pagamento</label>
+                                        <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
+                                               class="form-control"
+                                               value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
+                                    </div>
+                                    <?php
+
                                 } else {
                                     ?>
 
@@ -400,11 +430,7 @@ if (isset($pedido['numero_parcelas'])) {
             $("#salvarModal").click(function () {
 
                 var parcelas = $("#numero_parcelas").val();
-
-                var formParcela = document.querySelector("#formParcela");
                 var idPedido = "<?php echo $idPedido; ?>";
-
-                console.log(idPedido);
 
                 var arrayKit = [];
                 var arrayValor = [];
@@ -413,19 +439,27 @@ if (isset($pedido['numero_parcelas'])) {
                     arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
                     arrayValor [i] = $("input[name='valor[" + i + "]']").val();
 
-                    console.log(arrayKit[i]);
-                    console.log(arrayValor[i]);
-
                 }
 
+
+                var dados = $('#templateParcela').serialize();
+
+                console.log(dados);
+
+
+              /*  $.post('?perfil=evento&p=parcelas_cadastro',dados)
+                    .done(function(data){
+                        $('.parcelas').html(data);
+                    });*/
+
                 $.ajax({
-                    url: 'http://localhost/siscontrat2/visual/index.php?perfil=evento&p=parcelas_cadastro',
+                    url: '?perfil=evento&p=parcelas_cadastro',
                     type: 'POST', // Tipo de requisição, podendo alterar para GET, POST, PUT , DELETE e outros metodos http
                     data: {parcelas: parcelas, idPedido: idPedido, arrayValor: arrayValor, arrayKit: arrayKit},
                     success: function () {
                         $('#modalParcelas').modal('hide');
                         // sweetAlert("Parcelas editadas com sucesso!");
-                        window.location.href = "?perfil=evento&p=parcelas_cadastro";
+                       // window.location.href = "?perfil=evento&p=parcelas_cadastro";
                     },
                     error: function () {
                         swal("Erro ao gravar");

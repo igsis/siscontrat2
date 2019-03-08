@@ -5,15 +5,17 @@ $idPedido = $_SESSION['idPedido'];
 
 if(isset($_POST['salvar'])) {
     $parcelas = $_POST['parcela'];
-    $valor = $_POST['valor'];
-    $dataPagamento = $_POST['data_kit_pagamento'];
+    $valores = $_POST['valor'];
+    $datasPagamento = $_POST['data_kit_pagamento'];
 
-    foreach ($parcelas as $num_parcela) {
+    for($i = 1; $i <= count($parcelas); $i++) {
+        $parcela = $parcelas[$i];
+        $valor = $valores[$i];
+        $dataPagamento = $datasPagamento[$i];
 
-        $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido' AND numero_parcelas = '$num_parcela'";
+        $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido' AND numero_parcelas = '$parcela'";
         mysqli_query($con, $sqlUpdate);
         gravarLog($sqlUpdate);
-        echo $num_parcela;
     }
 
     if (mysqli_query($con, $sqlUpdate)) {
@@ -52,17 +54,17 @@ $nums = mysqli_num_rows($query);
                                 <div class='row'>
                                     <div class='form-group col-md-offset-3 col-md-1'>
                                         <label for='parcela'>Parcela </label>
-                                        <input type='number' id="parcela" name="parcela[]" value="<?=$parcela['numero_parcelas']?>" class='form-control' readonly>
+                                        <input type='number' id="parcela" name="parcela[<?=$parcela['numero_parcelas']?>]" value="<?=$parcela['numero_parcelas']?>" class='form-control' readonly>
                                     </div>
                                     <div class='form-group col-md-2'>
                                         <label for='valor'>Valor </label>
-                                        <input type='text' id='valor' name='valor' value="<?=  dinheiroParaBr($parcela['valor'])?>"
+                                        <input type='text' id='valor' name='valor[<?=$parcela['numero_parcelas']?>]' value="<?=  dinheiroParaBr($parcela['valor'])?>"
                                                onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
                                     </div>
                                     <div class='form-group col-md-3'>
                                         <label for='data_kit_pagamento'>Data Kit Pagamento</label>
                                         <input type='date' id='data_kit_pagamento' value="<?=$parcela['data_pagamento']?>"
-                                               name='data_kit_pagamento' class='form-control'>
+                                               name='data_kit_pagamento[<?=$parcela['numero_parcelas']?>]' class='form-control'>
                                     </div>
                                 </div>
                                 <?php
