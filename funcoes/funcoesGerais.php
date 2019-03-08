@@ -315,7 +315,7 @@ function geraOpcao($tabela, $select = '')
 function geraOpcaoParcelas($tabela, $select = '')
 {
     //gera os options de um select
-    $sql = "SELECT * FROM $tabela";
+    $sql = "SELECT * FROM $tabela ORDER BY id";
     $con = bancoMysqli();
     $query = mysqli_query($con,$sql);
     while($option = mysqli_fetch_row($query))
