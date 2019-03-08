@@ -146,18 +146,9 @@ if (isset($pedido['numero_parcelas'])) {
                                             <option value="<?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "0" ?>">
                                                 <?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "Selecione..." ?>
                                             </option>
-                                            <option value="1">Parcela Única</option>
-                                            <option value="2">2 parcelas</option>
-                                            <option value="3">3 parcelas</option>
-                                            <option value="4">4 parcelas</option>
-                                            <option value="5">5 parcelas</option>
-                                            <option value="6">6 parcelas</option>
-                                            <option value="7">7 parcelas</option>
-                                            <option value="8">8 parcelas</option>
-                                            <option value="9">9 parcelas</option>
-                                            <option value="10">10 parcelas</option>
-                                            <option value="11">11 parcelas</option>
-                                            <option value="12">12 parcelas</option>
+                                            <?php
+                                            geraOpcao("parcela_opcoes");
+                                            ?>
                                         </select>
                                     </div>
                                     <!-- Button trigger modal -->
