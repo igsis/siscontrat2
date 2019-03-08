@@ -127,51 +127,53 @@ if (isset($pedido['numero_parcelas'])) {
                                 </div>
 
                                 <?php
-                                    if ($numRows > 0) {
-                                        ?>
-
-                                        <a class="btn btn-info" href="?perfil=evento&p=parcelas_edita" style="margin-left: 20px; margin-top: 24px; role="button">
-                                            <?= $numRows ?> parcelas salvas, clique aqui para editá-las.
+                                if ($numRows > 0) {
+                                    ?>
+                                    <div class="form-group col-md-4">
+                                        <a class="btn btn-primary" href="?perfil=evento&p=parcelas_edita"
+                                           style="margin-left: 20px; margin-top: 24px; role=" button">
+                                        <?= $numRows ?> parcelas salvas, clique aqui para editá-las.
                                         </a>
-                                        <?php
-                                    }else {
-                                        ?>
+                                    </div>
+                                    <?php
+                                } else {
+                                    ?>
 
-                                        <div class="form-group col-md-2">
-                                            <label for="numero_parcelas">Número de Parcelas</label>
-                                            <select onchange="ocultarBotao()" class="form-control" id="numero_parcelas"
-                                                    name="numero_parcelas">
-                                                <option value="<?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "0" ?>">
-                                                    <?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "Selecione..." ?>
-                                                </option>
-                                                <option value="1">Parcela Única</option>
-                                                <option value="2">2 parcelas</option>
-                                                <option value="3">3 parcelas</option>
-                                                <option value="4">4 parcelas</option>
-                                                <option value="5">5 parcelas</option>
-                                                <option value="6">6 parcelas</option>
-                                                <option value="7">7 parcelas</option>
-                                                <option value="8">8 parcelas</option>
-                                                <option value="9">9 parcelas</option>
-                                                <option value="10">10 parcelas</option>
-                                                <option value="11">11 parcelas</option>
-                                                <option value="12">12 parcelas</option>
-                                            </select>
-                                        </div>
-                                        <!-- Button trigger modal -->
-                                        <button type="button" style="margin-top: 24px; <?= $displayEditar ?>"
-                                                id="editarParcelas" class="btn btn-info">
-                                            Editar Parcelas
-                                        </button>
-                                        <div class="form-group col-md-2" id="data_kit_pagamento"
-                                             style="margin-left: -10px; <?= $displayKit ?>">
-                                            <label for="data_kit_pagamento">Data Kit Pagamento</label>
-                                            <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
-                                                   class="form-control"
-                                                   value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
-                                        </div>
-                                        <?php
-                                    }
+                                    <div class="form-group col-md-2">
+                                        <label for="numero_parcelas">Número de Parcelas</label>
+                                        <select onchange="ocultarBotao()" class="form-control" id="numero_parcelas"
+                                                name="numero_parcelas">
+                                            <option value="<?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "0" ?>">
+                                                <?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "Selecione..." ?>
+                                            </option>
+                                            <option value="1">Parcela Única</option>
+                                            <option value="2">2 parcelas</option>
+                                            <option value="3">3 parcelas</option>
+                                            <option value="4">4 parcelas</option>
+                                            <option value="5">5 parcelas</option>
+                                            <option value="6">6 parcelas</option>
+                                            <option value="7">7 parcelas</option>
+                                            <option value="8">8 parcelas</option>
+                                            <option value="9">9 parcelas</option>
+                                            <option value="10">10 parcelas</option>
+                                            <option value="11">11 parcelas</option>
+                                            <option value="12">12 parcelas</option>
+                                        </select>
+                                    </div>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" style="margin-top: 24px; <?= $displayEditar ?>"
+                                            id="editarParcelas" class="btn btn-primary">
+                                        Editar Parcelas
+                                    </button>
+                                    <div class="form-group col-md-2" id="data_kit_pagamento"
+                                         style="margin-left: -10px; <?= $displayKit ?>">
+                                        <label for="data_kit_pagamento">Data Kit Pagamento</label>
+                                        <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
+                                               class="form-control"
+                                               value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
+                                    </div>
+                                    <?php
+                                }
                                 ?>
                             </div>
                             <div class="row">
@@ -195,7 +197,7 @@ if (isset($pedido['numero_parcelas'])) {
                         <!-- /.box-body -->
                         <div class="box-footer">
                             <button type="submit" onClick="document.form_principal.submit()" name="edita"
-                                    class="btn btn-info pull-right">Gravar
+                                    class="btn btn-primary pull-right">Gravar
                             </button>
                         </div>
                         </form>
@@ -434,8 +436,8 @@ if (isset($pedido['numero_parcelas'])) {
                     data: {parcelas: parcelas, idPedido: idPedido, arrayValor: arrayValor, arrayKit: arrayKit},
                     success: function () {
                         $('#modalParcelas').modal('hide');
-                        sweetAlert("Parcelas editadas com sucesso!");
-                        window.location.href = "http://localhost/siscontrat2/visual/index.php?perfil=evento&p=parcelas_cadastro";
+                        // sweetAlert("Parcelas editadas com sucesso!");
+                        window.location.href = "?perfil=evento&p=parcelas_cadastro";
                     },
                     error: function () {
                         swal("Erro ao gravar");

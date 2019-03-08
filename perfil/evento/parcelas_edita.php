@@ -45,7 +45,7 @@ $nums = mysqli_num_rows($query);
                         <h3 class="box-title">Edição de parcelas</h3>
                     </div>
                     <form method="POST" action="?perfil=evento&p=parcelas_edita" role="form">
-                        <div class="box-body center-block">
+                        <div class="box-body">
                             <?php
                             while ($parcela = mysqli_fetch_array($query)) {
                                 ?>
