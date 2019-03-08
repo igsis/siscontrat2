@@ -1,0 +1,35 @@
+com -> comunicação
+con -> contratos
+conl -> contratos lite
+eve -> eventos
+for -> formação
+ocp -> ocupação | Evento interno 
+pro -> produção
+coo -> coordenadoria
+jur -> jurídico
+pag -> pagamentos
+pes -> pesquisa
+adm -> administrador
+
+
+
+
+
+
+
+PERFIS EXISTENTES
+
+PERFIL					TOKEN
+
+COM 					692989psr
+CON					d8ycbv58a
+CON | PAG				j5augfp4g
+CONL |EMIA | EVE			u6g8qkm6m
+CONL |EVE				5f96a6tzy
+CONL | EVE |FOR				qta8sg4z6
+CONL | EVE | PRO			q6wa4hxpw
+COO					w6up869xc
+JUR					awptxn9dg
+PAG					fnh4urr4f
+PES					6brnyb4d7
+ADM					didiego30
