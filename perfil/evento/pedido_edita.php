@@ -108,7 +108,7 @@ if (isset($pedido['numero_parcelas'])) {
                     <div class="box-header with-border">
                         <h3 class="box-title">Detalhes</h3>
                     </div>
-                    <div method="POST" action="?perfil=evento&p=pedido_edita" name="form_principal" role="form">
+                    <form method="POST" action="?perfil=evento&p=pedido_edita" name="form_principal" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -143,11 +143,11 @@ if (isset($pedido['numero_parcelas'])) {
                                         <label for="numero_parcelas">Número de Parcelas</label>
                                         <select onchange="ocultarBotao()" class="form-control" id="numero_parcelas"
                                                 name="numero_parcelas">
-                                            <option value="<?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "0" ?>">
-                                                <?= $pedido['numero_parcelas'] ? $pedido['numero_parcelas'] : "Selecione..." ?>
+                                            <option value="0">
+                                                Selecione...
                                             </option>
                                             <?php
-                                            geraOpcao("parcela_opcoes");
+                                            geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']);
                                             ?>
                                         </select>
                                     </div>
@@ -187,12 +187,9 @@ if (isset($pedido['numero_parcelas'])) {
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="submit" onClick="document.form_principal.submit()" name="edita"
-                                    class="btn btn-primary pull-right">Gravar
-                            </button>
+                            <button type="submit" name="edita" class="btn btn-primary pull-right">Gravar </button>
                         </div>
-                        </form>
-                    </div>
+                    </form>
                     <!-- /.pedido -->
                     <!-- proponente -->
                     <div class="box box-info">
