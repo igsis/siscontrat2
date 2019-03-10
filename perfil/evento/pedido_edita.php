@@ -363,10 +363,11 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary" id="salvarModal">Salvar</button>
+                <button type="button" class="btn btn-primary salvar" name="salvar" id="salvarModal">Salvar</button>
             </div>
         </div>
     </div>
+</div>
 
     <script type="text/x-handlebars-template" id="templateParcela">
         <div class='row'>
@@ -376,16 +377,36 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             </div>
             <div class='form-group col-md-3'>
                 <label for='valor'>Valor </label>
-                <input type='text' id='valor' name='valor[{{count}}]' placeholder="Valor em reais"
+                <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
                        onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
             </div>
             <div class='form-group col-md-4'>
                 <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
-                <input type='date' id='modal_data_kit_pagamento' name='modal_data_kit_pagamento[{{count}}]'
+                <input type='date' id='modal_data_kit_pagamento' value="{{kit}}"  name='modal_data_kit_pagamento[{{count}}]'
                        class='form-control'>
             </div>
         </div>
     </script>
+
+    <script type="text/x-handlebars-template" id="templateEditado">
+        <div class='row'>
+            <div class='form-group col-md-2'>
+                <label for='parcela'>Parcela </label>
+                <input type='number' value="{{count}}" class='form-control' disabled>
+            </div>
+            <div class='form-group col-md-3'>
+                <label for='valor'>Valor </label>
+                <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
+                       onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
+            </div>
+            <div class='form-group col-md-4'>
+                <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
+                <input type='date' id='modal_data_kit_pagamento' value="{{kit}}"  name='modal_data_kit_pagamento[{{count}}]'
+                       class='form-control'>
+            </div>
+        </div>
+    </script>
+
 
     <script type="text/javascript">
 
@@ -416,7 +437,6 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                     html += template({
                         count: count
                     });
-                    console.log(count);
                 }
 
                 var footer = document.querySelector(".main-footer");
@@ -441,30 +461,63 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
                 }
 
+                var source = document.getElementById("templateParcela").innerHTML;
+                var template = Handlebars.compile(source);
+                var parcelas = $("#numero_parcelas").val();
 
-                var dados = $('#templateParcela').serialize();
+                var html = '';
 
-                console.log(dados);
+                var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary editar' name='editar' id='salvarModal'>Editar</button>";
 
 
-              /*  $.post('?perfil=evento&p=parcelas_cadastro',dados)
-                    .done(function(data){
-                        $('.parcelas').html(data);
-                    });*/
+                $('#modalParcelas').slideUp('fast');
 
-                $.ajax({
+                $.post('?perfil=evento&p=parcelas_cadastro',{parcelas: parcelas, idPedido: idPedido, arrayValor: arrayValor, arrayKit: arrayKit})
+                    .done(function(){
+                        for (var count = 1; count <= parcelas; count++) {
+                            html += template({
+                                count: count,
+                                valor: arrayValor [count],
+                                kit: arrayKit [count]
+                            });
+                        }
+
+                        $(".modal-footer").html(newButtons);
+
+                        swal("Informacoes das parcelas gravadas com sucesso!", "success")
+                            .then((value) => {
+                                $('#modalParcelas').slideDown('slow');
+                            });
+                    })
+                    .fail(function(){
+                        swal("danger", "Erro ao gravar");
+                    });
+
+               /* $.ajax({
                     url: '?perfil=evento&p=parcelas_cadastro',
                     type: 'POST', // Tipo de requisição, podendo alterar para GET, POST, PUT , DELETE e outros metodos http
                     data: {parcelas: parcelas, idPedido: idPedido, arrayValor: arrayValor, arrayKit: arrayKit},
-                    success: function () {
-                        $('#modalParcelas').modal('hide');
-                        // sweetAlert("Parcelas editadas com sucesso!");
-                       // window.location.href = "?perfil=evento&p=parcelas_cadastro";
+                    success: function (data) {
+                        for (var count = 1; count <= parcelas; count++) {
+                            html += template({
+                                count: count,
+                                valor: arrayValor [count],
+                                kit: arrayKit [count]
+                            });
+                        }
+
+                        console.log(data);
+
+                        swal("Informacoes das parcelas gravadas com sucesso!")
+                            .then((value) => {
+                                $('#modalParcelas').slideDown('slow');
+                            });
                     },
+
                     error: function () {
                         swal("Erro ao gravar");
                     }
-                });
+                });*/
             });
         });
 
