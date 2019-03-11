@@ -497,7 +497,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         $('#salvarModal').on('click', salvarModal);
         $('#salvarModalOficina').on('click', salvarModal);
 
-        $('#editarModal').on('click', editarModal);
+        $('#editarModal').on('click', salvarModal);
     });
 
     var ocultarBotao = function () {
@@ -516,6 +516,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
     }
 
     var abrirModal = function () {
+
         var source = document.getElementById("templateParcela").innerHTML;
         var template = Handlebars.compile(source);
         var html = '';
@@ -563,12 +564,13 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             var StringDatas = "<?php if (isset($StringDatas)) {
                 echo $StringDatas;
             } ?>";
+
             var valores = StringValores.split("|");
             var datas = StringDatas.split("|");
 
-            for (var count = 1; count <= parcelas; count++) {
+            for (var count = 0; count < parcelas; count++) {
                 html += template({
-                    count: count,
+                    count: count + 1, // para sincronizar com o array vindo do banco
                     valor: valores [count],
                     kit: datas [count]
                 });
@@ -578,7 +580,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
             $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>");
 
-            $('#editarModal').on('click', editarModal);
+            $('#editarModal').on('click', salvarModal);
             $('#modalParcelas').modal('show');
 
         } else {
@@ -595,11 +597,10 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
     };
 
     var salvarModal = function () {
+
         var idAtracao = "<?php if (isset($categoria)) {
             echo $categoria;
         } ?>";
-
-        console.log(idAtracao);
 
         if (idAtracao == 4) {
 
@@ -644,7 +645,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                     }
 
                     $(".botoes").html(newButtons);
-                    $('#editarModal').on('click', editarModal);
+                    $('#editarModal').on('click', salvarModal);
 
                     swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                         .then(() => {
@@ -689,7 +690,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                     }
 
                     $(".botoes").html(newButtons);
-                    $('#editarModal').on('click', editarModal);
+                    $('#editarModal').on('click', salvarModal);
 
                     swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                         .then(() => {
@@ -707,7 +708,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         var rows = "<?php echo $numRows ?>";
 
         if (rows > 0) {
-            parcelas = "<?php echo $numRows ?>";
+            var parcelas = "<?php echo $numRows ?>";
         } else {
             var parcelas = $("#numero_parcelas").val();
         }
@@ -731,7 +732,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             arrayValor: arrayValor,
             arrayKit: arrayKit
         })
-            .done(function (data) {
+            .done(function () {
                 for (var count = 1; count <= parcelas; count++) {
                     html += template({
                         count: count,

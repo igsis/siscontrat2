@@ -3,8 +3,8 @@ $con = bancoMysqli();
 
 $idPedido = $_SESSION['idPedido'];
 $parcelas = $_POST['parcelas'] ?? NULL;
-$arrayValor = $_POST['arrayValorTeste'] ?? NULL;
-$arrayKit = $_POST['arrayValorTeste'] ?? NULL;
+$arrayValor = $_POST['arrayValor'] ?? NULL;
+$arrayKit = $_POST['arrayKit'] ?? NULL;
 
 for ($i = 1; $i <= $parcelas; $i++) {
     $parcela = $parcelas[$i];
