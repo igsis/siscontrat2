@@ -132,39 +132,40 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                                 if ($numRows > 0) {
                                     ?>
                                     <div class="form-group col-md-4">
-                                        <a class="btn btn-primary" href="?perfil=evento&p=parcelas_edita"
-                                           style="margin-left: 20px; margin-top: 24px; role=" button">
-                                        <?= $numRows ?> parcelas salvas, clique aqui para editá-las.
-                                        </a>
+                                        <button type="button" style="margin-left: 20px; margin-top: 24px;"
+                                                id="abrirParcelas" class="btn btn-primary">
+                                            <?= $numRows ?> parcelas salvas, clique aqui para editá-las.
+                                        </button>
                                     </div>
+                            </div>
                                     <?php
                                 } else if ($atracao['categoria_atracao_id'] == 4) {
                                     ?>
-
-                                    <div class="form-group col-md-2">
-                                        <label for="numero_parcelas">Número de Parcelas</label>
-                                        <select onchange="ocultarBotao()" class="form-control" id="numero_parcelas"
-                                                name="numero_parcelas">
-                                            <option value="0">
-                                                Selecione...
-                                            </option>
-                                            <?php
-                                            geraOpcaoParcelas("oficina_opcoes", $pedido['numero_parcelas']);
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <!-- Button trigger modal -->
-                                    <button type="button" style="margin-top: 24px; <?= $displayEditar ?>"
-                                            id="editarParcelas" class="btn btn-primary">
-                                        Editar Parcelas
-                                    </button>
-                                    <div class="form-group col-md-2" id="data_kit_pagamento"
-                                         style="margin-left: -10px; <?= $displayKit ?>">
-                                        <label for="data_kit_pagamento">Data Kit Pagamento</label>
-                                        <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
-                                               class="form-control"
-                                               value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
-                                    </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="numero_parcelas">Número de Parcelas</label>
+                                            <select class="form-control" id="numero_parcelas" name="numero_parcelas">
+                                                <option value="0">
+                                                    Selecione...
+                                                </option>
+                                                <?php
+                                                geraOpcaoParcelas("oficina_opcoes", $pedido['numero_parcelas']);
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <!-- Button trigger modal -->
+                                        <div class="form-group col-md-2">
+                                            <button type="button" style="margin-top: 24px; <?= $displayEditar ?>"
+                                                    id="editarParcelas" class="btn btn-primary">
+                                                Editar Parcelas
+                                            </button>
+                                        </div>
+                                        <div class="form-group col-md-2" id="data_kit_pagamento"
+                                             style="margin-left: -10px; <?= $displayKit ?>">
+                                            <label for="data_kit_pagamento">Data Kit Pagamento</label>
+                                            <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
+                                                   class="form-control"
+                                                   value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
+                                        </div>
                                     <?php
 
                                 } else {
@@ -172,8 +173,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
                                     <div class="form-group col-md-2">
                                         <label for="numero_parcelas">Número de Parcelas</label>
-                                        <select onchange="ocultarBotao()" class="form-control" id="numero_parcelas"
-                                                name="numero_parcelas">
+                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas">
                                             <option value="0">
                                                 Selecione...
                                             </option>
@@ -372,44 +372,69 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
     </div>
 </div>
 
-<script type="text/x-handlebars-template" id="templateParcela">
-    <div class='row'>
-        <div class='form-group col-md-2'>
-            <label for='parcela'>Parcela </label>
-            <input type='number' value="{{count}}" class='form-control' disabled>
-        </div>
-        <div class='form-group col-md-3'>
-            <label for='valor'>Valor </label>
-            <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
-                   onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
-        </div>
-        <div class='form-group col-md-4'>
-            <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
-            <input type='date' id='modal_data_kit_pagamento' value="{{kit}}" name='modal_data_kit_pagamento[{{count}}]'
-                   class='form-control'>
-        </div>
-    </div>
-</script>
+<?php
+if ($atracao['categoria_atracao_id'] == 4) {
+    ?>
 
-<script type="text/x-handlebars-template" id="templateEditado">
-    <div class='row'>
-        <div class='form-group col-md-2'>
-            <label for='parcela'>Parcela </label>
-            <input type='number' value="{{count}}" class='form-control' disabled>
+    <script type="text/x-handlebars-template" id="templateParcela">
+        <div class='row'>
+            <div class='form-group col-md-2'>
+                <label for='parcela'>Parcela </label>
+                <input type='number' value="{{count}}" class='form-control' disabled>
+            </div>
+            <div class='form-group col-md-3'>
+                <label for='valor'>Valor </label>
+                <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
+                       onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
+            </div>
+            <div class='form-group col-md-4'>
+                <label for='data_inicial'>Data Inicial</label>
+                <input type='date' id='data_inicial' value="{{inicial}}" name='data_inicial[{{count}}]'
+                       class='form-control'>
+            </div>
+            <div class='form-group col-md-4'>
+                <label for='data_final'>Data Final</label>
+                <input type='date' id='data_final' value="{{final}}" name='data_final[{{count}}]' class='form-control'>
+            </div>
+            <div class='form-group col-md-4'>
+                <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
+                <input type='date' id='modal_data_kit_pagamento' value="{{kit}}"
+                       name='modal_data_kit_pagamento[{{count}}]' class='form-control'>
+            </div>
+            <div class='form-group col-md-4'>
+                <label for='horas'>Horas</label>
+                <input type='date' id='horas' value="{{horas}}" name='horas[{{count}}]' class='form-control'>
+            </div>
         </div>
-        <div class='form-group col-md-3'>
-            <label for='valor'>Valor </label>
-            <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
-                   onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
-        </div>
-        <div class='form-group col-md-4'>
-            <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
-            <input type='date' id='modal_data_kit_pagamento' value="{{kit}}" name='modal_data_kit_pagamento[{{count}}]'
-                   class='form-control'>
-        </div>
-    </div>
-</script>
+    </script>
 
+    <?php
+} else {
+    ?>
+
+    <script type="text/x-handlebars-template" id="templateParcela">
+        <div class='row'>
+            <div class='form-group col-md-2'>
+                <label for='parcela'>Parcela </label>
+                <input type='number' value="{{count}}" class='form-control' disabled>
+            </div>
+            <div class='form-group col-md-3'>
+                <label for='valor'>Valor </label>
+                <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
+                       onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
+            </div>
+            <div class='form-group col-md-4'>
+                <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
+                <input type='date' id='modal_data_kit_pagamento' value="{{kit}}"
+                       name='modal_data_kit_pagamento[{{count}}]'
+                       class='form-control'>
+            </div>
+        </div>
+    </script>
+
+    <?php
+}
+?>
 
 <script type="text/javascript">
 
@@ -470,8 +495,6 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
         var source = document.getElementById("templateParcela").innerHTML;
         var template = Handlebars.compile(source);
-        var parcelas = $("#numero_parcelas").val();
-
         var html = '';
 
         var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary editar' name='editar' id='editarModal'>Editar</button>";
@@ -513,13 +536,10 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         for (var i = 1; i <= parcelas; i++) {
             arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
             arrayValor [i] = $("input[name='valor[" + i + "]']").val();
-
         }
 
         var source = document.getElementById("templateParcela").innerHTML;
         var template = Handlebars.compile(source);
-        var parcelas = $("#numero_parcelas").val();
-
         var html = '';
 
         $('#modalParcelas').slideUp();
@@ -541,6 +561,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 swal("Informacoes das parcelas editadas com sucesso!", "", "success")
                     .then(() => {
                         //$('#modalParcelas').slideDown('slow');
+
                         window.location.href = "?perfil=evento&p=parcelas_edita";
                     });
             })
