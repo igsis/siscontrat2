@@ -26,8 +26,8 @@ CON					d8ycbv58a
 CON | PAG				j5augfp4g
 CONL |EMIA | EVE			u6g8qkm6m
 CONL |EVE				5f96a6tzy
-CONL | EVE |FOR				qta8sg4z6
-CONL | EVE | PRO			q6wa4hxpw
+CONL | EVE | FOR			qta8sg4z6
+CONL | EVE | OCP | PRO			q6wa4hxpw
 COO					w6up869xc
 JUR					awptxn9dg
 PAG					fnh4urr4f
