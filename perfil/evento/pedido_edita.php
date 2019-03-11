@@ -130,221 +130,221 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
                                 <?php
                                 if ($numRows > 0) {
-                                    ?>
-                                    <div class="form-group col-md-4">
-                                        <button type="button" style="margin-left: 20px; margin-top: 24px;"
-                                                id="abrirParcelas" class="btn btn-primary">
-                                            <?= $numRows ?> parcelas salvas, clique aqui para editá-las.
-                                        </button>
-                                    </div>
+                                ?>
+                                <div class="form-group col-md-4">
+                                    <button type="button" style="margin-left: 20px; margin-top: 24px;"
+                                            id="abrirParcelas" class="btn btn-primary">
+                                        <?= $numRows ?> parcelas salvas, clique aqui para editá-las.
+                                    </button>
+                                </div>
                             </div>
-                                    <?php
-                                } else if ($atracao['categoria_atracao_id'] == 4) {
-                                    ?>
-                                        <div class="form-group col-md-6">
-                                            <label for="numero_parcelas">Número de Parcelas</label>
-                                            <select class="form-control" id="numero_parcelas" name="numero_parcelas">
-                                                <option value="0">
-                                                    Selecione...
-                                                </option>
-                                                <?php
-                                                geraOpcaoParcelas("oficina_opcoes", $pedido['numero_parcelas']);
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <!-- Button trigger modal -->
-                                        <div class="form-group col-md-2">
-                                            <button type="button" style="margin-top: 24px; <?= $displayEditar ?>"
-                                                    id="editarParcelas" class="btn btn-primary">
-                                                Editar Parcelas
-                                            </button>
-                                        </div>
-                                        <div class="form-group col-md-2" id="data_kit_pagamento"
-                                             style="margin-left: -10px; <?= $displayKit ?>">
-                                            <label for="data_kit_pagamento">Data Kit Pagamento</label>
-                                            <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
-                                                   class="form-control"
-                                                   value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
-                                        </div>
-                                    <?php
-
-                                } else {
-                                    ?>
-
-                                    <div class="form-group col-md-2">
-                                        <label for="numero_parcelas">Número de Parcelas</label>
-                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas">
-                                            <option value="0">
-                                                Selecione...
-                                            </option>
-                                            <?php
-                                            geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']);
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <!-- Button trigger modal -->
+                            <?php
+                            } else if ($atracao['categoria_atracao_id'] == 4) {
+                                ?>
+                                <div class="form-group col-md-6">
+                                    <label for="numero_parcelas">Número de Parcelas</label>
+                                    <select class="form-control" id="numero_parcelas" name="numero_parcelas">
+                                        <option value="0">
+                                            Selecione...
+                                        </option>
+                                        <?php
+                                        geraOpcaoParcelas("oficina_opcoes", $pedido['numero_parcelas']);
+                                        ?>
+                                    </select>
+                                </div>
+                                <!-- Button trigger modal -->
+                                <div class="form-group col-md-2">
                                     <button type="button" style="margin-top: 24px; <?= $displayEditar ?>"
-                                            id="editarParcelas" class="btn btn-primary">
+                                            id="editarOficinas" class="btn btn-primary">
                                         Editar Parcelas
                                     </button>
-                                    <div class="form-group col-md-2" id="data_kit_pagamento"
-                                         style="margin-left: -10px; <?= $displayKit ?>">
-                                        <label for="data_kit_pagamento">Data Kit Pagamento</label>
-                                        <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
-                                               class="form-control"
-                                               value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
-                                    </div>
-                                    <?php
-                                }
-                                ?>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="forma_pagamento">Forma de pagamento</label><br/>
-                                    <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
-                                              rows="8"><?= $pedido['forma_pagamento'] ?></textarea>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="justificativa">Justificativa</label><br/>
-                                    <textarea id="justificativa" name="justificativa" class="form-control"
-                                              rows="8"><?= $pedido['justificativa'] ?></textarea>
+                                <div class="form-group col-md-2" id="data_kit_pagamento"
+                                     style="margin-left: -10px; <?= $displayKit ?>">
+                                    <label for="data_kit_pagamento">Data Kit Pagamento</label>
+                                    <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
+                                           class="form-control"
+                                           value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="observacao">Observação</label>
-                                <input type="text" id="observacao" name="observacao" class="form-control"
-                                       maxlength="255" value="<?= $pedido['observacao'] ?>">
-                            </div>
-                        </div>
-                        <!-- /.box-body -->
-                        <div class="box-footer">
-                            <button type="submit" name="edita" class="btn btn-primary pull-right">Gravar</button>
-                        </div>
-                    </form>
-                    <!-- /.pedido -->
-                    <!-- proponente -->
-                    <div class="box box-info">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Cadastro de Proponente</h3>
-                        </div>
+                                <?php
 
-                        <div class="box-body">
-                            <div class="row">
-                                <div class="form-group col-md-8">
-                                    <label for="proponente">Proponente</label>
-                                    <input type="text" id="proponente" name="proponente" class="form-control" disabled
-                                           value="<?= $proponente ?>">
+                            } else {
+                                ?>
+
+                                <div class="form-group col-md-2">
+                                    <label for="numero_parcelas">Número de Parcelas</label>
+                                    <select class="form-control" id="numero_parcelas" name="numero_parcelas">
+                                        <option value="0">
+                                            Selecione...
+                                        </option>
+                                        <?php
+                                        geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']);
+                                        ?>
+                                    </select>
                                 </div>
-                                <div class="form-group col-md-2"><label><br></label>
-                                    <form method="POST" action="<?= $link_edita ?>" role="form">
-                                        <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
-                                        <button type="submit" name="editProponente" class="btn btn-primary btn-block">
-                                            Editar Proponente
-                                        </button>
-                                    </form>
+                                <!-- Button trigger modal -->
+                                <button type="button" style="margin-top: 24px; <?= $displayEditar ?>"
+                                        id="editarParcelas" class="btn btn-primary">
+                                    Editar Parcelas
+                                </button>
+                                <div class="form-group col-md-2" id="data_kit_pagamento"
+                                     style="margin-left: -10px; <?= $displayKit ?>">
+                                    <label for="data_kit_pagamento">Data Kit Pagamento</label>
+                                    <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
+                                           class="form-control"
+                                           value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
                                 </div>
-                                <div class="form-group col-md-2"><label><br></label>
-                                    <form method="POST" action="<?= $link_troca ?>" role="form">
-                                        <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
-                                            Proponente
-                                        </button>
-                                    </form>
-                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="forma_pagamento">Forma de pagamento</label><br/>
+                                <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
+                                          rows="8"><?= $pedido['forma_pagamento'] ?></textarea>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="justificativa">Justificativa</label><br/>
+                                <textarea id="justificativa" name="justificativa" class="form-control"
+                                          rows="8"><?= $pedido['justificativa'] ?></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="observacao">Observação</label>
+                            <input type="text" id="observacao" name="observacao" class="form-control"
+                                   maxlength="255" value="<?= $pedido['observacao'] ?>">
+                        </div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <button type="submit" name="edita" class="btn btn-primary pull-right">Gravar</button>
+                </div>
+                </form>
+                <!-- /.pedido -->
+                <!-- proponente -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Cadastro de Proponente</h3>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="form-group col-md-8">
+                                <label for="proponente">Proponente</label>
+                                <input type="text" id="proponente" name="proponente" class="form-control" disabled
+                                       value="<?= $proponente ?>">
+                            </div>
+                            <div class="form-group col-md-2"><label><br></label>
+                                <form method="POST" action="<?= $link_edita ?>" role="form">
+                                    <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
+                                    <button type="submit" name="editProponente" class="btn btn-primary btn-block">
+                                        Editar Proponente
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="form-group col-md-2"><label><br></label>
+                                <form method="POST" action="<?= $link_troca ?>" role="form">
+                                    <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
+                                        Proponente
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
-                    <!-- líderes -->
-                    <?php
-                    //if($pedido['pessoa_tipo_id'] == 2){
-                    $sql_atracao = "SELECT * FROM atracoes AS a                                              
+                </div>
+                <!-- líderes -->
+                <?php
+                //if($pedido['pessoa_tipo_id'] == 2){
+                $sql_atracao = "SELECT * FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
                                             WHERE evento_id = '" . $_SESSION['idEvento'] . "'";
-                    $query_atracao = mysqli_query($con, $sql_atracao);
-                    ?>
-                    <div class="box box-info">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Líder</h3>
-                        </div>
-                        <div class="box-body">
-                            <table class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Atração</th>
-                                    <th>Proponente</th>
-                                    <th width="10%">Ação</th>
-                                </tr>
-                                </thead>
-                                <?php
-                                echo "<tbody>";
-                                while ($atracao = mysqli_fetch_array($query_atracao)) {
-                                    //analisaArray($atracao);
-                                    echo "<tr>";
-                                    echo "<td>" . $atracao['nome_atracao'] . "</td>";
-                                    if ($atracao['pessoa_fisica_id'] > 0) {
-                                        echo "<td>" . $atracao['nome'] . "</td>";
-                                        echo "<td>
+                $query_atracao = mysqli_query($con, $sql_atracao);
+                ?>
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Líder</h3>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Atração</th>
+                                <th>Proponente</th>
+                                <th width="10%">Ação</th>
+                            </tr>
+                            </thead>
+                            <?php
+                            echo "<tbody>";
+                            while ($atracao = mysqli_fetch_array($query_atracao)) {
+                                //analisaArray($atracao);
+                                echo "<tr>";
+                                echo "<td>" . $atracao['nome_atracao'] . "</td>";
+                                if ($atracao['pessoa_fisica_id'] > 0) {
+                                    echo "<td>" . $atracao['nome'] . "</td>";
+                                    echo "<td>
                                             <form method=\"POST\" action=\"?perfil=evento&p=pessoa_fisica\" role=\"form\">
                                             <input type='hidden' name='idAtracao' value='" . $atracao['id'] . "'>
                                             <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class='fa fa-refresh'></i> Trocar</button>
                                             </form>
                                         </td>";
-                                    } else {
-                                        echo "<td>
+                                } else {
+                                    echo "<td>
                                             <form method=\"POST\" action=\"?perfil=evento&p=pessoa_fisica\" role=\"form\">
                                             <input type='hidden' name='idAtracao' value='" . $atracao['id'] . "'>
                                             <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-plus'></i> Adicionar</button>
                                             </form>
                                         </td>";
-                                        echo "<td></td>";
-                                    }
-                                    echo "</tr>";
+                                    echo "<td></td>";
                                 }
-                                echo "</tbody>";
-                                ?>
-                            </table>
-                        </div>
+                                echo "</tr>";
+                            }
+                            echo "</tbody>";
+                            ?>
+                        </table>
                     </div>
-                    <?php
-                    //}
-                    ?>
-                    <!-- parecer -->
-                    <div class="box box-info">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Parecer artístico</h3>
+                </div>
+                <?php
+                //}
+                ?>
+                <!-- parecer -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Parecer artístico</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group">
+                            Aqui vai o parecer
                         </div>
-                        <div class="box-body">
-                            <div class="form-group">
-                                Aqui vai o parecer
+                        <div class="row">
+                            <div class="form-group col-md-offset-4 col-md-2">
+                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
+                                      role="form">
+                                    <button type="submit" name="idPedido" value="<?= $idPedido ?>"
+                                            class="btn btn-primary btn-block">Artista Local
+                                    </button>
+                                </form>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-offset-4 col-md-2">
-                                    <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
-                                          role="form">
-                                        <button type="submit" name="idPedido" value="<?= $idPedido ?>"
-                                                class="btn btn-primary btn-block">Artista Local
-                                        </button>
-                                    </form>
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
-                                          role="form">
-                                        <button type="submit" name="idPedido" value="<?= $idPedido ?>"
-                                                class="btn btn-primary btn-block">Artista Consagrado
-                                        </button>
-                                    </form>
-                                </div>
+                            <div class="form-group col-md-2">
+                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
+                                      role="form">
+                                    <button type="submit" name="idPedido" value="<?= $idPedido ?>"
+                                            class="btn btn-primary btn-block">Artista Consagrado
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- /.col -->
             </div>
+            <!-- /.col -->
         </div>
-        <!-- /.row -->
-        <!-- END ACCORDION & CAROUSEL-->
-    </section>
-    <!-- /.content -->
+</div>
+<!-- /.row -->
+<!-- END ACCORDION & CAROUSEL-->
+</section>
+<!-- /.content -->
 </div>
 <!-- Modal -->
 <div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
@@ -371,76 +371,97 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         </div>
     </div>
 </div>
+<script type="text/x-handlebars-template" id="templateParcela">
+    <div class='row'>
+        <div class='form-group col-md-2'>
+            <label for='parcela'>Parcela </label>
+            <input type='number' value="{{count}}" class='form-control' disabled>
+        </div>
+        <div class='form-group col-md-3'>
+            <label for='valor'>Valor </label>
+            <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
+                   onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
+        </div>
+        <div class='form-group col-md-4'>
+            <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
+            <input type='date' id='modal_data_kit_pagamento' value="{{kit}}"
+                   name='modal_data_kit_pagamento[{{count}}]'
+                   class='form-control'>
+        </div>
+    </div>
+</script>
 
-<?php
-if ($atracao['categoria_atracao_id'] == 4) {
-    ?>
+<style>
+    .modal-lg {
+        width: 82%;
+    }
+</style>
 
-    <script type="text/x-handlebars-template" id="templateParcela">
-        <div class='row'>
-            <div class='form-group col-md-2'>
-                <label for='parcela'>Parcela </label>
-                <input type='number' value="{{count}}" class='form-control' disabled>
+<!-- Modal Oficinas-->
+<div class="modal fade" id="modalOficina" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="margin-top: 15px;" class="modal-title text-bold" id="exampleModalLongTitle">Editar
+                    Parcelas</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class='form-group col-md-3'>
-                <label for='valor'>Valor </label>
-                <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
-                       onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
+            <div class="modal-body">
+                <form action="#" id="formParcela">
+                </form>
             </div>
-            <div class='form-group col-md-4'>
-                <label for='data_inicial'>Data Inicial</label>
-                <input type='date' id='data_inicial' value="{{inicial}}" name='data_inicial[{{count}}]'
-                       class='form-control'>
-            </div>
-            <div class='form-group col-md-4'>
-                <label for='data_final'>Data Final</label>
-                <input type='date' id='data_final' value="{{final}}" name='data_final[{{count}}]' class='form-control'>
-            </div>
-            <div class='form-group col-md-4'>
-                <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
-                <input type='date' id='modal_data_kit_pagamento' value="{{kit}}"
-                       name='modal_data_kit_pagamento[{{count}}]' class='form-control'>
-            </div>
-            <div class='form-group col-md-4'>
-                <label for='horas'>Horas</label>
-                <input type='date' id='horas' value="{{horas}}" name='horas[{{count}}]' class='form-control'>
+            <div class="modal-footer">
+                <div class="botoes">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary salvar" name="salvar" id="salvarModal">Salvar</button>
+                </div>
             </div>
         </div>
-    </script>
+    </div>
+</div>
 
-    <?php
-} else {
-    ?>
-
-    <script type="text/x-handlebars-template" id="templateParcela">
-        <div class='row'>
-            <div class='form-group col-md-2'>
-                <label for='parcela'>Parcela </label>
-                <input type='number' value="{{count}}" class='form-control' disabled>
-            </div>
-            <div class='form-group col-md-3'>
-                <label for='valor'>Valor </label>
-                <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
-                       onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
-            </div>
-            <div class='form-group col-md-4'>
-                <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
-                <input type='date' id='modal_data_kit_pagamento' value="{{kit}}"
-                       name='modal_data_kit_pagamento[{{count}}]'
-                       class='form-control'>
-            </div>
+<script type="text/x-handlebars-template" id="templateOficina">
+    <div class='row'>
+        <div class='form-group col-md-1'>
+            <label for='parcela'>Parcela </label>
+            <input type='number' value="{{count}}" class='form-control' disabled>
         </div>
-    </script>
+        <div class='form-group col-md-2'>
+            <label for='valor'>Valor </label>
+            <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
+                   onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
+        </div>
+        <div class='form-group col-md-2'>
+            <label for='data_inicial'>Data Inicial</label>
+            <input type='date' id='data_inicial' value="{{inicial}}" name='data_inicial[{{count}}]'
+                   class='form-control'>
+        </div>
+        <div class='form-group col-md-2'>
+            <label for='data_final'>Data Final</label>
+            <input type='date' id='data_final' value="{{final}}" name='data_final[{{count}}]' class='form-control'>
+        </div>
+        <div class='form-group col-md-2'>
+            <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
+            <input type='date' id='modal_data_kit_pagamento' value="{{kit}}"
+                   name='modal_data_kit_pagamento[{{count}}]' class='form-control'>
+        </div>
+        <div class='form-group col-md-2'>
+            <label for='horas'>Horas</label>
+            <input type='number' id='horas' value="{{horas}}" name='horas[{{count}}]' class='form-control'>
+        </div>
+    </div>
+</script>
 
-    <?php
-}
-?>
+
 
 <script type="text/javascript">
 
     $(function () {
         $('#numero_parcelas').on('change', ocultarBotao);
         $('#editarParcelas').on('click', abrirModal);
+        $('#editarOficinas').on('click', abrirModalOficina);
         $('#salvarModal').on('click', salvarModal);
         $('#editarModal').on('click', editarModal);
     });
@@ -481,6 +502,26 @@ if ($atracao['categoria_atracao_id'] == 4) {
         $('#modalParcelas').modal('show');
     };
 
+    var abrirModalOficina = function () {
+        var source = document.getElementById("templateOficina").innerHTML;
+        var template = Handlebars.compile(source);
+        var parcelas = $("#numero_parcelas").val();
+
+        var html = '';
+
+        for (var count = 1; count <= parcelas; count++) {
+            html += template({
+                count: count
+            });
+        }
+
+        var footer = document.querySelector(".main-footer");
+        footer.style.display = "none";
+
+        $('#modalOficina').find('#formParcela').html(html);
+        $('#modalOficina').modal('show');
+    };
+
     var salvarModal = function () {
 
         var parcelas = $("#numero_parcelas").val();
@@ -490,7 +531,6 @@ if ($atracao['categoria_atracao_id'] == 4) {
         for (var i = 1; i <= parcelas; i++) {
             arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
             arrayValor [i] = $("input[name='valor[" + i + "]']").val();
-
         }
 
         var source = document.getElementById("templateParcela").innerHTML;
