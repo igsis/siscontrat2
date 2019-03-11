@@ -45,6 +45,7 @@ else
     <!-- JQUEY Mask -->
     <script src="dist/js/jquery-1.12.4.min.js"></script>
     <script src="dist/js/jquery.mask.js"></script>
+    <script src="dist/js/scripts.js"></script>
     <!-- jQuery 3 -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>

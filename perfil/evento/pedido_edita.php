@@ -72,7 +72,37 @@ if ($pedido['pessoa_tipo_id'] == 2) {
 
 $sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido'";
 $query = mysqli_query($con, $sqlParcelas);
+//$parcelas = mysqli_fetch_array($query); //array utilizado no js
 $numRows = mysqli_num_rows($query);
+
+if ($numRows > 0) {
+    while ($parcela = mysqli_fetch_array($query)) {
+        $arrayValores[] = $parcela['valor'];
+        $arrayDatas[] = $parcela['data_pagamento'];
+        $idsParcela [] = $parcela['id'];
+    }
+
+    $StringValores = implode("|", $arrayValores);
+    $StringDatas = implode("|", $arrayDatas);
+
+    foreach ($idsParcela as $idParcela) {
+        $sqlComplemento = "SELECT * FROM parcela_complementos WHERE parcela_id = '$idParcela'";
+        $queryComplemento = mysqli_query($con, $sqlComplemento);
+        $nComplemento = mysqli_num_rows($queryComplemento);
+
+        if ($nComplemento > 0) {
+            while ($complemento = mysqli_fetch_array($queryComplemento)) {
+                $arrayInicio [] = $complemento['data_inicio'];
+                $arrayFim [] = $complemento['data_fim'];
+                $CargaHoraria [] = $complemento['carga_horaria'];
+            }
+            $StringInicio = implode("|", $arrayInicio);
+            $StringFim = implode("|", $arrayFim);
+            $StringCarga = implode("|", $CargaHoraria);
+        }
+    }
+}
+
 
 $displayEditar = "display: none";
 $displayKit = "display: block";
@@ -130,221 +160,221 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
                                 <?php
                                 if ($numRows > 0) {
-                                ?>
-                                <div class="form-group col-md-4">
-                                    <button type="button" style="margin-left: 20px; margin-top: 24px;"
-                                            id="abrirParcelas" class="btn btn-primary">
-                                        <?= $numRows ?> parcelas salvas, clique aqui para editá-las.
-                                    </button>
-                                </div>
-                            </div>
-                            <?php
-                            } else if ($atracao['categoria_atracao_id'] == 4) {
-                                ?>
-                                <div class="form-group col-md-6">
-                                    <label for="numero_parcelas">Número de Parcelas</label>
-                                    <select class="form-control" id="numero_parcelas" name="numero_parcelas">
-                                        <option value="0">
-                                            Selecione...
-                                        </option>
-                                        <?php
-                                        geraOpcaoParcelas("oficina_opcoes", $pedido['numero_parcelas']);
-                                        ?>
-                                    </select>
-                                </div>
-                                <!-- Button trigger modal -->
-                                <div class="form-group col-md-2">
+                                    ?>
+                                    <div class="form-group col-md-4">
+                                        <button type="button" style="margin-left: 20px; margin-top: 24px;"
+                                                id="abrirParcelas" class="btn btn-primary">
+                                            <?= $numRows ?> parcelas salvas, clique aqui para editá-las.
+                                        </button>
+                                    </div>
+                                    <?php
+                                } else if ($atracao['categoria_atracao_id'] == 4) {
+                                    $categoria = 4;
+                                    ?>
+                                    <div class="form-group col-md-6">
+                                        <label for="numero_parcelas">Número de Parcelas</label>
+                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas">
+                                            <option value="0">
+                                                Selecione...
+                                            </option>
+                                            <?php
+                                            geraOpcaoParcelas("oficina_opcoes", $pedido['numero_parcelas']);
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <!-- Button trigger modal -->
+                                    <div class="form-group col-md-2">
+                                        <button type="button" style="margin-top: 24px; <?= $displayEditar ?>"
+                                                id="editarParcelas" class="btn btn-primary">
+                                            Editar Parcelas
+                                        </button>
+                                    </div>
+                                    <div class="form-group col-md-2" id="data_kit_pagamento"
+                                         style="margin-left: -10px; <?= $displayKit ?>">
+                                        <label for="data_kit_pagamento">Data Kit Pagamento</label>
+                                        <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
+                                               class="form-control"
+                                               value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
+                                    </div>
+                                    <?php
+
+                                } else {
+                                    ?>
+
+                                    <div class="form-group col-md-2">
+                                        <label for="numero_parcelas">Número de Parcelas</label>
+                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas">
+                                            <option value="0">
+                                                Selecione...
+                                            </option>
+                                            <?php
+                                            geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']);
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <!-- Button trigger modal -->
                                     <button type="button" style="margin-top: 24px; <?= $displayEditar ?>"
-                                            id="editarOficinas" class="btn btn-primary">
+                                            id="editarParcelas" class="btn btn-primary">
                                         Editar Parcelas
                                     </button>
-                                </div>
-                                <div class="form-group col-md-2" id="data_kit_pagamento"
-                                     style="margin-left: -10px; <?= $displayKit ?>">
-                                    <label for="data_kit_pagamento">Data Kit Pagamento</label>
-                                    <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
-                                           class="form-control"
-                                           value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
-                                </div>
-                                <?php
-
-                            } else {
+                                    <div class="form-group col-md-2" id="data_kit_pagamento"
+                                         style="margin-left: -10px; <?= $displayKit ?>">
+                                        <label for="data_kit_pagamento">Data Kit Pagamento</label>
+                                        <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
+                                               class="form-control"
+                                               value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
+                                    </div>
+                                    <?php
+                                }
                                 ?>
-
-                                <div class="form-group col-md-2">
-                                    <label for="numero_parcelas">Número de Parcelas</label>
-                                    <select class="form-control" id="numero_parcelas" name="numero_parcelas">
-                                        <option value="0">
-                                            Selecione...
-                                        </option>
-                                        <?php
-                                        geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']);
-                                        ?>
-                                    </select>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="forma_pagamento">Forma de pagamento</label><br/>
+                                    <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
+                                              rows="8"><?= $pedido['forma_pagamento'] ?></textarea>
                                 </div>
-                                <!-- Button trigger modal -->
-                                <button type="button" style="margin-top: 24px; <?= $displayEditar ?>"
-                                        id="editarParcelas" class="btn btn-primary">
-                                    Editar Parcelas
-                                </button>
-                                <div class="form-group col-md-2" id="data_kit_pagamento"
-                                     style="margin-left: -10px; <?= $displayKit ?>">
-                                    <label for="data_kit_pagamento">Data Kit Pagamento</label>
-                                    <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
-                                           class="form-control"
-                                           value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
+                                <div class="form-group col-md-6">
+                                    <label for="justificativa">Justificativa</label><br/>
+                                    <textarea id="justificativa" name="justificativa" class="form-control"
+                                              rows="8"><?= $pedido['justificativa'] ?></textarea>
                                 </div>
-                                <?php
-                            }
-                            ?>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label for="forma_pagamento">Forma de pagamento</label><br/>
-                                <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
-                                          rows="8"><?= $pedido['forma_pagamento'] ?></textarea>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="justificativa">Justificativa</label><br/>
-                                <textarea id="justificativa" name="justificativa" class="form-control"
-                                          rows="8"><?= $pedido['justificativa'] ?></textarea>
+                            <div class="form-group">
+                                <label for="observacao">Observação</label>
+                                <input type="text" id="observacao" name="observacao" class="form-control"
+                                       maxlength="255" value="<?= $pedido['observacao'] ?>">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="observacao">Observação</label>
-                            <input type="text" id="observacao" name="observacao" class="form-control"
-                                   maxlength="255" value="<?= $pedido['observacao'] ?>">
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <button type="submit" name="edita" class="btn btn-primary pull-right">Gravar</button>
                         </div>
-                </div>
-                <!-- /.box-body -->
-                <div class="box-footer">
-                    <button type="submit" name="edita" class="btn btn-primary pull-right">Gravar</button>
-                </div>
-                </form>
-                <!-- /.pedido -->
-                <!-- proponente -->
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Cadastro de Proponente</h3>
-                    </div>
+                    </form>
+                    <!-- /.pedido -->
+                    <!-- proponente -->
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Cadastro de Proponente</h3>
+                        </div>
 
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="form-group col-md-8">
-                                <label for="proponente">Proponente</label>
-                                <input type="text" id="proponente" name="proponente" class="form-control" disabled
-                                       value="<?= $proponente ?>">
-                            </div>
-                            <div class="form-group col-md-2"><label><br></label>
-                                <form method="POST" action="<?= $link_edita ?>" role="form">
-                                    <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
-                                    <button type="submit" name="editProponente" class="btn btn-primary btn-block">
-                                        Editar Proponente
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="form-group col-md-2"><label><br></label>
-                                <form method="POST" action="<?= $link_troca ?>" role="form">
-                                    <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
-                                        Proponente
-                                    </button>
-                                </form>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    <label for="proponente">Proponente</label>
+                                    <input type="text" id="proponente" name="proponente" class="form-control" disabled
+                                           value="<?= $proponente ?>">
+                                </div>
+                                <div class="form-group col-md-2"><label><br></label>
+                                    <form method="POST" action="<?= $link_edita ?>" role="form">
+                                        <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
+                                        <button type="submit" name="editProponente" class="btn btn-primary btn-block">
+                                            Editar Proponente
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="form-group col-md-2"><label><br></label>
+                                    <form method="POST" action="<?= $link_troca ?>" role="form">
+                                        <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
+                                            Proponente
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- líderes -->
-                <?php
-                //if($pedido['pessoa_tipo_id'] == 2){
-                $sql_atracao = "SELECT * FROM atracoes AS a                                              
+                    <!-- líderes -->
+                    <?php
+                    //if($pedido['pessoa_tipo_id'] == 2){
+                    $sql_atracao = "SELECT * FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
                                             WHERE evento_id = '" . $_SESSION['idEvento'] . "'";
-                $query_atracao = mysqli_query($con, $sql_atracao);
-                ?>
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Líder</h3>
-                    </div>
-                    <div class="box-body">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>Atração</th>
-                                <th>Proponente</th>
-                                <th width="10%">Ação</th>
-                            </tr>
-                            </thead>
-                            <?php
-                            echo "<tbody>";
-                            while ($atracao = mysqli_fetch_array($query_atracao)) {
-                                //analisaArray($atracao);
-                                echo "<tr>";
-                                echo "<td>" . $atracao['nome_atracao'] . "</td>";
-                                if ($atracao['pessoa_fisica_id'] > 0) {
-                                    echo "<td>" . $atracao['nome'] . "</td>";
-                                    echo "<td>
+                    $query_atracao = mysqli_query($con, $sql_atracao);
+                    ?>
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Líder</h3>
+                        </div>
+                        <div class="box-body">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Atração</th>
+                                    <th>Proponente</th>
+                                    <th width="10%">Ação</th>
+                                </tr>
+                                </thead>
+                                <?php
+                                echo "<tbody>";
+                                while ($atracao = mysqli_fetch_array($query_atracao)) {
+                                    //analisaArray($atracao);
+                                    echo "<tr>";
+                                    echo "<td>" . $atracao['nome_atracao'] . "</td>";
+                                    if ($atracao['pessoa_fisica_id'] > 0) {
+                                        echo "<td>" . $atracao['nome'] . "</td>";
+                                        echo "<td>
                                             <form method=\"POST\" action=\"?perfil=evento&p=pessoa_fisica\" role=\"form\">
                                             <input type='hidden' name='idAtracao' value='" . $atracao['id'] . "'>
                                             <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class='fa fa-refresh'></i> Trocar</button>
                                             </form>
                                         </td>";
-                                } else {
-                                    echo "<td>
+                                    } else {
+                                        echo "<td>
                                             <form method=\"POST\" action=\"?perfil=evento&p=pessoa_fisica\" role=\"form\">
                                             <input type='hidden' name='idAtracao' value='" . $atracao['id'] . "'>
                                             <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-plus'></i> Adicionar</button>
                                             </form>
                                         </td>";
-                                    echo "<td></td>";
+                                        echo "<td></td>";
+                                    }
+                                    echo "</tr>";
                                 }
-                                echo "</tr>";
-                            }
-                            echo "</tbody>";
-                            ?>
-                        </table>
-                    </div>
-                </div>
-                <?php
-                //}
-                ?>
-                <!-- parecer -->
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Parecer artístico</h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="form-group">
-                            Aqui vai o parecer
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-offset-4 col-md-2">
-                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
-                                      role="form">
-                                    <button type="submit" name="idPedido" value="<?= $idPedido ?>"
-                                            class="btn btn-primary btn-block">Artista Local
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="form-group col-md-2">
-                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
-                                      role="form">
-                                    <button type="submit" name="idPedido" value="<?= $idPedido ?>"
-                                            class="btn btn-primary btn-block">Artista Consagrado
-                                    </button>
-                                </form>
-                            </div>
+                                echo "</tbody>";
+                                ?>
+                            </table>
                         </div>
                     </div>
+                    <?php
+                    //}
+                    ?>
+                    <!-- parecer -->
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Parecer artístico</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="form-group">
+                                Aqui vai o parecer
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-offset-4 col-md-2">
+                                    <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
+                                          role="form">
+                                        <button type="submit" name="idPedido" value="<?= $idPedido ?>"
+                                                class="btn btn-primary btn-block">Artista Local
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
+                                          role="form">
+                                        <button type="submit" name="idPedido" value="<?= $idPedido ?>"
+                                                class="btn btn-primary btn-block">Artista Consagrado
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <!-- /.col -->
             </div>
-            <!-- /.col -->
         </div>
-</div>
-<!-- /.row -->
-<!-- END ACCORDION & CAROUSEL-->
-</section>
-<!-- /.content -->
+        <!-- /.row -->
+        <!-- END ACCORDION & CAROUSEL-->
+    </section>
+    <!-- /.content -->
 </div>
 <!-- Modal -->
 <div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
@@ -395,15 +425,16 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 <!-- Modal Oficinas-->
 <style>
     .modal-lg {
-        width: 82%;
+        width: 83%;
     }
 </style>
-<div class="modal fade" id="modalOficina" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal fade" id="modalOficina" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 style="margin-top: 15px;" class="modal-title text-bold" id="exampleModalLongTitle">Editar
-                    Parcelas</h3>
+                    Parcelas de Oficina</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -455,17 +486,16 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 </script>
 
 
-
 <script type="text/javascript">
 
     $(function () {
         $('#numero_parcelas').on('change', ocultarBotao);
 
+        $('#abrirParcelas').on('click', abrirModal);
         $('#editarParcelas').on('click', abrirModal);
-        $('#editarOficinas').on('click', abrirModalOficina);
 
         $('#salvarModal').on('click', salvarModal);
-        $('#salvarModalOficina').on('click', salvarModalOficina);
+        $('#salvarModalOficina').on('click', salvarModal);
 
         $('#editarModal').on('click', editarModal);
     });
@@ -488,147 +518,200 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
     var abrirModal = function () {
         var source = document.getElementById("templateParcela").innerHTML;
         var template = Handlebars.compile(source);
-        var parcelas = $("#numero_parcelas").val();
-
         var html = '';
-
-        for (var count = 1; count <= parcelas; count++) {
-            html += template({
-                count: count
-            });
-        }
 
         var footer = document.querySelector(".main-footer");
         footer.style.display = "none";
 
-        $('#modalParcelas').find('#formParcela').html(html);
+        var parcelas = "<?php echo $numRows ?>";
 
-        $('#modalParcelas').modal('show');
-    };
+        var idAtracao = "<?php if (isset($categoria)) {
+            echo $categoria;
+        } ?>";
 
-    var abrirModalOficina = function () {
-        var source = document.getElementById("templateOficina").innerHTML;
-        var template = Handlebars.compile(source);
-        var parcelas = $("#numero_parcelas").val();
+        if (idAtracao == 4) {
+            var source = document.getElementById("templateOficina").innerHTML;
+            var template = Handlebars.compile(source);
+            var parcelas = $("#numero_parcelas").val();
 
-        var html = '';
 
-        for (var count = 1; count <= parcelas; count++) {
-            html += template({
-                count: count
-            });
+            if (parcelas == 3 || parcelas == 4) {
+                for (var count = 1; count < parcelas; count++) {
+                    html += template({
+                        count: count
+                    });
+                }
+            } else {
+                for (var count = 1; count <= parcelas; count++) {
+                    html += template({
+                        count: count
+                    });
+                }
+            }
+
+            var footer = document.querySelector(".main-footer");
+            footer.style.display = "none";
+
+            $('#modalOficina').find('#formParcela').html(html);
+            $('#modalOficina').modal('show');
+
+        } else if (parcelas > 0) {
+
+            var StringValores = "<?php if (isset($StringValores)) {
+                echo $StringValores;
+            } ?>";
+            var StringDatas = "<?php if (isset($StringDatas)) {
+                echo $StringDatas;
+            } ?>";
+            var valores = StringValores.split("|");
+            var datas = StringDatas.split("|");
+
+            for (var count = 1; count <= parcelas; count++) {
+                html += template({
+                    count: count,
+                    valor: valores [count],
+                    kit: datas [count]
+                });
+            }
+
+            $('#modalParcelas').find('#formParcela').html(html);
+
+            $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>");
+
+            $('#editarModal').on('click', editarModal);
+            $('#modalParcelas').modal('show');
+
+        } else {
+            var parcelas = $("#numero_parcelas").val();
+
+            for (var count = 1; count <= parcelas; count++) {
+                html += template({
+                    count: count
+                });
+            }
+            $('#modalParcelas').find('#formParcela').html(html);
+            $('#modalParcelas').modal('show');
         }
-
-        var footer = document.querySelector(".main-footer");
-        footer.style.display = "none";
-
-        $('#modalOficina').find('#formParcela').html(html);
-        $('#modalOficina').modal('show');
     };
 
     var salvarModal = function () {
-        var parcelas = $("#numero_parcelas").val();
-        var arrayKit = [];
-        var arrayValor = [];
+        var idAtracao = "<?php if (isset($categoria)) {
+            echo $categoria;
+        } ?>";
 
+        console.log(idAtracao);
 
-        for (var i = 1; i <= parcelas; i++) {
-            arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
-            arrayValor [i] = $("input[name='valor[" + i + "]']").val();
-        }
+        if (idAtracao == 4) {
 
-        var source = document.getElementById("templateParcela").innerHTML;
-        var template = Handlebars.compile(source);
-        var html = '';
+            var parcelas = $("#numero_parcelas").val();
+            var arrayKit = [];
+            var arrayValor = [];
+            var arrayInicial = [];
+            var arrayFinal = [];
+            var horas = [];
 
-        var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>";
+            for (var i = 1; i <= parcelas; i++) {
+                arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
+                arrayValor [i] = $("input[name='valor[" + i + "]']").val();
+                arrayInicial [i] = $("input[name='data_inicial[" + i + "]']").val();
+                arrayFinal[i] = $("input[name='data_final[" + i + "]']").val();
+                horas[i] = $("input[name='horas[" + i + "]']").val();
+            }
 
-        $('#modalParcelas').slideUp();
+            var source = document.getElementById("templateOficina").innerHTML;
+            var template = Handlebars.compile(source);
+            var html = '';
 
-        $.post('?perfil=evento&p=parcelas_cadastro', {
-            parcelas: parcelas,
-            arrayValor: arrayValor,
-            arrayKit: arrayKit
-        })
-            .done(function () {
-                for (var count = 1; count <= parcelas; count++) {
-                    html += template({
-                        count: count,
-                        valor: arrayValor [count],
-                        kit: arrayKit [count]
-                    });
-                }
+            var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary editar' name='editar' id='editarModal'>Editar</button>";
 
-                $(".botoes").html(newButtons);
-                $('#editarModal').on('click', editarModal);
+            $('#modalOficina').slideUp();
 
-                swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
-                    .then(() => {
-                        $('#modalParcelas').slideDown('slow');
-                    });
+            $.post('?perfil=evento&p=parcelas_cadastro', {
+                parcelas: parcelas,
+                arrayValor: arrayValor,
+                arrayKit: arrayKit,
+                arrayInicial: arrayInicial,
+                arrayFinal: arrayFinal,
+                horas: horas
             })
-            .fail(function () {
-                swal("danger", "Erro ao gravar");
-            });
-    };
+                .done(function () {
+                    for (var count = 1; count <= parcelas; count++) {
+                        html += template({
+                            count: count,
+                            valor: arrayValor [count],
+                            kit: arrayKit [count]
+                        });
+                    }
 
-    var salvarModalOficina = function () {
+                    $(".botoes").html(newButtons);
+                    $('#editarModal').on('click', editarModal);
 
-        var parcelas = $("#numero_parcelas").val();
-        var arrayKit = [];
-        var arrayValor = [];
-        var arrayInicial = [];
-        var arrayFinal = [];
-        var horas = [];
+                    swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
+                        .then(() => {
+                            $('#modalOficina').slideDown('slow');
+                        });
+                })
+                .fail(function () {
+                    swal("danger", "Erro ao gravar");
+                });
 
-        for (var i = 1; i <= parcelas; i++) {
-            arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
-            arrayValor [i] = $("input[name='valor[" + i + "]']").val();
-            arrayInicial [i] = $("input[name='data_inicial[" + i + "]']").val();
-            arrayFinal[i] = $("input[name='data_final[" + i + "]']").val();
-            horas[i] = $("input[name='horas[" + i + "]']").val();
-        }
+        } else {
 
-        var source = document.getElementById("templateOficina").innerHTML;
-        var template = Handlebars.compile(source);
-        var html = '';
+            var parcelas = $("#numero_parcelas").val();
+            var arrayKit = [];
+            var arrayValor = [];
 
-        var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary editar' name='editar' id='editarModal'>Editar</button>";
+            for (var i = 1; i <= parcelas; i++) {
+                arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
+                arrayValor [i] = $("input[name='valor[" + i + "]']").val();
+            }
 
-        $('#modalOficina').slideUp();
+            var source = document.getElementById("templateParcela").innerHTML;
+            var template = Handlebars.compile(source);
+            var html = '';
 
-        $.post('?perfil=evento&p=parcelas_cadastro', {
-            parcelas: parcelas,
-            arrayValor: arrayValor,
-            arrayKit: arrayKit,
-            arrayInicial: arrayInicial,
-            arrayFinal: arrayFinal,
-            horas: horas
-        })
-            .done(function () {
-                for (var count = 1; count <= parcelas; count++) {
-                    html += template({
-                        count: count,
-                        valor: arrayValor [count],
-                        kit: arrayKit [count]
-                    });
-                }
+            var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>";
 
-                $(".botoes").html(newButtons);
-                $('#editarModal').on('click', editarModal);
+            $('#modalParcelas').slideUp();
 
-                swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
-                    .then(() => {
-                        $('#modalOficina').slideDown('slow');
-                    });
+            $.post('?perfil=evento&p=parcelas_cadastro', {
+                parcelas: parcelas,
+                arrayValor: arrayValor,
+                arrayKit: arrayKit
             })
-            .fail(function () {
-                swal("danger", "Erro ao gravar");
-            });
+                .done(function () {
+                    for (var count = 1; count <= parcelas; count++) {
+                        html += template({
+                            count: count,
+                            valor: arrayValor [count],
+                            kit: arrayKit [count]
+                        });
+                    }
+
+                    $(".botoes").html(newButtons);
+                    $('#editarModal').on('click', editarModal);
+
+                    swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
+                        .then(() => {
+                            $('#modalParcelas').slideDown('slow');
+                        });
+                })
+                .fail(function () {
+                    swal("danger", "Erro ao gravar");
+                });
+        }
     };
 
     var editarModal = function () {
-        var parcelas = $("#numero_parcelas").val();
+
+        var rows = "<?php echo $numRows ?>";
+
+        if (rows > 0) {
+            parcelas = "<?php echo $numRows ?>";
+        } else {
+            var parcelas = $("#numero_parcelas").val();
+        }
+
         var arrayKit = [];
         var arrayValor = [];
 
@@ -657,12 +740,13 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                     });
                 }
 
+                $('#modalParcelas').find('#formParcela').html(html);
                 $('#editarModal').on('click', editarModal);
 
                 swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                     .then(() => {
-                        //$('#modalParcelas').slideDown('slow');
-                        window.location.href = "?perfil=evento&p=parcelas_edita";
+                        $('#modalParcelas').slideDown('slow');
+                        //window.location.href = "?perfil=evento&p=parcelas_edita";
                     });
             })
             .fail(function () {
