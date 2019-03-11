@@ -391,13 +391,13 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
     </div>
 </script>
 
+
+<!-- Modal Oficinas-->
 <style>
     .modal-lg {
         width: 82%;
     }
 </style>
-
-<!-- Modal Oficinas-->
 <div class="modal fade" id="modalOficina" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -415,7 +415,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             <div class="modal-footer">
                 <div class="botoes">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary salvar" name="salvar" id="salvarModal">Salvar</button>
+                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModalOficina">Salvar</button>
                 </div>
             </div>
         </div>
@@ -460,9 +460,13 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
     $(function () {
         $('#numero_parcelas').on('change', ocultarBotao);
+
         $('#editarParcelas').on('click', abrirModal);
         $('#editarOficinas').on('click', abrirModalOficina);
+
         $('#salvarModal').on('click', salvarModal);
+        $('#salvarModalOficina').on('click', salvarModalOficina);
+
         $('#editarModal').on('click', editarModal);
     });
 
@@ -527,10 +531,17 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         var parcelas = $("#numero_parcelas").val();
         var arrayKit = [];
         var arrayValor = [];
+        var arrayInicial = [];
+        var arrayFinal = [];
+        var horas = [];
+
 
         for (var i = 1; i <= parcelas; i++) {
             arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
             arrayValor [i] = $("input[name='valor[" + i + "]']").val();
+            arrayInicial [i] = $("input[name='data_inicial[" + i + "]']").val();
+            arrayFinal[i] = $("input[name='data_final[" + i + "]']").val();
+            horas[i] = $("input[name='horas[" + i + "]']").val();
         }
 
         var source = document.getElementById("templateParcela").innerHTML;
@@ -544,7 +555,10 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         $.post('?perfil=evento&p=parcelas_cadastro', {
             parcelas: parcelas,
             arrayValor: arrayValor,
-            arrayKit: arrayKit
+            arrayKit: arrayKit,
+            arrayInicial: arrayInicial,
+            arrayFinal: arrayFinal,
+            horas: horas
         })
             .done(function () {
                 for (var count = 1; count <= parcelas; count++) {
@@ -561,6 +575,62 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 swal("Informacoes das parcelas gravadas com sucesso!", "", "success")
                     .then(() => {
                         $('#modalParcelas').slideDown('slow');
+                    });
+            })
+            .fail(function () {
+                swal("danger", "Erro ao gravar");
+            });
+    };
+
+
+    var salvarModalOficina = function () {
+
+        var parcelas = $("#numero_parcelas").val();
+        var arrayKit = [];
+        var arrayValor = [];
+        var arrayInicial = [];
+        var arrayFinal = [];
+        var horas = [];
+
+        for (var i = 1; i <= parcelas; i++) {
+            arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
+            arrayValor [i] = $("input[name='valor[" + i + "]']").val();
+            arrayInicial [i] = $("input[name='data_inicial[" + i + "]']").val();
+            arrayFinal[i] = $("input[name='data_final[" + i + "]']").val();
+            horas[i] = $("input[name='horas[" + i + "]']").val();
+        }
+
+        var source = document.getElementById("templateOficina").innerHTML;
+        var template = Handlebars.compile(source);
+        var html = '';
+
+        var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary editar' name='editar' id='editarModal'>Editar</button>";
+
+        $('#modalOficina').slideUp();
+
+        $.post('?perfil=evento&p=parcelas_cadastro', {
+            parcelas: parcelas,
+            arrayValor: arrayValor,
+            arrayKit: arrayKit,
+            arrayInicial: arrayInicial,
+            arrayFinal: arrayFinal,
+            horas: horas
+        })
+            .done(function () {
+                for (var count = 1; count <= parcelas; count++) {
+                    html += template({
+                        count: count,
+                        valor: arrayValor [count],
+                        kit: arrayKit [count]
+                    });
+                }
+
+                $(".botoes").html(newButtons);
+                $('#editarModal').on('click', editarModal);
+
+                swal("Informacoes das parcelas gravadas com sucesso!", "", "success")
+                    .then(() => {
+                        $('#modalOficina').slideDown('slow');
                     });
             })
             .fail(function () {
