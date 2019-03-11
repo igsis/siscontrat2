@@ -156,6 +156,8 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                                     <input type="text" class="form-control" name="passaporte" value="<?=$procurar?>" >
 
                                     <span class="input-group-btn">
+                                        <p>&nbsp;</p>
+                                        <p>&nbsp;</p>
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
                                 </div>
