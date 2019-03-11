@@ -1,3 +1,7 @@
+<?php
+//geram o insert pro framework da igsis
+$pasta = "?perfil=evento_interno&p=";
+?>
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -5,11 +9,13 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
-            <li class="header">MÓDULOS</li>
-            <li><a href="?perfil=administrativo"><i class="fa fa-circle-o text-red"></i> <span>Administrador</span></a></li>
-            <li><a href="?perfil=evento"><i class="fa fa-circle-o text-yellow"></i> <span>Evento</span></a></li>
-            <li><a href="?perfil=evento_interno"><i class="fa fa-circle-o text-blue"></i> <span>Evento Interno</span></a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Contratos</span></a></li>
+            <li class="header">EVENTO</li>
+            <li><a href="<?= $pasta ?>evento_cadastro"><i class="fa fa-circle-o"></i> <span>Novo</span></a></li>
+            <li><a href="<?= $pasta ?>evento_lista"><i class="fa fa-circle-o"></i> <span>Carregar evento gravado</span></a></li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> <span>Acompanhar pedidos enviados</span></a></li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> <span>Acompanhar eventos enviados</span></a></li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> <span>Buscar no CAPAC</span></a></li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> <span>Informações de produção</span></a></li>
             <li class="header">MAIS</li>
             <li><a href="?perfil=usuario/minha_conta"><i class="fa fa-user"></i><span>Minha Conta</span></a></li>
             <li><a href="../include/ajuda.php"><i class="fa fa-question "></i><span>Ajuda</span></a></li>
