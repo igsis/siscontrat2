@@ -26,23 +26,22 @@ require "includes/menu_principal.php";
                             </div>
                                 <div class="row">
                                     <div class="form-group col-md-6">
-                                        <label for="relacaoJuridica">Tipo de relação jurídica *</label>
-                                        <select class="form-control" name="relacaoJuridica" id="relacaoJuridica"
-                                                required>
-                                            <option value="">Selecione uma opção...</option>
-                                            <?php
-                                            geraOpcao("relacao_juridicas");
-                                            ?>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6">
                                         <label for="projetoEspecial">Projeto Especial *</label>
                                         <select class="form-control" id="projetoEspecial" name="projetoEspecial"
                                                 required>
                                             <option value="">Selecione uma opção...</option>
                                             <?php
                                             geraOpcaoPublicado("projeto_especiais", "");
+                                            ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="fiscal">Fiscal *</label>
+                                        <select class="form-control" id="fiscal" name="fiscal" required>
+                                            <option value="">Selecione um fiscal...</option>
+                                            <?php
+                                            geraOpcaoUsuario("usuarios", 1, "");
                                             ?>
                                         </select>
                                     </div>
@@ -56,28 +55,6 @@ require "includes/menu_principal.php";
                                     <textarea name="sinopse" id="sinopse" class="form-control" rows="5"
                                               required></textarea>
                                 </div>
-
-                                <div class="row ">
-                                    <div class="form-group col-md-6">
-                                        <label for="fiscal">Fiscal *</label>
-                                        <select class="form-control" id="fiscal" name="fiscal" required>
-                                            <option value="">Selecione um fiscal...</option>
-                                            <?php
-                                            geraOpcaoUsuario("usuarios", 1, "");
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="suplente">Suplente *</label>
-                                        <select class="form-control" id="suplente" name="suplente" required>
-                                            <option value="">Selecione um suplente...</option>
-                                            <?php
-                                            geraOpcaoUsuario("usuarios", 1, "");
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-
                             </div>
 
                             <div class="box-footer">

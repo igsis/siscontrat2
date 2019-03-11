@@ -4,12 +4,12 @@ $idEvento = isset($_SESSION['idEvento']) ?? null;
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $nomeEvento =  addslashes($_POST['nomeEvento']);
-    $relacao_juridica_id = $_POST['relacaoJuridica'];
+    $relacao_juridica_id = 1;
     $projeto_especial_id = $_POST['projetoEspecial'];
     $sinopse =  addslashes($_POST['sinopse']);
     $tipo = 1;
     $fiscal_id = $_POST['fiscal'];
-    $suplente_id = $_POST['suplente'];
+    $suplente_id = $fiscal_id;
     $usuario = $_SESSION['idUser'];
     $original = 0;
     $contratacao = 0;
@@ -113,21 +113,21 @@ include "includes/menu_interno.php";
                             
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="relacaoJuridica">Tipo de relação jurídica *</label>
-                                    <select class="form-control" name="relacaoJuridica" id="relacaoJuridica" required>
-                                        <option value="">Selecione uma opção...</option>
-                                        <?php
-                                        geraOpcao("relacao_juridicas", $evento['relacao_juridica_id']);
-                                        ?>
-                                    </select>
-                                </div>
-
-                                <div class="form-group col-md-6">
                                     <label for="projetoEspecial">Projeto Especial *</label>
                                     <select class="form-control" id="projetoEspecial" name="projetoEspecial" required>
                                         <option value="">Selecione uma opção...</option>
                                         <?php
                                         geraOpcaoPublicado("projeto_especiais", $evento['projeto_especial_id']);
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="fiscal">Fiscal *</label>
+                                    <select class="form-control" id="fiscal" name="fiscal" required>
+                                        <option value="">Selecione um fiscal...</option>
+                                        <?php
+                                        geraOpcaoUsuario("usuarios", 1, $evento['fiscal_id']);
                                         ?>
                                     </select>
                                 </div>
@@ -138,27 +138,6 @@ include "includes/menu_interno.php";
                                 <i>Esse campo deve conter uma breve descrição do que será apresentado no evento.</i>
                                 <p align="justify"><span style="color: gray; "><strong><i>Texto de exemplo:</strong><br/>Ana Cañas faz o show de lançamento do seu quarto disco, “Tô na Vida” (Som Livre/Guela Records). Produzido por Lúcio Maia (Nação Zumbi) em parceria com Ana e mixado por Mario Caldato Jr, é o primeiro disco totalmente autoral da carreira da cantora e traz parcerias com Arnaldo Antunes e Dadi entre outros.</span></i></p>
                                 <textarea name="sinopse" id="sinopse" class="form-control" rows="5" required><?= $evento['sinopse'] ?></textarea>
-                            </div>
-
-                            <div class="row ">
-                                <div class="form-group col-md-6">
-                                    <label for="fiscal">Fiscal *</label>
-                                    <select class="form-control" id="fiscal" name="fiscal" required>
-                                        <option value="">Selecione um fiscal...</option>
-                                        <?php
-                                        geraOpcaoUsuario("usuarios", 1, $evento['fiscal_id']);
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="suplente">Suplente</label>
-                                    <select class="form-control" id="suplente" name="suplente">
-                                        <option value="">Selecione um suplente...</option>
-                                        <?php
-                                        geraOpcaoUsuario("usuarios", 1, $evento['suplente_id']);
-                                        ?>
-                                    </select>
-                                </div>
                             </div>
                         </div>
 
