@@ -3,14 +3,13 @@ $con = bancoMysqli();
 
 $idPedido = $_SESSION['idPedido'];
 $parcelas = $_POST['parcelas'] ?? NULL;
-$arrayValor = $_POST['arrayValor'] ?? NULL;
-$arrayKit = $_POST['arrayKit'] ?? NULL;
-
+$arrayValor = $_POST['arrayValorTeste'] ?? NULL;
+$arrayKit = $_POST['arrayValorTeste'] ?? NULL;
 
 for ($i = 1; $i <= $parcelas; $i++) {
     $parcela = $parcelas[$i];
     $valor = dinheiroParaBr($arrayValor[$i]);
-    $dataPagamento = $arrayKit[$i];
+    $dataPagamento =  exibirDataMysql($arrayKit[$i]);
 
     $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido' AND numero_parcelas = '$parcela'";
 
@@ -18,11 +17,6 @@ for ($i = 1; $i <= $parcelas; $i++) {
 
     if (mysqli_query($con, $sqlUpdate)) {
         gravarLog($sqlUpdate);
-
-        echo "
-                <script>
-                    setTimeout(" . "document.location='?perfil=evento&p=pedido_edita'" . ",0);
-                </script>";
     }
 }
 

@@ -365,7 +365,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             <div class="modal-footer">
                 <div class="botoes">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary salvar" name="salvar" id="salvarModal">Salvar</button>
+                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModal">Salvar</button>
                 </div>
             </div>
         </div>
@@ -527,38 +527,28 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
     };
 
     var salvarModal = function () {
-
         var parcelas = $("#numero_parcelas").val();
         var arrayKit = [];
         var arrayValor = [];
-        var arrayInicial = [];
-        var arrayFinal = [];
-        var horas = [];
 
 
         for (var i = 1; i <= parcelas; i++) {
             arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
             arrayValor [i] = $("input[name='valor[" + i + "]']").val();
-            arrayInicial [i] = $("input[name='data_inicial[" + i + "]']").val();
-            arrayFinal[i] = $("input[name='data_final[" + i + "]']").val();
-            horas[i] = $("input[name='horas[" + i + "]']").val();
         }
 
         var source = document.getElementById("templateParcela").innerHTML;
         var template = Handlebars.compile(source);
         var html = '';
 
-        var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary editar' name='editar' id='editarModal'>Editar</button>";
+        var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>";
 
         $('#modalParcelas').slideUp();
 
         $.post('?perfil=evento&p=parcelas_cadastro', {
             parcelas: parcelas,
             arrayValor: arrayValor,
-            arrayKit: arrayKit,
-            arrayInicial: arrayInicial,
-            arrayFinal: arrayFinal,
-            horas: horas
+            arrayKit: arrayKit
         })
             .done(function () {
                 for (var count = 1; count <= parcelas; count++) {
@@ -572,7 +562,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 $(".botoes").html(newButtons);
                 $('#editarModal').on('click', editarModal);
 
-                swal("Informacoes das parcelas gravadas com sucesso!", "", "success")
+                swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                     .then(() => {
                         $('#modalParcelas').slideDown('slow');
                     });
@@ -581,7 +571,6 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 swal("danger", "Erro ao gravar");
             });
     };
-
 
     var salvarModalOficina = function () {
 
@@ -628,7 +617,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 $(".botoes").html(newButtons);
                 $('#editarModal').on('click', editarModal);
 
-                swal("Informacoes das parcelas gravadas com sucesso!", "", "success")
+                swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                     .then(() => {
                         $('#modalOficina').slideDown('slow');
                     });
@@ -659,7 +648,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             arrayValor: arrayValor,
             arrayKit: arrayKit
         })
-            .done(function () {
+            .done(function (data) {
                 for (var count = 1; count <= parcelas; count++) {
                     html += template({
                         count: count,
@@ -668,10 +657,11 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                     });
                 }
 
-                swal("Informacoes das parcelas editadas com sucesso!", "", "success")
+                $('#editarModal').on('click', editarModal);
+
+                swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                     .then(() => {
                         //$('#modalParcelas').slideDown('slow');
-
                         window.location.href = "?perfil=evento&p=parcelas_edita";
                     });
             })
