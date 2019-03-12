@@ -394,10 +394,11 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 <form action="#" id="formParcela">
                 </form>
                 <div class="row">
-                    <h4 class="text-center" id="somaParcelas">Soma das parcelas: <?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL?></h4>
+                    <h4 class="text-center" id="somaParcelas">Soma das
+                        parcelas: <?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL ?></h4>
                 </div>
                 <div class="row">
-                    <h4 class="text-center">Valor total do contrato: <?= dinheiroParaBr($pedido['valor_total'])?></h4>
+                    <h4 class="text-center">Valor total do contrato: <?= dinheiroParaBr($pedido['valor_total']) ?></h4>
                 </div>
             </div>
             <div class="modal-footer">
@@ -605,7 +606,6 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
     };
 
 
-
     var salvarModal = function () {
 
         var idAtracao = "<?php if (isset($categoria)) {
@@ -737,9 +737,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             $("input[name='valor[" + i + "]']").each(function () {
                 valores.push($(this).val());
             });
-
             soma += parseFloat(valores[i]);
-
         }
 
         var source = document.getElementById("templateParcela").innerHTML;
@@ -770,13 +768,11 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                     .then(() => {
                         $('#modalParcelas').slideDown('slow');
-                       // window.location.href = "?perfil=evento&p=parcelas_edita";
+                        // window.location.href = "?perfil=evento&p=parcelas_edita";
                     });
             })
             .fail(function () {
                 swal("danger", "Erro ao gravar");
             });
     };
-
-
 </script>

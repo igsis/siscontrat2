@@ -447,7 +447,15 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
                             </div>
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                                <button type="submit" name="voltar" formaction="?perfil=evento&p=pedido_edita"
+                                        class="btn btn-default pull-left">Voltar
+                                </button>
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
+                                <div class="col-md-10 text-center">
+                                    <button style="margin-left: 30px;" type="submit" formaction="?perfil=evento&p=pf_anexos" name="idPf"
+                                            value="<?= $idPf ?>" class="btn btn-primary">Demais Anexos
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -456,15 +464,6 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
                 <!-- /.box -->
             </div>
             <!-- /.col -->
-        </div>
-        <div class="row">
-            <div class="form-group col-md-3">
-                <form method="POST" action="?perfil=evento&p=pf_anexos" role="form">
-                    <button type="submit" name="idPf" value="<?= $idPf ?>" class="btn btn-info btn-block">Demais
-                        Anexos
-                    </button>
-                </form>
-            </div>
         </div>
         <!-- /.row -->
         <!-- END ACCORDION & CAROUSEL-->
