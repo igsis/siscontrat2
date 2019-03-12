@@ -38,6 +38,13 @@ $query = mysqli_query($con, $sql);
                     <div class="box-header">
                         <h3 class="box-title">Listagem</h3>
                     </div>
+
+                    <div class="row" align="center">
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
+                    </div>
+
                     <!-- /.box-header -->
                     <div class="box-body">
                         <table id="tblEvento" class="table table-bordered table-striped">
