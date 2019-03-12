@@ -127,7 +127,7 @@ $query = mysqli_query($con,$sql);
                                 </td>";
 
                                 echo "<td>
-                                    <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-id='".$ocorrencia['id']."' data-tittle='Apagar ocorrência' data-message='Deseja mesmo pagar está ocorrências' onClick='setarIdOcorrencia(".$ocorrencia['id'].")'><span class='glyphicon glyphicon-trash'></span></button>
+                                    <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-id='".$ocorrencia['id']."' data-tittle='Apagar ocorrência' data-message='Deseja mesmo apagar está ocorrências' onClick='setarIdOcorrencia(".$ocorrencia['id'].")'><span class='glyphicon glyphicon-trash'></span></button>
                                   </td>";
                                 echo "</tr>";
                             }
