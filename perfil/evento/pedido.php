@@ -6,6 +6,7 @@ $idEvento = $_SESSION['idEvento'];
 $sql = "SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
 $query = mysqli_query($con,$sql);
 $num = mysqli_num_rows($query);
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->

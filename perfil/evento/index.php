@@ -9,14 +9,11 @@ unset($_SESSION['idPf']);
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
         <!-- START ACCORDION-->
         <h2 class="page-header">Seus últimos eventos enviados</h2>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-solid">
-
                     <div class="box-body">
                         <div class="box-group" id="accordion">
                             <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
