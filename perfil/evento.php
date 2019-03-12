@@ -18,7 +18,7 @@ function modalUploadArquivoUnico($idModal,$pagina,$nomeArquivo,$sigla,$idPessoa,
                 <div class=\"modal-header\">
                     <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">
                         <span aria-hidden=\"true\">&times;</span></button>
-                    <h4 class=\"modal-title\">Upload $nomeArquivo/h4>
+                    <h4 class=\"modal-title\">Upload $nomeArquivo</h4>
                 </div>
                 <div class=\"modal-body\">
                     <p align='center'><strong>Arquivo somente em PDF e até 05 MB.</strong></p>
@@ -27,7 +27,7 @@ function modalUploadArquivoUnico($idModal,$pagina,$nomeArquivo,$sigla,$idPessoa,
                         <br/>
                         <input type=\"hidden\" name=\"idPessoa\" value=\"$idPessoa\"  />
                         <input type=\"hidden\" name=\"tipoPessoa\" value=\"$tipoPessoa\"  />
-                        <button type=\"submit\" class=\"btn btn-primary\">Enviar</button>
+                        <button type=\"submit\" name=\"enviar\" class=\"btn btn-primary\">Enviar</button>
                     </form>
                 </div>
                 <div class=\"modal-footer\">

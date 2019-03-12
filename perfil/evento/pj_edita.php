@@ -74,7 +74,6 @@ if(isset($_POST['edita'])) {
     $mensagem = "";
     $sql = "UPDATE pessoa_juridicas SET razao_social = '$razao_social', cnpj = '$cnpj', ccm = '$ccm', email = '$email' WHERE id = '$idPj'";
 
-
     if (mysqli_query($con, $sql)) {
         if (isset($_POST['telefone2'])) {
             $telefone2 = $_POST['telefone2'];
@@ -148,6 +147,48 @@ if(isset($_POST['edita'])) {
     }
 }
 
+if(isset($_POST["enviar"])) {
+    $idPj = $_POST['idPessoa'];
+    $tipoPessoa = $_POST['tipoPessoa'];
+
+    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+    $query_arquivos = mysqli_query($con, $sql_arquivos);
+
+    while ($arq = mysqli_fetch_array($query_arquivos)) {
+        $y = $arq['id'];
+        $x = $arq['sigla'];
+        $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
+        $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
+
+        if ($f_size > 5242880) {
+            $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
+
+        } else {
+            if ($nome_arquivo != "") {
+                $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
+                $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
+                $hoje = date("Y-m-d H:i:s");
+                $dir = '../uploadsdocs/'; //Diretório para uploads
+
+                if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
+                    $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPj', '$y', '$new_name', '$hoje', '1'); ";
+                    $query = mysqli_query($con, $sql_insere_arquivo);
+
+                    if ($query) {
+                        $mensagem = mensagem("success", "Arquivo recebido com sucesso");
+                        gravarLog($sql_insere_arquivo);
+                    } else {
+                        $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                    }
+                } else {
+                    $mensagem = mensagem("danger", "Erro no upload");
+                }
+            }
+        }
+    }
+}
+
+
 $sqlTelefones = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 
@@ -164,9 +205,7 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
 </script>
 <div class="content-wrapper">
     <section class="content">
-
         <h2 class="page-header">Cadastro Pessoa Jurídica</h2>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-info">
@@ -386,32 +425,9 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                 </div>
             </div>
         </div>
-
-        <!-- /.modal cartão cnpj -->
-        <div class="modal fade" id="modal-cnpj">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Upload do Cartão CNPJ</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <input type="file">
-                            <br/>
-                            <button type="submit" class="btn btn-primary">Enviar</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal cartão cnpj -->
+        <?php
+        modalUploadArquivoUnico("modal-cnpj","?perfil=evento&p=pj_edita","CNPJ","cartao_cnp",$idPj,"2");
+        ?>
 
     </section>
 </div>
