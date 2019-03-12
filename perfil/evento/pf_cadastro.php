@@ -26,7 +26,8 @@ if($evento['tipo_evento_id'] == 1){
     $mostraDRT = false;
 }
 
-
+$sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'";
+$atracao = mysqli_query($con,$sql);
 ?>
 
 <script>
@@ -74,8 +75,8 @@ if($evento['tipo_evento_id'] == 1){
                                 if ($tipoDocumento == 1){
                                 ?>
                                     <div class="form-group col-md-2">
-                                        <label for="rg">RG: </label>
-                                        <input type="text" class="form-control" name="rg" placeholder="Digite o RG" maxlength="20" >
+                                        <label for="rg">RG: *</label>
+                                        <input type="text" class="form-control" name="rg" placeholder="Digite o RG" maxlength="20" required>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="cpf">CPF: </label>
@@ -119,9 +120,6 @@ if($evento['tipo_evento_id'] == 1){
                                 <div class="form-group col-md-2">
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
-                                </div>
-                                <div style="margin-top: 10px;" class="form-group col-md-6">
-                                    <h4 class="text-center col-md-12"><em>Insira seu CEP e aperte a tecla "TAB" para seu endereço carregar automaticamente</em></h4>
                                 </div>
                             </div>
                             <div class="row">
@@ -174,54 +172,60 @@ if($evento['tipo_evento_id'] == 1){
 
                             <div class="row">
                                 <?php
-                                    if($mostraDRT){
-                                    ?>
-                           <div class="form-group col-md-6">
-                                    <label for="drt">DRT: </label>
-                                    <input type="text" name="drt" class="form-control telefone" maxlength="15" placeholder="Digite o DRT">
-                                </div>
-                                <div class="form-group col-md-6">                               
-<?php
-                                    }else{
-                                        ?>
-                                        <div class="form-group col-md-12">
-                                        <?php
-                                    }
-                                 ?>
-                                    <label for="nit">NIT: </label>
-                                    <input type="text" name="nit" class="form-control telefone" maxlength="45" placeholder="Digite o NIT">
-                                </div>
-                            </div>
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <label for="observacao">Observação: </label>
-                                        <textarea id="observacao" name="observacao" rows="3" class="form-control"></textarea>
+                                if ($mostraDRT){
+                                ?>
+                                    <div class="form-group col-md-6">
+                                        <label for="drt">DRT: </label>
+                                        <input type="text" name="drt" class="form-control" maxlength="15" placeholder="Digite o DRT">
                                     </div>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <h4 class="text-bold text-warning text-center col-md-12">Dados Bancários</h4>
-                                </div>
-
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="banco">Banco:</label>
-                                    <select required id="banco" name="banco" class="form-control">
-                                        <option value="">Selecione um banco...</option>
-                                        <?php
-                                        geraOpcao("bancos", "");
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="agencia">Agência:</label>
-                                    <input type="text" name="agencia" class="form-control"  placeholder="Digite a Agência" maxlength="12">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="conta">Conta:</label>
-                                    <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12">
+                                    <div class="form-group col-md-6">
+                                <?php
+                                }
+                                else{
+                                ?>
+                                    <div class="form-group col-md-12">
+                                <?php
+                                }
+                                ?>
+                                    <label for="nit">NIT: </label>
+                                    <input type="text" name="nit" class="form-control" maxlength="45" placeholder="Digite o NIT">
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="observacao">Observação: </label>
+                                    <textarea id="observacao" name="observacao" rows="3" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <hr/>
+                            <?php
+                            foreach($atracao as $row)
+                            {
+                                if($row['valor_individual'] != 0.00){
+                                ?>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="banco">Banco:</label>
+                                            <select required id="banco" name="banco" class="form-control">
+                                                <option value="">Selecione um banco...</option>
+                                                <?php
+                                                geraOpcao("bancos", "");
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="agencia">Agência:</label>
+                                            <input type="text" name="agencia" class="form-control"  placeholder="Digite a Agência" maxlength="12">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="conta">Conta:</label>
+                                            <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12">
+                                        </div>
+                                    </div>
+                                <?php
+                                }
+                            }
+                            ?>
                             <div class="box-footer">
                                 <button type="submit" name="cadastra" class="btn btn-info pull-right">Salvar</button>
                             </div>
