@@ -25,6 +25,7 @@ $pasta = "?perfil=evento&p=";
                 if($evento['contratacao'] == 1){
                     echo "<li><a href=\"".$pasta."pedido\"><i class=\"fa fa-circle-o\"></i> <span>Pedido</span></a></li>";
                 }
+                echo "<li><a href=\"".$pasta."finalizar\"><i class=\"fa fa-circle-o\"></i> <span>Finalizar</span></a></li>";
             }
             ?>
             <li><a href="?perfil=evento"><i class="fa fa-circle-o"></i> <span>Voltar</span></a></li>
