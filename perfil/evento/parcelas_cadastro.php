@@ -3,10 +3,6 @@ $con = bancoMysqli();
 
 $idPedido = $_SESSION['idPedido'];
 
-$sqlVerifica = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido'";
-$query = mysqli_query($con, $sqlVerifica);
-$nRows = mysqli_num_rows($query);
-
 $parcelas = $_POST['parcelas'];
 $arrayValor = $_POST['arrayValor'];
 $arrayKit = $_POST['arrayKit'];
@@ -16,6 +12,9 @@ $arrayInicial = $_POST['arrayInicial'] ?? NULL;
 $arrayFinal = $_POST['arrayFinal'] ?? NULL;
 $horas = $_POST['horas'] ?? NULL;
 
+$sqlVerifica = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido'";
+$query = mysqli_query($con, $sqlVerifica);
+$nRows = mysqli_num_rows($query);
 
 if ($nRows > 0) {
     for ($i = 1; $i <= $parcelas; $i++) {
@@ -40,6 +39,7 @@ if ($nRows > 0) {
 
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
+            echo $sql;
 
             $parcela = recuperaUltimo("parcelas");
 

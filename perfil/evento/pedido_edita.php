@@ -497,7 +497,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         $('#salvarModal').on('click', salvarModal);
         $('#salvarModalOficina').on('click', salvarModal);
 
-        $('#editarModal').on('click', salvarModal);
+        $('#editarModal').on('click', editarModal);
     });
 
     var ocultarBotao = function () {
@@ -580,7 +580,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
             $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>");
 
-            $('#editarModal').on('click', salvarModal);
+            $('#editarModal').on('click', editarModal);
             $('#modalParcelas').modal('show');
 
         } else {
@@ -595,6 +595,9 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             $('#modalParcelas').modal('show');
         }
     };
+
+
+
 
     var salvarModal = function () {
 
@@ -690,11 +693,12 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                     }
 
                     $(".botoes").html(newButtons);
-                    $('#editarModal').on('click', salvarModal);
+                    $('#editarModal').on('click', editarModal);
 
                     swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                         .then(() => {
                             $('#modalParcelas').slideDown('slow');
+                            //window.location.href = "?perfil=evento&p=parcelas_cadastro";
                         });
                 })
                 .fail(function () {
@@ -724,6 +728,8 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         var source = document.getElementById("templateParcela").innerHTML;
         var template = Handlebars.compile(source);
         var html = '';
+
+        console.log(parcelas, arrayValor, arrayKit);
 
         $('#modalParcelas').slideUp();
 
