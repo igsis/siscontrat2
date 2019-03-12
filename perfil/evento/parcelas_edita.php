@@ -1,10 +1,12 @@
 <?php
 $con = bancoMysqli();
 
+var_dump($_POST);
+
 $idPedido = $_SESSION['idPedido'];
 $parcelas = $_POST['parcelas'] ?? NULL;
-$arrayValor = $_POST['arrayValor'] ?? NULL;
-$arrayKit = $_POST['arrayKit'] ?? NULL;
+$arrayValor = $_POST['valores'] ?? NULL;
+$arrayKit = $_POST['datas'] ?? NULL;
 
 for ($i = 1; $i <= $parcelas; $i++) {
     $parcela = $parcelas[$i];

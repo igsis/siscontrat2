@@ -7,9 +7,6 @@ $parcelas = $_POST['parcelas'];
 $arrayValor = $_POST['arrayValor'];
 $arrayKit = $_POST['arrayKit'];
 
-$valores = $_POST['valores'];
-$datas = $_POST['datas'];
-
 //oficinas
 $arrayInicial = $_POST['arrayInicial'] ?? NULL;
 $arrayFinal = $_POST['arrayFinal'] ?? NULL;

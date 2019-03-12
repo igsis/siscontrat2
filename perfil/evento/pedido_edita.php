@@ -738,12 +738,12 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
         $('#modalParcelas').slideUp();
 
-        $.post('?perfil=evento&p=parcelas_cadastro', {
+        $.post('?perfil=evento&p=parcelas_edita', {
             parcelas: parcelas,
             valores: valores,
             datas: datas
         })
-            .done(function () {
+            .done(function (data) {
                 for (var count = 1; count <= parcelas; count++) {
                     html += template({
                         count: count,
@@ -757,8 +757,8 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
                 swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                     .then(() => {
-                        //$('#modalParcelas').slideDown('slow');
-                        window.location.href = "?perfil=evento&p=parcelas_cadastro";
+                       // $('#modalParcelas').slideDown('slow');
+                        window.location.href = "?perfil=evento&p=parcelas_edita";
                     });
             })
             .fail(function () {
