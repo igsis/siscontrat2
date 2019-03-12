@@ -455,7 +455,7 @@ include "includes/menu_interno.php";
                                     <?php
                                     }
                                     ?>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-3">
                                         <label for="nit">NIT: </label>
                                         <input type="text" name="nit" class="form-control telefone" maxlength="45" placeholder="Digite o NIT" value="<?= $nits['nit']?>">
                                     </div>
@@ -534,7 +534,7 @@ include "includes/menu_interno.php";
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <form method="POST" action="?perfil=evento&p=pf_demais_anexos" role="form">
-                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Demais Anexos</button>
+                                    <button type="submit" name="idPf" value="<?= $pf['id'] ?>" class="btn btn-info btn-block">Demais Anexos</button>
                                 </form>
                             </div>
                             <div class="form-group col-md-3 pull-right">
