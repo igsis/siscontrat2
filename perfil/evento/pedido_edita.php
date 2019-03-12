@@ -717,43 +717,48 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             var parcelas = $("#numero_parcelas").val();
         }
 
-        var arrayKit = [];
-        var arrayValor = [];
+        var datas = new Array(1);
+        var valores = new Array(1);
 
         for (var i = 1; i <= parcelas; i++) {
-            arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
-            arrayValor [i] = $("input[name='valor[" + i + "]']").val();
+            $("input[name='modal_data_kit_pagamento[" + i + "]']").each(function () {
+                datas.push($(this).val());
+            });
+
+            $("input[name='valor[" + i + "]']").each(function () {
+                valores.push($(this).val());
+            });
         }
 
         var source = document.getElementById("templateParcela").innerHTML;
         var template = Handlebars.compile(source);
         var html = '';
 
-        console.log(parcelas, arrayValor, arrayKit);
+        console.log(datas, valores);
 
         $('#modalParcelas').slideUp();
 
-        $.post('?perfil=evento&p=parcelas_edita', {
+        $.post('?perfil=evento&p=parcelas_cadastro', {
             parcelas: parcelas,
-            arrayValor: arrayValor,
-            arrayKit: arrayKit
+            valores: valores,
+            datas: datas
         })
             .done(function () {
                 for (var count = 1; count <= parcelas; count++) {
                     html += template({
                         count: count,
-                        valor: arrayValor [count],
-                        kit: arrayKit [count]
+                        valor: valores [count],
+                        kit: datas [count]
                     });
                 }
 
-                $('#modalParcelas').find('#formParcela').html(html);
+                $('#editarModal').off('click', editarModal);
                 $('#editarModal').on('click', editarModal);
 
                 swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                     .then(() => {
-                        $('#modalParcelas').slideDown('slow');
-                        //window.location.href = "?perfil=evento&p=parcelas_edita";
+                        //$('#modalParcelas').slideDown('slow');
+                        window.location.href = "?perfil=evento&p=parcelas_cadastro";
                     });
             })
             .fail(function () {

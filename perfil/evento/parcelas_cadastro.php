@@ -7,6 +7,9 @@ $parcelas = $_POST['parcelas'];
 $arrayValor = $_POST['arrayValor'];
 $arrayKit = $_POST['arrayKit'];
 
+$valores = $_POST['valores'];
+$datas = $_POST['datas'];
+
 //oficinas
 $arrayInicial = $_POST['arrayInicial'] ?? NULL;
 $arrayFinal = $_POST['arrayFinal'] ?? NULL;
@@ -17,19 +20,22 @@ $query = mysqli_query($con, $sqlVerifica);
 $nRows = mysqli_num_rows($query);
 
 if ($nRows > 0) {
-    for ($i = 1; $i <= $parcelas; $i++) {
+
+    echo "testeee";
+
+/*    for ($i = 1; $i <= $parcelas; $i++) {
         $parcela = $parcelas[$i];
         $valor = dinheiroParaBr($arrayValor[$i]);
         $dataPagamento =  exibirDataMysql($arrayKit[$i]);
 
         $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido' AND numero_parcelas = '$parcela'";
 
-        echo $sqlUpdate;
+
 
         if (mysqli_query($con, $sqlUpdate)) {
             gravarLog($sqlUpdate);
         }
-    }
+    }*/
 
 } else {
 
