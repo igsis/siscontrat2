@@ -394,7 +394,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 <form action="#" id="formParcela">
                 </form>
                 <div class="row">
-                    <h4 class="text-center" id="somaParcelas">Soma das parcelas: <?= dinheiroParaBr($somaParcelas)?></h4>
+                    <h4 class="text-center" id="somaParcelas">Soma das parcelas: <?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL?></h4>
                 </div>
                 <div class="row">
                     <h4 class="text-center">Valor total do contrato: <?= dinheiroParaBr($pedido['valor_total'])?></h4>
