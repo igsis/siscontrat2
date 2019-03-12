@@ -42,7 +42,10 @@ if ($nRows > 0) {
 
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
-            echo $sql;
+
+            $update = "UPDATE pedidos SET numero_parcelas = '$parcelas'";
+            mysqli_query($con, $update);
+            gravarLog($update);
 
             $parcela = recuperaUltimo("parcelas");
 

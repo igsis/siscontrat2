@@ -4,6 +4,7 @@ $con = bancoMysqli();
 if (isset($_POST['carregar'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
 }
+
 $idPedido = $_SESSION['idPedido'];
 $idEvento = $_SESSION['idEvento'];
 
@@ -30,9 +31,11 @@ if (isset($_POST['cadastra'])) {
     }
 }
 
+$pedido = recuperaDados("pedidos", "id", $idPedido);
+
 if (isset($_POST['edita'])) {
     $valor_total = dinheiroDeBr($_POST['valor_total']);
-    $numero_parcelas = $_POST['numero_parcelas'];
+    $numero_parcelas = $_POST['numero_parcelas'] ?? $pedido['numero_parcelas'];
 
     $sql_edita = "UPDATE pedidos SET verba_id = '$verba_id', valor_total = '$valor_total', numero_parcelas = '$numero_parcelas', data_kit_pagamento = null, forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
     if (mysqli_query($con, $sql_edita)) {
@@ -69,17 +72,18 @@ if ($pedido['pessoa_tipo_id'] == 2) {
 }
 
 //verificando parcelas
-
 $sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido'";
 $query = mysqli_query($con, $sqlParcelas);
-//$parcelas = mysqli_fetch_array($query); //array utilizado no js
 $numRows = mysqli_num_rows($query);
 
 if ($numRows > 0) {
+    $somaParcelas = 0;
     while ($parcela = mysqli_fetch_array($query)) {
-        $arrayValores[] = $parcela['valor'];
+        $arrayValores[] = dinheiroParaBr($parcela['valor']);
         $arrayDatas[] = $parcela['data_pagamento'];
         $idsParcela [] = $parcela['id'];
+
+        $somaParcelas += $parcela['valor'];
     }
 
     $StringValores = implode("|", $arrayValores);
@@ -102,7 +106,6 @@ if ($numRows > 0) {
         }
     }
 }
-
 
 $displayEditar = "display: none";
 $displayKit = "display: block";
@@ -391,6 +394,12 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             <div class="modal-body">
                 <form action="#" id="formParcela">
                 </form>
+                <div class="row">
+                    <h4 class="text-center" id="somaParcelas">Soma das parcelas: <?= dinheiroParaBr($somaParcelas)?></h4>
+                </div>
+                <div class="row">
+                    <h4 class="text-center">Valor total do contrato: <?= dinheiroParaBr($pedido['valor_total'])?></h4>
+                </div>
             </div>
             <div class="modal-footer">
                 <div class="botoes">
@@ -410,7 +419,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         <div class='form-group col-md-3'>
             <label for='valor'>Valor </label>
             <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
-                   onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
+                   onkeypress="return(moeda(this, '.', ',', event)); somar()" class='form-control'>
         </div>
         <div class='form-group col-md-4'>
             <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
@@ -598,7 +607,6 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
 
 
-
     var salvarModal = function () {
 
         var idAtracao = "<?php if (isset($categoria)) {
@@ -720,6 +728,8 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         var datas = new Array(1);
         var valores = new Array(1);
 
+        var soma = 0;
+
         for (var i = 1; i <= parcelas; i++) {
             $("input[name='modal_data_kit_pagamento[" + i + "]']").each(function () {
                 datas.push($(this).val());
@@ -728,13 +738,16 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             $("input[name='valor[" + i + "]']").each(function () {
                 valores.push($(this).val());
             });
+
+            soma += parseFloat(valores[i]);
+
         }
 
         var source = document.getElementById("templateParcela").innerHTML;
         var template = Handlebars.compile(source);
         var html = '';
 
-        console.log(datas, valores);
+        $("#somaParcelas").html("Soma das parcelas: " + soma);
 
         $('#modalParcelas').slideUp();
 
@@ -757,8 +770,8 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
                 swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                     .then(() => {
-                       // $('#modalParcelas').slideDown('slow');
-                        window.location.href = "?perfil=evento&p=parcelas_edita";
+                        $('#modalParcelas').slideDown('slow');
+                       // window.location.href = "?perfil=evento&p=parcelas_edita";
                     });
             })
             .fail(function () {
