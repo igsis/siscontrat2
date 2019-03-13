@@ -20,6 +20,25 @@ if(isset($_POST['cadastra'])){
     if(mysqli_query($con,$sql_atracoes)){
         $idAtracao = recuperaUltimo("atracoes");
         $mensagem = mensagem("success","Cadastrado com sucesso!");
+
+        $dataAtual = date("Y-m-d");
+        $sqlOcorrencia = "SELECT atr.valor_individual, ocr.data_inicio 
+                          FROM ocorrencias ocr 
+                          INNER JOIN atracoes atr 
+                          ON ocr.origem_ocorrencia_id = atr.id 
+                          WHERE atr.nome_atracao LIKE '%$nome_atracao%'";
+
+        $queryOcorrencia = mysqli_query($con, $sqlOcorrencia);
+
+        if(mysqli_num_rows($queryOcorrencia) > 0){
+            $ocrAtracao = mysqli_fetch_assoc($queryOcorrencia);
+            $dataInicio = $ocrAtracao['data_inicio'];
+            $valorIndividual = $ocrAtracao['valor_individual'];
+
+            if (($dataInicio < $dataAtual) && ($valorIndividual < $valor_individual)){
+                $mensagem2 = mensagem("warning","Atração atual tem valor acima de outras atrações com os mesmos nomes realizados anteriormente!");
+            }
+        }
     }
     else{
         $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
@@ -63,6 +82,9 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
                     <!-- form start -->
                     <div class="row" align="center">
                         <?php if(isset($mensagem)){echo $mensagem;};?>
+                    </div>
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem2)){echo $mensagem2;};?>
                     </div>
                     <form method="POST" action="?perfil=evento&p=atracoes_edita" role="form">
                         <div class="box-body">
