@@ -71,7 +71,7 @@ $query = mysqli_query($con,$sql);
         <h2 class="page-header">Ocorrências</h2>
         <div class="row">
             <div class="col-md-2">
-                <form method="POST" action="?perfil=evento&p=ocorrencia_cadastro">
+                <form method="POST" action="?perfil=evento_interno&p=ocorrencia_cadastro">
                     <input type="hidden" name="idOrigem" value="<?= $idOrigem ?>">
                     <button type="submit" class="btn btn-block btn-info"><i class="fa fa-plus"></i> Adiciona</button>
                 </form>
@@ -115,7 +115,7 @@ $query = mysqli_query($con,$sql);
                                 echo "<td>".$ocorrencia['local']."</td>";
 
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_edita\" role=\"form\">
+                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=ocorrencia_edita\" role=\"form\">
                                     <input type='hidden' name='idOcorrencia' value='".$ocorrencia['id']."'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
@@ -154,7 +154,7 @@ $query = mysqli_query($con,$sql);
 <div class="modal fade" id="duplicar" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" id='formDuplicar' action="?perfil=evento&p=ocorrencia_lista" class="form-horizontal" role="form">
+            <form method="POST" id='formDuplicar' action="?perfil=evento_interno&p=ocorrencia_lista" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">Replicando ocorrência</h4>
@@ -178,7 +178,7 @@ $query = mysqli_query($con,$sql);
 <div class="modal fade" id="apagar" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" id='formApagar' action="?perfil=evento&p=ocorrencia_lista" class="form-horizontal" role="form">
+            <form method="POST" id='formApagar' action="?perfil=evento_interno&p=ocorrencia_lista" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">Apagar ocorrência</h4>
