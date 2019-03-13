@@ -4,7 +4,9 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 date_default_timezone_set('America/Sao_Paulo');
 
-if(isset($_POST['idPj']) || isset($_POST['idProponente'])){
+$tipoPessoa = 2;
+
+if (isset($_POST['idPj']) || isset($_POST['idProponente'])) {
     $idPj = $_POST['idPj'] ?? $_POST['idProponente'];
 }
 
@@ -28,36 +30,36 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $ultima_atualizacao = date('Y-m-d H:i:s');
 }
 
-if(isset($_POST['cadastra'])) {
+if (isset($_POST['cadastra'])) {
     $mensagem = "";
     $sql = "INSERT INTO pessoa_juridicas (razao_social, cnpj, ccm, email, ultima_atualizacao) VALUES ('$razao_social', '$cnpj', '$ccm', '$email', '$ultima_atualizacao')";
-    if(mysqli_query($con, $sql)) {
+    if (mysqli_query($con, $sql)) {
         $idPj = recuperaUltimo('pessoa_juridicas');
         // cadastrar o telefone de pj
-        foreach ($telefones AS $telefone){
-            if (!empty($telefone)){
+        foreach ($telefones AS $telefone) {
+            if (!empty($telefone)) {
                 $sqlTel = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone, publicado) VALUES ('$idPj','$telefone',1)";
-                mysqli_query($con,$sqlTel);
+                mysqli_query($con, $sqlTel);
             }
         }
         // cadastrar endereco de pj
         $sqlEndereco = "INSERT INTO pj_enderecos (pessoa_juridica_id, logradouro, numero, complemento, bairro, cidade, uf, cep) VALUES ('$idPj','$logradouro','$numero', '$complemento', '$bairro', '$cidade', '$uf', '$cep')";
 
-        if(!mysqli_query($con, $sqlEndereco)){
-            $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.").$sqlEndereco;
+        if (!mysqli_query($con, $sqlEndereco)) {
+            $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlEndereco;
         }
 
-        if($banco != NULL){
+        if ($banco != NULL) {
             $sqlBanco = "INSERT INTO pj_bancos (pessoa_juridica_id, banco_id, agencia, conta) VALUES ('$idPj', '$banco', '$agencia', '$conta')";
-            if(!mysqli_query($con, $sqlBanco)){
-                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.").$sqlBanco;
+            if (!mysqli_query($con, $sqlBanco)) {
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlBanco;
             }
         }
 
-        if($observacao != NULL){
+        if ($observacao != NULL) {
             $sqlObs = "INSERT INTO pj_observacoes (pessoa_juridica_id, observacao) VALUES ('$idPj','$observacao')";
-            if(!mysqli_query($con, $sqlObs)){
-                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.").$sqlObs;
+            if (!mysqli_query($con, $sqlObs)) {
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlObs;
             }
         }
 
@@ -69,7 +71,7 @@ if(isset($_POST['cadastra'])) {
     }
 }
 
-if(isset($_POST['edita'])) {
+if (isset($_POST['edita'])) {
     $idPj = $_POST['edita'];
     $mensagem = "";
     $sql = "UPDATE pessoa_juridicas SET razao_social = '$razao_social', cnpj = '$cnpj', ccm = '$ccm', email = '$email' WHERE id = '$idPj'";
@@ -147,7 +149,7 @@ if(isset($_POST['edita'])) {
     }
 }
 
-if(isset($_POST["enviar"])) {
+if (isset($_POST["enviar"])) {
     $idPj = $_POST['idPessoa'];
     $tipoPessoa = $_POST['tipoPessoa'];
 
@@ -192,9 +194,9 @@ if(isset($_POST["enviar"])) {
 $sqlTelefones = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 
-$pj = recuperaDados("pessoa_juridicas","id",$idPj);
-$end = recuperaDados("pj_enderecos","pessoa_juridica_id",$idPj);
-$obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
+$pj = recuperaDados("pessoa_juridicas", "id", $idPj);
+$end = recuperaDados("pj_enderecos", "pessoa_juridica_id", $idPj);
+$obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
 ?>
 
 <script>
@@ -236,38 +238,49 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Anexo do Cartão CNPJ</label><br>
-                                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-cnpj">Clique aqui para anexar</button>
+                                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                                            data-target="#modal-cnpj">Clique aqui para anexar
+                                    </button>
                                 </div>
 
                                 <div class="form-group col-md-2">
                                     <label for="ccm">CCM: </label>
-                                    <input type="text" class="form-control" id="ccm" name="ccm" value="<?= $pj['ccm'] ?>">
+                                    <input type="text" class="form-control" id="ccm" name="ccm"
+                                           value="<?= $pj['ccm'] ?>">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Anexo FDC - CCM ou CPOM</label><br>
-                                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-ccm">Clique aqui para anexar</button>
+                                    <button type="button" class="btn btn-primary btn-block" id="modal" data-toggle="modal"
+                                            data-target="#modal-ccm">Clique aqui para anexar
+                                    </button>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="email">E-mail: *</label>
-                                    <input type="email" name="email" class="form-control" maxlength="60" placeholder="Digite o E-mail" required value="<?= $pj['email'] ?>">
+                                    <input type="email" name="email" class="form-control" maxlength="60"
+                                           placeholder="Digite o E-mail" required value="<?= $pj['email'] ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
-                                    <input type="text" data-mask="(00) 0000-0000" required class="form-control" id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]" value="<?= $arrayTelefones[0]['telefone']; ?>">
+                                    <input type="text" data-mask="(00) 0000-0000" required class="form-control"
+                                           id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
+                                           value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="celular">Telefone #2 </label>
                                     <?php
                                     if (isset($arrayTelefones[1])) {
                                         ?>
-                                        <input type="text" data-mask="(00)00000-0000" class="form-control" id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]" value="<?= $arrayTelefones[1]['telefone']; ?>">
+                                        <input type="text" data-mask="(00)00000-0000" class="form-control"
+                                               id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
+                                               value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
-                                        <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone1" name="telefone1">
+                                        <input type="text" data-mask="(00) 00000-0000" class="form-control"
+                                               id="telefone1" name="telefone1">
                                         <?php
                                     }
                                     ?>
@@ -276,13 +289,16 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                                     <label for="recado">Telefone #3</label>
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
-                                        <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]" value="<?=  $arrayTelefones[2]['telefone']; ?>">
+                                        <input type="text" data-mask="(00) 00000-0000" class="form-control"
+                                               id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
+                                               value="<?= $arrayTelefones[2]['telefone']; ?>">
 
                                         <?php
                                     } else {
                                         ?>
 
-                                        <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone2" name="telefone2">
+                                        <input type="text" data-mask="(00) 00000-0000" class="form-control"
+                                               id="telefone2" name="telefone2">
 
                                         <?php
                                     }
@@ -293,52 +309,63 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="cep">CEP: *</label>
-                                    <input type="text" class="form-control" name="cep" id="cep" maxlength="9" placeholder="Digite o CEP" required data-mask="00000-000" value="<?= $end['cep'] ?>">
+                                    <input type="text" class="form-control" name="cep" id="cep" maxlength="9"
+                                           placeholder="Digite o CEP" required data-mask="00000-000"
+                                           value="<?= $end['cep'] ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
                                 </div>
                                 <div style="margin-top: 10px;" class="form-group col-md-6">
-                                    <h4 class="text-center col-md-12"><em>Insira seu CEP e aperte a tecla "TAB" para seu endereço carregar automaticamente</em></h4>
+                                    <h4 class="text-center col-md-12"><em>Insira seu CEP e aperte a tecla "TAB" para seu
+                                            endereço carregar automaticamente</em></h4>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="rua">Rua: *</label>
-                                    <input type="text" class="form-control" name="rua" id="rua" placeholder="Digite a rua" maxlength="200" readonly value="<?= $end['logradouro'] ?>">
+                                    <input type="text" class="form-control" name="rua" id="rua"
+                                           placeholder="Digite a rua" maxlength="200" readonly
+                                           value="<?= $end['logradouro'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control" placeholder="Ex.: 10" required value="<?= $end['numero'] ?>">
+                                    <input type="number" name="numero" class="form-control" placeholder="Ex.: 10"
+                                           required value="<?= $end['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="complemento">Complemento:</label>
-                                    <input type="text" name="complemento" class="form-control" maxlength="20" placeholder="Digite o complemento" value="<?= $end['complemento'] ?>">
+                                    <input type="text" name="complemento" class="form-control" maxlength="20"
+                                           placeholder="Digite o complemento" value="<?= $end['complemento'] ?>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="bairro">Bairro: *</label>
-                                    <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Digite o Bairro" maxlength="80" readonly value="<?= $end['bairro'] ?>">
+                                    <input type="text" class="form-control" name="bairro" id="bairro"
+                                           placeholder="Digite o Bairro" maxlength="80" readonly
+                                           value="<?= $end['bairro'] ?>">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="cidade">Cidade: *</label>
-                                    <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Digite a cidade" maxlength="50" readonly value="<?= $end['cidade'] ?>">
+                                    <input type="text" class="form-control" name="cidade" id="cidade"
+                                           placeholder="Digite a cidade" maxlength="50" readonly
+                                           value="<?= $end['cidade'] ?>">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
-                                    <input type="text" class="form-control" name="estado" id="estado" maxlength="2" placeholder="Ex.: SP" readonly value="<?= $end['uf'] ?>">
+                                    <input type="text" class="form-control" name="estado" id="estado" maxlength="2"
+                                           placeholder="Ex.: SP" readonly value="<?= $end['uf'] ?>">
                                 </div>
                             </div>
                             <hr/>
                             <?php
                             $atracao = $conn->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'");
-                            foreach($atracao as $row)
-                            {
-                                if($row['valor_individual'] != 0.00){
-                                    $banco = recuperaDados("pj_bancos","pessoa_juridica_id",$idPj);
-                                ?>
+                            foreach ($atracao as $row) {
+                                if ($row['valor_individual'] != 0.00) {
+                                    $banco = recuperaDados("pj_bancos", "pessoa_juridica_id", $idPj);
+                                    ?>
                                     <div class="row">
                                         <div class="form-group col-md-4">
                                             <label for="banco">Banco:</label>
@@ -351,25 +378,35 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label for="agencia">Agência:</label>
-                                            <input type="text" name="agencia" class="form-control"  placeholder="Digite a Agência" maxlength="12" value="<?= $banco['agencia'] ?>">
+                                            <input type="text" name="agencia" class="form-control"
+                                                   placeholder="Digite a Agência" maxlength="12"
+                                                   value="<?= $banco['agencia'] ?>">
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label for="conta">Conta:</label>
-                                            <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12" value="<?= $banco['conta'] ?>">
+                                            <input type="text" name="conta" class="form-control"
+                                                   placeholder="Digite a Conta" maxlength="12"
+                                                   value="<?= $banco['conta'] ?>">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-md-3">
                                             <label>Gerar FACC</label><br>
-                                            <button type="button" class="btn btn-primary btn-block">Clique aqui para gerar a FACC</button>
+                                            <button type="button" class="btn btn-primary btn-block">Clique aqui para
+                                                gerar a FACC
+                                            </button>
                                         </div>
                                         <div class="form-group col-md-5">
                                             <label>&nbsp;</label><br>
-                                            <p>A FACC deve ser impressa, datada e assinada nos campos indicados no documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema no campo correspondente.</p>
+                                            <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                                documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                                no campo correspondente.</p>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label>Anexo FACC</label><br>
-                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-facc">Clique aqui para anexar</button>
+                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                                                    data-target="#modal-facc">Clique aqui para anexar
+                                            </button>
                                         </div>
                                     </div>
                                     <hr/>
@@ -380,12 +417,15 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
-                                    <textarea id="observacao" name="observacao" rows="3" class="form-control"><?= $obs['observacao'] ?? NULL ?></textarea>
+                                    <textarea id="observacao" name="observacao" rows="3"
+                                              class="form-control"><?= $obs['observacao'] ?? NULL ?></textarea>
                                 </div>
                             </div>
 
                             <div class="box-footer">
-                                <button type="submit" name="edita" value="<?= $pj['id'] ?>" class="btn btn-info pull-right">Atualizar</button>
+                                <button type="submit" name="edita" value="<?= $pj['id'] ?>"
+                                        class="btn btn-info pull-right">Atualizar
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -399,24 +439,31 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <form method="POST" action="?perfil=evento&p=pj_demais_anexos" role="form">
-                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Demais Anexos</button>
+                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                            class="btn btn-info btn-block">Demais Anexos
+                                    </button>
                                 </form>
                             </div>
                             <div class="form-group col-md-3">
                                 <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
-                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Representante 01</button>
+                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>"
+                                            class="btn btn-info btn-block">Representante 01
+                                    </button>
                                 </form>
                             </div>
                             <div class="form-group col-md-3">
                                 <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
-                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>" class="btn btn-info btn-block">Representante 02</button>
+                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>"
+                                            class="btn btn-info btn-block">Representante 02
+                                    </button>
                                 </form>
                             </div>
                             <div class="form-group col-md-3">
                                 <form method="POST" action="?perfil=evento&p=pedido_pagamento" role="form">
                                     <input type="hidden" name="pessoa_tipo_id" value="2">
                                     <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
-                                    <button type="submit" class="btn btn-info btn-block">Ir ao pedido de contratação</button>
+                                    <button type="submit" class="btn btn-info btn-block">Ir ao pedido de contratação
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -426,8 +473,60 @@ $obs = recuperaDados("pj_observacoes","pessoa_juridica_id",$idPj);
             </div>
         </div>
         <?php
-        modalUploadArquivoUnico("modal-cnpj","?perfil=evento&p=pj_edita","CNPJ","cartao_cnp",$idPj,"2");
+        modalUploadArquivoUnico("modal-cnpj", "?perfil=evento&p=pj_edita", "CNPJ", "cartao_cnp", $idPj, "2");
         ?>
 
     </section>
 </div>
+
+<div class="modal fade" id="modal-ccm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Upload de FCD - CCM ou CPOM</h4>
+            </div>
+            <div class="modal-body">
+                <p align='center'><strong>Arquivo somente em PDF e até 05 MB.</strong></p>
+                <form method="POST" action="?perfil=evento&p=pj_edita" enctype="multipart/form-data">
+                    <br/>
+                    <div align='center'>
+                        <?php
+
+                        if ($end['uf'] == "SP") {
+                        ?>
+                        <label>FDC - CCM</label>
+                        <input type='file' id="ccm" name='arquivo[ccm]'>
+                    </div>
+                    <?php
+                    } else {
+                    ?>
+                    <div align='center'>
+                        <label>CPOM</label>
+                        <input type='file' id="cpom" name='arquivo[cpom]'>
+                    </div>
+                    <?php } ?>
+                    <br/>
+                    <input type="hidden" name="idPessoa" value="<?= $idPj ?>"/>
+                    <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>"/>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" name="enviar" class="btn btn-success">Enviar</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    $("#modal").on("click", function () {
+        var footer = document.querySelector(".main-footer");
+        footer.style.display = "none";
+    });
+    
+</script>
