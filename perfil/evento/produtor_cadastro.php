@@ -54,7 +54,7 @@ if(isset($_POST['idAtracao'])){
                             </div>
                         </div>
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-default">Cancelar</button>
+                            <a href="?perfil=evento&p=atracoes_lista"><button type="button" class="btn btn-default">Voltar</button></a>
                             <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
                     </form>
