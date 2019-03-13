@@ -81,7 +81,7 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form method="POST" action="?perfil=evento&p=produtor_edita" role="form">
+                    <form method="POST" action="?perfil=evento_interno&p=produtor_edita" role="form">
                         <div class="box-body">
                             <input type='hidden' name='idProdutor' value="<?= $idProdutor ?>">
                             

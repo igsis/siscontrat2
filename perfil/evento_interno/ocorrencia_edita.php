@@ -230,7 +230,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                             echo $mensagem;
                         }; ?>
                     </div>
-                    <form method="POST" action="?perfil=evento&p=ocorrencia_edita" role="form">
+                    <form method="POST" action="?perfil=evento_interno&p=ocorrencia_edita" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
