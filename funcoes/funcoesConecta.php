@@ -30,6 +30,17 @@ function bancoPDO()
 		echo "Erro " . $e->getMessage();
 	}
 }
+// Conexão com banco do CAPAC
+function bancoCapac()
+{
+    $servidor = 'localhost';
+    $usuario = 'root';
+    $senha = '';
+    $banco = 'capac';
+    $con = mysqli_connect($servidor,$usuario,$senha,$banco);
+    mysqli_set_charset($con,"utf8");
+    return $con;
+}
 // Cria conexao ao banco de CEPs.
 function bancoMysqliCep()
 {
