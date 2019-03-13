@@ -86,7 +86,7 @@ if (isset($_POST['carregar'])){
                             </div>
 
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-default">Cancelar</button>
+                                <a href="?perfil=evento_interno&p=atracoes_lista"><button type="button" class="btn btn-default">Voltar</button></a>
                                 <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
                                 <button type="submit" name="cadastra" class="btn btn-info pull-right">Salvar</button>
                             </div>
