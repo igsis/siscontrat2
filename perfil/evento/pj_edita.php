@@ -229,7 +229,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                 </div>
                             </div>
 
-                            <div class="row ">
+                            <div class="row">
                                 <div class="form-group col-md-2">
                                     <label for="cnpj">CNPJ: *</label>
                                     <input type="text" class="form-control" id="cnpj" name="cnpj"
@@ -237,10 +237,32 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
 
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Anexo do Cartão CNPJ</label><br>
-                                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                            data-target="#modal-cnpj">Clique aqui para anexar
-                                    </button>
+                                    <?php
+                                    $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = 22 AND origem_id = '$idPj' AND publicado = 1";
+                                    $queryExistentes = mysqli_query($con, $sqlExistentes);
+
+                                    if (mysqli_num_rows($queryExistentes) == 0) {
+                                        ?>
+
+                                        <label>Anexo do Cartão CNPJ</label><br>
+                                        <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                                                data-target="#modal-cnpj">Clique aqui para anexar
+                                        </button>
+
+                                        <?php
+
+                                    } else {
+
+                                        $arquivo = mysqli_fetch_array($queryExistentes);
+                                        ?>
+                                        <label>Cartão CNPJ anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
+                                        <br>
+                                        <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
+                                           target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
+
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
 
                                 <div class="form-group col-md-2">
@@ -248,11 +270,47 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                     <input type="text" class="form-control" id="ccm" name="ccm"
                                            value="<?= $pj['ccm'] ?>">
                                 </div>
+
                                 <div class="form-group col-md-4">
+                                <?php
+                                if ($end['uf'] == "SP") {
+                                    $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (43) AND origem_id = '$idPj' AND publicado = 1";
+                                    $queryExistentesSP = mysqli_query($con, $sqlExistentes);
+                                } else {
+                                    $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (28) AND origem_id = '$idPj' AND publicado = 1";
+                                    $queryExistentes = mysqli_query($con, $sqlExistentes);
+                                }
+
+                                if (mysqli_num_rows($queryExistentes) == 0) {
+                                    ?>
                                     <label>Anexo FDC - CCM ou CPOM</label><br>
-                                    <button type="button" class="btn btn-primary btn-block" id="modal" data-toggle="modal"
-                                            data-target="#modal-ccm">Clique aqui para anexar
+                                    <button type="button" class="btn btn-primary btn-block" id="modal"
+                                            data-toggle="modal" data-target="#modal-ccm">
+                                        Clique aqui para anexar
                                     </button>
+                                    <?php
+                                } elseif (isset($queryExistentesSP )) {
+                                    $arquivo = mysqli_fetch_array($queryExistentesSP);
+                                    ?>
+                                    <label>FDC - CCM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label><br>
+                                    <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
+                                       target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
+                                    <?php
+
+                                } else {
+
+                                    $arquivo = mysqli_fetch_array($queryExistentes);
+
+                                    ?>
+
+                                    <label>CPOM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
+                                    <br>
+                                    <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
+                                       target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
+
+                                    <?php
+                                }
+                                ?>
                                 </div>
                             </div>
                             <hr/>
@@ -500,11 +558,11 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                     </div>
                     <?php
                     } else {
-                    ?>
-                    <div align='center'>
-                        <label>CPOM</label>
-                        <input type='file' id="cpom" name='arquivo[cpom]'>
-                    </div>
+                        ?>
+                        <div align='center'>
+                            <label>CPOM</label>
+                            <input type='file' id="cpom" name='arquivo[cpom]'>
+                        </div>
                     <?php } ?>
                     <br/>
                     <input type="hidden" name="idPessoa" value="<?= $idPj ?>"/>
@@ -520,12 +578,11 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
 </div>
 
 
-
 <script type="text/javascript">
 
     $("#modal").on("click", function () {
         var footer = document.querySelector(".main-footer");
         footer.style.display = "none";
     });
-    
+
 </script>
