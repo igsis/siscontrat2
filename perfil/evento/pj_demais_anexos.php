@@ -144,7 +144,7 @@ if(isset($_POST['apagar']))
                                                         <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 60MB.</h4>
                                                     </tr>
                                                     <?php
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (22) AND tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (22, 28, 43) AND tipo_documento_id = '$tipoPessoa' and publicado = 1";
                                                     $query_arquivos = mysqli_query($con,$sql_arquivos);
                                                     while($arq = mysqli_fetch_array($query_arquivos))
                                                     {

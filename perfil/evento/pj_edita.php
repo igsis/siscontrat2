@@ -493,7 +493,6 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                     <br/>
                     <div align='center'>
                         <?php
-
                         if ($end['uf'] == "SP") {
                         ?>
                         <label>FDC - CCM</label>
