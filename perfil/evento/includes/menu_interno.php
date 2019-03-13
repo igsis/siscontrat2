@@ -1,4 +1,7 @@
 <?php
+$con = bancoMysqli();
+
+
 $pasta = "?perfil=evento&p=";
 ?>
 <aside class="main-sidebar">
@@ -16,13 +19,19 @@ $pasta = "?perfil=evento&p=";
             if(isset($_SESSION['idEvento'])){
                 $idEvento = $_SESSION['idEvento'];
                 $evento = recuperaDados("eventos", "id",$idEvento);
+
+                $atracoes = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'";
+                $query = mysqli_query($con, $atracoes);
+                $nAtracoes = mysqli_num_rows($query);
+
+
                 if($evento['tipo_evento_id'] == 1){ //atração
                     echo "<li><a href=\"".$pasta."atracoes_lista\"><i class=\"fa fa-circle-o\"></i> <span>Atração</span></a></li>";
                 }
                 else{ //filme
                     echo "<li><a href=\"".$pasta."evento_cinema_lista\"><i class=\"fa fa-circle-o\"></i> <span>Filme</span></a></li>";
                 }
-                if($evento['contratacao'] == 1){
+                if($evento['contratacao'] == 1 && $nAtracoes > 0){
                     echo "<li><a href=\"".$pasta."pedido\"><i class=\"fa fa-circle-o\"></i> <span>Pedido</span></a></li>";
                 }
                 echo "<li><a href=\"".$pasta."finalizar\"><i class=\"fa fa-circle-o\"></i> <span>Finalizar</span></a></li>";
