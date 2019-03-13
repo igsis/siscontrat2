@@ -634,7 +634,7 @@ include "includes/menu_interno.php";
                                 </form>
                             </div>
                             <div class="form-group col-md-3 pull-right">
-                                <form method="POST" action="?perfil=evento&p=pedido_pagamento" role="form">
+                                <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
                                     <input type="hidden" name="pessoa_tipo_id" value="1">
                                     <input type="hidden" name="pessoa_id" value="<?= $pf['id'] ?>">
                                     <button type="submit" class="btn btn-info btn-block">Ir ao pedido de contratação</button>
