@@ -144,15 +144,25 @@ if(isset($_POST['apagar']))
                                                         <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 60MB.</h4>
                                                     </tr>
                                                     <?php
+
                                                     $sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (20, 21, 22, 28, 43, 89, 103, 104) AND tipo_documento_id = '$tipoPessoa' and publicado = 1";
                                                     $query_arquivos = mysqli_query($con,$sql_arquivos);
                                                     while($arq = mysqli_fetch_array($query_arquivos))
                                                     {
-                                                        ?>
-                                                        <tr>
-                                                            <td><label><?php echo $arq['documento']?></label></td><td><input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'></td>
-                                                        </tr>
-                                                        <?php
+                                                        $idDoc = $arq['id'];
+                                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = '$idDoc' AND origem_id = '$idPj' AND publicado = 1";
+                                                        $queryExistentes = mysqli_query($con, $sqlExistentes);
+
+                                                        if (mysqli_num_rows($queryExistentes) == 0) {
+                                                            ?>
+                                                            <tr>
+                                                                <td><label><?php echo $arq['documento'] ?></label></td>
+                                                                <td><input type='file'
+                                                                           name='arquivo[<?php echo $arq['sigla']; ?>]'>
+                                                                </td>
+                                                            </tr>
+                                                            <?php
+                                                        }
                                                     }
                                                     ?>
 
