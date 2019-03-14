@@ -57,7 +57,6 @@ $query = mysqli_query($con,$sql);
                                 <th>Nome da atração</th>
                                 <th>Categoria da atração</th>
                                 <th>Produtor</th>
-                                <th>Especificidade</th>
                                 <th>Ocorrência</th>
                                 <th>Visualizar</th>
                                 <th>Apagar</th>
@@ -92,97 +91,7 @@ $query = mysqli_query($con,$sql);
                                         </form>
                                     </td>";
                                 }
-                                /*
-                                 * Especificidades
-                                 */
-                                $idCategoriaAtracao = $atracao['categoria_atracao_id'];
-                                $array_teatro = array(3,7,23,24);
-                                if(in_array($idCategoriaAtracao, $array_teatro)){
-                                    $teatro = recuperaDados("teatro","atracao_id",$atracao['idAtracao']);
-                                    if($teatro != NULL){
-                                        echo "<td>
-                                                <form method=\"POST\" action=\"?perfil=evento_interno&p=teatro_edita\" role=\"form\">
-                                                <input type=\"hidden\" name='idTeatro' value='".$teatro['id']."'>
-                                                <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
-                                                </form>
-                                                </td>";
-                                    }
-                                    else{
-                                        echo "<td>
-                                                <form method=\"POST\" action=\"?perfil=evento_interno&p=teatro_cadastro\" role=\"form\">
-                                                <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                                <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Especificidade</button>
-                                                </form>
-                                                </td>";
-                                    }
-                                }
-                                else{
-                                    $array_musica = array(10,11,15,17);
-                                    if(in_array($idCategoriaAtracao, $array_musica)){
-                                        $musica = recuperaDados("musica","atracao_id",$atracao['idAtracao']);
-                                        if($musica != NULL){
-                                            echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=musica_edita\" role=\"form\">
-                                                    <input type=\"hidden\" name='idMusica' value='".$musica['id']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i>Especificidade</button>
-                                                    </form>
-                                                    </td>";
-                                        }
-                                        else{
-                                            echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=musica_cadastro\" role=\"form\">
-                                                    <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i>Especificidade</button>
-                                                    </form>
-                                                    </td>";
-                                        }
-                                    }
-                                    else{
-                                        if($idCategoriaAtracao == 2){
-                                            $exposicao = recuperaDados("exposicoes","atracao_id",$atracao['idAtracao']);
-                                            if($exposicao != NULL){
-                                                echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=exposicao_edita\" role=\"form\">
-                                                    <input type='hidden' name='idExposicao' value='".$exposicao['id']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i>Especificidade</button>
-                                                    </form>
-                                                    </td>";
-                                            }
-                                            else{
-                                                echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=exposicao_cadastro\" role=\"form\">
-                                                    <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i>Especificidade</button>
-                                                    </form>
-                                                    </td>";
-                                            }
-                                        }
-                                        else{
-                                            if($idCategoriaAtracao == 4 || $idCategoriaAtracao == 5){
-                                                $oficina = recuperaDados("oficinas","atracao_id",$atracao['idAtracao']);
-                                                if($oficina != NULL){
-                                                    echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=oficina_edita\" role=\"form\">
-                                                    <input type='hidden' name='idOficina' value='".$oficina['id']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i>Especificidade</button>
-                                                    </form>
-                                                    </td>";
-                                                }
-                                                else{
-                                                    echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=oficina_cadastro\" role=\"form\">
-                                                    <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Especificidade</button>
-                                                    </form>
-                                                    </td>";
-                                                }
-                                            }
-                                            else{
-                                                echo "<td>Não há especificidades.</td>";
-                                            }
-                                        }
-                                    }
-                                }
+
                                 /*
                                  * Ocorrência
                                  */
