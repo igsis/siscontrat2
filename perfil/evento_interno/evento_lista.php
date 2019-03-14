@@ -72,7 +72,7 @@ $query = mysqli_query($con, $sql);
                                 ?>
                                 <td>
                                     <form method="post" id="formExcluir">
-                                        <input type="hidden" name="idEvento" value="<?= $evento['id'] ?>">
+                                        <input type="hidden" name="idEvento" value="<?= $evento['idEvento'] ?>">
                                         <button type="button" class="btn btn-block btn-danger" id="excluiEvento"
                                                 data-toggle="modal" data-target="#exclusao" name="excluiEvento"
                                                 data-name="<?= $evento['nome_evento']?>"
