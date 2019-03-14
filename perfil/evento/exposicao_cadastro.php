@@ -1,11 +1,10 @@
-@@ -1,95 +0,0 @@
 <?php
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
 //$_SESSION['idAtracao'] = $_POST['idAtracao'];
 
-if (isset($_POST['carregar'])){
+if (isset($_POST['carregar'])) {
     $idAtracao = $_POST['idAtracao'];
 
 }
@@ -28,7 +27,8 @@ if (isset($_POST['carregar'])){
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="contratados">Quantidade de contratados</label><br/>
-                                    <label><input class="form-control" type="number" name="contratados" id="contratados"></label>
+                                    <label><input class="form-control" type="number" name="contratados"
+                                                  id="contratados"></label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="tipo_exposicao">Tipo de Exposição</label> <br>
@@ -69,9 +69,12 @@ if (isset($_POST['carregar'])){
                                 <div class="row">
                                     <div class="form-group col-md-3">
                                         <label for="documentacao">Pedido de documentação</label> <br>
-                                        <label><input type="radio" name="documentacao" id="fotografia"  value="2" checked> Fotografia </label>
-                                        <label><input type="radio" name="documentacao" id="audio" value="1"> Áudio </label>
-                                        <label><input type="radio" name="documentacao" id="video" value="0"> Vídeo </label>
+                                        <label><input type="radio" name="documentacao" id="fotografia" value="2"
+                                                      checked> Fotografia </label>
+                                        <label><input type="radio" name="documentacao" id="audio" value="1"> Áudio
+                                        </label>
+                                        <label><input type="radio" name="documentacao" id="video" value="0"> Vídeo
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -79,14 +82,20 @@ if (isset($_POST['carregar'])){
                                 <div class="form-group col-md-12">
                                     <center><label for="acervo">Acervo </label><br></center>
                                     <select class="form-control" id="acervo" name="acervo">
-                                        <option value="1">A exposição NÃO possui peças que fazem parte da coleção da instituição.</option>
-                                        <option value="2">A exposição POSSUI peças que fazem parte da coleção da instituição.</option>
+                                        <option value="1">A exposição NÃO possui peças que fazem parte da coleção da
+                                            instituição.
+                                        </option>
+                                        <option value="2">A exposição POSSUI peças que fazem parte da coleção da
+                                            instituição.
+                                        </option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-default">Cancelar</button>
+                                <a href="?perfil=evento&p=atracoes_lista">
+                                    <button type="button" class="btn btn-default">Voltar</button>
+                                </a>
                                 <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
                                 <button type="submit" name="cadastra" class="btn btn-info pull-right">Salvar</button>
                             </div>
