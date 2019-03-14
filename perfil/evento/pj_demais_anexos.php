@@ -1,7 +1,6 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-$idPedido = $_SESSION['idPedido'];
 $idPj = $_POST['idPj'];
 $tipoPessoa = 2; // arquivos necessarios para pessoa juridica
 

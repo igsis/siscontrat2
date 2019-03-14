@@ -238,10 +238,10 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = 22 AND origem_id = '$idPj' AND publicado = 1";
-                                    $queryExistentes = mysqli_query($con, $sqlExistentes);
+                                    $sqlExistentesCNPJ = "SELECT * FROM arquivos WHERE lista_documento_id = 22 AND origem_id = '$idPj' AND publicado = 1";
+                                    $queryExistentesCNPJ = mysqli_query($con, $sqlExistentesCNPJ);
 
-                                    if (mysqli_num_rows($queryExistentes) == 0) {
+                                    if (mysqli_num_rows($queryExistentesCNPJ) == 0) {
                                         ?>
 
                                         <label>Anexo do Cartão CNPJ</label><br>
@@ -253,7 +253,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
 
                                     } else {
 
-                                        $arquivo = mysqli_fetch_array($queryExistentes);
+                                        $arquivo = mysqli_fetch_array($queryExistentesCNPJ);
                                         ?>
                                         <label>Cartão CNPJ anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
                                         <br>
@@ -275,10 +275,12 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                 <?php
                                 if ($end['uf'] == "SP") {
                                     $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (43) AND origem_id = '$idPj' AND publicado = 1";
-                                    $queryExistentesSP = mysqli_query($con, $sqlExistentes);
+                                    $queryExistentes = mysqli_query($con, $sqlExistentes);
+                                    $cpom = 0;
                                 } else {
                                     $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (28) AND origem_id = '$idPj' AND publicado = 1";
                                     $queryExistentes = mysqli_query($con, $sqlExistentes);
+                                    $cpom = 1;
                                 }
 
                                 if (mysqli_num_rows($queryExistentes) == 0) {
@@ -289,8 +291,8 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                         Clique aqui para anexar
                                     </button>
                                     <?php
-                                } elseif (isset($queryExistentesSP )) {
-                                    $arquivo = mysqli_fetch_array($queryExistentesSP);
+                                } elseif (mysqli_num_rows($queryExistentes) > 0 && $cpom == 0) {
+                                    $arquivo = mysqli_fetch_array($queryExistentes);
                                     ?>
                                     <label>FDC - CCM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label><br>
                                     <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
@@ -298,9 +300,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                     <?php
 
                                 } else {
-
                                     $arquivo = mysqli_fetch_array($queryExistentes);
-
                                     ?>
 
                                     <label>CPOM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
@@ -532,6 +532,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
         </div>
         <?php
         modalUploadArquivoUnico("modal-cnpj", "?perfil=evento&p=pj_edita", "CNPJ", "cartao_cnp", $idPj, "2");
+        modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pj_edita", "facc", "cartao_cnp", $idPj, "2");
         ?>
 
     </section>
