@@ -538,10 +538,29 @@ include "includes/menu_interno.php";
                                            value="<?= $endereco['uf'] ?>">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Anexo Comprovante de endereço</label><br>
-                                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                            data-target="#modal-endereco">Clique aqui para anexar
-                                    </button>
+                                    <?php
+                                    $sqlComprovante = "SELECT * FROM arquivos WHERE lista_documento_id = 4 AND origem_id = '$idPf' AND publicado = 1";
+                                    $queryComprovante = mysqli_query($con, $sqlComprovante);
+
+                                    if (mysqli_num_rows($queryComprovante) == 0) {
+                                        ?>
+                                        <label>Anexo Comprovante de endereço</label><br>
+                                        <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                                                data-target="#modal-endereco">Clique aqui para anexar
+                                        </button>
+                                        <?php
+                                    } else {
+                                        $comprovante = mysqli_fetch_array($queryComprovante);
+                                        ?>
+                                        <label>Comprovante de endereço anexado no dia: <?= exibirDataBr($comprovante['data']) ?></label>
+                                        <br>
+                                        <a class="link" href='../uploadsdocs/<?= $comprovante['arquivo'] ?>'
+                                           target='_blank'><?= mb_strimwidth($comprovante['arquivo'], 15, 25, "...") ?></a>
+
+                                        <?php
+                                    }
+                                    ?>
+
                                 </div>
                             </div>
                             <hr/>
@@ -605,10 +624,29 @@ include "includes/menu_interno.php";
                                                placeholder="Digite o DRT" value="<?= $drts['drt'] ?>">
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label>Anexo DRT</label><br>
-                                        <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                data-target="#modal-drt">Clique aqui para anexar
-                                        </button>
+                                        <?php
+                                        $sqlDRT = "SELECT * FROM arquivos WHERE lista_documento_id = 60 AND origem_id = '$idPf' AND publicado = 1";
+                                        $queryDRT = mysqli_query($con, $sqlDRT);
+
+                                        if (mysqli_num_rows($queryDRT) == 0) {
+                                            ?>
+                                            <label>Anexo DRT</label><br>
+                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                                                    data-target="#modal-drt">Clique aqui para anexar
+                                            </button>
+                                            <?php
+                                        } else {
+                                            $DRT = mysqli_fetch_array($queryDRT);
+                                            ?>
+                                            <label>DRT anexado no dia: <?= exibirDataBr($DRT['data']) ?></label>
+                                            <br>
+                                            <a class="link" href='../uploadsdocs/<?= $DRT['arquivo'] ?>'
+                                               target='_blank'><?= mb_strimwidth($DRT['arquivo'], 15, 25, "...") ?></a>
+
+                                            <?php
+                                        }
+                                        ?>
+
                                     </div>
                                     <?php
                                 }
@@ -619,10 +657,28 @@ include "includes/menu_interno.php";
                                            placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Anexo NIT</label><br>
-                                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                            data-target="#modal-nit">Clique aqui para anexar
-                                    </button>
+                                    <?php
+                                    $sqlNIT = "SELECT * FROM arquivos WHERE lista_documento_id = 25 AND origem_id = '$idPf' AND publicado = 1";
+                                    $queryNIT = mysqli_query($con, $sqlNIT);
+
+                                    if (mysqli_num_rows($queryNIT) == 0) {
+                                        ?>
+                                        <label>Anexo NIT</label><br>
+                                        <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                                                data-target="#modal-nit">Clique aqui para anexar
+                                        </button>
+                                        <?php
+                                    } else {
+                                        $NIT = mysqli_fetch_array($queryNIT);
+                                        ?>
+                                        <label>NIT anexado no dia: <?= exibirDataBr($NIT['data']) ?></label>
+                                        <br>
+                                        <a class="link" href='../uploadsdocs/<?= $NIT['arquivo'] ?>'
+                                           target='_blank'><?= mb_strimwidth($NIT['arquivo'], 15, 25, "...") ?></a>
+
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
                             </div>
 
@@ -729,6 +785,8 @@ include "includes/menu_interno.php";
         modalUploadArquivoUnico("modal-rg", "?perfil=evento&p=pf_edita", "RG", "rg", $idPf, "1");
         modalUploadArquivoUnico("modal-cpf", "?perfil=evento&p=pf_edita", "CPF", "cpf", $idPf, "1");
         modalUploadArquivoUnico("modal-ccm", "?perfil=evento&p=pf_edita", "FDC - CCM", "ccm", $idPf, "1");
+        modalUploadArquivoUnico("modal-nit", "?perfil=evento&p=pf_edita", "NIT", "pis_pasep_", $idPf, "1");
+        modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprovante de endereço", "residencia", $idPf, "1");
         ?>
 
     </section>
