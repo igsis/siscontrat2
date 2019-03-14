@@ -53,7 +53,7 @@ $num = mysqli_num_rows($query);
                              */
                         ?>
                         <form method="POST" action="?perfil=evento&p=pedido_anexos" role="form">
-                            <table id="tblPedido" class="table table-bordered table-striped">
+                            <table class="table table-condensed">
                                 <thead>
                                 <tr>
                                     <th>Pedido</th>
