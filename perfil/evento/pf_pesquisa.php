@@ -254,8 +254,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
         var strCPF = cpf;
         Soma = 0;
 
-        if (strCPF == "00000000000" ||
-            strCPF == "11111111111" ||
+        if (strCPF == "11111111111" ||
             strCPF == "22222222222" ||
             strCPF == "33333333333" ||
             strCPF == "44444444444" ||

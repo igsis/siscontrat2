@@ -151,8 +151,7 @@ if (isset($_POST['procurar'])){
             return false;
         }
         // Elimina CNPJs invalidos conhecidos
-        if (cnpj == "00000000000000" ||
-            cnpj == "11111111111111" ||
+        if (cnpj == "11111111111111" ||
             cnpj == "22222222222222" ||
             cnpj == "33333333333333" ||
             cnpj == "44444444444444" ||
