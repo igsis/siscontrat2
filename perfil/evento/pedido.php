@@ -72,11 +72,13 @@ $num = mysqli_num_rows($query);
                                         $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
                                         echo "<td>".$pj['razao_social']."</td>";
                                         echo "<input type='hidden' name='idPessoa' value='".$pj['id']."'>";
+                                        $idProponente = $pj['id'];
                                     }
                                     else{
                                         $pf = recuperaDados("pessoa_fisicas","id",$pedido['pessoa_fisica_id']);
                                         echo "<td>".$pf['nome']."</td>";
                                         echo "<input type='hidden' name='idPessoa' value='".$pf['id']."'>";
+                                        $idProponente = $pf['id'];
                                     }
                                     echo "<td>";
                                     $idAtracao = $pedido['origem_id'];
@@ -104,7 +106,9 @@ $num = mysqli_num_rows($query);
                                         </td>";
                                     echo "<td>
                                         <form method=\"POST\" action=\"?perfil=evento&p=pedido_edita\" role=\"form\">
-                                        <input type='hidden' name='idPedido' value='".$pedido['id']."'>
+                                        <input type='hidden' name='idPedido' value='".$pedido['id']."'> 
+                                        <input type='hidden' name='idProponente' value='".$idProponente."'>
+                                        <input type='hidden' name='tipoPessoa' value='".$pedido['pessoa_tipo_id']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-primary btn-block\">Editar pedido</button>
                                         </form>
                                         </td>";

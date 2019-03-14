@@ -375,7 +375,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
                                 </div>
-                                <div style="margin-top: 10px;" class="form-group col-md-6">
+                                <div style="margin-top: 10px;" class="form-group col-md-7">
                                     <h4 class="text-center col-md-12"><em>Insira seu CEP e aperte a tecla "TAB" para seu
                                             endereço carregar automaticamente</em></h4>
                                 </div>
@@ -517,7 +517,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                 </form>
                             </div>
                             <div class="form-group col-md-3">
-                                <form method="POST" action="?perfil=evento&p=pedido_pagamento" role="form">
+                                <form method="POST" action="?perfil=evento&p=pedido_cadastro" role="form">
                                     <input type="hidden" name="pessoa_tipo_id" value="2">
                                     <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
                                     <button type="submit" class="btn btn-info btn-block">Ir ao pedido de contratação

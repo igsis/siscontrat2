@@ -43,7 +43,7 @@ if ($nRows > 0) {
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
 
-            $update = "UPDATE pedidos SET numero_parcelas = '$parcelas'";
+            $update = "UPDATE pedidos SET numero_parcelas = '$parcelas', data_kit_pagamento = null";
             mysqli_query($con, $update);
             gravarLog($update);
 

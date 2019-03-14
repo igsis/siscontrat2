@@ -1,56 +1,64 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
+$idProponente = $_POST['idProponente'];
+$tipoPessoa = $_POST['tipoPessoa'];
 
 if (isset($_POST['carregar'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
 }
 $idPedido = $_SESSION['idPedido'];
 
+
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $verba_id = $_POST['verba_id'];
+    $valor_total = dinheiroDeBr($_POST['valor_total']);
     $forma_pagamento = addslashes($_POST['forma_pagamento']);
     $justificativa = addslashes($_POST['justificativa']);
-    $observacao = addslashes($_POST['observacao']);
+    $observacao = addslashes($_POST['observacao']) ?? NULL;
     $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
     $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? NULL;
-}
 
-if (isset($_POST['cadastra'])) {
-    if (isset($data_kit_pagamento)) {
-        $sql_cadastra = "UPDATE pedidos SET verba_id = '$verba_id', forma_pagamento = '$forma_pagamento', data_kit_pagamento = '$data_kit_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
+    if ($tipoPessoa == 1) {
+        $campo = "pessoa_fisica_id";
     } else {
-        $sql_cadastra = "UPDATE pedidos SET verba_id = '$verba_id', forma_pagamento = '$forma_pagamento', numero_parcelas = '$numero_parcelas', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
+        $campo = "pessoa_juridica_id";
     }
 
-    if (mysqli_query($con, $sql_cadastra)) {
-        $mensagem = mensagem("success", "Gravado com sucesso!");
-    } else {
-        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+    if (isset($_POST['cadastra'])) {
+        $sql_cadastra = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, verba_id, numero_parcelas, valor_total, forma_pagamento, data_kit_pagamento, justificativa, status_pedido_id, observacao) 
+                          VALUES ('1', '$idEvento', '$tipoPessoa', '$idProponente', '$verba_id', '$numero_parcelas', '$valor_total', '$forma_pagamento', '$data_kit_pagamento', '$justificativa', 1, '$observacao')";
+
+        if (mysqli_query($con, $sql_cadastra)) {
+            gravarLog($sql_cadastra);
+
+            $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+            $idPedido = $_SESSION['idPedido'];
+
+            $mensagem = mensagem("success", "Pedido cadastrado com sucesso!");
+
+        } else {
+            $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+        }
     }
-}
 
-$pedido = recuperaDados("pedidos", "id", $idPedido);
+    $pedido = recuperaDados("pedidos", "id", $idPedido);
 
-if (isset($_POST['edita'])) {
-    $valor_total = dinheiroDeBr($_POST['valor_total']);
-    $numero_parcelas = $_POST['numero_parcelas'] ?? $pedido['numero_parcelas'];
+    if (isset($_POST['edita'])) {
+        $numero_parcelas = $_POST['numero_parcelas'] ?? $pedido['numero_parcelas'];
+        if ($numero_parcelas != 1){
+            $data_kit_pagamento = "0000-00-00";
+        }
 
-    $sql_edita = "UPDATE pedidos SET verba_id = '$verba_id', valor_total = '$valor_total', numero_parcelas = '$numero_parcelas', data_kit_pagamento = null, forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
-    if (mysqli_query($con, $sql_edita)) {
-        $mensagem = mensagem("success", "Gravado com sucesso.");
-    } else {
-        $mensagem = mensagem("danger", "Erro ao gravar: " . die(mysqli_error($con)));
-    }
-}
+        $sql_edita = "UPDATE pedidos SET verba_id = '$verba_id', valor_total = '$valor_total', numero_parcelas = '$numero_parcelas', data_kit_pagamento = '$data_kit_pagamento', forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
 
-if (isset($_POST['data_kit_pagamento'])) {
-    $data_kit_pagamento = $_POST['data_kit_pagamento'];
-    $sql_edita = "UPDATE pedidos SET data_kit_pagamento = '$data_kit_pagamento' WHERE id = '$idPedido'";
-    if (mysqli_query($con, $sql_edita)) {
-        $mensagem = mensagem("success", "Gravado com sucesso.");
-    } else {
-        $mensagem = mensagem("danger", "Erro ao gravar: " . die(mysqli_error($con)));
+        if (mysqli_query($con, $sql_edita)) {
+            $mensagem = mensagem("success", "Gravado com sucesso.");
+            gravarLog($sql_edita);
+
+        } else {
+            $mensagem = mensagem("danger", "Erro ao gravar: " . die(mysqli_error($con)));
+        }
     }
 }
 
@@ -250,6 +258,8 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
+                            <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
+                            <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
                             <button type="submit" name="edita" class="btn btn-primary pull-right">Gravar</button>
                         </div>
                     </form>
@@ -419,7 +429,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         <div class='form-group col-md-3'>
             <label for='valor'>Valor </label>
             <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
-                   onkeypress="return(moeda(this, '.', ',', event)); somar()" class='form-control'>
+                   onkeypress="return(moeda(this, '.', ',', event));" class='form-control'>
         </div>
         <div class='form-group col-md-4'>
             <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
