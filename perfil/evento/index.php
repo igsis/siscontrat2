@@ -10,11 +10,12 @@ unset($_SESSION['idPf']);
 $idUsuario = $_SESSION['idUser'];
 
 
-$sql = "SELECT * FROM EVENTOS  
-                              WHERE publicado = 1
+$sql = "SELECT * FROM EVENTOS eve
+                              WHERE eve.publicado = 1
                               AND
-                              ((usuario_id = '$idUsuario') OR (fiscal_id = '$idUsuario'))
-                              AND evento_status_id = 3";
+                              ((eve.usuario_id = '$idUsuario') OR (eve.fiscal_id = '$idUsuario'))
+                              AND eve.evento_status_id = 3
+                              ORDER BY eve.id DESC LIMIT 0,20";
 
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
