@@ -38,7 +38,7 @@ if (isset($_POST['cadastra'])) {
         // cadastrar o telefone de pj
         foreach ($telefones AS $telefone) {
             if (!empty($telefone)) {
-                $sqlTel = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone, publicado) VALUES ('$idPj','$telefone',1)";
+                $sqlTel = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone, publicado) VALUES ('$idPj', '$telefone', 1)";
                 mysqli_query($con, $sqlTel);
             }
         }
@@ -190,7 +190,6 @@ if (isset($_POST["enviar"])) {
     }
 }
 
-
 $sqlTelefones = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 
@@ -220,7 +219,6 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
 
                     <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
                         <div class="box-body">
-
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="razao_social">Razão Social: *</label>
@@ -238,7 +236,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                        anexosNaPagina(22, $idPj, "modal-cnpj", "CNPJ");
+                                    anexosNaPagina(22, $idPj, "modal-cnpj", "CNPJ");
                                     ?>
                                 </div>
 
@@ -249,45 +247,46 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                <?php
-                                if ($end['uf'] == "SP") {
-                                    $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (43) AND origem_id = '$idPj' AND publicado = 1";
-                                    $queryExistentes = mysqli_query($con, $sqlExistentes);
-                                    $cpom = 0;
-                                } else {
-                                    $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (28) AND origem_id = '$idPj' AND publicado = 1";
-                                    $queryExistentes = mysqli_query($con, $sqlExistentes);
-                                    $cpom = 1;
-                                }
-
-                                if (mysqli_num_rows($queryExistentes) == 0) {
-                                    ?>
-                                    <label>Anexo FDC - CCM ou CPOM</label><br>
-                                    <button type="button" class="btn btn-primary btn-block" id="modal"
-                                            data-toggle="modal" data-target="#modal-ccm">
-                                        Clique aqui para anexar
-                                    </button>
                                     <?php
-                                } elseif (mysqli_num_rows($queryExistentes) > 0 && $cpom == 0) {
-                                    $arquivo = mysqli_fetch_array($queryExistentes);
+                                    if ($end['uf'] == "SP") {
+                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (43) AND origem_id = '$idPj' AND publicado = 1";
+                                        $queryExistentes = mysqli_query($con, $sqlExistentes);
+                                        $cpom = 0;
+                                    } else {
+                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (28) AND origem_id = '$idPj' AND publicado = 1";
+                                        $queryExistentes = mysqli_query($con, $sqlExistentes);
+                                        $cpom = 1;
+                                    }
+
+                                    if (mysqli_num_rows($queryExistentes) == 0) {
+                                        ?>
+                                        <label>Anexo FDC - CCM ou CPOM</label><br>
+                                        <button type="button" class="btn btn-primary btn-block" id="modal"
+                                                data-toggle="modal" data-target="#modal-ccm">
+                                            Clique aqui para anexar
+                                        </button>
+                                        <?php
+                                    } elseif (mysqli_num_rows($queryExistentes) > 0 && $cpom == 0) {
+                                        $arquivo = mysqli_fetch_array($queryExistentes);
+                                        ?>
+                                        <label>FDC - CCM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
+                                        <br>
+                                        <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
+                                           target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
+                                        <?php
+
+                                    } else {
+                                        $arquivo = mysqli_fetch_array($queryExistentes);
+                                        ?>
+
+                                        <label>CPOM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
+                                        <br>
+                                        <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
+                                           target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
+
+                                        <?php
+                                    }
                                     ?>
-                                    <label>FDC - CCM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label><br>
-                                    <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
-                                       target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
-                                    <?php
-
-                                } else {
-                                    $arquivo = mysqli_fetch_array($queryExistentes);
-                                    ?>
-
-                                    <label>CPOM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
-                                    <br>
-                                    <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
-                                       target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
-
-                                    <?php
-                                }
-                                ?>
                                 </div>
                             </div>
                             <hr/>
@@ -407,7 +406,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                             <select id="banco" name="banco" class="form-control">
                                                 <option value="">Selecione um banco...</option>
                                                 <?php
-                                                    geraOpcao("bancos", $banco['banco_id']);
+                                                geraOpcao("bancos", $banco['banco_id']);
                                                 ?>
                                             </select>
                                         </div>
@@ -479,20 +478,63 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                     </button>
                                 </form>
                             </div>
-                            <div class="form-group col-md-3">
-                                <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
-                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>"
-                                            class="btn btn-info btn-block">Representante 01
+
+                            <?php
+                            if ($pj['representante_legal1_id'] == null && $pj['representante_legal2_id'] == null ) {
+                                ?>
+                                <div class="form-group col-md-3">
+                                    <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                                        <input type="hidden" name="tipoRepresentante" value="1">
+                                        <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                                class="btn btn-info btn-block">Representante 01
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                                        <input type="hidden" name="tipoRepresentante" value="2">
+                                        <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                                class="btn btn-info btn-block" >Representante 02
+                                        </button>
+                                    </form>
+                                </div>
+                                <?php
+                            } elseif ($pj['representante_legal1_id'] != null ) {
+                                ?>
+                                <div class="form-group col-md-3">
+                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>" class="btn btn-info btn-block"
+                                            id="modal" data-toggle="modal" data-target="#modal-representante-edita">
+                                        Representante 01
                                     </button>
-                                </form>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                                        <input type="hidden" name="tipoRepresentante" value="2">
+                                        <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                                class="btn btn-info btn-block" >
+                                            Representante 02
+                                        </button>
+                                    </form>
+                                </div>
+                                <?php
+                            } else {
+                                ?>
+                                <div class="form-group col-md-3">
                                     <button type="submit" name="edita" value="<?= $pj['id'] ?>"
-                                            class="btn btn-info btn-block">Representante 02
+                                            class="btn btn-info btn-block" id="modal" data-toggle="modal"
+                                            data-target="#modal-representante-edita">Representante 01
                                     </button>
-                                </form>
-                            </div>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>"
+                                            class="btn btn-info btn-block" id="modal" data-toggle="modal"
+                                            data-target="#modal-representante-edita">Representante 02
+                                    </button>
+                                </div>
+                                <?php
+                            }
+                            ?>
+
                             <div class="form-group col-md-3">
                                 <form method="POST" action="?perfil=evento&p=pedido_cadastro" role="form">
                                     <input type="hidden" name="pessoa_tipo_id" value="2">
@@ -541,13 +583,36 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                             <label>CPOM</label>
                             <input type='file' id="cpom" name='arquivo[cpom]'>
                         </div>
-                    <?php } ?>
+                    <?php
+                        }
+                        ?>
                     <br/>
                     <input type="hidden" name="idPessoa" value="<?= $idPj ?>"/>
                     <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>"/>
             </div>
             <div class="modal-footer">
                 <button type="submit" name="enviar" class="btn btn-success">Enviar</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-representante-cadastro">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Representante Legal Cadastro</h4>
+            </div>
+            <div class="modal-body">
+                <p align='center'><strong>Nenhum representante cadastrado, clique no botão abaixo para cadastrar um novo!</strong></p>
+                <form method="POST" action="?perfil=evento&p=represente_cadastro" enctype="multipart/form-data">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" name="cadastra" class="btn btn-success">Cadastrar</button>
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
             </div>
             </form>

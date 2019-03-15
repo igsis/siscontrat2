@@ -3,10 +3,11 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idPedido = $_SESSION['idPedido'];
-if(isset($_POST['tipo_representante'])){
-    $tipo_representante = $_POST['tipo_representante'];
 
-    $_SESSION['tipo_representante'] = $_POST['tipo_representante'];
+if(isset($_POST['tipoRepresentante']) && isset($_POST['idPj'])) {
+    $_SESSION['tipoRepresentante'] = $_POST['tipoRepresentante'];
+    $_SESSION['idPj'] = $_POST['idPj'];
+    $idPj = $_SESSION['idPj'];
 }
 
 if (isset($_POST['pesquisa'])) {
@@ -15,16 +16,16 @@ if (isset($_POST['pesquisa'])) {
     $sql = "SELECT * FROM siscontrat.representante_legais WHERE cpf ='$cpf' LIMIT 1";
     $query = mysqli_query($con,$sql);
 
-    if(mysqli_num_rows($query)>0){
+    if(mysqli_num_rows($query) > 0) {
         $resultado = mysqli_fetch_array($query);
-        $mensagem = "<form method='post' action='?perfil=evento&p=pj_edita'>
+        $mensagem = "<form method='post' action='?perfil=evento&p=representante_edita'>
                         <tr>
                             <td>".$resultado['nome']."</td>
                             <td>".$resultado['cpf']."</td>
                             <td>".$resultado['rg']."</td>
                             <td>
-                                <input type='text' value='".$resultado['id']."'>
-                                <button type='submit' class='btn btn-primary' name=''>Selecionar</button>
+                                <input type='hidden' name='idRepresentante' value='".$resultado['id']."'>
+                                <button type='submit' class='btn btn-primary' name='carregar'>Selecionar</button>
                             </td>
                         </tr>
                     </form>";

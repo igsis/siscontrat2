@@ -1,30 +1,21 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
+$cpf = $_POST['documentacao'];
 
-if (isset($_SESSION['cpfRepresentante'])) {
-    $cpf = $_SESSION['cpfRepresentante'];
-}else{
-    $cpf = $_POST['documentacao'];
-    $_SESSION['cpfRepresentante'] = $_POST['documentacao'];
-}
 ?>
 
 <div class="content-wrapper">
     <section class="content">
-
         <h2 class="page-header">Cadastro de Representante</h2>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Informações Presentante</h3>
+                        <h3 class="box-title">Informações Representante</h3>
                     </div>
-
                     <form method="POST" action="?perfil=evento&p=representante_edita" role="form">
                         <div class="box-body">
-
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: </label>
@@ -53,6 +44,5 @@ if (isset($_SESSION['cpfRepresentante'])) {
                 </div>
             </div>
         </div>
-
     </section>
 </div>
