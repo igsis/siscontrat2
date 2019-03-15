@@ -238,30 +238,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    $sqlExistentesCNPJ = "SELECT * FROM arquivos WHERE lista_documento_id = 22 AND origem_id = '$idPj' AND publicado = 1";
-                                    $queryExistentesCNPJ = mysqli_query($con, $sqlExistentesCNPJ);
-
-                                    if (mysqli_num_rows($queryExistentesCNPJ) == 0) {
-                                        ?>
-
-                                        <label>Anexo do Cartão CNPJ</label><br>
-                                        <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                data-target="#modal-cnpj">Clique aqui para anexar
-                                        </button>
-
-                                        <?php
-
-                                    } else {
-
-                                        $arquivo = mysqli_fetch_array($queryExistentesCNPJ);
-                                        ?>
-                                        <label>Cartão CNPJ anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
-                                        <br>
-                                        <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
-                                           target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
-
-                                        <?php
-                                    }
+                                        anexosNaPagina(22, $idPj, "modal-cnpj", "CNPJ");
                                     ?>
                                 </div>
 
@@ -430,7 +407,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                             <select id="banco" name="banco" class="form-control">
                                                 <option value="">Selecione um banco...</option>
                                                 <?php
-                                                geraOpcao("bancos", $banco['banco_id']);
+                                                    geraOpcao("bancos", $banco['banco_id']);
                                                 ?>
                                             </select>
                                         </div>

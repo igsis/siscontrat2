@@ -1133,4 +1133,29 @@ function mensagem($tipo,$texto){
 	    ";
 }
 
+
+function anexosNaPagina ($idDocumento, $idPessoa, $nomeModal, $documento) {
+    $con = bancoMysqli();
+    $sql = "SELECT * FROM arquivos WHERE lista_documento_id = '$idDocumento' AND origem_id = '$idPessoa' AND publicado = 1";
+    $query = mysqli_query($con, $sql);
+
+    if (mysqli_num_rows($query) == 0) {
+        echo"
+        <label>Anexo " . $documento . "</label><br>
+        <button type='button' class='btn btn-primary btn-block' data-toggle='modal'
+                data-target='#". $nomeModal . "'>Clique aqui para anexar
+        </button>";
+
+    } else {
+        $doc = mysqli_fetch_array($query);
+        echo"
+        <label style='margin-top: 10px;'>". $documento ." anexado no dia: " . exibirDataBr($doc['data']). "</label>
+        <br>
+        <a class='link' href='../uploadsdocs/". $doc['arquivo'] ."' 
+        target='_blank'>" . mb_strimwidth($doc['arquivo'], 15, 25, '...') . "</a>";
+    }
+}
+
+
+
 ?>

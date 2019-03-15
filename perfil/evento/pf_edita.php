@@ -350,34 +350,7 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <?php
                                 if (empty($pf['cpf'])) {
-                                    $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = 62 AND origem_id = '$idPf' AND publicado = 1";
-                                    $queryExistentes = mysqli_query($con, $sqlExistentes);
-
-                                    echo "<div class='form-group col-md-3'>
-                                        <label for='passaporte' >Passaporte:</label>
-                                        <input type='text' name='passaporte' class='form-control' value='" . $pf['passaporte'] . "' readonly>
-                                    </div>";
-
-                                    if ($queryExistentes == 0) {
-                                        ?>
-
-                                        <div class="form-group col-md-3">
-                                            <label>Anexo do Passaporte</label><br>
-                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                    data-target="#modal-passaporte">Clique aqui para anexar
-                                            </button>
-                                        </div>
-                                        <?php
-                                    } else {
-                                        $arquivo = mysqli_fetch_array($queryExistentes);
-                                        ?>
-                                        <label>Passaporte anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
-                                        <br>
-                                        <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
-                                           target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
-
-                                        <?php
-                                    }
+                                    anexosNaPagina(62, $idPf, "modal-passaporte", "Passaporte");
                                 } else {
                                     ?>
                                     <div class="form-group col-md-2">
@@ -416,74 +389,19 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <?php
-                                    if (!empty($pf['cpf'])){
-                                        $sqlRG = "SELECT * FROM arquivos WHERE lista_documento_id = 2 AND origem_id = '$idPf' AND publicado = 1";
-                                        $queryRG = mysqli_query($con, $sqlRG);
-                                        if (mysqli_num_rows($queryRG) == 0) {
-                                            ?>
-                                            <label>Anexo do RG</label><br>
-                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                    data-target="#modal-rg">Clique aqui para anexar
-                                            </button>
-                                            <?php
-                                        } else {
-                                            $RG = mysqli_fetch_array($queryRG);
-                                            ?>
-                                            <label>RG anexado no dia: <?= exibirDataBr($RG['data']) ?></label>
-                                            <br>
-                                            <a class="link" href='../uploadsdocs/<?= $RG['arquivo'] ?>'
-                                               target='_blank'><?= mb_strimwidth($RG['arquivo'], 15, 25, "...") ?></a>
-                                            <?php
-                                        }
+                                        if (!empty($pf['cpf'])){
+                                            anexosNaPagina(2, $idPf, "modal-rg", "RG");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                        <?php
-                                        $sqlCPF = "SELECT * FROM arquivos WHERE lista_documento_id = 3 AND origem_id = '$idPf' AND publicado = 1";
-                                        $queryCPF = mysqli_query($con, $sqlCPF);
-
-                                        if (mysqli_num_rows($queryCPF) == 0) {
-                                            ?>
-                                            <label>Anexo do CPF</label><br>
-                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                    data-target="#modal-cpf">
-                                                Clique aqui para anexar
-                                            </button>
-                                            <?php
-                                        } else {
-                                            $CPF = mysqli_fetch_array($queryCPF);
-                                            ?>
-                                            <label>CPF anexado no dia: <?= exibirDataBr($CPF['data']) ?></label>
-                                            <br>
-                                            <a class="link" href='../uploadsdocs/<?= $CPF['arquivo'] ?>'
-                                               target='_blank'><?= mb_strimwidth($CPF['arquivo'], 15, 25, "...") ?></a>
-
-                                            <?php
-                                        }
-                                        ?>
+                                    <?php
+                                            anexosNaPagina(3, $idPf, "modal-cpf", "CPF");
+                                    ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                        <?php
-                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (31) AND origem_id = '$idPf' AND publicado = 1";
-                                        $queryExistentes = mysqli_query($con, $sqlExistentes);
-
-                                        if (mysqli_num_rows($queryExistentes) == 0) {
-                                            ?>
-                                            <label>Anexo FDC - CCM</label><br>
-                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                    data-target="#modal-ccm">Clique aqui para anexar
-                                            </button>
-                                            <?php
-                                        } else {
-                                            $arquivo = mysqli_fetch_array($queryExistentes);
-                                            ?>
-                                            <label>FDC - CCM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
-                                            <br>
-                                            <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
-                                               target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
-                                            <?php
+                                    <?php
+                                            anexosNaPagina(31, $idPf, "modal-ccm", "FDC - CCM");
                                         }
-                                    }
                                     ?>
                                 </div>
                             </div>
@@ -539,28 +457,8 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    $sqlComprovante = "SELECT * FROM arquivos WHERE lista_documento_id = 4 AND origem_id = '$idPf' AND publicado = 1";
-                                    $queryComprovante = mysqli_query($con, $sqlComprovante);
-
-                                    if (mysqli_num_rows($queryComprovante) == 0) {
-                                        ?>
-                                        <label>Anexo Comprovante de endereço</label><br>
-                                        <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                data-target="#modal-endereco">Clique aqui para anexar
-                                        </button>
-                                        <?php
-                                    } else {
-                                        $comprovante = mysqli_fetch_array($queryComprovante);
-                                        ?>
-                                        <label>Comprovante de endereço anexado no dia: <?= exibirDataBr($comprovante['data']) ?></label>
-                                        <br>
-                                        <a class="link" href='../uploadsdocs/<?= $comprovante['arquivo'] ?>'
-                                           target='_blank'><?= mb_strimwidth($comprovante['arquivo'], 15, 25, "...") ?></a>
-
-                                        <?php
-                                    }
+                                    anexosNaPagina(4, $idPf, "modal-endereco", "Comprovante de endereço");
                                     ?>
-
                                 </div>
                             </div>
                             <hr/>
@@ -625,28 +523,8 @@ include "includes/menu_interno.php";
                                     </div>
                                     <div class="form-group col-md-3">
                                         <?php
-                                        $sqlDRT = "SELECT * FROM arquivos WHERE lista_documento_id = 60 AND origem_id = '$idPf' AND publicado = 1";
-                                        $queryDRT = mysqli_query($con, $sqlDRT);
-
-                                        if (mysqli_num_rows($queryDRT) == 0) {
-                                            ?>
-                                            <label>Anexo DRT</label><br>
-                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                    data-target="#modal-drt">Clique aqui para anexar
-                                            </button>
-                                            <?php
-                                        } else {
-                                            $DRT = mysqli_fetch_array($queryDRT);
-                                            ?>
-                                            <label>DRT anexado no dia: <?= exibirDataBr($DRT['data']) ?></label>
-                                            <br>
-                                            <a class="link" href='../uploadsdocs/<?= $DRT['arquivo'] ?>'
-                                               target='_blank'><?= mb_strimwidth($DRT['arquivo'], 15, 25, "...") ?></a>
-
-                                            <?php
-                                        }
+                                        anexosNaPagina(60, $idPf, "modal-drt", "DTR");
                                         ?>
-
                                     </div>
                                     <?php
                                 }
@@ -658,26 +536,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-3">
                                     <?php
-                                    $sqlNIT = "SELECT * FROM arquivos WHERE lista_documento_id = 25 AND origem_id = '$idPf' AND publicado = 1";
-                                    $queryNIT = mysqli_query($con, $sqlNIT);
-
-                                    if (mysqli_num_rows($queryNIT) == 0) {
-                                        ?>
-                                        <label>Anexo NIT</label><br>
-                                        <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                data-target="#modal-nit">Clique aqui para anexar
-                                        </button>
-                                        <?php
-                                    } else {
-                                        $NIT = mysqli_fetch_array($queryNIT);
-                                        ?>
-                                        <label>NIT anexado no dia: <?= exibirDataBr($NIT['data']) ?></label>
-                                        <br>
-                                        <a class="link" href='../uploadsdocs/<?= $NIT['arquivo'] ?>'
-                                           target='_blank'><?= mb_strimwidth($NIT['arquivo'], 15, 25, "...") ?></a>
-
-                                        <?php
-                                    }
+                                    anexosNaPagina(25, $idPf, "modal-nit", "NIT");
                                     ?>
                                 </div>
                             </div>
