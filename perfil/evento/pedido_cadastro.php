@@ -75,10 +75,9 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                                     </div>
                                     <!-- Button trigger modal -->
                                     <div class="form-group col-md-2">
-                                        <p style="margin-top: 24px; <?= $displayEditar ?>"
-                                                id="editarParcelas" class="btn btn-primary">
-                                            Edite as parcelas na próxima página!
-                                        </p>
+                                         <p style="margin-top: 22px; display: none" id="editarParcelas">
+                                             <em>Edição de parcelas na próxima página!</em>
+                                         </p>
                                     </div>
                                     <div class="form-group col-md-2" id="data_kit_pagamento"
                                          style="margin-left: -10px; <?= $displayKit ?>">

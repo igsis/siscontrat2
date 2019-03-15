@@ -444,7 +444,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 <!-- Modal Oficinas-->
 <style>
     .modal-lg {
-        width: 83%;
+        width: 90%;
     }
 </style>
 <div class="modal fade" id="modalOficina" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
