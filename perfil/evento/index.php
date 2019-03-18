@@ -10,7 +10,18 @@ unset($_SESSION['idPf']);
 $idUsuario = $_SESSION['idUser'];
 
 
-$sql = "SELECT * FROM EVENTOS eve
+$sql = "SELECT eve.id, eve.nome_evento, usu.nome_completo, envi.data_envio, oco.data_inicio, loc.local 
+                              FROM EVENTOS eve
+                              INNER JOIN usuarios usu
+                              ON eve.usuario_id = usu.id
+                              INNER JOIN evento_envios envi 
+                              ON eve.id = envi.evento_id
+                              INNER JOIN atracoes atr
+                              ON eve.id = atr.evento_id
+                              INNER JOIN ocorrencias oco
+                              ON atr.id = oco.origem_ocorrencia_id	
+                              INNER JOIN locais loc
+                              ON oco.local_id = loc.id
                               WHERE eve.publicado = 1
                               AND
                               ((eve.usuario_id = '$idUsuario') OR (eve.fiscal_id = '$idUsuario'))
@@ -55,11 +66,9 @@ if ($linha >= 1) {
                                         </div>
                                         <div id="collapseOne" class="panel-collapse collapse">
                                             <div class="box-body">
-                                                <p><b>Enviado por:</b> Lorelei Lourenço (Secretaria Municipal de
-                                                    Cultura)
-                                                    <b>em:</b> 06/06/2017</p>
-                                                <p><b>Data:</b> 10/06/2017</p>
-                                                <p><b>Local:</b> Biblioteca Nuto Sant’anna (CSMB)</p>
+                                                <p><b>Enviado por: </b><?= $evento['nome_completo'] ?> <b>em:</b> <?= exibirDataBr($evento['data_envio']) ?> </p>
+                                                <p><b>Data:</b> <?= exibirDataBr($evento['data_inicio']) ?> </p>
+                                                <p><b>Local:</b> <?= $evento['local'] ?></p>
                                             </div>
                                         </div>
                                     </div>
