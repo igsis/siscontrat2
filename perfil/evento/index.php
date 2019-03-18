@@ -26,6 +26,7 @@ $sql = "SELECT eve.id, eve.nome_evento, usu.nome_completo, envi.data_envio, oco.
                               AND
                               ((eve.usuario_id = '$idUsuario') OR (eve.fiscal_id = '$idUsuario'))
                               AND eve.evento_status_id = 3
+                              AND evento_interno = 0
                               ORDER BY eve.id DESC LIMIT 0,20";
 
 $query = mysqli_query($con, $sql);
