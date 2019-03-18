@@ -7,12 +7,7 @@
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">MÓDULO ADMINISTRATIVO</li>
 
-            <li class="treeview">
-                <a href=""> <i class="fa fa-cogs"></i> <span>Gerenciamento do Sistema</span> <i class="fa fa-angle-left pull-right"></i> </a>
-                <ul class="treeview-menu">
-                    <li><a href="?perfil=administrativo&p=usuario&sp=usuario_lista"><i class="fa fa-circle-o text-red"></i> <span>Usuários</span></a></li>
-                </ul>
-            </li>
+            <li><a href="?perfil=administrativo&p=usuario&sp=usuario_lista"><i class="fa fa-circle-o text-red"></i><span>Usuários</span></a></li>
 
             <li class="header">MAIS</li>
 
