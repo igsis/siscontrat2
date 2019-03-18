@@ -1,6 +1,11 @@
 <?php
 $con = bancoMysqli();
 
+if (isset($_SESSION['idEvento'])) {
+    $eventoNovo = false;
+} else {
+    $eventoNovo = true;
+}
 
 $pasta = "?perfil=evento&p=";
 ?>
@@ -9,29 +14,28 @@ $pasta = "?perfil=evento&p=";
         <ul class="sidebar-menu" data-widget="tree">
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">EVENTO</li>
-            <?php
-            if(isset($_SESSION['idEvento'])){
-                echo "<li><a href=\"".$pasta."evento_edita\"><i class=\"fa fa-circle-o\"></i> <span>Evento</span></a></li>";
-            }
-            else{
-                echo "<li><a href=\"".$pasta."evento_cadastro\"><i class=\"fa fa-circle-o\"></i> <span>Evento</span></a></li>";
-            }
-            if(isset($_SESSION['idEvento'])){
+
+            <?php if($eventoNovo) { ?>
+                <li><a href="<?=$pasta?>evento_cadastro"><i class="fa fa-circle-o"></i> <span>Evento</span></a></li>
+            <?php } else { ?>
+                <li><a href="<?=$pasta?>evento_edita"><i class="fa fa-circle-o"></i> <span>Evento</span></a></li>
+            <?php }
+
+            if (!($eventoNovo)) {
                 $idEvento = $_SESSION['idEvento'];
                 $evento = recuperaDados("eventos", "id",$idEvento);
 
                 $atracoes = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'";
-                $query = mysqli_query($con, $atracoes);
-                $nAtracoes = mysqli_num_rows($query);
+                $queryAtracoes = mysqli_query($con, $atracoes);
+                $nAtracoes = mysqli_num_rows($queryAtracoes);
 
-
-                if($evento['tipo_evento_id'] == 1){ //atração
+                if($evento['tipo_evento_id'] == 1) { //atração
                     echo "<li><a href=\"".$pasta."atracoes_lista\"><i class=\"fa fa-circle-o\"></i> <span>Atração</span></a></li>";
-                }
-                else{ //filme
+                } else { //filme
                     echo "<li><a href=\"".$pasta."evento_cinema_lista\"><i class=\"fa fa-circle-o\"></i> <span>Filme</span></a></li>";
                 }
-                if($evento['contratacao'] == 1 && $nAtracoes > 0){
+
+                if($evento['contratacao'] == 1 && $nAtracoes > 0) {
                     echo "<li><a href=\"".$pasta."pedido\"><i class=\"fa fa-circle-o\"></i> <span>Pedido</span></a></li>";
                 }
                 echo "<li><a href=\"".$pasta."finalizar\"><i class=\"fa fa-circle-o\"></i> <span>Finalizar</span></a></li>";
