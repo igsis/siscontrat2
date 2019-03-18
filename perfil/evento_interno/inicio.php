@@ -24,7 +24,7 @@ $sql = "SELECT eve.id, eve.nome_evento, usu.nome_completo, envi.data_envio, oco.
                               ON oco.local_id = loc.id
                               WHERE eve.publicado = 1
                               AND
-                              ((eve.usuario_id = '$idUsuario') OR (eve.fiscal_id = '$idUsuario'))
+                              ((eve.usuario_id = '$idUsuario') OR (eve.fiscal_id = '$idUsuario') OR (eve.suplente_id = '$idUsuario'))
                               AND eve.evento_status_id = 3
                               AND evento_interno = 1
                               ORDER BY eve.id DESC LIMIT 0,20";
