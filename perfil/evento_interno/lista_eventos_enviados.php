@@ -29,8 +29,6 @@ $sql = "SELECT eve.id idEvento, prot.protocolo, cat.categoria_atracao, eve.nome_
                                AND eve.evento_interno = 1
                                ORDER BY atr.id";
 
-echo $sql;
-
 $query = mysqli_query($con, $sql);
 ?>
 
