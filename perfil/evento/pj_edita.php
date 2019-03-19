@@ -171,24 +171,47 @@ if (isset($_POST["enviar"])) {
                 $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
+                $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                $ext = strtolower(substr($nome_arquivo,-4));
 
-                if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                    $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPj', '$y', '$new_name', '$hoje', '1'); ";
-                    $query = mysqli_query($con, $sql_insere_arquivo);
+                if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                {
 
-                    if ($query) {
-                        $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                        gravarLog($sql_insere_arquivo);
+                    if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
+                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPj', '$y', '$new_name', '$hoje', '1'); ";
+                        $query = mysqli_query($con, $sql_insere_arquivo);
+
+                        if ($query) {
+                            $mensagem = mensagem("success", "Arquivo recebido com sucesso");
+                            gravarLog($sql_insere_arquivo);
+                        } else {
+                            $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                        }
                     } else {
-                        $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                        $mensagem = mensagem("danger", "Erro no upload");
                     }
                 } else {
-                    $mensagem = mensagem("danger", "Erro no upload");
+                    echo "<script>
+                            swal(\"Erro no upload! Anexar documentos somente no formato PDF.\", \"\", \"error\");                             
+                        </script>";
                 }
             }
         }
     }
 }
+
+if (isset($_POST['apagar'])) {
+    $idArquivo = $_POST['idArquivo'];
+    $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
+    if (mysqli_query($con, $sql_apagar_arquivo)) {
+        $arq = recuperaDados("arquivos", $idArquivo, "id");
+        $mensagem = mensagem("success", "Arquivo " . $arq['arquivo'] . "apagado com sucesso!");
+        gravarLog($sql_apagar_arquivo);
+    } else {
+        $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
+    }
+}
+
 
 $sqlTelefones = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
@@ -330,7 +353,6 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                         <?php
                                     } else {
                                         ?>
-
                                         <input type="text" data-mask="(00) 00000-0000" class="form-control"
                                                id="telefone2" name="telefone2">
 
@@ -395,59 +417,69 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                             </div>
                             <hr/>
                             <?php
-                            $atracao = $conn->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'");
-                            foreach ($atracao as $row) {
-                                if ($row['valor_individual'] != 0.00) {
-                                    $banco = recuperaDados("pj_bancos", "pessoa_juridica_id", $idPj);
-                                    ?>
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="banco">Banco:</label>
-                                            <select id="banco" name="banco" class="form-control">
-                                                <option value="">Selecione um banco...</option>
-                                                <?php
-                                                geraOpcao("bancos", $banco['banco_id']);
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="agencia">Agência:</label>
-                                            <input type="text" name="agencia" class="form-control"
-                                                   placeholder="Digite a Agência" maxlength="12"
-                                                   value="<?= $banco['agencia'] ?>">
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="conta">Conta:</label>
-                                            <input type="text" name="conta" class="form-control"
-                                                   placeholder="Digite a Conta" maxlength="12"
-                                                   value="<?= $banco['conta'] ?>">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-md-3">
-                                            <label>Gerar FACC</label><br>
-                                            <button type="button" class="btn btn-primary btn-block">Clique aqui para
-                                                gerar a FACC
-                                            </button>
-                                        </div>
-                                        <div class="form-group col-md-5">
-                                            <label>&nbsp;</label><br>
-                                            <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                                documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                                no campo correspondente.</p>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label>Anexo FACC</label><br>
-                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                    data-target="#modal-facc">Clique aqui para anexar
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <hr/>
-                                    <?php
-                                }
-                            }
+                                $banco = recuperaDados("pj_bancos", "pessoa_juridica_id", $idPj);
                             ?>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="banco">Banco:</label>
+                                    <select id="banco" name="banco" class="form-control">
+                                        <option value="">Selecione um banco...</option>
+                                        <?php
+                                        geraOpcao("bancos", $banco['banco_id']);
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="agencia">Agência:</label>
+                                    <input type="text" name="agencia" class="form-control"
+                                           placeholder="Digite a Agência" maxlength="12"
+                                           value="<?= $banco['agencia'] ?>">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="conta">Conta:</label>
+                                    <input type="text" name="conta" class="form-control"
+                                           placeholder="Digite a Conta" maxlength="12"
+                                           value="<?= $banco['conta'] ?>">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <?php
+                                    $sqlFACC= "SELECT * FROM arquivos WHERE lista_documento_id = 89 AND origem_id = '$idPj' AND publicado = 1";
+                                    $queryFACC = mysqli_query($con,$sqlFACC);
+
+                                    if (mysqli_num_rows($queryFACC) == 0){
+
+                                        ?>
+                                        <label>Gerar FACC</label><br>
+                                        <button type="button" class="btn btn-primary btn-block">Clique aqui para
+                                            gerar a FACC
+                                        </button>
+                                        <?php
+                                    }else {
+                                        ?>
+                                        <label>FACC anexada</label><br>
+                                        <button type="button" formaction="?perfil=evento&p=pj_demais_anexos" class="btn btn-primary btn-block">Visualizar
+                                            arquivos enviados
+                                        </button>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label>&nbsp;</label><br>
+                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                        no campo correspondente.</p>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <?php
+                                    anexosNaPagina(89, $idPj, "modal-facc", "FACC");
+                                    ?>
+                                </div>
+                            </div>
+                            <hr/>
+
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
@@ -480,7 +512,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                             </div>
 
                             <?php
-                            if ($pj['representante_legal1_id'] == null && $pj['representante_legal2_id'] == null ) {
+                            if ($pj['representante_legal1_id'] == null && $pj['representante_legal2_id'] == null) {
                                 ?>
                                 <div class="form-group col-md-3">
                                     <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
@@ -494,15 +526,16 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                     <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
                                         <input type="hidden" name="tipoRepresentante" value="2">
                                         <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
-                                                class="btn btn-info btn-block" >Representante 02
+                                                class="btn btn-info btn-block">Representante 02
                                         </button>
                                     </form>
                                 </div>
                                 <?php
-                            } elseif ($pj['representante_legal1_id'] != null ) {
+                            } elseif ($pj['representante_legal1_id'] != null) {
                                 ?>
                                 <div class="form-group col-md-3">
-                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>" class="btn btn-info btn-block"
+                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                            class="btn btn-info btn-block"
                                             id="modal" data-toggle="modal" data-target="#modal-representante-edita">
                                         Representante 01
                                     </button>
@@ -511,7 +544,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                     <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
                                         <input type="hidden" name="tipoRepresentante" value="2">
                                         <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
-                                                class="btn btn-info btn-block" >
+                                                class="btn btn-info btn-block">
                                             Representante 02
                                         </button>
                                     </form>
@@ -551,7 +584,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
         </div>
         <?php
         modalUploadArquivoUnico("modal-cnpj", "?perfil=evento&p=pj_edita", "CNPJ", "cartao_cnp", $idPj, "2");
-        modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pj_edita", "facc", "cartao_cnp", $idPj, "2");
+        modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pj_edita", "facc", "facc", $idPj, "2");
         ?>
 
     </section>
@@ -583,9 +616,9 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                             <label>CPOM</label>
                             <input type='file' id="cpom" name='arquivo[cpom]'>
                         </div>
-                    <?php
-                        }
-                        ?>
+                        <?php
+                    }
+                    ?>
                     <br/>
                     <input type="hidden" name="idPessoa" value="<?= $idPj ?>"/>
                     <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>"/>
@@ -608,7 +641,8 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                 <h4 class="modal-title">Representante Legal Cadastro</h4>
             </div>
             <div class="modal-body">
-                <p align='center'><strong>Nenhum representante cadastrado, clique no botão abaixo para cadastrar um novo!</strong></p>
+                <p align='center'><strong>Nenhum representante cadastrado, clique no botão abaixo para cadastrar um
+                        novo!</strong></p>
                 <form method="POST" action="?perfil=evento&p=represente_cadastro" enctype="multipart/form-data">
             </div>
             <div class="modal-footer">
@@ -621,11 +655,41 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
 </div>
 
 
-<script type="text/javascript">
+<!--.modal-->
+<div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirmação de Exclusão</h4>
+            </div>
+            <div class="modal-body text-center">
+                <p>Tem certeza que deseja excluir este arquivo?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="?perfil=evento&p=pj_edita" method="post">
+                    <input type="hidden" name="idArquivo" id="idArquivo" value="">
+                    <input type="hidden" name="idPj" id="idPj" value="<?= $idPj ?>">
+                    <input type="hidden" name="apagar" id="apagar">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                    </button>
+                    <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Apagar">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  Fim Modal de Upload de arquivo  -->
 
-    $("#modal").on("click", function () {
-        var footer = document.querySelector(".main-footer");
-        footer.style.display = "none";
+<script type="text/javascript">
+    $('#exclusao').on('show.bs.modal', function (e) {
+        let nome = $(e.relatedTarget).attr('data-nome');
+        let id = $(e.relatedTarget).attr('data-id');
+
+        $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
+        $(this).find('#idArquivo').attr('value', `${id}`);
+
     });
 
 </script>

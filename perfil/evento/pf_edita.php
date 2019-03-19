@@ -258,34 +258,48 @@ if (isset($_POST["enviar"])) {
                 $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
+                $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                $ext = strtolower(substr($nome_arquivo,-4));
 
-                if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                    $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPf', '$y', '$new_name', '$hoje', '1'); ";
-                    $query = mysqli_query($con, $sql_insere_arquivo);
+                if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                {
 
-                    if ($query) {
-                        $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                        gravarLog($sql_insere_arquivo);
+                    if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
+                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPf', '$y', '$new_name', '$hoje', '1'); ";
+                        $query = mysqli_query($con, $sql_insere_arquivo);
+
+                        if ($query) {
+                            $mensagem = mensagem("success", "Arquivo recebido com sucesso");
+                            gravarLog($sql_insere_arquivo);
+                        } else {
+                            $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                        }
                     } else {
-                        $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                        $mensagem = mensagem("danger", "Erro no upload");
                     }
                 } else {
-                    $mensagem = mensagem("danger", "Erro no upload");
+                    echo "<script>
+                            swal(\"Erro no upload! Anexar documentos somente no formato PDF.\", \"\", \"error\");                             
+                        </script>";
                 }
             }
         }
     }
 }
 
-if (isset($_POST['apagar'])) {
-    $idArquivo = $_POST['apagar'];
-    $sql_apagar_arquivo = "UPDATE upload_arquivo SET publicado = 0 WHERE id = '$idArquivo'";
-    if (mysqli_query($con, $sql_apagar_arquivo)) {
-        $mensagem = "<font color='#01DF3A'><strong>Arquivo apagado com sucesso!</strong></font>";
+if(isset($_POST['apagar']))
+{
+    $idArquivo = $_POST['idArquivo'];
+    $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
+    if(mysqli_query($con,$sql_apagar_arquivo))
+    {
+        $arq = recuperaDados("arquivos",$idArquivo,"id");
+        $mensagem = mensagem("success", "Arquivo ".$arq['arquivo']."apagado com sucesso!");
         gravarLog($sql_apagar_arquivo);
-    } else {
-        $mensagem = "<font color='#FF0000'><strong>Erro ao apagar arquivo! Tente novamente!</strong></font>";
-
+    }
+    else
+    {
+        $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
     }
 }
 
@@ -592,11 +606,10 @@ include "includes/menu_interno.php";
                                     <button type="button" formaction="?perfil=evento&p=pf_demais_anexos" class="btn btn-primary btn-block">Visualizar
                                         arquivos enviados
                                     </button>
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
-                                <?php
-                                }
-                                ?>
-
 
                                 <div class="form-group col-md-5">
                                     <label>&nbsp;</label><br>
@@ -662,6 +675,44 @@ include "includes/menu_interno.php";
     </section>
     <!-- /.content -->
 </div>
+
+<!--.modal-->
+<div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirmação de Exclusão</h4>
+            </div>
+            <div class="modal-body text-center">
+                <p>Tem certeza que deseja excluir este arquivo?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="?perfil=evento&p=pf_edita" method="post">
+                    <input type="hidden" name="idArquivo" id="idArquivo" value="">
+                    <input type="hidden" name="idPf" id="idPf" value="<?=$idPf?>">
+                    <input type="hidden" name="apagar" id="apagar">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                    </button>
+                    <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Apagar">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  Fim Modal de Upload de arquivo  -->
+
+<script type="text/javascript">
+    $('#exclusao').on('show.bs.modal', function (e) {
+        let nome = $(e.relatedTarget).attr('data-nome');
+        let id = $(e.relatedTarget).attr('data-id');
+
+        $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
+        $(this).find('#idArquivo').attr('value', `${id}`);
+
+    })
+</script>
 
 
 
