@@ -2,6 +2,7 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 $cpf = $_POST['documentacao'];
+$tipoRepresentante = $_SESSION['tipoRepresentante'];
 
 ?>
 
@@ -36,6 +37,7 @@ $cpf = $_POST['documentacao'];
 
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancelar</button>
+                                <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
                                 <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
                                     Cadastrar
                                 </button>

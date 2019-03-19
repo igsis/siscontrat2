@@ -5,7 +5,7 @@ $con = bancoMysqli();
 $idPedido = $_SESSION['idPedido'];
 
 if(isset($_POST['tipoRepresentante']) && isset($_POST['idPj'])) {
-    $_SESSION['tipoRepresentante'] = $_POST['tipoRepresentante'];
+    $tipoRepresentante = $_POST['tipoRepresentante'];
     $_SESSION['idPj'] = $_POST['idPj'];
     $idPj = $_SESSION['idPj'];
 }
@@ -25,6 +25,7 @@ if (isset($_POST['pesquisa'])) {
                             <td>".$resultado['rg']."</td>
                             <td>
                                 <input type='hidden' name='idRepresentante' value='".$resultado['id']."'>
+                                <input type='hidden' name='tipoRepresentante' value='".$tipoRepresentante."'>
                                 <button type='submit' class='btn btn-primary' name='carregar'>Selecionar</button>
                             </td>
                         </tr>
@@ -36,6 +37,7 @@ if (isset($_POST['pesquisa'])) {
                             <td>Representante não cadastrado</td>
                             <td>
                                 <input type='hidden' name='documentacao' value='".$cpf."'>
+                                <input type='hidden' name='tipoRepresentante' value='".$tipoRepresentante."'>
                                 <button type='submit' class='btn btn-primary' name='adicionar'><i class='glyphicon glyphicon-plus'></i> Adicionar</button>
                             </td>
                         </tr>

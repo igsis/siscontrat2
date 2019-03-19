@@ -546,15 +546,15 @@ if(isset($pj['representante_legal2_id'])){
                                 <div class="form-group col-md-3">
                                     <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                             class="btn btn-info btn-block" id="modal" data-toggle="modal"
-                                            data-target="#modal-representante-edita"
-                                            data-id="<?= $representante1['id'] ?>" data-nome="<?=$representante1['nome']?>">
+                                            data-target="#modal-representante-edita" data-tipo="1"
+                                            data-id="<?= $representante1['id'] ?>" data-nome="<?=$representante1['nome']?>" >
                                         Representante 01
                                     </button>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                             class="btn btn-info btn-block" id="modal" data-toggle="modal"
-                                            data-target="#modal-representante-edita"
+                                            data-target="#modal-representante-edita" data-tipo="2"
                                             data-id="<?= $representante2['id'] ?>" data-nome="<?=$representante2['nome']?>">
                                         Representante 02
                                     </button>
@@ -565,8 +565,8 @@ if(isset($pj['representante_legal2_id'])){
                                 <div class="form-group col-md-3">
                                     <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                             class="btn btn-info btn-block"
-                                            id="modal" data-toggle="modal" data-target="#modal-representante-edita"
-                                            data-id-representante="<?=$pj['representante_legal1_id']?>" data-representante="1">
+                                            id="modal" data-toggle="modal" data-target="#modal-representante-edita" data-tipo="1"
+                                            data-id="<?= $representante1['id'] ?>" data-nome="<?=$representante1['nome']?>">
                                         Representante 01
                                     </button>
                                 </div>
@@ -692,6 +692,7 @@ if(isset($pj['representante_legal2_id'])){
                     <div class="form-group col-md-6"><label><br></label>
                         <form method="POST" action="?perfil=evento&p=representante_edita" role="form">
                             <input type='hidden' name='idRepresentante' id='idRepresentante' value=''>
+                            <input type='hidden' name='tipoRepresentante' id='tipoRepresentante' value=''>
                             <button type="submit" name="carregar" class="btn btn-primary btn-block">
                                 Editar Representante
                             </button>
@@ -758,9 +759,11 @@ if(isset($pj['representante_legal2_id'])){
     $('#modal-representante-edita').on('show.bs.modal', function (e) {
         let representante = $(e.relatedTarget).attr('data-nome');
         let idRepresentate = $(e.relatedTarget).attr('data-id');
+        let tipoRepresentate = $(e.relatedTarget).attr('data-tipo');
 
         $(this).find('#representante').attr('value', `${representante}`);
         $(this).find('#idRepresentante').attr('value', `${idRepresentate}`);
+        $(this).find('#tipoRepresentante').attr('value', `${tipoRepresentate}`);
 
     });
 
