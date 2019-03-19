@@ -221,6 +221,14 @@ $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 $pj = recuperaDados("pessoa_juridicas", "id", $idPj);
 $end = recuperaDados("pj_enderecos", "pessoa_juridica_id", $idPj);
 $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
+
+if(isset($pj['representante_legal1_id'])){
+    $representante1 = recuperaDados('representante_legais', 'id', $pj['representante_legal1_id']);
+}
+
+if(isset($pj['representante_legal2_id'])){
+    $representante2 = recuperaDados('representante_legais', 'id', $pj['representante_legal2_id']);
+}
 ?>
 
 <script>
@@ -533,12 +541,32 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                     </form>
                                 </div>
                                 <?php
+                            } elseif ($pj['representante_legal1_id'] != null && $pj['representante_legal2_id'] != null) {
+                                ?>
+                                <div class="form-group col-md-3">
+                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                            class="btn btn-info btn-block" id="modal" data-toggle="modal"
+                                            data-target="#modal-representante-edita"
+                                            data-id="<?=$representante1['id']?>" data-nome="<?=$representante1['nome']?>">
+                                        Representante 01
+                                    </button>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                            class="btn btn-info btn-block" id="modal" data-toggle="modal"
+                                            data-target="#modal-representante-edita"
+                                            data-id="<?=$representante2['id']?>" data-nome="<?=$representante2['nome']?>">
+                                       <?php echo $representante2['nome'] ?> Representante 02
+                                    </button>
+                                </div>
+                                <?php
                             } elseif ($pj['representante_legal1_id'] != null) {
                                 ?>
                                 <div class="form-group col-md-3">
                                     <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                             class="btn btn-info btn-block"
-                                            id="modal" data-toggle="modal" data-target="#modal-representante-edita">
+                                            id="modal" data-toggle="modal" data-target="#modal-representante-edita"
+                                            data-id-representante="<?=$pj['representante_legal1_id']?>" data-representante="1">
                                         Representante 01
                                     </button>
                                 </div>
@@ -552,22 +580,7 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                                     </form>
                                 </div>
                                 <?php
-                            } else {
-                                ?>
-                                <div class="form-group col-md-3">
-                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>"
-                                            class="btn btn-info btn-block" id="modal" data-toggle="modal"
-                                            data-target="#modal-representante-edita">Representante 01
-                                    </button>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <button type="submit" name="edita" value="<?= $pj['id'] ?>"
-                                            class="btn btn-info btn-block" id="modal" data-toggle="modal"
-                                            data-target="#modal-representante-edita">Representante 02
-                                    </button>
-                                </div>
-                                <?php
-                            }
+                                }
                             ?>
 
                             <div class="form-group col-md-3">
@@ -659,18 +672,37 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
     </div>
 </div>
 
-<div class="modal fade" id="modal-representante-cadastro">
+<div class="modal fade" id="modal-representante-edita" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Representante Legal Cadastro</h4>
+                <h4 class="modal-title">Representante Legal Edição</h4>
             </div>
             <div class="modal-body">
-                <p align='center'><strong>Nenhum representante cadastrado, clique no botão abaixo para cadastrar um
-                        novo!</strong></p>
-                <form method="POST" action="?perfil=evento&p=represente_cadastro" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <label for="proponente">Representante</label>
+                        <input type='text' name='idRepresentante' id='idRepresentante' value=''>
+                        <input type="text" id="representante" name="representante" class="form-control" disabled
+                               value="">
+                    </div>
+                    <div class="form-group col-md-2"><label><br></label>
+                        <form method="POST" action="?perfil=evento&p=representante_edita" role="form">
+                            <button type="submit" name="carregar" class="btn btn-primary btn-block">
+                                Editar Representante
+                            </button>
+                        </form>
+                    </div>
+                    <div class="form-group col-md-2"><label><br></label>
+                        <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                            <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
+                                Representante
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="submit" name="cadastra" class="btn btn-success">Cadastrar</button>
@@ -716,6 +748,17 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
 
         $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
         $(this).find('#idArquivo').attr('value', `${id}`);
+
+    });
+
+
+
+    $('#modal-representante-edita').on('show.bs.modal', function (e) {
+        let representante = $(e.relatedTarget).attr('data-nome');
+        let idRepresentate = $(e.relatedTarget).attr('data-id');
+
+        $(this).find('#representante').attr('value', `${representante}`);
+        $(this).find('#idRepresentante').attr('value', `${idRepresentate}`);
 
     });
 
