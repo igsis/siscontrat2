@@ -33,7 +33,7 @@ if(isset($_POST["enviar"])) {
                         if ($query) {
                             $mensagem = mensagem("success", "Arquivo recebido com sucesso");
                             echo "<script>
-                                swal(\"Clique nos arquivos após efetuar o upload e confira a exibição do documento!\", \"\", \"warning\");                             
+                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
                             </script>";
                             gravarLog($sql_insere_arquivo);
                         } else {
@@ -44,7 +44,7 @@ if(isset($_POST["enviar"])) {
                     }
                 } else {
                     echo "<script>
-                            swal(\"Erro no upload! Anexar documentos somente no formato PDF.\", \"\", \"error\");                             
+                            swal('Erro no upload! Anexar documentos somente no formato PDF.', '', 'error');                             
                         </script>";
                 }
             }

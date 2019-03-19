@@ -176,13 +176,15 @@ if (isset($_POST["enviar"])) {
 
                 if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
                 {
-
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
                         $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPj', '$y', '$new_name', '$hoje', '1'); ";
                         $query = mysqli_query($con, $sql_insere_arquivo);
 
                         if ($query) {
                             $mensagem = mensagem("success", "Arquivo recebido com sucesso");
+                            echo "<script>
+                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
+                            </script>";
                             gravarLog($sql_insere_arquivo);
                         } else {
                             $mensagem = mensagem("danger", "Erro ao gravar no banco");
@@ -192,7 +194,7 @@ if (isset($_POST["enviar"])) {
                     }
                 } else {
                     echo "<script>
-                            swal(\"Erro no upload! Anexar documentos somente no formato PDF.\", \"\", \"error\");                             
+                            swal('Erro no upload! Anexar documentos somente no formato PDF.', '', 'error');                             
                         </script>";
                 }
             }
@@ -569,12 +571,37 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
                             ?>
 
                             <div class="form-group col-md-3">
-                                <form method="POST" action="?perfil=evento&p=pedido_cadastro" role="form">
-                                    <input type="hidden" name="pessoa_tipo_id" value="2">
-                                    <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
-                                    <button type="submit" class="btn btn-info btn-block">Ir ao pedido de contratação
-                                    </button>
-                                </form>
+                                <?php
+                                $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1";
+                                $queryPedidos = mysqli_query($con, $sqlPedidos);
+                                $pedidos = mysqli_fetch_array($queryPedidos);
+
+                                if (($pedidos['pessoa_tipo_id'] == 2) && ($pedidos['pessoa_juridica_id'] == $idPj) ) {
+
+                                    ?>
+                                    <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                                        <input type="hidden" name="pessoa_tipo_id" value="1">
+                                        <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
+                                        <input type="hidden" name="idProponente" value="<?= $pj['id'] ?>">
+                                        <input type="hidden" name="tipoPessoa" value="1">
+                                        <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
+                                            contratação
+                                        </button>
+                                    </form>
+
+                                    <?php
+                                }else {
+                                    ?>
+                                    <form method="POST" action="?perfil=evento&p=pedido_cadastro" role="form">
+                                        <input type="hidden" name="pessoa_tipo_id" value="2">
+                                        <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
+                                        <button type="submit" class="btn btn-info btn-block">Ir ao pedido de
+                                            contratação
+                                        </button>
+                                    </form>
+                                    <?php
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>

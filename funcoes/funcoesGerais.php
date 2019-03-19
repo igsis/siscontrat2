@@ -1152,7 +1152,7 @@ function anexosNaPagina ($idDocumento, $idPessoa, $nomeModal, $documento) {
         <label style='margin-top: 10px;'>". $documento ." anexado no dia: " . exibirDataBr($doc['data']). "</label>
         <br>
         <div class='form-group' style='display: flex; align-items: center;'>
-        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' 
+        <button class='btn-sm btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' 
             data-target='#exclusao' data-id='". $doc['id'] ."' data-nome='" . $doc['arquivo'] . "'>
          </button> &nbsp;&nbsp;
         <a href='../uploadsdocs/". $doc['arquivo'] . "' target='_blank'>" .
