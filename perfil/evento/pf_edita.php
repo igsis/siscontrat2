@@ -258,34 +258,50 @@ if (isset($_POST["enviar"])) {
                 $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
+                $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                $ext = strtolower(substr($nome_arquivo,-4));
 
-                if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                    $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPf', '$y', '$new_name', '$hoje', '1'); ";
-                    $query = mysqli_query($con, $sql_insere_arquivo);
+                if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                {
+                    if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
+                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPf', '$y', '$new_name', '$hoje', '1'); ";
+                        $query = mysqli_query($con, $sql_insere_arquivo);
 
-                    if ($query) {
-                        $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                        gravarLog($sql_insere_arquivo);
+                        if ($query) {
+                            $mensagem = mensagem("success", "Arquivo recebido com sucesso");
+                            echo "<script>
+                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
+                            </script>";
+                            gravarLog($sql_insere_arquivo);
+                        } else {
+                            $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                        }
                     } else {
-                        $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                        $mensagem = mensagem("danger", "Erro no upload");
                     }
                 } else {
-                    $mensagem = mensagem("danger", "Erro no upload");
+                    echo "<script>
+                            swal(\"Erro no upload! Anexar documentos somente no formato PDF.\", \"\", \"error\");                             
+                        </script>";
                 }
             }
         }
     }
 }
 
-if (isset($_POST['apagar'])) {
-    $idArquivo = $_POST['apagar'];
-    $sql_apagar_arquivo = "UPDATE upload_arquivo SET publicado = 0 WHERE id = '$idArquivo'";
-    if (mysqli_query($con, $sql_apagar_arquivo)) {
-        $mensagem = "<font color='#01DF3A'><strong>Arquivo apagado com sucesso!</strong></font>";
+if(isset($_POST['apagar']))
+{
+    $idArquivo = $_POST['idArquivo'];
+    $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
+    if(mysqli_query($con,$sql_apagar_arquivo))
+    {
+        $arq = recuperaDados("arquivos",$idArquivo,"id");
+        $mensagem = mensagem("success", "Arquivo ".$arq['arquivo']."apagado com sucesso!");
         gravarLog($sql_apagar_arquivo);
-    } else {
-        $mensagem = "<font color='#FF0000'><strong>Erro ao apagar arquivo! Tente novamente!</strong></font>";
-
+    }
+    else
+    {
+        $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
     }
 }
 
@@ -549,57 +565,66 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <hr/>
-                            <?php
-                            foreach ($atracao as $row) {
-                                if ($row['valor_individual'] != 0.00) {
-                                    ?>
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="banco">Banco:</label>
-                                            <select id="banco" name="banco" class="form-control">
-                                                <option value="">Selecione um banco...</option>
-                                                <?php
-                                                geraOpcao("bancos", $banco['banco_id']);
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="agencia">Agência: *</label>
-                                            <input type="text" name="agencia" class="form-control"
-                                                   placeholder="Digite a Agência" maxlength="12" required
-                                                   value="<?= $banco['agencia'] ?>">
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="conta">Conta: *</label>
-                                            <input type="text" name="conta" class="form-control"
-                                                   placeholder="Digite a Conta" maxlength="12" required
-                                                   value="<?= $banco['conta'] ?>">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-md-3">
-                                            <label>Gerar FACC</label><br>
-                                            <button type="button" class="btn btn-primary btn-block">Clique aqui para
-                                                gerar a FACC
-                                            </button>
-                                        </div>
-                                        <div class="form-group col-md-5">
-                                            <label>&nbsp;</label><br>
-                                            <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                                documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                                no campo correspondente.</p>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label>Anexo FACC</label><br>
-                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                    data-target="#modal-facc">Clique aqui para anexar
-                                            </button>
-                                        </div>
-                                    </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="banco">Banco:</label>
+                                    <select id="banco" name="banco" class="form-control">
+                                        <option value="">Selecione um banco...</option>
+                                        <?php
+                                        geraOpcao("bancos", $banco['banco_id']);
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="agencia">Agência: *</label>
+                                    <input type="text" name="agencia" class="form-control"
+                                           placeholder="Digite a Agência" maxlength="12" required
+                                           value="<?= $banco['agencia'] ?>">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="conta">Conta: *</label>
+                                    <input type="text" name="conta" class="form-control"
+                                           placeholder="Digite a Conta" maxlength="12" required
+                                           value="<?= $banco['conta'] ?>">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
                                     <?php
-                                }
-                            }
-                            ?>
+                                    $sqlFACC= "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
+                                    $queryFACC = mysqli_query($con,$sqlFACC);
+
+                                    if (mysqli_num_rows($queryFACC) == 0){
+
+                                    ?>
+                                    <label>Gerar FACC</label><br>
+                                    <button type="button" class="btn btn-primary btn-block">Clique aqui para
+                                        gerar a FACC
+                                    </button>
+                                        <?php
+                                    }else {
+                                    ?>
+                                    <label>FACC anexada</label><br>
+                                    <button type="button" formaction="?perfil=evento&p=pf_demais_anexos" class="btn btn-primary btn-block">Visualizar
+                                        arquivos enviados
+                                    </button>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+
+                                <div class="form-group col-md-5">
+                                    <label>&nbsp;</label><br>
+                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                        no campo correspondente.</p>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <?php
+                                    anexosNaPagina(51, $idPf, "modal-facc", "FACC");
+                                    ?>
+                                </div>
+                            </div>
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
@@ -626,12 +651,37 @@ include "includes/menu_interno.php";
                                 </form>
                             </div>
                             <div class="form-group col-md-3 pull-right">
-                                <form method="POST" action="?perfil=evento&p=pedido_cadastro" role="form">
-                                    <input type="hidden" name="pessoa_tipo_id" value="1">
-                                    <input type="hidden" name="pessoa_id" value="<?= $pf['id'] ?>">
-                                    <button type="submit" class="btn btn-info btn-block">Ir ao pedido de contratação
-                                    </button>
-                                </form>
+                                <?php
+                                    $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1";
+                                    $queryPedidos = mysqli_query($con, $sqlPedidos);
+                                    $pedidos = mysqli_fetch_array($queryPedidos);
+
+                                    if (($pedidos['pessoa_tipo_id'] == 1) && ($pedidos['pessoa_fisica_id'] == $idPf) ) {
+
+                                        ?>
+                                        <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                                            <input type="hidden" name="pessoa_tipo_id" value="1">
+                                            <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
+                                            <input type="hidden" name="idProponente" value="<?= $pf['id'] ?>">
+                                            <input type="hidden" name="tipoPessoa" value="1">
+                                            <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
+                                                contratação
+                                            </button>
+                                        </form>
+
+                                        <?php
+                                    }else {
+                                        ?>
+                                        <form method="POST" action="?perfil=evento&p=pedido_cadastro" role="form">
+                                            <input type="hidden" name="pessoa_tipo_id" value="1">
+                                            <input type="hidden" name="pessoa_id" value="<?= $pf['id'] ?>">
+                                            <button type="submit" class="btn btn-info btn-block">Ir ao pedido de
+                                                contratação
+                                            </button>
+                                        </form>
+                                        <?php
+                                    }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -645,12 +695,51 @@ include "includes/menu_interno.php";
         modalUploadArquivoUnico("modal-cpf", "?perfil=evento&p=pf_edita", "CPF", "cpf", $idPf, "1");
         modalUploadArquivoUnico("modal-ccm", "?perfil=evento&p=pf_edita", "FDC - CCM", "ccm", $idPf, "1");
         modalUploadArquivoUnico("modal-nit", "?perfil=evento&p=pf_edita", "NIT", "pis_pasep_", $idPf, "1");
+        modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pf_edita", "FACC", "faq", $idPf, "1");
         modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprovante de endereço", "residencia", $idPf, "1");
         ?>
 
     </section>
     <!-- /.content -->
 </div>
+
+<!--.modal-->
+<div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirmação de Exclusão</h4>
+            </div>
+            <div class="modal-body text-center">
+                <p>Tem certeza que deseja excluir este arquivo?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="?perfil=evento&p=pf_edita" method="post">
+                    <input type="hidden" name="idArquivo" id="idArquivo" value="">
+                    <input type="hidden" name="idPf" id="idPf" value="<?=$idPf?>">
+                    <input type="hidden" name="apagar" id="apagar">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                    </button>
+                    <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Apagar">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  Fim Modal de Upload de arquivo  -->
+
+<script type="text/javascript">
+    $('#exclusao').on('show.bs.modal', function (e) {
+        let nome = $(e.relatedTarget).attr('data-nome');
+        let id = $(e.relatedTarget).attr('data-id');
+
+        $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
+        $(this).find('#idArquivo').attr('value', `${id}`);
+
+    })
+</script>
 
 
 

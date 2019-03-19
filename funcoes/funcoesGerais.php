@@ -1151,11 +1151,136 @@ function anexosNaPagina ($idDocumento, $idPessoa, $nomeModal, $documento) {
         echo"
         <label style='margin-top: 10px;'>". $documento ." anexado no dia: " . exibirDataBr($doc['data']). "</label>
         <br>
-        <a class='link' href='../uploadsdocs/". $doc['arquivo'] ."' 
-        target='_blank'>" . mb_strimwidth($doc['arquivo'], 15, 25, '...') . "</a>";
+        <div class='form-group' style='display: flex; align-items: center;'>
+        <button class='btn-sm btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' 
+            data-target='#exclusao' data-id='". $doc['id'] ."' data-nome='" . $doc['arquivo'] . "'>
+         </button> &nbsp;&nbsp;
+        <a href='../uploadsdocs/". $doc['arquivo'] . "' target='_blank'>" .
+            mb_strimwidth($doc['arquivo'], 15, 25, '...') .  "</a></div>";
     }
 }
 
 
+function listaLocais($idEvento)
+{
+    $con = bancoMysqli();
+    $sql_virada = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1' AND virada = '1'";
+    $query_virada = mysqli_query($con,$sql_virada);
+    $num = mysqli_num_rows($query_virada);
+    if($num > 0)
+    {
+        $locais = " DE ACORDO COM PROGRAMAÇÃO DO EVENTO NO PERÍODO DA VIRADA CULTURAL.";
+    }
+    else
+    {
+        $sql = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1'";
+        $query = mysqli_query($con, $sql);
+        $locais = "";
+        while($local = mysqli_fetch_array($query))
+        {
+            $sala = recuperaDados("locais", 'id', $local['local_id']);
+            $instituicao = recuperaDados("instituicoes", 'id', $sala['instituicao_id']);
+            $locais = $locais." ".$sala['local']." (".$instituicao['sigla'].") - ";
+        }
+    }
+    $locais = substr($locais, 0, strlen($locais) - 3);
+    $locais = $locais . ".";
+    return $locais;
+}
 
-?>
+function retornaPeriodoNovo($id)
+{
+    //retorna o período
+    $con = bancoMysqli();
+    $sql_virada = "SELECT DISTINCT oco.local_id FROM ocorrencias oco INNER JOIN atracoes atr ON atr.id = oco.origem_ocorrencia_id WHERE atr.evento_id = '$id' AND oco.publicado = '1' AND virada = '1' ";
+    $query_virada = mysqli_query($con,$sql_virada);
+    $num = mysqli_num_rows($query_virada);
+    if($num > 0)
+    {
+        $sql_anterior = "SELECT * FROM ocorrencias oco INNER JOIN atracoes atr ON atr.id = oco.origem_ocorrencia_id WHERE atr.evento_id = '$id' AND oco.publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1"; //a data inicial mais antecedente
+        $query_anterior = mysqli_query($con,$sql_anterior);
+        $data = mysqli_fetch_array($query_anterior);
+        $data_inicio = $data['dataInicio'];
+        $sql_posterior01 = "SELECT * FROM ocorrencias oco INNER JOIN atracoes atr ON atr.id = oco.origem_ocorrencia_id WHERE atr.evento_id = '$id' AND oco.publicado = '1' ORDER BY data_fim DESC LIMIT 0,1"; //quando existe data final
+        $sql_posterior02 = "SELECT * FROM ocorrencias oco INNER JOIN atracoes atr ON atr.id = oco.origem_ocorrencia_id WHERE atr.evento_id = '$id' AND oco.publicado = '1' ORDER BY data_inicio DESC LIMIT 0,1"; //quando há muitas datas únicas
+        $query_anterior01 = mysqli_query($con,$sql_posterior01);
+        $data = mysqli_fetch_array($query_anterior01);
+        $num = mysqli_num_rows($query_anterior01);
+        if(($data['data_fim'] != '0000-00-00') OR ($data['data_fim'] != NULL))
+        {
+            //se existe uma data final e que é diferente de NULO
+            $dataFinal01 = $data['data_fim'];
+        }
+        $query_anterior02 = mysqli_query($con,$sql_posterior02); //recupera a data única mais tarde
+        $data = mysqli_fetch_array($query_anterior02);
+        $dataFinal02 = $data['data_inicio'];
+        if(isset($dataFinal01))
+        {
+            //se existe uma temporada, compara com a última data única
+            if($dataFinal01 > $dataFinal02)
+            {
+                $dataFinal = $dataFinal01;
+            }
+            else
+            {
+                $dataFinal = $dataFinal02;
+            }
+        }
+        else
+        {
+            $dataFinal = $dataFinal02;
+        }
+        if($data_inicio == $dataFinal)
+        {
+            return exibirDataBr($data_inicio)." DE ACORDO COM PROGRAMAÇÃO DO EVENTO NO PERÍODO DA VIRADA CULTURAL.";
+        }
+        else
+        {
+            return "de ".exibirDataBr($data_inicio)." a ".exibirDataBr($dataFinal)." DE ACORDO COM PROGRAMAÇÃO DO EVENTO NO PERÍODO DA VIRADA CULTURAL.";
+        }
+    }
+    else
+    {
+        $sql_anterior = "SELECT * FROM ocorrencias oco INNER JOIN atracoes atr ON atr.id = oco.origem_ocorrencia_id WHERE atr.evento_id = '$id' AND oco.publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1"; //a data inicial mais antecedente
+        $query_anterior = mysqli_query($con,$sql_anterior);
+        $data = mysqli_fetch_array($query_anterior);
+        $data_inicio = $data['data_inicio'];
+        $sql_posterior01 = "SELECT * FROM ocorrencias oco INNER JOIN atracoes atr ON atr.id = oco.origem_ocorrencia_id WHERE atr.evento_id = '$id' AND oco.publicado = '1' ORDER BY data_fim DESC LIMIT 0,1"; //quando existe data final
+        $sql_posterior02 = "SELECT * FROM ocorrencias oco INNER JOIN atracoes atr ON atr.id = oco.origem_ocorrencia_id WHERE atr.evento_id = '$id' AND oco.publicado = '1' ORDER BY data_inicio DESC LIMIT 0,1"; //quando há muitas datas únicas
+        $query_anterior01 = mysqli_query($con,$sql_posterior01);
+        $data = mysqli_fetch_array($query_anterior01);
+        $num = mysqli_num_rows($query_anterior01);
+        if(($data['data_fim'] != '0000-00-00') OR ($data['data_fim'] != NULL))
+        {
+            //se existe uma data final e que é diferente de NULO
+            $dataFinal01 = $data['data_fim'];
+        }
+        $query_anterior02 = mysqli_query($con,$sql_posterior02); //recupera a data única mais tarde
+        $data = mysqli_fetch_array($query_anterior02);
+        $dataFinal02 = $data['data_inicio'];
+        if(isset($dataFinal01))
+        {
+            //se existe uma temporada, compara com a última data única
+            if($dataFinal01 > $dataFinal02)
+            {
+                $dataFinal = $dataFinal01;
+            }
+            else
+            {
+                $dataFinal = $dataFinal02;
+            }
+        }
+        else
+        {
+            $dataFinal = $dataFinal02;
+        }
+        if($data_inicio == $dataFinal)
+        {
+            return exibirDataBr($data_inicio);
+        }
+        else
+        {
+            return "de ".exibirDataBr($data_inicio)." a ".exibirDataBr($dataFinal);
+        }
+    }
+}

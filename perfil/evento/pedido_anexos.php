@@ -21,19 +21,31 @@ if(isset($_POST["enviar"])) {
                 $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
+                $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                $ext = strtolower(substr($nome_arquivo,-4));
 
-                if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                    $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPedido', '$y', '$new_name', '$hoje', '1'); ";
-                    $query = mysqli_query($con, $sql_insere_arquivo);
+                if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                {
+                    if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
+                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPedido', '$y', '$new_name', '$hoje', '1'); ";
+                        $query = mysqli_query($con, $sql_insere_arquivo);
 
-                    if ($query) {
-                        $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                        gravarLog($sql_insere_arquivo);
+                        if ($query) {
+                            $mensagem = mensagem("success", "Arquivo recebido com sucesso");
+                            echo "<script>
+                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
+                            </script>";
+                            gravarLog($sql_insere_arquivo);
+                        } else {
+                            $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                        }
                     } else {
-                        $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                        $mensagem = mensagem("danger", "Erro no upload");
                     }
-                } else {
-                    $mensagem = mensagem("danger", "Erro no upload");
+                }else {
+                    echo "<script>
+                            swal('Erro no upload! Anexar documentos somente no formato PDF.', '', 'error');                             
+                        </script>";
                 }
             }
         }
@@ -79,7 +91,7 @@ if(isset($_POST['apagar']))
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1 text-center">
-                                <div class="table-responsive list_info"><h4><strong>Se na lista abaixo, o seu arquivo começar com "http://", por favor, clique, grave em seu computador, faça o upload novamente e apague a ocorrência citada.</strong></h4><br>
+                                <div class="table-responsive list_info"><h4><strong>Update de arquivos somente em PDF!</strong></h4><br>
                             <?php
                             //lista arquivos de determinado pedido
                             $sql = "SELECT * FROM lista_documentos as list
@@ -111,7 +123,7 @@ if(isset($_POST['apagar']))
                                     echo "
                                           <td class='list_description'>
                                                     <form id='formExcliuir' method='POST'>
-                                                        <button class='btn btn-danger' type='button' data-toggle='modal' data-target='#exclusao' data-nome='" . $arquivo['arquivo'] . "' data-id='". $arquivo['id'] ."' data-pessoa='". $tipoPessoa."'>Remover
+                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' data-nome='" . $arquivo['arquivo'] . "' data-id='". $arquivo['id'] ."' data-pessoa='". $tipoPessoa."'>
                                                         </button></td>
                                                     </form>";
                                     echo "</tr>";
@@ -147,14 +159,24 @@ if(isset($_POST['apagar']))
                                                 $query_arquivos = mysqli_query($con,$sql_arquivos);
                                                 while($arq = mysqli_fetch_array($query_arquivos))
                                                 {
-                                                    ?>
-                                                    <tr>
-                                                        <td><label><?php echo $arq['documento']?></label></td><td><input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'></td>
-                                                    </tr>
-                                                    <?php
-                                                }
-                                                ?>
+                                                    $idDoc = $arq['id'];
+                                                    $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = '$idDoc' AND origem_id = '$idPedido' AND publicado = 1";
+                                                    $queryExistentes = mysqli_query($con, $sqlExistentes);
 
+                                                    if (mysqli_num_rows($queryExistentes) == 0) {
+                                                        ?>
+                                                        <tr>
+                                                            <td>
+                                                                <label><?php echo $arq['documento'] ?></label>
+                                                            </td>
+                                                            <td>
+                                                                <input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'>
+                                                            </td>
+                                                        </tr>
+                                                        <?php
+                                                    }
+                                                }
+                                                    ?>
                                                 </tbody>
                                             </table>
                                             <br>
@@ -193,13 +215,18 @@ if(isset($_POST['apagar']))
                                                 </form>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                                 <!--  Fim Modal de Upload de arquivo  -->
                             </div>
                         </div>
                     </div>
+                        <div class="box-footer">
+                            <form action="?perfil=evento&p=pedido_edita" method="post">
+                                <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
+                                <button type="submit" name="Voltar" class="btn btn-default pull-left">Voltar</button>
+                            </form>
+                        </div>
                 </div>
             </div>
         </div>
