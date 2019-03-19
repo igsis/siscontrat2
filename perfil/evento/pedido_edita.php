@@ -6,8 +6,9 @@ $tipoPessoa = $_POST['tipoPessoa'];
 
 if (isset($_POST['carregar'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
+    $idPedido = $_SESSION['idPedido'];
 }
-$idPedido = $_SESSION['idPedido'];
+
 
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {

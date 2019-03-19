@@ -549,57 +549,67 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <hr/>
-                            <?php
-                            foreach ($atracao as $row) {
-                                if ($row['valor_individual'] != 0.00) {
-                                    ?>
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="banco">Banco:</label>
-                                            <select id="banco" name="banco" class="form-control">
-                                                <option value="">Selecione um banco...</option>
-                                                <?php
-                                                geraOpcao("bancos", $banco['banco_id']);
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="agencia">Agência: *</label>
-                                            <input type="text" name="agencia" class="form-control"
-                                                   placeholder="Digite a Agência" maxlength="12" required
-                                                   value="<?= $banco['agencia'] ?>">
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="conta">Conta: *</label>
-                                            <input type="text" name="conta" class="form-control"
-                                                   placeholder="Digite a Conta" maxlength="12" required
-                                                   value="<?= $banco['conta'] ?>">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-md-3">
-                                            <label>Gerar FACC</label><br>
-                                            <button type="button" class="btn btn-primary btn-block">Clique aqui para
-                                                gerar a FACC
-                                            </button>
-                                        </div>
-                                        <div class="form-group col-md-5">
-                                            <label>&nbsp;</label><br>
-                                            <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                                documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                                no campo correspondente.</p>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label>Anexo FACC</label><br>
-                                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                                    data-target="#modal-facc">Clique aqui para anexar
-                                            </button>
-                                        </div>
-                                    </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="banco">Banco:</label>
+                                    <select id="banco" name="banco" class="form-control">
+                                        <option value="">Selecione um banco...</option>
+                                        <?php
+                                        geraOpcao("bancos", $banco['banco_id']);
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="agencia">Agência: *</label>
+                                    <input type="text" name="agencia" class="form-control"
+                                           placeholder="Digite a Agência" maxlength="12" required
+                                           value="<?= $banco['agencia'] ?>">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="conta">Conta: *</label>
+                                    <input type="text" name="conta" class="form-control"
+                                           placeholder="Digite a Conta" maxlength="12" required
+                                           value="<?= $banco['conta'] ?>">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
                                     <?php
+                                    $sqlFACC= "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
+                                    $queryFACC = mysqli_query($con,$sqlFACC);
+
+                                    if (mysqli_num_rows($queryFACC) == 0){
+
+                                    ?>
+                                    <label>Gerar FACC</label><br>
+                                    <button type="button" class="btn btn-primary btn-block">Clique aqui para
+                                        gerar a FACC
+                                    </button>
+                                        <?php
+                                    }else {
+                                    ?>
+                                    <label>FACC anexada</label><br>
+                                    <button type="button" formaction="?perfil=evento&p=pf_demais_anexos" class="btn btn-primary btn-block">Visualizar
+                                        arquivos enviados
+                                    </button>
+                                </div>
+                                <?php
                                 }
-                            }
-                            ?>
+                                ?>
+
+
+                                <div class="form-group col-md-5">
+                                    <label>&nbsp;</label><br>
+                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                        no campo correspondente.</p>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <?php
+                                    anexosNaPagina(51, $idPf, "modal-facc", "FACC");
+                                    ?>
+                                </div>
+                            </div>
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
@@ -645,6 +655,7 @@ include "includes/menu_interno.php";
         modalUploadArquivoUnico("modal-cpf", "?perfil=evento&p=pf_edita", "CPF", "cpf", $idPf, "1");
         modalUploadArquivoUnico("modal-ccm", "?perfil=evento&p=pf_edita", "FDC - CCM", "ccm", $idPf, "1");
         modalUploadArquivoUnico("modal-nit", "?perfil=evento&p=pf_edita", "NIT", "pis_pasep_", $idPf, "1");
+        modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pf_edita", "FACC", "faq", $idPf, "1");
         modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprovante de endereço", "residencia", $idPf, "1");
         ?>
 

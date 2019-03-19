@@ -1,7 +1,6 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-$idPedido = $_SESSION['idPedido'];
 $idPf = $_POST['idPf'];
 $tipoPessoa = 1; // arquivos necessarios para pessoa fisica
 
@@ -134,7 +133,7 @@ if(isset($_POST['apagar']))
                                     <div class="col-md-10 col-md-offset-1">
                                         <br />
                                         <div class="center">
-                                            <form method="POST" action="?perfil=evento&p=pf_anexos" enctype="multipart/form-data">
+                                            <form method="POST" action="?perfil=evento&p=pf_demais_anexos" enctype="multipart/form-data">
                                                 <table class="table text-center table-striped">
                                                     <tbody>
                                                     <tr>
@@ -144,15 +143,25 @@ if(isset($_POST['apagar']))
                                                         <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 60MB.</h4>
                                                     </tr>
                                                     <?php
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (2, 3, 25, 31, 51, 60, 62) AND tipo_documento_id = '$tipoPessoa' and publicado = 1";
                                                     $query_arquivos = mysqli_query($con,$sql_arquivos);
                                                     while($arq = mysqli_fetch_array($query_arquivos))
                                                     {
+                                                        $idDoc = $arq['id'];
+                                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = '$idDoc' AND origem_id = '$idPf' AND publicado = 1";
+                                                        $queryExistentes = mysqli_query($con, $sqlExistentes);
+
+                                                    if (mysqli_num_rows($queryExistentes) == 0) {
+
                                                         ?>
                                                         <tr>
-                                                            <td><label><?php echo $arq['documento']?></label></td><td><input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'></td>
+                                                            <td><label><?php echo $arq['documento'] ?></label></td>
+                                                            <td>
+                                                                <input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'>
+                                                            </td>
                                                         </tr>
                                                         <?php
+                                                    }
                                                     }
                                                     ?>
 
@@ -184,7 +193,7 @@ if(isset($_POST['apagar']))
                                                     <p>Tem certeza que deseja excluir este arquivo?</p>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <form action="?perfil=evento&p=pf_anexos" method="post">
+                                                    <form action="?perfil=evento&p=pf_demais_anexos" method="post">
                                                         <input type="hidden" name="idArquivo" id="idArquivo" value="">
                                                         <input type="hidden" name="tipoPessoa" id="tipoPessoa" value="">
                                                         <input type="hidden" name="idPf" id="idPf" value="<?=$idPf?>">
