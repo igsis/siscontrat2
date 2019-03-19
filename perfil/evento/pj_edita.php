@@ -547,7 +547,7 @@ if(isset($pj['representante_legal2_id'])){
                                     <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                             class="btn btn-info btn-block" id="modal" data-toggle="modal"
                                             data-target="#modal-representante-edita"
-                                            data-id="<?=$representante1['id']?>" data-nome="<?=$representante1['nome']?>">
+                                            data-id="<?= $representante1['id'] ?>" data-nome="<?=$representante1['nome']?>">
                                         Representante 01
                                     </button>
                                 </div>
@@ -555,8 +555,8 @@ if(isset($pj['representante_legal2_id'])){
                                     <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                             class="btn btn-info btn-block" id="modal" data-toggle="modal"
                                             data-target="#modal-representante-edita"
-                                            data-id="<?=$representante2['id']?>" data-nome="<?=$representante2['nome']?>">
-                                       <?php echo $representante2['nome'] ?> Representante 02
+                                            data-id="<?= $representante2['id'] ?>" data-nome="<?=$representante2['nome']?>">
+                                        Representante 02
                                     </button>
                                 </div>
                                 <?php
@@ -678,24 +678,26 @@ if(isset($pj['representante_legal2_id'])){
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Representante Legal Edição</h4>
+                <h4 class="modal-title">Representante Legal</h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body text-center">
                 <div class="row">
-                    <div class="form-group col-md-8">
-                        <label for="proponente">Representante</label>
-                        <input type='text' name='idRepresentante' id='idRepresentante' value=''>
-                        <input type="text" id="representante" name="representante" class="form-control" disabled
+                    <div class="form-group col-md-12">
+                        <label for="proponente">Representante cadastrado</label>
+                        <br><input type="text" id="representante" name="representante" class="form-control text-center" disabled
                                value="">
                     </div>
-                    <div class="form-group col-md-2"><label><br></label>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group col-md-6"><label><br></label>
                         <form method="POST" action="?perfil=evento&p=representante_edita" role="form">
+                            <input type='hidden' name='idRepresentante' id='idRepresentante' value=''>
                             <button type="submit" name="carregar" class="btn btn-primary btn-block">
                                 Editar Representante
                             </button>
                         </form>
                     </div>
-                    <div class="form-group col-md-2"><label><br></label>
+                    <div class="form-group col-md-6"><label><br></label>
                         <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
                             <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
                                 Representante
