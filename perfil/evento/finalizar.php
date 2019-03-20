@@ -79,12 +79,24 @@ include "includes/validacoes.php";
                 </div>
 
                 <div class="tab-pane" id="atracao">
-                    <?php include "label_atracao_filme.php" ?>
+                    <?php if ($numAtracoes == 0) { ?>
+                        <div class="alert alert-danger">
+                            <h4><i class="icon fa fa-ban"></i>Não há atrações cadastradas</h4>
+                        </div>
+                    <?php } else {
+                        include "label_atracao_filme.php";
+                    } ?>
                 </div>
 
                 <div class="tab-pane" id="ocorrencia">
                     <?php include "label_ocorrencia.php" ?>
                 </div>
+
+                <?php if ($evento['contratacao'] == 1) { ?>
+                    <div class="tab-pane" id="pedido">
+                        <?php include "label_pedido.php" ?>
+                    </div>
+                <?php } ?>
             </div>
             <div class="box-footer">
                 <button class="btn btn-success" type="submit" <?= (count($erros) != 0) ? "disabled" : "" ?>>Enviar Evento</button>
