@@ -81,7 +81,7 @@ date_default_timezone_set("Brazil/East");
 			$retornoDECE == 0 || $retornoDECE == NULL ? array_push($vetor,"Declaração de exclusividade PJ") : "";
 		} else //pf
 		{
- 
+
 			$consultaRG = "SELECT id FROM upload_arquivo WHERE idUploadListaDocumento = '2' AND idPessoa = '$idPessoa' AND publicado = '1'"; // RG
 			$envioRG = mysqli_query($con, $consultaRG);
 			$retornoRG = mysqli_num_rows($envioRG);
@@ -133,7 +133,7 @@ date_default_timezone_set("Brazil/East");
 		$envioCDN = mysqli_query($con, $consultaCDN);
 		$retornoCDN = mysqli_num_rows($envioCDN);
 		$retornoCDN == 0 || $retornoCDN == NULL ? array_push($vetor,"CDN") : "";
-		
+
 		$consultaCCM = "SELECT id FROM upload_arquivo WHERE idUploadListaDocumento = '31' AND idPessoa = '$idPessoa' AND publicado = '1'"; // CCM
 		$envioCCM = mysqli_query($con, $consultaCCM);
 		$retornoCCM = mysqli_num_rows($envioCCM);
@@ -599,7 +599,7 @@ function recuperaDados($tabela, $campo, $variavelCampo)
 			echo "disabled";
 		}
 	}
-	
+
 
 	function valorPorExtenso($valor=0)
 	{
@@ -629,7 +629,7 @@ function recuperaDados($tabela, $campo, $variavelCampo)
 			$t = count($inteiro)-1-$i;
 			$r .= $r ? " ".($valor > 1 ? $plural[$t] : $singular[$t]) : "";
 			if ($valor == "000")$z++; elseif ($z > 0) $z--;
-			if (($t==1) && ($z>0) && ($inteiro[0] > 0)) $r .= (($z>1) ? " de " : "").$plural[$t]; 
+			if (($t==1) && ($z>0) && ($inteiro[0] > 0)) $r .= (($z>1) ? " de " : "").$plural[$t];
 			if ($r) $rt = $rt . ((($i > 0) && ($i <= $fim) && ($inteiro[0] > 0) && ($z < 1)) ? ( ($i < $fim) ? ", " : " e ") : " ") . $r;
 		}
 		return($rt ? $rt : "zero");
@@ -1161,26 +1161,27 @@ function anexosNaPagina ($idDocumento, $idPessoa, $nomeModal, $documento) {
 }
 
 
-function listaLocais($idAtracao)
+function listaLocais($idEvento)
 {
     $con = bancoMysqli();
-    $sql_virada = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = '1' AND virada = '1'";
-    $query_virada = mysqli_query($con,$sql_virada);
-    $num = mysqli_num_rows($query_virada);
-    if($num > 0)
-    {
-        $locais = " DE ACORDO COM PROGRAMAÇÃO DO EVENTO NO PERÍODO DA VIRADA CULTURAL.";
-    }
-    else
-    {
-        $sql = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = '1'";
-        $query = mysqli_query($con, $sql);
-        $locais = "";
-        while($local = mysqli_fetch_array($query))
-        {
-            $sala = recuperaDados("locais", 'id', $local['local_id']);
-            $instituicao = recuperaDados("instituicoes", 'id', $sala['instituicao_id']);
-            $locais = $locais." ".$sala['local']." (".$instituicao['sigla'].") - ";
+    $sql_atracao = "SELECT * FROM atracoes WHERE origem_id = '$idEvento' AND publicado = 1";
+    $query_atracao = mysqli_query($con, $sql_atracao);
+    $locais = "";
+    while ($atracao = mysqli_fetch_array($query_atracao)) {
+        $idAtracao = $atracao['id'];
+        $sql_virada = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = '1' AND virada = '1'";
+        $query_virada = mysqli_query($con, $sql_virada);
+        $num = mysqli_num_rows($query_virada);
+        if ($num > 0) {
+            $locais = " DE ACORDO COM PROGRAMAÇÃO DO EVENTO NO PERÍODO DA VIRADA CULTURAL.";
+        } else {
+            $sql = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = '1'";
+            $query = mysqli_query($con, $sql);
+            while ($local = mysqli_fetch_array($query)) {
+                $sala = recuperaDados("locais", 'id', $local['local_id']);
+                $instituicao = recuperaDados("instituicoes", 'id', $sala['instituicao_id']);
+                $locais = $locais . " " . $sala['local'] . " (" . $instituicao['sigla'] . ") - ";
+            }
         }
     }
 
