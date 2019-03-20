@@ -53,7 +53,7 @@ if ($evento['tipo_evento_id'] == 1) {
     } else {
         foreach ($atracoes as $atracao) {
             if (($atracao['produtor_id'] == "") || ($atracao['produtor_id'] == null)) {
-                array_push($erros,"Produtor não cadastradado na atração <b>".$atracao['nome_atracao']."</b>");
+                array_push($erros,"Produtor não cadastrado na atração <b>".$atracao['nome_atracao']."</b>");
             }
 
             $especificidade = in_array_key($atracao['categoria_atracao_id'], $especificidades);

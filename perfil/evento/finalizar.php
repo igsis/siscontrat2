@@ -62,15 +62,18 @@ include "includes/validacoes.php";
                     </a>
                 </li>
                 <li class="active"><a href="#evento" data-toggle="tab">Evento</a></li>
-                <li class="pull-left header">Resumo do Evento</li>
+                <li class="pull-left header">Confirmação dos Dados Inseridos</li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="evento">
                     <div class="table-responsive">
                         <table class="table">
+                            <tr>
+                                <th class="bg-primary text-center" colspan="2">Dados do Evento</th>
+                            </tr>
                             <?php foreach ($resumoEvento as $campo => $dado) { ?>
                                 <tr>
-                                   <th width="30%"><?= $campo ?></th>
+                                    <th width="30%"><?= $campo ?></th>
                                     <td><?=$dado?></td>
                                 </tr>
                             <?php } ?>
