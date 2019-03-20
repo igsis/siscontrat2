@@ -78,7 +78,7 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . retornaPeriodoNovo($evento['idEvento']) . "</td>";
                                 echo "<td>" . $evento['status'] . "</td>";
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
+                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=resumo_evento_enviado\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
