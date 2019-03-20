@@ -232,7 +232,7 @@ $query = mysqli_query($con,$sql);
 
 <script type="text/javascript">
 
-    function generateRandomInt(max, min = 0) {
+    function generateRandomInt(max, min = 125) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
