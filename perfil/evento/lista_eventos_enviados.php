@@ -9,25 +9,7 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT eve.id idEvento, prot.protocolo, cat.categoria_atracao, eve.nome_evento, loc.local, sta.status, atr.id idAtracao
-                               FROM eventos eve
-                               INNER JOIN atracoes atr
-                               ON eve.id = atr.evento_id
-                               INNER JOIN protocolos prot
-                               ON eve.id = prot.origem_id
-                               INNER JOIN ocorrencias oco
-                               ON atr.id = oco.origem_ocorrencia_id
-                               INNER JOIN locais loc
-                               ON oco.local_id = loc.id
-                               INNER JOIN categoria_atracoes cat
-                               ON atr.categoria_atracao_id = cat.id
-                               INNER JOIN evento_status sta
-                               ON eve.evento_status_id = sta.id
-                               WHERE eve.publicado = 1
-                               AND ((eve.usuario_id = '$idUser') OR (eve.fiscal_id = '$idUser') OR (eve.suplente_id = '$idUser'))
-                               AND eve.evento_status_id >= 3
-                               AND eve.evento_interno = 0
-                               ORDER BY atr.id";
+$sql = "SELECT * FROM eventos WHERE publicado = 1";
 
 $query = mysqli_query($con, $sql);
 ?>
@@ -36,10 +18,8 @@ $query = mysqli_query($con, $sql);
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
         <!-- START FORM-->
         <h2 class="page-header">Evento</h2>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
