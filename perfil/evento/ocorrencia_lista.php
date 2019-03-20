@@ -108,7 +108,7 @@ $query = mysqli_query($con,$sql);
                             echo "<tbody>";
                             while ($ocorrencia = mysqli_fetch_array($query)){
 
-                                echo "<tr>";
+                                echo "<tr class='content'>";
                                 echo "<td>".exibirDataBr($ocorrencia['data_inicio'])."</td>";
                                 echo "<td>".exibirHora($ocorrencia['horario_inicio'])."</td>";
                                 echo "<td>".exibirHora($ocorrencia['horario_fim'])."</td>";
@@ -228,5 +228,68 @@ $query = mysqli_query($con,$sql);
     }
 
 
+</script>
+
+<script type="text/javascript">
+
+    function generateRandomInt(max, min = 0) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    function colorGenerator() {
+
+        const
+            generatedColors = new Set();
+
+        return () => {
+            let randomColor;
+
+            do {
+                randomColor = `rgb(${generateRandomInt(255)},${generateRandomInt(255)},${generateRandomInt(255)})`;
+            } while (generatedColors.has(randomColor));
+
+           generatedColors.add(randomColor);
+
+            return randomColor;
+        };
+    }
+
+    function highlightDoubles(table) {
+        const
+
+            contentCells = table.querySelectorAll('.content'),
+
+            contentMap = new Map();
+
+        Array.from(contentCells).forEach(cell => {
+            const
+              array = (contentMap.has(cell.textContent))
+                    ? contentMap.get(cell.textContent)
+                    : [];
+
+            array.push(cell)
+
+            contentMap.set(cell.textContent, array);
+        });
+
+       const
+            randomColor = colorGenerator();
+
+
+        contentMap.forEach(cells => {
+
+            if (cells.length < 2) {
+                return;
+            }
+
+           const
+                color = randomColor();
+
+            cells.forEach(cell => {
+                cell.style.backgroundColor = color;
+            });
+        });
+    }
+    highlightDoubles(document.getElementById('tblOcorrencia'));
 </script>
 
