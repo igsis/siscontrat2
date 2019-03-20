@@ -10,8 +10,8 @@ $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
 $sql = "SELECT * FROM eventos WHERE publicado = 1";
-
 $query = mysqli_query($con, $sql);
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -50,7 +50,8 @@ $query = mysqli_query($con, $sql);
                             <?php
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
-                                $locais = listaLocais($evento['idAtracao']);
+                                $locais = listaLocais($evento['id']);
+                                echo $locais;
                                 echo "<tr>";
                                 echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $evento['categoria_atracao'] . " - " . $evento['nome_evento'] . "</td>";
