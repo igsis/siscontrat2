@@ -1161,10 +1161,10 @@ function anexosNaPagina ($idDocumento, $idPessoa, $nomeModal, $documento) {
 }
 
 
-function listaLocais($idEvento)
+function listaLocais($idAtracao)
 {
     $con = bancoMysqli();
-    $sql_virada = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1' AND virada = '1'";
+    $sql_virada = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = '1' AND virada = '1'";
     $query_virada = mysqli_query($con,$sql_virada);
     $num = mysqli_num_rows($query_virada);
     if($num > 0)
@@ -1173,7 +1173,7 @@ function listaLocais($idEvento)
     }
     else
     {
-        $sql = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1'";
+        $sql = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = '1'";
         $query = mysqli_query($con, $sql);
         $locais = "";
         while($local = mysqli_fetch_array($query))
@@ -1183,8 +1183,9 @@ function listaLocais($idEvento)
             $locais = $locais." ".$sala['local']." (".$instituicao['sigla'].") - ";
         }
     }
+
     $locais = substr($locais, 0, strlen($locais) - 3);
-    $locais = $locais . ".";
+    $locais = $locais . ". ";
     return $locais;
 }
 

@@ -12,7 +12,7 @@ $pasta = "?perfil=evento&p=";
             <li class="header">EVENTO</li>
             <li><a href="<?= $pasta ?>evento_cadastro"><i class="fa fa-circle-o"></i> <span>Novo</span></a></li>
             <li><a href="<?= $pasta ?>evento_lista"><i class="fa fa-circle-o"></i> <span>Carregar evento gravado</span></a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> <span>Acompanhar pedidos enviados</span></a></li>
+            <li><a href="<?= $pasta ?>lista_pedidos_enviados"><i class="fa fa-circle-o"></i> <span>Acompanhar pedidos enviados</span></a></li>
             <li><a href="<?= $pasta ?>lista_eventos_enviados"><i class="fa fa-circle-o"></i> <span>Acompanhar eventos enviados</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Buscar no CAPAC</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Informações de produção</span></a></li>
