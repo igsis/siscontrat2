@@ -9,7 +9,7 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos WHERE publicado = 1";
+$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 0";
 $query = mysqli_query($con, $sql);
 
 $num_atracoes = 0;
@@ -99,15 +99,6 @@ $num_atracoes = 0;
                                 <th>Visualizar</th>
                             </tr>
                             </tfoot>
-                        </table>
-                        <table class="table-bordered table-striped">
-                            <tr>
-                                <th rowspan="2">teste</th>
-                                <th>teste2</th>
-                            </tr>
-                            <tr>
-                                <th>teste4</th>
-                            </tr>
                         </table>
                     </div>
                     <!-- /.box-body -->

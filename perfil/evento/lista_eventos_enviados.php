@@ -9,8 +9,10 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos WHERE publicado = 1";
+$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 1";
 $query = mysqli_query($con, $sql);
+
+$num_atracoes = 0;
 
 ?>
 
@@ -18,8 +20,10 @@ $query = mysqli_query($con, $sql);
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
+
         <!-- START FORM-->
         <h2 class="page-header">Evento</h2>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -39,9 +43,9 @@ $query = mysqli_query($con, $sql);
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
-                                <th width="25%">Objeto</th>
+                                <th>Objeto</th>
                                 <th>Local</th>
-                                <th width="17%">Período</th>
+                                <th>Período</th>
                                 <th>Status</th>
                                 <th>Visualizar</th>
                             </tr>
@@ -50,17 +54,34 @@ $query = mysqli_query($con, $sql);
                             <?php
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
-                                $locais = listaLocais($evento['id']);
-                                echo $locais;
+                                $idEvento = $evento['id'];
+                                $locais = listaLocais($idEvento);
+
+                                $protocolos = recuperaDados("protocolos", "origem_id", $idEvento);
+                                $status = recuperaDados("evento_status", "id", $evento['evento_status_id']);
+
+                                $sql_atracoes = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
+                                $query_atracoes = mysqli_query($con, $sql_atracoes);
+                                $num_atracoes = mysqli_num_rows($query_atracoes);
+
                                 echo "<tr>";
-                                echo "<td>" . $evento['protocolo'] . "</td>";
-                                echo "<td>" . $evento['categoria_atracao'] . " - " . $evento['nome_evento'] . "</td>";
+                                echo "<td>" . $protocolos['protocolo'] . "</td>";
+                                echo "<td>";
+                                while($atracao = mysqli_fetch_array($query_atracoes)){
+                                    $categorias = recuperaDados("categoria_atracoes", "id", $atracao['categoria_atracao_id']);
+
+                                    ?>
+                                    <p><?= $categorias['categoria_atracao'] . " - " . $evento['nome_evento'] ?></p><hr>
+                                    <?php
+                                    $num_atracoes++;
+                                }
+                                echo "</td>";
                                 echo "<td>" . $locais. "</td>";
-                                echo "<td>" . retornaPeriodoNovo($evento['idEvento']) . "</td>";
-                                echo "<td>" . $evento['status'] . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($evento['id']) . "</td>";
+                                echo "<td>" . $status['status'] . "</td>";
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
-                                    <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
+                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=resumo_evento_enviado\" role=\"form\">
+                                    <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
@@ -105,8 +126,8 @@ $query = mysqli_query($con, $sql);
             },
             "responsive": true,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
 </script>
