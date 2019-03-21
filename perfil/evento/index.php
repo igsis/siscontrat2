@@ -10,24 +10,8 @@ unset($_SESSION['idPf']);
 $idUsuario = $_SESSION['idUser'];
 
 
-$sql = "SELECT eve.id, eve.nome_evento, usu.nome_completo, envi.data_envio, oco.data_inicio, loc.local, atr.id idAtracao
-                              FROM EVENTOS eve
-                              INNER JOIN usuarios usu
-                              ON eve.usuario_id = usu.id
-                              INNER JOIN evento_envios envi 
-                              ON eve.id = envi.evento_id
-                              INNER JOIN atracoes atr
-                              ON eve.id = atr.evento_id
-                              INNER JOIN ocorrencias oco
-                              ON atr.id = oco.origem_ocorrencia_id	
-                              INNER JOIN locais loc
-                              ON oco.local_id = loc.id
-                              WHERE eve.publicado = 1
-                              AND
-                              ((eve.usuario_id = '$idUsuario') OR (eve.fiscal_id = '$idUsuario') OR (eve.suplente_id = '$idUsuario'))
-                              AND eve.evento_status_id = 3
-                              AND eve.evento_interno = 0
-                              ORDER BY eve.id DESC LIMIT 0,15";
+$idUser = $_SESSION['idUser'];
+$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 0 AND evento_status_id >= 3 ORDER BY id DESC LIMIT 0,20";
 
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
@@ -56,19 +40,25 @@ if ($linha >= 1) {
                                 $mensagem = mensagem("info", "Não existe eventos enviados!");
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
-                                    $locais = listaLocais($evento['idAtracao']);
+                                    $locais = listaLocais($evento['id'], '1');
                                     ?>
                                     <div class="panel box box-primary">
                                         <div class="box-header with-border">
                                             <h4 class="box-title">
-                                                <a data-toggle="collapse collapse in" data-parent="#accordion" href="#collapseOne">
+                                                <a data-toggle="collapse collapse in" data-parent="#accordion"
+                                                   href="#collapseOne">
                                                     <?= $evento['nome_evento'] ?>
                                                 </a>
                                             </h4>
                                         </div>
                                         <div id="collapseOne" class="panel-collapse collapse in">
                                             <div class="box-body">
-                                                <p><b>Enviado por: </b><?= $evento['nome_completo'] ?> <b>em:</b> <?= exibirDataBr($evento['data_envio']) ?> </p>
+                                                <?php
+                                                $dataEnvio = recuperaDados('evento_envios', 'evento_id', $evento['id']);
+                                                $usuario = recuperaDados('usuarios', 'id', $evento['usuario_id']);
+                                                ?>
+                                                <p><b>Enviado por: </b><?= $usuario['nome_completo'] ?>
+                                                    <b>em:</b> <?= exibirDataBr($dataEnvio['data_envio']) ?> </p>
                                                 <p><b>Período:</b> <?= retornaPeriodoNovo($evento['id']) ?> </p>
                                                 <p><b>Local:</b> <?= $locais ?></p>
                                             </div>

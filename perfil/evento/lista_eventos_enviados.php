@@ -9,7 +9,7 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 1";
+$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 0 AND evento_status_id >= 3";
 $query = mysqli_query($con, $sql);
 
 $num_atracoes = 0;

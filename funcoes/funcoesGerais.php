@@ -1161,7 +1161,7 @@ function anexosNaPagina ($idDocumento, $idPessoa, $nomeModal, $documento) {
 }
 
 
-function listaLocais($idEvento)
+function listaLocais($idEvento, $tiraLinha = "")
 {
     $con = bancoMysqli();
     $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
@@ -1179,12 +1179,20 @@ function listaLocais($idEvento)
             $sql = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = '1'";
             $query = mysqli_query($con, $sql);
             while ($local = mysqli_fetch_array($query)) {
+                if($tiraLinha == 1){
 
-                $sala = recuperaDados("locais", 'id', $local['local_id']);
-                $instituicao = recuperaDados("instituicoes", 'id', $sala['instituicao_id']);
-                $locais = "<p>" . $locais . " " . $sala['local'] . " (" . $instituicao['sigla'] . ") </p><hr>";
+                    $sala = recuperaDados("locais", 'id', $local['local_id']);
+                    $instituicao = recuperaDados("instituicoes", 'id', $sala['instituicao_id']);
+                    $locais = $locais . " " . $sala['local'] . " (" . $instituicao['sigla'] . ") -  ";
 
-                $negrito++;
+                    $negrito++;
+                }else{
+                    $sala = recuperaDados("locais", 'id', $local['local_id']);
+                    $instituicao = recuperaDados("instituicoes", 'id', $sala['instituicao_id']);
+                    $locais = "<p>" . $locais . " " . $sala['local'] . " (" . $instituicao['sigla'] . ") </p><hr>";
+
+                    $negrito++;
+                }
             }
         }
     }
