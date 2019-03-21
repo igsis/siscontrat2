@@ -136,9 +136,9 @@ $num = mysqli_num_rows($query);
                                     ?>
                                     <td>
                                         <form method='POST' id='formExcliuir'>
-                                            <input type="hidden" name='idUsuario' value="<?= $usuario['id'] ?>">
-                                            <button type="button" class="btn btn-danger btn-block" id="excluiUsuario"
-                                                    data-toggle="modal" data-target="#exclusao" name="excluiUsuario"
+                                            <input type="hidden" name='idPedido' value="<?= $pedido['id'] ?>">
+                                            <button type="button" class="btn btn-danger btn-block" id="excluiPedido"
+                                                    data-toggle="modal" data-target="#exclusao" name="excluiPedido"
                                                     data-id="<?= $pedido['id'] ?>"><span
                                                         class='glyphicon glyphicon-trash'></span></button>
                                         </form>
