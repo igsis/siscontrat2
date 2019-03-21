@@ -9,27 +9,11 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT eve.id idEvento, prot.protocolo, cat.categoria_atracao, eve.nome_evento, loc.local, sta.status, atr.id idAtracao
-                               FROM eventos eve
-                               INNER JOIN atracoes atr
-                               ON eve.id = atr.evento_id
-                               INNER JOIN protocolos prot
-                               ON eve.id = prot.origem_id
-                               INNER JOIN ocorrencias oco
-                               ON atr.id = oco.origem_ocorrencia_id
-                               INNER JOIN locais loc
-                               ON oco.local_id = loc.id
-                               INNER JOIN categoria_atracoes cat
-                               ON atr.categoria_atracao_id = cat.id
-                               INNER JOIN evento_status sta
-                               ON eve.evento_status_id = sta.id
-                               WHERE eve.publicado = 1
-                               AND ((eve.usuario_id = '$idUser') OR (eve.fiscal_id = '$idUser') OR (eve.suplente_id = '$idUser'))
-                               AND eve.evento_status_id >= 3
-                               AND eve.evento_interno = 0
-                               ORDER BY atr.id";
-
+$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 1";
 $query = mysqli_query($con, $sql);
+
+$num_atracoes = 0;
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -59,9 +43,9 @@ $query = mysqli_query($con, $sql);
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
-                                <th width="25%">Objeto</th>
+                                <th>Objeto</th>
                                 <th>Local</th>
-                                <th width="17%">Período</th>
+                                <th>Período</th>
                                 <th>Status</th>
                                 <th>Visualizar</th>
                             </tr>
@@ -70,16 +54,34 @@ $query = mysqli_query($con, $sql);
                             <?php
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
-                                $locais = listaLocais($evento['idAtracao']);
+                                $idEvento = $evento['id'];
+                                $locais = listaLocais($idEvento);
+
+                                $protocolos = recuperaDados("protocolos", "origem_id", $idEvento);
+                                $status = recuperaDados("evento_status", "id", $evento['evento_status_id']);
+
+                                $sql_atracoes = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
+                                $query_atracoes = mysqli_query($con, $sql_atracoes);
+                                $num_atracoes = mysqli_num_rows($query_atracoes);
+
                                 echo "<tr>";
-                                echo "<td>" . $evento['protocolo'] . "</td>";
-                                echo "<td>" . $evento['categoria_atracao'] . " - " . $evento['nome_evento'] . "</td>";
+                                echo "<td>" . $protocolos['protocolo'] . "</td>";
+                                echo "<td>";
+                                while($atracao = mysqli_fetch_array($query_atracoes)){
+                                    $categorias = recuperaDados("categoria_atracoes", "id", $atracao['categoria_atracao_id']);
+
+                                    ?>
+                                    <p><?= $categorias['categoria_atracao'] . " - " . $evento['nome_evento'] ?></p><hr>
+                                    <?php
+                                    $num_atracoes++;
+                                }
+                                echo "</td>";
                                 echo "<td>" . $locais. "</td>";
-                                echo "<td>" . retornaPeriodoNovo($evento['idEvento']) . "</td>";
-                                echo "<td>" . $evento['status'] . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($evento['id']) . "</td>";
+                                echo "<td>" . $status['status'] . "</td>";
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
-                                    <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
+                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=resumo_evento_enviado\" role=\"form\">
+                                    <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
@@ -124,8 +126,8 @@ $query = mysqli_query($con, $sql);
             },
             "responsive": true,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
 </script>

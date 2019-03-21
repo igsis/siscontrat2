@@ -60,9 +60,12 @@ $idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
 $sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim 
         FROM ocorrencias as o
         INNER JOIN  locais as l ON o.local_id = l.id
-        WHERE o.origem_ocorrencia_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id' AND o.publicado = 1";
+        WHERE o.origem_ocorrencia_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id' AND o.publicado = 1
+        ORDER BY local, data_inicio, horario_inicio, horario_fim";
 
 $query = mysqli_query($con,$sql);
+
+$mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências destacadas com a mesma cor são idênticas!!")
 ?>
 
 <div class="content-wrapper">
@@ -88,6 +91,9 @@ $query = mysqli_query($con,$sql);
                     </div>
                     <div class="row" align="center">
                         <?php if(isset($mensagem)){echo $mensagem;};?>
+                    </div>
+                    <div class="row" align="center" id="duplicated-message">
+
                     </div>
                     <div class="box-body">
                         <table id="tblOcorrencia" class="table table-bordered table-striped">
@@ -232,6 +238,8 @@ $query = mysqli_query($con,$sql);
 
 <script type="text/javascript">
 
+    const menssagem = `<?=$mensagem2?>`;
+
     function generateRandomInt(max, min = 125) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
@@ -255,6 +263,9 @@ $query = mysqli_query($con,$sql);
     }
 
     function highlightDoubles(table) {
+
+        var cont;
+        cont = 0;
         const
 
             contentCells = table.querySelectorAll('.content'),
@@ -280,6 +291,8 @@ $query = mysqli_query($con,$sql);
 
             if (cells.length < 2) {
                 return;
+            }else{
+                cont ++;
             }
 
            const
@@ -289,7 +302,14 @@ $query = mysqli_query($con,$sql);
                 cell.style.backgroundColor = color;
             });
         });
+
+        if(cont > 0){
+            $("#duplicated-message").html(menssagem)
+        }
+
     }
     highlightDoubles(document.getElementById('tblOcorrencia'));
+
+
 </script>
 
