@@ -78,9 +78,9 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         var dataFim = document.querySelector('#datepicker11').value;
 
 
-        var dataInicio = parseInt(dataInicio.split("-")[2].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[0].toString());
+        var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
         if(dataFim != ""){
-            var dataFim = parseInt(dataFim.split("-")[2].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[0].toString());
+            var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
 
             if(dataFim <= dataInicio){
                 alert("Data final menor que a data inicial");
