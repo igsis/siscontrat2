@@ -254,15 +254,15 @@ $query = mysqli_query($con,$sql);
             <form method="POST" id='formApagar' action="?perfil=evento&p=atracoes_lista" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"><p> Apagar atração</p></h4>
+                    <h4 class="modal-title"><p>Apagar atração</p></h4>
                 </div>
                 <div class="modal-body">
-                    <p>Deseja mesmo apagar está atração? </p>
+                    <p>Deseja mesmo apagar esta atração? </p>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="idAtracao">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type='submit' class='btn btn-info btn-sm' name="apagar">Confirmar</button>
+                    <button type='submit' class='btn btn-danger btn-sm' name="apagar">Confirmar</button>
                 </div>
             </form>
         </div>
