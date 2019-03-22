@@ -304,8 +304,12 @@ if(isset($pj['representante_legal2_id'])){
                                         ?>
                                         <label>FDC - CCM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
                                         <br>
-                                        <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
-                                           target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
+                                        <div class='form-group' style='display: flex; align-items: center;'>
+                                            <button class='btn-sm btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal'
+                                                    data-target='#exclusao' data-id='<?= $arquivo['id']?>' data-nome='<?=$arquivo['arquivo']?>'>
+                                            </button> &nbsp;&nbsp;
+                                            <a href='../uploadsdocs/<?=$arquivo['arquivo']?>' target='_blank'><?=
+                                            mb_strimwidth($arquivo['arquivo'], 15, 25, '...')?></a></div>
                                         <?php
 
                                     } else {
