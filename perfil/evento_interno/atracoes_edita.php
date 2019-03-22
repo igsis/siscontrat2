@@ -48,7 +48,7 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Cadastro de Evento</h2>
+        <h2 class="page-header">Cadastro de Evento Interno</h2>
 
         <div class="row">
             <div class="col-md-12">
