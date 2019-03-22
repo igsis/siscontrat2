@@ -13,18 +13,29 @@ if(isset($_POST['tipoRepresentante']) && isset($_POST['idPj'])) {
 if (isset($_POST['pesquisa'])) {
 
     $cpf = $_POST['cpf'];
-    $sql = "SELECT * FROM siscontrat.representante_legais WHERE cpf ='$cpf' LIMIT 1";
+    $sql = "SELECT rep.id as representanteId, rep.nome, rep.rg, rep.cpf, pj.representante_legal1_id, pj.representante_legal2_id
+                          FROM representante_legais as rep
+                          INNER JOIN pessoa_juridicas as pj
+                          ON (pj.representante_legal1_id = rep.id OR pj.representante_legal2_id = rep.id)
+                          WHERE rep.cpf = '$cpf'
+                          LIMIT 0,1";
+
     $query = mysqli_query($con,$sql);
 
     if(mysqli_num_rows($query) > 0) {
         $resultado = mysqli_fetch_array($query);
+        if (isset($resultado['representante_legal1_id'])) {
+            $tipoRepresentante = 1;
+        } else if (isset($resultado['representante_legal2_id'])) {
+            $tipoRepresentante = 2;
+        }
         $mensagem = "<form method='post' action='?perfil=evento&p=representante_edita'>
                         <tr>
                             <td>".$resultado['nome']."</td>
                             <td>".$resultado['cpf']."</td>
                             <td>".$resultado['rg']."</td>
                             <td>
-                                <input type='hidden' name='idRepresentante' value='".$resultado['id']."'>
+                                <input type='hidden' name='idRepresentante' value='".$resultado['representanteId']."'>
                                 <input type='hidden' name='tipoRepresentante' value='".$tipoRepresentante."'>
                                 <button type='submit' class='btn btn-primary' name='carregar'>Selecionar</button>
                             </td>

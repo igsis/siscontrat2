@@ -3,15 +3,18 @@ $con = bancoMysqli();
 $idPj = $_SESSION['idPj'];
 $pessoa_juridica = recuperaDados('pessoa_juridicas', 'id', $idPj);
 
-if (isset($_POST['carregar']) || isset($_POST['apagar'])){
-    $idRepresentante = $_POST['idRepresentante'];
-    $tipoRepresentante = $_POST['tipoRepresentante'];
+if (isset($_POST['carregar']) || isset($_POST['apagar']) || isset($_POST['enviar'])){
+    $idRepresentante = $_POST['idRepresentante'] ?? $_POST['idPessoa'];
+    $tipoRepresentante = $_POST['tipoRepresentante'] ?? $_POST['tipoPessoa'];
+
+    echo "id: " . $idRepresentante . "tipo: " . $tipoRepresentante;
+
 }
 
-if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['enviar'])){
+if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $nome =  addslashes($_POST['nome']) ?? null;
-    $rg = $_POST['rg'] ?? null;
-    $cpf = $_POST['cpf'] ?? null;
+    $rg = $_POST['rg'];
+    $cpf = $_POST['cpf'];
     $tipoRepresentante = $_POST['tipoRepresentante'];
 }
 
@@ -34,9 +37,6 @@ if($tipoRepresentante == 1){
     $nomeRg = "RG do Representante Legal 2";
     $nomeCpf = "CPF do Representante Legal 2";
 }
-
-
-
 
 if (isset($_POST['cadastra'])) {
     $sql = "INSERT INTO representante_legais 
@@ -148,7 +148,7 @@ if (isset($_POST['apagar'])) {
     }
 }
 
-$representante = recuperaDados("representante_legais","id",$idRepresentante);
+$representantes = recuperaDados("representante_legais","id",$idRepresentante);
 include "includes/menu_interno.php";
 ?>
 <script>
@@ -174,15 +174,15 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: </label>
                                     <input type="text" class="form-control" id="nome" name="nome"
-                                           maxlength="70" required value="<?= $representante['nome']?>" >
+                                           maxlength="70" required value="<?= $representantes['nome']?>" >
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="rg">RG: </label>
-                                    <input type="text" class="form-control" id="rg" name="rg" required value="<?= $representante['rg']?>" >
+                                    <input type="text" class="form-control" id="rg" name="rg" required value="<?= $representantes['rg']?>" >
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="cpf">CPF: </label>
-                                    <input type="text" class="form-control" id="cpf" name="cpf" required value="<?= $representante['cpf']?>" data-mask="000.000.000-00" readonly>
+                                    <input type="text" class="form-control" id="cpf" name="cpf" required value="<?= $representantes['cpf']?>" data-mask="000.000.000-00" readonly>
                                 </div>
                             </div>
                             <hr>
@@ -202,8 +202,9 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <div class="box-footer">
-                                <button type="button" formaction="?perfil=evento&p=pj_edita" class="btn btn-default">Cancelar</button>
+                                <button type="submit" formaction="?perfil=evento&p=pj_edita" name="idPj" value="<?=$idPj?>" class="btn btn-default">Voltar</button>
                                     <input type="hidden" name="idRepresentante" value="<?= $idRepresentante ?>">
+                                    <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
                                     <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Atualizar</button>
                             </div>
                     </form>
