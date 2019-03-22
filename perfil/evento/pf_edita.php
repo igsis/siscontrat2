@@ -696,6 +696,7 @@ include "includes/menu_interno.php";
         modalUploadArquivoUnico("modal-ccm", "?perfil=evento&p=pf_edita", "FDC - CCM", "ccm", $idPf, "1");
         modalUploadArquivoUnico("modal-nit", "?perfil=evento&p=pf_edita", "NIT", "pis_pasep_", $idPf, "1");
         modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pf_edita", "FACC", "faq", $idPf, "1");
+        modalUploadArquivoUnico("modal-drt", "?perfil=evento&p=pf_edita", "DRT", "drt", $idPf, "1");
         modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprovante de endereço", "residencia", $idPf, "1");
         ?>
 
