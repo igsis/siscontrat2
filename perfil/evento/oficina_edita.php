@@ -11,7 +11,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $publico_alvo = addslashes($_POST['publico_alvo']);
     $material = addslashes($_POST['material']);
     $carga_horaria = $_POST['carga_horaria'];
-    $valor_hora = $_POST['valor_hora'];
+    $valor_hora = dinheiroDeBr($_POST['valor_hora']);
     $inicio = $_POST ['inicio_inscricao'];
     $encerramento = $_POST ['encerramento_inscricao'];
     $divulgacao = $_POST['data_divulgacao'];
@@ -164,8 +164,8 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-4">
                                     <label for="valor_hora">Valor hora/aula:</label><br>
                                     <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora"
-                                           placeholder="5,00" pattern="([0-9]{1,3}\.)?[0-9]{1,3},[0-9]{2}$"
-                                           value="<?= number_format($oficina['valor_hora'], 2, ',', '.') ?>">
+                                           placeholder="5,00" onkeypress="return(moeda(this, '.', ',', event))"
+                                           value="<?= dinheiroParaBr($oficina['valor_hora']) ?>">
                                 </div>
                             </div>
                             <div class="row">
