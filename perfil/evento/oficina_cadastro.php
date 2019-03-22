@@ -70,7 +70,7 @@ $idAtracao = $_POST['idAtracao'];
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="valor_hora">Valor hora/aula: </label><br>
-                                    <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora" placeholder="5,00" pattern="([0-9]{1,3}\.)?[0-9]{1,3},[0-9]{2}$">
+                                    <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora" placeholder="5,00" onkeypress="return(moeda(this, '.', ',', event))">
                                 </div>
 
                             </div>
@@ -95,7 +95,6 @@ $idAtracao = $_POST['idAtracao'];
                                 <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
                                 <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                             </div>
-
                         </div>
                     </form>
                 </div>

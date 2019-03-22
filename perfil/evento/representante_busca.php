@@ -73,6 +73,8 @@ if (isset($_POST['pesquisa'])) {
                                 <div class="input-group">
                                     <input type="text" class="form-control" minlength=14 name="cpf" value="<?= empty($cpf)?'':$cpf ?>" id="cpf" data-mask="000.000.000-00" placeholder="Digite o CPF aqui. . . . ">
                                     <span class="input-group-btn">
+                                        <input type="hidden" name="idPj" value="<?=$idPj?>">
+                                        <input type="hidden" name="tipoRepresentante" value="<?=$tipoRepresentante?>">
                                         <button class="btn btn-default" name="pesquisa" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
                                 </div>

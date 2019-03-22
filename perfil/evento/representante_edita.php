@@ -8,12 +8,35 @@ if (isset($_POST['carregar']) || isset($_POST['apagar'])){
     $tipoRepresentante = $_POST['tipoRepresentante'];
 }
 
-if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-    $nome =  addslashes($_POST['nome']);
-    $rg = $_POST['rg'];
-    $cpf = $_POST['cpf'];
+if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['enviar'])){
+    $nome =  addslashes($_POST['nome']) ?? null;
+    $rg = $_POST['rg'] ?? null;
+    $cpf = $_POST['cpf'] ?? null;
     $tipoRepresentante = $_POST['tipoRepresentante'];
 }
+
+if($tipoRepresentante == 1){
+    $representante = "representante_legal1_id";
+    $RG = "20";
+    $CPF = "21";
+    $siglaRG = "rg_rl1";
+    $siglaCPF = "cpf_rl1";
+    $nomeRg = "RG do Representante Legal 1";
+    $nomeCpf = "CPF do Representante Legal 1";
+
+
+} else if ($tipoRepresentante == 2) {
+    $representante = "representante_legal2_id";
+    $RG = "103";
+    $CPF = "104";
+    $siglaRG = "rg_rl2";
+    $siglaCPF = "cpf_rl2";
+    $nomeRg = "RG do Representante Legal 2";
+    $nomeCpf = "CPF do Representante Legal 2";
+}
+
+
+
 
 if (isset($_POST['cadastra'])) {
     $sql = "INSERT INTO representante_legais 
@@ -124,30 +147,6 @@ if (isset($_POST['apagar'])) {
         $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
     }
 }
-
-
-if($tipoRepresentante == 1){
-    $representante = "representante_legal1_id";
-    $RG = "20";
-    $CPF = "21";
-    $siglaRG = "rg_rl1";
-    $siglaCPF = "cpf_rl1";
-    $nomeRg = "RG do Representante Legal 1";
-    $nomeCpf = "CPF do Representante Legal 1";
-
-
-} else if ($tipoRepresentante == 2) {
-    $representante = "representante_legal2_id";
-    $RG = "103";
-    $CPF = "104";
-    $siglaRG = "rg_rl2";
-    $siglaCPF = "cpf_rl2";
-    $nomeRg = "RG do Representante Legal 2";
-    $nomeCpf = "CPF do Representante Legal 2";
-}
-
-
-
 
 $representante = recuperaDados("representante_legais","id",$idRepresentante);
 include "includes/menu_interno.php";

@@ -2,7 +2,7 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 $cpf = $_POST['documentacao'];
-$tipoRepresentante = $_SESSION['tipoRepresentante'];
+$tipoRepresentante = $_POST['tipoRepresentante'];
 
 ?>
 
