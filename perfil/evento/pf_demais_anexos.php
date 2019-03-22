@@ -52,6 +52,11 @@ if(isset($_POST["enviar"])) {
     }
 }
 
+$sqlPf_arquivos = "SELECT id FROM lista_documentos WHERE tipo_documento_id = "
+
+
+
+
 
 
 if(isset($_POST['apagar']))
