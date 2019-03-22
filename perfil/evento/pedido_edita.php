@@ -156,7 +156,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="verba_id">Verba</label>
-                                    <select class="form-control" id="verba_id" name="verba_id">
+                                    <select class="form-control" id="verba_id" name="verba_id" required>
                                         <option value="">Selecione...</option>
                                         <?php
                                         geraOpcao("verbas", $pedido['verba_id'])
@@ -167,7 +167,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                                     <label for="valor_total">Valor Total</label>
                                     <input type="text" onkeypress="return(moeda(this, '.', ',', event))"
                                            id="valor_total" name="valor_total" class="form-control"
-                                           value="<?= dinheiroParaBr($pedido['valor_total']) ?>">
+                                           value="<?= dinheiroParaBr($pedido['valor_total']) ?>" required>
                                 </div>
 
                                 <?php
@@ -185,10 +185,8 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                                     ?>
                                     <div class="form-group col-md-6">
                                         <label for="numero_parcelas">Número de Parcelas</label>
-                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas">
-                                            <option value="0">
-                                                Selecione...
-                                            </option>
+                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas" required>
+                                            <option value="">Selecione...</option>
                                             <?php
                                             geraOpcaoParcelas("oficina_opcoes", $pedido['numero_parcelas']);
                                             ?>
@@ -215,10 +213,8 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
                                     <div class="form-group col-md-2">
                                         <label for="numero_parcelas">Número de Parcelas</label>
-                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas">
-                                            <option value="0">
-                                                Selecione...
-                                            </option>
+                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas" required>
+                                            <option value="">Selecione...</option>
                                             <?php
                                             geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']);
                                             ?>
