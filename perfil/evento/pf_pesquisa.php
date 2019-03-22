@@ -151,9 +151,9 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <label for="cpf">CPF *</label>
+                                    <label for="cpf" id="textoDocumento">CPF *</label>
                                     <input type="text" class="form-control" minlength=14 name="procurar" value="<?=$procurar?>" id="cpf" data-mask="000.000.000-00" >
-                                    <input type="text" class="form-control" name="passaporte" value="<?=$procurar?>" >
+                                    <input type="text" class="form-control" name="passaporte" value="<?=$procurar?>" maxlength="10">
 
                                     <span class="input-group-btn">
                                         <p>&nbsp;</p>
@@ -222,8 +222,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
 
     }else{
         passaporte.style.display = 'none' 
-        passaporte.disabled = true   
-
+        passaporte.disabled = true
     }
 
 
@@ -238,12 +237,16 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                 procurar.disabled = false
                 passaporte.disabled = true                
                 procurar.style.display = 'block'
+                $('#textoDocumento').text('CPF *')
+
             }else{
                 passaporte.style.display = 'block'
                 passaporte.disabled = false
                 procurar.disabled = true
                 procurar.style.display = 'none'
-                
+                $('#textoDocumento').text('Passaporte *')
+
+
             }            
         })
     }
