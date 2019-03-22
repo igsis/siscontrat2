@@ -335,7 +335,7 @@ if(isset($pj['representante_legal2_id'])){
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
-                                    <input type="text" data-mask="(00) 0000-0000" required class="form-control"
+                                    <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required class="form-control"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -344,13 +344,13 @@ if(isset($pj['representante_legal2_id'])){
                                     <?php
                                     if (isset($arrayTelefones[1])) {
                                         ?>
-                                        <input type="text" data-mask="(00)00000-0000" class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
-                                        <input type="text" data-mask="(00) 00000-0000" class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -360,14 +360,14 @@ if(isset($pj['representante_legal2_id'])){
                                     <label for="recado">Telefone #3</label>
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
-                                        <input type="text" data-mask="(00) 00000-0000" class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
                                         <?php
                                     } else {
                                         ?>
-                                        <input type="text" data-mask="(00) 00000-0000" class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control"
                                                id="telefone2" name="telefone2">
 
                                         <?php
@@ -459,7 +459,7 @@ if(isset($pj['representante_legal2_id'])){
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <?php
-                                    $sqlFACC= "SELECT * FROM arquivos WHERE lista_documento_id = 89 AND origem_id = '$idPj' AND publicado = 1";
+                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 89 AND origem_id = '$idPj' AND publicado = 1";
                                     $queryFACC = mysqli_query($con,$sqlFACC);
 
                                     if (mysqli_num_rows($queryFACC) == 0){
