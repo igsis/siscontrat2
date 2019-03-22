@@ -111,8 +111,6 @@ include "includes/menu_interno.php";
                                         </select>
                                     </label>
                                 </div>
-
-
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -133,9 +131,6 @@ include "includes/menu_interno.php";
                                                   value="0" <?= $exposicao['legendas'] == 0 ? 'checked' : NULL ?>> Não
                                     </label>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="identidade">Criação de Identidade Visual</label> <br>
                                     <label><input type="radio" name="identidade"
@@ -145,6 +140,9 @@ include "includes/menu_interno.php";
                                                   value="0" <?= $exposicao['identidade'] == 0 ? 'checked' : NULL ?>> Não
                                     </label>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="suporte">Suporte extra (exposição)</label> <br>
                                     <label><input type="radio" name="suporte"

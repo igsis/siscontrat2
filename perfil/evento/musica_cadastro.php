@@ -30,12 +30,9 @@ $idAtracao = $_POST['idAtracao'];
                                     <label><input type="radio" name="venda" class="venda" id="nao" value="0" checked> Não </label>
                                     <label><input type="radio" name="venda" class="venda" id="sim" value="1"> Sim </label>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="form-group col-md-8">
                                     <label for="descricao">Descrição</label>
-                                    <input type="text" class="form-control" name="descricao" id="descricao"
-                                           maxlength="255" readonly>
+                                    <input type="text" class="form-control" name="descricao" id="descricao" maxlength="255" readonly>
                                 </div>
                             </div>
                             <div class="box-footer">
