@@ -1,10 +1,11 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
+$conn = bancoPDO();
 $idPf = $_POST['idPf'];
 $tipoPessoa = 1; // arquivos necessarios para pessoa fisica
 
-if(isset($_POST["enviar"])) {
+if (isset($_POST["enviar"])) {
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
     $query_arquivos = mysqli_query($con, $sql_arquivos);
     while ($arq = mysqli_fetch_array($query_arquivos)) {
@@ -22,9 +23,9 @@ if(isset($_POST["enviar"])) {
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
                 $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-                $ext = strtolower(substr($nome_arquivo,-4));
+                $ext = strtolower(substr($nome_arquivo, -4));
 
-                if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
                 {
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
                         $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPf', '$y', '$new_name', '$hoje', '1'); ";
@@ -52,25 +53,14 @@ if(isset($_POST["enviar"])) {
     }
 }
 
-$sqlPf_arquivos = "SELECT id FROM lista_documentos WHERE tipo_documento_id = "
-
-
-
-
-
-
-if(isset($_POST['apagar']))
-{
+if (isset($_POST['apagar'])) {
     $idArquivo = $_POST['idArquivo'];
     $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
-    if(mysqli_query($con,$sql_apagar_arquivo))
-    {
-        $arq = recuperaDados("arquivos",$idArquivo,"id");
-        $mensagem = mensagem("success", "Arquivo ".$arq['arquivo']."apagado com sucesso!");
+    if (mysqli_query($con, $sql_apagar_arquivo)) {
+        $arq = recuperaDados("arquivos", $idArquivo, "id");
+        $mensagem = mensagem("success", "Arquivo " . $arq['arquivo'] . "apagado com sucesso!");
         gravarLog($sql_apagar_arquivo);
-    }
-    else
-    {
+    } else {
         $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
     }
 }
@@ -91,23 +81,25 @@ if(isset($_POST['apagar']))
                         <h3 class="box-title">Upload de arquivos</h3>
                     </div>
                     <div class="row" align="center">
-                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
                     </div>
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1 text-center">
-                                <div class="table-responsive list_info"><h4><strong>Update de arquivos somente em PDF!</strong></h4><br>
+                                <div class="table-responsive list_info"><h4><strong>Update de arquivos somente em
+                                            PDF!</strong></h4><br>
                                     <?php
                                     //lista arquivos da pessoa juridica
                                     $sql = "SELECT * FROM lista_documentos as list
 			                        INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
-                                    WHERE arq.origem_id = '$idPf'
+                                    WHERE arq.origem_id = '$idPf' AND list.tipo_documento_id = '$tipoPessoa'
                                     AND arq.publicado = '1' ORDER BY arq.id";
-                                    $query = mysqli_query($con,$sql);
+                                    $query = mysqli_query($con, $sql);
                                     $linhas = mysqli_num_rows($query);
 
-                                    if ($linhas > 0)
-                                    {
+                                    if ($linhas > 0) {
                                         echo "
                                     <table class='table text-center table-striped table-bordered table-condensed'>
                                         <thead>
@@ -119,26 +111,23 @@ if(isset($_POST['apagar']))
                                             </tr>
                                         </thead>
                                         <tbody>";
-                                        while($arquivo = mysqli_fetch_array($query))
-                                        {
-                                            echo "<tr>";
-                                            echo "<td class='list_description'> " .$arquivo['documento'] ."</td>";
-                                            echo "<td class='list_description'><a href='../uploadsdocs/".$arquivo['arquivo']."' target='_blank'>". mb_strimwidth($arquivo['arquivo'], 15 ,25,"..." )."</a></td>";
-                                            echo "<td class='list_description'>(".exibirDataBr($arquivo['data']).")</td>";
-                                            echo "
+                                        while ($arquivo = mysqli_fetch_array($query)) {
+                                                echo "<tr>";
+                                                echo "<td class='list_description'> " . $arquivo['documento'] . "</td>";
+                                                echo "<td class='list_description'><a href='../uploadsdocs/" . $arquivo['arquivo'] . "' target='_blank'>" . mb_strimwidth($arquivo['arquivo'], 15, 25, "...") . "</a></td>";
+                                                echo "<td class='list_description'>(" . exibirDataBr($arquivo['data']) . ")</td>";
+                                                echo "
                                           <td class='list_description'>
                                                     <form id='formExcliuir' method='POST'>
-                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' data-nome='" . $arquivo['arquivo'] . "' data-id='". $arquivo['id'] ."' data-pessoa='". $tipoPessoa."'>
+                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' data-nome='" . $arquivo['arquivo'] . "' data-id='" . $arquivo['id'] . "' data-pessoa='" . $tipoPessoa . "'>
                                                         </button></td>
                                                     </form>";
-                                            echo "</tr>";
+                                                echo "</tr>";
                                         }
                                         echo "
                                         </tbody>
                                         </table>";
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         echo "<p>Não há listas disponíveis no momento.<p/><br/>";
                                     }
 
@@ -148,37 +137,40 @@ if(isset($_POST['apagar']))
 
                                 <div class="row">
                                     <div class="col-md-10 col-md-offset-1">
-                                        <br />
+                                        <br/>
                                         <div class="center">
-                                            <form method="POST" action="?perfil=evento&p=pf_demais_anexos" enctype="multipart/form-data">
+                                            <form method="POST" action="?perfil=evento&p=pf_demais_anexos"
+                                                  enctype="multipart/form-data">
                                                 <table class="table text-center table-striped">
                                                     <tbody>
                                                     <tr>
                                                         <h1 class="text-center">Envio de Arquivos</h1>
                                                     </tr>
                                                     <tr>
-                                                        <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 60MB.</h4>
+                                                        <h4 class="text-center">Nesta página, você envia documentos
+                                                            digitalizados. O tamanho máximo do arquivo deve ser
+                                                            60MB.</h4>
                                                     </tr>
                                                     <?php
                                                     $sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (2, 3, 4, 25, 31, 51, 60, 62) AND tipo_documento_id = '$tipoPessoa' and publicado = 1";
-                                                    $query_arquivos = mysqli_query($con,$sql_arquivos);
-                                                    while($arq = mysqli_fetch_array($query_arquivos))
-                                                    {
+                                                    $query_arquivos = mysqli_query($con, $sql_arquivos);
+                                                    while ($arq = mysqli_fetch_array($query_arquivos)) {
                                                         $idDoc = $arq['id'];
                                                         $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = '$idDoc' AND origem_id = '$idPf' AND publicado = 1";
                                                         $queryExistentes = mysqli_query($con, $sqlExistentes);
 
-                                                    if (mysqli_num_rows($queryExistentes) == 0) {
+                                                        if (mysqli_num_rows($queryExistentes) == 0) {
 
-                                                        ?>
-                                                        <tr>
-                                                            <td><label><?php echo $arq['documento'] ?></label></td>
-                                                            <td>
-                                                                <input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'>
-                                                            </td>
-                                                        </tr>
-                                                        <?php
-                                                    }
+                                                            ?>
+                                                            <tr>
+                                                                <td><label><?php echo $arq['documento'] ?></label></td>
+                                                                <td>
+                                                                    <input type='file'
+                                                                           name='arquivo[<?php echo $arq['sigla']; ?>]'>
+                                                                </td>
+                                                            </tr>
+                                                            <?php
+                                                        }
                                                     }
                                                     ?>
 
@@ -186,14 +178,14 @@ if(isset($_POST['apagar']))
                                                 </table>
                                                 <br>
                                                 <?php
-                                                if(isset($_POST['volta']))
-                                                {
-                                                    echo "<input type='hidden' name='volta' value='".$_POST['volta']."' />";
+                                                if (isset($_POST['volta'])) {
+                                                    echo "<input type='hidden' name='volta' value='" . $_POST['volta'] . "' />";
                                                 }
                                                 ?>
-                                                <input type='hidden' name='idPf' value='<?=$idPf?>' />
-                                                <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa; ?>"  />
-                                                <input type="submit" class="btn btn-primary btn-lg btn-block" name="enviar" value='Enviar'>
+                                                <input type='hidden' name='idPf' value='<?= $idPf ?>'/>
+                                                <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa; ?>"/>
+                                                <input type="submit" class="btn btn-primary btn-lg btn-block"
+                                                       name="enviar" value='Enviar'>
                                             </form>
                                         </div>
                                     </div>
@@ -203,7 +195,8 @@ if(isset($_POST['apagar']))
                                             <!-- Modal content-->
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;
+                                                    </button>
                                                     <h4 class="modal-title">Confirmação de Exclusão</h4>
                                                 </div>
                                                 <div class="modal-body">
@@ -213,11 +206,13 @@ if(isset($_POST['apagar']))
                                                     <form action="?perfil=evento&p=pf_demais_anexos" method="post">
                                                         <input type="hidden" name="idArquivo" id="idArquivo" value="">
                                                         <input type="hidden" name="tipoPessoa" id="tipoPessoa" value="">
-                                                        <input type="hidden" name="idPf" id="idPf" value="<?=$idPf?>">
+                                                        <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
                                                         <input type="hidden" name="apagar" id="apagar">
-                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                                                        <button type="button" class="btn btn-default pull-left"
+                                                                data-dismiss="modal">Cancelar
                                                         </button>
-                                                        <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Apagar">
+                                                        <input class="btn btn-danger btn-outline" type="submit"
+                                                               name="excluir" value="Apagar">
                                                     </form>
                                                 </div>
                                             </div>

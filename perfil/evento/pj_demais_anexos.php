@@ -97,7 +97,7 @@ if(isset($_POST['apagar']))
                                     //lista arquivos da pessoa juridica
                                     $sql = "SELECT * FROM lista_documentos as list
 			                        INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
-                                    WHERE arq.origem_id = '$idPj'
+                                    WHERE arq.origem_id = '$idPj' AND list.tipo_documento_id = '$tipoPessoa'
                                     AND arq.publicado = '1' ORDER BY arq.id";
                                     $query = mysqli_query($con,$sql);
                                     $linhas = mysqli_num_rows($query);
