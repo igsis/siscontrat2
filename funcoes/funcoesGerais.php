@@ -415,7 +415,7 @@ function geraOpcaoLocais ($tabela, $select = '')
 
 	function retornaObjeto($idPedido){
         $con = bancoMysqli();
-        $sql = "SELECT nome_evento, FROM pedidos AS ped 
+        $sql = "SELECT nome_evento FROM pedidos AS ped 
                 INNER JOIN eventos AS eve ON ped.origem_id = eve.id
                 WHERE ped.origem_tipo_id = 1 AND eve.publicado = 1 AND ped.publicado = 1 AND ped.id = '$idPedido'";
         $query = mysqli_query($con,$sql);
@@ -427,8 +427,7 @@ function geraOpcaoLocais ($tabela, $select = '')
         $con = bancoMysqli();
         $sql_data_inicio = "SELECT data_inicio FROM ocorrencias AS oco
                             INNER JOIN atracoes AS atr ON oco.origem_ocorrencia_id = atr.id
-                            INNER JOIN atracao_eventos AS ae on atr.id = ae.atracao_id
-                            INNER JOIN eventos AS eve on ae.evento_id = eve.id
+                            INNER JOIN eventos AS eve on atr.evento_id = eve.id
                             WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND atr.publicado = 1 AND eve.id = '$idEvento'
                             ORDER BY data_inicio ASC LIMIT 0,1";
         $query_data_inicio = mysqli_query($con,$sql_data_inicio);
@@ -437,8 +436,7 @@ function geraOpcaoLocais ($tabela, $select = '')
 
         $sql_data_fim = "SELECT data_fim FROM ocorrencias AS oco
                             INNER JOIN atracoes AS atr ON oco.origem_ocorrencia_id = atr.id
-                            INNER JOIN atracao_eventos AS ae on atr.id = ae.atracao_id
-                            INNER JOIN eventos AS eve on ae.evento_id = eve.id
+                            INNER JOIN eventos AS eve on atr.evento_id = eve.id
                             WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND atr.publicado = 1 AND eve.id = '$idEvento'
                             ORDER BY data_fim ASC LIMIT 0,1";
         $query_data_fim = mysqli_query($con,$sql_data_fim);
@@ -446,10 +444,10 @@ function geraOpcaoLocais ($tabela, $select = '')
 
         $data_fim = $array_fim['data_fim'];
         if($data_fim == '0000-00-00' OR $data_fim == NULL){
-            return "Dia ".$data_inicio.".";
+            return "dia ".exibirDataBr($data_inicio);
         }
         else{
-            return "De ".$data_inicio." até ".$data_fim;
+            return "de ".exibirDataBr($data_inicio)." até ".exibirDataBr($data_fim);
         }
     }
 
@@ -632,7 +630,7 @@ function recuperaDados($tabela, $campo, $variavelCampo)
 			if (($t==1) && ($z>0) && ($inteiro[0] > 0)) $r .= (($z>1) ? " de " : "").$plural[$t];
 			if ($r) $rt = $rt . ((($i > 0) && ($i <= $fim) && ($inteiro[0] > 0) && ($z < 1)) ? ( ($i < $fim) ? ", " : " e ") : " ") . $r;
 		}
-		return($rt ? $rt : "zero");
+		return($rt ? $rt : " zero");
 	}
 
 	function analisaArray($array)

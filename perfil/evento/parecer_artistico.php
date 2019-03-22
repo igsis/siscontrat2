@@ -37,7 +37,7 @@ if(isset($_POST['edita'])){
 
 $parecer = recuperaDados("parecer_artisticos","pedido_id",$idPedido);
 
-if ($pedido['TipoPessoa'] == 2)
+if ($pedido['pessoa_tipo_id'] == 2)
 {
     $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
     $t1 = "Esta comissão ratifica o pedido de contratação de XXXXXXX LÍDERES XXXXXXXXX por intermédio da ".$pj['Nome'].", para apresentação artística no evento “".retornaObjeto($idPedido)."”, que ocorrerá ".retornaPeriodo($_SESSION['idEvento'])." no valor de R$ ".$pedido['valor_total']." (".valorPorExtenso($pedido['valor_total']).").";
@@ -45,7 +45,7 @@ if ($pedido['TipoPessoa'] == 2)
 else
 {
     $pf = recuperaDados("pessoa_fisicas","id",$pedido['pessoa_fisica_id']);
-    $t1 = "Esta comissão ratifica o pedido de contratação de ".$pf['Nome'].", para apresentação artística no evento “".retornaObjeto($idPedido)."”, que ocorrerá ".retornaPeriodo($_SESSION['idEvento'])." no valor de R$ ".$pedido['valor_total']." (".valorPorExtenso($pedido['valor_total']).").";
+    $t1 = "Esta comissão ratifica o pedido de contratação de ".$pf['nome'].", para apresentação artística no evento “".retornaObjeto($idPedido)."”, que ocorrerá ".retornaPeriodo($_SESSION['idEvento'])." no valor de R$ ".dinheiroParaBr($pedido['valor_total'])." (".valorPorExtenso($pedido['valor_total'])." ).";
 }
 ?>
 <script>
@@ -111,7 +111,7 @@ else
                         <?php if(isset($mensagem)){echo $mensagem;};?>
                     </div>
                     <div class="box-body">
-                        <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                        <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=<?=$artista?>" role="form">
                             <div class="form-group">
                                 <h4><strong>1º Tópico</strong></h4>
                                 <label for="topico1">Neste tópico deve conter o posicionamento da comissão e as informações gerais do evento (nome do artista, evento, datas, valor, tempo, etc).</label><br/>
@@ -144,7 +144,7 @@ else
                             <div class="form-group">
                                 <h4><strong>3º Tópico (mínimo de 700 caracteres)</strong></h4>
                                 <?php
-                                if ($pedido['TipoPessoa'] == 2){
+                                if ($pedido['pessoa_tipo_id'] == 2){
                                 ?>
                                     <label>Neste tópico deve-se falar sobre o currículo/biografia do artista ou grupo (na 3ª pessoa), escrever um breve release. Deve ficar claro que o artista contribuirá positivamente para a programação e porque essa é a melhor escolha de artista para o evento.</label>
                                 <?php
@@ -178,24 +178,12 @@ else
                                 <?php
                                 }
                                 ?>
-                                <textarea id="topico4" name="topico4" class="form-control" rows="5"></textarea>
+                                <textarea id="topico4" name="topico4" class="form-control" rows="5"><?=$parecer['topico4']?></textarea>
                             </div>
                             <!-- /.box-body -->
                             <div class="box-footer">
-                                <?php
-                                if($parecer == NULL){
-                                ?>
-                                    <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                    <button type="submit" name="cadastra" class="btn btn-info pull-right">Gravar</button>
-                                <?php
-                                }
-                                else{
-                                ?>
-                                    <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                    <button type="submit" name = "edita" class="btn btn-info pull-right">Gravar</button>
-                                <?php
-                                }
-                                ?>
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" name="<?=($parecer == NULL) ? "cadastra" : "edita"?>" class="btn btn-info pull-right">Gravar</button>
                             </div>
                         </form>
                     </div>

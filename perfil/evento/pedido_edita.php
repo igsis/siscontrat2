@@ -1,15 +1,16 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-$idProponente = $_POST['idProponente'];
-$tipoPessoa = $_POST['tipoPessoa'];
+
+if (isset($_POST['idProponente'])) {
+    $idProponente = $_POST['idProponente'];
+    $tipoPessoa = $_POST['tipoPessoa'];
+}
 
 if (isset($_POST['carregar'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
     $idPedido = $_SESSION['idPedido'];
 }
-
-
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $verba_id = $_POST['verba_id'];
