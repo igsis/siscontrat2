@@ -153,7 +153,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                                 <div class="input-group">
                                     <label for="cpf" id="textoDocumento">CPF *</label>
                                     <input type="text" class="form-control" minlength=14 name="procurar" value="<?=$procurar?>" id="cpf" data-mask="000.000.000-00" >
-                                    <input type="text" class="form-control" name="passaporte" value="<?=$procurar?>" maxlength="10">
+                                    <input type="text" class="form-control" name="passaporte" id="passaporte" value="<?=$procurar?>" maxlength="10">
 
                                     <span class="input-group-btn">
                                         <p>&nbsp;</p>
@@ -229,19 +229,23 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
     for (const tipo of tipos) {
         tipo.addEventListener('change', e => {
 
-            passaporte.value = ''
-            procurar.value = ''
+            const nulo = null;
+
+            passaporte.value = nulo
+            procurar.value = nulo
 
             if(e.target.value == 1){
                 passaporte.style.display = 'none'
                 procurar.disabled = false
                 passaporte.disabled = true                
                 procurar.style.display = 'block'
+                procurar.value = ''
                 $('#textoDocumento').text('CPF *')
 
             }else{
                 passaporte.style.display = 'block'
                 passaporte.disabled = false
+                passaporte.value = ''
                 procurar.disabled = true
                 procurar.style.display = 'none'
                 $('#textoDocumento').text('Passaporte *')
@@ -287,21 +291,23 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
         var divCPF = document.querySelector('#divCPF');
         var strCPF = document.querySelector('#cpf').value;
 
-        // tira os pontos do valor, ficando apenas os numeros
-        strCPF = strCPF.replace(/[^0-9]/g, '');
+        if(strCPF != null){
+            // tira os pontos do valor, ficando apenas os numeros
+            strCPF = strCPF.replace(/[^0-9]/g, '');
 
-        var validado = TestaCPF(strCPF);
+            var validado = TestaCPF(strCPF);
 
-        if(!validado){
-            alert("CPF inválido!");
-           document.querySelector("#adicionar").disabled = true;
-        }else{
-            document.querySelector("#adicionar").disabled = false;
+            if(!validado){
+                alert("CPF inválido!");
+                $("#adicionar").attr("disabled", true);
+            }else{
+                $("#adicionar").attr("disabled", false);
+            }
         }
     }
 
     $(document).ready(function () {
-        if(document.querySelector("#cpf").value != ""){
+        if((document.querySelector("#cpf").value != "") && (document.querySelector("#passaporte") != "")){
             validacao();
         }
     });
