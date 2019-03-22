@@ -28,7 +28,7 @@ if ($linha >= 1) {
     <!-- Main content -->
     <section class="content">
         <!-- START ACCORDION-->
-        <h2 class="page-header">Seus últimos eventos enviados</h2>
+        <h2 class="page-header">Seus últimos eventos internos enviados</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-solid">
@@ -37,7 +37,7 @@ if ($linha >= 1) {
                             <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                             <?php
                             if ($tem == 0) {
-                                $mensagem = mensagem("info", "Não existe eventos enviados!");
+                                $mensagem = mensagem("info", "Não existe eventos internos enviados!");
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
                                     $locais = listaLocais($evento['id'], '1');
