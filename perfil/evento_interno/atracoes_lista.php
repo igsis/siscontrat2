@@ -166,7 +166,7 @@ $query = mysqli_query($con,$sql);
                     <h4 class="modal-title"><p> Apagar atração</p></h4>
                 </div>
                 <div class="modal-body">
-                    <p>Deseja mesmo apagar está atração? </p>
+                    <p>Deseja mesmo apagar esta atração? </p>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="idAtracao">
