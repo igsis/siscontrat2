@@ -307,7 +307,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
     }
 
     $(document).ready(function () {
-        if((document.querySelector("#cpf").value != "") && (document.querySelector("#passaporte") != "")){
+        if((document.querySelector("#cpf").value != "") && (document.querySelector("#passaporte") == "")){
             validacao();
         }
     });
