@@ -4,6 +4,10 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 date_default_timezone_set('America/Sao_Paulo');
 
+$server = "http://".$_SERVER['SERVER_NAME']."/siscontrat2"; //mudar para pasta do igsis
+$http = $server."/pdf/";
+$link_facc = $http."rlt_fac_pj.php";
+
 $tipoPessoa = 2;
 
 if (isset($_POST['idPj']) || isset($_POST['idProponente'])) {
@@ -463,14 +467,16 @@ if(isset($pj['representante_legal2_id'])){
                                     $queryFACC = mysqli_query($con,$sqlFACC);
 
                                     if (mysqli_num_rows($queryFACC) == 0){
-
                                         ?>
                                         <label>Gerar FACC</label><br>
-                                        <button type="button" class="btn btn-primary btn-block">Clique aqui para
+                                        <a href="<?= $link_facc . "?id=". $idPj ?>" target="_blank" type="button" class="btn btn-primary btn-block">Clique aqui para
                                             gerar a FACC
-                                        </button>
+                                        </a>
                                         <?php
-                                    }else {
+                                    }else if ($pj['representante_legal1_id'] == null)  {
+                                        echo "<label>&nbsp;</label><br> 
+                                               <p>Para gerar a FACC primeiro cadastre um representante legal.</p>";
+                                    } else {
                                         ?>
                                         <label>FACC anexada</label><br>
                                         <button type="button" formaction="?perfil=evento&p=pj_demais_anexos" class="btn btn-primary btn-block">Visualizar
