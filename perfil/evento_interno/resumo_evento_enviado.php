@@ -30,29 +30,95 @@ if (isset($_POST['carregar'])) {
 
         <div class="row">
             <div class="col-md-12">
-                <div class="box box-solid">
+                <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><?= $evento['nome_evento']; ?></h3>
+                        <h3 class="box-title"><strong><?= $evento['nome_evento']; ?></strong></h3>
                     </div>
-                    <!-- /.box-header -->
                     <div class="box-body">
                         <div class="box-group" id="accordion">
-                            <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                            <div class="box-body">
-                                <p>Protocolo: <?= $protocolo['protocolo']; ?></p>
-                                <p>Tipo evento: <?= $tipo_evento['tipo_evento']; ?></p>
-                                <p>É original? <?= $original ?></p>
-                                <p>Relação Juridica: <?= $relacao_juridica['relacao_juridica'] ?></p>
-                                <p>Projeto Especial: <?= $projeto_especial['projeto_especial'] ?></p>
-                                <p>Sinopse: <?= $evento['sinopse'] ?></p>
-                                <p>Fiscal: <?= $fical['nome_completo'] ?></p>
-                                <p>Suplente: <?= $suplente['nome_completo'] ?></p>
-                                <p>Cadastramento realizado por: <?= $usuario['nome_completo'] ?></p>
-                                <p>Haverá contratação? <?= $contratacao ?></p>
-                                <p>Status do Evento: <?= $evento_status['status'] ?></p>
+                            <div class="row">
+                                <div class="box-body">
+                                    <div class="form-group col-md-4">
+                                        <label for="protocolo">Protocolo:</label>
+                                        <input type="text" class="form-control" id="protocolo" name="nomeProtocolo"
+                                               maxlength="250" required readonly
+                                               value="<?= $protocolo['protocolo'] ?>">
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <label for="nomeEvento">Nome do Evento:</label>
+                                        <input type="text" class="form-control" id="evento" name="nomeEvento"
+                                               maxlength="250" required readonly
+                                               value="<?= $evento ['nome_evento']; ?>">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="Periodo">Período:</label>
+                                        <input type="text" class="form-control" id="periodo" name="periodo"
+                                               maxlength="250"
+                                               required readonly value=" <?= retornaPeriodoNovo($idEvento); ?>">
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <label for="tipoEvento">Tipo evento:</label>
+                                        <input type="text" class="form-control" id="relacaoJuridica"
+                                               name="relacaoJuridica"
+                                               maxlength="250" required readonly
+                                               value="<?= $tipo_evento['tipo_evento']; ?>">
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="original"><strong>É original?</strong></label>
+                                        <input type="text" class="form-control" id="original" name="original"
+                                               maxlength="250" required readonly value="<?= $evento['original']; ?>">
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        <label for="relacaoJuridica">Relação Juridica:</label>
+                                        <input type="text" class="form-control" id="relacaoJuridica"
+                                               name="relacaoJuridica" maxlength="250"
+                                               readonly value="<?= $relacao_juridica['relacao_juridica']; ?>">
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        <label for="projetoEspecial">Projeto Especial:</label>
+                                        <input type="text" class="form-control" id="projetoEspecial"
+                                               name="projetoEspecial" maxlength="250" required
+                                               readonly value="<?= $projeto_especial['projeto_especial']; ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sinopse">Sinopse:</label>
+                                        <textarea name="sinopse" id="sinopse" class="form-control" rows="5"
+                                                  required readonly><?= $evento['sinopse']; ?></textarea>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="fiscal">Fiscal:</label>
+                                        <input type="text" class="form-control" id="fiscal"
+                                               name="fiscal" required readonly
+                                               value="<?= $fical['nome_completo'] ?> ">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="suplente">Suplente:</label>
+                                        <input type="text" class="form-control" id="suplente"
+                                               name="suplente" maxlength="250" required readonly
+                                               value=<?= $suplente['nome_completo']; ?>>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="cadastramento">Cadastramento realizado por:</label>
+                                        <input type="text" class="form-control" id="cadastramento"
+                                               name="cadastramento" maxlength="250" required readonly
+                                               value=<?= $usuario['nome_completo'] ?>>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="contratacao">Haverá contratação?</label>
+                                        <input type="text" class="form-control" id="contratacao"
+                                               name="contratacao" maxlength="250" required readonly
+                                               value=<?= $contratacao ?>>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="status">Status do Evento:</label>
+                                        <input type="text" class="form-control" id="status"
+                                               name="status" maxlength="250" required
+                                               readonly value=<?= $evento_status['status'];?>>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
+                    <hr>
                         <?php
                         $query_atracao = mysqli_query($con, $sql_atracao);
                         while ($atracao = mysqli_fetch_array($query_atracao)) {
@@ -68,7 +134,8 @@ if (isset($_POST['carregar'])) {
                                 <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                                 <div class="box-body">
                                     <p>Nome da atração: <?= $atracao['nome_atracao']; ?></p>
-                                    <p>Categoria da atração: <?= $categoria_atracao['categoria_atracao']; ?></p>
+                                    <p>Categoria da
+                                        atração: <?= $categoria_atracao['categoria_atracao']; ?></p>
                                     <p>Ficha técnica:<br> <?= $atracao['ficha_tecnica']; ?></p>
                                     <p>Integrantes: <?= $atracao['integrantes']; ?></p>
                                     <p>Classificação
@@ -81,12 +148,14 @@ if (isset($_POST['carregar'])) {
                                         <p>Links: <?= $atracao['links']; ?></p>
                                     <?php } ?>
 
-                                    <p>Quantidade de Apresentação: <?= $atracao['quantidade_apresentacao']; ?></p>
+                                    <p>Quantidade de
+                                        Apresentação: <?= $atracao['quantidade_apresentacao']; ?></p>
 
                                     <?php
                                     if ($atracao['valor_individual'] != NULL) {
                                         ?>
-                                        <p>Valor individual: <?= dinheiroParaBr($atracao['valor_individual']); ?></p>
+                                        <p>Valor
+                                            individual: <?= dinheiroParaBr($atracao['valor_individual']); ?></p>
                                     <?php }
 
                                     if ($atracao['produtor_id'] != NULL) {
@@ -106,6 +175,7 @@ if (isset($_POST['carregar'])) {
                             while ($ocorrencia = mysqli_fetch_array($query_ocorrencia)) {
 
                                 $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
+                                $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
 
                                 ?>
 
@@ -114,6 +184,30 @@ if (isset($_POST['carregar'])) {
                                     <div class="box-body">
                                         <h4>Ocorrências</h4>
                                         <p>Local: <?= $local['local']; ?></p>
+                                        <?php
+                                        if ($ocorrencia['horario_inicio'] != NULL) {
+                                            ?>
+                                            <p>Horário
+                                                Início: <?= exibirHora($ocorrencia['horario_inicio']); ?></p>
+                                        <?php } ?>
+                                        <?php
+                                        if ($ocorrencia['horario_fim'] != NULL) {
+                                            ?>
+                                            <p>Horário
+                                                Fim: <?= exibirHora($ocorrencia['horario_fim']); ?></p>
+                                        <?php } ?>
+                                        <p>Retirada de
+                                            Ingresso:<?= $retirada_ingresso['retirada_ingresso'] ?></p>
+                                        <?php
+                                        if ($ocorrencia['virada'] != NULL) {
+                                            ?>
+                                            <p>Virada: <?= $ocorrencia['virada']; ?></p>
+                                        <?php } ?>
+                                        <?php
+                                        if ($ocorrencia['publicado'] != NULL) {
+                                            ?>
+                                            <p>Publicado: <?= $ocorrencia['publicado']; ?></p>
+                                        <?php } ?>
                                     </div>
                                 </div>
 
