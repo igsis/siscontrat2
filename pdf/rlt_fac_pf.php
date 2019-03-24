@@ -1,13 +1,12 @@
 <?php 
    
    // INSTALAÇÃO DA CLASSE NA PASTA FPDF.
-	require_once("../include/lib/fpdf/fpdf.php");
+    require_once("../include/lib/fpdf/fpdf.php");
    require_once("../funcoes/funcoesConecta.php");
    require_once("../funcoes/funcoesGerais.php");
-   require_once("../funcoes/funcoesSiscontrat.php");
 
    //CONEXÃO COM BANCO DE DADOS 
-   $conexao = bancoMysqli(); 
+   $con = bancoMysqli();
    
 // logo da instituição 
 session_start();
@@ -28,15 +27,19 @@ function Header()
 
 }
 
-
-
 //CONSULTA 
-$id_pf=$_GET['id_pf'];
+$id_Pf = $_GET['id'];
 
 $ano=date('Y');
 
-$pessoa = siscontratDocs($id_pf,1);
-$enderecoCEP = enderecoCEP($pessoa['CEP']);
+$pf = recuperaDados("pessoa_fisicas", "id", $id_Pf);
+
+$sql_telefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$id_Pf' LIMIT 0,1";
+$query = mysqli_query($con, $sql_telefones);
+$telefones = mysqli_fetch_array($query);
+
+$end = recuperaDados("pf_enderecos", "pessoa_fisica_id", $id_Pf);
+$bancos = recuperaDados("pf_bancos", "pessoa_fisica_id", $id_Pf);
 
 $rua = $enderecoCEP["rua"]; 
 $bairro = $enderecoCEP["bairro"];
@@ -118,7 +121,7 @@ $l=7; //DEFINE A ALTURA DA LINHA
    $pdf->Cell(50,$l,utf8_decode($RG),0,0,'L');
 
 
-$pdf->Output();
+$pdf->Output($id_Pf.' - FACC.pdf', 'D');
 
 
 ?>

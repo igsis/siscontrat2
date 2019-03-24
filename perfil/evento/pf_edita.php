@@ -3,6 +3,11 @@ date_default_timezone_set('America/Sao_Paulo');
 $con = bancoMysqli();
 $conn = bancoPDO();
 
+$server = "http://".$_SERVER['SERVER_NAME']."/siscontrat2"; //mudar para pasta do igsis
+$http = $server."/pdf/";
+$link_facc = $http."rlt_fac_pf.php";
+
+
 if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
 }
@@ -598,9 +603,9 @@ include "includes/menu_interno.php";
 
                                     ?>
                                     <label>Gerar FACC</label><br>
-                                    <button type="button" class="btn btn-primary btn-block">Clique aqui para
+                                    <a href="<?= $link_facc . "?id=". $idPf ?>" target="_blank" type="button" class="btn btn-primary btn-block">Clique aqui para
                                         gerar a FACC
-                                    </button>
+                                    </a>
                                         <?php
                                     }else {
                                     ?>

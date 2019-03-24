@@ -471,7 +471,7 @@ if(isset($pj['representante_legal2_id'])){
 
                                         echo " <div class='form-group col-md-12 text-center'>
                                                    <label>&nbsp;</label><br> 
-                                                   <p class='text-warning text-bold'><em>Para gerar a FACC primeiro cadastre um representante legal.</em></p>
+                                                   <h4 class='text-warning text-bold'><em>Para gerar a FACC primeiro cadastre um representante legal.</em></h4>
                                                </div>";
 
                                         $facc = "none";
