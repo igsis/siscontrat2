@@ -461,38 +461,48 @@ if(isset($pj['representante_legal2_id'])){
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-3">
                                     <?php
                                     $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 89 AND origem_id = '$idPj' AND publicado = 1";
                                     $queryFACC = mysqli_query($con,$sqlFACC);
 
-                                    if (mysqli_num_rows($queryFACC) == 0){
+                                    $facc = "block";
+
+                                    if (mysqli_num_rows($queryFACC) == 0 && $pj['representante_legal1_id'] == null){
+
+                                        echo " <div class='form-group col-md-12 text-center'>
+                                                   <label>&nbsp;</label><br> 
+                                                   <p class='text-warning text-bold'><em>Para gerar a FACC primeiro cadastre um representante legal.</em></p>
+                                               </div>";
+
+                                        $facc = "none";
+
+                                    }else if (mysqli_num_rows($queryFACC) == 0 && $pj['representante_legal1_id'] != null)  {
                                         ?>
-                                        <label>Gerar FACC</label><br>
-                                        <a href="<?= $link_facc . "?id=". $idPj ?>" target="_blank" type="button" class="btn btn-primary btn-block">Clique aqui para
-                                            gerar a FACC
-                                        </a>
+                                            <div class="form-group col-md-3">
+                                                <label>Gerar FACC</label><br>
+                                                <a href="<?= $link_facc . "?id=". $idPj ?>" target="_blank" type="button" class="btn btn-primary btn-block">Clique aqui para
+                                                    gerar a FACC
+                                                </a>
+                                            </div>
                                         <?php
-                                    }else if ($pj['representante_legal1_id'] == null)  {
-                                        echo "<label>&nbsp;</label><br> 
-                                               <p>Para gerar a FACC primeiro cadastre um representante legal.</p>";
                                     } else {
                                         ?>
-                                        <label>FACC anexada</label><br>
-                                        <button type="button" formaction="?perfil=evento&p=pj_demais_anexos" class="btn btn-primary btn-block">Visualizar
-                                            arquivos enviados
-                                        </button>
+                                            <div class="form-group col-md-3">
+                                                    <label>FACC anexada</label><br>
+                                                    <button type="button" formaction="?perfil=evento&p=pj_demais_anexos" class="btn btn-primary btn-block">Visualizar
+                                                        arquivos enviados
+                                                    </button>
+                                            </div>
                                         <?php
                                     }
                                     ?>
-                                </div>
-                                <div class="form-group col-md-5">
+                                <div class="form-group col-md-5" style="display: <?=$facc?>">
                                     <label>&nbsp;</label><br>
                                     <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
                                         documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
                                         no campo correspondente.</p>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-4"  style="display: <?=$facc?>">
                                     <?php
                                     anexosNaPagina(89, $idPj, "modal-facc", "FACC");
                                     ?>

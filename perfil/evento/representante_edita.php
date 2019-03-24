@@ -7,8 +7,6 @@ if (isset($_POST['carregar']) || isset($_POST['apagar']) || isset($_POST['enviar
     $idRepresentante = $_POST['idRepresentante'] ?? $_POST['idPessoa'];
     $tipoRepresentante = $_POST['tipoRepresentante'] ?? $_POST['tipoPessoa'];
 
-    echo "id: " . $idRepresentante . "tipo: " . $tipoRepresentante;
-
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){

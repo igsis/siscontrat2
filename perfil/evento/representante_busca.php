@@ -2,7 +2,6 @@
 
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-$idPedido = $_SESSION['idPedido'];
 
 if(isset($_POST['tipoRepresentante']) && isset($_POST['idPj'])) {
     $tipoRepresentante = $_POST['tipoRepresentante'];
