@@ -41,11 +41,17 @@ $telefones = mysqli_fetch_array($query);
 $end = recuperaDados("pf_enderecos", "pessoa_fisica_id", $id_Pf);
 $bancos = recuperaDados("pf_bancos", "pessoa_fisica_id", $id_Pf);
 
-$rua = $enderecoCEP["rua"]; 
-$bairro = $enderecoCEP["bairro"];
-$cidade = $enderecoCEP["cidade"];
-$estado = $enderecoCEP["estado"];
 
+//endereco
+$rua = $end["logradouro"];
+$bairro = $end["bairro"];
+$cidade = $end["cidade"];
+$estado = $end["uf"];
+$num = $end['numero'];
+$pjComplemento = $end["complemento"];
+$cep = $end['cep'];
+
+//pessoa fisica
 $Nome = $pessoa["Nome"];
 $RG = $pessoa["RG"];
 $CPF = $pessoa["CPF"];
