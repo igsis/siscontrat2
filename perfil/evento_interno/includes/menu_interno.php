@@ -19,12 +19,6 @@ $pasta = "?perfil=evento_interno&p=";
                 if($evento['tipo_evento_id'] == 1){ //atração
                     echo "<li><a href=\"".$pasta."atracoes_lista\"><i class=\"fa fa-circle-o\"></i> <span>Atração</span></a></li>";
                 }
-                else{ //filme
-                    echo "<li><a href=\"".$pasta."evento_cinema_lista\"><i class=\"fa fa-circle-o\"></i> <span>Filme</span></a></li>";
-                }
-                if($evento['contratacao'] == 1){
-                    echo "<li><a href=\"".$pasta."pedido\"><i class=\"fa fa-circle-o\"></i> <span>Pedido</span></a></li>";
-                }
             }
             ?>
             <li><a href="?perfil=evento_interno"><i class="fa fa-circle-o"></i> <span>Voltar</span></a></li>

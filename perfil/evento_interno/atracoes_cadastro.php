@@ -97,6 +97,7 @@ include "includes/menu_interno.php";
                             <!-- /.box-body -->
 
                             <div class="box-footer">
+                                <a href="?perfil=evento_interno&p=atracoes_lista"><button type="button" class="btn btn-default">Voltar</button></a>
                                 <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar
                                 </button>
                             </div>

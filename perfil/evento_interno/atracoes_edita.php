@@ -1,5 +1,4 @@
 <?php
-include "includes/menu_interno.php";
 $con = bancoMysqli();
 
 $idEvento = $_SESSION['idEvento'];
@@ -38,6 +37,8 @@ if(isset($_POST['edita'])){
 if(isset($_POST['carregar'])){
     $idAtracao = $_POST['idAtracao'];
 }
+
+include "includes/menu_interno.php";
 
 $atracao = recuperaDados("atracoes","id",$idAtracao);
 ?>
@@ -123,6 +124,7 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
                         <!-- /.box-body -->
 
                         <div class="box-footer">
+                            <a href="?perfil=evento_interno&p=atracoes_lista"><button type="button" class="btn btn-default">Voltar</button></a>
                             <input type="hidden" name="idAtracao" value="<?= $atracao['id'] ?>">
                             <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>

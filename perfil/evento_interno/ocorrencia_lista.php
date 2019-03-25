@@ -21,7 +21,7 @@ if(isset($_POST['apagar'])){
 if(isset($_POST['duplicar'])){
     $idProjeto = $_POST['idProjeto'];
     $numeroDuplica = $_POST['numeroDuplica'];
-    
+
     $sqlProjeto = "SELECT * FROM siscontrat.ocorrencias WHERE id = :id";
 
     $stmt = $conn->prepare($sqlProjeto);
@@ -34,7 +34,7 @@ if(isset($_POST['duplicar'])){
             (" . implode(',', array_keys($cloneOcorrencia)). ") VALUES 
             (" . sprintf( "'%s'", implode( "','", $cloneOcorrencia )).")";
 
-    for ($i=0; $i < $numeroDuplica; $i++) { 
+    for ($i=0; $i < $numeroDuplica; $i++) {
         if($conn->exec($inserir)){
             $sucesso = true;
         }else{
@@ -44,7 +44,7 @@ if(isset($_POST['duplicar'])){
 
     if($sucesso){
         $mensagem = mensagem("success","$numeroDuplica Ocorrência(s) replicada(s) com sucesso!");
-    
+
     }else{
         $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
     }
@@ -55,14 +55,25 @@ $evento = recuperaDados('eventos', 'id', $_SESSION['idEvento']);
 
 $tipo_ocorrencia_id = $evento['tipo_evento_id'];
 
-$idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
+if(isset($_POST['carregar'])){
+    $idOrigem = $_POST['idOrigem'];
+    unset($_SESSION['idOrigem']);
+    $_SESSION['idOrigem'] = $idOrigem;
+}else if(isset($_SESSION['idOrigem'])){
+    $idOrigem = $_SESSION['idOrigem'];
+}else{
+    $idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
+}
 
 $sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim 
         FROM ocorrencias as o
         INNER JOIN  locais as l ON o.local_id = l.id
-        WHERE o.origem_ocorrencia_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id' AND o.publicado = 1";
+        WHERE o.origem_ocorrencia_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id' AND o.publicado = 1
+        ORDER BY local, data_inicio, horario_inicio, horario_fim";
 
 $query = mysqli_query($con,$sql);
+
+$mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências destacadas com a mesma cor são idênticas!!");
 ?>
 
 <div class="content-wrapper">
@@ -89,6 +100,9 @@ $query = mysqli_query($con,$sql);
                     <div class="row" align="center">
                         <?php if(isset($mensagem)){echo $mensagem;};?>
                     </div>
+                    <div class="row" align="center" id="duplicated-message">
+
+                    </div>
                     <div class="box-body">
                         <table id="tblOcorrencia" class="table table-bordered table-striped">
                             <thead>
@@ -108,7 +122,7 @@ $query = mysqli_query($con,$sql);
                             echo "<tbody>";
                             while ($ocorrencia = mysqli_fetch_array($query)){
 
-                                echo "<tr>";
+                                echo "<tr class='content'>";
                                 echo "<td>".exibirDataBr($ocorrencia['data_inicio'])."</td>";
                                 echo "<td>".exibirHora($ocorrencia['horario_inicio'])."</td>";
                                 echo "<td>".exibirHora($ocorrencia['horario_fim'])."</td>";
@@ -120,14 +134,14 @@ $query = mysqli_query($con,$sql);
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
-                                
+
                                 echo "<td>
                                     <input type='hidden' name='idOcorrencia'>
                                     <buttonn class='btn btn-block btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='".$ocorrencia['id']."' data-tittle='Replicando ocorrência' data-message='Digite o número de vezes que deseja replicar a ocorrência: '><span class='glyphicon glyphicon-retweet'></span></buttonn>
                                 </td>";
 
                                 echo "<td>
-                                    <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-id='".$ocorrencia['id']."' data-tittle='Apagar ocorrência' data-message='Deseja mesmo apagar está ocorrências' onClick='setarIdOcorrencia(".$ocorrencia['id'].")'><span class='glyphicon glyphicon-trash'></span></button>
+                                    <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-id='".$ocorrencia['id']."' data-tittle='Apagar ocorrência' data-message='Deseja mesmo pagar está ocorrências' onClick='setarIdOcorrencia(".$ocorrencia['id'].")'><span class='glyphicon glyphicon-trash'></span></button>
                                   </td>";
                                 echo "</tr>";
                             }
@@ -144,7 +158,7 @@ $query = mysqli_query($con,$sql);
                             </tfoot>
                         </table>
                     </div>
-            </div>
+                </div>
             </div>
         </div>
     </section>
@@ -154,7 +168,7 @@ $query = mysqli_query($con,$sql);
 <div class="modal fade" id="duplicar" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" id='formDuplicar' action="?perfil=evento_interno&p=ocorrencia_lista" class="form-horizontal" role="form">
+            <form method="POST" id='formDuplicar' action="?perfil=evento&p=ocorrencia_lista" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">Replicando ocorrência</h4>
@@ -178,7 +192,7 @@ $query = mysqli_query($con,$sql);
 <div class="modal fade" id="apagar" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" id='formApagar' action="?perfil=evento_interno&p=ocorrencia_lista" class="form-horizontal" role="form">
+            <form method="POST" id='formApagar' action="?perfil=evento&p=ocorrencia_lista" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">Apagar ocorrência</h4>
@@ -187,10 +201,10 @@ $query = mysqli_query($con,$sql);
                     <p>Deseja mesmo apagar esta ocorrência?</p>
                 </div>
                 <div class="modal-footer">
-                        <input type="hidden" name="idOcorrenciaApaga">
-                        <input type='hidden' name='idOrigemModal' value="<?=$idOrigem?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                        <button type='submit' class='btn btn-info btn-sm' name="apagar">Confirmar</button>
+                    <input type="hidden" name="idOcorrenciaApaga">
+                    <input type='hidden' name='idOrigemModal' value="<?=$idOrigem?>">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type='submit' class='btn btn-info btn-sm' name="apagar">Confirmar</button>
                 </div>
             </form>
         </div>
@@ -202,7 +216,7 @@ $query = mysqli_query($con,$sql);
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">
-        $(function () {
+    $(function () {
         $('#tblOcorrencia').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
@@ -229,3 +243,81 @@ $query = mysqli_query($con,$sql);
 
 
 </script>
+
+<script type="text/javascript">
+
+    const menssagem = `<?=$mensagem2?>`;
+
+    function generateRandomInt(max, min = 125) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    function colorGenerator() {
+
+        const
+            generatedColors = new Set();
+
+        return () => {
+            let randomColor;
+
+            do {
+                randomColor = `rgb(${generateRandomInt(255)},${generateRandomInt(255)},${generateRandomInt(255)})`;
+            } while (generatedColors.has(randomColor));
+
+            generatedColors.add(randomColor);
+
+            return randomColor;
+        };
+    }
+
+    function highlightDoubles(table) {
+
+        var cont;
+        cont = 0;
+        const
+
+            contentCells = table.querySelectorAll('.content'),
+
+            contentMap = new Map();
+
+        Array.from(contentCells).forEach(cell => {
+            const
+                array = (contentMap.has(cell.textContent))
+                    ? contentMap.get(cell.textContent)
+                    : [];
+
+            array.push(cell)
+
+            contentMap.set(cell.textContent, array);
+        });
+
+        const
+            randomColor = colorGenerator();
+
+
+        contentMap.forEach(cells => {
+
+            if (cells.length < 2) {
+                return;
+            }else{
+                cont ++;
+            }
+
+            const
+                color = randomColor();
+
+            cells.forEach(cell => {
+                cell.style.backgroundColor = color;
+            });
+        });
+
+        if(cont > 0){
+            $("#duplicated-message").html(menssagem)
+        }
+
+    }
+    highlightDoubles(document.getElementById('tblOcorrencia'));
+
+
+</script>
+

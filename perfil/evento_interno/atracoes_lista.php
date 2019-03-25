@@ -2,6 +2,7 @@
 include "includes/menu_interno.php";
 
 $con = bancoMysqli();
+unset($_SESSION['idOrigem']);
 $idEvento = $_SESSION['idEvento'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
@@ -60,7 +61,6 @@ $query = mysqli_query($con,$sql);
                                 <th>Ocorrência</th>
                                 <th>Visualizar</th>
                                 <th>Apagar</th>
-
                             </tr>
                             </thead>
 
@@ -136,9 +136,9 @@ $query = mysqli_query($con,$sql);
                                 <th>Nome da atração</th>
                                 <th>Categoria da atração</th>
                                 <th>Produtor</th>
-                                <th>Especificidade</th>
                                 <th>Ocorrência</th>
-                                <th colspan="2" width="10%"></th>
+                                <th>Visualizar</th>
+                                <th>Apagar</th>
                             </tr>
                             </tfoot>
                         </table>
