@@ -80,7 +80,7 @@ if (isset($_POST['carregar'])) {
                                                name="projetoEspecial" maxlength="250" required
                                                readonly value="<?= $projeto_especial['projeto_especial']; ?>">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group col-md-12">
                                         <label for="sinopse">Sinopse:</label>
                                         <textarea name="sinopse" id="sinopse" class="form-control" rows="5"
                                                   required readonly><?= $evento['sinopse']; ?></textarea>
@@ -113,118 +113,180 @@ if (isset($_POST['carregar'])) {
                                         <label for="status">Status do Evento:</label>
                                         <input type="text" class="form-control" id="status"
                                                name="status" maxlength="250" required
-                                               readonly value=<?= $evento_status['status'];?>>
+                                               readonly value=<?= $evento_status['status']; ?>>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    <hr>
+                        <hr>
                         <?php
                         $query_atracao = mysqli_query($con, $sql_atracao);
                         while ($atracao = mysqli_fetch_array($query_atracao)) {
 
-                            $categoria_atracao = recuperaDados('categoria_atracoes', 'id', $atracao['categoria_atracao_id']);
-                            $classificacao_indicativa = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
+                        $categoria_atracao = recuperaDados('categoria_atracoes', 'id', $atracao['categoria_atracao_id']);
+                        $classificacao_indicativa = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
 
-                            $idAtracao = $atracao['id'];
-                            $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = 1";
-
-                            ?>
-                            <div class="box-group" id="accordion">
-                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                                <div class="box-body">
-                                    <p>Nome da atração: <?= $atracao['nome_atracao']; ?></p>
-                                    <p>Categoria da
-                                        atração: <?= $categoria_atracao['categoria_atracao']; ?></p>
-                                    <p>Ficha técnica:<br> <?= $atracao['ficha_tecnica']; ?></p>
-                                    <p>Integrantes: <?= $atracao['integrantes']; ?></p>
-                                    <p>Classificação
-                                        Indicativa: <?= $classificacao_indicativa['classificacao_indicativa']; ?></p>
-                                    <p>Release:<br> <?= $atracao['release_comunicacao']; ?></p>
-
-                                    <?php
-                                    if ($atracao['links'] != NULL) {
-                                        ?>
-                                        <p>Links: <?= $atracao['links']; ?></p>
-                                    <?php } ?>
-
-                                    <p>Quantidade de
-                                        Apresentação: <?= $atracao['quantidade_apresentacao']; ?></p>
-
-                                    <?php
-                                    if ($atracao['valor_individual'] != NULL) {
-                                        ?>
-                                        <p>Valor
-                                            individual: <?= dinheiroParaBr($atracao['valor_individual']); ?></p>
-                                    <?php }
-
-                                    if ($atracao['produtor_id'] != NULL) {
-                                        $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
-                                        ?>
-                                        <p>Nome Produtor: <?= $produtor['nome']; ?></p>
-                                        <p>Email do Produtor: <?= $produtor['email']; ?></p>
-                                        <p>Telefone 1: <?= $produtor['telefone1']; ?></p>
-                                        <p>Telefone 2: <?= $produtor['telefone2']; ?></p>
-                                        <p>Observação: <?= $produtor['observacao']; ?></p>
-                                    <?php } ?>
-                                </div>
-
-                            </div>
-                            <?php
-                            $query_ocorrencia = mysqli_query($con, $sql_ocorrencia);
-                            while ($ocorrencia = mysqli_fetch_array($query_ocorrencia)) {
-
-                                $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
-                                $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
-
-                                ?>
-
-                                <div class="box-group" id="accordion">
-                                    <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                                    <div class="box-body">
-                                        <h4>Ocorrências</h4>
-                                        <p>Local: <?= $local['local']; ?></p>
-                                        <?php
-                                        if ($ocorrencia['horario_inicio'] != NULL) {
-                                            ?>
-                                            <p>Horário
-                                                Início: <?= exibirHora($ocorrencia['horario_inicio']); ?></p>
-                                        <?php } ?>
-                                        <?php
-                                        if ($ocorrencia['horario_fim'] != NULL) {
-                                            ?>
-                                            <p>Horário
-                                                Fim: <?= exibirHora($ocorrencia['horario_fim']); ?></p>
-                                        <?php } ?>
-                                        <p>Retirada de
-                                            Ingresso:<?= $retirada_ingresso['retirada_ingresso'] ?></p>
-                                        <?php
-                                        if ($ocorrencia['virada'] != NULL) {
-                                            ?>
-                                            <p>Virada: <?= $ocorrencia['virada']; ?></p>
-                                        <?php } ?>
-                                        <?php
-                                        if ($ocorrencia['publicado'] != NULL) {
-                                            ?>
-                                            <p>Publicado: <?= $ocorrencia['publicado']; ?></p>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-
-                            <?php }
-                        }
+                        $idAtracao = $atracao['id'];
+                        $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = 1";
 
                         ?>
-                    </div>
-                    <!-- /.box-body -->
-                </div>
-                <!-- /.box -->
-            </div>
-            <!-- /.col -->
-        </div>
-        <!-- /.row -->
-        <!-- END ACCORDION & CAROUSEL-->
 
-    </section>
-    <!-- /.content -->
+                            <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                            <div class="form-group col-md-6">
+                                <label for="nomeAtracao">Nome da atração:</label>
+                                <input type="text" class="form-control" id="nomeAtracao"
+                                       name="nomeAtracao" maxlength="250" required
+                                       readonly value=<?= $atracao['nome_atracao']; ?>>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="categoria">Categoria da
+                                    atração:</label>
+                                <input type="text" class="form-control" id="categoria"
+                                       name="categoria" maxlength="250" required
+                                       readonly value=<?= $categoria_atracao['categoria_atracao']; ?>>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="ficha">Ficha técnica:<br></label>
+                                <textarea name="ficha" id="ficha" class="form-control" rows="5"
+                                          readonly value="<?= $atracao['ficha_tecnica']; ?>"></textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="integrantes">Integrantes:</label>
+                                <input type="text" class="form-control" id="integrantes"
+                                       name="integrantes" maxlength="250" required readonly
+                                       value="<?= $atracao['integrantes']; ?>">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="classificacao">Classificação
+                                    Indicativa:</label>
+                                <input type="text" class="form-control" id="classificacao"
+                                       name="classificacao" maxlength="250" required readonly
+                                       value="<?= $classificacao_indicativa['classificacao_indicativa']; ?>">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="quantidade">Quantidade de
+                                    Apresentação:</label>
+                                <input type="text" class="form-control" id="quantidade"
+                                       name="quantidade" maxlength="250" required readonly
+                                       value="<?= $atracao['quantidade_apresentacao']; ?>">
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="release">Release:<br></label>
+                                <textarea name="release" id="release" class="form-control" rows="5"
+                                          readonly value="<?= $atracao['release_comunicacao']; ?>"></textarea>
+                            </div>
+                            <?php
+                            if ($atracao['links'] != NULL) {
+                                ?>
+                                <div class="form-group col-md-12">
+                                    <label for="links">Links:</label>
+                                    <textarea name="link" id="link" class="form-control" rows="3"
+                                              required readonly value="<?= $atracao['links']; ?>"></textarea>
+                                </div>
+                            <hr>
+                            <?php } ?>
+
+                            <?php
+                            if ($atracao['valor_individual'] != NULL) {
+                                ?>
+                                <p>Valor
+                                    individual: <?= dinheiroParaBr($atracao['valor_individual']); ?></p>
+                            <?php }
+
+                            if ($atracao['produtor_id'] != NULL) {
+                                $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
+                                ?>
+
+                                <div class="form-group col-md-12">
+                                    <label for="nomeProdutor">Nome Produtor:</label>
+                                    <input type="text" class="form-control" id="nomeProdutor"
+                                           name="nomeProdutor" maxlength="250" required readonly
+                                           value="<?= $produtor['nome']; ?>">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="emailProdutor">Email do Produtor:</label>
+                                    <input type="text" class="form-control" id="emailProdutor"
+                                           name="emailProdutor" maxlength="250" required readonly
+                                           value="<?= $produtor['email']; ?>">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="telefone1">Telefone 1:</label>
+                                    <input type="text" class="form-control" id="telefone1"
+                                           name="telefone1" maxlength="250" required readonly
+                                           value="<?= $produtor['telefone1']; ?>">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="telefone2">Telefone 2:</label>
+                                    <input type="text" class="form-control" id="telefone2"
+                                           name="telefone2" maxlength="250" required readonly
+                                           value="<?= $produtor['telefone2']; ?>">
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label for="obs">Observação:</label>
+                                    <textarea name="obs" id="obs" class="form-control" rows="3"
+                                              required readonly value="<?= $produtor['observacao']; ?>"></textarea>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $query_ocorrencia = mysqli_query($con, $sql_ocorrencia);
+                while ($ocorrencia = mysqli_fetch_array($query_ocorrencia)) {
+
+                    $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
+                    $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
+
+                    ?>
+
+                    <div class="box-group" id="accordion">
+                        <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                        <div class="box-body">
+                            <h4>Ocorrências</h4>
+                            <p>Local: <?= $local['local']; ?></p>
+                            <?php
+                            if ($ocorrencia['horario_inicio'] != NULL) {
+                                ?>
+                                <p>Horário
+                                    Início: <?= exibirHora($ocorrencia['horario_inicio']); ?></p>
+                            <?php } ?>
+                            <?php
+                            if ($ocorrencia['horario_fim'] != NULL) {
+                                ?>
+                                <p>Horário
+                                    Fim: <?= exibirHora($ocorrencia['horario_fim']); ?></p>
+                            <?php } ?>
+                            <p>Retirada de
+                                Ingresso:<?= $retirada_ingresso['retirada_ingresso'] ?></p>
+                            <?php
+                            if ($ocorrencia['virada'] != NULL) {
+                                ?>
+                                <p>Virada: <?= $ocorrencia['virada']; ?></p>
+                            <?php } ?>
+                            <?php
+                            if ($ocorrencia['publicado'] != NULL) {
+                                ?>
+                                <p>Publicado: <?= $ocorrencia['publicado']; ?></p>
+                            <?php } ?>
+                        </div>
+                    </div>
+
+                <?php }
+                }
+
+                ?>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+</div>
+<!-- /.col -->
+</div>
+<!-- /.row -->
+<!-- END ACCORDION & CAROUSEL-->
+
+</section>
+<!-- /.content -->
 </div>
