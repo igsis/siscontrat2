@@ -11,7 +11,7 @@ $idUsuario = $_SESSION['idUser'];
 
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 1 AND evento_status_id >= 3 AND (suplente_id = '$iddUsuario' OR fiscal_id = '$iddUsuario' OR usuario_id = '$iddUsuario') ORDER BY id DESC LIMIT 0,20";
+$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 1 AND evento_status_id >= 3 AND (suplente_id = '$idUsuario' OR fiscal_id = '$idUsuario' OR usuario_id = '$idUsuario') ORDER BY id DESC LIMIT 0,20";
 
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
@@ -33,7 +33,7 @@ if ($linha >= 1) {
             <div class="col-md-12">
                 <div class="box box-solid">
                     <div class="box-body">
-                        <div class="box-group" id="accordion">
+                        <div class="box-group" id="accordionEventoInterno">
                             <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                             <?php
                             if ($tem == 0) {
@@ -45,13 +45,13 @@ if ($linha >= 1) {
                                     <div class="panel box box-primary">
                                         <div class="box-header with-border">
                                             <h4 class="box-title">
-                                                <a data-toggle="collapse collapse in" data-parent="#accordion"
-                                                   href="#collapseOne">
+                                                <a data-toggle="collapse" data-parent="#accordionEventoInterno"
+                                                   href="#collapse<?=$evento['id']?>">
                                                     <?= $evento['nome_evento'] ?>
                                                 </a>
                                             </h4>
                                         </div>
-                                        <div id="collapseOne" class="panel-collapse collapse in">
+                                        <div id="collapse<?=$evento['id']?>" class="panel-collapse collapse">
                                             <div class="box-body">
                                                 <?php
                                                 $dataEnvio = recuperaDados('evento_envios', 'evento_id', $evento['id']);

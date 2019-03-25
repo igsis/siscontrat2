@@ -11,7 +11,7 @@ if (isset($_POST['carregar'])) {
     $original = $evento['original'] == 1 ? 'Sim' : 'Não';
     $relacao_juridica = recuperaDados('relacao_juridicas', 'id', $evento['relacao_juridica_id']);
     $projeto_especial = recuperaDados('projeto_especiais', 'id', $evento['projeto_especial_id']);
-    $fical = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
+    $fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
     $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
     $usuario = recuperaDados('usuarios', 'id', $evento['usuario_id']);
     $contratacao = $evento['contratacao'] == 1 ? 'Sim' : 'Não';
@@ -89,7 +89,7 @@ if (isset($_POST['carregar'])) {
                                         <label for="fiscal">Fiscal:</label>
                                         <input type="text" class="form-control" id="fiscal"
                                                name="fiscal" required readonly
-                                               value="<?= $fical['nome_completo'] ?> ">
+                                               value="<?= $fiscal['nome_completo'] ?> ">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="suplente">Suplente:</label>

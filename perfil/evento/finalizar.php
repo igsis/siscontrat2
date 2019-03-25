@@ -102,7 +102,9 @@ include "includes/validacoes.php";
                 <?php } ?>
             </div>
             <div class="box-footer">
-                <button class="btn btn-success" type="submit" <?= (count($erros) != 0) ? "disabled" : "" ?>>Enviar Evento</button>
+                <form action="?perfil=evento&p=atracoes_edita">
+                    <button class="btn btn-success" type="submit" <?= (count($erros) != 0) ? "disabled" : "" ?>>Enviar Evento</button>
+                </form>
             </div>
         </div>
     </section>
