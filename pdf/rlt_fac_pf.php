@@ -19,7 +19,7 @@ class PDF extends FPDF
 function Header()
 {	
     // Logo
-    $this->Image('../pdf/img/fac_pf.jpg',15,10,180);
+    $this->Image('../pdf/fac_pf.jpg',15,10,180);
     
     // Line break
     $this->Ln(20);
@@ -34,13 +34,14 @@ $ano=date('Y');
 
 $pf = recuperaDados("pessoa_fisicas", "id", $id_Pf);
 
-$sql_telefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$id_Pf' LIMIT 0,1";
-$query = mysqli_query($con, $sql_telefones);
-$telefones = mysqli_fetch_array($query);
-
+$drts = recuperaDados("drts", "pessoa_fisica_id", $id_Pf);
+$nits = recuperaDados("nits", "pessoa_fisica_id", $id_Pf);
 $end = recuperaDados("pf_enderecos", "pessoa_fisica_id", $id_Pf);
 $bancos = recuperaDados("pf_bancos", "pessoa_fisica_id", $id_Pf);
 
+$sql_telefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$id_Pf' LIMIT 0,1";
+$query = mysqli_query($con, $sql_telefones);
+$telefones = mysqli_fetch_array($query);
 
 //endereco
 $rua = $end["logradouro"];
@@ -48,26 +49,21 @@ $bairro = $end["bairro"];
 $cidade = $end["cidade"];
 $estado = $end["uf"];
 $num = $end['numero'];
-$pjComplemento = $end["complemento"];
+$complemento = $end["complemento"];
 $cep = $end['cep'];
 
 //pessoa fisica
-$Nome = $pessoa["Nome"];
-$RG = $pessoa["RG"];
-$CPF = $pessoa["CPF"];
-$CCM = $pessoa["CCM"];
-$Endereco = $pessoa["Endereco"];
-$NumEndereco = $pessoa["NumEndereco"];
-$Complemento = $pessoa["Complemento"];
-$cep = $pessoa["CEP"];
-$Telefone01 = $pessoa["Telefone01"];
-$banco = $pessoa["Banco"];
-$agencia = $pessoa["Agencia"];
-$conta = $pessoa["Conta"];
-$codbanco = $pessoa["CodigoBanco"];
-$cbo = $pessoa["cbo"];
-$INSS = $pessoa["INSS"];
-$DataNascimento = exibirDataBr($pessoa["DataNascimento"]);
+$Nome = $pf["nome"];
+$RG = $pf["rg"];
+$CPF = $pf["cpf"];
+$CCM = $pf["ccm"];
+$Telefone01 = $telefones["telefone"];
+$agencia = $bancos["agencia"];
+$conta = $bancos["conta"];
+$codbanco = $bancos["banco_id"];
+$cbo = $bancos["cbo"] ?? NULL;
+$nit = $nits["nit"];
+$DataNascimento = exibirDataBr($pf["data_nascimento"]);
 
 
 // GERANDO O PDF:
@@ -99,7 +95,7 @@ $l=7; //DEFINE A ALTURA DA LINHA
    
    $pdf->SetXY($x, 68);
    $pdf->SetFont('Arial','', 10);
-   $pdf->Cell(160,$l,utf8_decode("$rua".", "."$NumEndereco".", "."$Complemento"),0,0,'L');
+   $pdf->Cell(160,$l,utf8_decode("$rua".", "."$num"." - "."$complemento"),0,0,'L');
    
    $pdf->SetXY($x, 82);
    $pdf->SetFont('Arial','', 9);
@@ -117,7 +113,7 @@ $l=7; //DEFINE A ALTURA DA LINHA
    
    $pdf->SetXY($x, 107);
    $pdf->SetFont('Arial','', 10);
-   $pdf->Cell(87,$l,utf8_decode($INSS),0,0,'L');
+   $pdf->Cell(87,$l,utf8_decode($nit),0,0,'L');
    $pdf->Cell(52,$l,utf8_decode($DataNascimento),0,0,'L');
    $pdf->Cell(33,$l,utf8_decode($cbo),0,0,'L');
    
