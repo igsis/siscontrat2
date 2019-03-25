@@ -11,7 +11,7 @@ $idUsuario = $_SESSION['idUser'];
 
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 1 AND evento_status_id >= 3 ORDER BY id DESC LIMIT 0,20";
+$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 1 AND evento_status_id >= 3 AND (suplente_id = '$iddUsuario' OR fiscal_id = '$iddUsuario' OR usuario_id = '$iddUsuario') ORDER BY id DESC LIMIT 0,20";
 
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
