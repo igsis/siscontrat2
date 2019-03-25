@@ -67,6 +67,9 @@
                         <!-- /.box-body -->
 
                         <div class="box-footer">
+                            <a href="?perfil=administrativo&p=usuario&sp=usuario_lista">
+                                <button type="button" class="btn btn-default">Voltar</button>
+                            </a>
                             <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">Cadastrar</button>
                         </div>
                     </form>

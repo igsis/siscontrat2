@@ -122,6 +122,9 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
                         <!-- /.box-body -->
 
                         <div class="box-footer">
+                            <a href="?perfil=administrativo&p=usuario&sp=usuario_lista">
+                                <button type="button" class="btn btn-default">Voltar</button>
+                            </a>
                             <input type="hidden" name="idUsuario" id="idUsuario" value="<?= $idUsuario ?>">
                             <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">Salvar</button>
                         </div>

@@ -8,6 +8,7 @@
             <li class="header">MÓDULO ADMINISTRATIVO</li>
 
             <li><a href="?perfil=administrativo&p=usuario&sp=usuario_lista"><i class="fa fa-circle-o text-red"></i><span>Usuários</span></a></li>
+            <li><a href="?perfil=administrativo&p=projeto_especial&sp=projeto_especial_lista"><i class="fa fa-circle-o text-blue"></i><span>Projeto Especial</span></a></li>
 
             <li class="header">MAIS</li>
 
