@@ -32,7 +32,7 @@ if (isset($_POST['carregar'])) {
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><strong><?= $evento['nome_evento']; ?></strong></h3>
+                        <h3 class="box-title"><strong><?= $evento['nome_evento']; ?></strong></h3><hr>
                         <div class="box-body">
                             <div class="box-group" id="accordion">
                                 <div class="row">
@@ -73,7 +73,7 @@ if (isset($_POST['carregar'])) {
                                             </div>
                                         </div>
                                         <div class="form-group col-md-12">
-                                            <strong>Fiscal: </strong><?= $fical['nome_completo'] ?>
+                                            <strong>Fiscal: </strong><?= $fiscal['nome_completo'] ?>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <strong>Suplente: </strong><?= $suplente['nome_completo']; ?>
