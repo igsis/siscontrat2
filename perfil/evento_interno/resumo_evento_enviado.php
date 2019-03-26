@@ -33,253 +33,220 @@ if (isset($_POST['carregar'])) {
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong><?= $evento['nome_evento']; ?></strong></h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="box-group" id="accordion">
-                            <div class="row">
-                                <div class="box-body">
-                                    <div class="form-group col-md-4">
-                                        <label for="protocolo">Protocolo:</label>
-                                        <input type="text" class="form-control" id="protocolo" name="nomeProtocolo"
-                                               maxlength="250" required readonly
-                                               value="<?= $protocolo['protocolo'] ?>">
-                                    </div>
-                                    <div class="form-group col-md-8">
-                                        <label for="nomeEvento">Nome do Evento:</label>
-                                        <input type="text" class="form-control" id="evento" name="nomeEvento"
-                                               maxlength="250" required readonly
-                                               value="<?= $evento ['nome_evento']; ?>">
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="Periodo">Período:</label>
-                                        <input type="text" class="form-control" id="periodo" name="periodo"
-                                               maxlength="250"
-                                               required readonly value=" <?= retornaPeriodoNovo($idEvento); ?>">
-                                    </div>
-                                    <div class="form-group col-md-8">
-                                        <label for="tipoEvento">Tipo evento:</label>
-                                        <input type="text" class="form-control" id="relacaoJuridica"
-                                               name="relacaoJuridica"
-                                               maxlength="250" required readonly
-                                               value="<?= $tipo_evento['tipo_evento']; ?>">
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <label for="original"><strong>É original?</strong></label>
-                                        <input type="text" class="form-control" id="original" name="original"
-                                               maxlength="250" required readonly value="<?= $evento['original']; ?>">
-                                    </div>
-                                    <div class="form-group col-md-5">
-                                        <label for="relacaoJuridica">Relação Juridica:</label>
-                                        <input type="text" class="form-control" id="relacaoJuridica"
-                                               name="relacaoJuridica" maxlength="250"
-                                               readonly value="<?= $relacao_juridica['relacao_juridica']; ?>">
-                                    </div>
-                                    <div class="form-group col-md-5">
-                                        <label for="projetoEspecial">Projeto Especial:</label>
-                                        <input type="text" class="form-control" id="projetoEspecial"
-                                               name="projetoEspecial" maxlength="250" required
-                                               readonly value="<?= $projeto_especial['projeto_especial']; ?>">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="sinopse">Sinopse:</label>
-                                        <textarea name="sinopse" id="sinopse" class="form-control" rows="5"
-                                                  required readonly><?= $evento['sinopse']; ?></textarea>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="fiscal">Fiscal:</label>
-                                        <input type="text" class="form-control" id="fiscal"
-                                               name="fiscal" required readonly
-                                               value="<?= $fiscal['nome_completo'] ?> ">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="suplente">Suplente:</label>
-                                        <input type="text" class="form-control" id="suplente"
-                                               name="suplente" maxlength="250" required readonly
-                                               value=<?= $suplente['nome_completo']; ?>>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="cadastramento">Cadastramento realizado por:</label>
-                                        <input type="text" class="form-control" id="cadastramento"
-                                               name="cadastramento" maxlength="250" required readonly
-                                               value=<?= $usuario['nome_completo'] ?>>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="contratacao">Haverá contratação?</label>
-                                        <input type="text" class="form-control" id="contratacao"
-                                               name="contratacao" maxlength="250" required readonly
-                                               value=<?= $contratacao ?>>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="status">Status do Evento:</label>
-                                        <input type="text" class="form-control" id="status"
-                                               name="status" maxlength="250" required
-                                               readonly value=<?= $evento_status['status']; ?>>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <?php
-                        $query_atracao = mysqli_query($con, $sql_atracao);
-                        while ($atracao = mysqli_fetch_array($query_atracao)) {
+                        <div class="box-body">
+                            <div class="box-group" id="accordion">
+                                <div class="row">
+                                    <div class="box-body">
+                                        <div class="form-group col-md-12">
+                                            <div align="center">
+                                                <h3>Informações sobre o evento</h3><hr>
+                                            </div>
+                                            <strong>Protocolo: </strong><?= $protocolo['protocolo'] ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Nome do Evento: </strong><?= $evento ['nome_evento']; ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Período: </strong><?= retornaPeriodoNovo($idEvento); ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Tipo evento: </strong><?= $tipo_evento['tipo_evento']; ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>É original? </strong><?= $original ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Relação
+                                                Juridica: </strong><?= $relacao_juridica['relacao_juridica']; ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Projeto
+                                                Especial: </strong><?= $projeto_especial['projeto_especial']; ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Sinopse:</strong><?= $evento['sinopse']; ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div align="center">
+                                                <h3>Informações sobre cadastramento</h3>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Fiscal: </strong><?= $fical['nome_completo'] ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Suplente: </strong><?= $suplente['nome_completo']; ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Cadastramento realizado
+                                                por: </strong><?= $usuario['nome_completo'] ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Haverá contratação? </strong><?= $contratacao ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Status do Evento: </strong><?= $evento_status['status']; ?>
+                                        </div>
+                                        <hr>
+                                        <?php
+                                        $query_atracao = mysqli_query($con, $sql_atracao);
+                                        while ($atracao = mysqli_fetch_array($query_atracao)) {
 
-                        $categoria_atracao = recuperaDados('categoria_atracoes', 'id', $atracao['categoria_atracao_id']);
-                        $classificacao_indicativa = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
+                                        $categoria_atracao = recuperaDados('categoria_atracoes', 'id', $atracao['categoria_atracao_id']);
+                                        $classificacao_indicativa = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
 
-                        $idAtracao = $atracao['id'];
-                        $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = 1";
+                                        $idAtracao = $atracao['id'];
+                                        $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = 1";
 
-                        ?>
+                                        ?>
+                                        <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                        <div class="form-group col-md-12">
+                                            <div align="center">
+                                                <h3>Informações sobre a atração</h3>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Nome da atração: </strong><?= $atracao['nome_atracao']; ?>
+                                        </div>
 
-                            <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                            <div class="form-group col-md-6">
-                                <label for="nomeAtracao">Nome da atração:</label>
-                                <input type="text" class="form-control" id="nomeAtracao"
-                                       name="nomeAtracao" maxlength="250" required
-                                       readonly value=<?= $atracao['nome_atracao']; ?>>
-                            </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Categoria da
+                                                atração: </strong><?= $categoria_atracao['categoria_atracao']; ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Ficha técnica: </strong><?= $atracao['ficha_tecnica']; ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Integrantes: </strong><?= $atracao['integrantes']; ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Classificação
+                                                Indicativa: </strong><?= $classificacao_indicativa['classificacao_indicativa']; ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Quantidade de
+                                                Apresentação: </strong><?= $atracao['quantidade_apresentacao']; ?>
+                                        </div>
 
-                            <div class="form-group col-md-6">
-                                <label for="categoria">Categoria da
-                                    atração:</label>
-                                <input type="text" class="form-control" id="categoria"
-                                       name="categoria" maxlength="250" required
-                                       readonly value=<?= $categoria_atracao['categoria_atracao']; ?>>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="ficha">Ficha técnica:<br></label>
-                                <textarea name="ficha" id="ficha" class="form-control" rows="5"
-                                          readonly value="<?= $atracao['ficha_tecnica']; ?>"></textarea>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="integrantes">Integrantes:</label>
-                                <input type="text" class="form-control" id="integrantes"
-                                       name="integrantes" maxlength="250" required readonly
-                                       value="<?= $atracao['integrantes']; ?>">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="classificacao">Classificação
-                                    Indicativa:</label>
-                                <input type="text" class="form-control" id="classificacao"
-                                       name="classificacao" maxlength="250" required readonly
-                                       value="<?= $classificacao_indicativa['classificacao_indicativa']; ?>">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="quantidade">Quantidade de
-                                    Apresentação:</label>
-                                <input type="text" class="form-control" id="quantidade"
-                                       name="quantidade" maxlength="250" required readonly
-                                       value="<?= $atracao['quantidade_apresentacao']; ?>">
-                            </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Release: </strong><?= $atracao['release_comunicacao']; ?>
+                                        </div>
+                                        <?php
+                                        if ($atracao['links'] != NULL) {
+                                            ?>
+                                            <div class="form-group col-md-12">
+                                                <strong>Links: </strong><?= $atracao['links']; ?>
+                                            </div>
+                                        <?php } ?>
 
-                            <div class="form-group col-md-12">
-                                <label for="release">Release:<br></label>
-                                <textarea name="release" id="release" class="form-control" rows="5"
-                                          readonly value="<?= $atracao['release_comunicacao']; ?>"></textarea>
-                            </div>
+                                        <?php
+                                        if ($atracao['valor_individual'] != NULL) {
+                                            ?>
+                                            <p>Valor
+                                                individual: <?= dinheiroParaBr($atracao['valor_individual']); ?></p>
+                                        <?php }
+
+                                        if ($atracao['produtor_id'] != NULL) {
+                                            $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
+                                            ?>
+                                            <div class="form-group col-md-12">
+                                                <div align="center">
+                                                    <h3>Informações sobre a produção</h3>
+                                                    <hr>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <strong>Nome Produtor: </strong><?= $produtor['nome']; ?>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <strong>Email do Produtor: </strong><?= $produtor['email']; ?>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <strong>Telefone 1: </strong><?= $produtor['telefone1']; ?>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <strong>Telefone 2: </strong><?= $produtor['telefone2']; ?>
+                                            </div>
+                                            <hr>
+                                            <div class="form-group col-md-12">
+                                                <strong>Observação:</strong><?= $produtor['observacao']; ?>
+                                            </div>
+                                        <?php } ?>
                             <?php
-                            if ($atracao['links'] != NULL) {
-                                ?>
-                                <div class="form-group col-md-12">
-                                    <label for="links">Links:</label>
-                                    <textarea name="link" id="link" class="form-control" rows="3"
-                                              required readonly value="<?= $atracao['links']; ?>"></textarea>
-                                </div>
-                            <hr>
-                            <?php } ?>
+                            $query_ocorrencia = mysqli_query($con, $sql_ocorrencia);
+                            while ($ocorrencia = mysqli_fetch_array($query_ocorrencia)) {
 
-                            <?php
-                            if ($atracao['valor_individual'] != NULL) {
-                                ?>
-                                <p>Valor
-                                    individual: <?= dinheiroParaBr($atracao['valor_individual']); ?></p>
-                            <?php }
+                            $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
+                            $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
 
-                            if ($atracao['produtor_id'] != NULL) {
-                                $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
-                                ?>
+                            ?>
 
-                                <div class="form-group col-md-12">
-                                    <label for="nomeProdutor">Nome Produtor:</label>
-                                    <input type="text" class="form-control" id="nomeProdutor"
-                                           name="nomeProdutor" maxlength="250" required readonly
-                                           value="<?= $produtor['nome']; ?>">
+
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+
+
+                                        <div class="form-group col-md-12">
+                                            <div align="center">
+                                                <h3>Ocorrências</h3><hr>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Local: </strong><?= $local['local']; ?>
+                                        </div>
+                                        <?php
+                                        if ($ocorrencia['horario_inicio'] != NULL) {
+                                            ?>
+                                            <div class="form-group col-md-12">
+                                                <strong>Horário
+                                                    Inicial: </strong><?= exibirHora($ocorrencia['horario_inicio']); ?>
+                                            </div>
+                                        <?php } ?>
+                                        <?php
+                                        if ($ocorrencia['horario_fim'] != NULL) {
+                                            ?>
+                                            <div class="form-group col-md-12">
+                                                <strong>Horário
+                                                    Final: </strong><?= exibirHora($ocorrencia['horario_fim']); ?>
+                                            </div>
+                                        <?php } ?>
+                                        <div class="form-group col-md-12">
+                                            <strong>Retirada de
+                                                Ingresso:</strong> <?= $retirada_ingresso['retirada_ingresso'] ?>
+                                        </div>
+                                        <?php
+                                        if ($ocorrencia['virada'] != NULL) {
+                                            ?>
+                                            <div class="form-group col-md-12">
+                                                <strong>Virada:</strong> <?= $ocorrencia['virada']; ?>
+                                            </div>
+                                        <?php } ?>
+                                        <?php
+                                        if ($ocorrencia['publicado'] != NULL) {
+                                            ?>
+                                            <div class="form-group col-md-12">
+                                                <strong>Publicado:</strong> <?= $ocorrencia['publicado']; ?>
+                                            </div>
+                                        <?php } ?>
+
+                                        <?php }
+                                        }
+
+                                        ?>
+                                        <div class="box-footer" align="center">
+                                            <a href="?perfil=evento_interno&p=lista_eventos_enviados">
+                                                <button type="button" class="btn btn-default">Voltar</button>
+                                            </a>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="emailProdutor">Email do Produtor:</label>
-                                    <input type="text" class="form-control" id="emailProdutor"
-                                           name="emailProdutor" maxlength="250" required readonly
-                                           value="<?= $produtor['email']; ?>">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="telefone1">Telefone 1:</label>
-                                    <input type="text" class="form-control" id="telefone1"
-                                           name="telefone1" maxlength="250" required readonly
-                                           value="<?= $produtor['telefone1']; ?>">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="telefone2">Telefone 2:</label>
-                                    <input type="text" class="form-control" id="telefone2"
-                                           name="telefone2" maxlength="250" required readonly
-                                           value="<?= $produtor['telefone2']; ?>">
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label for="obs">Observação:</label>
-                                    <textarea name="obs" id="obs" class="form-control" rows="3"
-                                              required readonly value="<?= $produtor['observacao']; ?>"></textarea>
-                                </div>
-                            <?php } ?>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <?php
-                $query_ocorrencia = mysqli_query($con, $sql_ocorrencia);
-                while ($ocorrencia = mysqli_fetch_array($query_ocorrencia)) {
-
-                    $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
-                    $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
-
-                    ?>
-
-                    <div class="box-group" id="accordion">
-                        <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                        <div class="box-body">
-                            <h4>Ocorrências</h4>
-                            <p>Local: <?= $local['local']; ?></p>
-                            <?php
-                            if ($ocorrencia['horario_inicio'] != NULL) {
-                                ?>
-                                <p>Horário
-                                    Início: <?= exibirHora($ocorrencia['horario_inicio']); ?></p>
-                            <?php } ?>
-                            <?php
-                            if ($ocorrencia['horario_fim'] != NULL) {
-                                ?>
-                                <p>Horário
-                                    Fim: <?= exibirHora($ocorrencia['horario_fim']); ?></p>
-                            <?php } ?>
-                            <p>Retirada de
-                                Ingresso:<?= $retirada_ingresso['retirada_ingresso'] ?></p>
-                            <?php
-                            if ($ocorrencia['virada'] != NULL) {
-                                ?>
-                                <p>Virada: <?= $ocorrencia['virada']; ?></p>
-                            <?php } ?>
-                            <?php
-                            if ($ocorrencia['publicado'] != NULL) {
-                                ?>
-                                <p>Publicado: <?= $ocorrencia['publicado']; ?></p>
-                            <?php } ?>
-                        </div>
-                    </div>
-
-                <?php }
-                }
-
-                ?>
             </div>
             <!-- /.box-body -->
-        </div>
+
         <!-- /.box -->
 </div>
 <!-- /.col -->
