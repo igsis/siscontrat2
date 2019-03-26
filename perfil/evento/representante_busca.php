@@ -35,6 +35,9 @@ if (isset($_POST['pesquisa'])) {
                             <td>" . $resultado['rg'] . "</td>
                             <td>
                                 <input type='hidden' name='idRepresentante' value='" . $resultado['representanteId'] . "'>
+                                <input type='hidden' name='nome' value='" . $resultado['nome'] . "'>
+                                <input type='hidden' name='cpf' value='" . $resultado['cpf'] . "'>
+                                <input type='hidden' name='rg' value='" . $resultado['rg'] . "'>
                                 <input type='hidden' name='tipoRepresentante' value='" . $tipoRepresentante . "'>
                                 <button type='submit' class='btn btn-primary' name='carregar'>Selecionar</button>
                             </td>

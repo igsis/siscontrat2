@@ -4,7 +4,7 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 date_default_timezone_set('America/Sao_Paulo');
 
-$server = "http://".$_SERVER['SERVER_NAME']."/siscontrat2"; //mudar para pasta do igsis
+$server = "http://".$_SERVER['SERVER_NAME']."/siscontrat2"; //mudar para pasta do siscontrat
 $http = $server."/pdf/";
 $link_facc = $http."rlt_fac_pj.php";
 
@@ -68,6 +68,8 @@ if (isset($_POST['cadastra'])) {
         }
 
         $mensagem .= mensagem("success", "Cadastrado com sucesso!");
+        $idPj = recuperaUltimo("pessoa_juridicas");
+        $_SESSION['idPj'] = $idPj;
         //gravarLog($sql);
     } else {
         $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
@@ -703,6 +705,7 @@ if(isset($pj['representante_legal2_id'])){
                 <div class="col-md-12">
                     <div class="form-group col-md-6"><label><br></label>
                         <form method="POST" action="?perfil=evento&p=representante_edita" role="form">
+                            <input type='hidden' name='idPj' id='idPj' value='<?=$idPj?>'>
                             <input type='hidden' name='idRepresentante' id='idRepresentante' value=''>
                             <input type='hidden' name='tipoRepresentante' id='tipoRepresentante' value=''>
                             <button type="submit" name="carregar" class="btn btn-primary btn-block">
@@ -772,12 +775,14 @@ if(isset($pj['representante_legal2_id'])){
 
     $('#modal-representante-edita').on('show.bs.modal', function (e) {
         let representante = $(e.relatedTarget).attr('data-nome');
-        let idRepresentate = $(e.relatedTarget).attr('data-id');
-        let tipoRepresentate = $(e.relatedTarget).attr('data-tipo');
+        let idRepresentante = $(e.relatedTarget).attr('data-id');
+        let tipoRepresentante = $(e.relatedTarget).attr('data-tipo');
 
         $(this).find('#representante').attr('value', `${representante}`);
-        $(this).find('#idRepresentante').attr('value', `${idRepresentate}`);
-        $(this).find('#tipoRepresentante').attr('value', `${tipoRepresentate}`);
+        $(this).find('#idRepresentante').attr('value', `${idRepresentante}`);
+        $(this).find('#tipoRepresentante').attr('value', `${tipoRepresentante}`);
+
+        console.log(tipoRepresentante);
 
     });
 

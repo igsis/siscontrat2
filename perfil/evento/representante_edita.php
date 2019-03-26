@@ -1,22 +1,24 @@
 <?php
 $con = bancoMysqli();
-$idPj = $_SESSION['idPj'];
+$idPj = $_POST['idPj'];
 $pessoa_juridica = recuperaDados('pessoa_juridicas', 'id', $idPj);
 
-if (isset($_POST['carregar']) || isset($_POST['apagar']) || isset($_POST['enviar'])){
+if (isset($_POST['carregar']) || isset($_POST['apagar']) || isset($_POST['enviar'])) {
     $idRepresentante = $_POST['idRepresentante'] ?? $_POST['idPessoa'];
     $tipoRepresentante = $_POST['tipoRepresentante'] ?? $_POST['tipoPessoa'];
 
 }
 
-if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-    $nome =  addslashes($_POST['nome']) ?? null;
+if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['carregar'])) {
+    $nome = addslashes($_POST['nome']) ?? null;
     $rg = $_POST['rg'];
     $cpf = $_POST['cpf'];
     $tipoRepresentante = $_POST['tipoRepresentante'];
+
+    echo "teste" . $tipoRepresentante;
 }
 
-if($tipoRepresentante == 1){
+if ($tipoRepresentante == 1) {
     $representante = "representante_legal1_id";
     $RG = "20";
     $CPF = "21";
@@ -45,37 +47,40 @@ if (isset($_POST['cadastra'])) {
                                   '$rg',
                                   '$cpf')";
 
-    if(mysqli_query($con, $sql))
-    {
+    if (mysqli_query($con, $sql)) {
         if (isset($idRepresentante)) {
             if ($idRepresentante != null) {
                 $idRepresentante = recuperaUltimo('representante_legais');
             }
         }
+
         $idRepresentante = recuperaUltimo("representante_legais");
+
         // salvar o represente na pessoa juridica
         $sqlPessoaJuridica = "UPDATE pessoa_juridicas SET $representante = $idRepresentante WHERE id = '$idPj'";
         mysqli_query($con, $sqlPessoaJuridica);
-        $mensagem = mensagem("success","Cadastrado com sucesso!");
+
+        $mensagem = mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
-    }else{
-        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
+
+    } else {
+        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
 }
 
-if(isset($_POST['edita'])){
+if (isset($_POST['edita'])) {
     $idRepresentante = $_POST['idRepresentante'];
     $sql = "UPDATE representante_legais SET
                               nome = '$nome', 
                               rg = '$rg', 
                               cpf = '$cpf' 
                               WHERE id = '$idRepresentante'";
-    If(mysqli_query($con,$sql)){
-        $mensagem = mensagem("success","Atualizado com sucesso!");
+    If (mysqli_query($con, $sql)) {
+        $mensagem = mensagem("success", "Atualizado com sucesso!");
         //gravarLog($sql);
-    }else{
-        $mensagem = mensagem("danger","Erro ao atualizar! Tente novamente.");
+    } else {
+        $mensagem = mensagem("danger", "Erro ao atualizar! Tente novamente.");
         //gravarLog($sql);
     }
 }
@@ -104,9 +109,9 @@ if (isset($_POST["enviar"])) {
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
                 $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-                $ext = strtolower(substr($nome_arquivo,-4));
+                $ext = strtolower(substr($nome_arquivo, -4));
 
-                if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
                 {
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
                         $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPj', '$y', '$new_name', '$hoje', '1'); ";
@@ -146,12 +151,12 @@ if (isset($_POST['apagar'])) {
     }
 }
 
-$representantes = recuperaDados("representante_legais","id",$idRepresentante);
+$representantes = recuperaDados("representante_legais", "id", $idRepresentante);
 include "includes/menu_interno.php";
 ?>
 <script>
     $(document).ready(function () {
-       $('#cpf').mask('000.000.000-00',{reverse:true});
+        $('#cpf').mask('000.000.000-00', {reverse: true});
     });
 </script>
 <div class="content-wrapper">
@@ -164,7 +169,9 @@ include "includes/menu_interno.php";
                         <h3 class="box-title">Informações Presentante</h3>
                     </div>
                     <div class="row" align="center">
-                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
                     </div>
                     <form method="POST" action="?perfil=evento&p=representante_edita" role="form">
                         <div class="box-body">
@@ -172,15 +179,17 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: </label>
                                     <input type="text" class="form-control" id="nome" name="nome"
-                                           maxlength="70" required value="<?= $representantes['nome']?>" >
+                                           maxlength="70" required value="<?= $representantes['nome'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="rg">RG: </label>
-                                    <input type="text" class="form-control" id="rg" name="rg" required value="<?= $representantes['rg']?>" >
+                                    <input type="text" class="form-control" id="rg" name="rg" required
+                                           value="<?= $representantes['rg'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="cpf">CPF: </label>
-                                    <input type="text" class="form-control" id="cpf" name="cpf" required value="<?= $representantes['cpf']?>" data-mask="000.000.000-00" readonly>
+                                    <input type="text" class="form-control" id="cpf" name="cpf" required
+                                           value="<?= $representantes['cpf'] ?>" data-mask="000.000.000-00" readonly>
                                 </div>
                             </div>
                             <hr>
@@ -200,12 +209,15 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <div class="box-footer">
+                                <button type="button" name="voltar" id="voltar" value="<?= $idPj ?>"
+                                        class="btn btn-default">Voltar
+                                </button>
 
-                                    <button type="button" name="voltar" id="voltar" value="<?=$idPj?>" class="btn btn-default">Voltar</button>
-
-                                    <input type="hidden" name="idRepresentante" value="<?= $idRepresentante ?>">
-                                    <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
-                                    <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Atualizar</button>
+                                <input type="hidden" name="idRepresentante" value="<?= $idRepresentante ?>">
+                                <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
+                                <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">
+                                    Atualizar
+                                </button>
                             </div>
                     </form>
                 </div>
@@ -218,7 +230,6 @@ include "includes/menu_interno.php";
 
     </section>
 </div>
-
 
 
 <!--.modal-->
@@ -237,8 +248,8 @@ include "includes/menu_interno.php";
                 <form action="?perfil=evento&p=representante_edita" method="post">
                     <input type="hidden" name="idArquivo" id="idArquivo" value="">
                     <input type="hidden" name="idPj" id="idPj" value="<?= $idPj ?>">
-                    <input type="hidden" name="tipoRepresentante" value="<?=$tipoRepresentante?>">
-                    <input type="hidden" name="idRepresentante" value="<?=$idRepresentante?>">
+                    <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
+                    <input type="hidden" name="idRepresentante" value="<?= $idRepresentante ?>">
                     <input type="hidden" name="apagar" id="apagar">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                     </button>
@@ -263,13 +274,14 @@ include "includes/menu_interno.php";
 
     $("#voltar").on("click", function () {
 
-        var idPj = "<?=$idPj?>";
+        var idPj = "<?php echo $idPj; ?>";
 
-        $.post('?perfil=evento&p=pj_edita', {
-            idPj: idPj
-        })
+        console.log("idPj" + idPj);
+
+        $.post('?perfil=evento&p=pj_edita', {idPj: idPj})
             .done(function () {
-                window.location('?perfil=evento&p=pj_edita')
+                //window.location.href = "?perfil=evento&p=pj_edita";
+                console.log("foi");
             });
 
     })
