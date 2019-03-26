@@ -100,7 +100,12 @@ $l=7; //DEFINE A ALTURA DA LINHA
    
    $pdf->SetXY($x, 75);
    $pdf->SetFont('Arial','', 10);
-   $pdf->Cell(160,$l,utf8_decode("$rua".", "."$num".", "."$pjComplemento"),0,0,'L');
+
+    if ($pjComplemento != null) {
+        $pdf->Cell(160,$l,utf8_decode("$rua".", "."$num"." - "."$pjComplemento"),0,0,'L');
+    } else {
+        $pdf->Cell(160,$l,utf8_decode("$rua".", "."$num"),0,0,'L');
+    }
    
    $pdf->SetXY($x, 90);
    $pdf->SetFont('Arial','', 9);
@@ -123,8 +128,7 @@ $l=7; //DEFINE A ALTURA DA LINHA
    $pdf->Cell(80,$l,utf8_decode($rep01Nome),0,0,'L');
    $pdf->Cell(50,$l,utf8_decode($rep01RG),0,0,'L');
 
-
-$pdf->Output($id_Pj.' - FACC.pdf', 'D');
+$pdf->Output();
 
 
 ?>

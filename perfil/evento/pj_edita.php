@@ -476,37 +476,29 @@ if(isset($pj['representante_legal2_id'])){
 
                                         $facc = "none";
 
-                                    }else if (mysqli_num_rows($queryFACC) == 0 && $pj['representante_legal1_id'] != null)  {
+                                    }else if ($pj['representante_legal1_id'] != null) {
                                         ?>
-                                            <div class="form-group col-md-3">
-                                                <label>Gerar FACC</label><br>
-                                                <a href="<?= $link_facc . "?id=". $idPj ?>" target="_blank" type="button" class="btn btn-primary btn-block">Clique aqui para
-                                                    gerar a FACC
-                                                </a>
-                                            </div>
-                                        <?php
-                                    } else {
-                                        ?>
-                                            <div class="form-group col-md-3">
-                                                    <label>FACC anexada</label><br>
-                                                    <button type="button" formaction="?perfil=evento&p=pj_demais_anexos" class="btn btn-primary btn-block">Visualizar
-                                                        arquivos enviados
-                                                    </button>
-                                            </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Gerar FACC</label><br>
+                                            <a href="<?= $link_facc . "?id=" . $idPj ?>" target="_blank" type="button"
+                                               class="btn btn-primary btn-block">Clique aqui para
+                                                gerar a FACC
+                                            </a>
+                                        </div>
+                                        <div class="form-group col-md-5" style="display: <?= $facc ?>">
+                                            <label>&nbsp;</label><br>
+                                            <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                                documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                                no campo correspondente.</p>
+                                        </div>
+                                        <div class="form-group col-md-4" style="display: <?= $facc ?>">
+                                            <?php
+                                            anexosNaPagina(89, $idPj, "modal-facc", "FACC");
+                                            ?>
+                                        </div>
                                         <?php
                                     }
-                                    ?>
-                                <div class="form-group col-md-5" style="display: <?=$facc?>">
-                                    <label>&nbsp;</label><br>
-                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                        no campo correspondente.</p>
-                                </div>
-                                <div class="form-group col-md-4"  style="display: <?=$facc?>">
-                                    <?php
-                                    anexosNaPagina(89, $idPj, "modal-facc", "FACC");
-                                    ?>
-                                </div>
+                                ?>
                             </div>
                             <hr/>
 
@@ -720,6 +712,8 @@ if(isset($pj['representante_legal2_id'])){
                     </div>
                     <div class="form-group col-md-6"><label><br></label>
                         <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                            <input type='hidden' name='idPj' id='idPj' value=''>
+                            <input type='hidden' name='tipoRepresentante' id='tipoRepresentante' value=''>
                             <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
                                 Representante
                             </button>
