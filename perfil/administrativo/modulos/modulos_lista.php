@@ -4,7 +4,7 @@ $conn = bancoPDO();
 
 if (isset($_POST['excluir'])) {
     $idModulo= $_POST['idModulo'];
-    $stmt = $conn->prepare("UPDATE `projeto_especiais` SET publicado = 0 WHERE id = :id");
+    $stmt = $conn->prepare("DELETE FROM `modulos` WHERE id = :id");
     $stmt->execute(['id' => $idModulo]);
     $mensagem = mensagem("success", "Módulo excluído com sucesso!");
 }
@@ -142,6 +142,6 @@ $query = mysqli_query($con, $sql);
         let id = $(e.relatedTarget).attr('data-id');
 
         $(this).find('p').text(`Tem certeza que deseja excluir o módulo: ${nome} ?`);
-        $(this).find('#idProjetoEspecial').attr('value', `${id}`);
+        $(this).find('#idModulo').attr('value', `${id}`);
     })
 </script>

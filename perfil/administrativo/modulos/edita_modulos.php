@@ -10,16 +10,16 @@ if(isset($_POST['carregar'])){
 if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
     $sigla = $_POST['sigla'];
     $desc = $_POST['descricao'];
-    $cor = $_POST['cor'];
+    $cor_id = $_POST['cor'];
 
     if(isset($_POST['cadastra'])){
-        $sql = "INSERT INTO modulos (sigla, descricao, cor)
-                VALUES ('$nome')";
+        $sql = "INSERT INTO modulos (sigla, descricao, cor_id)
+                VALUES ('$sigla', '$desc', '$cor_id')";
 
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
             $mensagem = mensagem("success", "Módulo cadastrado com sucesso!");
-            $idProjetoEspecial = recuperaUltimo('modulos');
+            $idModulo = recuperaUltimo('modulos');
         } else {
             $mensagem = mensagem("danger", "Erro no cadastro do módulo! Tente novamente.");
         }
@@ -28,7 +28,7 @@ if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
     if(isset($_POST['edita'])){
         $idModulo = $_POST['idModulo'];
 
-        $sql = "UPDATE modulos SET sigla = '$sigla', descricao = '$desc', cor = '$cor' WHERE id = '$idModulo'";
+        $sql = "UPDATE modulos SET sigla = '$sigla', descricao = '$desc', cor_id = '$cor_id' WHERE id = '$idModulo'";
 
         if(mysqli_query($con, $sql)){
             gravarLog($sql);
@@ -40,7 +40,7 @@ if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
 }
 $modulos = recuperaDados('modulos', 'id', $idModulo);
 
-$cor = recuperaDados("cores", "id", $modulos['cor_id']);
+$cores = recuperaDados("cores", "id", $modulos['cor_id']);
 
 ?>
 
@@ -69,7 +69,7 @@ $cor = recuperaDados("cores", "id", $modulos['cor_id']);
                           role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-5">
                                     <label for="sigla">Sigla: </label>
                                     <input type="text" class="form-control" id="sigla" name="sigla" value="<?=$modulos['sigla']?>"
                                            maxlength="70" required>
@@ -79,10 +79,26 @@ $cor = recuperaDados("cores", "id", $modulos['cor_id']);
                                     <label for="descricao">Descrição: </label>
                                     <input type="text" class="form-control" id="descricao" name="descricao" required maxlength="12" value="<?=$modulos['descricao']?>">
                                 </div>
-
                                 <div class="form-group col-md-3">
                                     <label for="cor">Cor: </label>
-                                    <input type="text" class="form-control <?=$cor['text-color']?>" id="cor" name="cor" required value="<?= $cor['text-color'] ?>">
+                                    <select class="form-control" id="cor" name="cor">
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                            geraOpcao("cores", $cores['id']);
+                                            $cor = explode("-", $cores['text-color']);
+                                            
+                                            if (count($cor) > 2) {
+                                                $cor = $cor[1] . "-" . $cor[2];
+                                            } else {
+                                                $cor = $cor[1];
+                                            }
+
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-1 cor">
+                                    <label for='cor'>Visualizar</label>
+                                    <input type='text' class='form-control bg-<?=$cor?>' disabled>
                                 </div>
                             </div>
                         </div>
@@ -105,7 +121,26 @@ $cor = recuperaDados("cores", "id", $modulos['cor_id']);
         </div>
         <!-- /.row -->
         <!-- END ACCORDION & CAROUSEL-->
-
     </section>
     <!-- /.content -->
 </div>
+
+<script>
+    $("#cor").on("change", function () {
+
+        let selecionado = $("#cor :selected").text();
+
+        let cor = selecionado.split("-");
+
+        if (cor.length > 2) {
+            cor = cor[1] + "-" + cor[2];
+        } else {
+            cor = cor[1];
+        }
+
+        console.log(cor);
+
+        $(".cor").html("<label for='cor'>Visualizar</label><input type='text' class='form-control bg-"+ cor + "' disabled>");
+
+    });
+</script>

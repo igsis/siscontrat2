@@ -80,13 +80,9 @@
             cor = cor[1];
         }
 
-
         console.log(cor);
 
         $(".cor").html("<label for='cor'>Visualizar</label><input type='text' class='form-control bg-"+ cor + "' disabled>");
-
-
-
 
     });
 </script>

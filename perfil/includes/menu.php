@@ -9,6 +9,7 @@ $u_perfil = $user['perfil_id'];
 
 $sql_perfil = "SELECT * FROM modulo_perfis 
               INNER JOIN modulos AS m ON modulo_perfis.modulo_id = m.id 
+              INNER JOIN cores ON m.cor_id = cores.id
               WHERE perfil_id = '$u_perfil' ORDER BY descricao";
 $query_perfil = mysqli_query($con,$sql_perfil);
 ?>
@@ -23,7 +24,7 @@ $query_perfil = mysqli_query($con,$sql_perfil);
             <li class="header">MÓDULOS</li>
             <?php
             while($row = mysqli_fetch_array($query_perfil)){
-                echo "<li><a href=\"?perfil=".$row['sigla']."\"><i class=\"fa fa-circle-o ".$row['cor']."\"></i> <span>".$row['descricao']."</span></a></li>";
+                echo "<li><a href=\"?perfil=".$row['sigla']."\"><i class=\"fa fa-circle-o ".$row['text-color']."\"></i> <span>".$row['descricao']."</span></a></li>";
             }
             ?>
             <li class="header">MAIS</li>
