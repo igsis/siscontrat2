@@ -3,13 +3,13 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 if (isset($_POST['excluir'])) {
-    $projetoEspecial = $_POST['idProjetoEspecial'];
-    $stmt = $conn->prepare("UPDATE `projeto_especiais` SET publicado = 0 WHERE id = :id");
-    $stmt->execute(['id' => $projetoEspecial]);
-    $mensagem = mensagem("success", "Projeto especial excluido com sucesso!");
+    $perfil = $_POST['idPerfil'];
+    $stmt = $conn->prepare("UPDATE `perfis` SET publicado = 0 WHERE id = :id");
+    $stmt->execute(['id' => $perfil]);
+    $mensagem = mensagem("success", "Perfil excluido com sucesso!");
 }
 
-$sql = "SELECT * FROM projeto_especiais WHERE publicado = 1";
+$sql = "SELECT * FROM perfis WHERE publicado = 1";
 $query = mysqli_query($con, $sql);
 ?>
 
@@ -19,9 +19,9 @@ $query = mysqli_query($con, $sql);
     <section class="content">
 
         <!-- START FORM-->
-        <h3 class="box-title">Lista de Projeto especial</h3>
-        <a href="?perfil=administrativo&p=projeto_especial&sp=cadastro_projeto_especial" class="text-right btn btn-success"
-           style="float: right">Adicionar Projeto Especial</a>
+        <h3 class="box-title">Lista de Perfis</h3>
+        <a href="?perfil=administrativo&p=perfil&sp=cadastro_perfil" class="text-right btn btn-success"
+           style="float: right">Adicionar Perfil</a>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -36,10 +36,11 @@ $query = mysqli_query($con, $sql);
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblProjetoEspecial" class="table table-bordered table-striped">
+                        <table id="tblPerfil" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th width="95%">Projeto Especial</th>
+                                <th width="90%">Perfil</th>
+                                <th>Token</th>
                                 <th>Visualizar</th>
                                 <th>Excluir</th>
                             </tr>
@@ -47,23 +48,24 @@ $query = mysqli_query($con, $sql);
 
                             <?php
                             echo "<tbody>";
-                            while ($projetoEspecial = mysqli_fetch_array($query)) {
+                            while ($perfil = mysqli_fetch_array($query)) {
                                 echo "<tr>";
-                                echo "<td>" . $projetoEspecial['projeto_especial'] . "</td>";
+                                echo "<td>" . $perfil['descricao'] . "</td>";
+                                echo "<td>" . $perfil['token'] . "</td>";
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=administrativo&p=projeto_especial&sp=edita_projeto_especial\" role=\"form\">
-                                    <input type='hidden' name='idProjetoEspecial' value='" . $projetoEspecial['id'] . "'>
+                                    <form method=\"POST\" action=\"?perfil=administrativo&p=perfil&sp=edita_perfil\" role=\"form\">
+                                    <input type='hidden' name='idPerfil' value='" . $perfil['id'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
                                 ?>
                                 <td>
                                     <form method='POST' id='formExcliuir'>
-                                        <input type="hidden" name='idProjetoEspecial' value="<?= $projetoEspecial['id'] ?>">
-                                        <button type="button" class="btn btn-block btn-danger" id="excluiProjetoEspecial"
-                                                data-toggle="modal" data-target="#exclusao" name="escluiProjetoEspecial"
-                                                data-nome="<?= $projetoEspecial['projeto_especial'] ?>"
-                                                data-id="<?= $projetoEspecial['id'] ?>"><span
+                                        <input type="hidden" name='idPerfil' value="<?= $perfil['id'] ?>">
+                                        <button type="button" class="btn btn-block btn-danger" id="excluiPerfil"
+                                                data-toggle="modal" data-target="#exclusao" name="excluiPerfil"
+                                                data-nome="<?= $perfil['descricao'] ?>"
+                                                data-id="<?= $perfil['id'] ?>"><span
                                                     class='glyphicon glyphicon-trash'></span></button>
                                     </form>
                                 </td>
@@ -73,7 +75,8 @@ $query = mysqli_query($con, $sql);
                             ?>
                             <tfoot>
                             <tr>
-                                <th>Projeto Especial</th>
+                                <th>Perfil</th>
+                                <th>Token</th>
                                 <th>Visualizar</th>
                                 <th>Excluir</th>
                             </tr>
@@ -102,8 +105,8 @@ $query = mysqli_query($con, $sql);
                         <p>Tem certeza que deseja excluir este usuário?</p>
                     </div>
                     <div class="modal-footer">
-                        <form action="?perfil=administrativo&p=projeto_especial&sp=projeto_especial_lista" method="post">
-                            <input type="hidden" name="idProjetoEspecial" id="idProjetoEspecial" value="">
+                        <form action="?perfil=administrativo&p=perfil&sp=perfil_lista" method="post">
+                            <input type="hidden" name="idPerfil" id="idPerfil" value="">
                             <input type="hidden" name="apagar" id="apagar">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                             </button>
@@ -124,7 +127,7 @@ $query = mysqli_query($con, $sql);
 
 <script type="text/javascript">
     $(function () {
-        $('#tblProjetoEspecial').DataTable({
+        $('#tblPerfil').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },
@@ -141,7 +144,7 @@ $query = mysqli_query($con, $sql);
         let nome = $(e.relatedTarget).attr('data-nome');
         let id = $(e.relatedTarget).attr('data-id');
 
-        $(this).find('p').text(`Tem certeza que deseja excluir o projeto especial: ${nome} ?`);
-        $(this).find('#idProjetoEspecial').attr('value', `${id}`);
+        $(this).find('p').text(`Tem certeza que deseja excluir o perfil: ${nome} ?`);
+        $(this).find('#idPerfil').attr('value', `${id}`);
     })
 </script>
