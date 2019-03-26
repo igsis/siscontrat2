@@ -200,9 +200,8 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <div class="box-footer">
-                                <a href="?perfil=evento&p=pj_edita">
-                                    <button type="button" name="idPj" value="<?=$idPj?>" class="btn btn-default">Voltar</button>
-                                </a>
+
+                                    <button type="button" name="voltar" id="voltar" value="<?=$idPj?>" class="btn btn-default">Voltar</button>
 
                                     <input type="hidden" name="idRepresentante" value="<?= $idRepresentante ?>">
                                     <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
@@ -261,5 +260,18 @@ include "includes/menu_interno.php";
         $(this).find('#idArquivo').attr('value', `${id}`);
 
     });
+
+    $("#voltar").on("click", function () {
+
+        var idPj = "<?=$idPj?>";
+
+        $.post('?perfil=evento&p=pj_edita', {
+            idPj: idPj
+        })
+            .done(function () {
+                window.location('?perfil=evento&p=pj_edita')
+            });
+
+    })
 
 </script>

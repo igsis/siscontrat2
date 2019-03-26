@@ -712,7 +712,7 @@ if(isset($pj['representante_legal2_id'])){
                     </div>
                     <div class="form-group col-md-6"><label><br></label>
                         <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
-                            <input type='hidden' name='idPj' id='idPj' value=''>
+                            <input type='hidden' name='idPj' id='idPj' value='<?=$idPj?>'>
                             <input type='hidden' name='tipoRepresentante' id='tipoRepresentante' value=''>
                             <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
                                 Representante
