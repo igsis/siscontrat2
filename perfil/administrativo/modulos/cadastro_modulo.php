@@ -4,24 +4,35 @@
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Cadastro de Projeto Especial</h2>
+        <h2 class="page-header">Cadastro de Módulos</h2>
 
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Projeto Especial</h3>
+                        <h3 class="box-title">Módulos</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form method="POST" action="?perfil=administrativo&p=projeto_especial&sp=edita_projeto_especial"
+                    <form method="POST" action="?perfil=administrativo&p=modulos&sp=edita_modulos"
                           role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="nome">Projeto especial nome *</label>
-                                    <input type="text" id="nome" name="nome" class="form-control" required>
+                                <div class="form-group col-md-3">
+                                    <label for="sigla">Sigla: </label>
+                                    <input type="text" class="form-control" id="sigla" name="sigla"
+                                           maxlength="70" required>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="descricao">Descrição: </label>
+                                    <input type="text" class="form-control text" id="descricao" name="descricao" required maxlength="12">
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label for="cor">Cor: </label>
+                                    <input type="text" class="form-control" id="cor" name="cor" required>
                                 </div>
                             </div>
                         </div>
