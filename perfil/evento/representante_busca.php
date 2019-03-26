@@ -3,7 +3,7 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
-if(isset($_POST['tipoRepresentante']) && isset($_POST['idPj'])) {
+if (isset($_POST['tipoRepresentante']) && isset($_POST['idPj'])) {
     $tipoRepresentante = $_POST['tipoRepresentante'];
     $_SESSION['idPj'] = $_POST['idPj'];
     $idPj = $_SESSION['idPj'];
@@ -19,9 +19,9 @@ if (isset($_POST['pesquisa'])) {
                           WHERE rep.cpf = '$cpf'
                           LIMIT 0,1";
 
-    $query = mysqli_query($con,$sql);
+    $query = mysqli_query($con, $sql);
 
-    if(mysqli_num_rows($query) > 0) {
+    if (mysqli_num_rows($query) > 0) {
         $resultado = mysqli_fetch_array($query);
         if (isset($resultado['representante_legal1_id'])) {
             $tipoRepresentante = 1;
@@ -30,30 +30,31 @@ if (isset($_POST['pesquisa'])) {
         }
         $mensagem = "<form method='post' action='?perfil=evento&p=representante_edita'>
                         <tr>
-                            <td>".$resultado['nome']."</td>
-                            <td>".$resultado['cpf']."</td>
-                            <td>".$resultado['rg']."</td>
+                            <td>" . $resultado['nome'] . "</td>
+                            <td>" . $resultado['cpf'] . "</td>
+                            <td>" . $resultado['rg'] . "</td>
                             <td>
-                                <input type='hidden' name='idRepresentante' value='".$resultado['representanteId']."'>
-                                <input type='hidden' name='tipoRepresentante' value='".$tipoRepresentante."'>
+                                <input type='hidden' name='idRepresentante' value='" . $resultado['representanteId'] . "'>
+                                <input type='hidden' name='tipoRepresentante' value='" . $tipoRepresentante . "'>
                                 <button type='submit' class='btn btn-primary' name='carregar'>Selecionar</button>
                             </td>
                         </tr>
                     </form>";
 
-    }else{
+    } else {
         $mensagem = "<form action='?perfil=evento&p=representante_cadastro' method='post'>
                         <tr>
                             <td>Representante não cadastrado</td>
                             <td>
-                                <input type='hidden' name='documentacao' value='".$cpf."'>
-                                <input type='hidden' name='tipoRepresentante' value='".$tipoRepresentante."'>
+                                <input type='hidden' name='documentacao' value='" . $cpf . "'>
+                                <input type='hidden' name='tipoRepresentante' value='" . $tipoRepresentante . "'>
                                 <button type='submit' class='btn btn-primary' name='adicionar'><i class='glyphicon glyphicon-plus'></i> Adicionar</button>
                             </td>
                         </tr>
                      </form>";
     }
 }
+
 
 ?>
 <script>
@@ -81,11 +82,14 @@ if (isset($_POST['pesquisa'])) {
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" minlength=14 name="cpf" value="<?= empty($cpf)?'':$cpf ?>" id="cpf" data-mask="000.000.000-00" placeholder="Digite o CPF aqui. . . . ">
+                                    <input type="text" class="form-control" minlength=14 name="cpf"
+                                           value="<?= empty($cpf) ? '' : $cpf ?>" id="cpf" data-mask="000.000.000-00"
+                                           placeholder="Digite o CPF aqui. . . . ">
                                     <span class="input-group-btn">
-                                        <input type="hidden" name="idPj" value="<?=$idPj?>">
-                                        <input type="hidden" name="tipoRepresentante" value="<?=$tipoRepresentante?>">
-                                        <button class="btn btn-default" name="pesquisa" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
+                                        <input type="hidden" name="idPj" value="<?= $idPj ?>">
+                                        <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
+                                        <button class="btn btn-default" name="pesquisa" type="submit"><i
+                                                    class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
                                 </div>
                             </div>
@@ -100,18 +104,23 @@ if (isset($_POST['pesquisa'])) {
                                     <th>Nome</th>
                                     <th>CPF</th>
                                     <th>RG</th>
-                                    <tr></tr>
+                                <tr></tr>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if (isset($mensagem)){
-                                        echo $mensagem;
-                                    } ?>
+                                <?php if (isset($mensagem)) {
+                                    echo $mensagem;
+                                } ?>
                                 </tbody>
                             </table>
                         </div>
-
-
+                        <div class="box-footer">
+                            <form action="?perfil=evento&p=pj_edita" method="post">
+                                <button type="submit" id="idPj" name="idPj" value="<?= $idPj ?>"
+                                        class="btn btn-default">Voltar
+                                </button>
+                            </form>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                 </div>

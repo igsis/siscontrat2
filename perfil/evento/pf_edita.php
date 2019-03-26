@@ -598,24 +598,12 @@ include "includes/menu_interno.php";
                                     <?php
                                     $sqlFACC= "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
                                     $queryFACC = mysqli_query($con,$sqlFACC);
-
-                                    if (mysqli_num_rows($queryFACC) == 0){
-
                                     ?>
+
                                     <label>Gerar FACC</label><br>
                                     <a href="<?= $link_facc . "?id=". $idPf ?>" target="_blank" type="button" class="btn btn-primary btn-block">Clique aqui para
                                         gerar a FACC
                                     </a>
-                                        <?php
-                                    }else {
-                                    ?>
-                                    <label>FACC anexada</label><br>
-                                    <button type="button" formaction="?perfil=evento&p=pf_demais_anexos" class="btn btn-primary btn-block">Visualizar
-                                        arquivos enviados
-                                    </button>
-                                        <?php
-                                    }
-                                    ?>
                                 </div>
 
                                 <div class="form-group col-md-5">

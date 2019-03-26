@@ -200,7 +200,10 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <div class="box-footer">
-                                <button type="button" formaction="?perfil=evento&p=pj_edita" name="idPj" value="<?=$idPj?>" class="btn btn-default">Voltar</button>
+                                <a href="?perfil=evento&p=pj_edita">
+                                    <button type="button" name="idPj" value="<?=$idPj?>" class="btn btn-default">Voltar</button>
+                                </a>
+
                                     <input type="hidden" name="idRepresentante" value="<?= $idRepresentante ?>">
                                     <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
                                     <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Atualizar</button>
