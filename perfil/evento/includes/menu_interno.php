@@ -16,9 +16,9 @@ $pasta = "?perfil=evento&p=";
             <li class="header">EVENTO</li>
 
             <?php if($eventoNovo) { ?>
-                <li><a href="<?=$pasta?>evento_cadastro"><i class="fa fa-circle-o"></i> <span>Evento</span></a></li>
+                <li><a href="<?=$pasta?>evento_cadastro"><i class="fa fa-circle-o text-green"></i> <span>Evento</span></a></li>
             <?php } else { ?>
-                <li><a href="<?=$pasta?>evento_edita"><i class="fa fa-circle-o"></i> <span>Evento</span></a></li>
+                <li><a href="<?=$pasta?>evento_edita"><i class="fa fa-circle-o text-green"></i> <span>Evento</span></a></li>
             <?php }
 
             if (!($eventoNovo)) {
@@ -30,22 +30,29 @@ $pasta = "?perfil=evento&p=";
                 $nAtracoes = mysqli_num_rows($queryAtracoes);
 
                 if($evento['tipo_evento_id'] == 1) { //atração
-                    echo "<li><a href=\"".$pasta."atracoes_lista\"><i class=\"fa fa-circle-o\"></i> <span>Atração</span></a></li>";
+                    echo "<li><a href=\"".$pasta."atracoes_lista\"><i class=\"fa fa-circle-o text-lime\"></i> <span>Atração</span></a></li>";
                 } else { //filme
-                    echo "<li><a href=\"".$pasta."evento_cinema_lista\"><i class=\"fa fa-circle-o\"></i> <span>Filme</span></a></li>";
+                    echo "<li><a href=\"".$pasta."evento_cinema_lista\"><i class=\"fa fa-circle-o text-lime\"></i> <span>Filme</span></a></li>";
                 }
-
+                ?>
+                <li><a href="<?=$pasta?>arquivo_cominicacao_producao"><i class="fa fa-circle-o text-teal"></i> <span>Anexo Comunicação/Produção</span></a></li>
+                <?php
                 if($evento['contratacao'] == 1 && $nAtracoes > 0) {
-                    echo "<li><a href=\"".$pasta."pedido\"><i class=\"fa fa-circle-o\"></i> <span>Pedido</span></a></li>";
+                    echo "<li><a href=\"".$pasta."pedido\"><i class=\"fa fa-circle-o text-aqua\"></i> <span>Pedido</span></a></li>";
                 }
-                echo "<li><a href=\"".$pasta."finalizar\"><i class=\"fa fa-circle-o\"></i> <span>Finalizar</span></a></li>";
+                echo "<li><a href=\"".$pasta."finalizar\"><i class=\"fa fa-circle-o text-light-blue\"></i> <span>Finalizar</span></a></li>";
             }
             ?>
-            <li><a href="?perfil=evento"><i class="fa fa-circle-o"></i> <span>Voltar</span></a></li>
+            <li><a href="?perfil=evento"><i class="fa fa-reply"></i> <span>Voltar</span></a></li>
+            <?php
+            include "../perfil/includes/menu_mais.php";
+            ?>
+            <!--
             <li class="header">MAIS</li>
             <li><a href="?perfil=usuario/minha_conta"><i class="fa fa-user"></i><span>Minha Conta</span></a></li>
             <li><a href="../includes/ajuda.php"><i class="fa fa-question "></i><span>Ajuda</span></a></li>
             <li><a href="../include/logoff.php"><i class="fa fa-sign-out"></i><span>Sair</span></a></li>
+            -->
         </ul>
     </section>
 </aside>
