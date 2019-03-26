@@ -1,6 +1,7 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
+$idPj = $_SESSION['idPj'];
 $cpf = $_POST['documentacao'];
 $tipoRepresentante = $_POST['tipoRepresentante'];
 
@@ -36,7 +37,7 @@ $tipoRepresentante = $_POST['tipoRepresentante'];
                             </div>
 
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-default">Cancelar</button>
+                                <button type="submit" formaction="?perfil=evento&p=pj_edita" id="voltar" name="idPj" value="<?=$idPj?>" class="btn btn-default">Voltar</button>
                                 <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
                                 <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
                                     Cadastrar
@@ -48,3 +49,18 @@ $tipoRepresentante = $_POST['tipoRepresentante'];
         </div>
     </section>
 </div>
+
+
+<script>
+    $("#voltar").on("click", function () {
+
+        var nome = document.querySelector("#nome");
+        var rg = document.querySelector("#rg");
+        var cpf = document.querySelector("#cpf");
+
+        nome.required = false;
+        rg.required = false;
+        cpf.required = false;
+
+    })
+</script>
