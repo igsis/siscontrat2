@@ -25,14 +25,22 @@
                                            maxlength="70" required>
                                 </div>
 
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
                                     <label for="descricao">Descrição: </label>
                                     <input type="text" class="form-control text" id="descricao" name="descricao" required maxlength="12">
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="cor">Cor: </label>
-                                    <input type="text" class="form-control" id="cor" name="cor" required>
+                                    <select class="form-control" id="cor" name="cor">
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                            geraOpcao("cores");
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-1 cor">
+                                    <input type="text" style="display: none">
                                 </div>
                             </div>
                         </div>
@@ -54,7 +62,31 @@
         </div>
         <!-- /.row -->
         <!-- END ACCORDION & CAROUSEL-->
-
     </section>
     <!-- /.content -->
 </div>
+
+
+<script>
+    $("#cor").on("change", function () {
+
+        let selecionado = $("#cor :selected").text();
+
+        let cor = selecionado.split("-");
+
+        if (cor.length > 2) {
+            cor = cor[1] + "-" + cor[2];
+        } else {
+            cor = cor[1];
+        }
+
+
+        console.log(cor);
+
+        $(".cor").html("<label for='cor'>Visualizar</label><input type='text' class='form-control bg-"+ cor + "' disabled>");
+
+
+
+
+    });
+</script>

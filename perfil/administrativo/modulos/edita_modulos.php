@@ -38,10 +38,10 @@ if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
         }
     }
 }
-
-
-
 $modulos = recuperaDados('modulos', 'id', $idModulo);
+
+$cor = recuperaDados("cores", "id", $modulos['cor_id']);
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -82,7 +82,7 @@ $modulos = recuperaDados('modulos', 'id', $idModulo);
 
                                 <div class="form-group col-md-3">
                                     <label for="cor">Cor: </label>
-                                    <input type="text" class="form-control <?=$modulos['cor']?>" id="cor" name="cor" required value="<?= $modulos['cor'] ?>">
+                                    <input type="text" class="form-control <?=$cor['text-color']?>" id="cor" name="cor" required value="<?= $cor['text-color'] ?>">
                                 </div>
                             </div>
                         </div>
