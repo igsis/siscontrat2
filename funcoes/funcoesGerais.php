@@ -537,7 +537,7 @@ function recuperaDados($tabela, $campo, $variavelCampo)
 	{
 		//retorna uma array com os dados de qualquer tabela. serve apenas para 1 registro com o tipo do evento.
 		$con = bancoMysqli();
-		$sql = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$variavelCampo' AND tipo_ocorrencia_id = '$tipoOcorrenciaId' LIMIT 0,1";
+		$sql = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$variavelCampo' AND tipo_ocorrencia_id = '$tipoOcorrenciaId' AND publicado = 1 LIMIT 0,1";
 		$query = mysqli_query($con,$sql);
 		$campo = mysqli_fetch_array($query);
 		return $campo;
