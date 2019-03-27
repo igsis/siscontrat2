@@ -39,7 +39,8 @@ $query = mysqli_query($con, $sql);
                         <table id="tblPerfil" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th width="90%">Perfil</th>
+                                <th>Perfil</th>
+                                <th>Modulos</th>
                                 <th>Token</th>
                                 <th>Visualizar</th>
                                 <th>Excluir</th>
@@ -49,8 +50,16 @@ $query = mysqli_query($con, $sql);
                             <?php
                             echo "<tbody>";
                             while ($perfil = mysqli_fetch_array($query)) {
+                                $idPerfil = $perfil['id'];
+                                $sql_modulo = "SELECT modu.descricao FROM modulo_perfis modpf INNER JOIN modulos modu ON modpf.modulo_id = modu.id WHERE modpf.perfil_id = '$idPerfil'";
+                                $query_modulo = mysqli_query($con, $sql_modulo);
                                 echo "<tr>";
                                 echo "<td>" . $perfil['descricao'] . "</td>";
+                                echo "<td>";
+                                while($modulo = mysqli_fetch_array($query_modulo)){
+                                    echo $modulo['descricao'] . "<br>";
+                                }
+                                echo "</td>";
                                 echo "<td>" . $perfil['token'] . "</td>";
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=administrativo&p=perfil&sp=edita_perfil\" role=\"form\">
@@ -76,6 +85,7 @@ $query = mysqli_query($con, $sql);
                             <tfoot>
                             <tr>
                                 <th>Perfil</th>
+                                <th>Modulos</th>
                                 <th>Token</th>
                                 <th>Visualizar</th>
                                 <th>Excluir</th>
@@ -102,7 +112,7 @@ $query = mysqli_query($con, $sql);
                         <h4 class="modal-title">Confirmação de Exclusão</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Tem certeza que deseja excluir este usuário?</p>
+                        <p>Tem certeza que deseja excluir este perfil?</p>
                     </div>
                     <div class="modal-footer">
                         <form action="?perfil=administrativo&p=perfil&sp=perfil_lista" method="post">
