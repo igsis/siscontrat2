@@ -152,7 +152,7 @@ if(isset($_POST['apagar']))
                                                     <h1 class="text-center">Envio de Arquivos</h1>
                                                 </tr>
                                                 <tr>
-                                                    <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 60MB.</h4>
+                                                    <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 5MB.</h4>
                                                 </tr>
                                                 <?php
                                                 $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";

@@ -77,8 +77,19 @@ if ($evento['tipo_evento_id'] == 1) {
     if ($evento['contratacao'] == 1) {
         $pedidos = $con->query("SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'");
         $numPedidos = $pedidos->num_rows;
+        $pedido = $pedidos->fetch_assoc();
         if ($numPedidos == 0) {
             array_push($erros, "Não há pedido inserido neste evento");
+        } else {
+            if ($pedido['pessoa_tipo_id'] == 1) {
+                $pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_tipo_id']);
+
+
+            } elseif ($pedido['pessoa_tipo_id'] == 2) {
+                $pj = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_tipo_id']);
+
+
+            }
         }
     }
 }

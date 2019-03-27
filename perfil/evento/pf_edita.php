@@ -362,9 +362,9 @@ include "includes/menu_interno.php";
                                            maxlength="70" required value="<?= $pf['nome'] ?>">
                                 </div>
                                 <div class="col-md-6 form-group">
-                                    <label for="nomeArtistico">Nome Artistico: *</label>
+                                    <label for="nomeArtistico">Nome Artistico:</label>
                                     <input type="text" class="form-control" name="nomeArtistico"
-                                           placeholder="Digite o nome artistico" maxlength="70" required
+                                           placeholder="Digite o nome artistico" maxlength="70"
                                            value="<?= $pf['nome_artistico'] ?>">
                                 </div>
                             </div>

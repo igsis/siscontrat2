@@ -102,7 +102,7 @@ $atracao = mysqli_query($con,$sql);
                                     <input type="date" class="form-control" id="dataNascimento" name="dtNascimento" onkeyup="barraData(this);" required/>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="nacionalidade">Nacionalidade: </label>
+                                    <label for="nacionalidade">Nacionalidade: *</label>
                                     <select class="form-control" id="nacionalidade" name="nacionalidade" required>
                                         <option value="">Selecione uma opção...</option>
                                         <?php
@@ -214,12 +214,12 @@ $atracao = mysqli_query($con,$sql);
                                             </select>
                                         </div>
                                         <div class="form-group col-md-4">
-                                            <label for="agencia">Agência:</label>
-                                            <input type="text" name="agencia" class="form-control"  placeholder="Digite a Agência" maxlength="12">
+                                            <label for="agencia">Agência: *</label>
+                                            <input type="text" name="agencia" class="form-control"  placeholder="Digite a Agência" maxlength="12" required>
                                         </div>
                                         <div class="form-group col-md-4">
-                                            <label for="conta">Conta:</label>
-                                            <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12">
+                                            <label for="conta">Conta: *</label>
+                                            <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12" required>
                                         </div>
                                     </div>
                                 <?php

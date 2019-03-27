@@ -29,24 +29,48 @@ include "includes/validacoes.php";
     </section>
 
     <section class="content">
-        <?php if (count($erros) == 0) { ?>
-            <div class="alert alert-success alert-dismissible">
-                <h4><i class="icon fa fa-check"></i> Seu Evento Não Possui Pendencias!</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <?php if (count($erros) == 0) { ?>
+                    <div class="alert alert-success alert-dismissible">
+                        <h4><i class="icon fa fa-check"></i> Seu Evento Não Possui Pendencias!</h4>
 
-                <p>Confirme todos os dados abaixo antes de enviar.</p>
-            </div>
-        <?php } else { ?>
-            <div class="alert alert-danger">
-                <h4><i class="icon fa fa-ban"></i> Seu Evento Possui Pendencias!</h4>
+                        <p>Confirme todos os dados abaixo antes de enviar.</p>
+                    </div>
+                <?php } else { ?>
+                    <div class="alert alert-danger">
+                        <h4><i class="icon fa fa-ban"></i> Seu Evento Possui Pendencias!</h4>
 
-                <ul>
-                    <?php foreach ($erros as $erro) {
-                        echo "<li>$erro</li>";
-                    }
-                    ?>
-                </ul>
+                        <ul>
+                            <?php foreach ($erros as $erro) {
+                                echo "<li>$erro</li>";
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                <?php } ?>
             </div>
-        <?php } ?>
+            <div class="col-md-6">
+                <?php if (count($erros) == 0) { ?>
+                    <div class="alert alert-success alert-dismissible">
+                        <h4><i class="icon fa fa-check"></i> Todos os Arquivos Foram Enviados!</h4>
+
+                        <p>Confirme todos os dados abaixo antes de enviar.</p>
+                    </div>
+                <?php } else { ?>
+                    <div class="alert alert-danger">
+                        <h4><i class="icon fa fa-ban"></i> Alguns Arquivos não Foram Enviados!</h4>
+
+                        <ul>
+                            <?php foreach ($erros as $erro) {
+                                echo "<li>$erro</li>";
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
 
         <h2 class="page-header">Finalizar</h2>
 
@@ -66,18 +90,22 @@ include "includes/validacoes.php";
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="evento">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <tr>
-                                <th class="bg-primary text-center" colspan="2">Dados do Evento</th>
-                            </tr>
-                            <?php foreach ($resumoEvento as $campo => $dado) { ?>
-                                <tr>
-                                    <th width="30%"><?= $campo ?></th>
-                                    <td><?=$dado?></td>
-                                </tr>
-                            <?php } ?>
-                        </table>
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Dados do Evento</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <?php foreach ($resumoEvento as $campo => $dado) { ?>
+                                        <tr>
+                                            <th width="30%"><?= $campo ?></th>
+                                            <td><?=$dado?></td>
+                                        </tr>
+                                    <?php } ?>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
