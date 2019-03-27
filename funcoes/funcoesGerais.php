@@ -533,6 +533,16 @@ function recuperaDados($tabela, $campo, $variavelCampo)
 		return $campo;
 	}
 
+function recuperaDadosPublicado($tabela, $campo, $variavelCampo)
+{
+    //retorna uma array com os dados de qualquer tabela. serve apenas para 1 registro.
+    $con = bancoMysqli();
+    $sql = "SELECT * FROM $tabela WHERE ".$campo." = '$variavelCampo' AND publicado = 1 LIMIT 0,1";
+    $query = mysqli_query($con,$sql);
+    $campo = mysqli_fetch_array($query);
+    return $campo;
+}
+
 		function recuperaOcorrenciaDados($variavelCampo, $tipoOcorrenciaId)
 	{
 		//retorna uma array com os dados de qualquer tabela. serve apenas para 1 registro com o tipo do evento.

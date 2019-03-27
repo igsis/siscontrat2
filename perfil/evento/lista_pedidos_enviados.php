@@ -54,8 +54,9 @@ $query = mysqli_query($con, $sql);
 
                             <?php
                             echo "<tbody>";
-                            while ($pedido = mysqli_fetch_array($query)) {
-                                $locais = listaLocais($pedido['id']);
+                            while ($evento = mysqli_fetch_array($query)) {
+                                $pedido = recuperaDadosPublicado('pedidos', 'origem_id', $evento['id']);
+                                $locais = listaLocais($evento['id']);
                                 if($pedido['pessoa_tipo_id'] == 1){
                                     $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
                                     $proponente = $proponente['nome'];
@@ -64,7 +65,6 @@ $query = mysqli_query($con, $sql);
                                     $proponente = $proponente['razao_social'];
                                 }
 
-                                $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
                                 $protocolo = recuperaDados('protocolos', 'origem_id', $evento['id']);
 
                                 $idEvento = $evento['id'];
