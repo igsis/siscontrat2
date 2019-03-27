@@ -708,7 +708,7 @@ if(isset($pj['representante_legal2_id'])){
                             <input type='hidden' name='idPj' id='idPj' value='<?=$idPj?>'>
                             <input type='hidden' name='idRepresentante' id='idRepresentante' value=''>
                             <input type='hidden' name='tipoRepresentante' id='tipoRepresentante' value=''>
-                            <button type="submit" name="carregar" class="btn btn-primary btn-block">
+                            <button type="submit" name="abrirPag" class="btn btn-primary btn-block">
                                 Editar Representante
                             </button>
                         </form>
@@ -716,7 +716,7 @@ if(isset($pj['representante_legal2_id'])){
                     <div class="form-group col-md-6"><label><br></label>
                         <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
                             <input type='hidden' name='idPj' id='idPj' value='<?=$idPj?>'>
-                            <input type='hidden' name='tipoRepresentante' id='tipoRepresentante' value=''>
+                            <input type='hidden' name='tipoRepresentanteTroca' id='tipoRepresentanteTroca' value=''>
                             <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
                                 Representante
                             </button>
@@ -781,6 +781,7 @@ if(isset($pj['representante_legal2_id'])){
         $(this).find('#representante').attr('value', `${representante}`);
         $(this).find('#idRepresentante').attr('value', `${idRepresentante}`);
         $(this).find('#tipoRepresentante').attr('value', `${tipoRepresentante}`);
+        $(this).find('#tipoRepresentanteTroca').attr('value', `${tipoRepresentante}`);
 
         console.log(tipoRepresentante);
 

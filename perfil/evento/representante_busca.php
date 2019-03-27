@@ -2,44 +2,68 @@
 
 include "includes/menu_interno.php";
 $con = bancoMysqli();
+$conn = bancoPDO();
+
+if (isset($_POST['tipoRepresentanteTroca'])){
+    $tipoRepresentante = $_POST['tipoRepresentanteTroca'];
+    $_SESSION['idPj'] = $_POST['idPj'];
+    $idPj = $_SESSION['idPj'];
+}
 
 if (isset($_POST['tipoRepresentante']) && isset($_POST['idPj'])) {
     $tipoRepresentante = $_POST['tipoRepresentante'];
     $_SESSION['idPj'] = $_POST['idPj'];
     $idPj = $_SESSION['idPj'];
+
+    //echo $tipoRepresentante;
 }
 
 if (isset($_POST['pesquisa'])) {
 
     $cpf = $_POST['cpf'];
-    $sql = "SELECT rep.id as representanteId, rep.nome, rep.rg, rep.cpf, pj.representante_legal1_id, pj.representante_legal2_id
-                          FROM representante_legais as rep
-                          INNER JOIN pessoa_juridicas as pj
-                          ON (pj.representante_legal1_id = rep.id OR pj.representante_legal2_id = rep.id)
-                          WHERE rep.cpf = '$cpf'
-                          LIMIT 0,1";
 
-    $query = mysqli_query($con, $sql);
+    $sqlRepre = "SELECT * FROM representante_legais WHERE cpf = '$cpf' LIMIT 1";
+    $representante = $conn->query($sqlRepre)->fetch();
 
-    if (mysqli_num_rows($query) > 0) {
-        $resultado = mysqli_fetch_array($query);
-        if (isset($resultado['representante_legal1_id'])) {
-            $tipoRepresentante = 1;
-        } else if (isset($resultado['representante_legal2_id'])) {
-            $tipoRepresentante = 2;
+    if ($representante != null && count($representante) > 0) {
+        $idRepresentante = $representante['id'];
+        echo "teste " . $idRepresentante;
+
+        $sqlPj = "SELECT representante_legal1_id, representante_legal2_id FROM pessoa_juridicas WHERE id = '$idPj' AND (representante_legal1_id = '$idRepresentante' 
+                                                  OR representante_legal2_id = '$idRepresentante')";
+        $pj = $conn->query($sqlPj)->fetch();
+
+        if ($pj != null && count($pj) > 0) {
+            if (isset($pj['representante_legal1_id']) && $idRepresentante == $pj['representante_legal1_id']) {
+                echo "<script>
+                       swal('A pessoa fisíca " . $representante['nome'] . " cadastrada com esse cpf é seu representante legal 1!', '', 'warning')
+                        .then(() => {
+                            desabilitaSelecionar(); 
+                        });
+                     </script>";
+
+            } else if (isset($pj['representante_legal2_id']) && $idRepresentante == $pj['representante_legal2_id']) {
+                echo "<script>                     
+                      swal('A pessoa fisíca " . $representante['nome'] . " cadastrada com esse cpf é seu representante legal 2!', '', 'warning')
+                        .then(() => {
+                            desabilitaSelecionar(); 
+                        });               
+                    </script>";
+            }
         }
         $mensagem = "<form method='post' action='?perfil=evento&p=representante_edita'>
                         <tr>
-                            <td>" . $resultado['nome'] . "</td>
-                            <td>" . $resultado['cpf'] . "</td>
-                            <td>" . $resultado['rg'] . "</td>
+                            <td>" . $representante['nome'] . "</td>
+                            <td>" . $representante['cpf'] . "</td>
+                            <td>" . $representante['rg'] . "</td>
                             <td>
-                                <input type='hidden' name='idRepresentante' value='" . $resultado['representanteId'] . "'>
-                                <input type='hidden' name='nome' value='" . $resultado['nome'] . "'>
-                                <input type='hidden' name='cpf' value='" . $resultado['cpf'] . "'>
-                                <input type='hidden' name='rg' value='" . $resultado['rg'] . "'>
+                                <input type='hidden' name='idPj' value='" . $idPj . "'>
+                                <input type='hidden' name='idRepresentante' value='" . $representante['id'] . "'>
+                                <input type='hidden' name='nome' value='" . $representante['nome'] . "'>
+                                <input type='hidden' name='cpf' value='" . $representante['cpf'] . "'>
+                                <input type='hidden' name='rg' value='" . $representante['rg'] . "'>
                                 <input type='hidden' name='tipoRepresentante' value='" . $tipoRepresentante . "'>
-                                <button type='submit' class='btn btn-primary' name='carregar'>Selecionar</button>
+                                <button type='submit' class='btn btn-primary' name='carregar' id='selecionar'>Selecionar</button>
                             </td>
                         </tr>
                     </form>";
@@ -137,3 +161,74 @@ if (isset($_POST['pesquisa'])) {
     </section>
     <!-- /.content -->
 </div>
+
+
+<script>
+
+    function desabilitaSelecionar() {
+
+        let testeee = document.querySelector('#selecionar');
+        testeee.disabled = true;
+
+        console.log(testeee);
+    }
+
+
+    function TestaCPF(cpf) {
+        var Soma;
+        var Resto;
+        var strCPF = cpf;
+        Soma = 0;
+
+        if (strCPF == "11111111111" ||
+            strCPF == "22222222222" ||
+            strCPF == "33333333333" ||
+            strCPF == "44444444444" ||
+            strCPF == "55555555555" ||
+            strCPF == "66666666666" ||
+            strCPF == "77777777777" ||
+            strCPF == "88888888888" ||
+            strCPF == "99999999999")
+            return false;
+
+        for (i = 1; i <= 9; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+        Resto = (Soma * 10) % 11;
+
+        if ((Resto == 10) || (Resto == 11)) Resto = 0;
+        if (Resto != parseInt(strCPF.substring(9, 10))) return false;
+
+        Soma = 0;
+        for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+        Resto = (Soma * 10) % 11;
+
+        if ((Resto == 10) || (Resto == 11)) Resto = 0;
+        if (Resto != parseInt(strCPF.substring(10, 11))) return false;
+        return true;
+    }
+
+    function validacao() {
+        var divCPF = document.querySelector('#divCPF');
+        var strCPF = document.querySelector('#cpf').value;
+
+        if (strCPF != null) {
+            // tira os pontos do valor, ficando apenas os numeros
+            strCPF = strCPF.replace(/[^0-9]/g, '');
+
+            var validado = TestaCPF(strCPF);
+
+            if (!validado) {
+                swal("CPF inválido!", "", "error");
+                $("#adicionar").attr("disabled", true);
+            } else {
+                $("#adicionar").attr("disabled", false);
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        if ((document.querySelector("#cpf").value != "")) {
+            validacao();
+        }
+    });
+
+</script>

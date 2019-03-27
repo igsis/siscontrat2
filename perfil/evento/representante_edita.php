@@ -3,20 +3,25 @@ $con = bancoMysqli();
 $idPj = $_POST['idPj'];
 $pessoa_juridica = recuperaDados('pessoa_juridicas', 'id', $idPj);
 
+if (isset($_POST['abrirPag'])) {
+    $idRepresentante = $_POST['idRepresentante'] ?? $_POST['idPessoa'];
+    $tipoRepresentante = $_POST['tipoRepresentante'] ?? $_POST['tipoPessoa'];
+}
+
+
 if (isset($_POST['carregar']) || isset($_POST['apagar']) || isset($_POST['enviar'])) {
     $idRepresentante = $_POST['idRepresentante'] ?? $_POST['idPessoa'];
     $tipoRepresentante = $_POST['tipoRepresentante'] ?? $_POST['tipoPessoa'];
 
 }
 
-if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['carregar'])) {
+if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['carregar']) ) {
     $nome = addslashes($_POST['nome']) ?? null;
     $rg = $_POST['rg'];
     $cpf = $_POST['cpf'];
     $tipoRepresentante = $_POST['tipoRepresentante'];
-
-    echo "teste" . $tipoRepresentante;
 }
+
 
 if ($tipoRepresentante == 1) {
     $representante = "representante_legal1_id";
@@ -26,7 +31,6 @@ if ($tipoRepresentante == 1) {
     $siglaCPF = "cpf_rl1";
     $nomeRg = "RG do Representante Legal 1";
     $nomeCpf = "CPF do Representante Legal 1";
-
 
 } else if ($tipoRepresentante == 2) {
     $representante = "representante_legal2_id";
@@ -57,7 +61,7 @@ if (isset($_POST['cadastra'])) {
         $idRepresentante = recuperaUltimo("representante_legais");
 
         // salvar o represente na pessoa juridica
-        $sqlPessoaJuridica = "UPDATE pessoa_juridicas SET $representante = $idRepresentante WHERE id = '$idPj'";
+        $sqlPessoaJuridica = "UPDATE pessoa_juridicas SET $representante = '$idRepresentante' WHERE id = '$idPj'";
         mysqli_query($con, $sqlPessoaJuridica);
 
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
@@ -69,15 +73,28 @@ if (isset($_POST['cadastra'])) {
     }
 }
 
-if (isset($_POST['edita'])) {
+if (isset($_POST['edita']) || isset($_POST['carregar'])) {
     $idRepresentante = $_POST['idRepresentante'];
+
     $sql = "UPDATE representante_legais SET
                               nome = '$nome', 
                               rg = '$rg', 
                               cpf = '$cpf' 
                               WHERE id = '$idRepresentante'";
-    If (mysqli_query($con, $sql)) {
-        $mensagem = mensagem("success", "Atualizado com sucesso!");
+    if (mysqli_query($con, $sql)) {
+
+        if (isset($_POST['edita'])) {
+            $mensagem = mensagem("success", "Dados atualizados com sucesso!");
+
+        }elseif (isset($_POST['carregar'])) {
+
+            $sqlSeleciona = "UPDATE pessoa_juridicas SET $representante = '$idRepresentante' WHERE id = '$idPj'";
+            mysqli_query($con, $sqlSeleciona);
+
+            echo "<script>swal('Lembre-se de conferir os dados', '', 'warning') </script>";
+
+            $mensagem = mensagem("success", "Representante selecionado com sucesso!");
+        }
         //gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Erro ao atualizar! Tente novamente.");
@@ -166,7 +183,7 @@ include "includes/menu_interno.php";
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Informações Presentante</h3>
+                        <h3 class="box-title">Informações Representante</h3>
                     </div>
                     <div class="row" align="center">
                         <?php if (isset($mensagem)) {
@@ -208,18 +225,18 @@ include "includes/menu_interno.php";
                                     </div>
                                 </div>
                             </div>
-                            <div class="box-footer">
-                                <button type="button" name="voltar" id="voltar" value="<?= $idPj ?>"
-                                        class="btn btn-default">Voltar
-                                </button>
+                            <input type="hidden" name="idPj" value="<?= $idPj ?>">
+                            <input type="hidden" name="idRepresentante" value="<?= $idRepresentante ?>">
+                            <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
+                            <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">
+                                Atualizar
+                            </button>
 
-                                <input type="hidden" name="idRepresentante" value="<?= $idRepresentante ?>">
-                                <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
-                                <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">
-                                    Atualizar
-                                </button>
-                            </div>
                     </form>
+                    <form action="?perfil=evento&p=pj_edita" method="post">
+                        <button type="submit" name="idPj" id="idPj" value="<?= $idPj ?>" class="btn btn-default">Voltar</button>
+                    </form>
+                </div>
                 </div>
             </div>
         </div>
@@ -271,19 +288,5 @@ include "includes/menu_interno.php";
         $(this).find('#idArquivo').attr('value', `${id}`);
 
     });
-
-    $("#voltar").on("click", function () {
-
-        var idPj = "<?php echo $idPj; ?>";
-
-        console.log("idPj" + idPj);
-
-        $.post('?perfil=evento&p=pj_edita', {idPj: idPj})
-            .done(function () {
-                //window.location.href = "?perfil=evento&p=pj_edita";
-                console.log("foi");
-            });
-
-    })
 
 </script>
