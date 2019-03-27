@@ -59,7 +59,7 @@ $query = mysqli_query($con, $sql);
                                 ?>
                                 <td>
                                     <form method='POST' id='formExcliuir'>
-                                        <input type="hidden" name='idPerfil' value="<?= $perfil['id'] ?>">
+                                        <input type="hidden" name='idCategoria' value="<?= $categoria['id'] ?>">
                                         <button type="button" class="btn btn-block btn-danger" id="excluiPerfil"
                                                 data-toggle="modal" data-target="#exclusao" name="excluiPerfil"
                                                 data-nome="<?= $categoria['categoria_atracao'] ?>"
