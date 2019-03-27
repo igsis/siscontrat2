@@ -19,7 +19,7 @@
                           role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="sigla">Sigla: </label>
                                     <input type="text" class="form-control" id="sigla" name="sigla"
                                            maxlength="70" required>
@@ -39,8 +39,9 @@
                                         ?>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-1 cor">
-                                    <input type="text" style="display: none">
+                                <div class="form-group col-md-1 cor text-center" style="margin-top: 6px;">
+                                    <label for='cor'><span class='glyphicon glyphicon-eye-open'></span></label>
+                                    <input type="text" class='form-control bg-<?=$cor?>' disabled">
                                 </div>
                             </div>
                         </div>
@@ -82,7 +83,7 @@
 
         console.log(cor);
 
-        $(".cor").html("<label for='cor'>Visualizar</label><input type='text' class='form-control bg-"+ cor + "' disabled>");
+        $(".cor").html("<label for='cor'><span class='glyphicon glyphicon-eye-open'></span></label><input type='text' class='form-control bg-"+ cor + "' disabled>");
 
     });
 </script>

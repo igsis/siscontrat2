@@ -69,13 +69,13 @@ $cores = recuperaDados("cores", "id", $modulos['cor_id']);
                           role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="form-group col-md-5">
+                                <div class="form-group col-md-4">
                                     <label for="sigla">Sigla: </label>
                                     <input type="text" class="form-control" id="sigla" name="sigla" value="<?=$modulos['sigla']?>"
                                            maxlength="70" required>
                                 </div>
 
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="descricao">Descrição: </label>
                                     <input type="text" class="form-control" id="descricao" name="descricao" required maxlength="12" value="<?=$modulos['descricao']?>">
                                 </div>
@@ -96,8 +96,8 @@ $cores = recuperaDados("cores", "id", $modulos['cor_id']);
                                         ?>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-1 cor">
-                                    <label for='cor'>Visualizar</label>
+                                <div class="form-group col-md-1 cor text-center" style="margin-top: 6px;">
+                                    <label for='cor'><span class='glyphicon glyphicon-eye-open'></span></label>
                                     <input type='text' class='form-control bg-<?=$cor?>' disabled>
                                 </div>
                             </div>
@@ -140,7 +140,7 @@ $cores = recuperaDados("cores", "id", $modulos['cor_id']);
 
         console.log(cor);
 
-        $(".cor").html("<label for='cor'>Visualizar</label><input type='text' class='form-control bg-"+ cor + "' disabled>");
+        $(".cor").html("<label for='cor'><span class='glyphicon glyphicon-eye-open'></span></label><input type='text' class='form-control bg-"+ cor + "' disabled>");
 
     });
 </script>
