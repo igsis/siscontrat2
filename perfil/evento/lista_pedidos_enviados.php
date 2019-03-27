@@ -9,7 +9,7 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM pedidos WHERE publicado = 1";
+$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 0 AND evento_status_id >= 3 AND contratacao = 1 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
 
 $query = mysqli_query($con, $sql);
 ?>
@@ -55,6 +55,7 @@ $query = mysqli_query($con, $sql);
                             <?php
                             echo "<tbody>";
                             while ($pedido = mysqli_fetch_array($query)) {
+                                $locais = listaLocais($pedido['id']);
                                 if($pedido['pessoa_tipo_id'] == 1){
                                     $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
                                     $proponente = $proponente['nome'];
@@ -85,7 +86,7 @@ $query = mysqli_query($con, $sql);
                                     ?>
                                 </td>
                             <?php
-                                echo "<td> PRECISA VER ESSA DESGRAÇA AQUI </td>";
+                                echo "<td>" . $locais. "</td>";
                                 echo "<td>" . dinheiroParaBr($pedido['valor_total']) . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($evento['id']) . "</td>";
                                 echo "<td>" . $status['status'] . "</td>";
