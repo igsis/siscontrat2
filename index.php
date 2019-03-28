@@ -67,6 +67,12 @@ if(isset($_POST['login']))
   <!-- iCheck -->
   <link rel="stylesheet" href="visual/plugins/iCheck/square/blue.css">
 
+  <!-- full Calendar -->
+  <link href='visual/css/calendar/core/main.min.css' rel='stylesheet' />
+  <link href='visual/css/calendar/daygrid/main.min.css' rel='stylesheet' />
+  <link href='visual/css/calendar/timegrid/main.min.css' rel='stylesheet' />
+  <link href='visual/css/calendar/list/main.min.css' rel='stylesheet' />
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
