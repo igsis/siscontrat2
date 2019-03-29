@@ -39,16 +39,14 @@
                                         ?>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-1 cor text-center" style="margin-top: 6px;">
-                                    <label for='cor'><span class='glyphicon glyphicon-eye-open'></span></label>
-                                    <input type="text" class='form-control bg-<?=$cor?>' disabled">
+                                <div class="form-group col-md-1 cor text-center" style="margin-top: 6px; display: none;">
                                 </div>
                             </div>
                         </div>
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <a href="?perfil=administrativo&p=projeto_especial&sp=projeto_especial_lista">
+                            <a href="?perfil=administrativo&p=modulos&sp=modulos_lista">
                                 <button type="button" class="btn btn-default">Voltar</button>
                             </a>
                             <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">
@@ -81,7 +79,9 @@
             cor = cor[1];
         }
 
-        console.log(cor);
+        let div = document.querySelector(".cor");
+
+        div.style.display = "block";
 
         $(".cor").html("<label for='cor'><span class='glyphicon glyphicon-eye-open'></span></label><input type='text' class='form-control bg-"+ cor + "' disabled>");
 
