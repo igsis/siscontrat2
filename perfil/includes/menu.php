@@ -13,7 +13,6 @@ $sql_perfil = "SELECT * FROM modulo_perfis
               WHERE perfil_id = '$u_perfil' ORDER BY descricao";
 $query_perfil = mysqli_query($con,$sql_perfil);
 ?>
-<li><a href="?perfil=administrativo"><i class="fa fa-circle-o text-red"></i> <span>Administrador</span></a></li>
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->

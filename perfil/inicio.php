@@ -16,10 +16,8 @@ $query_avisos = mysqli_query($con,$sql_avisos);
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
         <!-- START ACCORDION-->
         <h2 class="page-header">Mural de Atualizações</h2>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-solid">
