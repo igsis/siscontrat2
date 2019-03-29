@@ -1,3 +1,13 @@
+<?php
+include "includes/menu.php";
+?>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <section class="content">
+        <div id='calendar'></div>
+    </section>
+</div>
 
 <script>
 
@@ -73,23 +83,6 @@
   });
 
 </script>
-<style>
 
-  body {
-    margin: 40px 10px;
-    padding: 0;
-    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-    font-size: 14px;
-  }
-
-  #calendar {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-</style>
-
-
-  <div id='calendar'></div>
 
 

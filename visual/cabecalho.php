@@ -33,7 +33,11 @@ else
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
-
+      <!-- fullCalendar -->
+      <link rel="stylesheet" href="bower_components/fullcalendar/packages/core/main.css">
+      <link rel="stylesheet" href="bower_components/fullcalendar/packages/list/main.css">
+      <link rel="stylesheet" href="bower_components/fullcalendar/packages/daygrid/main.css">
+      <link rel="stylesheet" href="bower_components/fullcalendar/packages/timegrid/main.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -53,6 +57,12 @@ else
       <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
       <script src="dist/js/handlebars-v4.1.0.js"></script>
       <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+      <!-- fullCalendar -->
+      <script src="bower_components/fullcalendar/packages/core/main.js"></script>
+      <script src="bower_components/fullcalendar/packages/interaction/main.js"></script>
+      <script src="bower_components/fullcalendar/packages/daygrid/main.js"></script>
+      <script src="bower_components/fullcalendar/packages/timegrid/main.js"></script>
+      <script src="bower_components/fullcalendar/packages/list/main.js"></script>
   </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
