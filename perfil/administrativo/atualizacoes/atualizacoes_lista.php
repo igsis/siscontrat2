@@ -3,13 +3,13 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 if (isset($_POST['excluir'])) {
-    $categoria = $_POST['idCategoria'];
-    $stmt = $conn->prepare("UPDATE `categoria_atracoes` SET publicado = 0 WHERE id = :id");
-    $stmt->execute(['id' => $categoria]);
-    $mensagem = mensagem("success", "Categoria excluida com sucesso!");
+    $atualizacao = $_POST['idAtualizacao'];
+    $stmt = $conn->prepare("UPDATE `avisos` SET publicado = 0 WHERE id = :id");
+    $stmt->execute(['id' => $atualizacao]);
+    $mensagem = mensagem("success", "Atualização excluída com sucesso!");
 }
 
-$sql = "SELECT * FROM categoria_atracoes WHERE publicado = 1";
+$sql = "SELECT * FROM avisos WHERE publicado = 1";
 $query = mysqli_query($con, $sql);
 ?>
 
@@ -19,9 +19,9 @@ $query = mysqli_query($con, $sql);
     <section class="content">
 
         <!-- START FORM-->
-        <h3 class="box-title">Lista de Categorias</h3>
-        <a href="?perfil=administrativo&p=categoria&sp=cadastro_categoria" class="text-right btn btn-success"
-           style="float: right">Adicionar Categoria</a>
+        <h3 class="box-title">Lista de Usuário</h3>
+        <a href="?perfil=administrativo&p=atualizacoes&sp=cadastro_atualizacao" class="text-right btn btn-success"
+           style="float: right">Adicionar Atualização</a>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -36,34 +36,50 @@ $query = mysqli_query($con, $sql);
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblPerfil" class="table table-bordered table-striped">
+                        <table id="tblAtualizacao" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th width="90%">Categoria atração</th>
-                                <th>Visualizar</th>
-                                <th>Excluir</th>
+                                <th width="20%">Título</th>
+                                <th>Mensagem</th>
+                                <th width="10%">Data</th>
+                                <th width="10%">Visualizar</th>
+                                <th width="10%">Excluir</th>
                             </tr>
                             </thead>
 
                             <?php
                             echo "<tbody>";
-                            while ($categoria = mysqli_fetch_array($query)) {
+                            while ($atualizacao = mysqli_fetch_array($query)) {
+
+                                $tamanho = strlen($atualizacao['mensagem']);
+
+                                if ($tamanho > 180) {
+
+                                    $novo_texto = trim(substr($atualizacao['mensagem'], 0, 100)).'...';
+
+                                }else {
+                                    $novo_texto = $atualizacao['mensagem'];
+                                }
+
+
                                 echo "<tr>";
-                                echo "<td>" . $categoria['categoria_atracao'] . "</td>";
+                                echo "<td>" . $atualizacao['titulo'] . "</td>";
+                                echo "<td>" . $novo_texto . "</td>";
+                                echo "<td>" . exibirDataBr($atualizacao['data']). "</td>";
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=administrativo&p=categoria&sp=edita_categoria\" role=\"form\">
-                                    <input type='hidden' name='idCategoria' value='" . $categoria['id'] . "'>
+                                    <form method=\"POST\" action=\"?perfil=administrativo&p=atualizacoes&sp=edita_atualizacao\" role=\"form\">
+                                    <input type='hidden' name='idAtualizacao' value='" . $atualizacao['id'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
                                 ?>
                                 <td>
                                     <form method='POST' id='formExcliuir'>
-                                        <input type="hidden" name='idCategoria' value="<?= $categoria['id'] ?>">
-                                        <button type="button" class="btn btn-block btn-danger" id="excluiPerfil"
-                                                data-toggle="modal" data-target="#exclusao" name="excluiPerfil"
-                                                data-nome="<?= $categoria['categoria_atracao'] ?>"
-                                                data-id="<?= $categoria['id'] ?>"><span
+                                        <input type="hidden" name='idAtualizacao' value="<?= $atualizacao['id'] ?>">
+                                        <button type="button" class="btn btn-block btn-danger" id="excluiAtualizacao"
+                                                data-toggle="modal" data-target="#exclusao" name="excluiAtualizacao"
+                                                data-nome="<?= $atualizacao['titulo'] ?>"
+                                                data-id="<?= $atualizacao['id'] ?>"><span
                                                     class='glyphicon glyphicon-trash'></span></button>
                                     </form>
                                 </td>
@@ -73,7 +89,9 @@ $query = mysqli_query($con, $sql);
                             ?>
                             <tfoot>
                             <tr>
-                                <th>Categoria atração</th>
+                                <th>Título</th>
+                                <th>Mensagem</th>
+                                <th>Data</th>
                                 <th>Visualizar</th>
                                 <th>Excluir</th>
                             </tr>
@@ -99,11 +117,11 @@ $query = mysqli_query($con, $sql);
                         <h4 class="modal-title">Confirmação de Exclusão</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Tem certeza que deseja excluir esta categoria?</p>
+                        <p>Tem certeza que deseja excluir esta atualização?</p>
                     </div>
                     <div class="modal-footer">
-                        <form action="?perfil=administrativo&p=categoria&sp=categoria_lista" method="post">
-                            <input type="hidden" name="idCategoria" id="idCategoria" value="">
+                        <form action="?perfil=administrativo&p=atualizacoes&sp=atualizacoes_lista" method="post">
+                            <input type="hidden" name="idAtualizacao" id="idAtualizacao" value="">
                             <input type="hidden" name="apagar" id="apagar">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                             </button>
@@ -124,7 +142,7 @@ $query = mysqli_query($con, $sql);
 
 <script type="text/javascript">
     $(function () {
-        $('#tblPerfil').DataTable({
+        $('#tblAtualizacao').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },
@@ -141,7 +159,7 @@ $query = mysqli_query($con, $sql);
         let nome = $(e.relatedTarget).attr('data-nome');
         let id = $(e.relatedTarget).attr('data-id');
 
-        $(this).find('p').text(`Tem certeza que deseja excluir a categoria: ${nome} ?`);
-        $(this).find('#idCategoria').attr('value', `${id}`);
+        $(this).find('p').text(`Tem certeza que deseja excluir a atualização ${nome} ?`);
+        $(this).find('#idAtualizacao').attr('value', `${id}`);
     })
 </script>

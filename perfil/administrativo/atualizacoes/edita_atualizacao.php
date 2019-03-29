@@ -2,39 +2,42 @@
 $con = bancoMysqli();
 
 if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
-    $nome = $_POST['nome'];
+    $titulo = $_POST['titulo'];
+    $msg = $_POST['msg'];
+    $hoje = date("Y-m-d H:i:s");
 
     if(isset($_POST['cadastra'])){
-        $sql = "INSERT INTO categoria_atracoes (categoria_atracao) VALUES ('$nome')";
+        $sql = "INSERT INTO avisos (titulo, mensagem, data) VALUES ('$titulo', '$msg', '$hoje')";
 
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
-            $mensagem = mensagem("success", "Categoria cadastrada com sucesso!");
-            $idCategoria = recuperaUltimo('categoria_atracoes');
+            $mensagem = mensagem("success", "Aviso cadastrado com sucesso!");
+            $idAtualizacao = recuperaUltimo('avisos');
         } else {
-            $mensagem = mensagem("danger", "Erro no cadastro da categoria! Tente novamente.");
+            $mensagem = mensagem("danger", "Erro no cadastro do aviso! Tente novamente.");
         }
     }
 
     if(isset($_POST['edita'])){
-        $idCategoria = $_POST['idCategoria'];
+        $hoje = date("Y-m-d H:i:s");
+        $idAtualizacao = $_POST['idAtualizacao'];
 
-        $sql = "UPDATE categoria_atracoes SET categoria_atracao = '$nome' WHERE id = '$idCategoria'";
+        $sql = "UPDATE avisos SET titulo = '$titulo', mensagem = '$msg', data = '$hoje' WHERE id = '$idAtualizacao'";
 
         if(mysqli_query($con, $sql)){
             gravarLog($sql);
-            $mensagem = mensagem("success", "Categoria editada com sucesso!");
+            $mensagem = mensagem("success", "Aviso editado com sucesso!");
         }else{
-            $mensagem = mensagem("danger", "Erro ao salvar a categoria! Tente novamente.");
+            $mensagem = mensagem("danger", "Erro ao salvar o aviso! Tente novamente.");
         }
     }
 }
 
 if(isset($_POST['carregar'])){
-    $idCategoria = $_POST['idCategoria'];
+    $idAtualizacao = $_POST['idAtualizacao'];
 }
 
-$categoria = recuperaDados('categoria_atracoes', 'id', $idCategoria);
+$atualizacao = recuperaDados('avisos', 'id', $idAtualizacao);
 
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -58,23 +61,29 @@ $categoria = recuperaDados('categoria_atracoes', 'id', $idCategoria);
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form method="POST" action="?perfil=administrativo&p=categoria&sp=edita_categoria"
+                    <form method="POST" action="?perfil=administrativo&p=atualizacoes&sp=edita_atualizacao"
                           role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="nome">Categoria da Atração *</label>
-                                    <input type="text" id="nome" name="nome" class="form-control" required value="<?= $categoria['categoria_atracao'] ?>">
+                                    <label for="titulo">Título *</label>
+                                    <input align="center" type="text" id="titulo" name="titulo" class="form-control" value="<?= $atualizacao['titulo'] ?>" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group  col-md-12">
+                                    <label for="msg">Mensagem *</label>
+                                    <textarea type="text" rows="5" id="msg" name="msg" class="form-control" required><?= $atualizacao['mensagem'] ?></textarea>
                                 </div>
                             </div>
                         </div>
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <a href="?perfil=administrativo&p=categoria&sp=categoria_lista">
+                            <a href="?perfil=administrativo&p=atualizacoes&sp=atualizacoes_lista">
                                 <button type="button" class="btn btn-default">Voltar</button>
                             </a>
-                            <input type="hidden" name="idCategoria" id="idCategoria" value="<?= $idCategoria ?>">
+                            <input type="hidden" name="idAtualizacao" id="idAtualizacao" value="<?= $idAtualizacao ?>">
                             <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
                                 Salvar
                             </button>
