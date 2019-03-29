@@ -19,7 +19,7 @@ $query = mysqli_query($con, $sql);
     <section class="content">
 
         <!-- START FORM-->
-        <h3 class="box-title">Lista de Usuário</h3>
+        <h3 class="box-title">Lista de Atualizações</h3>
         <a href="?perfil=administrativo&p=atualizacoes&sp=cadastro_atualizacao" class="text-right btn btn-success"
            style="float: right">Adicionar Atualização</a>
         <div class="row">

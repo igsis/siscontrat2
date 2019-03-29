@@ -5,54 +5,70 @@ $idEvento = $_SESSION['idEvento'];
 
 if (isset($_POST["enviar"])) {
 
-    $arquivos = $_FILES;
+    foreach ($_FILES as $key => $arquivo) {
 
-    foreach ($arquivo as $value => $arquivo) {
+        foreach ($arquivo as $key => $dados) {
 
+            for ($i = 0; $i < sizeof($dados); $i++) {
+                $arquivos[$i][$key] = $arquivo[$key][$i];
+                //print_r($arquivos);
+            }
+        }
     }
+    $i = 1;
 
+    foreach ($arquivos as $file) {
+        if ($file['name'] != "") {
+            // print_r($arquivo);
+            $x = $key;
+            $nome_arquivo = isset($file['name']) ? $file['name'] : null;
 
+            print_r($nome_arquivo);
 
-    print_r($arquivos);
-    $y = 110;
-    $nome_arquivo = isset($_FILES['arquivo']['name']) ? $_FILES['arquivo']['name'] : null;
-    $f_size = isset($_FILES['arquivo']['size']) ? $_FILES['arquivo']['size'] : null;
+            //print_r($arquivos);
+            $y = 107;
+            $nome_arquivo = isset($file['name']) ? $file['name'] : null;
+            $f_size = isset($file['size']) ? $file['size'] : null;
 
-    if ($f_size > 1172464 ) {
-        echo "<br>";
-        print_r($f_size) ;
-        $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 60 MB.</strong>");
-    } else {
-        if ($nome_arquivo != "") {
-            $nome_temporario = $_FILES['arquivo']['tmp_name']['com_prod'];
-            $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
-            $hoje = date("Y-m-d H:i:s");
-            $dir = '../uploadsdocs/'; //Diretório para uploads
-            $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-            $ext = strtolower(substr($nome_arquivo, -4));
+            if ($f_size > 60000000) {
+                echo "<br>";
+                print_r($f_size);
+                $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 60 MB.</strong>");
+            } else {
+                if ($nome_arquivo != "") {
+                    $nome_temporario = $file['tmp_name'];
+                    echo $nome_temporario;
+                    $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
+                    $hoje = date("Y-m-d H:i:s");
+                    $dir = '../uploadsdocs/'; //Diretório para uploads
+                    $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                    $ext = strtolower(substr($nome_arquivo, -4));
 
-            if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
-            {
-                if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                    $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idEvento', '$y', '$new_name', '$hoje', '1'); ";
-                    $query = mysqli_query($con, $sql_insere_arquivo);
+                    if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                    {
+                        if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
+                            $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idEvento', '$y', '$new_name', '$hoje', '1'); ";
+                            $query = mysqli_query($con, $sql_insere_arquivo);
+                            echo $sql_insere_arquivo;
 
-                    if ($query) {
-                        $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                        echo "<script>
+                            if ($query) {
+                                $mensagem = mensagem("success", "Arquivo recebido com sucesso");
+                                echo "<script>
                                 swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
                             </script>";
-                        gravarLog($sql_insere_arquivo);
+                                gravarLog($sql_insere_arquivo);
+                            } else {
+                                $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                            }
+                        } else {
+                            $mensagem = mensagem("danger", "Erro no upload");
+                        }
                     } else {
-                        $mensagem = mensagem("danger", "Erro ao gravar no banco");
-                    }
-                } else {
-                    $mensagem = mensagem("danger", "Erro no upload");
-                }
-            } else {
-                echo "<script>
+                        echo "<script>
                             swal('Erro no upload! Anexar documentos somente no formato PDF.', '', 'error');                             
                         </script>";
+                    }
+                }
             }
         }
     }
@@ -99,7 +115,7 @@ if (isset($_POST['apagar'])) {
                                     <?php
                                     //lista arquivos de determinado pedido
                                     $sql = "SELECT * FROM arquivos as arq
-                                    WHERE arq.origem_id = '$idEvento' AND lista_documento_id = 110
+                                    WHERE arq.origem_id = '$idEvento' AND lista_documento_id = 107
                                     AND arq.publicado = '1' ORDER BY arq.id";
                                     $query = mysqli_query($con, $sql);
                                     $linhas = mysqli_num_rows($query);
@@ -117,13 +133,12 @@ if (isset($_POST['apagar'])) {
                                         <tbody>";
                                         while ($arquivo = mysqli_fetch_array($query)) {
                                             echo "<tr>";
-                                            echo "<td class='list_description'> " . $arquivo['documento'] . "</td>";
                                             echo "<td class='list_description'><a href='uploadsdocs/" . $arquivo['arquivo'] . "' target='_blank'>" . mb_strimwidth($arquivo['arquivo'], 15, 25, "...") . "</a></td>";
                                             echo "<td class='list_description'>(" . exibirDataBr($arquivo['data']) . ")</td>";
                                             echo "
                                           <td class='list_description'>
                                                     <form id='formExcliuir' method='POST'>
-                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' data-nome='" . $arquivo['arquivo'] . "' data-id='" . $arquivo['id'] . "' data-pessoa='" . $tipoPessoa . "'>
+                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' data-nome='" . $arquivo['arquivo'] . "' data-id='" . $arquivo['id'] . "'>
                                                         </button></td>
                                                     </form>";
                                             echo "</tr>";
