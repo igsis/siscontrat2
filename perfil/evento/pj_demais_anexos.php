@@ -13,6 +13,10 @@ if(isset($_POST["enviar"])) {
         $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
         $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
 
+        print_r($f_size);
+        echo "<br>";
+        print_r($_FILES);
+
         if ($f_size > 5242880) {
             $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
         } else {

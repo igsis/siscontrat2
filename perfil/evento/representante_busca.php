@@ -75,7 +75,7 @@ if (isset($_POST['pesquisa'])) {
                             <td>
                                 <input type='hidden' name='documentacao' value='" . $cpf . "'>
                                 <input type='hidden' name='tipoRepresentante' value='" . $tipoRepresentante . "'>
-                                <button type='submit' class='btn btn-primary' name='adicionar'><i class='glyphicon glyphicon-plus'></i> Adicionar</button>
+                                <button type='submit' class='btn btn-primary' id='adicionar' name='adicionar'><i class='glyphicon glyphicon-plus'></i> Adicionar</button>
                             </td>
                         </tr>
                      </form>";

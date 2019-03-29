@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$idPj = $_POST['idPj'];
+$idPj = $_SESSION['idPj'];
 $pessoa_juridica = recuperaDados('pessoa_juridicas', 'id', $idPj);
 
 if (isset($_POST['abrirPag'])) {
@@ -231,7 +231,6 @@ include "includes/menu_interno.php";
                             <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">
                                 Atualizar
                             </button>
-
                     </form>
                     <form action="?perfil=evento&p=pj_edita" method="post">
                         <button type="submit" name="idPj" id="idPj" value="<?= $idPj ?>" class="btn btn-default">Voltar</button>
@@ -241,7 +240,7 @@ include "includes/menu_interno.php";
             </div>
         </div>
         <?php
-        modalUploadArquivoUnico("modal-$siglaRG", "?perfil=evento&p=representante_edita", $nomeRg, $siglaRG, $idRepresentante, $tipoRepresentante);
+        modalUploadArquivoUnico("modal-$siglaRG", "?perfil=evento&p=representante_edita", $nomeRg, $siglaRG, $idRepresentante, $tipoRepresentante, $idPj);
         modalUploadArquivoUnico("modal-$siglaCPF", "?perfil=evento&p=representante_edita", $nomeCpf, $siglaCPF, $idRepresentante, $tipoRepresentante);
         ?>
 

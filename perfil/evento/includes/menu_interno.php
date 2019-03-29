@@ -35,7 +35,7 @@ $pasta = "?perfil=evento&p=";
                     echo "<li><a href=\"".$pasta."evento_cinema_lista\"><i class=\"fa fa-circle-o text-lime\"></i> <span>Filme</span></a></li>";
                 }
                 ?>
-                <li><a href="<?=$pasta?>arquivo_cominicacao_producao"><i class="fa fa-circle-o text-teal"></i> <span>Anexo Comunicação/Produção</span></a></li>
+                <li><a href="<?=$pasta?>arquivo_comunicacao_producao"><i class="fa fa-circle-o text-teal"></i> <span>Anexo Comunicação/Produção</span></a></li>
                 <?php
                 if($evento['contratacao'] == 1 && $nAtracoes > 0) {
                     echo "<li><a href=\"".$pasta."pedido\"><i class=\"fa fa-circle-o text-aqua\"></i> <span>Pedido</span></a></li>";

@@ -69,7 +69,6 @@ if (isset($_POST['cadastra'])) {
 
         $mensagem .= mensagem("success", "Cadastrado com sucesso!");
         $idPj = recuperaUltimo("pessoa_juridicas");
-        $_SESSION['idPj'] = $idPj;
         //gravarLog($sql);
     } else {
         $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
@@ -223,6 +222,8 @@ if (isset($_POST['apagar'])) {
 
 $sqlTelefones = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
+
+$_SESSION['idPj'] = $idPj;
 
 $pj = recuperaDados("pessoa_juridicas", "id", $idPj);
 $end = recuperaDados("pj_enderecos", "pessoa_juridica_id", $idPj);

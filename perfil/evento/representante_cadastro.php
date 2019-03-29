@@ -35,15 +35,14 @@ $tipoRepresentante = $_POST['tipoRepresentante'];
                                     <input type="text" class="form-control" id="cpf" name="cpf" required value="<?= $cpf; ?>" readonly>
                                 </div>
                             </div>
-
-                            <div class="box-footer">
-                               <!-- <button type="submit" formaction="?perfil=evento&p=pj_edita" id="voltar" name="idPj" value="<?/*=$idPj*/?>" class="btn btn-default">Voltar</button>-->
                                 <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
                                 <input type="hidden" name="idPj" value="<?= $idPj ?>">
                                 <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
                                     Cadastrar
                                 </button>
-                            </div>
+                    </form>
+                    <form action="?perfil=evento&p=pj_edita" method="post">
+                        <button type="submit" name="idPj" id="idPj" value="<?= $idPj ?>" class="btn btn-default">Voltar</button>
                     </form>
                 </div>
             </div>
