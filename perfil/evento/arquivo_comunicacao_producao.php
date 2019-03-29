@@ -19,20 +19,13 @@ if (isset($_POST["enviar"])) {
 
     foreach ($arquivos as $file) {
         if ($file['name'] != "") {
-            // print_r($arquivo);
-            $x = $key;
-            $nome_arquivo = isset($file['name']) ? $file['name'] : null;
-
-            print_r($nome_arquivo);
-
-            //print_r($arquivos);
             $y = 107;
+            $x = $key;
             $nome_arquivo = isset($file['name']) ? $file['name'] : null;
             $f_size = isset($file['size']) ? $file['size'] : null;
 
             if ($f_size > 60000000) {
                 echo "<br>";
-                print_r($f_size);
                 $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 60 MB.</strong>");
             } else {
                 if ($nome_arquivo != "") {
@@ -73,7 +66,6 @@ if (isset($_POST["enviar"])) {
         }
     }
 }
-
 
 if (isset($_POST['apagar'])) {
     $idArquivo = $_POST['idArquivo'];
