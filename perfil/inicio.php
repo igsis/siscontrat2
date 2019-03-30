@@ -51,7 +51,7 @@ if (isset($_SESSION['idEvento'])) {
                                         </h4>
                                     </div>
                                     <div id="collapse<?=$i?>" class="panel-collapse collapse<?=$aberto?>">
-                                        <div class="box-body">
+                                        <div class="box-body bg-warning">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <h4><?= exibirDataBr($data). "<br><br>" . $new_msg . "<br><br>" . $att; ?></h4>
