@@ -103,7 +103,6 @@ $cores = recuperaDados("cores", "id", $modulos['cor_id']);
                             </div>
                         </div>
                         <!-- /.box-body -->
-
                         <div class="box-footer">
                             <a href="?perfil=administrativo&p=modulos&sp=modulos_lista">
                                 <button type="button" class="btn btn-default">Voltar</button>
