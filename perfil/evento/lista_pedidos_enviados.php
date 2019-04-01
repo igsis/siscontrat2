@@ -70,7 +70,7 @@ $query = mysqli_query($con, $sql);
                                 $idEvento = $evento['id'];
                                 $sql_atracao = "SELECT * FROM atracoes atr INNER JOIN categoria_atracoes cat ON cat.id = atr.categoria_atracao_id WHERE evento_id = '$idEvento' AND atr.publicado = 1";
                                 $query_atracao = mysqli_query($con, $sql_atracao);
-                                $status = recuperaDados('evento_status', 'id', $evento['evento_status_id']);
+                                $status = recuperaDados('pedido_status', 'id', $evento['evento_status_id']);
 
                                 // $locais = listaLocais($evento['idAtracao']);
                                 echo "<tr>";
