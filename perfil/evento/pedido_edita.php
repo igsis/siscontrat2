@@ -171,16 +171,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                                 </div>
 
                                 <?php
-                                if ($numRows > 0) {
-                                    ?>
-                                    <div class="form-group col-md-4">
-                                        <button type="button" style="margin-left: 20px; margin-top: 24px;"
-                                                id="abrirParcelas" class="btn btn-primary">
-                                            <?= $numRows ?> parcelas salvas, clique aqui para editá-las.
-                                        </button>
-                                    </div>
-                                    <?php
-                                } else if ($atracao['categoria_atracao_id'] == 4) {
+                                if ($atracao['categoria_atracao_id'] == 4) {
                                     $categoria = 4;
                                     ?>
                                     <div class="form-group col-md-6">
@@ -726,11 +717,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
         var rows = "<?php echo $numRows ?>";
 
-        if (rows > 0) {
-            var parcelas = "<?php echo $numRows ?>";
-        } else {
-            var parcelas = $("#numero_parcelas").val();
-        }
+        var parcelas = $("#numero_parcelas").val();
 
         var datas = new Array(1);
         var valores = new Array(1);
@@ -756,11 +743,21 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
         $('#modalParcelas').slideUp();
 
-        $.post('?perfil=evento&p=parcelas_edita', {
+        $.ajax({
+            url: "?perfil=evento&p=parcelas_edita",
+            method: "POST",
+            data: {
+                parcelas: parcelas,
+                valores: valores,
+                datas: datas
+            },
+        })
+
+        /*$.post('?perfil=evento&p=parcelas_edita', {
             parcelas: parcelas,
             valores: valores,
             datas: datas
-        })
+        })*/
             .done(function (data) {
                 for (var count = 1; count <= parcelas; count++) {
                     html += template({

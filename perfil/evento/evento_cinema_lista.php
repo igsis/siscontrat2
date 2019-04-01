@@ -36,6 +36,14 @@ $resul = mysqli_query($con, $query);
     <section class="content">
 
         <h2 class="page-header">Cinema</h2>
+        <div class="row">
+            <div class="col-md-2">
+                <a href="?perfil=evento&p=evento_cinema_procura">
+                    <button type="button" class="btn btn-block btn-info"><i class="fa fa-plus"></i> Adiciona</button>
+                </a>
+            </div>
+        </div>
+        <br/>
 
         <div class="row">
             <?php
@@ -57,12 +65,6 @@ $resul = mysqli_query($con, $query);
                                     <th>Duração</th>
                                     <th>Diretor</th>
                                     <th>Ocorrência</th>
-                                    <th colspan="2">
-                                        <a class="btn btn-primary" href="?perfil=evento&p=evento_cinema_procura" style="margin: 0 25%;">
-                                            <span class="glyphicon glyphicon-plus" style="font-size: 12px;margin-right: 5px">        
-                                            </span>Adicionar
-                                        </a>
-                                    </th>
                                 </tr>
                             </thead>
                             <?php
