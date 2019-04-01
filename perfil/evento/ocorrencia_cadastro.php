@@ -205,7 +205,9 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                         </div>
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-default">Cancelar</button>
+                            <a href="?perfil=evento&p=atracoes_lista">
+                                <button type="button" class="btn btn-default">Voltar</button>
+                            </a>
                             <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
                             <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                         </div>

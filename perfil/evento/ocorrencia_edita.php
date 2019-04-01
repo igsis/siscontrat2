@@ -341,6 +341,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                         </div>
 
                         <div class="box-footer">
+                            <a href="?perfil=evento&p=atracoes_lista">
+                                <button type="button" class="btn btn-default">Voltar</button>
+                            </a>
                             <input type="hidden" name="idOcorrencia" value="<?= $idOcorrencia ?>">
                             <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>

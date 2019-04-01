@@ -11,7 +11,6 @@ if (isset($_POST["enviar"])) {
 
             for ($i = 0; $i < sizeof($dados); $i++) {
                 $arquivos[$i][$key] = $arquivo[$key][$i];
-                //print_r($arquivos);
             }
         }
     }
@@ -30,7 +29,6 @@ if (isset($_POST["enviar"])) {
             } else {
                 if ($nome_arquivo != "") {
                     $nome_temporario = $file['tmp_name'];
-                    echo $nome_temporario;
                     $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
                     $hoje = date("Y-m-d H:i:s");
                     $dir = '../uploadsdocs/'; //Diretório para uploads
