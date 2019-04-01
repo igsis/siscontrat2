@@ -34,7 +34,7 @@ if (isset($_POST['cadastraEspaco'])) {
 
     $sql = "INSERT INTO espacos (local_id ,espaco, publicado)
                 VALUES ('$idLocal', '$espaco', 2)";
-    
+
     if (mysqli_query($con, $sql)) {
         gravarLog($sql);
         $mensagem2 = mensagem("success", "Solicitação de adição de espaço efetuado com sucesso");

@@ -27,7 +27,7 @@ include "includes/menu_principal.php";
                                     <label for="local">Local: </label>
                                     <select name="local" id="local" class="form-control" required>
                                         <?php
-                                            geraOpcao('locais');
+                                            geraOpcaoPublicado('locais');
                                         ?>
                                     </select>
                                 </div>

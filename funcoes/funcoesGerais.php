@@ -364,7 +364,7 @@ function geraOpcaoLocais ($tabela, $select = '')
 
 
 
-	function geraOpcaoPublicado($tabela,$select)
+	function geraOpcaoPublicado($tabela,$select = '')
 	{
 		//gera os options de um select
 		$sql = "SELECT * FROM $tabela WHERE publicado = '1' ORDER BY 2";
