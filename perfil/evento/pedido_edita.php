@@ -404,7 +404,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             <div class="modal-footer">
                 <div class="botoes">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModal" onmouseover="verificaForm()">Salvar</button>
+                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModal" onmouseenter="mouseEnter()" onmouseleave="mouseLeave()">Salvar</button>
                 </div>
             </div>
         </div>
@@ -429,8 +429,6 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         </div>
     </div>
 </script>
-
-
 <!-- Modal Oficinas-->
 <style>
     .modal-lg {
@@ -509,8 +507,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         $('#editarModal').on('click', editarModal);
     });
 
-    function verificaForm () {
-
+    function mouseEnter () {
         var count = 0;
         $("#formParcela input").each(function () {
             if ($(this).val() == ""){
@@ -519,14 +516,24 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         });
 
         if (count != 0) {
-            $("#salvarModal").attr("disabled", true);
-            $("#salvarModal").append($("<span>Preencha todos os campos!</span>"));
+            //$("#salvarModal").attr("disabled", true);
+            $(".botoes").html($("<button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Fechar</button>\n" +
+                "                    <button type=\"button\" class=\"btn btn-primary\" onmouseenter='mouseEnter()'>Preencha todos os campos!</button>"));
             console.log($("#salvarModal"));
-          /*  console.log(salvar);
-            */
+            console.log(count);
+        /*<button type="button" class="btn btn-primary" name="salvar" id="salvarModal" onmouseenter="mouseEnter()" onmouseleave="mouseLeave()">Salvar</button>*/
+            /*  console.log(salvar);
+              */
         } else {
-            $("salvarModal").attr("disabled", false);
+            console.log(count);
+
+            $(".botoes").html($("<button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Fechar</button>\n" +
+                "                    <button type=\"button\" class=\"btn btn-primary\" name=\"salvar\" id=\"salvarModal\" onmouseenter=\"mouseEnter()\" onmouseleave=\"mouseLeave()\">Preencha todos os campos!</button>"));
         }
+    }
+
+    function mouseLeave () {
+        $("salvarModal").html("disabled", false);
     }
 
     var ocultarBotao = function () {
