@@ -1,12 +1,12 @@
 <?php
 $con = bancoMysqli();
 
-var_dump($_POST);
-
 $idPedido = $_SESSION['idPedido'];
 $parcelas = $_POST['parcelas'] ?? NULL;
 $arrayValor = $_POST['valores'] ?? NULL;
 $arrayKit = $_POST['datas'] ?? NULL;
+
+var_dump($_POST);
 
 for ($i = 1; $i <= $parcelas; $i++) {
     $parcela = $parcelas[$i];
@@ -18,7 +18,10 @@ for ($i = 1; $i <= $parcelas; $i++) {
     echo $sqlUpdate;
 
     if (mysqli_query($con, $sqlUpdate)) {
+        echo "true";
         gravarLog($sqlUpdate);
+    }else {
+        "Erro ao editar!";
     }
 }
 
