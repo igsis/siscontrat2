@@ -16,6 +16,8 @@ $pasta = "?perfil=evento&p=";
             <li><a href="<?= $pasta ?>lista_eventos_enviados"><i class="fa fa-circle-o"></i> <span>Acompanhar eventos enviados</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Buscar no CAPAC</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> <span>Informações de produção</span></a></li>
+            <li><a href="<?= $pasta ?>solicitar_local"><i class="fa fa-circle-o"></i> <span>Solicitar adição de local</span></a></li>
+            <li><a href="<?= $pasta ?>solicitar_espaco"><i class="fa fa-circle-o"></i> <span>Solicitar adição de espaço</span></a></li>
             <li class="header">MAIS</li>
             <li><a href="?perfil=usuario/minha_conta"><i class="fa fa-user"></i><span>Minha Conta</span></a></li>
             <li><a href="../include/ajuda.php"><i class="fa fa-question "></i><span>Ajuda</span></a></li>

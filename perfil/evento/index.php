@@ -3,6 +3,46 @@ include "includes/menu_principal.php";
 
 $con = bancoMysqli();
 
+
+if (isset($_POST['cadastraLocal'])) {
+    $idInstituicao = $_POST['instituicao'] ?? NULL;
+    $local = $_POST['local'];
+    $cep = $_POST['cep'];
+    $rua = $_POST['rua'];
+    $numero = $_POST['numero'];
+    $complemento = $_POST['complemento'] ?? NULL;
+    $bairro = $_POST['bairro'];
+    $cidade = $_POST['cidade'];
+    $estado = $_POST['estado'];
+    $zona = $_POST['zona'];
+
+    $sql = "INSERT INTO locais (instituicao_id, local, logradouro, numero, complemento, bairro, cidade, uf, cep, zona_id, publicado)
+                VALUES ('$idInstituicao', '$local', '$rua', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$zona', 2)";
+
+    if (mysqli_query($con, $sql)) {
+        gravarLog($sql);
+        $mensagem2 = mensagem("success", "Solicitação de adição de local efetuado com sucesso");
+    } else {
+        $mensagem2 = mensagem("danger", "Erro na solicitação de adição de local! Tente novamente.");
+    }
+}
+
+
+if (isset($_POST['cadastraEspaco'])) {
+    $idLocal = $_POST['local'];
+    $espaco = $_POST['espaco'];
+
+    $sql = "INSERT INTO espacos (local_id ,espaco, publicado)
+                VALUES ('$idLocal', '$espaco', 2)";
+    
+    if (mysqli_query($con, $sql)) {
+        gravarLog($sql);
+        $mensagem2 = mensagem("success", "Solicitação de adição de espaço efetuado com sucesso");
+    } else {
+        $mensagem2 = mensagem("danger", "Erro na solicitação de adição de espaço! Tente novamente.");
+    }
+}
+
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
@@ -21,6 +61,7 @@ if ($linha >= 1) {
 } else {
     $tem = 0;
 }
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -28,6 +69,11 @@ if ($linha >= 1) {
     <!-- Main content -->
     <section class="content">
         <!-- START ACCORDION-->
+        <div class="row" align="center">
+            <?php if (isset($mensagem2)) {
+                echo $mensagem2;
+            }; ?>
+        </div>
         <h2 class="page-header">Seus últimos eventos enviados</h2>
         <div class="row">
             <div class="col-md-12">
@@ -46,12 +92,12 @@ if ($linha >= 1) {
                                         <div class="box-header with-border">
                                             <h4 class="box-title">
                                                 <a data-toggle="collapse" data-parent="#accordionEventos"
-                                                   href="#collapse<?=$evento['id']?>">
+                                                   href="#collapse<?= $evento['id'] ?>">
                                                     <?= $evento['nome_evento'] ?>
                                                 </a>
                                             </h4>
                                         </div>
-                                        <div id="collapse<?=$evento['id']?>" class="panel-collapse collapse">
+                                        <div id="collapse<?= $evento['id'] ?>" class="panel-collapse collapse">
                                             <div class="box-body">
                                                 <?php
                                                 $dataEnvio = recuperaDados('evento_envios', 'evento_id', $evento['id']);
