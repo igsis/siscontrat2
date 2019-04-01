@@ -46,7 +46,7 @@ if (isset($_SESSION['idEvento'])) {
                                     <div class="box-header with-border">
                                         <h4 class="box-title">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?=$i?>">
-                                                <?= $titulo ?>
+                                                <?= exibirDataBr($data). "  " . $titulo ?>
                                             </a>
                                         </h4>
                                     </div>
@@ -54,7 +54,7 @@ if (isset($_SESSION['idEvento'])) {
                                         <div class="box-body bg-warning">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <h4><?= exibirDataBr($data). "<br><br>" . $new_msg . "<br><br>" . $att; ?></h4>
+                                                    <h4><?= $new_msg . "<br><br>" . $att; ?></h4>
                                                 </div>
                                             </div>
                                         </div>

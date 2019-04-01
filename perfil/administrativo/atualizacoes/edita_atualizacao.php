@@ -3,7 +3,7 @@ $con = bancoMysqli();
 
 if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
     $titulo = $_POST['titulo'];
-    $msg = $_POST['msg'];
+    $msg = addslashes($_POST['msg']);
     $hoje = date("Y-m-d H:i:s");
 
     if(isset($_POST['cadastra'])){
