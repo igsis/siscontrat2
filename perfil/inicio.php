@@ -22,11 +22,10 @@ if (isset($_SESSION['idEvento'])) {
                     <div class="box-body">
                         <div class="box-group" id="accordion">
                             <?php
-                            $sql_avisos = "SELECT * FROM avisos WHERE publicado = '1' ORDER BY id DESC";
+                            $sql_avisos = "SELECT * FROM avisos WHERE publicado = '1' ORDER BY data DESC";
                             $query_avisos = mysqli_query($con, $sql_avisos);
                             $i = 1;
                             $x = 1;
-                            $boxes = ["box-warning", "box-success", "box-danger", "box-primary"];
                             while ($avisos = mysqli_fetch_array($query_avisos)) {
                                 $data = $avisos['data'];
                                 $msg = $avisos['mensagem'];
@@ -36,13 +35,15 @@ if (isset($_SESSION['idEvento'])) {
                                 $new_msg = substr($msg, 0, -31);
 
                                 if ($i == 1) {
+                                    $cor = "box-warning";
                                     $aberto = "in";
                                 } else {
+                                    $cor = "box-info";
                                     $aberto = "";
                                 }
                                 ?>
                                 <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                                <div class="panel box <?php print_r($boxes[$i-1]) ?>">
+                                <div class="panel box <?= $cor ?>">
                                     <div class="box-header with-border">
                                         <h4 class="box-title">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?=$i?>">

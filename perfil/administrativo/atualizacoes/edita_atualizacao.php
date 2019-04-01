@@ -46,14 +46,14 @@ $atualizacao = recuperaDados('avisos', 'id', $idAtualizacao);
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Edição de Categoria</h2>
+        <h2 class="page-header">Edição de Atualizações</h2>
 
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Categoria</h3>
+                        <h3 class="box-title">Atualização</h3>
                     </div>
 
                     <div class="row" align="center">
