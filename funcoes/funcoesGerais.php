@@ -178,6 +178,13 @@ date_default_timezone_set("Brazil/East");
 		list ($dia, $mes, $ano) = explode ('/', $data);
 		$data_mysql = $ano.'-'.$mes.'-'.$dia;
 		return $data_mysql;
+        /*
+        $dt = DateTime::createFromFormat('d/m/Y', $data);
+        if( !$dt ){
+            return '';
+        }
+        return $dt->format('Y-m-d');
+        */
 	}
 	//retorna o endereço da página atual
 	function urlAtual()
