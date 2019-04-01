@@ -10,6 +10,7 @@ if (isset($_POST['idProponente'])) {
 if (isset($_POST['carregar'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
     $idPedido = $_SESSION['idPedido'];
+    $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
@@ -44,9 +45,8 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
         }
     }
 
-    $pedido = recuperaDados("pedidos", "id", $idPedido);
-
     if (isset($_POST['edita'])) {
+        $idPedido = $_SESSION['idPedido'];
         $numero_parcelas = $_POST['numero_parcelas'] ?? $pedido['numero_parcelas'];
         if ($numero_parcelas != 1){
             $data_kit_pagamento = "0000-00-00";
@@ -247,6 +247,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                             <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
                             <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
                             <button type="submit" name="edita" class="btn btn-primary pull-right">Gravar</button>
@@ -403,7 +404,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             <div class="modal-footer">
                 <div class="botoes">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModal">Salvar</button>
+                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModal" onmouseover="verificaForm()">Salvar</button>
                 </div>
             </div>
         </div>
@@ -417,12 +418,12 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         </div>
         <div class='form-group col-md-3'>
             <label for='valor'>Valor </label>
-            <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
+            <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" required placeholder="Valor em reais"
                    onkeypress="return(moeda(this, '.', ',', event));" class='form-control'>
         </div>
         <div class='form-group col-md-4'>
             <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
-            <input type='date' id='modal_data_kit_pagamento' value="{{kit}}"
+            <input type='date' id='modal_data_kit_pagamento' value="{{kit}}" required
                    name='modal_data_kit_pagamento[{{count}}]'
                    class='form-control'>
         </div>
@@ -508,6 +509,26 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         $('#editarModal').on('click', editarModal);
     });
 
+    function verificaForm () {
+
+        var count = 0;
+        $("#formParcela input").each(function () {
+            if ($(this).val() == ""){
+                count ++;
+            }
+        });
+
+        if (count != 0) {
+            $("#salvarModal").attr("disabled", true);
+            $("#salvarModal").append($("<span>Preencha todos os campos!</span>"));
+            console.log($("#salvarModal"));
+          /*  console.log(salvar);
+            */
+        } else {
+            $("salvarModal").attr("disabled", false);
+        }
+    }
+
     var ocultarBotao = function () {
 
         var optionSelect = document.querySelector("#numero_parcelas").value;
@@ -532,7 +553,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         var footer = document.querySelector(".main-footer");
         footer.style.display = "none";
 
-        var parcelas = "<?php echo $numRows ?>";
+        var parcelasSalvas = "<?php echo $numRows ?>";
 
         var idAtracao = "<?php if (isset($categoria)) {
             echo $categoria;
@@ -564,55 +585,72 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             $('#modalOficina').find('#formParcela').html(html);
             $('#modalOficina').modal('show');
 
-        } else if (parcelas > 0) {
+        } else {
+
+            var parcelasSelected = $("#numero_parcelas").val();
 
             var StringValores = "<?php if (isset($StringValores)) {
                 echo $StringValores;
+            } else {
+                echo "";
             } ?>";
+
             var StringDatas = "<?php if (isset($StringDatas)) {
                 echo $StringDatas;
+            } else {
+                echo "";
             } ?>";
 
-            var valores = StringValores.split("|");
-            var datas = StringDatas.split("|");
+            if (StringValores != "" && StringDatas != "") {
 
-            for (var count = 0; count < parcelas; count++) {
-                html += template({
-                    count: count + 1, // para sincronizar com o array vindo do banco
-                    valor: valores [count],
-                    kit: datas [count]
-                });
+                var valores = StringValores.split("|");
+                var datas = StringDatas.split("|");
+
+                for (var count = 0; count < parcelasSalvas; count++) {
+                    html += template({
+                        count: count + 1, // para sincronizar com o array vindo do banco
+                        valor: valores [count],
+                        kit: datas [count],
+                    });
+                }
+
+                if (parcelasSalvas < parcelasSelected) {
+                    let sobrando = (parcelasSelected - parcelasSalvas);
+                    console.log(" parcelas = " + parcelasSalvas + " selecionadas = " + parcelasSelected + " sobrando = " + sobrando);
+
+                    for (var count = parcelasSalvas; count < parcelasSelected; count++) {
+                        html += template({
+                            count: parseInt(count)+1,
+                        });
+                    }
+                }
+
+                $('#modalParcelas').find('#formParcela').html(html);
+
+                $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>");
+
+                $('#editarModal').on('click', editarModal);
+                $('#modalParcelas').modal('show');
+
+            } else {
+                for (var count = 1; count <= parcelasSelected; count++) {
+                    html += template({
+                        count: count
+                    });
+                }
+                $('#modalParcelas').find('#formParcela').html(html);
+                $('#modalParcelas').modal('show');
             }
-
-            $('#modalParcelas').find('#formParcela').html(html);
-
-            $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>");
-
-            $('#editarModal').on('click', editarModal);
-            $('#modalParcelas').modal('show');
-
-        } else {
-            var parcelas = $("#numero_parcelas").val();
-
-            for (var count = 1; count <= parcelas; count++) {
-                html += template({
-                    count: count
-                });
-            }
-            $('#modalParcelas').find('#formParcela').html(html);
-            $('#modalParcelas').modal('show');
         }
     };
 
 
     var salvarModal = function () {
-
         var idAtracao = "<?php if (isset($categoria)) {
             echo $categoria;
         } ?>";
 
         if (idAtracao == 4) {
-
             var parcelas = $("#numero_parcelas").val();
             var arrayKit = [];
             var arrayValor = [];
@@ -674,8 +712,8 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             for (var i = 1; i <= parcelas; i++) {
                 arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
                 arrayValor [i] = $("input[name='valor[" + i + "]']").val();
-            }
 
+            }
             var source = document.getElementById("templateParcela").innerHTML;
             var template = Handlebars.compile(source);
             var html = '';
@@ -780,4 +818,6 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 swal("danger", "Erro ao gravar");
             });
     };
+
+
 </script>
