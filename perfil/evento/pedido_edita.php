@@ -525,7 +525,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
         $('#modalParcelas').find('p').html(soma.toFixed(2).replace('.', ','));
 
-        console.log("soma = " + soma + " real = " + real);
+        console.log("soma = " + soma);
     }
 
     var ocultarBotao = function () {
