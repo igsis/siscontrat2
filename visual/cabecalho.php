@@ -12,7 +12,7 @@ else
     $logado = $_SESSION['login'];
 }
 ?>
-<html>
+<html lang="pt-br">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -63,6 +63,7 @@ else
       <script src="bower_components/fullcalendar/packages/daygrid/main.js"></script>
       <script src="bower_components/fullcalendar/packages/timegrid/main.js"></script>
       <script src="bower_components/fullcalendar/packages/list/main.js"></script>
+      <script src="bower_components/fullcalendar/packages/core/locales/pt-br.js"></script>
   </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
