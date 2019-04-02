@@ -395,7 +395,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 </form>
                 <div class="row">
                     <h4 class="text-center" id="somaParcelas">Soma das
-                        parcelas: <?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL ?></h4>
+                        parcelas: <p><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL?></p></h4>
                 </div>
                 <div class="row">
                     <h4 class="text-center">Valor total do contrato: <?= dinheiroParaBr($pedido['valor_total']) ?></h4>
@@ -419,7 +419,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         <div class='form-group col-md-3'>
             <label for='valor'>Valor </label>
             <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" required placeholder="Valor em reais"
-                   onkeypress="return(moeda(this, '.', ',', event));" class='form-control'>
+                   onkeypress="return(moeda(this, '.', ',', event));" onkeyup="somar()" class='form-control'>
         </div>
         <div class='form-group col-md-4'>
             <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
@@ -509,17 +509,23 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
     function somar () {
 
-
-
         var parcelas = $("#numero_parcelas").val();
         var arrayValor = [];
+        let soma = 0;
 
         for (var i = 1; i <= parcelas; i++) {
-            arrayValor [i] = $("input[name='valor[" + i + "]']").val();
+            arrayValor [i] = $("input[name='valor[" + i + "]']").val().replace('.', '').replace(',', '.');
 
+            if (arrayValor[i] == "") {
+                $("input[name='valor[" + i + "]']").val(0);
+            }
 
-
+            soma += parseFloat(arrayValor[i]);
         }
+
+        $('#modalParcelas').find('p').html(soma.toFixed(2).replace('.', ','));
+
+        console.log("soma = " + soma + " real = " + real);
     }
 
     var ocultarBotao = function () {
@@ -547,6 +553,19 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         footer.style.display = "none";
 
         var parcelasSalvas = "<?php echo $numRows ?>";
+        var parcelasSelected = $("#numero_parcelas").val();
+
+        var StringValores = "<?php if (isset($StringValores)) {
+            echo $StringValores;
+        } else {
+            echo "";
+        } ?>";
+
+        var StringDatas = "<?php if (isset($StringDatas)) {
+            echo $StringDatas;
+        } else {
+            echo "";
+        } ?>";
 
         var idAtracao = "<?php if (isset($categoria)) {
             echo $categoria;
@@ -554,45 +573,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
 
         if (idAtracao == 4) {
             var source = document.getElementById("templateOficina").innerHTML;
-            var template = Handlebars.compile(source);
-            var parcelas = $("#numero_parcelas").val();
-
-
-            if (parcelas == 3 || parcelas == 4) {
-                for (var count = 1; count < parcelas; count++) {
-                    html += template({
-                        count: count
-                    });
-                }
-            } else {
-                for (var count = 1; count <= parcelas; count++) {
-                    html += template({
-                        count: count
-                    });
-                }
-            }
-
-            var footer = document.querySelector(".main-footer");
-            footer.style.display = "none";
-
-            $('#modalOficina').find('#formParcela').html(html);
-            $('#modalOficina').modal('show');
-
-        } else {
-
-            var parcelasSelected = $("#numero_parcelas").val();
-
-            var StringValores = "<?php if (isset($StringValores)) {
-                echo $StringValores;
-            } else {
-                echo "";
-            } ?>";
-
-            var StringDatas = "<?php if (isset($StringDatas)) {
-                echo $StringDatas;
-            } else {
-                echo "";
-            } ?>";
+            var templateOficina = Handlebars.compile(source);
 
             if (StringValores != "" && StringDatas != "") {
 
@@ -600,6 +581,70 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 var datas = StringDatas.split("|");
 
                 for (var count = 0; count < parcelasSalvas; count++) {
+                    html += templateOficina({
+                        count: count + 1, // para sincronizar com o array vindo do banco
+                        valor: valores [count],
+                        kit: datas [count],
+                    });
+                }
+                if (parcelasSalvas < parcelasSelected) {
+                    if (parcelasSelected == 3 || parcelasSelected == 4) {
+                        for (var count = parcelasSalvas; count < parcelasSelected; count++) {
+                            html += templateOficina({
+                                count: parseInt(count) + 1,
+                            });
+                        }
+                    } else {
+                        for (var count = parcelasSalvas; count <= parcelasSelected; count++) {
+                            html += templateOficina({
+                                count: parseInt(count) + 1
+                            });
+                        }
+                    }
+
+                    var footer = document.querySelector(".main-footer");
+                    footer.style.display = "none";
+
+                    $('#modalOficina').find('#formParcela').html(html);
+                    $('#modalOficina').modal('show');
+
+                } else {
+                    if (parcelasSelected == 3 || parcelasSelected == 4) {
+                        for (var count = 1; count < parcelasSelected; count++) {
+                            html += templateOficina({
+                                count: count + 1,
+                            });
+                        }
+                    } else {
+                        for (var count = 1; count <= parcelasSelected; count++) {
+                            html += templateOficina({
+                                count: count + 1
+                            });
+                        }
+                    }
+
+                    var footer = document.querySelector(".main-footer");
+                    footer.style.display = "none";
+
+                    $('#modalOficina').find('#formParcela').html(html);
+                    $('#modalOficina').modal('show');
+                }
+            }
+
+        } else {
+
+            if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)){
+
+                console.log ("selecionas = " + parcelasSelected + " salvas = " + parcelasSalvas);
+
+                swal("Havia  " + parcelasSalvas + " parcelas nesse pedido!", "Número de parcelas selecionadas menor que quantidade de parcelas salvas, ao edita-lás as demais parcelas seram excluídas!", "warning");
+            }
+
+            if (StringValores != "" && StringDatas != "") {''
+                var valores = StringValores.split("|");
+                var datas = StringDatas.split("|");
+
+                for (var count = 0; count < parcelasSelected; count++) {
                     html += template({
                         count: count + 1, // para sincronizar com o array vindo do banco
                         valor: valores [count],
@@ -607,9 +652,10 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                     });
                 }
 
-                if (parcelasSalvas < parcelasSelected) {
-
-                    for (var count = parcelasSalvas; count < parcelasSelected; count++) {
+                if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
+                    var faltando = parcelasSelected - parcelasSalvas;
+                    for (var i = 1; count < parseInt(faltando); i++) {
+                        var count = parcelasSalvas;
                         html += template({
                             count: parseInt(count)+1,
                         });
@@ -650,8 +696,10 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             });
 
             if (count != 0) {
-                swal("Preencha todas as parcelas para salva-lás!", "", "warning");
+                swal("Preencha todas as informações para salvar!", "", "warning");
+
             } else {
+
                 var parcelas = $("#numero_parcelas").val();
                 var arrayKit = [];
                 var arrayValor = [];
@@ -714,7 +762,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             });
 
             if (count != 0) {
-                swal("Preencha todas as parcelas para salva-lás!", "", "warning");
+                swal("Preencha todas as informações para editar as parcelas!", "", "warning");
             } else {
                 var parcelas = $("#numero_parcelas").val();
                 var arrayKit = [];
@@ -773,7 +821,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         });
 
         if (count != 0) {
-            swal("Preencha todas as parcelas para salva-lás!", "", "warning");
+            swal("Preencha todas as parcelas para edita-lás!", "", "warning");
         } else {
 
             var parcelas = $("#numero_parcelas").val();
@@ -811,7 +859,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                     datas: datas
                 },
             })
-                .done(function (data) {
+                .done(function () {
                     for (var count = 1; count <= parcelas; count++) {
                         html += template({
                             count: count,
@@ -826,7 +874,6 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                     swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                         .then(() => {
                             location.reload(true);
-                            // window.location.href = "?perfil=evento&p=parcelas_edita";
                         });
                 })
                 .fail(function () {
