@@ -1312,3 +1312,11 @@ function retornaPeriodoNovo($id)
         }
     }
 }
+
+function geraProtocolo($id)
+{
+    date_default_timezone_set('America/Sao_Paulo');
+    $date = date('Ymd');
+    $preencheZeros = str_pad($id, 5, '0', STR_PAD_LEFT);
+    return $date . $preencheZeros;
+}
