@@ -19,7 +19,7 @@ if (isset($_POST['cadastra']) || (isset($_POST['edita']))) {
     if (isset($_POST['edita'])) {
         $idRelacaoJuridica = $_POST['idRelacaoJuridica'];
 
-        $sql = "UPDATE relacao_juridicas SET relacao_juridica = '$titulo' WHERE id='idRelacaoJuridica'";
+        $sql = "UPDATE relacao_juridicas SET relacao_juridica = '$titulo' WHERE id= '$idRelacaoJuridica'";
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
             $mensagem = mensagem("success", "Relação Jurídica editada com sucesso!");
