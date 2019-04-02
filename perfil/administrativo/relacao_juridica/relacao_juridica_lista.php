@@ -12,7 +12,6 @@ if (isset($_POST['excluir'])) {
 $sql = "SELECT * FROM relacao_juridicas";
 $query = mysqli_query($con, $sql);
 ?>
-?>
 <div class="content-wrapper">
     <section class="content">
 
