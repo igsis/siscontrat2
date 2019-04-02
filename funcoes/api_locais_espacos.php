@@ -11,7 +11,7 @@
 	if(isset($_GET['instituicao_id'])){
 		$id = $_GET['instituicao_id'];
 
-		$sql = "SELECT id, local FROM locais WHERE instituicao_id = :instituicao AND publicado = 1 order by local";
+		$sql = "SELECT id, local FROM locais WHERE instituicao_id = :instituicao order by local";
 
 		$stmt = $conn->prepare($sql);
 		$stmt->bindParam(':instituicao', $id);
@@ -27,7 +27,7 @@
 	if(isset($_GET['espaco_id'])){
 		$id = $_GET['espaco_id'];
 
-		$sql = "SELECT id, espaco FROM espacos WHERE local_id = :local_id AND publicado = 1 order by espaco";
+		$sql = "SELECT id, espaco FROM espacos WHERE local_id = :local_id order by espaco";
 
 		$stmt = $conn->prepare($sql);
 		$stmt->bindParam(':local_id', $id);

@@ -9,7 +9,6 @@ $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.
     <section class="content">
         <div class="row ">
             <div class="col-md-6">
-
                 <label for="data_inicio">Data Início*</label> <br>
                 <input type="date" name="data_inicio" class="form-control" id="datepicker10"
                        required placeholder="DD/MM/AAAA" onblur="mudaData()">
@@ -59,6 +58,8 @@ $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.
     var calendarEl = document.getElementById('calendar');
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
+
+      locale: 'pt-br',
       plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
       header: {
         left: 'prev,next today',
@@ -123,6 +124,7 @@ $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.
       ]
     });
 
+    calendar.setOption('locale', 'pt-br');
     calendar.render();
   });
 
