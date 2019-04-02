@@ -124,7 +124,7 @@ $query_espaco = mysqli_query($con, $sql_espaco);
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Listagem de Locais</h3>
+                        <h3 class="box-title">Listagem de Espaços</h3>
                     </div>
 
                     <div class="row" align="center">
@@ -137,7 +137,7 @@ $query_espaco = mysqli_query($con, $sql_espaco);
                         <table id="tblEspaco" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>Espaco</th>
+                                <th>Espaço</th>
                                 <th width="5%">Visualizar</th>
                             </tr>
                             </thead>
@@ -158,7 +158,7 @@ $query_espaco = mysqli_query($con, $sql_espaco);
                             ?>
                             <tfoot>
                             <tr>
-                                <th>Espaco</th>
+                                <th>Espaço</th>
                                 <th width="5%">Visualizar</th>
                             </tr>
                             </tfoot>
