@@ -404,7 +404,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             <div class="modal-footer">
                 <div class="botoes">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModal" onmouseenter="mouseEnter()" onmouseleave="mouseLeave()">Salvar</button>
+                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModal">Salvar</button>
                 </div>
             </div>
         </div>
@@ -507,33 +507,19 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         $('#editarModal').on('click', editarModal);
     });
 
-    function mouseEnter () {
-        var count = 0;
-        $("#formParcela input").each(function () {
-            if ($(this).val() == ""){
-                count ++;
-            }
-        });
+    function somar () {
 
-        if (count != 0) {
-            //$("#salvarModal").attr("disabled", true);
-            $(".botoes").html($("<button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Fechar</button>\n" +
-                "                    <button type=\"button\" class=\"btn btn-primary\" onmouseenter='mouseEnter()'>Preencha todos os campos!</button>"));
-            console.log($("#salvarModal"));
-            console.log(count);
-        /*<button type="button" class="btn btn-primary" name="salvar" id="salvarModal" onmouseenter="mouseEnter()" onmouseleave="mouseLeave()">Salvar</button>*/
-            /*  console.log(salvar);
-              */
-        } else {
-            console.log(count);
 
-            $(".botoes").html($("<button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Fechar</button>\n" +
-                "                    <button type=\"button\" class=\"btn btn-primary\" name=\"salvar\" id=\"salvarModal\" onmouseenter=\"mouseEnter()\" onmouseleave=\"mouseLeave()\">Preencha todos os campos!</button>"));
+
+        var parcelas = $("#numero_parcelas").val();
+        var arrayValor = [];
+
+        for (var i = 1; i <= parcelas; i++) {
+            arrayValor [i] = $("input[name='valor[" + i + "]']").val();
+
+
+
         }
-    }
-
-    function mouseLeave () {
-        $("salvarModal").html("disabled", false);
     }
 
     var ocultarBotao = function () {
@@ -622,8 +608,6 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                 }
 
                 if (parcelasSalvas < parcelasSelected) {
-                    let sobrando = (parcelasSelected - parcelasSalvas);
-                    console.log(" parcelas = " + parcelasSalvas + " selecionadas = " + parcelasSelected + " sobrando = " + sobrando);
 
                     for (var count = parcelasSalvas; count < parcelasSelected; count++) {
                         html += template({
@@ -658,172 +642,197 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
         } ?>";
 
         if (idAtracao == 4) {
-            var parcelas = $("#numero_parcelas").val();
-            var arrayKit = [];
-            var arrayValor = [];
-            var arrayInicial = [];
-            var arrayFinal = [];
-            var horas = [];
+            var count = 0;
+            $("#formParcela input").each(function () {
+                if ($(this).val() == "") {
+                    count++;
+                }
+            });
 
-            for (var i = 1; i <= parcelas; i++) {
-                arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
-                arrayValor [i] = $("input[name='valor[" + i + "]']").val();
-                arrayInicial [i] = $("input[name='data_inicial[" + i + "]']").val();
-                arrayFinal[i] = $("input[name='data_final[" + i + "]']").val();
-                horas[i] = $("input[name='horas[" + i + "]']").val();
-            }
+            if (count != 0) {
+                swal("Preencha todas as parcelas para salva-lás!", "", "warning");
+            } else {
+                var parcelas = $("#numero_parcelas").val();
+                var arrayKit = [];
+                var arrayValor = [];
+                var arrayInicial = [];
+                var arrayFinal = [];
+                var horas = [];
 
-            var source = document.getElementById("templateOficina").innerHTML;
-            var template = Handlebars.compile(source);
-            var html = '';
+                for (var i = 1; i <= parcelas; i++) {
+                    arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
+                    arrayValor [i] = $("input[name='valor[" + i + "]']").val();
+                    arrayInicial [i] = $("input[name='data_inicial[" + i + "]']").val();
+                    arrayFinal[i] = $("input[name='data_final[" + i + "]']").val();
+                    horas[i] = $("input[name='horas[" + i + "]']").val();
+                }
 
-            var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary editar' name='editar' id='editarModal'>Editar</button>";
+                var source = document.getElementById("templateOficina").innerHTML;
+                var template = Handlebars.compile(source);
+                var html = '';
 
-            $('#modalOficina').slideUp();
+                var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary editar' name='editar' id='editarModal'>Editar</button>";
 
-            $.post('?perfil=evento&p=parcelas_cadastro', {
-                parcelas: parcelas,
-                arrayValor: arrayValor,
-                arrayKit: arrayKit,
-                arrayInicial: arrayInicial,
-                arrayFinal: arrayFinal,
-                horas: horas
-            })
-                .done(function () {
-                    for (var count = 1; count <= parcelas; count++) {
-                        html += template({
-                            count: count,
-                            valor: arrayValor [count],
-                            kit: arrayKit [count]
-                        });
-                    }
+                $('#modalOficina').slideUp();
 
-                    $(".botoes").html(newButtons);
-                    $('#editarModal').on('click', salvarModal);
-
-                    swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
-                        .then(() => {
-                            $('#modalOficina').slideDown('slow');
-                        });
+                $.post('?perfil=evento&p=parcelas_cadastro', {
+                    parcelas: parcelas,
+                    arrayValor: arrayValor,
+                    arrayKit: arrayKit,
+                    arrayInicial: arrayInicial,
+                    arrayFinal: arrayFinal,
+                    horas: horas
                 })
-                .fail(function () {
-                    swal("danger", "Erro ao gravar");
-                });
+                    .done(function () {
+                        for (var count = 1; count <= parcelas; count++) {
+                            html += template({
+                                count: count,
+                                valor: arrayValor [count],
+                                kit: arrayKit [count]
+                            });
+                        }
+
+                        $(".botoes").html(newButtons);
+                        $('#editarModal').on('click', salvarModal);
+
+                        swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
+                            .then(() => {
+                                $('#modalOficina').slideDown('slow');
+                            });
+                    })
+                    .fail(function () {
+                        swal("danger", "Erro ao gravar");
+                    });
+            }
 
         } else {
+            var count = 0;
+            $("#formParcela input").each(function () {
+                if ($(this).val() == "") {
+                    count++;
+                }
+            });
 
-            var parcelas = $("#numero_parcelas").val();
-            var arrayKit = [];
-            var arrayValor = [];
+            if (count != 0) {
+                swal("Preencha todas as parcelas para salva-lás!", "", "warning");
+            } else {
+                var parcelas = $("#numero_parcelas").val();
+                var arrayKit = [];
+                var arrayValor = [];
 
-            for (var i = 1; i <= parcelas; i++) {
-                arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
-                arrayValor [i] = $("input[name='valor[" + i + "]']").val();
+                for (var i = 1; i <= parcelas; i++) {
+                    arrayKit [i] = $("input[name='modal_data_kit_pagamento[" + i + "]']").val();
+                    arrayValor [i] = $("input[name='valor[" + i + "]']").val();
+                }
 
-            }
-            var source = document.getElementById("templateParcela").innerHTML;
-            var template = Handlebars.compile(source);
-            var html = '';
+                var source = document.getElementById("templateParcela").innerHTML;
+                var template = Handlebars.compile(source);
+                var html = '';
 
-            var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>";
+                var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>";
 
-            $('#modalParcelas').slideUp();
+                $('#modalParcelas').slideUp();
 
-            $.post('?perfil=evento&p=parcelas_cadastro', {
-                parcelas: parcelas,
-                arrayValor: arrayValor,
-                arrayKit: arrayKit
-            })
-                .done(function () {
-                    for (var count = 1; count <= parcelas; count++) {
-                        html += template({
-                            count: count,
-                            valor: arrayValor [count],
-                            kit: arrayKit [count]
-                        });
-                    }
-
-                    $(".botoes").html(newButtons);
-                    $('#editarModal').on('click', editarModal);
-
-                    swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
-                        .then(() => {
-                            $('#modalParcelas').slideDown('slow');
-                            //window.location.href = "?perfil=evento&p=parcelas_cadastro";
-                        });
+                $.post('?perfil=evento&p=parcelas_cadastro', {
+                    parcelas: parcelas,
+                    arrayValor: arrayValor,
+                    arrayKit: arrayKit
                 })
-                .fail(function () {
-                    swal("danger", "Erro ao gravar");
-                });
+                    .done(function () {
+                        for (var count = 1; count <= parcelas; count++) {
+                            html += template({
+                                count: count,
+                                valor: arrayValor [count],
+                                kit: arrayKit [count]
+                            });
+                        }
+
+                        $(".botoes").html(newButtons);
+                        $('#editarModal').on('click', editarModal);
+
+                        swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
+                            .then(() => {
+                                $('#modalParcelas').slideDown('slow');
+                                //window.location.href = "?perfil=evento&p=parcelas_cadastro";
+                            });
+                    })
+                    .fail(function () {
+                        swal("danger", "Erro ao gravar");
+                    });
+            }
         }
     };
 
     var editarModal = function () {
 
-        var rows = "<?php echo $numRows ?>";
+        var count = 0;
+        $("#formParcela input").each(function () {
+            if ($(this).val() == "") {
+                count++;
+            }
+        });
 
-        var parcelas = $("#numero_parcelas").val();
+        if (count != 0) {
+            swal("Preencha todas as parcelas para salva-lás!", "", "warning");
+        } else {
 
-        var datas = new Array(1);
-        var valores = new Array(1);
+            var parcelas = $("#numero_parcelas").val();
 
-        var soma = 0;
+            var datas = new Array(1);
+            var valores = new Array(1);
 
-        for (var i = 1; i <= parcelas; i++) {
-            $("input[name='modal_data_kit_pagamento[" + i + "]']").each(function () {
-                datas.push($(this).val());
-            });
+            var soma = 0;
 
-            $("input[name='valor[" + i + "]']").each(function () {
-                valores.push($(this).val());
-            });
-            soma += parseFloat(valores[i]);
-        }
+            for (var i = 1; i <= parcelas; i++) {
+                $("input[name='modal_data_kit_pagamento[" + i + "]']").each(function () {
+                    datas.push($(this).val());
+                });
 
-        var source = document.getElementById("templateParcela").innerHTML;
-        var template = Handlebars.compile(source);
-        var html = '';
+                $("input[name='valor[" + i + "]']").each(function () {
+                    valores.push($(this).val());
+                });
+                soma += parseFloat(valores[i]);
+            }
 
-        $("#somaParcelas").html("Soma das parcelas: " + soma);
+            var source = document.getElementById("templateParcela").innerHTML;
+            var template = Handlebars.compile(source);
+            var html = '';
 
-        $('#modalParcelas').slideUp();
+            $("#somaParcelas").html("Soma das parcelas: " + soma);
 
-        $.ajax({
-            url: "?perfil=evento&p=parcelas_edita",
-            method: "POST",
-            data: {
-                parcelas: parcelas,
-                valores: valores,
-                datas: datas
-            },
-        })
+            $('#modalParcelas').slideUp();
 
-        /*$.post('?perfil=evento&p=parcelas_edita', {
-            parcelas: parcelas,
-            valores: valores,
-            datas: datas
-        })*/
-            .done(function (data) {
-                for (var count = 1; count <= parcelas; count++) {
-                    html += template({
-                        count: count,
-                        valor: valores [count],
-                        kit: datas [count]
-                    });
-                }
-
-                $('#editarModal').off('click', editarModal);
-                $('#editarModal').on('click', editarModal);
-
-                swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
-                    .then(() => {
-                        $('#modalParcelas').slideDown('slow');
-                        // window.location.href = "?perfil=evento&p=parcelas_edita";
-                    });
+            $.ajax({
+                url: "?perfil=evento&p=parcelas_edita",
+                method: "POST",
+                data: {
+                    parcelas: parcelas,
+                    valores: valores,
+                    datas: datas
+                },
             })
-            .fail(function () {
-                swal("danger", "Erro ao gravar");
-            });
+                .done(function (data) {
+                    for (var count = 1; count <= parcelas; count++) {
+                        html += template({
+                            count: count,
+                            valor: valores [count],
+                            kit: datas [count]
+                        });
+                    }
+
+                    $('#editarModal').off('click', editarModal);
+                    $('#editarModal').on('click', editarModal);
+
+                    swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
+                        .then(() => {
+                            location.reload(true);
+                            // window.location.href = "?perfil=evento&p=parcelas_edita";
+                        });
+                })
+                .fail(function () {
+                    swal("danger", "Erro ao gravar");
+                });
+        }
     };
 
 

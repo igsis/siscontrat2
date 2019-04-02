@@ -28,10 +28,8 @@ $num = mysqli_num_rows($query);
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
         <!-- START FORM-->
         <h2 class="page-header">Pedido de Contração</h2>
-
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
