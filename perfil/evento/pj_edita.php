@@ -394,10 +394,6 @@ if(isset($pj['representante_legal2_id'])){
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
                                 </div>
-                                <div style="margin-top: 10px;" class="form-group col-md-7">
-                                    <h4 class="text-center col-md-12"><em>Insira seu CEP e aperte a tecla "TAB" para seu
-                                            endereço carregar automaticamente</em></h4>
-                                </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">

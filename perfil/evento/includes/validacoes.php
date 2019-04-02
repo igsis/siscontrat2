@@ -81,14 +81,12 @@ if ($evento['tipo_evento_id'] == 1) {
         if ($numPedidos == 0) {
             array_push($erros, "Não há pedido inserido neste evento");
         } else {
-            if ($pedido['pessoa_tipo_id'] == 1) {
-                $pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_tipo_id']);
+            if ($pedido['pessoa_tipo_id'] == 2) {
+                $pj = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
 
-
-            } elseif ($pedido['pessoa_tipo_id'] == 2) {
-                $pj = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_tipo_id']);
-
-
+                if (($pj['representante_legal1_id'] == null) && ($pj['representante_legal2_id'] == null)) {
+                    array_push($erros, "Não há Representante Legal cadastrado no proponente <b>".$pj['razao_social']."</b>");
+                }
             }
         }
     }

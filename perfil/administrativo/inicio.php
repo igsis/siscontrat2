@@ -12,7 +12,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body center-block">
-                <img src="https://imgur.com/4ebJPmF.jpg" alt="para bens" class="img-responsive">
+                <img src="https://media.giphy.com/media/fdXR4TOByOVIwLNhlW/giphy.gif" alt="para bens" class="img-responsive">
             </div>
         </div>
     </section>

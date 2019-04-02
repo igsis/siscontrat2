@@ -73,9 +73,6 @@ $atracao = mysqli_query($con,$sql);
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
                                 </div>
-                                <div style="margin-top: 10px;" class="form-group col-md-6">
-                                    <h4 class="text-center col-md-12"><em>Insira seu CEP e aperte a tecla "TAB" para seu endereço carregar automaticamente</em></h4>
-                                </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -113,8 +110,8 @@ $atracao = mysqli_query($con,$sql);
                             ?>
                                     <div class="row">
                                         <div class="form-group col-md-4">
-                                            <label for="banco">Banco:</label>
-                                            <select id="banco" name="banco" class="form-control">
+                                            <label for="banco">Banco: *</label>
+                                            <select id="banco" name="banco" class="form-control" required>
                                                 <option value="">Selecione um banco...</option>
                                                 <?php
                                                 geraOpcao("bancos", "");
@@ -122,12 +119,12 @@ $atracao = mysqli_query($con,$sql);
                                             </select>
                                         </div>
                                         <div class="form-group col-md-4">
-                                            <label for="agencia">Agência:</label>
-                                            <input type="text" name="agencia" class="form-control"  placeholder="Digite a Agência" maxlength="12">
+                                            <label for="agencia">Agência: *</label>
+                                            <input type="text" name="agencia" class="form-control"  placeholder="Digite a Agência" maxlength="12" required>
                                         </div>
                                         <div class="form-group col-md-4">
-                                            <label for="conta">Conta:</label>
-                                            <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12">
+                                            <label for="conta">Conta: *</label>
+                                            <input type="text" name="conta" class="form-control" placeholder="Digite a Conta" maxlength="12" required>
                                         </div>
                                     </div>
                                     <hr/>

@@ -12,9 +12,9 @@ if (isset($_POST['excluir'])) {
 $sql = "SELECT * FROM relacao_juridicas";
 $query = mysqli_query($con, $sql);
 ?>
-?>
 <div class="content-wrapper">
     <section class="content">
+
         <h3 class="box-title">Lista de Relações Jurídicas</h3>
         <a href="?perfil=administrativo&p=relacao_juridica&sp=cadastro_relacao_juridica"
            class="text-right btn btn-success"

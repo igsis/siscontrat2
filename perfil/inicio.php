@@ -11,7 +11,7 @@ if (isset($_SESSION['idEvento'])) {
     <!-- Main content -->
     <section class="content">
         <!-- START ACCORDION-->
-        <h2 class="page-header"><?= saudacao() . " " . $_SESSION['nome'] ?></h2>
+        <h2 class="page-header"><?= saudacao() . ", " . $_SESSION['nome'] ?>!</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-solid">

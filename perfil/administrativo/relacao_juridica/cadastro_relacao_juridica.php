@@ -23,13 +23,6 @@
                                     <input align="center" type="text" id="titulo" name="titulo" class="form-control" required>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group  col-md-12">
-                                    <label for="msg">Mensagem *</label>
-                                    <textarea type="text" rows="5" id="msg" name="msg" class="form-control" required></textarea>
-                                </div>
-                            </div>
-                        </div>
                         <!-- /.box-body -->
 
                         <div class="box-footer">
