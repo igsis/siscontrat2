@@ -46,6 +46,12 @@ if (isset($_POST['carregar'])) {
 
 $local = recuperaDados('locais', 'id', $idLocal);
 
+if($local['publicado'] == 1){
+    $caminho = "?perfil=administrativo&p=instituicao&sp=edita_local";
+}else if($local['publicado'] == 2){
+    $caminho = "?perfil=administrativo&p=instituicao&sp=solicitacoes_local_espaco";
+}
+
 $sql = "SELECT * FROM espacos WHERE local_id = '$idLocal'";
 $query = mysqli_query($con, $sql);
 ?>
@@ -72,7 +78,7 @@ $query = mysqli_query($con, $sql);
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form method="POST" action="?perfil=administrativo&p=instituicao&sp=edita_local"
+                    <form method="POST" action="<?= $caminho ?>"
                           role="form">
                         <div class="box-body">
                             <div class="row">
@@ -137,72 +143,97 @@ $query = mysqli_query($con, $sql);
                             </div>
                         </div>
                         <!-- /.box-body -->
-
-                        <div class="box-footer">
-                            <a href="?perfil=administrativo&p=instituicao&sp=instituicao_lista">
-                                <button type="button" class="btn btn-default">Voltar</button>
-                            </a>
-                            <input type="hidden" name="idLocal" id="idLocal" value="<?= $idLocal ?>">
-                            <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
-                                Salvar
-                            </button>
-                        </div>
+                        <?php
+                        if ($local['publicado'] == 1) {
+                            ?>
+                            <div class="box-footer">
+                                <a href="?perfil=administrativo&p=instituicao&sp=instituicao_lista">
+                                    <button type="button" class="btn btn-default">Voltar</button>
+                                </a>
+                                <input type="hidden" name="idLocal" id="idLocal" value="<?= $idLocal ?>">
+                                <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
+                                    Salvar
+                                </button>
+                            </div>
+                            <?php
+                        } else if ($local['publicado'] == 2) {
+                            ?>
+                            <div class="box-footer">
+                                <a href="?perfil=administrativo&p=instituicao&sp=solicitacoes_local_espaco">
+                                    <button type="button" class="btn btn-default">Voltar</button>
+                                </a>
+                                <input type="hidden" name="idLocal" id="idLocal" value="<?= $idLocal ?>">
+                                <button type="submit" name="recusarLocal" id="recusarLocal" class="btn btn-warning">
+                                    Recusar local
+                                </button>
+                                <button type="submit" name="aceitarLocal" id="aceitarLocal" class="btn btn-primary pull-right">
+                                    Aceitar local
+                                </button>
+                            </div>
+                            <?php
+                        } ?>
                     </form>
                 </div>
                 <!-- /.box -->
             </div>
             <!-- /.col -->
         </div>
+        <?php
+        if ($local['publicado'] == 1) {
+            ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">Listagem de Espacos</h3>
+                            <form action="?perfil=administrativo&p=instituicao&sp=adicionar_espaco" method="POST">
+                                <input type="hidden" name="idLocal" id="idLocal" value="<?= $idLocal ?>">
+                                <button type="submit" class="text-right btn btn-success" style="float: right">Adicionar
+                                    Espaco
+                                </button>
+                            </form>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="tblEspaco" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Espaço</th>
+                                    <th width="5%">Visualizar</th>
+                                </tr>
+                                </thead>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Listagem de Espacos</h3>
-                        <form action="?perfil=administrativo&p=instituicao&sp=adicionar_espaco" method="POST">
-                            <input type="hidden" name="idLocal" id="idLocal" value="<?= $idLocal ?>">
-                            <button type="submit" class="text-right btn btn-success" style="float: right">Adicionar
-                                Espaco
-                            </button>
-                        </form>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <table id="tblEspaco" class="table table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>Espaço</th>
-                                <th width="5%">Visualizar</th>
-                            </tr>
-                            </thead>
-
-                            <?php
-                            echo "<tbody>";
-                            while ($espaco = mysqli_fetch_array($query)) {
-                                echo "<tr>";
-                                echo "<td>" . $espaco['espaco'] . "</td>";
-                                echo "<td>
+                                <?php
+                                echo "<tbody>";
+                                while ($espaco = mysqli_fetch_array($query)) {
+                                    echo "<tr>";
+                                    echo "<td>" . $espaco['espaco'] . "</td>";
+                                    echo "<td>
                                     <form method=\"POST\" action=\"?perfil=administrativo&p=instituicao&sp=edita_espaco\" role=\"form\">
                                     <input type='hidden' name='idEspaco' value='" . $espaco['id'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
-                            }
-                            ?>
-                            <tfoot>
-                            <tr>
-                                <th>Espaço</th>
-                                <th>Visualizar</th>
-                            </tr>
-                            </tfoot>
-                        </table>
+                                }
+                                ?>
+                                <tfoot>
+                                <tr>
+                                    <th>Espaço</th>
+                                    <th>Visualizar</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
                     </div>
-                    <!-- /.box-body -->
+                    <!-- /.box -->
                 </div>
-                <!-- /.box -->
+                <!-- /.col -->
             </div>
-            <!-- /.col -->
-        </div>
+            <?php
+        }
+
+        ?>
         <!-- /.row -->
         <!-- END ACCORDION & CAROUSEL-->
         <!-- /.row -->

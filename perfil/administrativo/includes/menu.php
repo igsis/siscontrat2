@@ -13,6 +13,7 @@
             <li><a href="?perfil=administrativo&p=modulos&sp=modulos_lista"><i class="fa fa-circle-o text-white"></i><span>Gerenciar modulos</span></a></li>
             <li><a href="?perfil=administrativo&p=categoria&sp=categoria_lista"><i class="fa fa-circle-o text-orange"></i><span>Categorias</span></a></li>
             <li><a href="?perfil=administrativo&p=instituicao&sp=instituicao_lista"><i class="fa fa-circle-o text-green"></i><span>Instituições</span></a></li>
+            <li><a href="?perfil=administrativo&p=instituicao&sp=solicitacoes_local_espaco"><i class="fa fa-circle-o text-fuchsia"></i><span>Aprovar solicitações</span></a></li>
             <li><a href="?perfil=administrativo&p=relacao_juridica&sp=relacao_juridica_lista"><i class="fa fa-circle-o text-black"></i><span>Relação Jurídica</span></a></li>
             <?php
             include "../perfil/includes/menu_mais.php";
