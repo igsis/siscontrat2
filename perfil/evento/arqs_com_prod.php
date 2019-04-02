@@ -32,32 +32,23 @@ if (isset($_POST["enviar"])) {
                     $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
                     $hoje = date("Y-m-d H:i:s");
                     $dir = '../uploadsdocs/'; //Diretório para uploads
-                    $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
                     $ext = strtolower(substr($nome_arquivo, -4));
 
-                    if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
-                    {
-                        if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                            $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idEvento', '$y', '$new_name', '$hoje', '1'); ";
-                            $query = mysqli_query($con, $sql_insere_arquivo);
-                            echo $sql_insere_arquivo;
+                    if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
+                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idEvento', '$y', '$new_name', '$hoje', '1'); ";
+                        $query = mysqli_query($con, $sql_insere_arquivo);
 
-                            if ($query) {
-                                $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                                echo "<script>
+                        if ($query) {
+                            $mensagem = mensagem("success", "Arquivo recebido com sucesso");
+                            echo "<script>
                                 swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
                             </script>";
-                                gravarLog($sql_insere_arquivo);
-                            } else {
-                                $mensagem = mensagem("danger", "Erro ao gravar no banco");
-                            }
+                            gravarLog($sql_insere_arquivo);
                         } else {
-                            $mensagem = mensagem("danger", "Erro no upload");
+                            $mensagem = mensagem("danger", "Erro ao gravar no banco");
                         }
                     } else {
-                        echo "<script>
-                            swal('Erro no upload! Anexar documentos somente no formato PDF.', '', 'error');                             
-                        </script>";
+                        $mensagem = mensagem("danger", "Erro no upload");
                     }
                 }
             }
@@ -100,8 +91,7 @@ if (isset($_POST['apagar'])) {
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1 text-center">
-                                <div class="table-responsive list_info"><h4><strong>Update de arquivos somente em
-                                            PDF!</strong></h4><br>
+                                <div class="table-responsive list_info"><h4><strong>Nesta página você envia os arquivos como o rider, mapas de cenas e luz, logos de parceiros, programação de filmes de mostras de cinema, entre outros arquivos destinados à comunicação e produção.</strong></h4><br>
                                     <?php
                                     //lista arquivos de determinado pedido
                                     $sql = "SELECT * FROM arquivos as arq
@@ -156,10 +146,7 @@ if (isset($_POST['apagar'])) {
                                                         <h1 class="text-center">Envio de Arquivos</h1>
                                                     </tr>
                                                     <tr>
-                                                        <h4 class="text-center">Nesta página você envia os arquivos como
-                                                            o rider, mapas de cenas e luz, logos de parceiros,
-                                                            programação de filmes de mostras de cinema, entre outros
-                                                            arquivos destinados à comunicação e produção. <em>O tamanho
+                                                        <h4 class="text-center"><em>O tamanho
                                                                 máximo do arquivo deve ser 60MB.</em>
 
                                                             <br><br>Não envie cópias de documentos nesta página. Para o
