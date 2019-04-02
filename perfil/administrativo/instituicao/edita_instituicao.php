@@ -79,13 +79,13 @@ $query = mysqli_query($con, $sql);
                                 <div class="form-group col-md-9">
                                     <label for="nome">Nome da Instituição *</label>
                                     <input type="text" id="nome" name="nome" class="form-control" required
-                                           value="<?= $instituicao['nome'] ?>">
+                                           value="<?= $instituicao['nome'] ?>" maxlength="60">
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="token">Sigla *</label>
                                     <input type="text" id="sigla" name="sigla" class="form-control" required
-                                           value="<?= $instituicao['sigla'] ?>">
+                                           value="<?= $instituicao['sigla'] ?>" maxlength="8">
                                 </div>
                             </div>
                         </div>

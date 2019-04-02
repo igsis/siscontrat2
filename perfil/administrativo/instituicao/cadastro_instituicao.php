@@ -21,12 +21,12 @@
                             <div class="row">
                                 <div class="form-group col-md-9">
                                     <label for="nome">Nome da instituição *</label>
-                                    <input type="text" id="nome" name="nome" class="form-control" required>
+                                    <input type="text" id="nome" name="nome" class="form-control" required maxlength="60">
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="Sigla">Sigla *</label>
-                                    <input type="text" id="sigla" name="sigla" class="form-control" required>
+                                    <input type="text" id="sigla" name="sigla" class="form-control" required maxlength="8">
                                 </div>
                             </div>
                         </div>
