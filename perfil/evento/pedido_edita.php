@@ -517,9 +517,9 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
             arrayValor [i] = $("input[name='valor[" + i + "]']").val().replace('.', '').replace(',', '.');
 
             if (arrayValor[i] == "") {
-                $("input[name='valor[" + i + "]']").val(0);
+                $("input[name='valor[" + i + "]']").val("0,00");
+                continue;
             }
-
             soma += parseFloat(arrayValor[i]);
         }
 
