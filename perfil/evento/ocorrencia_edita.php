@@ -28,6 +28,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $valor_ingresso = dinheiroDeBr($_POST['valor_ingresso']);
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $idOcorrencia =  $_POST['idOcorrencia'] ?? NULL;
+    $virada = ($_POST['virada']);
 
 }
 
@@ -51,7 +52,8 @@ if (isset($_POST['cadastra'])) {
                                  horario_fim,
                                  retirada_ingresso_id,
                                  valor_ingresso,
-                                 observacao)
+                                 observacao,
+                                 virada)
                           VALUES ('$tipo_evento_id',
                                   '$origem_ocorrencia_id',
                                   '$instituicao_id',
@@ -70,8 +72,9 @@ if (isset($_POST['cadastra'])) {
                                   '$horario_fim',
                                   '$retirada_ingresso_id',
                                   '$valor_ingresso',
-                                  '$observacao')";
-
+                                  '$observacao',
+                                  '$virada')";
+    
     if (mysqli_query($con, $sql)) 
     {
         $idOcorrencia = recuperaUltimo('ocorrencias');
@@ -103,6 +106,7 @@ if (isset($_POST['edita'])) {
                             horario_fim = '$horario_fim',
                             retirada_ingresso_id = '$retirada_ingresso_id',
                             valor_ingresso = '$valor_ingresso',
+                            virada = '$virada',
                             observacao = '$observacao'
                             WHERE id = '$idOcorrencia'";
 
@@ -247,7 +251,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-6">
                                     <label>
                                         <input type="checkbox" name="domingo" id="diasemana07"
                                                value="1" <?php checarOcorrencia($ocorrencia['domingo']) ?> > Domingo
@@ -271,6 +275,12 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                                value="1" <?php checarOcorrencia($ocorrencia['sabado']) ?> > Sábado
                                         &nbsp;
                                     </label>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="virada">É virada?</label> &nbsp;
+                                    <input type="radio" name="virada" id="viradaSim" value="1" <?= $ocorrencia['virada'] == 1 ? "checked" : NULL ?> class="virada"> Sim &nbsp;
+                                    <input type="radio" name="virada" id="viradaNao" value="0" <?= $ocorrencia['virada'] == 0 ? "checked" : NULL ?>  class="virada" > Não
                                 </div>
                             </div>
 
@@ -385,6 +395,72 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         getEspacos('','') // Se alterar o primeiro ele limpa o local e o espaço 
 
     })
+
+   var virada = $('.virada');
+   virada.on("change", verificaVirada);
+   $(document).ready(verificaVirada());
+    function verificaVirada() {
+
+            if($('#viradaNao').is(':checked')){
+                $('#horaInicio')
+                    .attr('readonly', false)
+                    .val('');
+
+                $('#horaFim')
+                    .attr('readonly', false)
+                    .val('');
+
+                $('#instituicao')
+                    .attr('readonly', false)
+                    .val($('option:contains("Selecione uma opção...")').val());
+
+                $('#local')
+                    .attr('readonly', false)
+                    .val($('option:contains("Selecione uma opção...")').val());
+
+                $('#espaco')
+                    .attr('readonly', false)
+                    .val($('option:contains("Selecione uma opção...")').val());
+
+                $('#retiradaIngresso')
+                    .attr('readonly', false)
+                    .val($('option:contains("Selecione uma opção...")').val());
+
+                $('#valor_ingresso')
+                    .attr('readonly', false)
+                    .val('');
+            }else{
+                $('#horaInicio')
+                    .attr('readonly', true)
+                    .val('00:00');
+
+                $('#horaFim')
+                    .attr('readonly', true)
+                    .val('00:00');
+
+                $('#instituicao')
+                    .attr('readonly', true)
+                    .val($('option:contains("Virada Cultural")').val());
+
+                $('#local')
+                    .attr('readonly', true)
+                    .val($('option:contains("De acordo com a programação do evento")').val());
+
+                $('#espaco')
+                    .attr('readonly', true);
+
+                $('#retiradaIngresso')
+                    .attr('readonly', true)
+                    .val($('option:contains("INGRESSOS GRÁTIS")').val());
+
+                $('#valor_ingresso')
+                    .attr('readonly', true)
+                    .val('0,00');
+            }
+
+            getLocais(10, 626);
+            getEspacos();
+    }
 
     function getLocais(idInstituicao, selectedId){
         fetch(`${url}?instituicao_id=${idInstituicao}`)

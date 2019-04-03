@@ -293,6 +293,10 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                .attr('readonly', false)
                .val($('option:contains("Selecione uma opção...")').val());
 
+           $('#espaco')
+               .attr('readonly', false)
+               .val($('option:contains("Selecione uma opção...")').val());
+
            $('#retiradaIngresso')
                .attr('readonly', false)
                .val($('option:contains("Selecione uma opção...")').val());
@@ -320,6 +324,9 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
            $('#retiradaIngresso')
                .attr('readonly', true)
                .val($('option:contains("INGRESSOS GRÁTIS")').val());
+
+           $('#espaco')
+               .attr('readonly', true);
 
            $('#valor_ingresso')
                .attr('readonly', true)
