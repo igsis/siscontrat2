@@ -9,7 +9,10 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 0 AND evento_status_id >= 3 AND contratacao = 1 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+$sql = "SELECT * FROM eventos AS eve
+        INNER JOIN pedidos AS ped ON eve.id = ped.origem_id
+        WHERE eve.publicado = 1 AND ped.publicado = 1 AND ped.origem_tipo_id = 1 AND evento_interno = 0 AND evento_status_id >= 3 AND ped.status_pedido_id >= 2 AND contratacao = 1 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+
 
 $query = mysqli_query($con, $sql);
 ?>
