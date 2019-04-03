@@ -404,10 +404,10 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 </form>
                 <div class="row">
                     <h4 class="text-center" id="somaParcelas">Soma das
-                        parcelas: <p><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL ?></p></h4>
+                        parcelas: <p id="soma"><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL ?></p></h4>
                 </div>
                 <div class="row">
-                    <h4 class="text-center">Valor total do contrato: <?= dinheiroParaBr($pedido['valor_total']) ?></h4>
+                    <h4 class="text-center"> Valor total do contrato: <p id="valor_total"><?= dinheiroParaBr($pedido['valor_total']) ?> </p></h4>
                 </div>
             </div>
             <div class="modal-footer">
@@ -461,10 +461,10 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 </form>
                 <div class="row">
                     <h4 class="text-center" id="somaParcelas">Soma das
-                        parcelas: <p><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL ?></p></h4>
+                        parcelas: <p id="soma"><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL ?></p></h4>
                 </div>
                 <div class="row">
-                    <h4 class="text-center">Valor total do contrato: <?= dinheiroParaBr($pedido['valor_total']) ?></h4>
+                    <h4 class="text-center"><p id="valor_total">Valor total do contrato: <?= dinheiroParaBr($pedido['valor_total']) ?></h4>
                 </div>
             </div>
             <div class="modal-footer">
@@ -486,8 +486,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         <div class='form-group col-md-2'>
             <label for='valor'>Valor </label>
             <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
-                   onkeyup="somar()"
-                   onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
+                   onkeyup="somar()" onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
         </div>
         <div class='form-group col-md-2'>
             <label for='data_inicial'>Data Inicial</label>
@@ -527,7 +526,33 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
     function somar() {
 
-        var parcelas = $("#numero_parcelas").val();
+        var idAtracao = "<?php if (isset($oficina)) {
+            echo $oficina;
+        } ?>";
+
+        console.log(idAtracao);
+
+        if (idAtracao == 4) {
+            console.log("teste");
+
+            if ($("#numero_parcelas").val() == 4) {
+                $("#numero_parcelas").val("3");
+                var parcelas = $("#numero_parcelas").val();
+
+            } else if ($("#numero_parcelas").val() == 3) {
+                $("#numero_parcelas").val("2");
+                var parcelas = $("#numero_parcelas").val();
+
+            } else {
+                var parcelas = $("#numero_parcelas").val();
+            }
+
+        } else {
+            var parcelas = $("#numero_parcelas").val();
+        }
+
+        var valorTotal = "<?=$pedido['valor_total']?>";
+
         var arrayValor = [];
         let soma = 0;
 
@@ -539,17 +564,19 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 continue;
             }
             soma += parseFloat(arrayValor[i]);
+            valorTotal -= parseFloat(arrayValor[i]);
         }
-
-        var idAtracao = "<?php if (isset($oficina)) {
-            echo $oficina;
-        } ?>";
 
         if (idAtracao == 4) {
+            console.log("teste");
             $('#modalOficinas').find('p').html(soma.toFixed(2).replace('.', ','));
-        }
+        }/* else {
+            $('#modalParcelas').find('p #soma').html(soma.toFixed(2).replace('.', ','));
+        }*/
 
-        $('#modalParcelas').find('p').html(soma.toFixed(2).replace('.', ','));
+        $('#modalParcelas').find('#soma').html(soma.toFixed(2).replace('.', ','));
+        $('#modalParcelas').find('#valor_total').html(valorTotal.toFixed(2).replace('.', ','));
+
     }
 
     var ocultarBotao = function () {
