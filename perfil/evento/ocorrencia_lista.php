@@ -55,7 +55,15 @@ $evento = recuperaDados('eventos', 'id', $_SESSION['idEvento']);
 
 $tipo_ocorrencia_id = $evento['tipo_evento_id'];
 
-$idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
+if(isset($_POST['carregar'])){
+    $idOrigem = $_POST['idOrigem'];
+    unset($_SESSION['idOrigem']);
+    $_SESSION['idOrigem'] = $idOrigem;
+}else if(isset($_SESSION['idOrigem'])){
+    $idOrigem = $_SESSION['idOrigem'];
+}else{
+    $idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
+}
 
 $sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim 
         FROM ocorrencias as o

@@ -9,7 +9,7 @@ if(isset($_POST['cadastra']) || isset($_POST['edita'])){
     $ficha_tecnica = addslashes($_POST['ficha_tecnica']);
     $classificacao_indicativa_id = $_POST['classificacao_indicativa_id'];
     $release_comunicacao = addslashes($_POST['release_comunicacao']);
-    $links = $_POST['links'];
+    $links = addslashes($_POST['links']);
     $quantidade_apresentacao = $_POST['quantidade_apresentacao'];
 }
 if(isset($_POST['cadastra'])){

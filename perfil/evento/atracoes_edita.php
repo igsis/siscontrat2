@@ -11,7 +11,7 @@ if(isset($_POST['cadastra']) || isset($_POST['edita'])){
     $integrantes = addslashes($_POST['integrantes']);
     $classificacao_indicativa_id = $_POST['classificacao_indicativa_id'];
     $release_comunicacao = addslashes($_POST['release_comunicacao']);
-    $links = $_POST['links'];
+    $links = addslashes($_POST['links']);
     $quantidade_apresentacao = $_POST['quantidade_apresentacao'];
     $valor_individual = dinheiroDeBr($_POST['valor_individual']);
 }

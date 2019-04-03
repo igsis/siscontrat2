@@ -4,6 +4,10 @@ include "includes/menu_interno.php";
 $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.php';
 
 
+$_SESSION['idOrigem'] = $_POST['idOrigem'];
+
+
+
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
 ?>
@@ -205,9 +209,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                         </div>
 
                         <div class="box-footer">
-                            <a href="?perfil=evento&p=atracoes_lista">
-                                <button type="button" class="btn btn-default">Voltar</button>
-                            </a>
+                            <a href="?perfil=evento&p=ocorrencia_lista"><button type="button" class="btn btn-default" id="voltar" name="voltar">Voltar</button></a>
                             <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
                             <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
