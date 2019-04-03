@@ -11,6 +11,11 @@ $parcelas = $_POST['parcelas'] ?? NULL;
 $arrayValor = $_POST['valores'] ?? [];
 $arrayKit = $_POST['datas'] ?? [];
 
+//oficinas
+$arrayInicial = $_POST['arrayInicial'] ?? NULL;
+$arrayFinal = $_POST['arrayFinal'] ?? NULL;
+$horas = $_POST['horas'] ?? NULL;
+
 if ($nums < $parcelas){
     $faltando = $nums - $parcelas;
 
@@ -25,6 +30,18 @@ if ($nums < $parcelas){
         $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
 
         if (mysqli_query($con, $sqlUpdate)) {
+
+            if (isset($arrayInicial) && isset($arrayFinal)) {
+
+                $sqlVerifica = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
+                $parcela = mysqli_query($con, $sqlVerifica);
+
+                $sqlComplemento = "UPDATE parcela_complementos SET parcela_id = '$parcela',  data_inicio = '$arrayInicial[$i]',  data_fim = '$arrayFinal[$i]', carga_horaria = '$horas[$i]'";
+
+                if (mysqli_query($con, $sqlComplemento)) {
+                    gravarLog($sqlComplemento);
+                }
+            }
             gravarLog($sqlUpdate);
         }else {
             echo "Erro ao editar!";
@@ -40,6 +57,18 @@ if ($nums < $parcelas){
         if (mysqli_query($con, $sqlInsert)) {
             $sqlPedido = "UPDATE pedidos SET numero_parcelas = '$parcelas'";
             if (mysqli_query($con, $sqlPedido)) {
+
+                $parcela = recuperaUltimo("parcelas");
+
+                if (isset($arrayInicial) && isset($arrayFinal)) {
+
+                    $sqlComplemento = "INSERT INTO parcela_complementos (parcela_id, data_inicio, data_fim, carga_horaria, publicado) VALUES ('$parcela', '$arrayInicial[$i]', '$arrayFinal[$i]', '$horas[$i]', 1)";
+
+                    if (mysqli_query($con, $sqlComplemento)) {
+                        gravarLog($sqlComplemento);
+                    }
+                }
+
                 gravarLog($sqlInsert);
                 gravarLog($sqlPedido);
             } else {
@@ -62,6 +91,18 @@ if ($nums < $parcelas){
         $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
 
         if (mysqli_query($con, $sqlUpdate)) {
+
+            if (isset($arrayInicial) && isset($arrayFinal)) {
+
+                $sqlVerifica = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
+                $parcela = mysqli_query($con, $sqlVerifica);
+
+                $sqlComplemento = "UPDATE parcela_complementos SET parcela_id = '$parcela',  data_inicio = '$arrayInicial[$i]',  data_fim = '$arrayFinal[$i]', carga_horaria = '$horas[$i]'";
+
+                if (mysqli_query($con, $sqlComplemento)) {
+                    gravarLog($sqlComplemento);
+                }
+            }
             gravarLog($sqlUpdate);
         }else {
             echo "Erro ao editar!";
@@ -76,6 +117,16 @@ if ($nums < $parcelas){
 
         if (mysqli_query($con, $sqlDelete)) {
             $sqlPedido = "UPDATE pedidos SET numero_parcelas = '$parcelas'";
+
+            if (isset($arrayInicial) && isset($arrayFinal)) {
+
+                $sqlComplemento = "DELETE FROM parcela_complementos WHERE parcela_id = '$i'";
+
+                if (mysqli_query($con, $sqlComplemento)) {
+                    gravarLog($sqlComplemento);
+                }
+            }
+
             if (mysqli_query($con, $sqlPedido)) {
                 gravarLog($sqlDelete);
                 gravarLog($sqlPedido);
@@ -98,6 +149,16 @@ if ($nums < $parcelas){
         $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
 
         if (mysqli_query($con, $sqlUpdate)) {
+
+            if (isset($arrayInicial) && isset($arrayFinal)) {
+
+                $sqlComplemento = "INSERT INTO parcela_complementos (parcela_id, data_inicio, data_fim, carga_horaria, publicado) VALUES ('$i', '$arrayInicial[$i]', '$arrayFinal[$i]', '$horas[$i]', 1)";
+
+                if (mysqli_query($con, $sqlComplemento)) {
+                    gravarLog($sqlComplemento);
+                }
+            }
+
             gravarLog($sqlUpdate);
         }else {
             echo "Erro ao editar!";

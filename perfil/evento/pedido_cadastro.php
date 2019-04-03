@@ -1,6 +1,7 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
+$conn = bancoPDO();
 $idEvento = $_SESSION['idEvento'];
 
 $tipoPessoa = $_POST['pessoa_tipo_id'];
@@ -23,8 +24,22 @@ $displayEditar = "display: none";
 $displayKit = "display: block";
 
 
-$atracao = recuperaDados("atracoes", "evento_id", $idEvento);
+$sqlAtracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+$queryAtracao = mysqli_query($con, $sqlAtracao);
+//$atracoes = mysqli_fetch_array($queryAtracao);
 
+while ($atracao = mysqli_fetch_array($queryAtracao)) {
+    $valores [] = $atracao['valor_individual'];
+
+    if ($atracao['categoria_atracao_id'] == 4) {
+        $oficina = 4;
+    }
+}
+
+$soma = 0;
+foreach ($valores as $valor) {
+    $soma += $valor;
+}
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -55,12 +70,11 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                                 <div class="form-group col-md-2">
                                     <label for="valor_total">Valor Total</label>
                                     <input type="text" onkeypress="return(moeda(this, '.', ',', event))"
-                                           id="valor_total" name="valor_total" class="form-control" required>
+                                           id="valor_total" name="valor_total" class="form-control" value="<?=dinheiroParaBr($soma)?>" required>
                                 </div>
 
                                 <?php
-                                 if ($atracao['categoria_atracao_id'] == 4) {
-                                    $categoria = 4;
+                                 if (isset($oficina)) {
                                     ?>
                                     <div class="form-group col-md-6">
                                         <label for="numero_parcelas">Número de Parcelas</label>
@@ -167,7 +181,7 @@ $atracao = recuperaDados("atracoes", "evento_id", $idEvento);
                     $sql_atracao = "SELECT * FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
-                                            WHERE evento_id = '" . $_SESSION['idEvento'] . "'";
+                                            WHERE evento_id = '" . $_SESSION['idEvento'] . "' AND publicado = 1";
                     $query_atracao = mysqli_query($con, $sql_atracao);
                     ?>
                     <div class="box box-info">
