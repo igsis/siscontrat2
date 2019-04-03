@@ -403,11 +403,11 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 <form action="#" id="formParcela">
                 </form>
                 <div class="row">
-                    <h4 class="text-center" id="somaParcelas">Soma das
-                        parcelas: <p id="soma"><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL ?></p></h4>
+                    <h4 class="text-center" id="somaParcelas"><b>Soma das
+                        parcelas</b> <p id="soma"><em><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL ?></em></p></h4>
                 </div>
                 <div class="row">
-                    <h4 class="text-center"> Valor total do contrato: <p id="valor_total"><?= dinheiroParaBr($pedido['valor_total']) ?> </p></h4>
+                    <h4 class="text-center"><b>Valor total do contrato</b>  <p id="valor_total"><?= dinheiroParaBr($pedido['valor_total']) ?> </p></h4>
                 </div>
             </div>
             <div class="modal-footer">
