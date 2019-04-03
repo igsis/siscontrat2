@@ -62,8 +62,8 @@ $query = mysqli_query($con, $sql);
                                                 id="excluiRelacaoJuridica"
                                                 data-toggle="modal" data-target="#exclusao" name="excluiRelacaoJuridica"
                                                 data-nome="<?= $relacaoJuridica['relacao_juridica'] ?>"
-                                                data-id="<?= $relacaoJuridica['id'] ?>"><span
-                                                    class='glyphicon glyphicon-trash'></span></button>
+                                                data-id="<?= $relacaoJuridica['id'] ?>">
+                                            <span class='glyphicon glyphicon-trash'></span></button>
                                     </form>
                                 </td>
                                 <?php
@@ -95,7 +95,7 @@ $query = mysqli_query($con, $sql);
                         <h4 class="modal-title">Confirmação de Exclusão</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Tem certeza que deseja excluir este usuário?</p>
+                        <p>Tem certeza que deseja excluir esta relação jurídica?</p>
                     </div>
                     <div class="modal-footer">
 
@@ -138,7 +138,7 @@ $query = mysqli_query($con, $sql);
         let nome = $(e.relatedTarget).attr('data-nome');
         let id = $(e.relatedTarget).attr('data-id');
 
-        $(this).find('p').text(`Tem certeza que deseja excluir o projeto especial: ${nome} ?`);
+        $(this).find('p').text(`Tem certeza que deseja excluir a relação juridica: ${nome} ?`);
         $(this).find('#idRelacaoJuridica').attr('value', `${id}`);
     })
 </script>
