@@ -599,22 +599,52 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
             var source = document.getElementById("templateOficina").innerHTML;
             var templateOficina = Handlebars.compile(source);
 
+
+            var StringInicio = "<?php if (isset($StringInicio)) {
+                echo $StringInicio;
+            } else {
+                echo "";
+            } ?>";
+
+            var StringFim = "<?php if (isset($StringFim)) {
+                echo $StringFim;
+            } else {
+                echo "";
+            } ?>";
+
+            var StringHoras = "<?php if (isset($StringHoras)) {
+                echo $StringHoras;
+            } else {
+                echo "";
+            } ?>";
+
             if (StringValores != "" && StringDatas != "") {
 
                 var valores = StringValores.split("|");
                 var datas = StringDatas.split("|");
+                var inicio = StringInicio.split("|");
+                var fim = StringFim.split("|");
+                var horas = StringHoras.split("|");
 
                 for (var count = 0; count < parcelasSalvas; count++) {
                     html += templateOficina({
                         count: count + 1, // para sincronizar com o array vindo do banco
                         valor: valores [count],
                         kit: datas [count],
+                        inicial: inicio [count],
+                        final: fim [count],
+                        horas: horas [count],
                     });
                 }
 
                 if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
                     if (parcelasSelected == 3 || parcelasSelected == 4) {
-                        //console.log(parcelasSelected + " teste " + parcelasSalvas);
+                        if (parcelasSelected == 3) {
+                            parcelasSelected.val(2);
+                        }else if (parcelasSelected == 4) {
+                            parcelasSelected.val(3);
+                        }
+                        console.log(parcelasSelected + " teste " + parcelasSalvas);
                         let faltando = parcelasSelected - parcelasSalvas;
                         //console.log(faltando);
                         for (var i = 1; i < parseInt(faltando); i++) {
@@ -626,6 +656,12 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                     } else {
                         if (parcelasSelected == 3 || parcelasSelected == 4) {
+                            if (parcelasSelected == 3) {
+                                parcelasSelected.val(2);
+                            }else if (parcelasSelected == 4) {
+                                parcelasSelected.val(3);
+                            }
+                            console.log(parcelasSelected);
                             for (var i = 1; i <= parcelasSelected; i++) {
                                 html += templateOficina({
                                     count: i + 1
@@ -642,6 +678,12 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                 } else {
                     if (parcelasSelected == 3 || parcelasSelected == 4) {
+                        if (parcelasSelected == 3) {
+                            $("#numero_parcelas").val(2);
+                        }else if (parcelasSelected == 4) {
+                            $("#numero_parcelas").val(3);
+                        }
+                        console.log(parcelasSelected);
                         for (var i = 1; i < parcelasSelected; i++) {
                             html += templateOficina({
                                 count: parseInt(count)+ 1,
@@ -649,6 +691,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                         }
                     } else {
                         for (var i = 1; i <= parcelasSelected; i++) {
+                            console.log(parcelasSelected);
                             html += templateOficina({
                                 count: parseInt(count)+ 1
                             });
