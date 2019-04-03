@@ -48,7 +48,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     if (isset($_POST['edita'])) {
         $idPedido = $_SESSION['idPedido'];
         $numero_parcelas = $_POST['numero_parcelas'] ?? $pedido['numero_parcelas'];
-        if ($numero_parcelas != 1){
+        if ($numero_parcelas != 1) {
             $data_kit_pagamento = "0000-00-00";
         }
 
@@ -183,7 +183,8 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                                     ?>
                                     <div class="form-group col-md-6">
                                         <label for="numero_parcelas">Número de Parcelas</label>
-                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas" required>
+                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas"
+                                                required>
                                             <option value="">Selecione...</option>
                                             <?php
                                             geraOpcaoParcelas("oficina_opcoes", $pedido['numero_parcelas']);
@@ -211,7 +212,8 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                                     <div class="form-group col-md-2">
                                         <label for="numero_parcelas">Número de Parcelas</label>
-                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas" required>
+                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas"
+                                                required>
                                             <option value="">Selecione...</option>
                                             <?php
                                             geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']);
@@ -402,7 +404,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 </form>
                 <div class="row">
                     <h4 class="text-center" id="somaParcelas">Soma das
-                        parcelas: <p><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL?></p></h4>
+                        parcelas: <p><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL ?></p></h4>
                 </div>
                 <div class="row">
                     <h4 class="text-center">Valor total do contrato: <?= dinheiroParaBr($pedido['valor_total']) ?></h4>
@@ -425,7 +427,8 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         </div>
         <div class='form-group col-md-3'>
             <label for='valor'>Valor </label>
-            <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" required placeholder="Valor em reais"
+            <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" required
+                   placeholder="Valor em reais"
                    onkeypress="return(moeda(this, '.', ',', event));" onkeyup="somar()" class='form-control'>
         </div>
         <div class='form-group col-md-4'>
@@ -458,7 +461,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 </form>
                 <div class="row">
                     <h4 class="text-center" id="somaParcelas">Soma das
-                        parcelas: <p><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL?></p></h4>
+                        parcelas: <p><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL ?></p></h4>
                 </div>
                 <div class="row">
                     <h4 class="text-center">Valor total do contrato: <?= dinheiroParaBr($pedido['valor_total']) ?></h4>
@@ -482,7 +485,8 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         </div>
         <div class='form-group col-md-2'>
             <label for='valor'>Valor </label>
-            <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais" onkeyup="somar()"
+            <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
+                   onkeyup="somar()"
                    onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
         </div>
         <div class='form-group col-md-2'>
@@ -521,7 +525,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         $('#editarModal').on('click', editarModal);
     });
 
-    function somar () {
+    function somar() {
 
         var parcelas = $("#numero_parcelas").val();
         var arrayValor = [];
@@ -572,12 +576,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         var footer = document.querySelector(".main-footer");
         footer.style.display = "none";
 
-        var parcelasSalvas = "<?php echo $numRows ?>";
-        var parcelasSelected = $("#numero_parcelas").val();
-
-        if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)){
-            swal("Havia  " + parcelasSalvas + " parcelas nesse pedido!", "Número de parcelas selecionadas menor que quantidade de parcelas salvas, ao edita-lás as demais parcelas seram excluídas!", "warning");
-        }
 
         var StringValores = "<?php if (isset($StringValores)) {
             echo $StringValores;
@@ -599,6 +597,27 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
             var source = document.getElementById("templateOficina").innerHTML;
             var templateOficina = Handlebars.compile(source);
 
+            // var parcelasSelected = $("#numero_parcelas").val();
+
+            if ($("#numero_parcelas").val() == 4) {
+                $("#numero_parcelas").val("3");
+                var parcelasSelected = $("#numero_parcelas").val();
+
+            } else if ($("#numero_parcelas").val() == 3) {
+                $("#numero_parcelas").val("2");
+                var parcelasSelected = $("#numero_parcelas").val();
+
+            } else {
+                var parcelasSelected = $("#numero_parcelas").val();
+            }
+
+            var parcelasSalvas = "<?php isset($numRows) ?? NULL?>";
+
+
+            if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
+                swal("Havia  " + parcelasSalvas + " parcelas nesse pedido!", "Número de parcelas selecionadas menor que quantidade de parcelas salvas, ao edita-lás as demais parcelas seram excluídas!", "warning");
+            }
+
 
             var StringInicio = "<?php if (isset($StringInicio)) {
                 echo $StringInicio;
@@ -612,8 +631,8 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 echo "";
             } ?>";
 
-            var StringHoras = "<?php if (isset($StringHoras)) {
-                echo $StringHoras;
+            var StringCarga = "<?php if (isset($StringCarga)) {
+                echo $StringCarga;
             } else {
                 echo "";
             } ?>";
@@ -624,7 +643,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 var datas = StringDatas.split("|");
                 var inicio = StringInicio.split("|");
                 var fim = StringFim.split("|");
-                var horas = StringHoras.split("|");
+                var horas = StringCarga.split("|");
 
                 for (var count = 0; count < parcelasSalvas; count++) {
                     html += templateOficina({
@@ -638,85 +657,31 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 }
 
                 if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
-                    if (parcelasSelected == 3 || parcelasSelected == 4) {
-                        if (parcelasSelected == 3) {
-                            parcelasSelected.val(2);
-                        }else if (parcelasSelected == 4) {
-                            parcelasSelected.val(3);
-                        }
-                        console.log(parcelasSelected + " teste " + parcelasSalvas);
-                        let faltando = parcelasSelected - parcelasSalvas;
-                        //console.log(faltando);
-                        for (var i = 1; i < parseInt(faltando); i++) {
-                            let count = parcelasSalvas;
-                            html += templateOficina({
-                                count: parseInt(count) + 1,
-                            });
-                        }
-
-                    } else {
-                        if (parcelasSelected == 3 || parcelasSelected == 4) {
-                            if (parcelasSelected == 3) {
-                                parcelasSelected.val(2);
-                            }else if (parcelasSelected == 4) {
-                                parcelasSelected.val(3);
-                            }
-                            console.log(parcelasSelected);
-                            for (var i = 1; i <= parcelasSelected; i++) {
-                                html += templateOficina({
-                                    count: i + 1
-                                });
-                            }
-                        }
+                    let faltando = parcelasSelected - parcelasSalvas;
+                    //console.log(faltando);
+                    for (var i = 1; i < parseInt(faltando); i++) {
+                        let count = parcelasSalvas;
+                        html += templateOficina({
+                            count: parseInt(count) + 1,
+                        });
                     }
-
-                    var footer = document.querySelector(".main-footer");
-                    footer.style.display = "none";
-
-                    $('#modalOficina').find('#formParcela').html(html);
-                    $('#modalOficina').modal('show');
-
-                } else {
-                    if (parcelasSelected == 3 || parcelasSelected == 4) {
-                        if (parcelasSelected == 3) {
-                            $("#numero_parcelas").val(2);
-                        }else if (parcelasSelected == 4) {
-                            $("#numero_parcelas").val(3);
-                        }
-                        console.log(parcelasSelected);
-                        for (var i = 1; i < parcelasSelected; i++) {
-                            html += templateOficina({
-                                count: parseInt(count)+ 1,
-                            });
-                        }
-                    } else {
-                        for (var i = 1; i <= parcelasSelected; i++) {
-                            console.log(parcelasSelected);
-                            html += templateOficina({
-                                count: parseInt(count)+ 1
-                            });
-                        }
-                    }
-
-                    var footer = document.querySelector(".main-footer");
-                    footer.style.display = "none";
-
-                    $('#modalOficina').find('#formParcela').html(html);
-                    $('#modalOficina').modal('show');
                 }
+
+
+                var footer = document.querySelector(".main-footer");
+                footer.style.display = "none";
+
+                $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>");
+
+                $('#modalOficina').find('#formParcela').html(html);
+                $('#modalOficina').modal('show');
+
+
             } else {
-                if (parcelasSelected == 3 || parcelasSelected == 4) {
-                    for (var count = 1; count < parcelasSelected; count++) {
-                        html += templateOficina({
-                            count: count,
-                        });
-                    }
-                } else {
-                    for (var count = 1; count <= parcelasSelected; count++) {
-                        html += templateOficina({
-                            count: count
-                        });
-                    }
+                for (var count = 1; count <= parcelasSelected; count++) {
+                    html += templateOficina({
+                        count: count
+                    });
                 }
 
                 var footer = document.querySelector(".main-footer");
@@ -727,6 +692,14 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
             }
 
         } else {
+
+            var parcelasSalvas = "<?php isset($numRows) ?? NULL?>";
+            var parcelasSelected = $("#numero_parcelas").val();
+
+            if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
+                swal("Havia  " + parcelasSalvas + " parcelas nesse pedido!", "Número de parcelas selecionadas menor que quantidade de parcelas salvas, ao edita-lás as demais parcelas seram excluídas!", "warning");
+            }
+
 
             if (StringValores != "" && StringDatas != "") {
                 var valores = StringValores.split("|");
@@ -742,10 +715,10 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                 if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
                     var faltando = parcelasSelected - parcelasSalvas;
-                    for (var i = 1; count < parseInt(faltando); i++) {
+                    for (var i = 1; i < parseInt(faltando); i++) {
                         var count = parcelasSalvas;
                         html += template({
-                            count: parseInt(count)+1,
+                            count: parseInt(count) + 1,
                         });
                     }
                 }
