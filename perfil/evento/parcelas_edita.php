@@ -36,8 +36,8 @@ if ($nums < $parcelas) {
 
                 $sqlVerifica = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
                 $queryVerifica = mysqli_query($con, $sqlVerifica);
-                $parcelas = mysqli_fetch_array($queryVerifica);
-                $parcela_id = $parcelas['id'];
+                $parc = mysqli_fetch_array($queryVerifica);
+                $parcela_id = $parc['id'];
 
                 echo "parcela id " . $parcela_id;
 
@@ -57,13 +57,16 @@ if ($nums < $parcelas) {
         }
     }
 
-    $faltando = ($parcelas - $nums);
+    $faltando = (intval($parcelas)- $nums);
     $count = $nums + 1;
     echo "faltando = " + $faltando;
 
+    echo "parcelas = " . intval($parcelas) . " nums = ";
+    print_r($nums);
+
     for ($i = 1; $i <= $faltando; $i++) {
 
-        echo "faltando = " + $faltando ;
+        echo "faltando = " + $faltando;
 
         $valor = dinheiroDeBr($arrayValor[$i]);
         $dataPagamento = $arrayKit[$i];
@@ -116,8 +119,8 @@ if ($nums < $parcelas) {
 
                 $sqlVerifica = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
                 $queryVerifica = mysqli_query($con, $sqlVerifica);
-                $parcelas = mysqli_fetch_array($queryVerifica);
-                $parcela_id = $parcelas['id'];
+                $parc = mysqli_fetch_array($queryVerifica);
+                $parcela_id = $parc['id'];
 
                 $sqlComplemento = "UPDATE parcela_complementos SET data_inicio = '$data_inicio',  data_fim = '$data_fim', carga_horaria = '$horas' WHERE parcela_id = '$parcela_id'";
 
@@ -150,8 +153,8 @@ if ($nums < $parcelas) {
         if (isset($arrayInicial) && isset($arrayFinal)) {
             $sqlTeste = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$count'";
             $query = mysqli_query($con, $sqlTeste);
-            $Parcela = mysqli_fetch_array($query);
-            $idParcela = $Parcela['id'];
+            $parc = mysqli_fetch_array($query);
+            $idParcela = $parc['id'];
 
             $sqlComplementoDelete = "DELETE FROM parcela_complementos WHERE parcela_id = '$idParcela'";
 
