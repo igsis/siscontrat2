@@ -9,11 +9,11 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos AS eve
+$sql = "SELECT eve.id AS id, eve.protocolo, ped.numero_processo, ped.pessoa_tipo_id, ped.pessoa_juridica_id, ped.pessoa_fisica_id, eve.nome_evento, ped.valor_total, pst.status 
+        FROM eventos AS eve
         INNER JOIN pedidos AS ped ON eve.id = ped.origem_id
+        INNER JOIN pedido_status AS pst ON ped.status_pedido_id = pst.id
         WHERE eve.publicado = 1 AND ped.publicado = 1 AND ped.origem_tipo_id = 1 AND evento_interno = 0 AND evento_status_id >= 3 AND ped.status_pedido_id >= 2 AND contratacao = 1 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
-
-
 $query = mysqli_query($con, $sql);
 ?>
 
@@ -58,44 +58,37 @@ $query = mysqli_query($con, $sql);
                             <?php
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
-                                $pedido = recuperaDadosPublicado('pedidos', 'origem_id', $evento['id']);
-                                $locais = listaLocais($evento['id']);
-                                if($pedido['pessoa_tipo_id'] == 1){
-                                    $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
-                                    $proponente = $proponente['nome'];
-                                }else if($pedido['pessoa_fisica_id' == 2]){
-                                    $proponente = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
-                                    $proponente = $proponente['razao_social'];
+                                $idEvento = $evento['id'];
+                                if($evento['pessoa_tipo_id'] == 1){
+                                    $pf = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id']);
+                                    $proponente = $pf['nome'];
+                                }else if($evento['pessoa_tipo_id' == 2]){
+                                    $pj = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id']);
+                                    $proponente = $pj['razao_social'];
                                 }
 
-                                $protocolo = recuperaDados('protocolos', 'origem_id', $evento['id']);
-
-                                $idEvento = $evento['id'];
                                 $sql_atracao = "SELECT * FROM atracoes atr INNER JOIN categoria_atracoes cat ON cat.id = atr.categoria_atracao_id WHERE evento_id = '$idEvento' AND atr.publicado = 1";
                                 $query_atracao = mysqli_query($con, $sql_atracao);
-                                $status = recuperaDados('pedido_status', 'id', $evento['evento_status_id']);
+
+                                $locais = listaLocais($evento['id']);
 
                                 // $locais = listaLocais($evento['idAtracao']);
                                 echo "<tr>";
-                                echo "<td>" . $protocolo['protocolo'] . "</td>";
-                                echo "<td>" . $pedido['numero_processo'] . "</td>";
+                                echo "<td>" . $evento['protocolo'] . "</td>";
+                                echo "<td>" . $evento['numero_processo'] . "</td>";
                                 echo "<td>" . $proponente . "</td>";
-                                ?>
-                                <td>
-                                    <?php
+                                echo "<td>";
                                     while ($atracao = mysqli_fetch_array($query_atracao)){
                                          echo $atracao['categoria_atracao'] . " - " . $evento['nome_evento'] . " ";
                                     }
-                                    ?>
-                                </td>
-                            <?php
+                                echo "</td>";
                                 echo "<td>" . $locais. "</td>";
-                                echo "<td>" . dinheiroParaBr($pedido['valor_total']) . "</td>";
-                                echo "<td>" . retornaPeriodoNovo($evento['id']) . "</td>";
-                                echo "<td>" . $status['status'] . "</td>";
+                                echo "<td>" . dinheiroParaBr($evento['valor_total']) . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($idEvento) . "</td>";
+                                echo "<td>" . $evento['status'] . "</td>";
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=resumo_evento_enviado\" role=\"form\">
-                                    <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>
+                                    <input type='hidden' name='idEvento' value='" . $idEvento . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
@@ -104,14 +97,14 @@ $query = mysqli_query($con, $sql);
                             echo "</tbody>";
                             ?>
                             <tfoot>
-                            <tr>
-                                <th>Protocolo</th>
-                                <th>Objeto</th>
-                                <th>Local</th>
-                                <th>Período</th>
-                                <th>Status</th>
-                                <th>Visualizar</th>
-                            </tr>
+                                <tr>
+                                    <th>Protocolo</th>
+                                    <th>Objeto</th>
+                                    <th>Local</th>
+                                    <th>Período</th>
+                                    <th>Status</th>
+                                    <th>Visualizar</th>
+                                </tr>
                             </tfoot>
                         </table>
                     </div>
