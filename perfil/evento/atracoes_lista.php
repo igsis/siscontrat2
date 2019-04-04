@@ -29,18 +29,16 @@ $query = mysqli_query($con,$sql);
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
         <!-- START FORM-->
         <h2 class="page-header">Atrações</h2>
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-2" id="adiciona">
                 <a href="?perfil=evento&p=atracoes_cadastro">
                     <button type="button" class="btn btn-block btn-info"><i class="fa fa-plus"></i> Adiciona</button>
                 </a>
             </div>
         </div>
         <br/>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -284,6 +282,17 @@ $query = mysqli_query($con,$sql);
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
+        let cat = "<?= $idCategoriaAtracao ?>";
+        if (cat == 4) {
+            $("#adiciona").attr("style", "display:none");
+           // $("#oficina_txt").attr("style", "display:block");
+        } else {
+            $("#adiciona").attr("style", "display:block");
+            //$("#oficina_txt").attr("style", "display:none");
+        }
+
+
+
 </script>
 
 <script>
