@@ -145,7 +145,7 @@ if (isset($_POST['carregar'])) {
                                         if ($atracao['valor_individual'] != NULL) {
                                             ?>
                                             <p>Valor
-                                                individual: <?= dinheiroParaBr($atracao['valor_individual']); ?></p>
+                                                individual: <?= $atracao['valor_individual']; ?></p>
                                         <?php }
 
                                         if ($atracao['produtor_id'] != NULL) {
