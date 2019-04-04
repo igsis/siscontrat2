@@ -2,8 +2,8 @@
 $con = bancoMysqli();
 
 if (isset($_POST['cadastra']) || (isset($_POST['edita']))) {
-    $nome = $_POST['nome'];
-    $sigla = $_POST['sigla'];
+    $nome = addslashes($_POST['nome']);
+    $sigla = addslashes($_POST['sigla']);
 
     if (isset($_POST['cadastra'])) {
         $sql = "INSERT INTO instituicoes (nome, sigla)
