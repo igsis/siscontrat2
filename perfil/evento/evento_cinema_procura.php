@@ -116,6 +116,10 @@ if (isset($_POST['procurar'])){
                                         ?>
                                     </tbody>
                                 </table>
+                                <div class="box-footer" align="center">
+                                <a href="?perfil=evento&p=evento_cinema_lista">
+                                    <button type="button" class="btn btn-default">Voltar</button>
+                                </a>
                             </div>
 
 
