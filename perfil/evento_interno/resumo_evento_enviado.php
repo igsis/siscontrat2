@@ -215,21 +215,6 @@ if (isset($_POST['carregar'])) {
                                             <strong>Retirada de
                                                 Ingresso:</strong> <?= $retirada_ingresso['retirada_ingresso'] ?>
                                         </div>
-                                        <?php
-                                        if ($ocorrencia['virada'] != NULL) {
-                                            ?>
-                                            <div class="form-group col-md-12">
-                                                <strong>Virada:</strong> <?= $ocorrencia['virada']; ?>
-                                            </div>
-                                        <?php } ?>
-                                        <?php
-                                        if ($ocorrencia['publicado'] != NULL) {
-                                            ?>
-                                            <div class="form-group col-md-12">
-                                                <strong>Publicado:</strong> <?= $ocorrencia['publicado']; ?>
-                                            </div>
-                                        <?php } ?>
-
                                         <?php }
                                         }
 
