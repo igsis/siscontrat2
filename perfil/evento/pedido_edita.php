@@ -718,12 +718,13 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                 if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
                     let faltando = parcelasSelected - parcelasSalvas;
-                    //console.log(faltando);
-                    for (var i = 1; i < parseInt(faltando); i++) {
-                        let count = parcelasSalvas;
+                    console.log("teste" + faltando);
+                    let count = parcelasSalvas;
+                    for (var i = 1; i <= parseInt(faltando); i++) {
                         html += templateOficina({
                             count: parseInt(count) + 1,
                         });
+                        count++;
                     }
                 }
 
@@ -733,9 +734,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                 $('#editarModal').on('click', editarModal);
                 $('#modalOficina').modal('show');
-
-                console.log($('.botoesOficina'));
-
 
             } else {
                 for (var count = 1; count <= parcelasSelected; count++) {
