@@ -4,8 +4,8 @@ $conn = bancoPDO();
 
 if(isset($_POST['excluir'])){
     $verbas = $_POST['idVerbas'];
-    $stmt = $conn->prepare("DELETE FROM 'verbas' WHERE id= :id");
-    $stmt->execute(['id'=> $verbas]);
+    $stmt = $conn->prepare("DELETE FROM `verbas` WHERE id= :id");
+    $stmt->execute(['id' => $verbas]);
     $mensagem = mensagem("success","Verba excluida com sucesso!");
 }
 
