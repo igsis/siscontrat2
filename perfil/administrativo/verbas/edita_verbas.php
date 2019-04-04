@@ -21,18 +21,19 @@ if (isset($_POST['cadastra']) || (isset($_POST['edita']))) {
 
         $sql = "UPDATE verbas SET verba = '$titulo' WHERE id = '$idVerbas'";
 
+
         if(mysqli_query($con, $sql)){
             gravarLog($sql);
-            $mensagem = mensagem("success", "Projeto Especial editado com sucesso!");
+            $mensagem = mensagem("success", "Verba editada com sucesso!");
         }else{
-            $mensagem = mensagem("danger", "Erro ao salvar o projeto especial! Tente novamente.");
+            $mensagem = mensagem("danger", "Erro ao salvar a verba! Tente novamente.");
         }
     }
 }
 if (isset($_POST['carregar'])) {
-    $idVerbas = $_POST ['idVerbas'];
+    $idVerbas = $_POST['idVerbas'];
 }
-$idVerbas = recuperaDados('verbas', 'id',$idVerbas);
+$Verbas = recuperaDados('verbas', 'id',$idVerbas);
 ?>
 
 <div class="content-wrapper">
@@ -60,7 +61,7 @@ $idVerbas = recuperaDados('verbas', 'id',$idVerbas);
                                 <div class="form-group col-md-12">
                                     <label for="titulo">Título *</label>
                                     <input type="text" id="titulo" name="titulo" class="form-control" required
-                                           value="<?=$idVerbas['verba']?>">
+                                           value="<?=$Verbas['verba']?>">
                                 </div>
                             </div>
                         </div>
