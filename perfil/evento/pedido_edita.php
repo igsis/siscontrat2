@@ -472,7 +472,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <h4 class="text-center" id="somaParcelas"><b><p id="msg"></p><b/></h4>
+                    <h4 class="text-center" id="msg"><b><p id="msg"></p><b/></h4>
                 </div>
                 <form action="#" id="formParcela">
                 </form>
@@ -555,18 +555,20 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
     function somar() {
 
-        var idAtracao = "<?php if (isset($oficina)) {
-            echo $oficina;
-        } ?>";
+        var idAtracao = parseInt("<?= isset($oficina) ? $oficina : '' ?>");
 
         if (idAtracao == 4) {
+
             if ($("#numero_parcelas").val() == 4) {
-                $("#numero_parcelas").val("3");
-                var parcelas = $("#numero_parcelas").val();
+                //$("#numero_parcelas").val("3");
+                var parcelas = $("#numero_parcelas").val() - 1;
+
+                console.log(parcelas);
 
             } else if ($("#numero_parcelas").val() == 3) {
-                $("#numero_parcelas").val("2");
-                var parcelas = $("#numero_parcelas").val();
+               // $("#numero_parcelas").val("2");
+                var parcelas = $("#numero_parcelas").val() - 1;
+                console.log(parcelas);
 
             } else {
                 var parcelas = $("#numero_parcelas").val();
@@ -590,7 +592,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 continue;
             }
             soma += parseFloat(arrayValor[i]);
-            restante -= parseFloat(arrayValor[i]);
+            restante -= arrayValor[i];
         }
 
         if (idAtracao == 4) {
@@ -608,9 +610,9 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 var nums = "<?= isset($numRows) ? $numRows : ''; ?>";
 
                 if (nums != '') {
-                    $("#modalParcelas").find('#msg').html("<em class='text-success'> Agora os valores batem! Clique em editar para continuar.");
+                    $("#modalOficina").find('#msg').html("<em class='text-success'> Agora os valores batem! Clique em editar para continuar.");
                 } else {
-                    $("#modalParcelas").find('#msg').html("<em class='text-success'> Agora os valores batem! Clique em salvar para continuar.");
+                    $("#modalOficina").find('#msg').html("<em class='text-success'> Agora os valores batem! Clique em salvar para continuar.");
                 }
             }
 
@@ -667,7 +669,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
             var StringDatas = "<?= isset($StringDatas) ? $StringDatas : ''; ?>";
 
-            var idAtracao = "<?= isset($oficina) ? $oficina : '' ?>";
+            var idAtracao = parseInt("<?= isset($oficina) ? $oficina : '' ?>");
 
             if (idAtracao == 4) {
                 var sourceOficina = document.getElementById("templateOficina").innerHTML;
@@ -678,21 +680,16 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 // var parcelasSelected = $("#numero_parcelas").val();
 
                 if ($("#numero_parcelas").val() == 4) {
-                    $("#numero_parcelas").val("3");
-                    var parcelasSelected = $("#numero_parcelas").val();
+                   // $("#numero_parcelas").val("3");
+                    var parcelasSelected = $("#numero_parcelas").val() - 1;
 
                 } else if ($("#numero_parcelas").val() == 3) {
-                    $("#numero_parcelas").val("2");
-                    var parcelasSelected = $("#numero_parcelas").val();
+                    //$("#numero_parcelas").val("2");
+                    var parcelasSelected = $("#numero_parcelas").val() - 1;
 
                 } else {
                     var parcelasSelected = $("#numero_parcelas").val();
                 }
-
-                if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
-                    swal("Haviam  " + parcelasSalvas + " parcelas nesse pedido!", "Número de parcelas selecionadas menor que quantidade de parcelas salvas, ao edita-lás as demais seram excluídas!", "warning");
-                }
-
 
                 var StringInicio = "<?= isset($StringInicio) ? $StringInicio : '';?>";
 
@@ -710,6 +707,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     var somando = 0;
 
                     if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
+                        swal("Haviam  " + parcelasSalvas + " parcelas nesse pedido!", "Número de parcelas selecionadas menor que quantidade de parcelas salvas, ao edita-lás as demais seram excluídas!", "warning");
                         for (var count = 0; count < parcelasSelected; count++) {
                             html += templateOficina({
                                 count: count + 1, // para sincronizar com o array vindo do banco
@@ -775,6 +773,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     var footer = document.querySelector(".main-footer");
                     footer.style.display = "none";
 
+                    $('#editarModalOficina').on('click', salvarModal);
                     $('#modalOficina').find('#formParcela').html(html);
                     $('#modalOficina').modal('show');
                 }
@@ -876,8 +875,18 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         } else {
 
             if (idAtracao == 4) {
+                if ($("#numero_parcelas").val() == 4) {
+                    // $("#numero_parcelas").val("3");
+                    var parcelas = $("#numero_parcelas").val() - 1;
 
-                var parcelas = $("#numero_parcelas").val();
+                } else if ($("#numero_parcelas").val() == 3) {
+                    //$("#numero_parcelas").val("2");
+                    var parcelas = $("#numero_parcelas").val() - 1;
+
+                } else {
+                    var parcelas = $("#numero_parcelas").val();
+                }
+
                 var arrayKit = [];
                 var arrayValor = [];
                 var arrayInicial = [];
@@ -892,8 +901,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     horas[i] = $("input[name='horas[" + i + "]']").val();
                 }
 
-                var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary editar' name='editar' id='editarModal'>Editar</button>";
-
                 $('#modalOficina').slideUp();
 
                 $.post('?perfil=evento&p=parcelas_cadastro', {
@@ -905,10 +912,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     horas: horas
                 })
                     .done(function () {
-
-                        $(".botoes").html(newButtons);
-                        $('#editarModal').on('click', editarModal);
-
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
                                 location.reload(true);
@@ -929,10 +932,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     arrayValor [i] = $("input[name='valor[" + i + "]']").val();
                 }
 
-                var source = document.getElementById("templateParcela").innerHTML;
-                var template = Handlebars.compile(source);
-                var html = '';
-
                 var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>";
 
                 $('#modalParcelas').slideUp();
@@ -943,16 +942,9 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     arrayKit: arrayKit
                 })
                     .done(function () {
-                        for (var count = 1; count <= parcelas; count++) {
-                            html += template({
-                                count: count,
-                                valor: arrayValor [count],
-                                kit: arrayKit [count]
-                            });
-                        }
 
                         $(".botoes").html(newButtons);
-                        $('#editarModal').on('click', editarModal);
+                        $('#editarModalOficina').on('click', editarModal);
 
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
@@ -982,12 +974,20 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
             swal("Preencha todas as parcelas para edita-lás!", "", "warning");
 
         } else {
-            var idAtracao = "<?php if (isset($oficina)) {
-                echo $oficina;
-            } ?>";
+            var idAtracao = "<?= isset($oficina) ? $oficina : ''?>";
 
             if (idAtracao == 4) {
-                var parcelas = $("#numero_parcelas").val();
+                if ($("#numero_parcelas").val() == 4) {
+                    // $("#numero_parcelas").val("3");
+                    var parcelas = $("#numero_parcelas").val() - 1;
+
+                } else if ($("#numero_parcelas").val() == 3) {
+                    //$("#numero_parcelas").val("2");
+                    var parcelas = $("#numero_parcelas").val() - 1;
+
+                } else {
+                    var parcelas = $("#numero_parcelas").val();
+                }
                 var arrayKit = [];
                 var arrayValor = [];
                 var arrayInicial = [];
@@ -1002,8 +1002,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     horas[i] = $("input[name='horas[" + i + "]']").val();
                 }
 
-                var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary editar' name='editar' id='editarModalOficina'>Editar</button>";
-
                 $('#modalOficina').slideUp();
 
                 $.post('?perfil=evento&p=parcelas_edita', {
@@ -1015,15 +1013,9 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     horas: horas
                 })
                     .done(function () {
-
-                        $(".botoes").html(newButtons);
-                        $('#editarModalOficina').off('click', editarModal);
-                        $('#editarModalOficina').on('click', editarModal);
-
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
                                 location.reload(true);
-                                //$('#modalOficina').slideDown('slow');
                             });
                     })
                     .fail(function () {
@@ -1059,9 +1051,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     },
                 })
                     .done(function () {
-                        $('#editarModal').off('click', editarModal);
-                        $('#editarModal').on('click', editarModal);
-
                         swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                             .then(() => {
                                 location.reload(true);
