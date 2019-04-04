@@ -3,8 +3,8 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
-    $nome = $_POST['nome'];
-    $token = $_POST['token'];
+    $nome = addslashes($_POST['nome']);
+    $token = addslashes($_POST['token']);
 
     if(isset($_POST['cadastra'])){
         $sql = "INSERT INTO perfis (descricao, token)

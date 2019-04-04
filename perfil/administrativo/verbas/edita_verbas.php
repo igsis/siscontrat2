@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 
 if (isset($_POST['cadastra']) || (isset($_POST['edita']))) {
-    $titulo = $_POST['titulo'];
+    $titulo = addslashes($_POST['titulo']);
 
     if (isset($_POST['cadastra'])) {
         $sql = "INSERT INTO verbas (verba)

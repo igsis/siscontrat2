@@ -8,19 +8,19 @@
 
     if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
-        $tituloFilme = $_POST['tituloFilme'];
-        $tituloOriginal = $_POST['tituloOriginal'];
-        $paisOrigem = $_POST['paisOrigem'];
-        $paisCoProducao = $_POST['paisCoProducao'];
+        $tituloFilme = addslashes($_POST['tituloFilme']);
+        $tituloOriginal = addslashes($_POST['tituloOriginal']);
+        $paisOrigem = addslashes($_POST['paisOrigem']);
+        $paisCoProducao = addslashes($_POST['paisCoProducao']);
         $anoProducao = $_POST['anoProducao'];
-        $genero = $_POST['genero'];
-        $bitola = $_POST['bitola'];
-        $direcao = $_POST['direcao'];
-        $sinopse = $_POST['sinopse'];
-        $elenco = $_POST['elenco'];
+        $genero = addslashes($_POST['genero']);
+        $bitola = addslashes($_POST['bitola']);
+        $direcao = addslashes($_POST['direcao']);
+        $sinopse = addslashes($_POST['sinopse']);
+        $elenco = addslashes($_POST['elenco']);
         $duracao = $_POST['duracao'];
         $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
-        $link = $_POST['link'];
+        $link = addslashes($_POST['link']);
     }
 
     if (isset($_POST['cadastra'])) {

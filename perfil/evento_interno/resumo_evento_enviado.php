@@ -1,8 +1,7 @@
 <?php
 include "includes/menu_principal.php";
-
-
 $con = bancoMysqli();
+
 if (isset($_POST['carregar'])) {
     $idEvento = $_POST['idEvento'];
     $evento = recuperaDados('eventos', 'id', $idEvento);
@@ -145,7 +144,7 @@ if (isset($_POST['carregar'])) {
                                         if ($atracao['valor_individual'] != NULL) {
                                             ?>
                                             <p>Valor
-                                                individual: <?= dinheiroParaBr($atracao['valor_individual']); ?></p>
+                                                individual: <?= $atracao['valor_individual']; ?></p>
                                         <?php }
 
                                         if ($atracao['produtor_id'] != NULL) {

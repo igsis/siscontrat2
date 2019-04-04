@@ -7,11 +7,11 @@
     //}
 
     if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-        $nome = $_POST['nome'];
+        $nome = addslashes($_POST['nome']);
         $email = $_POST['email'];
         $telefone1 = $_POST['telefone1'];
         $telefone2 = $_POST['telefone2'];
-        $observacao = $_POST['observacao'];
+        $observacao = addslashes($_POST['observacao']);
     }
     if (isset($_POST['cadastra'])){
         $idAtracoes = $_POST['idAtracoes'];
