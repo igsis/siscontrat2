@@ -56,8 +56,6 @@ $query = mysqli_query($con,$sql);
                                 ?>
                                 <td>
                                     <form method='POST' id='formExcluir'>
-                                        <input type="hidden" name='idVerbas'
-                                               value="<?= $verbas['id'] ?>">
                                         <button type="button" class="btn btn-block btn-danger"
                                                 id="excluiVerbas"
                                                 data-toggle="modal" data-target="#exclusao" name="excluiVerbas"
@@ -129,7 +127,7 @@ $query = mysqli_query($con,$sql);
 
 <script type="text/javascript">
     $('#exclusao').on('show.bs.modal',function (e) {
-        let nome = $(e.relatedTarget).attr('data-nome');
+        let nome = $(e.relatedTarget).attr('data-name');
         let id = $(e.relatedTarget).attr('data-id');
 
         $(this).find('p').text(`Tem certeza que deseja excluir a verba: ${nome} ?`);
