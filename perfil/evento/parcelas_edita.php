@@ -19,8 +19,6 @@ $arrayFinal = $_POST['arrayFinal'] ?? NULL;
 $horas = $_POST['horas'] ?? NULL;
 
 if ($nums < $parcelas) {
-    echo "teste 1";
-
     for ($i = 1; $i <= $nums; $i++) {
         $valor = dinheiroDeBr($arrayValor[$i]);
         $dataPagamento = $arrayKit[$i];
@@ -39,12 +37,8 @@ if ($nums < $parcelas) {
                 $parc = mysqli_fetch_array($queryVerifica);
                 $parcela_id = $parc['id'];
 
-                echo "parcela id " . $parcela_id;
-
                 $sqlComplemento = "UPDATE parcela_complementos SET data_inicio = '$data_inicio',  data_fim = '$data_fim', carga_horaria = '$carga_horaria' 
                                       WHERE parcela_id = '$parcela_id'";
-
-                echo $sqlComplemento;
 
                 if (mysqli_query($con, $sqlComplemento)) {
                     gravarLog($sqlComplemento);
@@ -59,21 +53,13 @@ if ($nums < $parcelas) {
 
     $faltando = (intval($parcelas)- $nums);
     $count = $nums + 1;
-    echo "faltando = " + $faltando;
-
-    echo "parcelas = " . intval($parcelas) . " nums = ";
-    print_r($nums);
 
     for ($i = 1; $i <= $faltando; $i++) {
-
-        echo "faltando = " + $faltando;
 
         $valor = dinheiroDeBr($arrayValor[$i]);
         $dataPagamento = $arrayKit[$i];
 
         $sqlInsert = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento, publicado) VALUES ('$idPedido', '$count', '$valor', '$dataPagamento', 1)";
-
-        echo $sqlInsert;
 
         if (mysqli_query($con, $sqlInsert)) {
             $sqlPedido = "UPDATE pedidos SET numero_parcelas = '$parcelas'";
@@ -83,7 +69,6 @@ if ($nums < $parcelas) {
                 if (isset($arrayInicial) && isset($arrayFinal)) {
                     $sqlComplemento = "INSERT INTO parcela_complementos (parcela_id, data_inicio, data_fim, carga_horaria, publicado) VALUES ('$parcela', '$arrayInicial[$i]', '$arrayFinal[$i]', '$horas[$i]', 1)";
 
-                    echo "caiu" . $sqlComplemento;
                     if (mysqli_query($con, $sqlComplemento)) {
                         gravarLog($sqlComplemento);
                     }
@@ -98,8 +83,6 @@ if ($nums < $parcelas) {
     }
 
 } elseif ($nums > $parcelas) {
-
-    echo "teste 2";
 
     $sobrando = $nums - $parcelas;
 
@@ -127,14 +110,6 @@ if ($nums < $parcelas) {
                 if (mysqli_query($con, $sqlComplemento)) {
                     gravarLog($sqlComplemento);
                 }
-
-                echo " sql update = " . $sqlComplemento;
-
-                echo " X = " . $x;
-
-                //print_r($parcelasSalvas);
-
-                echo " id parcela == " . $parcela_id;
             }
             gravarLog($sqlUpdate);
         } else {
@@ -147,8 +122,6 @@ if ($nums < $parcelas) {
     for ($i = 1; $i <= $sobrando; $i++) {
         $valor = dinheiroDeBr($arrayValor[$i]);
         $dataPagamento = $arrayKit[$i];
-
-        echo " count = " . $count;
 
         if (isset($arrayInicial) && isset($arrayFinal)) {
             $sqlTeste = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$count'";
@@ -217,15 +190,10 @@ if ($nums < $parcelas) {
 
                 $sqlComplemento = "UPDATE parcela_complementos SET data_inicio = '$data_inicio',  data_fim = '$data_fim ', carga_horaria = '$carga_horario' WHERE parcela_id = '$parcela_id'";
 
-                echo $sqlComplemento;
-
-                //print_r($sqlComplemento);
-
                 if (mysqli_query($con, $sqlComplemento)) {
                     gravarLog($sqlComplemento);
                 }
             }
-
             gravarLog($sqlUpdate);
         } else {
             echo "Erro ao editar!";
