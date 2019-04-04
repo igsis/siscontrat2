@@ -638,7 +638,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         var template = Handlebars.compile(source);
         var html = '';
 
-        var parcelasSalvas = "<?= isset($numRows) ? $numRows : ''?>";
+        var parcelasSalvas = "<?= isset($numRows) ? $numRows : ''; ?>";
 
         var footer = document.querySelector(".main-footer");
         footer.style.display = "none";
@@ -710,12 +710,12 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                 if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
                     let faltando = parcelasSelected - parcelasSalvas;
-                    //console.log(faltando);
-                    for (var i = 1; i < parseInt(faltando); i++) {
-                        let count = parcelasSalvas;
+                    let count = parcelasSalvas;
+                    for (var i = 1; i <= parseInt(faltando); i++) {
                         html += templateOficina({
                             count: parseInt(count) + 1,
                         });
+                        count++;
                     }
                 }
 
