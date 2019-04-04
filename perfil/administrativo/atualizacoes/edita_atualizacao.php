@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 
 if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
-    $titulo = $_POST['titulo'];
+    $titulo = addslashes($_POST['titulo']);
     $msg = addslashes($_POST['msg']);
     $hoje = date("Y-m-d H:i:s");
 
