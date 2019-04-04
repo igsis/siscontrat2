@@ -177,7 +177,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                                            id="valor_total" name="valor_total" class="form-control"
                                            value="<?= dinheiroParaBr($pedido['valor_total']) ?>" readonly>
                                 </div>
-
                                 <?php
                                 if (isset($oficina)) {
                                 ?>
@@ -234,6 +233,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                                            class="form-control"
                                            value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
                                 </div>
+                            </div>
                                 <?php
                             }
                             ?>
@@ -407,7 +407,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 <form action="#" id="formParcela">
                 </form>
                 <div class="row">
-                    <h4 class="text-center" id="somaParcelas"><b>Valor restante</b> <em><p id="valor_restante"></p></em>
+                    <h4 class="text-center" id="somaParcelas"><b>Valor restante</b> <em><p id="valor_restante"><?= isset($somaParcelas) ? "0,00" : dinheiroParaBr($pedido['valor_total']) ?></p></em>
                     </h4>
                 </div>
                 <div class="row">
@@ -672,23 +672,11 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
             }
 
 
-            var StringInicio = "<?php if (isset($StringInicio)) {
-                echo $StringInicio;
-            } else {
-                echo "";
-            } ?>";
+            var StringInicio = "<?= isset($StringInicio) ? $StringInicio :  '';?>";
 
-            var StringFim = "<?php if (isset($StringFim)) {
-                echo $StringFim;
-            } else {
-                echo "";
-            } ?>";
+            var StringFim = "<?= isset($StringFim) ?  $StringFim : ''; ?>";
 
-            var StringCarga = "<?php if (isset($StringCarga)) {
-                echo $StringCarga;
-            } else {
-                echo "";
-            } ?>";
+            var StringCarga = "<?= isset($StringCarga) ?  $StringCarga : '';?>";
 
             if (StringValores != "" && StringDatas != "") {
                 var valores = StringValores.split("|");
@@ -697,15 +685,28 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 var fim = StringFim.split("|");
                 var horas = StringCarga.split("|");
 
-                for (var count = 0; count < parcelasSalvas; count++) {
-                    html += templateOficina({
-                        count: count + 1, // para sincronizar com o array vindo do banco
-                        valor: valores [count],
-                        kit: datas [count],
-                        inicial: inicio [count],
-                        final: fim [count],
-                        horas: horas [count],
-                    });
+                if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
+                    for (var count = 0; count < parcelasSelected; count++) {
+                        html += templateOficina({
+                            count: count + 1, // para sincronizar com o array vindo do banco
+                            valor: valores [count],
+                            kit: datas [count],
+                            inicial: inicio [count],
+                            final: fim [count],
+                            horas: horas [count],
+                        });
+                    }
+                } else {
+                    for (var count = 0; count < parcelasSalvas; count++) {
+                        html += templateOficina({
+                            count: count + 1, // para sincronizar com o array vindo do banco
+                            valor: valores [count],
+                            kit: datas [count],
+                            inicial: inicio [count],
+                            final: fim [count],
+                            horas: horas [count],
+                        });
+                    }
                 }
 
                 if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
@@ -725,9 +726,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                 $('#editarModal').on('click', editarModal);
                 $('#modalOficina').modal('show');
-
-                console.log($('.botoesOficina'));
-
 
             } else {
                 for (var count = 1; count <= parcelasSelected; count++) {
@@ -755,12 +753,23 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 var valores = StringValores.split("|");
                 var datas = StringDatas.split("|");
 
-                for (var count = 0; count < parcelasSalvas; count++) {
-                    html += template({
-                        count: count + 1, // para sincronizar com o array vindo do banco
-                        valor: valores [count],
-                        kit: datas [count],
-                    });
+                if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
+                    for (var count = 0; count < parcelasSelected; count++) {
+                        html += template({
+                            count: count + 1, // para sincronizar com o array vindo do banco
+                            valor: valores [count],
+                            kit: datas [count],
+                        });
+                       // $('#modalParcelas').find('#valor_restante').html(valores[count+2]);
+                    }
+                } else {
+                    for (var count = 0; count < parcelasSalvas; count++) {
+                        html += template({
+                            count: count + 1, // para sincronizar com o array vindo do banco
+                            valor: valores [count],
+                            kit: datas [count],
+                        });
+                    }
                 }
 
                 if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
@@ -780,8 +789,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                 $('#editarModal').on('click', editarModal);
                 $('#modalParcelas').modal('show');
-
-                console.log($('.botoes'));
 
 
             } else {
