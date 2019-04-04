@@ -407,14 +407,14 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 <form action="#" id="formParcela">
                 </form>
                 <div class="row">
+                    <h4 class="text-center" id="somaParcelas"><b>Valor restante</b> <em><p id="valor_restante"></p></em>
+                    </h4>
+                </div>
+                <div class="row">
                     <h4 class="text-center" id="somaParcelas"><b>Soma das
                             parcelas</b> <em><p
                                     id="soma"><?= isset($somaParcelas) ? dinheiroParaBr($somaParcelas) : NULL ?></p>
                         </em></h4>
-                </div>
-                <div class="row">
-                    <h4 class="text-center" id="somaParcelas"><b>Valor restante</b> <em><p id="valor_restante"></p></em>
-                    </h4>
                 </div>
                 <div class="row">
                     <h4 class="text-center"><b>Valor total do contrato</b>
@@ -744,8 +744,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
             }
 
         } else {
-
-            var parcelasSalvas = "<?php isset($numRows) ?? NULL?>";
             var parcelasSelected = $("#numero_parcelas").val();
 
             if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
@@ -757,7 +755,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 var valores = StringValores.split("|");
                 var datas = StringDatas.split("|");
 
-                for (var count = 0; count < parcelasSelected; count++) {
+                for (var count = 0; count < parcelasSalvas; count++) {
                     html += template({
                         count: count + 1, // para sincronizar com o array vindo do banco
                         valor: valores [count],
@@ -767,11 +765,12 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                 if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
                     var faltando = parcelasSelected - parcelasSalvas;
-                    for (var i = 1; i < parseInt(faltando); i++) {
-                        var count = parcelasSalvas;
+                    var count = parcelasSalvas;
+                    for (var i = 1; i <= parseInt(faltando); i++) {
                         html += template({
                             count: parseInt(count) + 1,
                         });
+                        count++;
                     }
                 }
 
