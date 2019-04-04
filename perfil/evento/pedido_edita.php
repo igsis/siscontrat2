@@ -673,7 +673,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 var sourceOficina = document.getElementById("templateOficina").innerHTML;
                 var templateOficina = Handlebars.compile(sourceOficina);
 
-
                 $(".botoesOficina").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModalOficina'>Editar</button>");
 
                 // var parcelasSelected = $("#numero_parcelas").val();
@@ -854,12 +853,12 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                             count: count
                         });
                     }
+                    $('#editarModal').on('click', salvarModal);
                     $('#modalParcelas').find('#formParcela').html(html);
                     $('#modalParcelas').modal('show');
                 }
             }
-        }
-    ;
+        };
 
 
     var salvarModal = function () {
@@ -908,7 +907,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     .done(function () {
 
                         $(".botoes").html(newButtons);
-                        $('#editarModal').on('click', salvarModal);
+                        $('#editarModal').on('click', editarModal);
 
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
@@ -1018,8 +1017,8 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     .done(function () {
 
                         $(".botoes").html(newButtons);
-                        $('#editarModal').off('click', editarModal);
-                        $('#editarModal').on('click', editarModal);
+                        $('#editarModalOficina').off('click', editarModal);
+                        $('#editarModalOficina').on('click', editarModal);
 
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
@@ -1060,7 +1059,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     },
                 })
                     .done(function () {
-
                         $('#editarModal').off('click', editarModal);
                         $('#editarModal').on('click', editarModal);
 
