@@ -13,8 +13,8 @@ if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
-    $nome = $_POST['nome'];
-    $nomeArtistico = $_POST['nomeArtistico'];
+    $nome = addslashes($_POST['nome']);
+    $nomeArtistico = addslashes($_POST['nomeArtistico']);
     $rg = $_POST['rg'] ?? NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;

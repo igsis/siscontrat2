@@ -2,13 +2,13 @@
 $con = bancoMysqli();
 
 if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
-    $nome = $_POST['nome'];
+    $nome = addslashes($_POST['nome']);
     $jovemMonitor = $_POST['jovem_monitor'];
     $rgRf = $_POST['rgrf_usuario'];
     $telefone = $_POST['tel_usuario'];
-    $email = $_POST['email'];
-    $usuario = $_POST['usuario'];
-    $perfil = $_POST['perfil'];
+    $email = addslashes($_POST['email']);
+    $usuario = addslashes($_POST['usuario']);
+    $perfil = addslashes($_POST['perfil']);
 
     if($jovemMonitor == 0){
         // fazer um in_array() depois que ficar definido os modulos que terá acesso a eventos

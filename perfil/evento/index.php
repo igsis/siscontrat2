@@ -6,15 +6,15 @@ $con = bancoMysqli();
 
 if (isset($_POST['cadastraLocal'])) {
     $idInstituicao = $_POST['instituicao'] ?? NULL;
-    $local = $_POST['local'];
+    $local = addslashes($_POST['local']);
     $cep = $_POST['cep'];
-    $rua = $_POST['rua'];
+    $rua = addslashes($_POST['rua']);
     $numero = $_POST['numero'];
     $complemento = $_POST['complemento'] ?? NULL;
-    $bairro = $_POST['bairro'];
-    $cidade = $_POST['cidade'];
-    $estado = $_POST['estado'];
-    $zona = $_POST['zona'];
+    $bairro = addslashes($_POST['bairro']);
+    $cidade = addslashes($_POST['cidade']);
+    $estado = addslashes($_POST['estado']);
+    $zona = addslashes($_POST['zona']);
 
     $sql = "INSERT INTO locais (instituicao_id, local, logradouro, numero, complemento, bairro, cidade, uf, cep, zona_id, publicado)
                 VALUES ('$idInstituicao', '$local', '$rua', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$zona', 2)";
