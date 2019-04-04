@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 
 if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
-    $nome = $_POST['nome'];
+    $nome = addslashes($_POST['nome']);
 
     if(isset($_POST['cadastra'])){
         $sql = "INSERT INTO categoria_atracoes (categoria_atracao) VALUES ('$nome')";
