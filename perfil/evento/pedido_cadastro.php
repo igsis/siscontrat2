@@ -70,7 +70,7 @@ foreach ($valores as $valor) {
                                 <div class="form-group col-md-2">
                                     <label for="valor_total">Valor Total</label>
                                     <input type="text" onkeypress="return(moeda(this, '.', ',', event))"
-                                           id="valor_total" name="valor_total" class="form-control" value="<?=dinheiroParaBr($soma)?>" required>
+                                           id="valor_total" name="valor_total" class="form-control" value="<?=dinheiroParaBr($soma)?>" readonly>
                                 </div>
 
                                 <?php
