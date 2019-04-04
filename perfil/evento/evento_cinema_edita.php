@@ -8,7 +8,7 @@
 
     if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
-        $tituloFilme = addslashes($_POST['tituloFilme']);
+        $tituloFilme = $_POST['tituloFilme'];
         $tituloOriginal = addslashes($_POST['tituloOriginal']);
         $paisOrigem = addslashes($_POST['paisOrigem']);
         $paisCoProducao = addslashes($_POST['paisCoProducao']);
@@ -80,7 +80,7 @@
         $idFilme = $_POST['idFilme'];
     }
 
-    $row = recuperaDados("filmes","id", $idFilme);
+    $row = recuperaDados("filmes","id", '$idFilme');
 ?>
 
 <div class="content-wrapper">
