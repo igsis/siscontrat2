@@ -96,7 +96,9 @@
 
 
                         <div class="box-footer">
-                            <button type="reset" class="btn btn-default">Cancel</button>
+                                <a href="?perfil=evento&p=evento_edita">
+                                    <button type="button" class="btn btn-default">Voltar</button>
+                                </a>
                             <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
                     </form>
