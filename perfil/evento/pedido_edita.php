@@ -188,7 +188,16 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                                             required>
                                         <option value="">Selecione...</option>
                                         <?php
-                                        geraOpcaoParcelas("oficina_opcoes", $pedido['numero_parcelas']);
+
+                                        if ($pedido['numero_parcelas'] == 3) {
+                                            $option = 4;
+                                        } elseif ($pedido['numero_parcelas'] == 4) {
+                                            $option = 3;
+                                        } else {
+                                            $option = $pedido['numero_parcelas'];
+                                        }
+
+                                        geraOpcaoParcelas("oficina_opcoes", $option);
                                         ?>
                                     </select>
                                 </div>
@@ -553,6 +562,17 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         $('#editarModal').on('click', editarModal);
     });
 
+    $('#modalParcelas').on('hide.bs.modal', function (event) {
+        //executar algo...
+        location.reload(true);
+    });
+
+    $('#modalOficina').on('hide.bs.modal', function (event) {
+        //executar algo...
+        location.reload(true);
+    });
+
+
     function somar() {
 
         var idAtracao = parseInt("<?= isset($oficina) ? $oficina : '' ?>");
@@ -656,168 +676,167 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
     var abrirModal = function () {
 
-            var source = document.getElementById("templateParcela").innerHTML;
-            var template = Handlebars.compile(source);
-            var html = '';
+        var source = document.getElementById("templateParcela").innerHTML;
+        var template = Handlebars.compile(source);
+        var html = '';
 
-            var parcelasSalvas = "<?= isset($numRows) ? $numRows : ''; ?>";
+        var parcelasSalvas = "<?= isset($numRows) ? $numRows : ''; ?>";
 
-            var footer = document.querySelector(".main-footer");
-            footer.style.display = "none";
+        var footer = document.querySelector(".main-footer");
+        footer.style.display = "none";
 
-            var StringValores = "<?= isset($StringValores) ? $StringValores : ''; ?>";
+        var StringValores = "<?= isset($StringValores) ? $StringValores : ''; ?>";
 
-            var StringDatas = "<?= isset($StringDatas) ? $StringDatas : ''; ?>";
+        var StringDatas = "<?= isset($StringDatas) ? $StringDatas : ''; ?>";
 
-            var idAtracao = parseInt("<?= isset($oficina) ? $oficina : '' ?>");
+        var idAtracao = parseInt("<?= isset($oficina) ? $oficina : '' ?>");
 
-            if (idAtracao == 4) {
-                var sourceOficina = document.getElementById("templateOficina").innerHTML;
-                var templateOficina = Handlebars.compile(sourceOficina);
+        if (idAtracao == 4) {
+            var sourceOficina = document.getElementById("templateOficina").innerHTML;
+            var templateOficina = Handlebars.compile(sourceOficina);
 
-                $(".botoesOficina").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModalOficina'>Editar</button>");
+            $(".botoesOficina").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModalOficina'>Editar</button>");
 
-                // var parcelasSelected = $("#numero_parcelas").val();
+            // var parcelasSelected = $("#numero_parcelas").val();
 
-                if ($("#numero_parcelas").val() == 4) {
-                   // $("#numero_parcelas").val("3");
-                    var parcelasSelected = $("#numero_parcelas").val() - 1;
+            if ($("#numero_parcelas").val() == 4) {
+                // $("#numero_parcelas").val("3");
+                var parcelasSelected = $("#numero_parcelas").val() - 1;
 
-                } else if ($("#numero_parcelas").val() == 3) {
-                    //$("#numero_parcelas").val("2");
-                    var parcelasSelected = $("#numero_parcelas").val() - 1;
-
-                } else {
-                    var parcelasSelected = $("#numero_parcelas").val();
-                }
-
-                var StringInicio = "<?= isset($StringInicio) ? $StringInicio : '';?>";
-
-                var StringFim = "<?= isset($StringFim) ? $StringFim : ''; ?>";
-
-                var StringCarga = "<?= isset($StringCarga) ? $StringCarga : '';?>";
-
-                if (StringValores != "" && StringDatas != "") {
-                    var valores = StringValores.split("|");
-                    var datas = StringDatas.split("|");
-                    var inicio = StringInicio.split("|");
-                    var fim = StringFim.split("|");
-                    var horas = StringCarga.split("|");
-
-                    var somando = 0;
-
-                    if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
-                        swal("Haviam  " + parcelasSalvas + " parcelas nesse pedido!", "Número de parcelas selecionadas menor que quantidade de parcelas salvas, ao edita-lás as demais seram excluídas!", "warning");
-                        for (var count = 0; count < parcelasSelected; count++) {
-                            html += templateOficina({
-                                count: count + 1, // para sincronizar com o array vindo do banco
-                                valor: valores [count],
-                                kit: datas [count],
-                                inicial: inicio [count],
-                                final: fim [count],
-                                horas: horas [count],
-                            });
-
-                            var valor = valores[count].replace('.', '').replace(',', '.');
-                            somando += parseFloat(valor);
-                        }
-                        var valorFaltando = 0;
-                        for (var x = parcelasSelected; x < parcelasSalvas; x++) {
-                            var valor = valores[x].replace('.', '').replace(',', '.');
-                            valorFaltando += parseFloat(valor);
-                        }
-
-                        $('#modalOficina').find('#valor_restante').html(valorFaltando.toFixed(2).replace('.', ','));
-
-                        if ($("#valor_restante") != 0) {
-                            $("#editarModalOficina").attr("disabled", true);
-                            $('#modalOficina').find('#soma').html(somando.toFixed(2).replace('.', ','));
-                            $("#modalOficina").find('#msg').html("<em class='text-danger'>O valor das parcelas somadas devem ser igual ao valor total do contrato! </em>");
-                        }
-                    } else {
-                        for (var count = 0; count < parcelasSalvas; count++) {
-                            html += templateOficina({
-                                count: count + 1, // para sincronizar com o array vindo do banco
-                                valor: valores [count],
-                                kit: datas [count],
-                                inicial: inicio [count],
-                                final: fim [count],
-                                horas: horas [count],
-                            });
-                        }
-                    }
-
-                    if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
-                        let faltando = parcelasSelected - parcelasSalvas;
-                        let count = parcelasSalvas;
-                        for (var i = 1; i <= parseInt(faltando); i++) {
-                            html += templateOficina({
-                                count: parseInt(count) + 1,
-                            });
-                            count++;
-                        }
-                    }
-
-                    $('#modalOficina').find('#formParcela').html(html);
-
-                    $('#editarModalOficina').on('click', editarModal);
-                    $('#modalOficina').modal('show');
-
-                } else {
-                    for (var count = 1; count <= parcelasSelected; count++) {
-                        html += templateOficina({
-                            count: count
-                        });
-                    }
-
-                    var footer = document.querySelector(".main-footer");
-                    footer.style.display = "none";
-
-                    $('#editarModalOficina').on('click', salvarModal);
-                    $('#modalOficina').find('#formParcela').html(html);
-                    $('#modalOficina').modal('show');
-                }
+            } else if ($("#numero_parcelas").val() == 3) {
+                //$("#numero_parcelas").val("2");
+                var parcelasSelected = $("#numero_parcelas").val() - 1;
 
             } else {
-
-                $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>");
-
                 var parcelasSelected = $("#numero_parcelas").val();
+            }
+
+            var StringInicio = "<?= isset($StringInicio) ? $StringInicio : '';?>";
+
+            var StringFim = "<?= isset($StringFim) ? $StringFim : ''; ?>";
+
+            var StringCarga = "<?= isset($StringCarga) ? $StringCarga : '';?>";
+
+            if (StringValores != "" && StringDatas != "") {
+                var valores = StringValores.split("|");
+                var datas = StringDatas.split("|");
+                var inicio = StringInicio.split("|");
+                var fim = StringFim.split("|");
+                var horas = StringCarga.split("|");
+
+                var somando = 0;
 
                 if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
                     swal("Haviam  " + parcelasSalvas + " parcelas nesse pedido!", "Número de parcelas selecionadas menor que quantidade de parcelas salvas, ao edita-lás as demais seram excluídas!", "warning");
+
+                    for (var count = 0; count < parcelasSelected; count++) {
+                        html += templateOficina({
+                            count: count + 1, // para sincronizar com o array vindo do banco
+                            valor: valores [count],
+                            kit: datas [count],
+                            inicial: inicio [count],
+                            final: fim [count],
+                            horas: horas [count],
+                        });
+
+                        var valor = valores[count].replace('.', '').replace(',', '.');
+                        somando += parseFloat(valor);
+                    }
+                    var valorFaltando = 0;
+                    for (var x = parcelasSelected; x < parcelasSalvas; x++) {
+                        var valor = valores[x].replace('.', '').replace(',', '.');
+                        valorFaltando += parseFloat(valor);
+                    }
+
+                    $('#modalOficina').find('#valor_restante').html(valorFaltando.toFixed(2).replace('.', ','));
+
+                    if ($("#valor_restante") != 0) {
+                        $("#editarModalOficina").attr("disabled", true);
+                        $('#modalOficina').find('#soma').html(somando.toFixed(2).replace('.', ','));
+                        $("#modalOficina").find('#msg').html("<em class='text-danger'>O valor das parcelas somadas devem ser igual ao valor total do contrato! </em>");
+                    }
+                } else {
+                    for (var count = 0; count < parcelasSalvas; count++) {
+                        html += templateOficina({
+                            count: count + 1, // para sincronizar com o array vindo do banco
+                            valor: valores [count],
+                            kit: datas [count],
+                            inicial: inicio [count],
+                            final: fim [count],
+                            horas: horas [count],
+                        });
+                    }
                 }
 
-                if (StringValores != "" && StringDatas != "") {
-                    var valores = StringValores.split("|");
-                    var datas = StringDatas.split("|");
+                if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
+                    let faltando = parcelasSelected - parcelasSalvas;
+                    let count = parcelasSalvas;
+                    for (var i = 1; i <= parseInt(faltando); i++) {
+                        html += templateOficina({
+                            count: parseInt(count) + 1,
+                        });
+                        count++;
+                    }
+                }
 
-                    var somando = 0;
+                $('#modalOficina').find('#formParcela').html(html);
 
-                    if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
-                        for (var count = 0; count < parcelasSelected; count++) {
-                            html += template({
-                                count: count + 1, // para sincronizar com o array vindo do banco
-                                valor: valores [count],
-                                kit: datas [count],
-                            });
+                $('#editarModalOficina').on('click', editarModal);
+                $('#modalOficina').modal('show');
 
-                            var valor = valores[count].replace('.', '').replace(',', '.');
-                            somando += parseFloat(valor);
-                        }
-                        var valorFaltando = 0;
-                        for (var x = parcelasSelected; x < parcelasSalvas; x++) {
-                            var valor = valores[x].replace('.', '').replace(',', '.');
-                            valorFaltando += parseFloat(valor);
-                        }
-                        $('#modalParcelas').find('#valor_restante').html(valorFaltando.toFixed(2).replace('.', ','));
+            } else {
+                for (var count = 1; count <= parcelasSelected; count++) {
+                    html += templateOficina({
+                        count: count
+                    });
+                }
 
-                        if ($("#valor_restante") != "0,00") {
-                            $("#editarModal").attr("disabled", true);
-                            $('#modalParcelas').find('#soma').html(somando.toFixed(2).replace('.', ','));
-                            $("#modalParcelas").find('#msg').html("<em class='text-danger'>O valor das parcelas somadas devem ser igual ao valor total do contrato! </em>");
+                var footer = document.querySelector(".main-footer");
+                footer.style.display = "none";
 
-                        }
+                $('#editarModalOficina').on('click', salvarModal);
+                $('#modalOficina').find('#formParcela').html(html);
+                $('#modalOficina').modal('show');
+            }
+
+        } else {
+
+            $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>");
+
+            var parcelasSelected = $("#numero_parcelas").val();
+
+            if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
+                swal("Haviam  " + parcelasSalvas + " parcelas nesse pedido!", "Número de parcelas selecionadas menor que quantidade de parcelas salvas, ao edita-lás as demais seram excluídas!", "warning");
+            }
+
+            if (StringValores != "" && StringDatas != "") {
+                var valores = StringValores.split("|");
+                var datas = StringDatas.split("|");
+
+                var somando = 0;
+
+                if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
+                    for (var count = 0; count < parcelasSelected; count++) {
+                        html += template({
+                            count: count + 1, // para sincronizar com o array vindo do banco
+                            valor: valores [count],
+                            kit: datas [count],
+                        });
+
+                        var valor = valores[count].replace('.', '').replace(',', '.');
+                        somando += parseFloat(valor);
+                    }
+                    var valorFaltando = 0;
+                    for (var x = parcelasSelected; x < parcelasSalvas; x++) {
+                        var valor = valores[x].replace('.', '').replace(',', '.');
+                        valorFaltando += parseFloat(valor);
+                    }
+                    $('#modalParcelas').find('#valor_restante').html(valorFaltando.toFixed(2).replace('.', ','));
+
+                    if ($("#valor_restante") != "0,00") {
+                        $("#editarModal").attr("disabled", true);
+                        $('#modalParcelas').find('#soma').html(somando.toFixed(2).replace('.', ','));
+                        $("#modalParcelas").find('#msg').html("<em class='text-danger'>O valor das parcelas somadas devem ser igual ao valor total do contrato! </em>");
 
                     } else {
                         for (var count = 0; count < parcelasSalvas; count++) {
@@ -857,7 +876,8 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     $('#modalParcelas').modal('show');
                 }
             }
-        };
+        }
+    };
 
 
     var salvarModal = function () {
@@ -912,9 +932,24 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     horas: horas
                 })
                     .done(function () {
+                        var sourceOficina = document.getElementById("templateOficina").innerHTML;
+                        var templateOficina = Handlebars.compile(sourceOficina);
+                        var html = '';
+
+                        for (var count = 0; count < parcelas; count++) {
+                            html += templateOficina({
+                                count: count + 1, // para sincronizar com o array vindo do banco
+                                valor: arrayValor [count],
+                                kit: arrayKit [count],
+                                inicial: arrayInicial [count],
+                                final: arrayFinal [count],
+                                horas: horas [count],
+                            });
+                        }
+
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
-                                location.reload(true);
+                               // location.reload(true);
                                 //$('#modalOficina').slideDown('slow');
                             });
                     })
@@ -948,8 +983,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
-                                location.reload(true);
-                                //$('#modalParcelas').slideDown('slow');
+                                $('#modalParcelas').slideDown('slow');
                                 //window.location.href = "?perfil=evento&p=parcelas_cadastro";
                             });
                     })
@@ -1002,6 +1036,12 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     horas[i] = $("input[name='horas[" + i + "]']").val();
                 }
 
+                var sourceOficina = document.getElementById("templateOficina").innerHTML;
+                var templateOficina = Handlebars.compile(sourceOficina);
+                var html = '';
+
+                var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModalOficina'>Editar</button>";
+
                 $('#modalOficina').slideUp();
 
                 $.post('?perfil=evento&p=parcelas_edita', {
@@ -1013,9 +1053,24 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     horas: horas
                 })
                     .done(function () {
+                        for (var count = 0; count < parcelas; count++) {
+                            html += templateOficina({
+                                count: count + 1, // para sincronizar com o array vindo do banco
+                                valor: arrayValor [count],
+                                kit: arrayKit [count],
+                                inicial: arrayInicial [count],
+                                final: arrayFinal [count],
+                                horas: horas [count],
+                            });
+                        }
+
+                        $(".botoes").html(newButtons);
+                        $('#editarModalOficina').on('click', editarModal);
+
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
-                                location.reload(true);
+                                //location.reload(true);
+                                $('#modalOficina').slideDown("slow");
                             });
                     })
                     .fail(function () {
