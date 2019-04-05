@@ -360,10 +360,6 @@ function geraOpcaoLocais ($tabela, $select = '')
     }
 }
 
-
-
-
-
 	function geraOpcaoPublicado($tabela,$select = '')
 	{
 		//gera os options de um select
