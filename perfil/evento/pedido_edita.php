@@ -399,7 +399,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 </div>
 <!-- Modal -->
 <div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
-     aria-hidden="true"  data-keyboard="false">
+     aria-hidden="true" data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -566,7 +566,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         location.reload(true);
     });
 
-    $('#modalOficina').on('hide.bs.modal', function (){
+    $('#modalOficina').on('hide.bs.modal', function () {
         location.reload(true);
     });
 
@@ -582,7 +582,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 var parcelas = $("#numero_parcelas").val() - 1;
 
             } else if ($("#numero_parcelas").val() == 3) {
-               // $("#numero_parcelas").val("2");
+                // $("#numero_parcelas").val("2");
                 var parcelas = $("#numero_parcelas").val() - 1;
 
             } else {
@@ -805,10 +805,13 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
             }
 
             if (StringValores != "" && StringDatas != "") {
+
                 var valores = StringValores.split("|");
                 var datas = StringDatas.split("|");
 
                 var somando = 0;
+
+                console.log(valores);
 
                 if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
                     for (var count = 0; count < parcelasSelected; count++) {
@@ -832,44 +835,44 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                         $("#editarModal").attr("disabled", true);
                         $('#modalParcelas').find('#soma').html(somando.toFixed(2).replace('.', ','));
                         $("#modalParcelas").find('#msg').html("<em class='text-danger'>O valor das parcelas somadas devem ser igual ao valor total do contrato! </em>");
-
-                    } else {
-                        for (var count = 0; count < parcelasSalvas; count++) {
-                            html += template({
-                                count: count + 1, // para sincronizar com o array vindo do banco
-                                valor: valores [count],
-                                kit: datas [count],
-                            });
-                        }
                     }
-
-                    if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
-                        var faltando = parcelasSelected - parcelasSalvas;
-                        var count = parcelasSalvas;
-                        for (var i = 1; i <= parseInt(faltando); i++) {
-                            html += template({
-                                count: parseInt(count) + 1,
-                            });
-                            count++;
-                        }
-                    }
-
-                    $('#modalParcelas').find('#formParcela').html(html);
-
-                    $('#editarModal').on('click', editarModal);
-                    $('#modalParcelas').modal('show');
-
 
                 } else {
-                    for (var count = 1; count <= parcelasSelected; count++) {
+                    for (var count = 0; count < parcelasSalvas; count++) {
                         html += template({
-                            count: count
+                            count: count + 1, // para sincronizar com o array vindo do banco
+                            valor: valores [count],
+                            kit: datas [count],
                         });
                     }
-                    $('#editarModal').on('click', salvarModal);
-                    $('#modalParcelas').find('#formParcela').html(html);
-                    $('#modalParcelas').modal('show');
                 }
+
+                if (parseInt(parcelasSalvas) < parseInt(parcelasSelected)) {
+                    var faltando = parcelasSelected - parcelasSalvas;
+                    var count = parcelasSalvas;
+                    for (var i = 1; i <= parseInt(faltando); i++) {
+                        html += template({
+                            count: parseInt(count) + 1,
+                        });
+                        count++;
+                    }
+                }
+
+                $('#modalParcelas').find('#formParcela').html(html);
+
+                $('#editarModal').on('click', editarModal);
+                $('#modalParcelas').modal('show');
+
+
+            } else {
+                for (var count = 1; count <= parcelasSelected; count++) {
+                    html += template({
+                        count: count
+                    });
+                }
+                $('#editarModal').on('click', salvarModal);
+                $('#modalParcelas').find('#formParcela').html(html);
+                $('#modalParcelas').modal('show');
             }
         }
     };
@@ -944,7 +947,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
-                               // location.reload(true);
+                                // location.reload(true);
                                 //$('#modalOficina').slideDown('slow');
                             });
                     })
@@ -972,9 +975,20 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     arrayKit: arrayKit
                 })
                     .done(function () {
+                        var source = document.getElementById("templateParcela").innerHTML;
+                        var template = Handlebars.compile(source);
+                        var html = '';
+
+                        for (var count = 0; count < parcelas; count++) {
+                            html += template({
+                                count: count + 1, // para sincronizar com o array vindo do banco
+                                valor: arrayValor[count],
+                                kit: arrayKit[count],
+                            });
+                        }
 
                         $(".botoes").html(newButtons);
-                        $('#editarModalOficina').on('click', editarModal);
+                        $('#editarModal').on('click', editarModal);
 
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
@@ -995,7 +1009,6 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         $("#formParcela input").each(function () {
             if ($(this).val() == "" || $(this).val() == "0,00") {
                 count++;
-                console.log($(this).val());
             }
         });
 
@@ -1101,9 +1114,22 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                     },
                 })
                     .done(function () {
+                        var source = document.getElementById("templateParcela").innerHTML;
+                        var template = Handlebars.compile(source);
+                        var html = '';
+
+                        for (var count = 0; count < parcelas; count++) {
+                            html += template({
+                                count: count + 1, // para sincronizar com o array vindo do banco
+                                valor: valores[count],
+                                kit: datas[count],
+                            });
+                        }
+
                         swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                             .then(() => {
-                                location.reload(true);
+                               //location.reload(true);
+                                $('#modalParcelas').slideDown("slow");
                             });
                     })
                     .fail(function () {
