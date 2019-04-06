@@ -51,13 +51,13 @@ if ($nums < $parcelas) {
         }
     }
 
-    $faltando = (intval($parcelas)- $nums);
+    $faltando = (intval($parcelas) - $nums);
     $count = $nums + 1;
 
     for ($i = 1; $i <= $faltando; $i++) {
 
-        $valor = dinheiroDeBr($arrayValor[$i]);
-        $dataPagamento = $arrayKit[$i];
+        $valor = dinheiroDeBr($arrayValor[$count]);
+        $dataPagamento = $arrayKit[$count];
 
         $sqlInsert = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento, publicado) VALUES ('$idPedido', '$count', '$valor', '$dataPagamento', 1)";
 
@@ -67,7 +67,7 @@ if ($nums < $parcelas) {
                 $parcela = recuperaUltimo("parcelas");
 
                 if (isset($arrayInicial) && isset($arrayFinal)) {
-                    $sqlComplemento = "INSERT INTO parcela_complementos (parcela_id, data_inicio, data_fim, carga_horaria, publicado) VALUES ('$parcela', '$arrayInicial[$i]', '$arrayFinal[$i]', '$horas[$i]', 1)";
+                    $sqlComplemento = "INSERT INTO parcela_complementos (parcela_id, data_inicio, data_fim, carga_horaria, publicado) VALUES ('$parcela', '$arrayInicial[$count]', '$arrayFinal[$count]', '$horas[$count]', 1)";
 
                     if (mysqli_query($con, $sqlComplemento)) {
                         gravarLog($sqlComplemento);
@@ -98,14 +98,14 @@ if ($nums < $parcelas) {
             if (isset($arrayInicial) && isset($arrayFinal)) {
                 $data_inicio = $arrayInicial[$i];
                 $data_fim = $arrayFinal[$i];
-                $horas = $horas[$i];
+                $horario = $horas[$i];
 
                 $sqlVerifica = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
                 $queryVerifica = mysqli_query($con, $sqlVerifica);
                 $parc = mysqli_fetch_array($queryVerifica);
                 $parcela_id = $parc['id'];
 
-                $sqlComplemento = "UPDATE parcela_complementos SET data_inicio = '$data_inicio',  data_fim = '$data_fim', carga_horaria = '$horas' WHERE parcela_id = '$parcela_id'";
+                $sqlComplemento = "UPDATE parcela_complementos SET data_inicio = '$data_inicio',  data_fim = '$data_fim', carga_horaria = '$horario' WHERE parcela_id = '$parcela_id'";
 
                 if (mysqli_query($con, $sqlComplemento)) {
                     gravarLog($sqlComplemento);

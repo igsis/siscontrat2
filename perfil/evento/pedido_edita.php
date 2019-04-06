@@ -399,7 +399,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
 </div>
 <!-- Modal -->
 <div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
-     aria-hidden="true">
+     aria-hidden="true"  data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -469,7 +469,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
     }
 </style>
 <div class="modal fade" id="modalOficina" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
-     aria-hidden="true">
+     aria-hidden="true" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -562,13 +562,11 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         $('#editarModal').on('click', editarModal);
     });
 
-    $('#modalParcelas').on('hide.bs.modal', function (event) {
-        //executar algo...
+    $('#modalParcelas').on('hide.bs.modal', function () {
         location.reload(true);
     });
 
-    $('#modalOficina').on('hide.bs.modal', function (event) {
-        //executar algo...
+    $('#modalOficina').on('hide.bs.modal', function (){
         location.reload(true);
     });
 
@@ -583,12 +581,9 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 //$("#numero_parcelas").val("3");
                 var parcelas = $("#numero_parcelas").val() - 1;
 
-                console.log(parcelas);
-
             } else if ($("#numero_parcelas").val() == 3) {
                // $("#numero_parcelas").val("2");
                 var parcelas = $("#numero_parcelas").val() - 1;
-                console.log(parcelas);
 
             } else {
                 var parcelas = $("#numero_parcelas").val();
