@@ -23,9 +23,9 @@ if (isset($_POST["enviar"])) {
             $nome_arquivo = isset($file['name']) ? $file['name'] : null;
             $f_size = isset($file['size']) ? $file['size'] : null;
 
-            if ($f_size > 60000000) {
+            if ($f_size > 600000) {
                 echo "<br>";
-                $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 60 MB.</strong>");
+                $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 0,6 MB.</strong>");
             } else {
                 if ($nome_arquivo != "") {
                     $nome_temporario = $file['tmp_name'];
@@ -147,7 +147,7 @@ if (isset($_POST['apagar'])) {
                                                     </tr>
                                                     <tr>
                                                         <h4 class="text-center"><em>O tamanho
-                                                                máximo do arquivo deve ser 60MB.</em>
+                                                                máximo do arquivo deve ser 0,6 MB.</em>
 
                                                             <br><br>Não envie cópias de documentos nesta página. Para o
                                                             envio, vá até a área de <a href="?perfil=evento&p=pedido">"Pedidos
