@@ -24,7 +24,6 @@ if (isset($_POST["enviar"])) {
             $f_size = isset($file['size']) ? $file['size'] : null;
 
             if ($f_size > 600000) {
-                echo "<br>";
                 $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 0,6 MB.</strong>");
             } else {
                 if ($nome_arquivo != "") {
