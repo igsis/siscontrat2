@@ -2,9 +2,19 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
-if(isset($_POST['adicionar'])){
+if(isset($_POST['adicionar']) || isset($_POST['adicionarLider'])){
     $documento = $_POST['documentacao'];
     $tipoDocumento = $_POST['tipoDocumento'];
+
+    if (isset($_POST['adicionarLider'])) {
+        $idAtracao = $_POST['idAtracao'];
+        $idPedido = $_POST['idPedido'];
+        $botoesFooter = "<input type='hidden' name='idPedido' value='$idPedido'>
+                            <input type='hidden' name='idAtracao' value='$idAtracao'>
+                            <button type='submit' name='cadastraComLider' class='btn btn-info pull-right'>Salvar</button>";
+    } else {
+        $botoesFooter = "<button type='submit' name='cadastra' class='btn btn-info pull-right'>Salvar</button>";
+    }
 }
 
 $idEvento = $_SESSION['idEvento'];
@@ -227,7 +237,7 @@ $atracao = mysqli_query($con,$sql);
                             }
                             ?>
                             <div class="box-footer">
-                                <button type="submit" name="cadastra" class="btn btn-info pull-right">Salvar</button>
+                                <?=$botoesFooter?>
                             </div>
                         </form>
                     </div>

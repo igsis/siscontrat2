@@ -12,7 +12,25 @@ if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
 }
 
-if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
+
+if (isset($_POST['cadastraLider'])) {
+    $idPedido = $_POST['idPedido'];
+    $idAtracao = $_POST['idAtracao'];
+
+    $sqlDeleteLider = "DELETE FROM lideres WHERE atracao_id = '$idAtracao'";
+
+    if(mysqli_query($con, $sqlDeleteLider)){
+        $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
+                                VALUES ('$idPedido', '$idAtracao', '$idPf')";
+        if (mysqli_query($con, $sqLider)) {
+            $mensagem = mensagem("success", "Líder selecionado com sucesso!");
+            echo "<script> swal('Lembre-se de conferir os dados', '', 'warning') </script>";
+        }
+    }
+}
+
+
+if (isset($_POST['cadastra']) || isset($_POST['edita']) ||  isset($_POST['cadastraComLider'])) {
     $nome = addslashes($_POST['nome']);
     $nomeArtistico = addslashes($_POST['nomeArtistico']);
     $rg = $_POST['rg'] ?? NULL;
@@ -39,7 +57,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $conta = $_POST['conta'] ?? NULL;
     $data = date("y-m-d h:i:s");
 }
-if (isset($_POST['cadastra'])) {
+if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
     $mensagem = "";
     $sql = "INSERT INTO siscontrat.`pessoa_fisicas` (nome, nome_artistico, rg, passaporte, cpf, ccm, data_nascimento, nacionalidade_id, email, ultima_atualizacao) VALUES('$nome','$nomeArtistico','$rg','$passaporte','$cpf','$ccm','$dtNascimento','$nacionalidade','$email','$data')";
     if (mysqli_query($con, $sql)) {
@@ -83,6 +101,25 @@ if (isset($_POST['cadastra'])) {
                 $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlNit;
             }
         }
+
+
+        if (isset($_POST['cadastraComLider'])) {
+            $idPedido = $_POST['idPedido'];
+            $idAtracao = $_POST['idAtracao'];
+
+            $sqlDeleteLider = "DELETE FROM lideres WHERE atracao_id = '$idAtracao'";
+
+            if(mysqli_query($con, $sqlDeleteLider)){
+                $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
+                                VALUES ('$idPedido', '$idAtracao', '$idPf')";
+                if (mysqli_query($con, $sqLider)) {
+                    $mensagem .= mensagem("success", "Cadastrado com sucesso!");
+
+                    echo "<script>swal('Líder cadastrado com sucesso!', '', 'success') </script>";
+                }
+            }
+        }
+
         $mensagem .= mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
     } else {
@@ -184,7 +221,7 @@ if (isset($_POST['edita'])) {
         }
         //edita drt
         if ($drt != NULL) {
-            $drt_existe = verificaExiste("pf_drts", "pessoa_fisica_id", $idPf, 0);
+            $drt_existe = verificaExiste("drts", "pessoa_fisica_id", $idPf, 0);
             if ($drt_existe['numero'] > 0) {
                 $sqlNit = "UPDATE drts SET drt = '$drt' WHERE pessoa_fisica_id = '$idPf'";
                 if (!mysqli_query($con, $sqlNit)) {
@@ -229,6 +266,8 @@ if ($evento['tipo_evento_id'] == 1) {
     $atracoesTipo = array('3', '7', '11', '13', '23');
 
     $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
+    $valorTotal = $atracao['valor_individual'];
+
     $categoria_atracao_id = $atracao['categoria_atracao_id'];
 
     if (in_array($categoria_atracao_id, $atracoesTipo)) {
@@ -320,9 +359,6 @@ $drts = recuperaDados("drts", "pessoa_fisica_id", $idPf);
 $nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
 $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
 $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
-
-$sqlAtracao = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'";
-$atracao = mysqli_query($con, $sqlAtracao);
 
 include "includes/menu_interno.php";
 ?>
@@ -665,10 +701,11 @@ include "includes/menu_interno.php";
                                         <?php
                                     }else {
                                         ?>
-                                        <form method="POST" action="?perfil=evento&p=pedido_cadastro" role="form">
+                                        <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
                                             <input type="hidden" name="pessoa_tipo_id" value="1">
                                             <input type="hidden" name="pessoa_id" value="<?= $pf['id'] ?>">
-                                            <button type="submit" class="btn btn-info btn-block">Ir ao pedido de
+                                            <input type="hidden" name="valor" value="<?= $valorTotal ?>">
+                                            <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
                                                 contratação
                                             </button>
                                         </form>

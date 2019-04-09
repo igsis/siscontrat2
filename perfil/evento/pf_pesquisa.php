@@ -1,74 +1,96 @@
 <?php
-
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 unset($_SESSION['idPf_pedido']);
 
-
+$idAtracao = null;
+$idPedido = null;
 $exibir = ' ';
 $resultado = "<td></td>";
 $procurar = NULL;
 $tipoDocumento = null;
 
+if (isset($_POST['lider'])) {
+    $idPedido = $_POST['lider'];
+    $idAtracao = $_POST['idAtracao'];
+    echo $idAtracao;
+}
 
-if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
+
+if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
+    $idPedido = $_POST['idPedido'] ?? NULL;
+    $idAtracao = $_POST['idAtracao'] ?? NULL;
+
+    if ($idPedido != null) {
+        echo $idAtracao;
+        $botaoSelecionar = "<input type='submit' name='cadastraLider' class='btn btn-primary' value='Selecionar'>";
+        $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
+                                <i class='glyphicon glyphicon-plus'>        
+                                </i>Adicionar
+                            </button>";
+    } else {
+        echo "teste";
+        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
+        $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
+                                <i class='glyphicon glyphicon-plus'>        
+                                </i>Adicionar
+                            </button>";
+    }
 
     $procurar = $_POST['procurar'] ?? $_POST['passaporte'];
     $tipoDocumento = $_POST['tipoDocumento'] ?? false;
 
-    if ($procurar != NULL ) {
-
-        if ($tipoDocumento == 1){
+    if ($procurar != NULL) {
+        if ($tipoDocumento == 1) {
 
             $queryCPF = "SELECT  id, nome, cpf, email
                          FROM siscontrat.`pessoa_fisicas`
                          WHERE cpf = '$procurar'";
 
-           if ($result = mysqli_query($con,$queryCPF)) {
+            if ($result = mysqli_query($con, $queryCPF)) {
 
-               $resultCPF = mysqli_num_rows($result);
+                $resultCPF = mysqli_num_rows($result);
 
-               if ($resultCPF > 0){
+                if ($resultCPF > 0) {
 
-                   $exibir = true;
-                   $resultado = "";
+                    $exibir = true;
+                    $resultado = "";
 
-                   foreach($result as $pessoa){
+                    foreach ($result as $pessoa) {
 
-                       $resultado .= "<tr>";
-                       $resultado .= "<td>".$pessoa['nome']."</td>";
-                       $resultado .= "<td>".$pessoa['cpf']."</td>";
-                       $resultado .= "<td>".$pessoa['email']."</td>";
-                       $resultado .= "<td>
+                        $resultado .= "<tr>";
+                        $resultado .= "<td>" . $pessoa['nome'] . "</td>";
+                        $resultado .= "<td>" . $pessoa['cpf'] . "</td>";
+                        $resultado .= "<td>" . $pessoa['email'] . "</td>";
+                        $resultado .= "<td>
                                      <form action='?perfil=evento&p=pf_edita' method='post'>
-                                        <input type='hidden' name='idPf' value='".$pessoa['id']."'>
-                                        <input type='submit' name='carregar' class='btn btn-primary' name='selecionar' value='Selecionar'>
+                                        <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
+                                        <input type='hidden' name='idAtracao' value='$idAtracao'>
+                                        <input type='hidden' name='idPedido' value='$idPedido'>
+                                        $botaoSelecionar                                        
                                      </form>
                                </td>";
-                       $resultado .= "</tr>";
-                   }
+                        $resultado .= "</tr>";
+                    }
 
 
-               }else {
-                   $exibir = false;
-                   $resultado = "<td colspan='4'>
+                } else {
+                    $exibir = false;
+                    $resultado = "<td colspan='4'>
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
                         <form method='post' action='?perfil=evento&p=pf_cadastro'>
+                            <input type='hidden' name='idAtracao' value='$idAtracao'>
+                            <input type='hidden' name='idPedido' value='$idPedido'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
-                            <button class=\"btn btn-primary\" name='adicionar' type='submit' id='adicionar'>
-                                <i class=\"glyphicon glyphicon-plus\">        
-                                </i>Adicionar
-                            </button>
+                            $botaoAdd
                         </form>
                       </td>";
-
-               }
-
+                }
             }
-        }else {
+        } else {
             if ($tipoDocumento == 2) {
 
                 $queryPassaporte = "SELECT id,nome,passaporte,email
@@ -84,7 +106,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                         $exibir = true;
                         $resultado = "";
 
-                        foreach($result as $pessoa) {
+                        foreach ($result as $pessoa) {
                             $resultado .= "<tr>";
                             $resultado .= "<td>" . $pessoa['nome'] . "</td>";
                             $resultado .= "<td>" . $pessoa['passaporte'] . "</td>";
@@ -97,7 +119,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                                </td>";
                             $resultado .= "</tr>";
                         }
-                    }else {
+                    } else {
                         $exibir = false;
                         $resultado = "<td colspan='4'>
                         <span style='margin: 50% 40%;'>Sem resultados</span>
@@ -143,51 +165,56 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                         <form action="?perfil=evento&p=pf_pesquisa" method="post">
                             <label for="tipoDocumento">Tipo de documento: </label>
                             <label class="radio-inline">
-                               <input type="radio" name="tipoDocumento" value="1" checked>CPF
+                                <input type="radio" name="tipoDocumento" value="1" checked>CPF
                             </label>
                             <label class="radio-inline">
-                               <input type="radio" name="tipoDocumento" value="2">Passaporte
+                                <input type="radio" name="tipoDocumento" value="2">Passaporte
                             </label>
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
                                     <label for="cpf" id="textoDocumento">CPF *</label>
-                                    <input type="text" class="form-control" minlength=14 name="procurar" value="<?=$procurar?>" id="cpf" data-mask="000.000.000-00" >
-                                    <input type="text" class="form-control" name="passaporte" id="passaporte" value="<?=$procurar?>" maxlength="10">
+                                    <input type="text" class="form-control" minlength=14 name="procurar"
+                                           value="<?= $procurar ?>" id="cpf" data-mask="000.000.000-00">
+                                    <input type="text" class="form-control" name="passaporte" id="passaporte"
+                                           value="<?= $procurar ?>" maxlength="10">
 
                                     <span class="input-group-btn">
                                         <p>&nbsp;</p>
                                         <p>&nbsp;</p>
-                                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
+                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?? NULL?>">
+                                        <input type="hidden" name="idAtracao" value="<?= $idAtracao ?? NULL?>">
+                                        <button class="btn btn-default" type="submit"><i
+                                                    class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
                                 </div>
                             </div>
                         </form>
 
-                            <div class="panel panel-default">
-                                <!-- Default panel contents -->
-                                <!-- Table -->
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Nome</th>
-                                            <th id="trocaDoc">CPF</th>
-                                            <th>E-mail</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                            if ($exibir){
-                                                echo $resultado;
-                                            }elseif(!$exibir){
-                                                echo $resultado;
-                                            }else{
-                                                echo $resultado;
-                                            }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="panel panel-default">
+                            <!-- Default panel contents -->
+                            <!-- Table -->
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th id="trocaDoc">CPF</th>
+                                    <th>E-mail</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                if ($exibir) {
+                                    echo $resultado;
+                                } elseif (!$exibir) {
+                                    echo $resultado;
+                                } else {
+                                    echo $resultado;
+                                }
+                                ?>
+                                </tbody>
+                            </table>
+                        </div>
 
 
                     </div>
@@ -211,7 +238,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
     let procurar = document.querySelector("input[name='procurar']");
     let trocaDoc = document.querySelector("#trocaDoc");
 
-    
+
     if (`<?=$tipoDocumento?>` == 2) {
         trocaDoc.innerHTML = 'Passaporte'
         tipos[1].checked = true
@@ -220,8 +247,8 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
         procurar.disabled = true
         procurar.style.display = 'none'
 
-    }else{
-        passaporte.style.display = 'none' 
+    } else {
+        passaporte.style.display = 'none'
         passaporte.disabled = true
     }
 
@@ -234,15 +261,15 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
             passaporte.value = nulo
             procurar.value = nulo
 
-            if(e.target.value == 1){
+            if (e.target.value == 1) {
                 passaporte.style.display = 'none'
                 procurar.disabled = false
-                passaporte.disabled = true                
+                passaporte.disabled = true
                 procurar.style.display = 'block'
                 procurar.value = ''
                 $('#textoDocumento').text('CPF *')
 
-            }else{
+            } else {
                 passaporte.style.display = 'block'
                 passaporte.disabled = false
                 passaporte.value = ''
@@ -251,7 +278,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
                 $('#textoDocumento').text('Passaporte *')
 
 
-            }            
+            }
         })
     }
 
@@ -272,42 +299,42 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])){
             strCPF == "99999999999")
             return false;
 
-        for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
+        for (i = 1; i <= 9; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
         Resto = (Soma * 10) % 11;
 
-        if ((Resto == 10) || (Resto == 11))  Resto = 0;
-        if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
+        if ((Resto == 10) || (Resto == 11)) Resto = 0;
+        if (Resto != parseInt(strCPF.substring(9, 10))) return false;
 
         Soma = 0;
-        for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
+        for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
         Resto = (Soma * 10) % 11;
 
-        if ((Resto == 10) || (Resto == 11))  Resto = 0;
-        if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
+        if ((Resto == 10) || (Resto == 11)) Resto = 0;
+        if (Resto != parseInt(strCPF.substring(10, 11))) return false;
         return true;
     }
 
-    function validacao(){
+    function validacao() {
         var divCPF = document.querySelector('#divCPF');
         var strCPF = document.querySelector('#cpf').value;
 
-        if(strCPF != null){
+        if (strCPF != null) {
             // tira os pontos do valor, ficando apenas os numeros
             strCPF = strCPF.replace(/[^0-9]/g, '');
 
             var validado = TestaCPF(strCPF);
 
-            if(!validado){
+            if (!validado) {
                 alert("CPF inválido!");
                 $("#adicionar").attr("disabled", true);
-            }else{
+            } else {
                 $("#adicionar").attr("disabled", false);
             }
         }
     }
 
     $(document).ready(function () {
-        if((document.querySelector("#cpf").value != "") && (document.querySelector("#passaporte") == "")){
+        if ((document.querySelector("#cpf").value != "") && (document.querySelector("#passaporte") == "")) {
             validacao();
         }
     });

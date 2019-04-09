@@ -1,5 +1,4 @@
 <?php
-include "includes/menu_interno.php";
 $con = bancoMysqli();
 
 $idEvento = $_SESSION['idEvento'];
@@ -61,16 +60,16 @@ if(isset($_POST['carregar'])){
 }
 
 $atracao = recuperaDados("atracoes","id",$idAtracao);
+
+include "includes/menu_interno.php";
 ?>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
         <!-- START FORM-->
         <h2 class="page-header">Cadastro de Evento</h2>
-
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
@@ -92,7 +91,6 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
                                 <label for="nome_atracao">Nome da atração *</label>
                                 <input type="text" id="nome_atracao" name="nome_atracao" class="form-control" maxlength="100" required value="<?= $atracao['nome_atracao'] ?>">
                             </div>
-
                             <div class="form-group">
                                 <label for="categoria_atracao_id">Categoria da atração *</label>
                                 <select class="form-control" id="categoria_atracao_id" name="categoria_atracao_id" required>
@@ -102,7 +100,6 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
                                     ?>
                                 </select>
                             </div>
-
                             <div class="row ">
                                 <div class="form-group col-md-6">
                                     <label for="ficha_tecnica">Ficha técnica completa *</label><br/>

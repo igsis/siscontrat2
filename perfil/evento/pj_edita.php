@@ -229,6 +229,8 @@ $pj = recuperaDados("pessoa_juridicas", "id", $idPj);
 $end = recuperaDados("pj_enderecos", "pessoa_juridica_id", $idPj);
 $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
 
+$atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
+
 if(isset($pj['representante_legal1_id'])){
     $representante1 = recuperaDados('representante_legais', 'id', $pj['representante_legal1_id']);
 }
@@ -500,7 +502,6 @@ if(isset($pj['representante_legal2_id'])){
                                 ?>
                             </div>
                             <hr/>
-
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
@@ -508,7 +509,6 @@ if(isset($pj['representante_legal2_id'])){
                                               class="form-control"><?= $obs['observacao'] ?? NULL ?></textarea>
                                 </div>
                             </div>
-
                             <div class="box-footer">
                                 <button type="submit" name="edita" value="<?= $pj['id'] ?>"
                                         class="btn btn-info pull-right">Atualizar
@@ -604,10 +604,10 @@ if(isset($pj['representante_legal2_id'])){
 
                                     ?>
                                     <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                        <input type="hidden" name="pessoa_tipo_id" value="1">
+                                        <input type="hidden" name="pessoa_tipo_id" value="2">
                                         <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
                                         <input type="hidden" name="idProponente" value="<?= $pj['id'] ?>">
-                                        <input type="hidden" name="tipoPessoa" value="1">
+                                        <input type="hidden" name="tipoPessoa" value="2">
                                         <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
                                             contratação
                                         </button>
@@ -616,10 +616,11 @@ if(isset($pj['representante_legal2_id'])){
                                     <?php
                                 }else {
                                     ?>
-                                    <form method="POST" action="?perfil=evento&p=pedido_cadastro" role="form">
+                                    <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
                                         <input type="hidden" name="pessoa_tipo_id" value="2">
                                         <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
-                                        <button type="submit" class="btn btn-info btn-block">Ir ao pedido de
+                                        <input type="hidden" name="valor" value="<?= $atracao['valor_individual'] ?>">
+                                        <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
                                             contratação
                                         </button>
                                     </form>

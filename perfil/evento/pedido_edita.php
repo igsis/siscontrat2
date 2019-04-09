@@ -1,6 +1,7 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
+$idEvento = $_SESSION['idEvento'];
 
 if (isset($_POST['idProponente'])) {
     $idProponente = $_POST['idProponente'];
@@ -13,37 +14,37 @@ if (isset($_POST['carregar'])) {
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
-if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
-    $verba_id = $_POST['verba_id'];
-    $valor_total = dinheiroDeBr($_POST['valor_total']);
-    $forma_pagamento = addslashes($_POST['forma_pagamento']);
-    $justificativa = addslashes($_POST['justificativa']);
-    $observacao = addslashes($_POST['observacao']) ?? NULL;
-    $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
-    $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? NULL;
+if (isset($_POST['cadastra'])){
+    $tipoPessoa = $_POST['pessoa_tipo_id'];
+    $idPessoa = $_POST['pessoa_id'];
+    $valorTotal = $_POST['valor'];
 
     if ($tipoPessoa == 1) {
         $campo = "pessoa_fisica_id";
     } else {
         $campo = "pessoa_juridica_id";
     }
-
-    if (isset($_POST['cadastra'])) {
-        $sql_cadastra = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, verba_id, numero_parcelas, valor_total, forma_pagamento, data_kit_pagamento, justificativa, status_pedido_id, observacao) 
-                          VALUES ('1', '$idEvento', '$tipoPessoa', '$idProponente', '$verba_id', '$numero_parcelas', '$valor_total', '$forma_pagamento', '$data_kit_pagamento', '$justificativa', 1, '$observacao')";
-
-        if (mysqli_query($con, $sql_cadastra)) {
-            gravarLog($sql_cadastra);
-
+        $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES ('1', $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
+        if (mysqli_query($con, $sqlFirst)) {
             $_SESSION['idPedido'] = recuperaUltimo("pedidos");
-            $idPedido = $_SESSION['idPedido'];
-
-            $mensagem = mensagem("success", "Pedido cadastrado com sucesso!");
-
-        } else {
-            $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         }
     }
+
+    if (isset($_POST['edita'])) {
+        $verba_id = $_POST['verba_id'];
+        $valor_total = dinheiroDeBr($_POST['valor_total']);
+        $forma_pagamento = addslashes($_POST['forma_pagamento']);
+        $justificativa = addslashes($_POST['justificativa']);
+        $observacao = addslashes($_POST['observacao']) ?? NULL;
+        $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
+        $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? NULL;
+
+        if ($tipoPessoa == 1) {
+            $campo = "pessoa_fisica_id";
+        } else {
+            $campo = "pessoa_juridica_id";
+        }
 
     if (isset($_POST['edita'])) {
         $idPedido = $_SESSION['idPedido'];
@@ -129,12 +130,12 @@ if (isset($pedido['numero_parcelas'])) {
     }
 }
 
-$sqlAtracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
-$queryAtracao = mysqli_query($con, $sqlAtracao);
+$sqlOficina = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+$queryOficina = mysqli_query($con, $sqlOficina);
 //$atracoes = mysqli_fetch_array($queryAtracao);
 
-while ($atracao = mysqli_fetch_array($queryAtracao)) {
-    if ($atracao['categoria_atracao_id'] == 4) {
+while ($atracoes = mysqli_fetch_array($queryOficina)) {
+    if ($atracoes['categoria_atracao_id'] == 4) {
         $oficina = 4;
     }
 }
@@ -307,7 +308,7 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                 <!-- líderes -->
                 <?php
                 //if($pedido['pessoa_tipo_id'] == 2){
-                $sql_atracao = "SELECT * FROM atracoes AS a                                              
+                $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
                                             WHERE evento_id = '" . $_SESSION['idEvento'] . "'";
@@ -335,15 +336,17 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
                                 if ($atracao['pessoa_fisica_id'] > 0) {
                                     echo "<td>" . $atracao['nome'] . "</td>";
                                     echo "<td>
-                                            <form method=\"POST\" action=\"?perfil=evento&p=pessoa_fisica\" role=\"form\">
+                                            <form method=\"POST\" action=\"?perfil=evento&p=pf_pesquisa\" role=\"form\">
                                             <input type='hidden' name='idAtracao' value='" . $atracao['id'] . "'>
+                                            <input type='hidden' name='lider' value='$idPedido'>
                                             <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class='fa fa-refresh'></i> Trocar</button>
                                             </form>
                                         </td>";
                                 } else {
                                     echo "<td>
-                                            <form method=\"POST\" action=\"?perfil=evento&p=pessoa_fisica\" role=\"form\">
+                                            <form method=\"POST\" action=\"?perfil=evento&p=pf_pesquisa\" role=\"form\">
                                             <input type='hidden' name='idAtracao' value='" . $atracao['id'] . "'>
+                                            <input type='hidden' name='lider' value='$idPedido'>
                                             <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-plus'></i> Adicionar</button>
                                             </form>
                                         </td>";
@@ -661,9 +664,11 @@ while ($atracao = mysqli_fetch_array($queryAtracao)) {
         var dataKit = document.querySelector("#data_kit_pagamento");
 
         if (optionSelect == "1" || optionSelect == 0) {
+            dataKit.required = true;
             editarParcelas.style.display = "none";
             dataKit.style.display = "block";
         } else {
+            $("#data_kit_pagamento").attr("required", false);
             editarParcelas.style.display = "block";
             dataKit.style.display = "none";
         }
