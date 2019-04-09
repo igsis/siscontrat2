@@ -36,9 +36,9 @@ if (isset($_POST['procurar'])){
                 $resultado .= "<td>".$filmes['duracao']."</td>";
                 $resultado .= "<td>".$filmes['direcao']."</td>";
                 $resultado .= "<td>
-                                     <form action='?perfil=evento&p=evento_cinema_lista' method='post'>
+                                     <form action='?perfil=evento&p=evento_cinema_edita' method='post'>
                                         <input type='hidden' name='idFilme' value='".$filmes['id']."'>
-                                        <input class='btn btn-primary' type='submit' name='selecionar' value='Selecionar'>
+                                        <input class='btn btn-primary' type='submit' name='carregar' value='Selecionar'>
                                      </form>
                                </td>";
                 $resultado .= "</tr>";
