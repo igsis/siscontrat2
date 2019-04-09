@@ -39,7 +39,7 @@ $resul = mysqli_query($con, $query);
         <div class="row">
             <div class="col-md-2">
                 <a href="?perfil=evento&p=evento_cinema_procura">
-                    <button type="button" class="btn btn-block btn-info"><i class="fa fa-plus"></i> Adiciona</button>
+                    <button type="button" class="btn btn-block btn-info"><i class="fa fa-plus"></i> Adicionar</button>
                 </a>
             </div>
         </div>

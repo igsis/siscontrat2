@@ -80,7 +80,7 @@
         $idFilme = $_POST['idFilme'];
     }
 
-    $row = recuperaDados("filmes","id", '$idFilme');
+    $row = recuperaDados("filmes","id",$idFilme);
 ?>
 
 <div class="content-wrapper">
@@ -175,6 +175,12 @@
                             <input type="text" class="form-control" name="link" id="link" placeholder="Cole aqui o link para o trailer" value="<?= $row['link_trailer'] ?>">
                         </div>
                     </div>
+
+
+                    <div class="box-footer">
+                        <a href="?perfil=evento&p=evento_cinema_lista">
+                            <button type="button" class="btn btn-info pull-left">Voltar</button>
+                        </a>
 
                     <div class="box-footer">
                         <input type="hidden" name="idFilme" value="<?= $idFilme ?>">
