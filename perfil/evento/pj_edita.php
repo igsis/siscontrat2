@@ -4,14 +4,27 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 date_default_timezone_set('America/Sao_Paulo');
 
-$server = "http://".$_SERVER['SERVER_NAME']."/siscontrat2"; //mudar para pasta do siscontrat
-$http = $server."/pdf/";
-$link_facc = $http."rlt_fac_pj.php";
+$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do siscontrat
+$http = $server . "/pdf/";
+$link_facc = $http . "rlt_fac_pj.php";
 
 $tipoPessoa = 2;
 
 if (isset($_POST['idPj']) || isset($_POST['idProponente'])) {
     $idPj = $_POST['idPj'] ?? $_POST['idProponente'];
+}
+
+if (isset($_POST['editProponente'])) {
+    $idPedido = $_SESSION['idPedido'];
+    $voltar = "<form action='?perfil=evento&p=pedido_edita' method='post'>
+                    <input type='hidden' name='idProponente' value='$idPj'>
+                    <input type='hidden' name='tipoPessoa' value='$tipoPessoa'>
+                        <button type='submit' name='idPedido' id='idPedido' value='$idPedido' class='btn btn-default'>Voltar</button>
+                    </form>";
+} else {
+    $voltar = "<form action='?perfil=evento&p=pj_pesquisa' method='post'>
+                        <button type='submit' class='btn btn-default'>Voltar</button>
+                    </form>";
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
@@ -177,9 +190,9 @@ if (isset($_POST["enviar"])) {
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
                 $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-                $ext = strtolower(substr($nome_arquivo,-4));
+                $ext = strtolower(substr($nome_arquivo, -4));
 
-                if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
                 {
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
                         $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPj', '$y', '$new_name', '$hoje', '1'); ";
@@ -231,11 +244,11 @@ $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
 
 $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
 
-if(isset($pj['representante_legal1_id'])){
+if (isset($pj['representante_legal1_id'])) {
     $representante1 = recuperaDados('representante_legais', 'id', $pj['representante_legal1_id']);
 }
 
-if(isset($pj['representante_legal2_id'])){
+if (isset($pj['representante_legal2_id'])) {
     $representante2 = recuperaDados('representante_legais', 'id', $pj['representante_legal2_id']);
 }
 ?>
@@ -314,11 +327,13 @@ if(isset($pj['representante_legal2_id'])){
                                         <label>FDC - CCM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
                                         <br>
                                         <div class='form-group' style='display: flex; align-items: center;'>
-                                            <button class='btn-sm btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal'
-                                                    data-target='#exclusao' data-id='<?= $arquivo['id']?>' data-nome='<?=$arquivo['arquivo']?>'>
+                                            <button class='btn-sm btn-danger glyphicon glyphicon-trash' type='button'
+                                                    data-toggle='modal'
+                                                    data-target='#exclusao' data-id='<?= $arquivo['id'] ?>'
+                                                    data-nome='<?= $arquivo['arquivo'] ?>'>
                                             </button> &nbsp;&nbsp;
-                                            <a href='../uploadsdocs/<?=$arquivo['arquivo']?>' target='_blank'><?=
-                                            mb_strimwidth($arquivo['arquivo'], 15, 25, '...')?></a></div>
+                                            <a href='../uploadsdocs/<?= $arquivo['arquivo'] ?>' target='_blank'><?=
+                                                mb_strimwidth($arquivo['arquivo'], 15, 25, '...') ?></a></div>
                                         <?php
 
                                     } else {
@@ -344,7 +359,8 @@ if(isset($pj['representante_legal2_id'])){
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
-                                    <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required class="form-control"
+                                    <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
+                                           class="form-control"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -353,13 +369,15 @@ if(isset($pj['representante_legal2_id'])){
                                     <?php
                                     if (isset($arrayTelefones[1])) {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -369,14 +387,16 @@ if(isset($pj['representante_legal2_id'])){
                                     <label for="recado">Telefone #3</label>
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
                                         <?php
                                     } else {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
                                                id="telefone2" name="telefone2">
 
                                         <?php
@@ -436,7 +456,7 @@ if(isset($pj['representante_legal2_id'])){
                             </div>
                             <hr/>
                             <?php
-                                $banco = recuperaDados("pj_bancos", "pessoa_juridica_id", $idPj);
+                            $banco = recuperaDados("pj_bancos", "pessoa_juridica_id", $idPj);
                             ?>
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -462,43 +482,43 @@ if(isset($pj['representante_legal2_id'])){
                                 </div>
                             </div>
                             <div class="row">
-                                    <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 89 AND origem_id = '$idPj' AND publicado = 1";
-                                    $queryFACC = mysqli_query($con,$sqlFACC);
+                                <?php
+                                $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 89 AND origem_id = '$idPj' AND publicado = 1";
+                                $queryFACC = mysqli_query($con, $sqlFACC);
 
-                                    $facc = "block";
+                                $facc = "block";
 
-                                    if (mysqli_num_rows($queryFACC) == 0 && $pj['representante_legal1_id'] == null){
+                                if (mysqli_num_rows($queryFACC) == 0 && $pj['representante_legal1_id'] == null) {
 
-                                        echo " <div class='form-group col-md-12 text-center'>
+                                    echo " <div class='form-group col-md-12 text-center'>
                                                    <label>&nbsp;</label><br> 
                                                    <h4 class='text-warning text-bold'><em>Para gerar a FACC primeiro cadastre um representante legal.</em></h4>
                                                </div>";
 
-                                        $facc = "none";
+                                    $facc = "none";
 
-                                    }else if ($pj['representante_legal1_id'] != null) {
-                                        ?>
-                                        <div class="form-group col-md-3">
-                                            <label>Gerar FACC</label><br>
-                                            <a href="<?= $link_facc . "?id=" . $idPj ?>" target="_blank" type="button"
-                                               class="btn btn-primary btn-block">Clique aqui para
-                                                gerar a FACC
-                                            </a>
-                                        </div>
-                                        <div class="form-group col-md-5" style="display: <?= $facc ?>">
-                                            <label>&nbsp;</label><br>
-                                            <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                                documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                                no campo correspondente.</p>
-                                        </div>
-                                        <div class="form-group col-md-4" style="display: <?= $facc ?>">
-                                            <?php
-                                            anexosNaPagina(89, $idPj, "modal-facc", "FACC");
-                                            ?>
-                                        </div>
+                                } else if ($pj['representante_legal1_id'] != null) {
+                                    ?>
+                                    <div class="form-group col-md-3">
+                                        <label>Gerar FACC</label><br>
+                                        <a href="<?= $link_facc . "?id=" . $idPj ?>" target="_blank" type="button"
+                                           class="btn btn-primary btn-block">Clique aqui para
+                                            gerar a FACC
+                                        </a>
+                                    </div>
+                                    <div class="form-group col-md-5" style="display: <?= $facc ?>">
+                                        <label>&nbsp;</label><br>
+                                        <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                            documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                            no campo correspondente.</p>
+                                    </div>
+                                    <div class="form-group col-md-4" style="display: <?= $facc ?>">
                                         <?php
-                                    }
+                                        anexosNaPagina(89, $idPj, "modal-facc", "FACC");
+                                        ?>
+                                    </div>
+                                    <?php
+                                }
                                 ?>
                             </div>
                             <hr/>
@@ -513,133 +533,134 @@ if(isset($pj['representante_legal2_id'])){
                                 <button type="submit" name="edita" value="<?= $pj['id'] ?>"
                                         class="btn btn-info pull-right">Atualizar
                                 </button>
-                            </div>
-                        </div>
                     </form>
+                    <?= $voltar ?>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="box box-default">
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <form method="POST" action="?perfil=evento&p=pj_demais_anexos" role="form">
-                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
-                                            class="btn btn-info btn-block">Demais Anexos
-                                    </button>
-                                </form>
-                            </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <form method="POST" action="?perfil=evento&p=pj_demais_anexos" role="form">
+                            <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                    class="btn btn-info btn-block">Demais Anexos
+                            </button>
+                        </form>
+                    </div>
+
+                    <?php
+                    if ($pj['representante_legal1_id'] == null && $pj['representante_legal2_id'] == null) {
+                        ?>
+                        <div class="form-group col-md-3">
+                            <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                                <input type="hidden" name="tipoRepresentante" value="1">
+                                <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                        class="btn btn-info btn-block">Representante 01
+                                </button>
+                            </form>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                                <input type="hidden" name="tipoRepresentante" value="2">
+                                <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                        class="btn btn-info btn-block">Representante 02
+                                </button>
+                            </form>
+                        </div>
+                        <?php
+                    } elseif ($pj['representante_legal1_id'] != null && $pj['representante_legal2_id'] != null) {
+                        ?>
+                        <div class="form-group col-md-3">
+                            <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                    class="btn btn-info btn-block" id="modal" data-toggle="modal"
+                                    data-target="#modal-representante-edita" data-tipo="1"
+                                    data-id="<?= $representante1['id'] ?>" data-nome="<?= $representante1['nome'] ?>">
+                                Representante 01
+                            </button>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                    class="btn btn-info btn-block" id="modal" data-toggle="modal"
+                                    data-target="#modal-representante-edita" data-tipo="2"
+                                    data-id="<?= $representante2['id'] ?>" data-nome="<?= $representante2['nome'] ?>">
+                                Representante 02
+                            </button>
+                        </div>
+                        <?php
+                    } elseif ($pj['representante_legal1_id'] != null) {
+                        ?>
+                        <div class="form-group col-md-3">
+                            <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                    class="btn btn-info btn-block"
+                                    id="modal" data-toggle="modal" data-target="#modal-representante-edita"
+                                    data-tipo="1"
+                                    data-id="<?= $representante1['id'] ?>" data-nome="<?= $representante1['nome'] ?>">
+                                Representante 01
+                            </button>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                                <input type="hidden" name="tipoRepresentante" value="2">
+                                <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
+                                        class="btn btn-info btn-block">
+                                    Representante 02
+                                </button>
+                            </form>
+                        </div>
+                        <?php
+                    }
+                    ?>
+
+                    <div class="form-group col-md-3">
+                        <?php
+                        $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1";
+                        $queryPedidos = mysqli_query($con, $sqlPedidos);
+                        $pedidos = mysqli_fetch_array($queryPedidos);
+
+                        if (($pedidos['pessoa_tipo_id'] == 2) && ($pedidos['pessoa_juridica_id'] == $idPj)) {
+
+                            ?>
+                            <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                                <input type="hidden" name="pessoa_tipo_id" value="2">
+                                <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
+                                <input type="hidden" name="idProponente" value="<?= $pj['id'] ?>">
+                                <input type="hidden" name="tipoPessoa" value="2">
+                                <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
+                                    contratação
+                                </button>
+                            </form>
 
                             <?php
-                            if ($pj['representante_legal1_id'] == null && $pj['representante_legal2_id'] == null) {
-                                ?>
-                                <div class="form-group col-md-3">
-                                    <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
-                                        <input type="hidden" name="tipoRepresentante" value="1">
-                                        <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
-                                                class="btn btn-info btn-block">Representante 01
-                                        </button>
-                                    </form>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
-                                        <input type="hidden" name="tipoRepresentante" value="2">
-                                        <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
-                                                class="btn btn-info btn-block">Representante 02
-                                        </button>
-                                    </form>
-                                </div>
-                                <?php
-                            } elseif ($pj['representante_legal1_id'] != null && $pj['representante_legal2_id'] != null) {
-                                ?>
-                                <div class="form-group col-md-3">
-                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
-                                            class="btn btn-info btn-block" id="modal" data-toggle="modal"
-                                            data-target="#modal-representante-edita" data-tipo="1"
-                                            data-id="<?= $representante1['id'] ?>" data-nome="<?=$representante1['nome']?>" >
-                                        Representante 01
-                                    </button>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
-                                            class="btn btn-info btn-block" id="modal" data-toggle="modal"
-                                            data-target="#modal-representante-edita" data-tipo="2"
-                                            data-id="<?= $representante2['id'] ?>" data-nome="<?=$representante2['nome']?>">
-                                        Representante 02
-                                    </button>
-                                </div>
-                                <?php
-                            } elseif ($pj['representante_legal1_id'] != null) {
-                                ?>
-                                <div class="form-group col-md-3">
-                                    <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
-                                            class="btn btn-info btn-block"
-                                            id="modal" data-toggle="modal" data-target="#modal-representante-edita" data-tipo="1"
-                                            data-id="<?= $representante1['id'] ?>" data-nome="<?=$representante1['nome']?>">
-                                        Representante 01
-                                    </button>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
-                                        <input type="hidden" name="tipoRepresentante" value="2">
-                                        <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
-                                                class="btn btn-info btn-block">
-                                            Representante 02
-                                        </button>
-                                    </form>
-                                </div>
-                                <?php
-                                }
+                        } else {
                             ?>
-
-                            <div class="form-group col-md-3">
-                                <?php
-                                $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1";
-                                $queryPedidos = mysqli_query($con, $sqlPedidos);
-                                $pedidos = mysqli_fetch_array($queryPedidos);
-
-                                if (($pedidos['pessoa_tipo_id'] == 2) && ($pedidos['pessoa_juridica_id'] == $idPj) ) {
-
-                                    ?>
-                                    <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                        <input type="hidden" name="pessoa_tipo_id" value="2">
-                                        <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
-                                        <input type="hidden" name="idProponente" value="<?= $pj['id'] ?>">
-                                        <input type="hidden" name="tipoPessoa" value="2">
-                                        <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
-                                            contratação
-                                        </button>
-                                    </form>
-
-                                    <?php
-                                }else {
-                                    ?>
-                                    <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                        <input type="hidden" name="pessoa_tipo_id" value="2">
-                                        <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
-                                        <input type="hidden" name="valor" value="<?= $atracao['valor_individual'] ?>">
-                                        <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
-                                            contratação
-                                        </button>
-                                    </form>
-                                    <?php
-                                }
-                                ?>
-                            </div>
-                        </div>
+                            <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                                <input type="hidden" name="pessoa_tipo_id" value="2">
+                                <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
+                                <input type="hidden" name="valor" value="<?= $atracao['valor_individual'] ?>">
+                                <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
+                                    contratação
+                                </button>
+                            </form>
+                            <?php
+                        }
+                        ?>
                     </div>
-                    <!-- /. box-body -->
                 </div>
             </div>
+            <!-- /. box-body -->
         </div>
-        <?php
-        modalUploadArquivoUnico("modal-cnpj", "?perfil=evento&p=pj_edita", "CNPJ", "cartao_cnp", $idPj, "2");
-        modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pj_edita", "facc", "facc", $idPj, "2");
-        ?>
+    </div>
+</div>
+<?php
+modalUploadArquivoUnico("modal-cnpj", "?perfil=evento&p=pj_edita", "CNPJ", "cartao_cnp", $idPj, "2");
+modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pj_edita", "facc", "facc", $idPj, "2");
+?>
 
-    </section>
+</section>
 </div>
 
 <div class="modal fade" id="modal-ccm">
@@ -696,14 +717,15 @@ if(isset($pj['representante_legal2_id'])){
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label for="proponente">Representante cadastrado</label>
-                        <br><input type="text" id="representante" name="representante" class="form-control text-center" disabled
-                               value="">
+                        <br><input type="text" id="representante" name="representante" class="form-control text-center"
+                                   disabled
+                                   value="">
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="form-group col-md-6"><label><br></label>
                         <form method="POST" action="?perfil=evento&p=representante_edita" role="form">
-                            <input type='hidden' name='idPj' id='idPj' value='<?=$idPj?>'>
+                            <input type='hidden' name='idPj' id='idPj' value='<?= $idPj ?>'>
                             <input type='hidden' name='idRepresentante' id='idRepresentante' value=''>
                             <input type='hidden' name='tipoRepresentante' id='tipoRepresentante' value=''>
                             <button type="submit" name="abrirPag" class="btn btn-primary btn-block">
@@ -713,7 +735,7 @@ if(isset($pj['representante_legal2_id'])){
                     </div>
                     <div class="form-group col-md-6"><label><br></label>
                         <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
-                            <input type='hidden' name='idPj' id='idPj' value='<?=$idPj?>'>
+                            <input type='hidden' name='idPj' id='idPj' value='<?= $idPj ?>'>
                             <input type='hidden' name='tipoRepresentanteTroca' id='tipoRepresentanteTroca' value=''>
                             <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
                                 Representante
@@ -768,7 +790,6 @@ if(isset($pj['representante_legal2_id'])){
         $(this).find('#idArquivo').attr('value', `${id}`);
 
     });
-
 
 
     $('#modal-representante-edita').on('show.bs.modal', function (e) {

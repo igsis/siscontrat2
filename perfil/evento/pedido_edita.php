@@ -6,6 +6,7 @@ $idEvento = $_SESSION['idEvento'];
 if (isset($_POST['idProponente'])) {
     $idProponente = $_POST['idProponente'];
     $tipoPessoa = $_POST['tipoPessoa'];
+    $idPedido = $_POST['idPedido'] ?? null;
 }
 
 if (isset($_POST['carregar'])) {
@@ -28,6 +29,7 @@ if (isset($_POST['cadastra'])) {
                                   VALUES ('1', $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
     if (mysqli_query($con, $sqlFirst)) {
         $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
     }
 }
 

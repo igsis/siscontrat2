@@ -27,7 +27,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                 </i>Adicionar
                             </button>";
     } else {
-        echo "teste";
         $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
         $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
