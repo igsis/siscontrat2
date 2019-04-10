@@ -40,7 +40,7 @@ $parecer = recuperaDados("parecer_artisticos","pedido_id",$idPedido);
 if ($pedido['pessoa_tipo_id'] == 2)
 {
     $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
-    $t1 = "Esta comissão ratifica o pedido de contratação de XXXXXXX LÍDERES XXXXXXXXX por intermédio da ".$pj['Nome'].", para apresentação artística no evento “".retornaObjeto($idPedido)."”, que ocorrerá ".retornaPeriodo($_SESSION['idEvento'])." no valor de R$ ".$pedido['valor_total']." (".valorPorExtenso($pedido['valor_total']).").";
+    $t1 = "Esta comissão ratifica o pedido de contratação de XXXXXXX LÍDERES XXXXXXXXX por intermédio da ".$pj['razao_social'].", para apresentação artística no evento “".retornaObjeto($idPedido)."”, que ocorrerá ".retornaPeriodo($_SESSION['idEvento'])." no valor de R$ ".$pedido['valor_total']." (".valorPorExtenso($pedido['valor_total']).").";
 }
 else
 {

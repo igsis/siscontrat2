@@ -381,7 +381,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                                 </form>
                             </div>
                             <div class="form-group col-md-2">
-                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
+                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=consagrado"
                                       role="form">
                                     <button type="submit" name="idPedido" value="<?= $idPedido ?>"
                                             class="btn btn-primary btn-block">Artista Consagrado
