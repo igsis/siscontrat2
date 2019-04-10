@@ -178,7 +178,9 @@ else
                                 <?php
                                 }
                                 ?>
-                                <textarea id="topico4" name="topico4" class="form-control" rows="5"><?=$parecer['topico4']?></textarea>
+                                <textarea id="topico4" name="topico4" class="form-control" onkeyup="mostrarResultado3(this.value,700,'spcontando3');contarCaracteres3(this.value,700,'sprestante3')" rows="5"><?=$parecer['topico4']?></textarea>
+                                <span id="spcontando3" style="font-family:Georgia;">Comece a digitar para ativar a contagem de caracteres.</span><br />
+                                <span id="sprestante3" style="font-family:Georgia;"></span>
                             </div>
                             <!-- /.box-body -->
                             <div class="box-footer">

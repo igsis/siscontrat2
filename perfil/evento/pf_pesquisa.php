@@ -13,7 +13,6 @@ $tipoDocumento = null;
 if (isset($_POST['lider'])) {
     $idPedido = $_POST['lider'];
     $idAtracao = $_POST['idAtracao'];
-    echo $idAtracao;
 }
 
 
@@ -22,7 +21,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
     $idAtracao = $_POST['idAtracao'] ?? NULL;
 
     if ($idPedido != null) {
-        echo $idAtracao;
         $botaoSelecionar = "<input type='submit' name='cadastraLider' class='btn btn-primary' value='Selecionar'>";
         $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        

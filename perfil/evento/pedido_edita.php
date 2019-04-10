@@ -14,7 +14,7 @@ if (isset($_POST['carregar'])) {
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
-if (isset($_POST['cadastra'])){
+if (isset($_POST['cadastra'])) {
     $tipoPessoa = $_POST['pessoa_tipo_id'];
     $idPessoa = $_POST['pessoa_id'];
     $valorTotal = $_POST['valor'];
@@ -24,27 +24,27 @@ if (isset($_POST['cadastra'])){
     } else {
         $campo = "pessoa_juridica_id";
     }
-        $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
                                   VALUES ('1', $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
-        if (mysqli_query($con, $sqlFirst)) {
-            $_SESSION['idPedido'] = recuperaUltimo("pedidos");
-        }
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
     }
+}
 
-    if (isset($_POST['edita'])) {
-        $verba_id = $_POST['verba_id'];
-        $valor_total = dinheiroDeBr($_POST['valor_total']);
-        $forma_pagamento = addslashes($_POST['forma_pagamento']);
-        $justificativa = addslashes($_POST['justificativa']);
-        $observacao = addslashes($_POST['observacao']) ?? NULL;
-        $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
-        $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? NULL;
+if (isset($_POST['edita'])) {
+    $verba_id = $_POST['verba_id'];
+    $valor_total = dinheiroDeBr($_POST['valor_total']);
+    $forma_pagamento = addslashes($_POST['forma_pagamento']);
+    $justificativa = addslashes($_POST['justificativa']);
+    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
+    $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? NULL;
 
-        if ($tipoPessoa == 1) {
-            $campo = "pessoa_fisica_id";
-        } else {
-            $campo = "pessoa_juridica_id";
-        }
+    if ($tipoPessoa == 1) {
+        $campo = "pessoa_fisica_id";
+    } else {
+        $campo = "pessoa_juridica_id";
+    }
 
     if (isset($_POST['edita'])) {
         $idPedido = $_SESSION['idPedido'];
@@ -368,37 +368,59 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                         <h3 class="box-title">Parecer artístico</h3>
                     </div>
                     <div class="box-body">
-                        <div class="form-group">
-                            Aqui vai o parecer
-                        </div>
                         <div class="row">
-                            <div class="form-group col-md-offset-4 col-md-2">
-                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
-                                      role="form">
-                                    <button type="submit" name="idPedido" value="<?= $idPedido ?>"
-                                            class="btn btn-primary btn-block">Artista Local
-                                    </button>
-                                </form>
+                            <div class="form-group col-md-12">
+                            <textarea class="form-control" rows="8" disabled>
+                            <?php
+                            $sqlParecer = "SELECT * FROM parecer_artisticos WHERE pedido_id = '$idPedido'";
+                            $queryParecer = mysqli_query($con, $sqlParecer);
+
+                            if (mysqli_num_rows($queryParecer) > 0) {
+
+                                while ($parecer = mysqli_fetch_array($queryParecer)) {
+                                    $top1 = $parecer['topico1'];
+                                    $top2 = $parecer['topico2'];
+                                    $top3 = $parecer['topico3'];
+                                    $top4 = $parecer['topico4'];
+
+                                    echo "$top1 &#10&#10";
+                                    echo "$top2 &#10&#10";
+                                    echo "$top3 &#10&#10";
+                                    echo "$top4 &#10";
+                                }
+                            }
+                            ?>
+                                </textarea>
                             </div>
-                            <div class="form-group col-md-2">
-                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=consagrado"
-                                      role="form">
-                                    <button type="submit" name="idPedido" value="<?= $idPedido ?>"
-                                            class="btn btn-primary btn-block">Artista Consagrado
-                                    </button>
-                                </form>
+                        </div>
+                            <div class="row">
+                                <div class="form-group col-md-offset-4 col-md-2">
+                                    <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
+                                          role="form">
+                                        <button type="submit" name="idPedido" value="<?= $idPedido ?>"
+                                                class="btn btn-primary btn-block">Artista Local
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=consagrado"
+                                          role="form">
+                                        <button type="submit" name="idPedido" value="<?= $idPedido ?>"
+                                                class="btn btn-primary btn-block">Artista Consagrado
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- /.col -->
             </div>
-            <!-- /.col -->
         </div>
-</div>
-<!-- /.row -->
-<!-- END ACCORDION & CAROUSEL-->
-</section>
-<!-- /.content -->
+        <!-- /.row -->
+        <!-- END ACCORDION & CAROUSEL-->
+    </section>
+    <!-- /.content -->
 </div>
 <!-- Modal -->
 <div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
@@ -1133,7 +1155,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
 
                         swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                             .then(() => {
-                               //location.reload(true);
+                                //location.reload(true);
                                 $('#modalParcelas').slideDown("slow");
                             });
                     })
