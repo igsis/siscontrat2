@@ -105,7 +105,7 @@ else
                 <!-- general form elements -->
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Parecer Artista Local</h3>
+                        <h3 class="box-title">Parecer Artista <?php if($artista == 'local') {echo "Local";}else {echo "Consagrado";} ?></h3>
                     </div>
                     <div class="row" align="center">
                         <?php if(isset($mensagem)){echo $mensagem;};?>
@@ -163,7 +163,7 @@ else
                             <div class="form-group">
                                 <h4><strong>4º Tópico</strong></h4>
                                 <?php
-                                if ($artista == "Local") {
+                                if ($artista == "local") {
                                     ?>
                                     <label for="topico4">Neste tópico deve-se falar que o contratado tem o necessário para a contratação e que as exigências legais foram observadas, apresentando a comprovação documental (mínimo três comprovações diferentes) do valor proposto para o cachê. Encerrar com a manifestação favorável da comissão quanto à contratação.</label><br/>
                                     <span style="color: gray; "><i><b>Texto de exemplo:</b></i><br/>
@@ -178,9 +178,7 @@ else
                                 <?php
                                 }
                                 ?>
-                                <textarea id="topico4" name="topico4" class="form-control" onkeyup="mostrarResultado3(this.value,700,'spcontando3');contarCaracteres3(this.value,700,'sprestante3')" rows="5"><?=$parecer['topico4']?></textarea>
-                                <span id="spcontando3" style="font-family:Georgia;">Comece a digitar para ativar a contagem de caracteres.</span><br />
-                                <span id="sprestante3" style="font-family:Georgia;"></span>
+                                <textarea id="topico4" name="topico4" class="form-control" rows="5"><?=$parecer['topico4']?></textarea>
                             </div>
                             <!-- /.box-body -->
                             <div class="box-footer">

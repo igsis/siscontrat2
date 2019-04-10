@@ -370,24 +370,24 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                     <div class="box-body">
                         <div class="row">
                             <div class="form-group col-md-12">
-                            <textarea class="form-control" rows="8" disabled>
                             <?php
                             $sqlParecer = "SELECT * FROM parecer_artisticos WHERE pedido_id = '$idPedido'";
                             $queryParecer = mysqli_query($con, $sqlParecer);
 
                             if (mysqli_num_rows($queryParecer) > 0) {
-
                                 while ($parecer = mysqli_fetch_array($queryParecer)) {
                                     $top1 = $parecer['topico1'];
                                     $top2 = $parecer['topico2'];
                                     $top3 = $parecer['topico3'];
                                     $top4 = $parecer['topico4'];
+                                    ?>
 
-                                    echo "$top1 &#10&#10";
-                                    echo "$top2 &#10&#10";
-                                    echo "$top3 &#10&#10";
-                                    echo "$top4 &#10";
+                                <textarea class="form-control" rows="8" disabled><?=
+                                    $top1. '&#10&#10' . $top2. '&#10&#10' . $top3 . '&#10&#10' . $top4 ?>
+                                <?php
                                 }
+                            } else {
+                                echo "Ainda nao ha parecer artistico nesse pedido.";
                             }
                             ?>
                                 </textarea>
