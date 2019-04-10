@@ -51,7 +51,7 @@ include "includes/validacoes.php";
                 <?php } ?>
             </div>
             <div class="col-md-6">
-                <?php if (count($erros) == 0) { ?>
+                <?php if (count($errosArqs) == 0) { ?>
                     <div class="alert alert-success alert-dismissible">
                         <h4><i class="icon fa fa-check"></i> Todos os Arquivos Foram Enviados!</h4>
 
@@ -62,8 +62,8 @@ include "includes/validacoes.php";
                         <h4><i class="icon fa fa-ban"></i> Alguns Arquivos não Foram Enviados!</h4>
 
                         <ul>
-                            <?php foreach ($erros as $erro) {
-                                echo "<li>$erro</li>";
+                            <?php foreach ($errosArqs as $erros) {
+                                echo "<li>$erros</li>";
                             }
                             ?>
                         </ul>

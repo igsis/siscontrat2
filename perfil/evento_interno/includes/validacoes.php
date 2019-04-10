@@ -5,6 +5,48 @@ $idEvento = $_SESSION['idEvento'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
+$sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
+$queryPedidos = mysqli_query($con, $sqlPedidos);
+
+$errosArqs = [];
+
+while ($pedidos = mysqli_fetch_array($queryPedidos)) {
+    $tipoPessoa = $pedidos['pessoa_tipo_id'];
+
+    if ($pedidos['pessoa_tipo_id'] == 1){
+        $idPessoa = $pedidos['pessoa_fisica_id'];
+        $pf = recuperaDados("pessoa_fisicas", "id", $idPessoa);
+
+        $sqlArqs = "SELECT * FROM arquivos WHERE lista_documento_id = 2 OR lista_documento_id = 3";
+        $queryArqs = mysqli_query($con, $sqlArqs);
+        if (mysqli_num_rows($queryArqs) < 2) {
+            $arqs = mysqli_fetch_array($queryArqs);
+            $idDoc = $arqs['lista_documento_id'];
+            if ($idDoc == 2) {
+              //  array_push($erros,"Produtor não cadastrado na atração <b>".$atracao['nome_atracao']."</b>");
+                array_push($errosArqs, "Copia do CPF nao anexada na pessoa fisica <b>" . $pf['nome'] ."</b>");
+            }
+
+        } elseif (mysqli_num_rows($queryArqs) == 0) {
+            echo "teste";
+            array_push($errosArqs, "Copias de documentos nao anexadas na pessoa fisica");
+        }
+
+
+    } else {
+        $idPessoa = $pedidos['pessoa_juridica_id'];
+
+        $pj = recuperaDados("pessoa_juridicas", "id", $idPessoa);
+
+        $sqlArqs = "SELECT * FROM arquivos WHERE lista_documento_id = 22";
+        $queryArqs = mysqli_query($con, $sqlArqs);
+       if (mysqli_num_rows($queryArqs) == 0) {
+            echo "teste";
+            array_push($errosArqs, "Copias de documentos nao anexadas na pessoa fisica");
+        }
+    }
+}
+
 $atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'");
 $numAtracoes = $atracoes->num_rows;
 
