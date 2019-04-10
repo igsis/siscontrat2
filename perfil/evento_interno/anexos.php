@@ -110,13 +110,14 @@ if (isset($_POST['apagar'])) {
                                         </thead>
                                         <tbody>";
                                         while ($arquivo = mysqli_fetch_array($query)) {
+                                            $NameArquivo = $arquivo['arquivo'];
                                             echo "<tr>";
-                                            echo "<td class='list_description'><a href='uploadsdocs/" . $arquivo['arquivo'] . "' target='_blank'>" . mb_strimwidth($arquivo['arquivo'], 15, 25, "...") . "</a></td>";
+                                            echo "<td class='list_description'><a href='uploadsdocs/$NameArquivo' target='_blank'>" . mb_strimwidth($NameArquivo, 15, 25, "...") . "</a></td>";
                                             echo "<td class='list_description'>(" . exibirDataBr($arquivo['data']) . ")</td>";
                                             echo "
                                           <td class='list_description'>
                                                     <form id='formExcliuir' method='POST'>
-                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' data-nome='" . mb_strimwidth($arquivo['arquivo'], 15, 25, "...") . "' data-id='" . $arquivo['id'] . "'>
+                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' data-nome='".  mb_strimwidth($NameArquivo, 15, 25, "...") . "' data-id='" . $arquivo['id'] . "'>
                                                         </button></td>
                                                     </form>";
                                             echo "</tr>";
@@ -136,7 +137,7 @@ if (isset($_POST['apagar'])) {
                                     <div class="col-md-10 col-md-offset-1">
                                         <br/>
                                         <div class="center">
-                                            <form method="POST" action="?perfil=evento&p=arqs_com_prod"
+                                            <form method="POST" action="?perfil=evento_interno&p=anexos"
                                                   enctype="multipart/form-data">
                                                 <table class="table text-center table-striped">
                                                     <tbody>
@@ -196,7 +197,7 @@ if (isset($_POST['apagar'])) {
                                                     <p>Tem certeza que deseja excluir este arquivo?</p>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <form action="?perfil=evento&p=arqs_com_prod"
+                                                    <form action="?perfil=evento_interno&p=anexos"
                                                           method="post">
                                                         <input type="hidden" name="idArquivo" id="idArquivo" value="">
                                                         <input type="hidden" name="apagar" id="apagar">
