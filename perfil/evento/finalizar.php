@@ -132,7 +132,7 @@ include "includes/validacoes.php";
             <div class="box-footer">
                 <form action="?perfil=evento&p=resumo_evento_enviado" method="post">
                     <input type="hidden" name="idEvento" id="idEvento" value="<?=$idEvento?>">
-                    <button class="btn btn-success" name="enviar" type="submit" >Enviar Evento</button>
+                    <button class="btn btn-success" name="enviar" type="submit" <?= (count($erros) != 0 OR count($errosArqs) != 0) ? "disabled" : "" ?>>Enviar Evento</button>
                 </form>
             </div>
         </div>
