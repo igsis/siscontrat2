@@ -25,6 +25,8 @@ while ($pedidos = mysqli_fetch_array($queryPedidos)) {
             if ($idDoc == 2) {
                 //  array_push($erros,"Produtor não cadastrado na atração <b>".$atracao['nome_atracao']."</b>");
                 array_push($errosArqs, "Copia do CPF nao anexada na pessoa fisica <b>" . $pf['nome'] ."</b>");
+            } elseif ($idDoc == 3) {
+
             }
 
         } elseif (mysqli_num_rows($queryArqs) == 0) {
