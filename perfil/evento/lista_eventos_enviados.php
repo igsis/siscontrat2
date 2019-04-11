@@ -57,7 +57,6 @@ $num_atracoes = 0;
                                 $idEvento = $evento['id'];
                                 $locais = listaLocais($idEvento);
 
-                                $protocolos = recuperaDados("protocolos", "origem_id", $idEvento);
                                 $status = recuperaDados("evento_status", "id", $evento['evento_status_id']);
 
                                 $sql_atracoes = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
@@ -65,7 +64,7 @@ $num_atracoes = 0;
                                 $num_atracoes = mysqli_num_rows($query_atracoes);
 
                                 echo "<tr>";
-                                echo "<td>" . $protocolos['protocolo'] . "</td>";
+                                echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>";
                                 while($atracao = mysqli_fetch_array($query_atracoes)){
                                     $categorias = recuperaDados("categoria_atracoes", "id", $atracao['categoria_atracao_id']);

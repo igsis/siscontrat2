@@ -9,22 +9,16 @@ if (isset($_POST['idEvento'])) {
 }
 
 if (isset($_POST['enviar'])) {
-    $protocolo = geraProtocolo($idEvento);
-    $sqlProtocolo = "INSERT INTO protocolos (tipo_origem_id, origem_id, protocolo) VALUE ('1', '$idEvento', '$protocolo')";
-    if ($con->query($sqlProtocolo)) {
-        $sqlEnviaEvento = "UPDATE eventos SET evento_status_id = '3' WHERE id = '$idEvento'";
-        if ($con->query($sqlEnviaEvento)) {
-            mensagem('success', 'Evento Enviado com Sucesso');
-        } else {
-            mensagem('danger', 'Falha ao Enviar o Evento');
-        }
+    $protocolo = geraProtocolo($idEvento) . "-e";
+    $sqlEnviaEvento = "UPDATE eventos SET evento_status_id = '3', protocolo = '$protocolo' WHERE id = '$idEvento'";
+    if ($con->query($sqlEnviaEvento)) {
+        mensagem('success', 'Evento Enviado com Sucesso');
     } else {
         mensagem('danger', 'Falha ao Enviar o Evento');
     }
 }
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$protocolo = recuperaDados('protocolos', 'origem_id', $idEvento);
 $tipo_evento = recuperaDados('tipo_eventos', 'id', $evento['tipo_evento_id']);
 $original = $evento['original'] == 1 ? 'Sim' : 'Não';
 $relacao_juridica = recuperaDados('relacao_juridicas', 'id', $evento['relacao_juridica_id']);
@@ -57,7 +51,7 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publica
                                             <div align="center">
                                                 <h3>Informações sobre o evento</h3><hr>
                                             </div>
-                                            <strong>Protocolo: </strong><?= $protocolo['protocolo'] ?>
+                                            <strong>Protocolo: </strong><?= $evento['protocolo'] ?>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <strong>Nome do Evento: </strong><?= $evento ['nome_evento']; ?>

@@ -1,39 +1,41 @@
 <?php
 $con = bancoMysqli();
+$conn = bancoPDO();
 
 $idEvento = $_SESSION['idEvento'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
 $sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
-$queryPedidos = mysqli_query($con, $sqlPedidos);
+$pedidos = $con->query($sqlPedidos)->fetch_assoc();
+
+$sqlAtracoes = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+$queryAtracoes = mysqli_query($con, $sqlAtracoes);
 
 $errosArqs = [];
 
-while ($pedidos = mysqli_fetch_array($queryPedidos)) {
+while($atracoes = mysqli_fetch_array($queryAtracoes)) {
     $tipoPessoa = $pedidos['pessoa_tipo_id'];
 
-    if ($pedidos['pessoa_tipo_id'] == 1){
+    if ($pedidos['pessoa_tipo_id'] == 1) {
         $idPessoa = $pedidos['pessoa_fisica_id'];
         $pf = recuperaDados("pessoa_fisicas", "id", $idPessoa);
 
         $sqlArqs = "SELECT * FROM arquivos WHERE lista_documento_id = 2 OR lista_documento_id = 3";
         $queryArqs = mysqli_query($con, $sqlArqs);
-        if (mysqli_num_rows($queryArqs) < 2) {
+        if (mysqli_num_rows($queryArqs) < 2 AND mysqli_num_rows($queryArqs) != 0) {
             $arqs = mysqli_fetch_array($queryArqs);
             $idDoc = $arqs['lista_documento_id'];
             if ($idDoc == 2) {
                 //  array_push($erros,"Produtor não cadastrado na atração <b>".$atracao['nome_atracao']."</b>");
-                array_push($errosArqs, "Copia do CPF nao anexada na pessoa fisica <b>" . $pf['nome'] ."</b>");
+                array_push($errosArqs, "Cópia do CPF não anexada na pessoa física <b>" . $pf['nome'] . "</b>");
             } elseif ($idDoc == 3) {
-
+                array_push($errosArqs, "Cópia do RG não anexada na pessoa física <b>" . $pf['nome'] . "</b>");
             }
 
         } elseif (mysqli_num_rows($queryArqs) == 0) {
-            echo "teste";
-            array_push($errosArqs, "Copias de documentos nao anexadas na pessoa fisica");
+            array_push($errosArqs, "Cópias de RG e CPF não anexadas na pessoa fisica ");
         }
-
 
     } else {
         $idPessoa = $pedidos['pessoa_juridica_id'];
@@ -45,7 +47,6 @@ while ($pedidos = mysqli_fetch_array($queryPedidos)) {
         }
     }
 }
-
 $atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'");
 $numAtracoes = $atracoes->num_rows;
 
