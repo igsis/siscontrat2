@@ -62,8 +62,8 @@ include "includes/validacoes.php";
                         <h4><i class="icon fa fa-ban"></i> Alguns Arquivos não Foram Enviados!</h4>
 
                         <ul>
-                            <?php foreach ($errosArqs as $erros) {
-                                echo "<li>$erros</li>";
+                            <?php foreach ($errosArqs as $erroArq) {
+                                echo "<li>$erroArq</li>";
                             }
                             ?>
                         </ul>
