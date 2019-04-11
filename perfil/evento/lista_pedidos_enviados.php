@@ -13,7 +13,7 @@ $sql = "SELECT eve.id AS id, eve.protocolo, ped.numero_processo, ped.pessoa_tipo
         FROM eventos AS eve
         INNER JOIN pedidos AS ped ON eve.id = ped.origem_id
         INNER JOIN pedido_status AS pst ON ped.status_pedido_id = pst.id
-        WHERE eve.publicado = 1 AND ped.publicado = 1 AND ped.origem_tipo_id = 1 AND evento_interno = 0 AND evento_status_id >= 3 AND ped.status_pedido_id >= 2 AND contratacao = 1 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+        WHERE eve.publicado = 1 AND ped.publicado = 1 AND ped.origem_tipo_id = 1 AND evento_interno = 0 AND evento_status_id >= 3 AND contratacao = 1 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
 $query = mysqli_query($con, $sql);
 ?>
 
@@ -44,7 +44,6 @@ $query = mysqli_query($con, $sql);
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
-                                <th>Número de Processo</th>
                                 <th>Proponente</th>
                                 <th width="25%">Objeto</th>
                                 <th>Local</th>
@@ -75,7 +74,6 @@ $query = mysqli_query($con, $sql);
                                 // $locais = listaLocais($evento['idAtracao']);
                                 echo "<tr>";
                                 echo "<td>" . $evento['protocolo'] . "</td>";
-                                echo "<td>" . $evento['numero_processo'] . "</td>";
                                 echo "<td>" . $proponente . "</td>";
                                 echo "<td>";
                                     while ($atracao = mysqli_fetch_array($query_atracao)){
@@ -99,8 +97,10 @@ $query = mysqli_query($con, $sql);
                             <tfoot>
                                 <tr>
                                     <th>Protocolo</th>
+                                    <th>Proponente</th>
                                     <th>Objeto</th>
                                     <th>Local</th>
+                                    <th>Valor</th>
                                     <th>Período</th>
                                     <th>Status</th>
                                     <th>Visualizar</th>

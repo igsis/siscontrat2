@@ -64,7 +64,7 @@ $query = mysqli_query($con,$sql);
                             </thead>
 
                             <?php
-                            echo "<body>";
+                            echo "<tbody>";
                             while ($atracao = mysqli_fetch_array($query)){
 
                                 echo "<tr>";
@@ -227,7 +227,8 @@ $query = mysqli_query($con,$sql);
                                 <th>Produtor</th>
                                 <th>Especificidade</th>
                                 <th>Ocorrência</th>
-                                <th colspan="2" width="10%"></th>
+                                <th>Visualizar</th>
+                                <th>Apagar</th>
                             </tr>
                             </tfoot>
                         </table>

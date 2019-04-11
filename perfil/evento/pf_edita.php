@@ -697,7 +697,7 @@ include "includes/menu_interno.php";
                             </div>
                             <div class="form-group col-md-3 pull-right">
                                 <?php
-                                    $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1";
+                                    $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
                                     $queryPedidos = mysqli_query($con, $sqlPedidos);
                                     $pedidos = mysqli_fetch_array($queryPedidos);
 

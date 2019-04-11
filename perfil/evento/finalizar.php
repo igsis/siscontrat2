@@ -25,7 +25,7 @@ include "includes/validacoes.php";
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>Pendencias</h1>
+        <h1>Pendencias </h1>
     </section>
 
     <section class="content">
@@ -72,8 +72,7 @@ include "includes/validacoes.php";
             </div>
         </div>
 
-        <h2 class="page-header">Finalizar</h2>
-
+        <h2 class="page-header">Finalizar <em class="pull-right"><?php if(isset($prazo)){echo $prazo;};?></em></h2>
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right">
                 <?php if ($evento['contratacao'] == 1) { ?>
@@ -132,7 +131,8 @@ include "includes/validacoes.php";
             <div class="box-footer">
                 <form action="?perfil=evento&p=resumo_evento_enviado" method="post">
                     <input type="hidden" name="idEvento" id="idEvento" value="<?=$idEvento?>">
-                    <button class="btn btn-success" name="enviar" type="submit" <?= (count($erros) != 0 OR count($errosArqs) != 0) ? "disabled" : "" ?>>Enviar Evento</button>
+                    <input type="hidden" name="fora" value="<?= $fora ?? 0 ?>">
+                    <button class="btn btn-success" name="enviar" type="submit">Enviar Evento</button>
                 </form>
             </div>
         </div>

@@ -91,6 +91,10 @@
                                     ?>
                                 </table>
                             </div>
+
+                            <div class="row" align="center">
+                                <?php if(isset($mensagem)){echo $mensagem;};?>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -9,12 +9,26 @@ if (isset($_POST['idEvento'])) {
 }
 
 if (isset($_POST['enviar'])) {
+    $fora = $_POST['fora'];
+    if ($fora == 1) {
+        $sqlPedido = "UPDATE pedidos SET status_pedido_id = 1 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
+        if (mysqli_query($con, $sqlPedido)){
+            $mensagemPedido = mensagem("warning", "Seu pedido está aguardando aprovação!");
+        }
+    } else {
+        $sqlPedido = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
+        if (mysqli_query($con, $sqlPedido)) {
+            $mensagemPedido = mensagem("successs", "Pedido aprovado!");
+        }
+    }
+
+
     $protocolo = geraProtocolo($idEvento) . "-e";
     $sqlEnviaEvento = "UPDATE eventos SET evento_status_id = '3', protocolo = '$protocolo' WHERE id = '$idEvento'";
     if ($con->query($sqlEnviaEvento)) {
-        mensagem('success', 'Evento Enviado com Sucesso');
+        $mensagem = mensagem('success', 'Evento Enviado com Sucesso');
     } else {
-        mensagem('danger', 'Falha ao Enviar o Evento');
+        $mensagem = mensagem('danger', 'Falha ao Enviar o Evento');
     }
 }
 
@@ -34,15 +48,19 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publica
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
         <!-- START ACCORDION-->
         <h2 class="page-header">Informações do Evento</h2>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong><?= $evento['nome_evento']; ?></strong></h3><hr>
+                        <div class="row" align="center">
+                            <?php if(isset($mensagem)){echo $mensagem;};?>
+                        </div>
+                        <div class="row" align="center">
+                            <?php if(isset($mensagemPedido)){echo $mensagemPedido;};?>
+                        </div>
                         <div class="box-body">
                             <div class="box-group" id="accordion">
                                 <div class="row">

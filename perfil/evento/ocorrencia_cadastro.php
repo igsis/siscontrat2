@@ -2,11 +2,7 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.php';
-
-
 $_SESSION['idOrigem'] = $_POST['idOrigem'];
-
-
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
@@ -183,7 +179,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="instituicao">Instituição</label>
-                                    <select class="form-control" name="instituicao" id="instituicao">
+                                    <select class="form-control" name="instituicao" id="instituicao" required>
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
