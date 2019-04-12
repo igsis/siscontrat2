@@ -1,10 +1,9 @@
 <?php
 include "includes/menu_principal.php";
-
 $con = bancoMysqli();
 
-
 if (isset($_POST['cadastraLocal'])) {
+    $idAtracao = $_POST['idAtracao'];
     $idInstituicao = $_POST['instituicao'] ?? NULL;
     $local = addslashes($_POST['local']);
     $cep = $_POST['cep'];
@@ -16,17 +15,34 @@ if (isset($_POST['cadastraLocal'])) {
     $estado = addslashes($_POST['estado']);
     $zona = addslashes($_POST['zona']);
 
-    $sql = "INSERT INTO locais (instituicao_id, local, logradouro, numero, complemento, bairro, cidade, uf, cep, zona_id, publicado)
+    $existe = 0;
+    $sqLocais = "SELECT * FROM locais WHERE instituicao_id = '$idInstituicao'";
+    $queryLocais = mysqli_query($con, $sqLocais);
+    while ($locais = mysqli_fetch_array($queryLocais)) {
+        if ($locais['local'] == $local) {
+            $existe = 1;
+        }
+    }
+
+    if ($existe != 0) {
+         // $mensagem2 = mensagem("warning", "Esse espaco ja existe! Procure-o na lista novamente.");
+        $mensagem2 = "<script>swal('Esse espaco ja existe! Procure-o na lista novamente.', '', 'warning')
+                            .then(() => {                             
+                                window.location.href = '?perfil=evento&p=ocorrencia_cadastro&idOrigem=$idAtracao';
+                            }); </script> ";
+
+    } else {
+        $sql = "INSERT INTO locais (instituicao_id, local, logradouro, numero, complemento, bairro, cidade, uf, cep, zona_id, publicado)
                 VALUES ('$idInstituicao', '$local', '$rua', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$zona', 2)";
 
-    if (mysqli_query($con, $sql)) {
-        gravarLog($sql);
-        $mensagem2 = mensagem("success", "Solicitação de adição de local efetuado com sucesso");
-    } else {
-        $mensagem2 = mensagem("danger", "Erro na solicitação de adição de local! Tente novamente.");
+        if (mysqli_query($con, $sql)) {
+            gravarLog($sql);
+            $mensagem2 = mensagem("success", "Solicitação de adição de local efetuado com sucesso");
+        } else {
+            $mensagem2 = mensagem("danger", "Erro na solicitação de adição de local! Tente novamente.");
+        }
     }
 }
-
 
 if (isset($_POST['cadastraEspaco'])) {
     $idLocal = $_POST['local'];

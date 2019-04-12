@@ -1,5 +1,8 @@
 <?php
 include "includes/menu_principal.php";
+
+$idAtracao = $_POST['idAtracao'];
+
 ?>
 <div class="content-wrapper">
     <!-- Main content -->
@@ -84,9 +87,10 @@ include "includes/menu_principal.php";
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <a href="?perfil=administrativo&p=instituicao&sp=instituicao_lista">
+                            <a href="?perfil=evento&p=atracoes_lista">
                                 <button type="button" class="btn btn-default">Voltar</button>
                             </a>
+                            <input type="hidden" name="idAtracao" value="<?=$idAtracao?>">
                             <button type="submit" name="cadastraLocal" id="cadastraLocal"
                                     class="btn btn-primary pull-right">
                                 Cadastrar

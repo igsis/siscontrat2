@@ -2,7 +2,10 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.php';
+
+$idEvento = $_SESSION['idEvento'];
 $_SESSION['idOrigem'] = $_POST['idOrigem'];
+$idAtracao = $_SESSION['idOrigem'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
@@ -190,13 +193,20 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
                                 <div class="form-group col-md-4">
                                     <label for="local">Local</label>
+                                    <a href="?perfil=evento&p=solicitar_local">
+                                        <button type="button" name="idAtracao" value="<?=$idAtracao?>" class="btn-success pull-right"><i class="fa fa-plus"></i> </button>
+                                    </a>
                                     <select class="form-control" id="local" name="local">
                                         <!-- Populando pelo js -->
                                     </select>
+
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="espaco">Espaço</label>
+                                    <a href="?perfil=evento&p=solicitar_espaco">
+                                        <button type="button" class="btn-success pull-right"><i class="fa fa-plus"></i> </button>
+                                    </a>
                                     <select class="form-control" id="espaco" name="espaco">
                                         <!-- Populando pelo js -->
                                     </select>
