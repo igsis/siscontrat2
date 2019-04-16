@@ -9,10 +9,6 @@ $idAtracao = $_SESSION['idOrigem'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
-
-print_r(geraOpcao("instituicoes"));
-
-
 ?>
 <script type="text/javascript">
     function desmarca() {
@@ -250,8 +246,8 @@ print_r(geraOpcao("instituicoes"));
                 <form method="POST" action="#" role="form">
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="cep">Instituição: *</label>
-                            <select name="instituicaoModal" id="instituicaoModal" class="form-control" required>
+                            <label for="instituicoes">Instituição: *</label>
+                            <select name="instituicoes" id="instituicoes" class="form-control" required>
                                 <?php
                                 geraOpcao('instituicoes');
                                 ?>
@@ -341,8 +337,7 @@ print_r(geraOpcao("instituicoes"));
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="instituicaoModal">Instituição</label>
-                            <select class="form-control" name="instituicaoModal" id="instituicaoModal"
-                                    onchange="insti_local()" required>
+                            <select class="form-control" name="instituicaoModal" id="instituicaoModal" onchange="insti_local()" required>
                                 <option value="">Selecione uma opção...</option>
                                 <?php
                                 geraOpcao("instituicoes");
@@ -354,9 +349,7 @@ print_r(geraOpcao("instituicoes"));
                         <div class="form-group col-md-12">
                             <label for="SelectLocal">Local: </label>
                             <select name="SelectLocal" id="SelectLocal" class="form-control" required>
-                                <!--
-                                geraOpcaoPublicado('locais');
-                                ?> -->
+                                <!-- Populado pelo JS -->
                             </select>
                         </div>
                     </div>
@@ -385,10 +378,7 @@ print_r(geraOpcao("instituicoes"));
     function insti_local() {
         const urlModal = `<?=$url?>`;
 
-        let idInstituicaoModal = $('#instituicaoModal').val();
-       // var idInstituicaoModal = $("#instituicaoModal").val();
-
-        console.log(idInstituicaoModal);
+        var idInstituicaoModal = $('#instituicaoModal').val();
 
         $.post(urlModal, {
             instituicao_id: idInstituicaoModal,
@@ -506,7 +496,7 @@ print_r(geraOpcao("instituicoes"));
     instituicao.addEventListener('change', async e => {
         let idInstituicao = $('#instituicao option:checked').val();
 
-        console.log(idInstituicao);
+        console.log(instituicao);
 
         fetch(`${url}?instituicao_id=${idInstituicao}`)
             .then(response => response.json())
