@@ -27,6 +27,7 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espa
                                 <div class="form-group col-md-6">
                                     <label for="instituicao">Instituição: *</label>
                                     <select name="instituicao" id="instituicao" class="form-control" required>
+                                        <option value="">Selecione uma opção...</option>
                                         <?php
                                         geraOpcao('instituicoes');
                                         ?>
@@ -76,14 +77,11 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espa
 <script type="text/javascript">
 
     const url = `<?=$url?>`;
-
     let instituicao = document.querySelector('#instituicao');
 
     instituicao.addEventListener('change', async e => {
+
         let idInstituicao = $('#instituicao option:checked').val();
-
-        console.log(instituicao);
-
         fetch(`${url}?instituicao_id=${idInstituicao}`)
             .then(response => response.json())
             .then(locais => {

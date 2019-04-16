@@ -488,15 +488,12 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
             });
     }
 
-
     const url = `<?=$url?>`;
 
     let instituicao = document.querySelector('#instituicao');
 
     instituicao.addEventListener('change', async e => {
         let idInstituicao = $('#instituicao option:checked').val();
-
-        console.log(instituicao);
 
         fetch(`${url}?instituicao_id=${idInstituicao}`)
             .then(response => response.json())
