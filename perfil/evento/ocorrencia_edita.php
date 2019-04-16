@@ -353,7 +353,6 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <textarea name="observacao" id="observacao" class="form-control"
                                           rows="5"><?= isset($ocorrencia['observacao']) ? $ocorrencia['observacao'] : NULL ?></textarea>
                             </div>
-
                         </div>
 
                         <div class="box-footer">
@@ -508,8 +507,6 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 </div>
 
 
-
-
 <script>
 
     function insti_local() {
@@ -535,7 +532,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     }
 
     function cadastraLocal() {
-        var instituicao = $("#instituicaoModal").val();
+        var instituicao = $("#instituicoes").val();
         var local = $("input[name='localModal']").val();
         var cep = $("input[name='cep']").val();
         var rua = $("input[name='rua']").val();
@@ -575,6 +572,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                             $('#modaLocal').modal('hide');
                         });
                 } else {
+                    console.log(res);
                     swal("Erro na solicitação! Tente novamente.", "", "danger")
                         .then(() => {
                             $('#modaLocal').slideDown('slow');
@@ -605,17 +603,17 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                 if (res == 0) {
                     swal('Esse espaço já existe! Procure-o na lista novamente.', '', 'warning')
                         .then(() => {
-                            $('#modaLocal').slideDown('slow');
+                            $('#modalEspaco').slideDown('slow');
                         });
                 } else if (res == 1) {
                     swal("Solicitação de novo espaço enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
                         .then(() => {
-                            $('#modaLocal').modal('hide');
+                            $('#modalEspaco').modal('hide');
                         });
                 } else {
                     swal("Erro na solicitação! Tente novamente.", "", "danger")
                         .then(() => {
-                            $('#modaLocal').slideDown('slow');
+                            $('#modalEspaco').slideDown('slow');
                         });
                 }
             })

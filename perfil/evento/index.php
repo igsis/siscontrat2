@@ -33,15 +33,10 @@ if (isset($_POST['cadastraLocal'])) {
 
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
-            //$mensagem2 = mensagem("success", "Solicitação de adição de local efetuado com sucesso");
-
             echo "<div id='resposta'>1</div>";
 
         } else {
-
             echo "<div id='resposta'>2</div>";
-
-            //$mensagem2 = mensagem("danger", "Erro na solicitação de adição de local! Tente novamente.");
         }
     }
 }
@@ -49,7 +44,6 @@ if (isset($_POST['cadastraLocal'])) {
 if (isset($_POST['cadastraEspaco'])) {
     $idLocal = $_POST['local'];
     $espaco = $_POST['espaco'];
-
 
     $existe = 0;
     $sqlEspacos = "SELECT * FROM espacos WHERE local_id = '$idLocal'";

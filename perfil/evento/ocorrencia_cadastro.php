@@ -398,7 +398,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
     }
 
     function cadastraLocal() {
-        var instituicao = $("#instituicaoModal").val();
+        var instituicao = $("#instituicoes").val();
         var local = $("input[name='localModal']").val();
         var cep = $("input[name='cep']").val();
         var rua = $("input[name='rua']").val();
