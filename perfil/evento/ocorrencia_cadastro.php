@@ -433,7 +433,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             $('#modaLocal').slideDown('slow');
                         });
                 } else if (res == 1) {
-                    swal("Solicitação de novo local enviada com sucesso!", "Aguarde até que um administrador aprove ou não sua solicitção.", "success")
+                    swal("Solicitação de novo local enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
                         .then(() => {
                             $('#modaLocal').modal('hide');
                         });
@@ -472,7 +472,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             $('#modaLocal').slideDown('slow');
                         });
                 } else if (res == 1) {
-                    swal("Solicitação de novo espaço enviada com sucesso!", "Aguarde até que um administrador aprove ou não sua solicitação.", "success")
+                    swal("Solicitação de novo espaço enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
                         .then(() => {
                             $('#modaLocal').modal('hide');
                         });
