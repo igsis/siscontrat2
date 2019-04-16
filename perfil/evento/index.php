@@ -24,10 +24,8 @@ if (isset($_POST['cadastraLocal'])) {
     }
 
     if ($existe != 0) {
-         // $mensagem2 = mensagem("warning", "Esse espaco ja existe! Procure-o na lista novamente.");
-        $mensagem2 = "<script>swal('Esse espaco ja existe! Procure-o na lista novamente.', '', 'warning')
-                            .then(() => {                             
-                            }); </script> ";
+
+        echo "<div id='resposta'>0</div>";
 
     } else {
         $sql = "INSERT INTO locais (instituicao_id, local, logradouro, numero, complemento, bairro, cidade, uf, cep, zona_id, publicado)
@@ -35,9 +33,15 @@ if (isset($_POST['cadastraLocal'])) {
 
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
-            $mensagem2 = mensagem("success", "Solicitação de adição de local efetuado com sucesso");
+            //$mensagem2 = mensagem("success", "Solicitação de adição de local efetuado com sucesso");
+
+            echo "<div id='resposta'>1</div>";
+
         } else {
-            $mensagem2 = mensagem("danger", "Erro na solicitação de adição de local! Tente novamente.");
+
+            echo "<div id='resposta'>2</div>";
+
+            //$mensagem2 = mensagem("danger", "Erro na solicitação de adição de local! Tente novamente.");
         }
     }
 }
@@ -46,15 +50,35 @@ if (isset($_POST['cadastraEspaco'])) {
     $idLocal = $_POST['local'];
     $espaco = $_POST['espaco'];
 
-    $sql = "INSERT INTO espacos (local_id ,espaco, publicado)
+
+    $existe = 0;
+    $sqlEspacos = "SELECT * FROM espacos WHERE local_id = '$idLocal'";
+    $queryEspacos = mysqli_query($con, $sqlEspacos);
+    while ($espacos = mysqli_fetch_array($queryEspacos)) {
+        if ($espacos['espaco'] == $espaco) {
+            $existe = 1;
+        }
+    }
+
+    if ($existe != 0) {
+        echo "<div id='resposta'>0</div>";
+
+    } else {
+
+        $sql = "INSERT INTO espacos (local_id ,espaco, publicado)
                 VALUES ('$idLocal', '$espaco', 2)";
 
-    if (mysqli_query($con, $sql)) {
-        gravarLog($sql);
-        $mensagem2 = mensagem("success", "Solicitação de adição de espaço efetuado com sucesso");
-    } else {
-        $mensagem2 = mensagem("danger", "Erro na solicitação de adição de espaço! Tente novamente.");
+        if (mysqli_query($con, $sql)) {
+            gravarLog($sql);
+            echo "<div id='resposta'>1</div>";
+
+            //$mensagem2 = mensagem("success", "Solicitação de adição de espaço efetuado com sucesso");
+        } else {
+            echo "<div id='resposta'>2</div>";
+           // $mensagem2 = mensagem("danger", "Erro na solicitação de adição de espaço! Tente novamente.");
+        }
     }
+
 }
 
 unset($_SESSION['idEvento']);

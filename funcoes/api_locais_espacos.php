@@ -8,8 +8,8 @@
 
 	$conn = bancoPDO();
 	
-	if(isset($_GET['instituicao_id'])){
-		$id = $_GET['instituicao_id'];
+	if(isset($_GET['instituicao_id']) || isset($_POST['instituicao_id'])){
+		$id = $_GET['instituicao_id'] ?? $_POST['instituicao_id'];
 
 		$sql = "SELECT id, local FROM locais WHERE instituicao_id = :instituicao AND publicado = 1 order by local";
 

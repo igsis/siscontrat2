@@ -9,6 +9,10 @@ $idAtracao = $_SESSION['idOrigem'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
+
+print_r(geraOpcao("instituicoes"));
+
+
 ?>
 <script type="text/javascript">
     function desmarca() {
@@ -42,8 +46,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         comparaData();
         if ($('#datepicker11').val().length > 0) {
             mudaData(false);
-        }
-        else {
+        } else {
             mudaData(true);
 
             var data = document.querySelector('input[name="data_inicio"]').value;
@@ -184,7 +187,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                     <label for="instituicao">Instituição</label>
                                     <select class="form-control" name="instituicao" id="instituicao" required>
                                         <option value="">Selecione uma opção...</option>
-
                                         <?php
                                         geraOpcao("instituicoes");
                                         ?>
@@ -192,12 +194,10 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="local">Local</label><!--
-                                    <a href="?perfil=evento&p=solicitar_local">-->
+                                    <label for="local">Local</label>
                                     <button type="button" name="idAtracao" data-toggle='modal'
-                                            data-target='#modaLocal' class="btn-success pull-right"><i
-                                                class="fa fa-plus"></i></button>
-                                    <!--</a>-->
+                                            data-target='#modaLocal' class="btn-success pull-right">
+                                        <i class="fa fa-plus"></i></button>
                                     <select class="form-control" id="local" name="local">
                                         <!-- Populando pelo js -->
                                     </select>
@@ -342,7 +342,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                         <div class="form-group col-md-12">
                             <label for="instituicaoModal">Instituição</label>
                             <select class="form-control" name="instituicaoModal" id="instituicaoModal"
-                                    required>
+                                    onchange="insti_local()" required>
                                 <option value="">Selecione uma opção...</option>
                                 <?php
                                 geraOpcao("instituicoes");
@@ -352,8 +352,8 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                     </div>
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="localModal">Local: </label>
-                            <select name="localModal" id="localModal" class="form-control" required>
+                            <label for="SelectLocal">Local: </label>
+                            <select name="SelectLocal" id="SelectLocal" class="form-control" required>
                                 <!--
                                 geraOpcaoPublicado('locais');
                                 ?> -->
@@ -370,7 +370,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
             </div>
             <!-- /.box-body -->
             <div class="modal-footer">
-                <input type="hidden" name="cadastraEspaco">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                 <button type='button' class='btn btn-success' name="cadastraEspaco" id="cadastraEspaco"
                         onclick="cadastraEspaco()">Solicitar
@@ -383,31 +382,32 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
 <script type="text/javascript">
 
+    function insti_local() {
         const urlModal = `<?=$url?>`;
-        let instituicaoModal = document.querySelector('#instituicaoModal');
 
-        instituicaoModal.addEventListener('change', async e => {
+        let idInstituicaoModal = $('#instituicaoModal').val();
+       // var idInstituicaoModal = $("#instituicaoModal").val();
 
-            console.log(instituicaoModal);
-            let idInstituicaoModal = $('#instituicaoModal option:checked').val();
+        console.log(idInstituicaoModal);
 
-            fetch(`${urlModal}?instituicao_id=${idInstituicaoModal}`)
-                .then(response => response.json())
-                .then(locais => {
-                    $('#localModal option').remove();
-                    $('#localModal').append('<option value="">Selecione uma opção...</option>');
-
-                    for (const local of locais) {
-                        $('#localModal').append(`<option value='${local.id}'>${local.local}</option>`).focus();
-                    }
-                })
-
-            console.log(locais);
+        $.post(urlModal, {
+            instituicao_id: idInstituicaoModal,
         })
+            .done(function (data) {
+                $('#SelectLocal option').remove();
+                $('#SelectLocal').append('<option value="">Selecione uma opção...</option>');
 
+                for (let local of data) {
+                    $('#SelectLocal').append(`<option value='${local.id}'>${local.local}</option>`).focus();
+                }
+            })
+            .fail(function () {
+                swal("danger", "Erro ao gravar");
+            });
+
+    }
 
     function cadastraLocal() {
-
         var instituicao = $("#instituicaoModal").val();
         var local = $("input[name='localModal']").val();
         var cep = $("input[name='cep']").val();
@@ -434,11 +434,26 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
             estado: estado,
             zona: zona
         })
-            .done(function () {
-                swal("Solicitacao de novo local enviada com sucesso!", "Aguarde a analise de um administrador, ele ira aprovar ou nao sua solicitacao.", "success")
-                    .then(() => {
-                        $('#modaLocal').modal('hide');
-                    });
+            .done(function (data) {
+                let res = $(data).find('#resposta').text();
+
+                if (res == 0) {
+                    swal('Esse local já existe! Procure-o na lista novamente.', '', 'warning')
+                        .then(() => {
+                            $('#modaLocal').slideDown('slow');
+                        });
+                } else if (res == 1) {
+                    swal("Solicitação de novo local enviada com sucesso!", "Aguarde até que um administrador aprove ou não sua solicitção.", "success")
+                        .then(() => {
+                            $('#modaLocal').modal('hide');
+                        });
+                } else {
+                    swal("Erro na solicitação! Tente novamente.", "", "danger")
+                        .then(() => {
+                            $('#modaLocal').slideDown('slow');
+                        });
+                }
+
             })
             .fail(function () {
                 swal("danger", "Erro ao gravar");
@@ -448,7 +463,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
     function cadastraEspaco() {
 
-        var local = $("#localId").val();
+        var local = $("#SelectLocal").val();
         var espaco = $("input[name='espaco']").val();
 
         $('#modalEspaco').slideUp();
@@ -458,11 +473,25 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
             espaco: espaco,
             local: local
         })
-            .done(function () {
-                swal("Solicitacao de novo espaco enviada com sucesso!", "Aguarde a analise de um administrador, ele ira aprovar ou nao sua solicitacao.", "success")
-                    .then(() => {
-                        $('#modaLocal').modal('hide');
-                    });
+            .done(function (data) {
+                let res = $(data).find('#resposta').text();
+
+                if (res == 0) {
+                    swal('Esse espaço já existe! Procure-o na lista novamente.', '', 'warning')
+                        .then(() => {
+                            $('#modaLocal').slideDown('slow');
+                        });
+                } else if (res == 1) {
+                    swal("Solicitação de novo espaço enviada com sucesso!", "Aguarde até que um administrador aprove ou não sua solicitação.", "success")
+                        .then(() => {
+                            $('#modaLocal').modal('hide');
+                        });
+                } else {
+                    swal("Erro na solicitação! Tente novamente.", "", "danger")
+                        .then(() => {
+                            $('#modaLocal').slideDown('slow');
+                        });
+                }
             })
             .fail(function () {
                 swal("danger", "Erro ao gravar");
@@ -477,6 +506,8 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
     instituicao.addEventListener('change', async e => {
         let idInstituicao = $('#instituicao option:checked').val();
 
+        console.log(idInstituicao);
+
         fetch(`${url}?instituicao_id=${idInstituicao}`)
             .then(response => response.json())
             .then(locais => {
@@ -488,9 +519,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                     ;
                 }
             })
-
-        console.log(locais);
-
     })
 
     let local = document.querySelector('#local');
@@ -681,21 +709,18 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 $("#cidade").prop('readonly', false);
                                 $("#estado").prop('readonly', false);
                             }
-                        }
-                        else {
+                        } else {
                             //CEP pesquisado não foi encontrado.
                             limpa_formulário_cep();
                             alert("CEP não encontrado.");
                         }
                     });
-                }
-                else {
+                } else {
                     //cep é inválido.
                     limpa_formulário_cep();
                     alert("Formato de CEP inválido.");
                 }
-            }
-            else {
+            } else {
                 //cep sem valor, limpa formulário.
                 limpa_formulário_cep();
             }
