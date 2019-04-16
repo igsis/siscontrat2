@@ -3,7 +3,6 @@ include "includes/menu_principal.php";
 $con = bancoMysqli();
 
 if (isset($_POST['cadastraLocal'])) {
-    $idAtracao = $_POST['idAtracao'];
     $idInstituicao = $_POST['instituicao'] ?? NULL;
     $local = addslashes($_POST['local']);
     $cep = $_POST['cep'];
@@ -28,7 +27,6 @@ if (isset($_POST['cadastraLocal'])) {
          // $mensagem2 = mensagem("warning", "Esse espaco ja existe! Procure-o na lista novamente.");
         $mensagem2 = "<script>swal('Esse espaco ja existe! Procure-o na lista novamente.', '', 'warning')
                             .then(() => {                             
-                                window.location.href = '?perfil=evento&p=ocorrencia_cadastro&idOrigem=$idAtracao';
                             }); </script> ";
 
     } else {

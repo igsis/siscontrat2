@@ -983,6 +983,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                     .fail(function () {
                         swal("danger", "Erro ao gravar");
                     });
+
             } else {
 
                 var parcelas = $("#numero_parcelas").val();

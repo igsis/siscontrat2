@@ -1,16 +1,11 @@
 <?php
 include "includes/menu_principal.php";
-
-$idAtracao = $_POST['idAtracao'];
-
 ?>
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
         <!-- START FORM-->
         <h2 class="page-header">Solicitar adição de Local</h2>
-
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
@@ -40,7 +35,6 @@ $idAtracao = $_POST['idAtracao'];
                                     <label for="cep">Local: *</label>
                                     <input type="text" class="form-control" name="local" id="local" required>
                                 </div>
-
                                 <div class="form-group col-md-3">
                                     <label for="cep">CEP: *</label>
                                     <input type="text" class="form-control" name="cep" id="cep" maxlength="9" placeholder="Digite o CEP" required data-mask="00000-000">
@@ -54,6 +48,7 @@ $idAtracao = $_POST['idAtracao'];
                                     </select>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="rua">Rua: *</label>
