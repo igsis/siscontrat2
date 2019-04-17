@@ -116,7 +116,6 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
             }
         }
 
-
         if (isset($_POST['cadastraComLider'])) {
             $idPedido = $_POST['idPedido'];
             $idAtracao = $_POST['idAtracao'];
@@ -127,9 +126,7 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
                 $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
                                 VALUES ('$idPedido', '$idAtracao', '$idPf')";
                 if (mysqli_query($con, $sqLider)) {
-                    $mensagem .= mensagem("success", "Cadastrado com sucesso!");
-
-                    echo "<script>swal('Líder cadastrado com sucesso!', '', 'success') </script>";
+                    echo "<script>swal('Líder selecionado com sucesso!', '', 'success') </script>";
                 }
             }
         }
