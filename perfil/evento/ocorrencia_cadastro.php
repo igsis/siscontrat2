@@ -438,7 +438,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             $('#modaLocal').modal('hide');
                         });
                 } else {
-                    swal("Erro na solicitação! Tente novamente.", "", "danger")
+                    swal("Erro na solicitação! Tente novamente.", "", "error")
                         .then(() => {
                             $('#modaLocal').slideDown('slow');
                         });

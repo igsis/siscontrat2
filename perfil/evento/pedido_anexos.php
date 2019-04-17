@@ -44,7 +44,7 @@ if(isset($_POST["enviar"])) {
                     }
                 }else {
                     echo "<script>
-                            swal('Erro no upload! Anexar documentos somente no formato PDF.', '', 'error');                             
+                            swal('Erro no upload!', 'Anexar documentos somente no formato PDF.', 'error');                             
                         </script>";
                 }
             }

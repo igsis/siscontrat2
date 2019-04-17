@@ -611,7 +611,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                             $('#modalEspaco').modal('hide');
                         });
                 } else {
-                    swal("Erro na solicitação! Tente novamente.", "", "danger")
+                    swal("Erro na solicitação! Tente novamente.", "", "error")
                         .then(() => {
                             $('#modalEspaco').slideDown('slow');
                         });
