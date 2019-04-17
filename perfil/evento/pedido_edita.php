@@ -15,22 +15,29 @@ if (isset($_POST['carregar'])) {
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
-if (isset($_POST['cadastra'])) {
-    $tipoPessoa = $_POST['pessoa_tipo_id'];
-    $idPessoa = $_POST['pessoa_id'];
-    $valorTotal = $_POST['valor'];
+if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
+    unset($_POST['cadastra']);
+    $_POST['carregar'] = 1;
+    $idPedido = $_SESSION['idPedido'];
+} else {
+    if (isset($_POST['cadastra'])) {
+        $tipoPessoa = $_POST['pessoa_tipo_id'];
+        $idPessoa = $_POST['pessoa_id'];
+        $valorTotal = $_POST['valor'];
 
-    if ($tipoPessoa == 1) {
-        $campo = "pessoa_fisica_id";
-    } else {
-        $campo = "pessoa_juridica_id";
-    }
-    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+        if ($tipoPessoa == 1) {
+            $campo = "pessoa_fisica_id";
+        } else {
+            $campo = "pessoa_juridica_id";
+        }
+        $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
                                   VALUES ('1', $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
-    if (mysqli_query($con, $sqlFirst)) {
-        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
-        $idPedido = $_SESSION['idPedido'];
+        if (mysqli_query($con, $sqlFirst)) {
+            $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+            $idPedido = $_SESSION['idPedido'];
+        }
     }
+
 }
 
 if (isset($_POST['edita'])) {
@@ -372,57 +379,57 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                     <div class="box-body">
                         <div class="row">
                             <div class="form-group col-md-12">
-                            <?php
-                            $sqlParecer = "SELECT * FROM parecer_artisticos WHERE pedido_id = '$idPedido'";
-                            $queryParecer = mysqli_query($con, $sqlParecer);
+                                <?php
+                                $sqlParecer = "SELECT * FROM parecer_artisticos WHERE pedido_id = '$idPedido'";
+                                $queryParecer = mysqli_query($con, $sqlParecer);
 
-                            if (mysqli_num_rows($queryParecer) > 0) {
+                                if (mysqli_num_rows($queryParecer) > 0) {
                                 while ($parecer = mysqli_fetch_array($queryParecer)) {
-                                    $top1 = $parecer['topico1'];
-                                    $top2 = $parecer['topico2'];
-                                    $top3 = $parecer['topico3'];
-                                    $top4 = $parecer['topico4'];
-                                    ?>
+                                $top1 = $parecer['topico1'];
+                                $top2 = $parecer['topico2'];
+                                $top3 = $parecer['topico3'];
+                                $top4 = $parecer['topico4'];
+                                ?>
 
                                 <textarea class="form-control" rows="8" disabled><?=
-                                    $top1. '&#10&#10' . $top2. '&#10&#10' . $top3 . '&#10&#10' . $top4 ?>
-                                <?php
-                                }
-                            } else {
-                                echo "Ainda nao ha parecer artistico nesse pedido.";
-                            }
-                            ?>
+                                    $top1 . '&#10&#10' . $top2 . '&#10&#10' . $top3 . '&#10&#10' . $top4 ?>
+                                    <?php
+                                    }
+                                    } else {
+                                        echo "Ainda nao ha parecer artistico nesse pedido.";
+                                    }
+                                    ?>
                                 </textarea>
                             </div>
                         </div>
-                            <div class="row">
-                                <div class="form-group col-md-offset-4 col-md-2">
-                                    <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
-                                          role="form">
-                                        <button type="submit" name="idPedido" value="<?= $idPedido ?>"
-                                                class="btn btn-primary btn-block">Artista Local
-                                        </button>
-                                    </form>
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=consagrado"
-                                          role="form">
-                                        <button type="submit" name="idPedido" value="<?= $idPedido ?>"
-                                                class="btn btn-primary btn-block">Artista Consagrado
-                                        </button>
-                                    </form>
-                                </div>
+                        <div class="row">
+                            <div class="form-group col-md-offset-4 col-md-2">
+                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=local"
+                                      role="form">
+                                    <button type="submit" name="idPedido" value="<?= $idPedido ?>"
+                                            class="btn btn-primary btn-block">Artista Local
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <form method="POST" action="?perfil=evento&p=parecer_artistico&artista=consagrado"
+                                      role="form">
+                                    <button type="submit" name="idPedido" value="<?= $idPedido ?>"
+                                            class="btn btn-primary btn-block">Artista Consagrado
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- /.col -->
             </div>
+            <!-- /.col -->
         </div>
-        <!-- /.row -->
-        <!-- END ACCORDION & CAROUSEL-->
-    </section>
-    <!-- /.content -->
+</div>
+<!-- /.row -->
+<!-- END ACCORDION & CAROUSEL-->
+</section>
+<!-- /.content -->
 </div>
 <!-- Modal -->
 <div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
@@ -825,8 +832,6 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
 
         } else {
 
-            $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>");
-
             var parcelasSelected = $("#numero_parcelas").val();
 
             if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
@@ -834,6 +839,8 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
             }
 
             if (StringValores != "" && StringDatas != "") {
+
+                $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>");
 
                 var valores = StringValores.split("|");
                 var datas = StringDatas.split("|");
@@ -894,12 +901,15 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
 
 
             } else {
+
+                $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='salvar' id='salvarModal'>Salvar</button>");
+
                 for (var count = 1; count <= parcelasSelected; count++) {
                     html += template({
                         count: count
                     });
                 }
-                $('#editarModal').on('click', salvarModal);
+                $('#salvarModal').on('click', salvarModal);
                 $('#modalParcelas').find('#formParcela').html(html);
                 $('#modalParcelas').modal('show');
             }

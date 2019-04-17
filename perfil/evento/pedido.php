@@ -10,6 +10,7 @@ if (isset($_POST['excluir'])) {
     $sql = "UPDATE `pedidos` SET publicado = 0 WHERE id = '$pedido'";
 
     if(mysqli_query($con, $sql)){
+        unset($_SESSION['idPedido']);
         $mensagem = mensagem("success", "Pedido excluido com sucesso!");
         gravarLog($sql);
     }else{
@@ -51,6 +52,7 @@ $num = mysqli_num_rows($query);
                          * Caso não haja pedido de contratação registrado
                          */
                         if($num == 0){
+                            unset($_SESSION['idPedido']);
                         ?>
                             <div class="row">
                                 <div class="form-group col-md-offset-3 col-md-3">
