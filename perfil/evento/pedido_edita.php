@@ -641,7 +641,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
             $('#modalOficina').find('#soma').html(soma.toFixed(2).replace('.', ','));
             $('#modalOficina').find('#valor_restante').html(restante.toFixed(2).replace('.', ','));
 
-            if (restante != 0) {
+            if (restante != 0 || restante != '0,00') {
                 $("#salvarModalOficina").attr("disabled", true);
                 $("#editarModalOficina").attr("disabled", true);
                 $("#modalOficina").find('#msg').html("<em class='text-danger'>O valor da soma das parcelas deve ser igual ao valor total do contrato! </em>");
@@ -662,13 +662,15 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
             $('#modalParcelas').find('#soma').html(soma.toFixed(2).replace('.', ','));
             $('#modalParcelas').find('#valor_restante').html(restante.toFixed(2).replace('.', ','));
 
-            if (restante != 0) {
+            if (Math.sign(restante) != -1) {
+                console.log(Math.sign(restante));
                 $("#salvarModal").attr("disabled", true);
                 $("#editarModal").attr("disabled", true);
                 $("#modalParcelas").find('#msg').html("<em class='text-danger'>O valor das parcelas somadas devem ser igual ao valor total do contrato! </em>");
             } else {
                 $("#salvarModal").attr("disabled", false);
                 $("#editarModal").attr("disabled", false);
+                $('#modalParcelas').find('#valor_restante').html(0);
 
                 var nums = "<?= isset($numRows) ? $numRows : ''; ?>";
 
