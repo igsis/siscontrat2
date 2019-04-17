@@ -184,8 +184,12 @@ else
                             <div class="box-footer">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" name="<?=($parecer == NULL) ? "cadastra" : "edita"?>" class="btn btn-info pull-right">Gravar</button>
-                            </div>
                         </form>
+                        <form action="?perfil=evento&p=pedido_edita" method="post">
+                            <input type="hidden" name="idPedido" value="<?=$idPedido?>">
+                            <button type="submit" name="carregar" class="btn btn-default">Voltar</button>
+                        </form>
+                    </div>
                     </div>
                 </div>
                 <!-- /.box -->
