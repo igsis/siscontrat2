@@ -5,4 +5,4 @@ if (isset($_GET['p'])) {
 } else {
     $p = "index";
 }
-include "agenda/" . $p . ".php";
+include "gestao_prazo/" . $p . ".php";
