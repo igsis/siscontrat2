@@ -29,6 +29,16 @@ include "includes/menu_interno.php";
                                     <label><input type="radio" name="contratacao" value="0"> Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="contratacao">Espaço em que será realizado o evento é público?</label> <br>
+                                    <label><input type="radio" name="tipoLugar" value="1" checked> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="tipoLugar" value="0"> Não </label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="contratacao">É fomento/programa?</label> <br>
+                                    <label><input type="radio" name="tipoFomento/Programa" value="1" checked> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="tipoFomento/Programa" value="0"> Não </label>
+                                </div>
+                                <div class="form-group col-md-4">
                                     <label for="tipo">Este evento é cinema?</label> <br>
                                     <label><input type="radio" name="tipo" value="2"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="tipo" value="1" checked> Não </label>
