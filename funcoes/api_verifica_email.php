@@ -8,7 +8,7 @@ header('Content-Type: application/json');
 
 if(isset($_POST['email'])){
 
-    #Recebe o Email Postado
+    #Recebe o Email postado
     $emailPostado = $_POST['email'];
 
     #Conecta banco de dados
