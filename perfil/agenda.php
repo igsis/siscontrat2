@@ -6,3 +6,4 @@ if (isset($_GET['p'])) {
     $p = "index";
 }
 include "agenda/" . $p . ".php";
+
