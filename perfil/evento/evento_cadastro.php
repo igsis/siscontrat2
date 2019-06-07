@@ -30,18 +30,30 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="contratacao">Espaço em que será realizado o evento é público?</label> <br>
-                                    <label><input type="radio" name="tipoLugar" value="1" checked> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="tipoLugar" value="0"> Não </label>
+                                    <label><input type="radio" name="tipoLugar" value="1"> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="tipoLugar" value="0" checked> Não </label>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="contratacao">É fomento/programa?</label> <br>
-                                    <label><input type="radio" name="tipoFomento/Programa" value="1" checked> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="tipoFomento/Programa" value="0"> Não </label>
-                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="tipo">Este evento é cinema?</label> <br>
                                     <label><input type="radio" name="tipo" value="2"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="tipo" value="1" checked> Não </label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="fomento">É fomento/programa?</label> <br>
+                                    <label><input type="radio" class="fomento" name="fomento" value="1" id="sim"> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" class="fomento" name="fomento" value="0" id="nao" checked> Não </label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="tipoFomento">Fomento/Programa</label> <br>
+                                    <select class="form-control" name="tipoFomento" id="tipoFomento">
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                            geraOpcao("fomentos");
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
 
@@ -111,3 +123,19 @@ include "includes/menu_interno.php";
         </div>
     </section>
 </div>
+
+<script>
+    var fomento = $('.fomento');
+    fomento.on("change", verificaFomento);
+    $(document).ready(verificaFomento());
+
+    function verificaFomento () {
+        if ($('#sim').is(':checked')) {
+            $('#tipoFomento')
+                .attr('disabled', false)
+        } else {
+            $('#tipoFomento')
+                .attr('disabled', true)
+        }
+    }
+</script>
