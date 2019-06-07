@@ -14,6 +14,9 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $original = $_POST['original'];
     $contratacao = $_POST['contratacao'];
     $eventoStatus = "1";
+    $fomento = $_POST['fomento'];
+    $tipoLugar = $_POST['tipoLugar'];
+    $idFomento = $_POST['tipoFomento'] ?? null;
 }
 
 if (isset($_POST['cadastra'])) {
@@ -28,7 +31,9 @@ if (isset($_POST['cadastra'])) {
                                  usuario_id, 
                                  contratacao, 
                                  original, 
-                                 evento_status_id) 
+                                 evento_status_id,
+                                 fomento, 
+                                 espaco_publico) 
                           VALUES ('$nomeEvento',
                                   '$relacao_juridica_id',
                                   '$projeto_especial_id',
@@ -39,12 +44,29 @@ if (isset($_POST['cadastra'])) {
                                   '$usuario',
                                   '$contratacao',
                                   '$original',
-                                  '$eventoStatus')";
+                                  '$eventoStatus',
+                                  '$fomento',
+                                  '$tipoLugar')";
 
     if(mysqli_query($con, $sql))
     {
         $idEvento = recuperaUltimo("eventos");
         $_SESSION['idEvento'] = $idEvento;
+
+        if($idFomento != null)
+        {
+            $sql = "INSERT INTO evento_fomento  (evento_id, fomento_id) VALUES ('$idEvento', '$idFomento')";
+            mysqli_query($con, $sql);
+        }
+
+        if(isset($_POST['acao'])){
+            atualizaRelacionamentoEvento('acao_evento', $idEvento, $_POST['acao']);
+        }
+
+        if(isset($_POST['publico'])){
+            atualizaRelacionamentoEvento('evento_publico', $idEvento, $_POST['publico']);
+        }
+
         $mensagem = mensagem("success","Cadastrado com sucesso!");
         //gravarLog($sql);
     }else{
@@ -55,6 +77,14 @@ if (isset($_POST['cadastra'])) {
 
 if(isset($_POST['edita'])){
     $idEvento = $_POST['idEvento'];
+    $evento = recuperaDados("eventos","id",$idEvento);
+
+    if($evento['fomento'] == $fomento){
+        $ehIgual = true;
+    }else{
+        $ehIgual = false;
+    }
+
     $sql = "UPDATE eventos SET
                               nome_evento = '$nomeEvento', 
                               relacao_juridica_id = '$relacao_juridica_id', 
@@ -64,10 +94,35 @@ if(isset($_POST['edita'])){
                               fiscal_id = '$fiscal_id', 
                               suplente_id = '$suplente_id', 
                               contratacao = '$contratacao', 
-                              original = '$original' 
+                              original = '$original',
+                              fomento = '$fomento',
+                              espaco_publico = '$tipoLugar'
                               WHERE id = '$idEvento'";
     If(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com sucesso!");
+
+        if($idFomento == null)
+        {
+            $sql = "DELETE FROM evento_fomento WHERE evento_id = '$idEvento'";
+
+        }else{
+            if($ehIgual){
+                $sql = "UPDATE evento_fomento SET fomento_id = '$idFomento' WHERE evento_id = '$idEvento'";
+            }
+            else{
+                $sql = "INSERT INTO evento_fomento VALUES ('$idEvento', '$idFomento')";
+
+            }
+        }
+
+        mysqli_query($con, $sql);
+
+        if(isset($_POST['acao'])){
+            atualizaRelacionamentoEvento('acao_evento', $idEvento, $_POST['acao']);
+        }
+        if(isset($_POST['publico'])){
+            atualizaRelacionamentoEvento('evento_publico', $idEvento, $_POST['publico']);
+        }
         //gravarLog($sql);
     }else{
         $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
@@ -80,6 +135,8 @@ if(isset($_POST['carregar'])){
 }
 
 $evento = recuperaDados("eventos","id",$idEvento);
+$fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
+
 include "includes/menu_interno.php";
 ?>
 
@@ -117,6 +174,7 @@ include "includes/menu_interno.php";
                                     <label><input type="radio" name="tipoLugar" value="1"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="tipoLugar" value="0" checked> Não </label>
                                 </div>
+
                                 <div class="form-group col-md-4">
                                     <label for="tipo">Este evento é cinema?</label> <br>
                                     <label><input type="radio" name="tipo" value="2" <?= $evento['tipo_evento_id'] == 3 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
@@ -125,14 +183,14 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-4">
                                     <label for="fomento">É fomento/programa?</label> <br>
                                     <label><input type="radio" class="fomento" name="fomento" value="1" id="sim"  <?= $evento['fomento'] == 1 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" class="fomento" name="fomento" value="0" id="nao" checked <?= $evento['fomento'] == 0 ? 'checked' : NULL ?>> Não </label>
+                                    <label><input type="radio" class="fomento" name="fomento" value="0" id="nao"  <?= $evento['fomento'] == 0 ? 'checked' : NULL ?>> Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="tipoFomento">Fomento/Programa</label> <br>
                                     <select class="form-control" name="tipoFomento" id="tipoFomento">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao("fomentos");
+                                        geraOpcao("fomentos", $fomento['fomento_id']);
                                         ?>
                                     </select>
                                 </div>
@@ -172,7 +230,7 @@ include "includes/menu_interno.php";
                                             data-target='#modalAcoes' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('acoes', 'acao', 'acao_evento');
+                                    geraCheckboxEvento('acoes', 'acao', 'acao_evento', $idEvento);
                                     ?>
                                 </div>
 
@@ -183,7 +241,7 @@ include "includes/menu_interno.php";
                                             data-target='#modalPublico' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('publicos', 'publico', 'evento_publico');
+                                    geraCheckboxEvento('publicos', 'publico', 'evento_publico', $idEvento);
                                     ?>
                                 </div>
                             </div>
@@ -312,9 +370,11 @@ include "includes/menu_interno.php";
         if ($('#sim').is(':checked')) {
             $('#tipoFomento')
                 .attr('disabled', false)
+                .attr('required',true)
         } else {
             $('#tipoFomento')
                 .attr('disabled', true)
+                .attr('required',false)
         }
     }
 </script>

@@ -232,9 +232,11 @@ include "includes/menu_interno.php";
         if ($('#sim').is(':checked')) {
             $('#tipoFomento')
                 .attr('disabled', false)
+                .attr('required',true)
         } else {
             $('#tipoFomento')
                 .attr('disabled', true)
+                .attr('required',false)
         }
     }
 </script>
