@@ -41,11 +41,13 @@ include "includes/menu_interno.php";
                                     <label><input type="radio" name="tipo" value="2"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="tipo" value="1" checked> Não </label>
                                 </div>
+
                                 <div class="form-group col-md-4">
                                     <label for="fomento">É fomento/programa?</label> <br>
                                     <label><input type="radio" class="fomento" name="fomento" value="1" id="sim"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" class="fomento" name="fomento" value="0" id="nao" checked> Não </label>
                                 </div>
+
                                 <div class="form-group col-md-4">
                                     <label for="tipoFomento">Fomento/Programa</label> <br>
                                     <select class="form-control" name="tipoFomento" id="tipoFomento">
@@ -81,6 +83,29 @@ include "includes/menu_interno.php";
                                         geraOpcaoPublicado("projeto_especiais", "");
                                         ?>
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla escolha) </i></label>
+                                    <button class='btn btn-default' type='button' data-toggle='modal'
+                                            data-target='#modalAcoes' style="border-radius: 30px;">
+                                        <i class="fa fa-question-circle"></i></button>
+                                   <?php
+                                        geraCheckboxEvento('acoes', 'acao', 'acao_evento');
+                                    ?>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="acao">Público (Representatividade e Visibilidade Sócio-cultural)* <i>(multipla
+                                            escolha) </i></label>
+                                    <button class='btn btn-default' type='button' data-toggle='modal'
+                                            data-target='#modalPublico' style="border-radius: 30px;">
+                                        <i class="fa fa-question-circle"></i></button>
+                                    <?php
+                                        geraCheckboxEvento('publicos', 'publico', 'evento_publico');
+                                    ?>
                                 </div>
                             </div>
 
@@ -122,6 +147,80 @@ include "includes/menu_interno.php";
             </div>
         </div>
     </section>
+</div>
+
+<div class="modal fade" id="modalAcoes" role="dialog" aria-labelledby="lblmodalAcoes" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Ações (Expressões Artístico-culturais)</h4>
+            </div>
+            <div class="modal-body" style="text-align: left;">
+                <table class="table table-bordered table-responsive">
+                    <thead>
+                    <tr>
+                        <th>Ação</th>
+                        <th>Descrição</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    $sqlConsultaAcoes = "SELECT acao, descricao FROM acoes WHERE publicado = '1' ORDER BY 1";
+                    foreach ($con->query($sqlConsultaAcoes)->fetch_all(MYSQLI_ASSOC) as $acao) {
+                        ?>
+                        <tr>
+                            <td><?= $acao['acao'] ?></td>
+                            <td><?= $acao['descricao'] ?></td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-theme" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalPublico" role="dialog" aria-labelledby="lblmodalPublico" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Público (Representatividade e Visibilidade Sócio-cultural)</h4>
+            </div>
+            <div class="modal-body" style="text-align: left;">
+                <table class="table table-bordered table-responsive">
+                    <thead>
+                    <tr>
+                        <th>Público</th>
+                        <th>Descrição</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    $sqlConsultaPublico = "SELECT publico, descricao FROM publicos WHERE publicado = '1' ORDER BY 1";
+                    foreach ($con->query($sqlConsultaPublico)->fetch_all(MYSQLI_ASSOC) as $publico) {
+                        ?>
+                        <tr>
+                            <td><?= $publico['publico'] ?></td>
+                            <td><?= $publico['descricao'] ?></td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-theme" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
