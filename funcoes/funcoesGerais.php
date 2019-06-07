@@ -338,9 +338,6 @@ function geraOpcaoParcelas($tabela, $select = '')
     }
 }
 
-
-
-
 function geraOpcaoLocais ($tabela, $select = '')
 {
     //gera os options de um select
@@ -1315,4 +1312,33 @@ function geraProtocolo($id)
     $date = date('Ymd');
     $preencheZeros = str_pad($id, 5, '0', STR_PAD_LEFT);
     return $date . $preencheZeros;
+}
+
+function in_array_r($needle, $haystack, $strict = false) {
+    foreach ($haystack as $item) {
+        if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function geraCheckboxEvento($tabela, $name, $tabelaRelacionamento, $idEvento = null) {
+    $con = bancoMysqli();
+    $sqlConsulta = "SELECT * FROM $tabela WHERE publicado = '1' ORDER BY 2";
+    $dados = $con->query($sqlConsulta);
+
+    $sqlConsultaRelacionamento = "SELECT * FROM $tabelaRelacionamento WHERE evento_id = $idEvento";
+    $resRelacionamentos = $con->query($sqlConsultaRelacionamento);
+    $relacionamentos = ($resRelacionamentos) ? $resRelacionamentos->fetch_all(MYSQLI_ASSOC) : [];
+
+    while ($checkbox = $dados->fetch_row()) {
+        ?>
+        <div class="checkbox-grid-2 text-left">
+            <input type="checkbox" name="<?=$name?>[]" id="<?=$checkbox[1]?>" value="<?=$checkbox[0]?>"
+                <?=in_array_r($checkbox[0], $relacionamentos) ? "checked" : ""?>>
+            <label for="<?=$checkbox[1]?>"><?=$checkbox[1]?></label>
+        </div>
+        <?php
+    }
 }
