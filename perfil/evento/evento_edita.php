@@ -111,7 +111,6 @@ if(isset($_POST['edita'])){
             }
             else{
                 $sql = "INSERT INTO evento_fomento VALUES ('$idEvento', '$idFomento')";
-
             }
         }
 

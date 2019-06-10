@@ -29,7 +29,8 @@ include "includes/menu_interno.php";
                                     <label><input type="radio" name="contratacao" value="0"> Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="contratacao">Espaço em que será realizado o evento é público?</label> <br>
+                                    <label for="contratacao">Espaço em que será realizado o evento é público?</label>
+                                    <br>
                                     <label><input type="radio" name="tipoLugar" value="1"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="tipoLugar" value="0" checked> Não </label>
                                 </div>
@@ -44,8 +45,10 @@ include "includes/menu_interno.php";
 
                                 <div class="form-group col-md-4">
                                     <label for="fomento">É fomento/programa?</label> <br>
-                                    <label><input type="radio" class="fomento" name="fomento" value="1" id="sim"> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" class="fomento" name="fomento" value="0" id="nao" checked> Não </label>
+                                    <label><input type="radio" class="fomento" name="fomento" value="1" id="sim"> Sim
+                                    </label>&nbsp;&nbsp;
+                                    <label><input type="radio" class="fomento" name="fomento" value="0" id="nao"
+                                                  checked> Não </label>
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -53,7 +56,7 @@ include "includes/menu_interno.php";
                                     <select class="form-control" name="tipoFomento" id="tipoFomento">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("fomentos");
+                                        geraOpcao("fomentos");
                                         ?>
                                     </select>
                                 </div>
@@ -88,12 +91,13 @@ include "includes/menu_interno.php";
 
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla escolha) </i></label>
+                                    <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla
+                                            escolha) </i></label>
                                     <button class='btn btn-default' type='button' data-toggle='modal'
                                             data-target='#modalAcoes' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
-                                   <?php
-                                        geraCheckboxEvento('acoes', 'acao', 'acao_evento');
+                                    <?php
+                                    geraCheckboxEvento('acoes', 'acao', 'acao_evento');
                                     ?>
                                 </div>
 
@@ -104,7 +108,7 @@ include "includes/menu_interno.php";
                                             data-target='#modalPublico' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                        geraCheckboxEvento('publicos', 'publico', 'evento_publico');
+                                    geraCheckboxEvento('publicos', 'publico', 'evento_publico');
                                     ?>
                                 </div>
                             </div>
@@ -112,7 +116,9 @@ include "includes/menu_interno.php";
                             <div class="form-group">
                                 <label for="sinopse">Sinopse *</label><br/>
                                 <i>Esse campo deve conter uma breve descrição do que será apresentado no evento.</i>
-                                <p align="justify"><span style="color: gray; "><strong><i>Texto de exemplo:</strong><br/>Ana Cañas faz o show de lançamento do seu quarto disco, “Tô na Vida” (Som Livre/Guela Records). Produzido por Lúcio Maia (Nação Zumbi) em parceria com Ana e mixado por Mario Caldato Jr, é o primeiro disco totalmente autoral da carreira da cantora e traz parcerias com Arnaldo Antunes e Dadi entre outros.</span></i></p>
+                                <p align="justify"><span
+                                            style="color: gray; "><strong><i>Texto de exemplo:</strong><br/>Ana Cañas faz o show de lançamento do seu quarto disco, “Tô na Vida” (Som Livre/Guela Records). Produzido por Lúcio Maia (Nação Zumbi) em parceria com Ana e mixado por Mario Caldato Jr, é o primeiro disco totalmente autoral da carreira da cantora e traz parcerias com Arnaldo Antunes e Dadi entre outros.</span></i>
+                                </p>
                                 <textarea name="sinopse" id="sinopse" class="form-control" rows="5" required></textarea>
                             </div>
 
@@ -224,19 +230,23 @@ include "includes/menu_interno.php";
 </div>
 
 <script>
-    var fomento = $('.fomento');
-    fomento.on("change", verificaFomento);
-    $(document).ready(verificaFomento());
+    let fomento = $('.fomento');
 
-    function verificaFomento () {
+    fomento.on("change", verificaFomento);
+
+    $(document).ready(
+        verificaFomento()
+    );
+
+    function verificaFomento() {
         if ($('#sim').is(':checked')) {
             $('#tipoFomento')
                 .attr('disabled', false)
-                .attr('required',true)
+                .attr('required', true)
         } else {
             $('#tipoFomento')
                 .attr('disabled', true)
-                .attr('required',false)
+                .attr('required', false)
         }
     }
 </script>
