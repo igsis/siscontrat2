@@ -189,7 +189,7 @@ include "includes/menu_interno.php";
                                     <select class="form-control" name="tipoFomento" id="tipoFomento">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao("fomentos", $fomento['fomento_id']);
+                                            geraOpcao("fomentos", $fomento['fomento_id']);
                                         ?>
                                     </select>
                                 </div>

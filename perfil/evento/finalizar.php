@@ -8,13 +8,17 @@ $sqlEvento = "SELECT
                pe.projeto_especial AS 'Projeto Especial',
                eve.sinopse AS 'Sinopse',
                fiscal.nome_completo AS 'Fiscal',
-               suplente.nome_completo AS 'Suplente'
+               suplente.nome_completo AS 'Suplente',
+               eve.espaco_publico AS 'Evento Público',
+               eve.fomento AS 'Fomento'
+               
                 FROM eventos AS eve
-                INNER JOIN tipo_eventos AS te ON eve.tipo_evento_id = te.id
+                INNER JOIN  tipo_eventos AS te ON eve.tipo_evento_id = te.id
                 INNER JOIN relacao_juridicas AS rj ON eve.relacao_juridica_id = rj.id
                 INNER JOIN projeto_especiais AS pe ON eve.projeto_especial_id = pe.id
                 INNER JOIN usuarios AS fiscal ON eve.fiscal_id = fiscal.id
                 INNER JOIN usuarios AS suplente ON eve.suplente_id = suplente.id
+                
                 WHERE eve.id = '$idEvento'";
 
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
@@ -99,6 +103,25 @@ include "includes/validacoes.php";
                                     <?php foreach ($resumoEvento as $campo => $dado) { ?>
                                         <tr>
                                             <th width="30%"><?= $campo ?></th>
+                                            <?php
+                                                if ($campo == "Evento Público"){
+                                                    if ($dado == 0){
+                                                    $dado = "Não";
+                                                    }else{
+                                                        $dado = "Sim";
+                                                    }
+                                                }
+                                                if($campo == "Fomento"){
+                                                    if ($dado == 0){
+                                                        $dado = "Não possui";
+                                                    }else{
+                                                        $fomentoRelacionado = recuperaDados("evento_fomento", "evento_id", $idEvento);
+                                                        $fomento = recuperaDados("fomentos", "id", $fomentoRelacionado['fomento_id']);
+
+                                                        $dado = $fomento['fomento'];
+                                                    }
+                                                }
+                                            ?>
                                             <td><?=$dado?></td>
                                         </tr>
                                     <?php } ?>
