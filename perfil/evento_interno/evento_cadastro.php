@@ -18,6 +18,30 @@ require "includes/menu_principal.php";
                         <div class="box-body">
 
                             <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="contratacao">Espaço em que será realizado o evento é público?</label>
+                                    <br>
+                                    <label><input type="radio" name="tipoLugar" value="1"> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="tipoLugar" value="0" checked> Não </label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="fomento">É fomento/programa?</label> <br>
+                                    <label><input type="radio" class="fomento" name="fomento" value="1" id="sim"> Sim
+                                    </label>&nbsp;&nbsp;
+                                    <label><input type="radio" class="fomento" name="fomento" value="0" id="nao"
+                                                  checked> Não </label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="tipoFomento">Fomento/Programa</label> <br>
+                                    <select class="form-control" name="tipoFomento" id="tipoFomento">
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcao("fomentos");
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="nomeEvento">Nome do evento *</label>
                                     <input type="text" class="form-control" id="nomeEvento" name="nomeEvento"
@@ -47,6 +71,29 @@ require "includes/menu_principal.php";
                                     </div>
                                 </div>
 
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla
+                                            escolha) </i></label>
+                                    <button class='btn btn-default' type='button' data-toggle='modal'
+                                            data-target='#modalAcoes' style="border-radius: 30px;">
+                                        <i class="fa fa-question-circle"></i></button>
+                                    <?php
+                                    geraCheckboxEvento('acoes', 'acao', 'acao_evento');
+                                    ?>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="acao">Público (Representatividade e Visibilidade Sócio-cultural)* <i>(multipla
+                                            escolha) </i></label>
+                                    <button class='btn btn-default' type='button' data-toggle='modal'
+                                            data-target='#modalPublico' style="border-radius: 30px;">
+                                        <i class="fa fa-question-circle"></i></button>
+                                    <?php
+                                    geraCheckboxEvento('publicos', 'publico', 'evento_publico');
+                                    ?>
+                                </div>
+                            </div>
                                 <div class="form-group">
                                     <label for="sinopse">Sinopse *</label><br/>
                                     <i>Esse campo deve conter uma breve descrição do que será apresentado no evento.</i>
@@ -66,3 +113,25 @@ require "includes/menu_principal.php";
         </div>
     </section>
 </div>
+
+<script>
+    let fomento = $('.fomento');
+
+    fomento.on("change", verificaFomento);
+
+    $(document).ready(
+        verificaFomento()
+    );
+
+    function verificaFomento() {
+        if ($('#sim').is(':checked')) {
+            $('#tipoFomento')
+                .attr('disabled', false)
+                .attr('required', true)
+        } else {
+            $('#tipoFomento')
+                .attr('disabled', true)
+                .attr('required', false)
+        }
+    }
+</script>

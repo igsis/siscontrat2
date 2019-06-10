@@ -14,6 +14,9 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $original = 0;
     $contratacao = 0;
     $eventoStatus = "1";
+    $fomento = $_POST['fomento'];
+    $tipoLugar = $_POST['tipoLugar'];
+    $idFomento = $_POST['tipoFomento'] ?? null;
 }
 
 if (isset($_POST['cadastra'])) {
@@ -29,7 +32,9 @@ if (isset($_POST['cadastra'])) {
                                  contratacao, 
                                  original, 
                                  evento_status_id,
-                                 evento_interno) 
+                                 evento_interno,
+                                 fomento, 
+                                 espaco_publico) 
                           VALUES ('$nomeEvento',
                                   '$relacao_juridica_id',
                                   '$projeto_especial_id',
@@ -41,12 +46,29 @@ if (isset($_POST['cadastra'])) {
                                   '$contratacao',
                                   '$original',
                                   '$eventoStatus',
-                                  1)";
+                                   1,
+                                  '$fomento',
+                                  '$tipoLugar')";
 
     if(mysqli_query($con, $sql))
     {
         $idEvento = recuperaUltimo("eventos");
         $_SESSION['idEvento'] = $idEvento;
+
+        if($idFomento != null)
+        {
+            $sql = "INSERT INTO evento_fomento  (evento_id, fomento_id) VALUES ('$idEvento', '$idFomento')";
+            mysqli_query($con, $sql);
+        }
+
+        if(isset($_POST['acao'])){
+            atualizaRelacionamentoEvento('acao_evento', $idEvento, $_POST['acao']);
+        }
+
+        if(isset($_POST['publico'])){
+            atualizaRelacionamentoEvento('evento_publico', $idEvento, $_POST['publico']);
+        }
+
         $mensagem = mensagem("success","Cadastrado com sucesso!");
         //gravarLog($sql);
     }else{
@@ -57,6 +79,14 @@ if (isset($_POST['cadastra'])) {
 
 if(isset($_POST['edita'])){
     $idEvento = $_POST['idEvento'];
+    $evento = recuperaDados("eventos","id",$idEvento);
+
+    if($evento['fomento'] == $fomento){
+        $ehIgual = true;
+    }else{
+        $ehIgual = false;
+    }
+
     $sql = "UPDATE eventos SET
                               nome_evento = '$nomeEvento', 
                               relacao_juridica_id = '$relacao_juridica_id', 
@@ -66,10 +96,35 @@ if(isset($_POST['edita'])){
                               fiscal_id = '$fiscal_id', 
                               suplente_id = '$suplente_id', 
                               contratacao = '$contratacao', 
-                              original = '$original' 
+                              original = '$original',
+                              fomento = '$fomento',
+                              espaco_publico = '$tipoLugar'
                               WHERE id = '$idEvento'";
+
     If(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com sucesso!");
+
+        if($idFomento == null)
+        {
+            $sql = "DELETE FROM evento_fomento WHERE evento_id = '$idEvento'";
+
+        }else{
+            if($ehIgual){
+                $sql = "UPDATE evento_fomento SET fomento_id = '$idFomento' WHERE evento_id = '$idEvento'";
+            }
+            else{
+                $sql = "INSERT INTO evento_fomento VALUES ('$idEvento', '$idFomento')";
+            }
+        }
+
+        mysqli_query($con, $sql);
+
+        if(isset($_POST['acao'])){
+            atualizaRelacionamentoEvento('acao_evento', $idEvento, $_POST['acao']);
+        }
+        if(isset($_POST['publico'])){
+            atualizaRelacionamentoEvento('evento_publico', $idEvento, $_POST['publico']);
+        }
         //gravarLog($sql);
     }else{
         $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
@@ -82,6 +137,8 @@ if(isset($_POST['carregar'])){
 }
 
 $evento = recuperaDados("eventos","id",$idEvento);
+$fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
+
 include "includes/menu_interno.php";
 ?>
 
@@ -102,7 +159,27 @@ include "includes/menu_interno.php";
 
                     <form method="POST" action="?perfil=evento_interno&p=evento_edita" role="form">
                         <div class="box-body">
-
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="contratacao">Espaço em que será realizado o evento é público?</label> <br>
+                                    <label><input type="radio" name="tipoLugar" value="1"> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="tipoLugar" value="0" checked> Não </label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="fomento">É fomento/programa?</label> <br>
+                                    <label><input type="radio" class="fomento" name="fomento" value="1" id="sim"  <?= $evento['fomento'] == 1 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" class="fomento" name="fomento" value="0" id="nao"  <?= $evento['fomento'] == 0 ? 'checked' : NULL ?>> Não </label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="tipoFomento">Fomento/Programa</label> <br>
+                                    <select class="form-control" name="tipoFomento" id="tipoFomento">
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcao("fomentos", $fomento['fomento_id']);
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="nomeEvento">Nome do evento *</label>
@@ -133,6 +210,29 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla escolha) </i></label>
+                                    <button class='btn btn-default' type='button' data-toggle='modal'
+                                            data-target='#modalAcoes' style="border-radius: 30px;">
+                                        <i class="fa fa-question-circle"></i></button>
+                                    <?php
+                                    geraCheckboxEvento('acoes', 'acao', 'acao_evento', $idEvento);
+                                    ?>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="acao">Público (Representatividade e Visibilidade Sócio-cultural)* <i>(multipla
+                                            escolha) </i></label>
+                                    <button class='btn btn-default' type='button' data-toggle='modal'
+                                            data-target='#modalPublico' style="border-radius: 30px;">
+                                        <i class="fa fa-question-circle"></i></button>
+                                    <?php
+                                    geraCheckboxEvento('publicos', 'publico', 'evento_publico', $idEvento);
+                                    ?>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="sinopse">Sinopse *</label><br/>
                                 <i>Esse campo deve conter uma breve descrição do que será apresentado no evento.</i>
@@ -152,3 +252,21 @@ include "includes/menu_interno.php";
 
     </section>
 </div>
+
+<script>
+    var fomento = $('.fomento');
+    fomento.on("change", verificaFomento);
+    $(document).ready(verificaFomento());
+
+    function verificaFomento () {
+        if ($('#sim').is(':checked')) {
+            $('#tipoFomento')
+                .attr('disabled', false)
+                .attr('required',true)
+        } else {
+            $('#tipoFomento')
+                .attr('disabled', true)
+                .attr('required',false)
+        }
+    }
+</script>
