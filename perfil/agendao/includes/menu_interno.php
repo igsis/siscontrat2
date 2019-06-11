@@ -1,5 +1,5 @@
 <?php
-$pasta = "?perfil=evento_interno&p=";
+$pasta = "?perfil=agendao&p=";
 ?>
 <aside class="main-sidebar">
     <section class="sidebar">
@@ -23,7 +23,7 @@ $pasta = "?perfil=evento_interno&p=";
             ?>
             <li><a href="<?=$pasta?>anexos"><i class='fa fa-circle-o text-teal'></i> <span>Anexar Arquivos</span></a></li>
             <li><a href="<?=$pasta?>finalizar"><i class='fa fa-circle-o text-light-blue'></i> <span>Finalizar</span></a></li>
-            <li><a href="?perfil=evento_interno"><i class="fa fa-reply"></i> <span>Voltar</span></a></li>
+            <li><a href="?perfil=agendao"><i class="fa fa-reply"></i> <span>Voltar</span></a></li>
             <li class="header">MAIS</li>
             <li><a href="?perfil=usuario/minha_conta"><i class="fa fa-user"></i><span>Minha Conta</span></a></li>
             <li><a href="../includes/ajuda.php"><i class="fa fa-question "></i><span>Ajuda</span></a></li>

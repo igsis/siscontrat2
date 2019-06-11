@@ -111,7 +111,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             <?php echo $evento['nome_evento'] ?>
                         </h3>
                     </div>
-                    <form method="POST" action="?perfil=evento_interno&p=ocorrencia_edita" role="form">
+                    <form method="POST" action="?perfil=agendao&p=ocorrencia_edita" role="form">
                         <div class="box-body">
 
                             <div class="row">
@@ -215,7 +215,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                         </div>
 
                         <div class="box-footer">
-                            <a href="?perfil=evento_interno&p=ocorrencia_lista">
+                            <a href="?perfil=agendao&p=ocorrencia_lista">
                                 <button type="button" class="btn btn-default" id="voltar" name="voltar">Voltar</button>
                             </a>
                             <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">

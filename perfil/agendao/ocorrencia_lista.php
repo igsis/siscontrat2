@@ -82,7 +82,7 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
         <h2 class="page-header">Ocorrências</h2>
         <div class="row">
             <div class="col-md-2">
-                <form method="POST" action="?perfil=evento_interno&p=ocorrencia_cadastro">
+                <form method="POST" action="?perfil=agendao&p=ocorrencia_cadastro">
                     <input type="hidden" name="idOrigem" value="<?= $idOrigem ?>">
                     <button type="submit" class="btn btn-block btn-info"><i class="fa fa-plus"></i> Adiciona</button>
                 </form>
@@ -129,7 +129,7 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
                                 echo "<td>".$ocorrencia['local']."</td>";
 
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=ocorrencia_edita\" role=\"form\">
+                                    <form method=\"POST\" action=\"?perfil=agendao&p=ocorrencia_edita\" role=\"form\">
                                     <input type='hidden' name='idOcorrencia' value='".$ocorrencia['id']."'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>

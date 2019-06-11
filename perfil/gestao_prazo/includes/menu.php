@@ -1,5 +1,5 @@
 <?php
-$pasta = "?perfil=evento_interno&p=";
+$pasta = "?perfil=agendao&p=";
 ?>
 <aside class="main-sidebar">
     <section class="sidebar">

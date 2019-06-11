@@ -33,7 +33,7 @@ if (isset($_POST['cadastra'])) {
                                  contratacao, 
                                  original, 
                                  evento_status_id,
-                                 evento_interno,
+                                 agendao,
                                  fomento, 
                                  espaco_publico,
                                  oficina) 
@@ -149,7 +149,7 @@ include "includes/menu_interno.php";
 <div class="content-wrapper">
     <section class="content">
 
-        <h2 class="page-header">Cadastro de Evento Interno</h2>
+        <h2 class="page-header">Cadastro do Agendão</h2>
 
         <div class="row">
             <div class="col-md-12">
@@ -161,7 +161,7 @@ include "includes/menu_interno.php";
                         <?php if(isset($mensagem)){echo $mensagem;};?>
                     </div>
 
-                    <form method="POST" action="?perfil=evento_interno&p=evento_edita" role="form">
+                    <form method="POST" action="?perfil=agendao&p=evento_edita" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -261,7 +261,6 @@ include "includes/menu_interno.php";
                 </div>
             </div>
         </div>
-
     </section>
 </div>
 

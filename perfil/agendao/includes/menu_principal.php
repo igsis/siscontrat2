@@ -1,6 +1,6 @@
 <?php
 //geram o insert pro framework da igsis
-$pasta = "?perfil=evento_interno&p=";
+$pasta = "?perfil=agendao&p=";
 ?>
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">

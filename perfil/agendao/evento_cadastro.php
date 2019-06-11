@@ -6,7 +6,7 @@ require "includes/menu_principal.php";
 <div class="content-wrapper">
     <section class="content">
 
-        <h2 class="page-header">Cadastro de Evento Interno</h2>
+        <h2 class="page-header">Cadastro do Agendão</h2>
 
         <div class="row">
             <div class="col-md-12">
@@ -14,7 +14,7 @@ require "includes/menu_principal.php";
                     <div class="box-header with-border">
                         <h3 class="box-title">Informações Gerais</h3>
                     </div>
-                    <form method="POST" action="?perfil=evento_interno&p=evento_edita" role="form">
+                    <form method="POST" action="?perfil=agendao&p=evento_edita" role="form">
                         <div class="box-body">
 
                             <div class="row">

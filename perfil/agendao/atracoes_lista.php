@@ -35,7 +35,7 @@ $query = mysqli_query($con,$sql);
         <h2 class="page-header">Atrações</h2>
         <div class="row">
             <div class="col-md-2">
-                <a href="?perfil=evento_interno&p=atracoes_cadastro">
+                <a href="?perfil=agendao&p=atracoes_cadastro">
                     <button type="button" class="btn btn-block btn-info"><i class="fa fa-plus"></i> Adiciona</button>
                 </a>
             </div>
@@ -77,7 +77,7 @@ $query = mysqli_query($con,$sql);
                                     $query_produtor = mysqli_query($con,$sql_produtor);
                                     $produtor = mysqli_fetch_array($query_produtor);
                                     echo "<td>
-                                              <form method=\"POST\" action=\"?perfil=evento_interno&p=produtor_edita\" role=\"form\">
+                                              <form method=\"POST\" action=\"?perfil=agendao&p=produtor_edita\" role=\"form\">
                                         <input type='hidden' name='idProdutor' value='".$produtor['id']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
                                         ".$produtor['nome']."</form>
@@ -85,7 +85,7 @@ $query = mysqli_query($con,$sql);
                                 }
                                 else{
                                     echo "<td>
-                                        <form method=\"POST\" action=\"?perfil=evento_interno&p=produtor_cadastro\" role=\"form\">
+                                        <form method=\"POST\" action=\"?perfil=agendao&p=produtor_cadastro\" role=\"form\">
                                         <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Produtor</button>
                                         </form>
@@ -103,7 +103,7 @@ $query = mysqli_query($con,$sql);
                                     $query_produtor = mysqli_query($con,$sql_produtor);
                                     $produtor = mysqli_fetch_array($query_produtor);
                                     echo "<td>
-                                              <form method=\"POST\" action=\"?perfil=evento_interno&p=ocorrencia_lista\" role=\"form\">
+                                              <form method=\"POST\" action=\"?perfil=agendao&p=ocorrencia_lista\" role=\"form\">
                                         <input type='hidden' name='idOrigem' value='".$atracao['idAtracao']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i> Listar ocorrência</button>
                                         </form>
@@ -111,14 +111,14 @@ $query = mysqli_query($con,$sql);
                                 }
                                 else{
                                     echo "<td>
-                                        <form method=\"POST\" action=\"?perfil=evento_interno&p=ocorrencia_cadastro\" role=\"form\">
+                                        <form method=\"POST\" action=\"?perfil=agendao&p=ocorrencia_cadastro\" role=\"form\">
                                         <input type='hidden' name='idOrigem' value='".$atracao['idAtracao']."'>
                                         <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Ocorrência</button>
                                         </form>
                                     </td>";
                                 }
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=atracoes_edita\" role=\"form\">
+                                    <form method=\"POST\" action=\"?perfil=agendao&p=atracoes_edita\" role=\"form\">
                                     <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
@@ -160,7 +160,7 @@ $query = mysqli_query($con,$sql);
 <div class="modal fade" id="apagar" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" id='formApagar' action="?perfil=evento_interno&p=atracoes_lista" class="form-horizontal" role="form">
+            <form method="POST" id='formApagar' action="?perfil=agendao&p=atracoes_lista" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title"><p> Apagar atração</p></h4>

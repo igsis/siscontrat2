@@ -9,7 +9,7 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_interno = 1 AND contratacao = 0 AND evento_status_id >= 3 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+$sql = "SELECT * FROM eventos WHERE publicado = 1 AND agendao = 1 AND contratacao = 0 AND evento_status_id >= 3 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
 $query = mysqli_query($con, $sql);
 
 $num_atracoes = 0;
@@ -80,7 +80,7 @@ $num_atracoes = 0;
                                 echo "<td>" . retornaPeriodoNovo($evento['id']) . "</td>";
                                 echo "<td>" . $status['status'] . "</td>";
                                 echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento_interno&p=resumo_evento_enviado\" role=\"form\">
+                                    <form method=\"POST\" action=\"?perfil=agendao&p=resumo_evento_enviado\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>

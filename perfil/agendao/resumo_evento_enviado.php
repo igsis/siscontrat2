@@ -219,7 +219,7 @@ if (isset($_POST['carregar'])) {
 
                                         ?>
                                         <div class="box-footer" align="center">
-                                            <a href="?perfil=evento_interno&p=lista_eventos_enviados">
+                                            <a href="?perfil=agendao&p=lista_eventos_enviados">
                                                 <button type="button" class="btn btn-default">Voltar</button>
                                             </a>
                                     </div>

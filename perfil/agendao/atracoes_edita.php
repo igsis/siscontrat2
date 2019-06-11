@@ -49,7 +49,7 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Cadastro de Evento Interno</h2>
+        <h2 class="page-header">Cadastro do Agendão</h2>
 
         <div class="row">
             <div class="col-md-12">
@@ -63,7 +63,7 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
                     <div class="row" align="center">
                         <?php if(isset($mensagem)){echo $mensagem;};?>
                     </div>
-                    <form method="POST" action="?perfil=evento_interno&p=atracoes_edita" role="form">
+                    <form method="POST" action="?perfil=agendao&p=atracoes_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="nome_atracao">Nome da atração *</label>
@@ -124,7 +124,7 @@ $atracao = recuperaDados("atracoes","id",$idAtracao);
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <a href="?perfil=evento_interno&p=atracoes_lista"><button type="button" class="btn btn-default">Voltar</button></a>
+                            <a href="?perfil=agendao&p=atracoes_lista"><button type="button" class="btn btn-default">Voltar</button></a>
                             <input type="hidden" name="idAtracao" value="<?= $atracao['id'] ?>">
                             <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>

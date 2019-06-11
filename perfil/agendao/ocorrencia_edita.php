@@ -235,7 +235,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                             echo $mensagem;
                         }; ?>
                     </div>
-                    <form method="POST" action="?perfil=evento_interno&p=ocorrencia_edita" role="form">
+                    <form method="POST" action="?perfil=agendao&p=ocorrencia_edita" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -352,7 +352,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                         </div>
 
                         <div class="box-footer">
-                            <a href="?perfil=evento_interno&p=ocorrencia_lista"><button type="button" class="btn btn-default" name="voltar">Voltar</button></a>
+                            <a href="?perfil=agendao&p=ocorrencia_lista"><button type="button" class="btn btn-default" name="voltar">Voltar</button></a>
                             <input type="hidden" name="idOcorrencia" value="<?= $idOcorrencia ?>">
                             <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>

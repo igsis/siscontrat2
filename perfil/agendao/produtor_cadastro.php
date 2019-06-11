@@ -26,7 +26,7 @@ if(isset($_POST['idAtracao'])){
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form method="POST" action="?perfil=evento_interno&p=produtor_edita" role="form">
+                    <form method="POST" action="?perfil=agendao&p=produtor_edita" role="form">
                         <div class="box-body">
                             <input type='hidden' name='idAtracoes' value='<?= $idAtracao?>'>
 
@@ -54,7 +54,7 @@ if(isset($_POST['idAtracao'])){
                             </div>
                         </div>
                         <div class="box-footer">
-                            <a href="?perfil=evento_interno&p=atracoes_lista"><button type="button" class="btn btn-default">Voltar</button></a>
+                            <a href="?perfil=agendao&p=atracoes_lista"><button type="button" class="btn btn-default">Voltar</button></a>
                             <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
                     </form>

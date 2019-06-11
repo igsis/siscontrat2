@@ -1,6 +1,6 @@
 USE siscontrat;
 
-INSERT INTO `eventos` (`id`, `tipo_evento_id`, `original`, `nome_evento`, `relacao_juridica_id`, `projeto_especial_id`, `sinopse`, `fiscal_id`, `suplente_id`, `usuario_id`, `contratacao`, `evento_status_id`, `evento_interno`, `publicado`) VALUES
+INSERT INTO `eventos` (`id`, `tipo_evento_id`, `original`, `nome_evento`, `relacao_juridica_id`, `projeto_especial_id`, `sinopse`, `fiscal_id`, `suplente_id`, `usuario_id`, `contratacao`, `evento_status_id`, `agendao`, `publicado`) VALUES
 (1, 1, 1, 'Teste Evento 1', 1, 1, 'Ana Cañas faz o show de lançamento do seu quarto disco, “Tô na Vida” (Som Livre/Guela Records). Produzido por Lúcio Maia (Nação Zumbi) em parceria com Ana e mixado por Mario Caldato Jr, é o primeiro disco totalmente autoral da carreira da cantora e traz parcerias com Arnaldo Antunes e Dadi entre outros.', 1, 1, 1, 1, 1, 0, 1);
 
 INSERT INTO `produtores` (`id`, `nome`, `email`, `telefone1`, `telefone2`, `observacao`) VALUES

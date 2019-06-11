@@ -8,7 +8,7 @@ include "includes/menu_interno.php";
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Cadastro de Evento Interno</h2>
+        <h2 class="page-header">Cadastro do Agendão</h2>
 
         <div class="row">
             <div class="col-md-12">
@@ -19,7 +19,7 @@ include "includes/menu_interno.php";
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form method="POST" action="?perfil=evento_interno&p=atracoes_edita" role="form">
+                    <form method="POST" action="?perfil=agendao&p=atracoes_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="nome_atracao">Nome da atração *</label>
@@ -97,7 +97,7 @@ include "includes/menu_interno.php";
                             <!-- /.box-body -->
 
                             <div class="box-footer">
-                                <a href="?perfil=evento_interno&p=atracoes_lista"><button type="button" class="btn btn-default">Voltar</button></a>
+                                <a href="?perfil=agendao&p=atracoes_lista"><button type="button" class="btn btn-default">Voltar</button></a>
                                 <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar
                                 </button>
                             </div>

@@ -137,7 +137,7 @@ if (isset($_POST['apagar'])) {
                                     <div class="col-md-10 col-md-offset-1">
                                         <br/>
                                         <div class="center">
-                                            <form method="POST" action="?perfil=evento_interno&p=anexos"
+                                            <form method="POST" action="?perfil=agendao&p=anexos"
                                                   enctype="multipart/form-data">
                                                 <table class="table text-center table-striped">
                                                     <tbody>
@@ -197,7 +197,7 @@ if (isset($_POST['apagar'])) {
                                                     <p>Tem certeza que deseja excluir este arquivo?</p>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <form action="?perfil=evento_interno&p=anexos"
+                                                    <form action="?perfil=agendao&p=anexos"
                                                           method="post">
                                                         <input type="hidden" name="idArquivo" id="idArquivo" value="">
                                                         <input type="hidden" name="apagar" id="apagar">

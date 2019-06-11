@@ -8,4 +8,4 @@ else
 {
     $p = "inicio";
 }
-include "evento_interno/".$p.".php";
+include "agendao/".$p.".php";
