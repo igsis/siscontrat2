@@ -17,6 +17,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $fomento = $_POST['fomento'];
     $tipoLugar = $_POST['tipoLugar'];
     $idFomento = $_POST['tipoFomento'] ?? null;
+    $oficina = $_POST['oficina'];
 }
 
 if (isset($_POST['cadastra'])) {
@@ -34,7 +35,8 @@ if (isset($_POST['cadastra'])) {
                                  evento_status_id,
                                  evento_interno,
                                  fomento, 
-                                 espaco_publico) 
+                                 espaco_publico,
+                                 oficina) 
                           VALUES ('$nomeEvento',
                                   '$relacao_juridica_id',
                                   '$projeto_especial_id',
@@ -48,7 +50,8 @@ if (isset($_POST['cadastra'])) {
                                   '$eventoStatus',
                                    1,
                                   '$fomento',
-                                  '$tipoLugar')";
+                                  '$tipoLugar',
+                                  '$oficina')";
 
     if(mysqli_query($con, $sql))
     {
@@ -98,7 +101,8 @@ if(isset($_POST['edita'])){
                               contratacao = '$contratacao', 
                               original = '$original',
                               fomento = '$fomento',
-                              espaco_publico = '$tipoLugar'
+                              espaco_publico = '$tipoLugar',
+                              oficina = '$oficina'
                               WHERE id = '$idEvento'";
 
     If(mysqli_query($con,$sql)){
@@ -211,6 +215,14 @@ include "includes/menu_interno.php";
                             </div>
 
                             <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="tipo">Este evento é oficina?</label> <br>
+                                    <label><input type="radio" name="oficina" value="1" id="simOficina" <?= $evento['oficina'] == 1 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="oficina" value="0" <?= $evento['oficina'] == 0 ? 'checked' : NULL ?>> Não </label>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla escolha) </i></label>
                                     <button class='btn btn-default' type='button' data-toggle='modal'
@@ -254,19 +266,70 @@ include "includes/menu_interno.php";
 </div>
 
 <script>
-    var fomento = $('.fomento');
-    fomento.on("change", verificaFomento);
-    $(document).ready(verificaFomento());
+    let fomento = $('.fomento');
+    let acao = $("input[name='acao[]']");
+    const oficinaId = "Oficinas e Formação Cultural";
+    let oficinaRadio = $("input[name='oficina']");
+    var oficinaOficial = acao[8];
 
-    function verificaFomento () {
+    function verificaOficina() {
+        if ($('#simOficina').is(':checked')) {
+            checaCampos(oficinaOficial);
+        } else {
+            checaCampos("");
+        }
+    }
+
+    function checaCampos(obj){
+        if(obj.id == oficinaId && obj.value == '8'){
+
+            for(i = 0; i < acao.size(); i++){
+                if (!(acao[i] == obj)){
+                    let acoes = acao[i].id;
+
+                    document.getElementById(acoes).disabled = true;
+                    document.getElementById(acoes).checked = false;
+                    document.getElementById(oficinaId).checked = true;
+                    document.getElementById(oficinaId).disabled = false;
+
+                    document.getElementById(oficinaId).readonly = true;
+
+                }
+            }
+        }else{
+            for(i = 0; i < acao.size(); i++){
+
+                if (!(acao[i] == acao[8])){
+                    let acoes = acao[i].id;
+
+                    document.getElementById(acoes).disabled = false;
+                    document.getElementById(oficinaId).checked = false;
+                    document.getElementById(oficinaId).disabled = true;
+
+                    document.getElementById(oficinaId).readonly = false;
+                }
+            }
+
+        }
+    }
+
+    fomento.on("change", verificaFomento);
+    oficinaRadio.on("change", verificaOficina);
+
+    $(document).ready(
+        verificaFomento(),
+        verificaOficina()
+    );
+
+    function verificaFomento() {
         if ($('#sim').is(':checked')) {
             $('#tipoFomento')
                 .attr('disabled', false)
-                .attr('required',true)
+                .attr('required', true)
         } else {
             $('#tipoFomento')
                 .attr('disabled', true)
-                .attr('required',false)
+                .attr('required', false)
         }
     }
 </script>
