@@ -11,7 +11,8 @@ $pasta = "?perfil=agendao&p=";
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">EVENTO</li>
             <li><a href="<?= $pasta ?>evento_cadastro"><i class="fa fa-circle-o"></i> <span>Novo</span></a></li>
-            <li><a href="<?= $pasta ?>listagem"><i class="fa fa-circle-o"></i> <span>Listar / Editar Evento</span></a></li>>
+            <li><a href="<?= $pasta ?>listagem"><i class="fa fa-circle-o"></i> <span>Listar / Editar Evento</span></a></li>
+            <li><a href="<?= $pasta ?>exporta_evento"><i class="fa fa-circle-o"></i> <span>Exportar Evento para Excel</span></a></li>>
             <?php
             include "../perfil/includes/menu_mais.php";
             ?>

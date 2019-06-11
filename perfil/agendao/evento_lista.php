@@ -1,5 +1,4 @@
 <?php
-include "includes/menu_principal.php";
 
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
@@ -21,15 +20,13 @@ $sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status FROM
         INNER JOIN evento_status es on ev.evento_status_id = es.id
         WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id = 1 AND agendao = 1";
 $query = mysqli_query($con, $sql);
+$linha = mysqli_num_rows($query);
+if ($linha >= 1) {
+    $tem = 1;
+} else {
+    $tem = 0;
+}
 ?>
-
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-    <!-- Main content -->
-    <section class="content">
-
-        <!-- START FORM-->
-        <h2 class="page-header">Evento</h2>
 
         <div class="row">
             <div class="col-md-12">
@@ -37,65 +34,74 @@ $query = mysqli_query($con, $sql);
                     <div class="box-header">
                         <h3 class="box-title">Listagem</h3>
                     </div>
+                    <?php
+                    if ($tem == 0) {
+                        $mensagemEvento = mensagem("info", "Não existe eventos enviados!");
+                        echo $mensagemEvento;
+                    } else {
 
-                    <div class="row" align="center">
-                        <?php if(isset($mensagem)){
-                            echo $mensagem;
-                        }; ?>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <table id="tblEvento" class="table table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>Nome do evento</th>
-                                <th>Tipo do evento</th>
-                                <th>Status</th>
-                                <th>Visualizar</th>
-                                <th>Apagar</th>
-                            </tr>
-                            </thead>
+                        ?>
+                        <div class="row" align="center">
+                            <?php if (isset($mensagem)) {
+                                echo $mensagem;
+                            }; ?>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="tblEvento2" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Nome do evento</th>
+                                    <th>Tipo do evento</th>
+                                    <th>Status</th>
+                                    <th>Visualizar</th>
+                                    <th>Apagar</th>
+                                </tr>
+                                </thead>
 
-                            <?php
-                            echo "<tbody>";
-                            while ($evento = mysqli_fetch_array($query)) {
-                                echo "<tr>";
-                                echo "<td>" . $evento['nome_evento'] . "</td>";
-                                echo "<td>" . $evento['tipo_evento'] . "</td>";
-                                echo "<td>" . $evento['status'] . "</td>";
-                                echo "<td>
+                                <?php
+                                echo "<tbody>";
+                                while ($evento = mysqli_fetch_array($query)) {
+                                    echo "<tr>";
+                                    echo "<td>" . $evento['nome_evento'] . "</td>";
+                                    echo "<td>" . $evento['tipo_evento'] . "</td>";
+                                    echo "<td>" . $evento['status'] . "</td>";
+                                    echo "<td>
                                     <form method=\"POST\" action=\"?perfil=agendao&p=evento_edita\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
+                                    ?>
+                                    <td>
+                                        <form method="post" id="formExcluir">
+                                            <input type="hidden" name="idEvento" value="<?= $evento['idEvento'] ?>">
+                                            <button type="button" class="btn btn-block btn-danger" id="excluiEvento"
+                                                    data-toggle="modal" data-target="#exclusao" name="excluiEvento"
+                                                    data-name="<?= $evento['nome_evento'] ?>"
+                                                    data-id="<?= $evento['idEvento'] ?>">
+                                                <span class="glyphicon glyphicon-trash"></span></button>
+                                        </form>
+                                    </td>
+                                    <?php
+                                    echo "</tr>";
+                                }
+                                echo "</tbody>";
                                 ?>
-                                <td>
-                                    <form method="post" id="formExcluir">
-                                        <input type="hidden" name="idEvento" value="<?= $evento['idEvento'] ?>">
-                                        <button type="button" class="btn btn-block btn-danger" id="excluiEvento"
-                                                data-toggle="modal" data-target="#exclusao" name="excluiEvento"
-                                                data-name="<?= $evento['nome_evento']?>"
-                                                data-id="<?= $evento['idEvento'] ?>">
-                                            <span class="glyphicon glyphicon-trash"></span></button>
-                                    </form>
-                                </td>
-                                <?php
-                                echo "</tr>";
-                            }
-                            echo "</tbody>";
-                            ?>
-                            <tfoot>
-                            <tr>
-                                <th>Nome do evento</th>
-                                <th>Tipo do evento</th>
-                                <th>Status</th>
-                                <th colspan="2" width="15%"></th>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <!-- /.box-body -->
+                                <tfoot>
+                                <tr>
+                                    <th>Nome do evento</th>
+                                    <th>Tipo do evento</th>
+                                    <th>Status</th>
+                                    <th colspan="2" width="15%"></th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <?php
+                        }
+                        ?>
                 </div>
                 <!-- /.box -->
             </div>
@@ -122,16 +128,13 @@ $query = mysqli_query($con, $sql);
                 </div>
             </div>
         </div>
-    </section>
-    <!-- /.content -->
-</div>
 
 <script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">
     $(function () {
-        $('#tblEvento').DataTable({
+        $('#tblEvento2').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },
