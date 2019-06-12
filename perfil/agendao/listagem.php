@@ -16,7 +16,7 @@ include "includes/menu_principal.php";
                 ?>
             </div>
 
-            <div class="tab-pane fade in active" id="acompanhar">
+            <div class="tab-pane" id="acompanhar">
                 <?php
                     include "lista_eventos_enviados.php";
                 ?>
