@@ -1,9 +1,34 @@
 <?php
 include "includes/menu.php";
 $con = bancoMysqli();
-$url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.php';
+$url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espacos.php';
+$urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_calendar.php';
 ?>
+<script>
+    const urlEvento = `<?=$urlEvento?>`;
+    let retornoEvento = new Object();
 
+    function evento() {
+
+        fetch(`${urlEvento}`)
+            .then(response => response.json())
+            .then(eventos => {
+                const qtdEventos = eventos.length;
+
+                for (let i = 0; i < qtdEventos; i++) {
+                    retornoEvento[i] = {
+                        title: eventos[i].nomeEvento,
+                        start: eventos[i].dataInicio + "T" + eventos[i].horaInicio,
+                        end : eventos[i].dataFim + "T" + eventos[i].horaFim
+                    }
+                }
+            });
+
+        return retornoEvento;
+    }
+
+    evento();
+</script>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <section class="content">
@@ -53,84 +78,6 @@ $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.
 </div>
 
 <script>
-
-  document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-
-      locale: 'pt-br',
-      plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
-      header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-      },
-      defaultDate: '2019-03-12',
-      navLinks: true, // can click day/week names to navigate views
-      businessHours: true, // display business hours
-      editable: true,
-      events: [
-        {
-          title: 'Business Lunch',
-          start: '2019-03-03T13:00:00',
-          constraint: 'businessHours'
-        },
-        {
-          title: 'Meeting',
-          start: '2019-03-13T11:00:00',
-          constraint: 'availableForMeeting', // defined below
-          color: '#257e4a'
-        },
-        {
-          title: 'Conference',
-          start: '2019-03-18',
-          end: '2019-03-20'
-        },
-        {
-          title: 'Party',
-          start: '2019-03-29T20:00:00'
-        },
-
-        // areas where "Meeting" must be dropped
-        {
-          groupId: 'availableForMeeting',
-          start: '2019-03-11T10:00:00',
-          end: '2019-03-11T16:00:00',
-          rendering: 'background'
-        },
-        {
-          groupId: 'availableForMeeting',
-          start: '2019-03-13T10:00:00',
-          end: '2019-03-13T16:00:00',
-          rendering: 'background'
-        },
-
-        // red areas where no events can be dropped
-        {
-          start: '2019-03-24',
-          end: '2019-03-28',
-          overlap: false,
-          rendering: 'background',
-          color: '#ff9f89'
-        },
-        {
-          start: '2019-03-06',
-          end: '2019-03-08',
-          overlap: false,
-          rendering: 'background',
-          color: '#ff9f89'
-        }
-      ]
-    });
-
-    calendar.setOption('locale', 'pt-br');
-    calendar.render();
-  });
-
-</script>
-
-<script>
     const url = `<?=$url?>`;
 
     let instituicao = document.querySelector('#instituicao');
@@ -145,11 +92,11 @@ $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.
                 $('#local').append('<option value="">Selecione uma opção...</option>');
 
                 for (const local of locais) {
-                    $('#local').append(`<option value='${local.id}'>${local.local}</option>`).focus();;
+                    $('#local').append(`<option value='${local.id}'>${local.local}</option>`).focus();
                 }
             })
 
-    })
+    });
 
     let local = document.querySelector('#local');
 
@@ -157,16 +104,16 @@ $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.
         let idLocal = $('#local option:checked').val();
 
         fetch(`${url}?espaco_id=${idLocal}`)
-            .then(response => response.json() )
+            .then(response => response.json())
             .then(espacos => {
                 $('#espaco option').remove();
-                if(espacos.length < 1){
+                if (espacos.length < 1) {
                     $('#espaco').append('<option value="">Não há espaço para esse local</option>')
-                        .attr('required',false)
+                        .attr('required', false)
                         .focus();
-                }else{
+                } else {
                     $('#espaco').append('<option value="">Selecione uma opção...</option>')
-                        .attr('required',true)
+                        .attr('required', true)
                         .focus();
                 }
 
@@ -175,9 +122,46 @@ $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.
                 }
 
             })
-    })
-
+    });
 </script>
 
+<script>
+    // document.addEventListener('DOMContentLoaded', carregaCalendario);
+    $(document).ready(carregaCalendario());
+
+    function carregaCalendario(){
+        let data = new Date();
+        let dia = data.getDate().toString();
+        let mes = (data.getMonth() + 1).toString();
+        let ano = data.getFullYear().toString();
+
+        if (dia.length == 1) dia = "0" + dia;
+        if (mes.length == 1) mes = "0" + mes;
 
 
+        const diaAtual = ano + '-' + mes + '-' + dia;
+
+        let calendarEl = document.getElementById('calendar');
+        let calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: 'pt-br',
+            plugins: ['dayGrid', 'timeGrid'],
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+
+            defaultDate: diaAtual,
+            navLinks: true, // can click day/week names to navigate views
+            businessHours: true, // display business hours
+            editable: false,
+            events: [
+                retornoEvento
+            ]
+
+        });
+
+        calendar.setOption('locale', 'pt-br');
+        calendar.render();
+    }
+</script>
