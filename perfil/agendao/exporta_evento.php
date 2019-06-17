@@ -1,10 +1,162 @@
 <?php
     include "includes/menu_principal.php";
+    $con = bancoMysqli();
+
+    $consulta = isset($_POST['filtrar']) ? 1 : 0;
+    $displayForm = 'block';
+    $displayBotoes = 'none';
+
+if (isset($_POST['filtrar'])) {
+    $datainicio = exibirDataMysql($_POST['inicio']);
+    $datafim = $_POST['final'] ?? null;
+    $instituicao = $_POST['instituicao'] ?? null;
+    $local = $_POST['local'] ?? null;
+    $usuario = $_POST['inserido'] ?? null;
+    $projeto = $_POST['projetoEspecial'] ?? null;
+
+    if ($datainicio != '') {
+        if ($datafim != '') {
+            $datafim = exibirDataMysql($_POST['final']);
+            $filtro_data = "O.data_inicio BETWEEN '$datainicio' AND '$datafim'";
+        } else {
+            $filtro_data = "O.data_inicio > '$datainicio'";
+        }
+    } else {
+        $mensagem = "Informe uma data para inicio da consulta";
+        $consulta = 0;
+    }
+
+    if ($instituicao != '') {
+        $filtro_instituicao = "AND E.idInstituicao = '$instituicao'";
+    } else {
+        $filtro_instituicao = "";
+        /* $mensagem = "Selecione um local para consulta";
+        $consulta = 0;*/
+    }
+
+    if ($local != '') {
+        $filtro_local = "AND O.local_id = '$local'";
+    } else {
+        $filtro_local = "";
+        /* $mensagem = "Selecione um local para consulta";
+        $consulta = 0;*/
+    }
+
+    if ($usuario != '') {
+        $sql_user = "SELECT * FROM usuarios WHERE nome_completo like '%$usuario%'";
+        $query_user = mysqli_query($con, $sql_user);
+        if (mysqli_num_rows($query_user) > 0) {
+            $user = mysqli_fetch_array($query_user);
+            $idUsuario = $user['usuario'];
+            $nomeUser = $user['nome_completo'];
+            $filtro_usuario = "AND E.usuario_id = $idUsuario";
+        } else {
+            $mensagem = "Usuário não possuí nenhum evento enviado!";
+            $consulta = 0;
+            $filtro_usuario = "";
+        }
+    } else {
+        $filtro_usuario = "";
+    }
+
+    if ($projeto != '') {
+        $filtro_PE = "AND E.projeto_especial_id = $projeto";
+    } else {
+        $filtro_PE = "";
+    }
+
+
+    $sql = "SELECT
+E.id,
+E.nome_evento AS 'nome',
+E.espaco_publico AS 'espaco_publico',
+E.projeto_especial_id AS 'idProjetoEspecial',
+E.numero_apresentacao AS 'apresentacoes',
+TE.tipo_evento AS 'categoria',
+O.id AS 'id',
+O.hora_inicio AS 'hora_inicio',
+O.data_inicio AS 'data_inicio',
+O.data_fim AS 'data_fim',
+O.duracao AS 'duracao',
+O.valor_ingresso AS 'valor_ingresso',
+O.segunda AS 'segunda',
+O.terca AS 'terca',
+O.quarta AS 'quarta',
+O.quinta AS 'quinta',
+O.sexta AS 'sexta',
+O.sabado AS 'sabado',
+O.domingo AS 'domingo',
+L.sala AS 'nome_local',
+I.sigla AS 'sigla',
+I.instituicao AS 'equipamento',
+L.logradouro AS 'logradouro',
+L.numero AS 'numero',
+L.complemento AS 'complemento',
+L.bairro AS 'bairro',
+L.cidade AS 'cidade',
+L.estado AS 'estado',
+L.cep AS 'cep',
+I.telefone AS 'telefone',
+E.fichaTecnica AS 'artista',
+CI.faixa AS 'classificacao',
+E.linksCom AS 'divulgacao',
+E.sinopse AS 'sinopse',
+E.fomento AS 'fomento',
+E.tipo_fomento AS 'tipoFomento',
+P.nome AS 'produtor_nome',
+P.email AS 'produtor_email',
+P.telefone AS 'produtor_fone',
+U.nome_completo AS 'nomeCompleto',
+PE.projeto_especial,
+SUB_PRE.subprefeitura AS 'subprefeitura',
+DIA_PERI.periodo AS 'periodo',
+retirada.retirada AS 'retirada'
+FROM
+eventos AS E
+INNER JOIN tipo_eventos AS TE ON E.ig_tipo_evento_idTipoEvento = TE.id
+INNER JOIN instituicoes AS I ON E.idInstituicao = I.id
+INNER JOIN ig_etaria AS CI ON E.faixaEtaria = CI.idIdade
+LEFT JOIN produtores AS P ON E.ig_produtor_idProdutor = P.id
+INNER JOIN usuarios AS U ON E.usuario_id = U.id
+LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
+INNER JOIN ocorrencias AS O ON E.idEvento = O.idEvento
+INNER JOIN locais AS L ON O.local_id = L.id
+LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
+LEFT JOIN ig_periodo_dia AS DIA_PERI ON O.idPeriodoDia = DIA_PERI.id
+INNER JOIN retirada_ingressos AS retirada ON O.retirada_ingresso_id = retirada.id
+
+WHERE
+$filtro_data
+$filtro_instituicao
+$filtro_local
+$filtro_usuario
+$filtro_PE AND
+E.evento_status_id = 1 AND
+E.publicado = 1
+ORDER BY O.data_inicio";
+
+    $query = mysqli_query($con, $sql);
+    $num = mysqli_num_rows($query);
+
+    if ($num > 0) {
+        $mensagem = "Foram encontrados $num resultados";
+        $consulta = 1;
+        $displayForm = 'none';
+        $displayBotoes = 'block';
+
+    } else {
+        $consulta = 0;
+        $mensagem = "Não foram encontrados resultados para esta pesquisa!";
+    }
+}
 ?>
 
 <div class="content-wrapper">
     <section class="content-header">
         <h3 class="box-title">Eventos - Gerar Excel - Filtrar</h3>
+        <h6><?php if (isset($mensagem)) {
+                echo $mensagem;
+            } ?></h6>
         <div class="box box-primary">
             <form method="POST" action="?perfil=agendao&p=exporta_evento">
                 <div class="box-body">
@@ -22,7 +174,7 @@
                             <select class="form-control" name="projetoEspecial" id="projetoEspecial">
                                 <option value="">Selecione uma opção...</option>
                                 <?php
-                                //geraOpcao("");
+                                    geraOpcaoPublicado("projeto_especiais", "");
                                 ?>
                             </select>
                             <br>
@@ -34,7 +186,8 @@
                             <label for="instituicao">Instituição</label>
                             <select name="instituicao" class="form-control" id="instituicao">
                                 <option value="">Seleciona uma Opção...</option>
-                                <?php //geraOpcao(""); ?>
+                                <?php
+                                    geraOpcao("instituicoes", ""); ?>
                             </select>
                             <br>
                         </div>
@@ -45,7 +198,8 @@
                             <label for="local">Local</label>
                             <select name="local" class="form-control" id="local">
                                 <option value="">Seleciona uma Opção...</option>
-                                <?php //geraOpcao(""); ?>
+                                <?php
+                                    geraOpcao("locais", ""); ?>
                             </select>
                             <br>
                         </div>
@@ -54,12 +208,12 @@
                     <div class="row">
                         <div class="col-md-offset-3 col-md-3">
                             <label>Data início *</label>
-                            <input type="date" name="dataInicio" class="form-control" id="dataInicio"
+                            <input type="date" name="inicio" class="form-control" id="dataInicio"
                                    onchange="desabilitaFiltrar()" placeholder="">
                         </div>
                         <div class="col-md-3">
                             <label>Data encerramento</label>
-                            <input type="date" name="dataEncerramento" class="form-control" id="dataEncerramento"
+                            <input type="date" name="final" class="form-control" id="dataEncerramento"
                                    placeholder="">
                             <br>
                         </div>
@@ -70,13 +224,189 @@
                 </div>
             </form>
         </div>
+
+        <div class="container" id="resultado">
+            <?php
+            if ($consulta == 1) {
+                ?>
+                <form method="post" action="../pdf/agendao_exportar_excel.php">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-8">
+                            <br/>
+                            <input type="hidden" name="sql" value="<?= $sql ?>">
+                            <input type="submit" class="btn btn-theme btn-block" name="exportar"
+                                   value="Baixar Arquivo Excel">
+                            <br>
+                        </div>
+                    </div>
+                </form>
+                <div class="table-responsive list_info" id="tabelaEventos">
+                    <table class='table table-condensed'>
+                        <thead>
+                        <tr class='list_menu'>
+                            <td>Instituição/Coordenadoria</td>
+                            <td>Equipamento</td>
+                            <td>Espaço Público?</td>
+                            <td>Local do Evento</td>
+                            <td>Logradouro</td>
+                            <td>Número</td>
+                            <td>Complemento</td>
+                            <td>Bairro</td>
+                            <td>Cidade</td>
+                            <td>Estado</td>
+                            <td>CEP</td>
+                            <td>SubPrefeitura</td>
+                            <td>Telefone</td>
+                            <td>Data Início</td>
+                            <td>Data Fim</td>
+                            <td>Dias da semana</td>
+                            <td>Horário de início</td>
+                            <td>Período</td>
+                            <td>Duração (em minutos)</td>
+                            <td>Nº de atividades</td>
+                            <td>Cobrança de ingresso</td>
+                            <td>Valor do ingresso</td>
+                            <td>Nome do Evento</td>
+                            <td>Projeto Especial?</td>
+                            <td>Artistas</td>
+                            <td>Ação</td>
+                            <td>Público</td>
+                            <td>É Fomento/Programa?</td>
+                            <td>Classificação indicativa</td>
+                            <td>Link de Divulgação</td>
+                            <td>Sinopse</td>
+                            <td>Produtor do Evento</td>
+                            <td>E-mail de contato</td>
+                            <td>Telefone de contato</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        while ($linha = mysqli_fetch_array($query)) {
+
+                            $totalDias = '';
+                            $dias = "";
+                            $linha['segunda'] == 1 ? $dias .= "Segunda, " : '';
+                            $linha['terca'] == 1 ? $dias .= "Terça, " : '';
+                            $linha['quarta'] == 1 ? $dias .= "Quarta, " : '';
+                            $linha['quinta'] == 1 ? $dias .= "Quinta, " : '';
+                            $linha['sexta'] == 1 ? $dias .= "Sexta, " : '';
+                            $linha['sabado'] == 1 ? $dias .= "Sabádo, " : '';
+                            $linha['domingo'] == 1 ? $dias .= "Domingo. " : '';
+
+                            if ($dias != "") {
+                                //echo "dias diferente de vazio " . $respectiva . $dias;
+                                $totalDias .= substr($dias, 0, -2) . ".<br>";
+                            } else {
+                                $totalDias .= "Dias não especificados. <br>";
+                            }
+
+                            //Ações
+                            $sqlAcao = "SELECT * FROM acao_evento WHERE evento_id = '" . $linha['evento_id'] . "'";
+                            $queryAcao = mysqli_query($con, $sqlAcao);
+                            $acoes = [];
+                            $i = 0;
+
+                            while ($arrayAcoes = mysqli_fetch_array($queryAcao)) {
+                                $idAcao = $arrayAcoes['acao_id'];
+                                $sqlLinguagens = "SELECT * FROM acoes WHERE id = '$idAcao'";
+                                $linguagens = $con->query($sqlLinguagens)->fetch_assoc();
+                                $acoes[$i] = $linguagens['acao'];
+                                $i++;
+                            }
+
+                            if (count($acoes) != 0) {
+                                $stringAcoes = implode(", ", $acoes);
+                            }
+
+                            //Público
+                            $sqlPublico = "SELECT * FROM evento_publico WHERE evento_id = '" . $linha['evento_id'] . "'";
+                            $queryPublico = mysqli_query($con, $sqlPublico);
+                            $representatividade = [];
+                            $i = 0;
+
+                            while ($arrayPublico = mysqli_fetch_array($queryPublico)) {
+                                $idRepresentatividade = $arrayPublico['publico_id'];
+                                $sqlRepresen = "SELECT * FROM publicos WHERE id = '$idRepresentatividade'";
+                                $publicos = $con->query($sqlRepresen)->fetch_assoc();
+                                $representatividade[$i] = $publicos['representatividade_social'];
+                                $i++;
+                            }
+
+                            if (count($acoes) != 0) {
+                                $stringPublico = implode(", ", $representatividade);
+                            }
+
+                            if ($linha['fomento'] == 1) {
+                                $sqlFomento = "SELECT * FROM fomento WHERE id = '" . $linha['tipoFomento'] . "'";
+                                $fomento = $con->query($sqlFomento)->fetch_assoc();
+                            }
+
+                            ?>
+                            <tr>
+                                <td class="list_description"><?= $linha['sigla'] ?></td>
+                                <td class="list_description"><?= $linha['equipamento'] ?> - <?= $linha['nome_local'] ?></td>
+                                <td class="list_description"><?= $linha['espaco_publico'] == 1 ? "SIM" : "NÃO" ?></td>
+                                <td class="list_description"><?= $linha['nome_local'] ?></td>
+                                <td class="list_description"><?= $linha['logradouro'] ?></td>
+                                <td class="list_description"><?= $linha['numero'] ?></td>
+                                <td class="list_description"><?= $linha['complemento'] ?></td>
+                                <td class="list_description"><?= $linha['bairro'] ?></td>
+                                <td class="list_description"><?= $linha['cidade'] ?> minutos</td>
+                                <td class="list_description"><?= $linha['estado'] ?></td>
+                                <td class="list_description"><?= $linha['cep'] ?></td>
+                                <td class="list_description"><?= $linha['subprefeitura'] ?></td>
+                                <td class="list_description"><?= $linha['telefone'] ?></td>
+                                <td class="list_description"><?= exibirDataBr($linha['dataInicio']) ?></td>
+                                <td class="list_description"><?= ($linha['dataFinal'] == "0000-00-00") ? "Não é Temporada" : exibirDataBr($linha['dataFinal']) ?></td>
+                                <td class="list_description"><?= $totalDias ?></td>
+                                <td class="list_description"><?= exibirHora($linha['horaInicio']) ?></td>
+                                <td class="list_description"><?= $linha['periodo'] ?></td>
+                                <td class="list_description"><?= $linha['duracao'] . " minutos." ?></td>
+                                <td class="list_description"><?= $linha['apresentacoes'] ?></td>
+                                <td class="list_description"><?= $linha['retirada'] ?></td>
+                                <td class="list_description"><?= ($linha['valorIngresso'] != '0.00') ? dinheiroParaBr($linha['valorIngresso']) . " reais." : "Gratuito" ?></td>
+                                <td class="list_description"><?= $linha['nome'] ?></td>
+                                <td class="list_description"><?= $linha['projetoEspecial'] ?></td>
+                                <td class="list_description"><?= mb_strimwidth($linha['artista'], 0, 50, '...') ?></td>
+                                <td class="list_description"><?= $stringAcoes ?? "Não há ações." ?></td>
+                                <td class="list_description"><?= $stringPublico ?? "Não foi selecionado público." ?></td>
+                                <td class="list_description"><?= isset($fomento['fomento']) ? $fomento['fomento'] : "Não" ?></td>
+                                <td class="list_description"><?= $linha['classificacao'] ?></td>
+                                <td class="list_description"><?= isset($linha['divulgacao']) ? $linha['divulgacao'] : "Sem link de divulgação." ?></td>
+                                <td class="list_description"><?= mb_strimwidth($linha['sinopse'], 0, 50, '...') ?></td>
+                                <td class="list_description"><?= $linha['produtor_nome'] ?></td>
+                                <td class="list_description"><?= $linha['produtor_email'] ?></td>
+                                <td class="list_description"><?= $linha['produtor_fone'] ?></td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php
+            }
+            ?>
+        </div>
     </section>
 </div>
 
 <script>
+    function mostraDiv() {
+        let form = document.querySelector('#testeTana');
+        form.style.display = 'block';
+
+        let botoes = document.querySelector('#botoes');
+        botoes.style.display = 'none';
+
+        let resultado = document.querySelector('#resultado');
+        resultado.style.display = 'none';
+    }
+
     function desabilitaFiltrar() {
 
-        var inicio = document.querySelector("#dataInicio");
+        var inicio = document.querySelector("#inicio");
         var filtrar = document.querySelector("#filtrar");
 
         if (inicio.value.length != 0) {
@@ -85,4 +415,19 @@
             filtrar.disabled = true;
         }
     }
+</script>
+
+<script>
+    $(function () {
+        var usuarios = [];
+        $.getJSON("ajax_usuario.php", function (result) {
+            $.each(result, function (i, field) {
+                usuarios.push(field.nomeCompleto);
+            });
+        });
+
+        $("#inserido").autocomplete({
+            source: usuarios
+        });
+    });
 </script>
