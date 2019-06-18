@@ -422,6 +422,64 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                         </div>
                     </div>
                 </div>
+
+                <!-- VALOR POR EQUIPAMENTO (LOCAL) -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Valor por equipamento</h3>
+                    </div>
+                    <div class="box-body">
+                        <?php
+                        $sqlEquipamento = "SELECT DISTINCT oco.local_id as 'local_id', local.local as 'local' 
+                            FROM ocorrencias oco
+                            INNER JOIN locais local ON local.id = oco.local_id";
+
+                        $queryEquipamento = mysqli_query($con, $sqlEquipamento);
+                        $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
+                        ?>
+                        <div class="form-group">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th width="80%">Equipamento</th>
+                                    <th>Valor</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                if ($numRowsEquipamento == 0) {
+                                    ?>
+                                    <tr>
+                                        <td width="100%" class="text-center">Não existe equipamentos cadastrados</td>
+                                    </tr>
+                                    <?php
+                                } else {
+                                    while ($equipamento = mysqli_fetch_array($queryEquipamento)) {
+                                        ?>
+                                        <tr>
+                                            <td><?= $equipamento['local'] ?></td>
+                                            <input type="hidden" value="<?= $equipamento['local_id'] ?>">
+                                            <td>
+                                                <input type="text" class="form-control">
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                                <tr>
+                                    <td width="50%">Valor Total: <?= $pedido['valor_total'] ?></td>
+                                    <td width="50%">Valor Faltante: <span id="valorFaltante"> uou </span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row">
+
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- /.col -->
         </div>
