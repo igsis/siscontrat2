@@ -47,7 +47,7 @@ if (isset($_POST['filtrar'])) {
         $query_user = mysqli_query($con, $sql_user);
         if (mysqli_num_rows($query_user) > 0) {
             $user = mysqli_fetch_array($query_user);
-            $idUsuario = $user['usuario'];
+            $idUsuario = $user['id'];
             $nomeUser = $user['nome_completo'];
             $filtro_usuario = "AND E.usuario_id = $idUsuario";
         } else {
@@ -70,11 +70,11 @@ if (isset($_POST['filtrar'])) {
 E.id,
 E.nome_evento AS 'nome',
 E.espaco_publico AS 'espaco_publico',
-E.projeto_especial_id AS 'idProjetoEspecial',
+E.projeto_especial_id AS 'projeto_especial_id',
 E.numero_apresentacao AS 'apresentacoes',
 TE.tipo_evento AS 'categoria',
-O.id AS 'id',
-O.hora_inicio AS 'hora_inicio',
+O.id AS 'idOcorrencia',
+O.horario_inicio AS 'hora_inicio',
 O.data_inicio AS 'data_inicio',
 O.data_fim AS 'data_fim',
 O.duracao AS 'duracao',
@@ -86,19 +86,19 @@ O.quinta AS 'quinta',
 O.sexta AS 'sexta',
 O.sabado AS 'sabado',
 O.domingo AS 'domingo',
-L.sala AS 'nome_local',
+L.local AS 'nome_local',
 I.sigla AS 'sigla',
-I.instituicao AS 'equipamento',
+I.nome AS 'equipamento',
 L.logradouro AS 'logradouro',
 L.numero AS 'numero',
 L.complemento AS 'complemento',
 L.bairro AS 'bairro',
 L.cidade AS 'cidade',
-L.estado AS 'estado',
+L.uf AS 'estado',
 L.cep AS 'cep',
 I.telefone AS 'telefone',
-E.fichaTecnica AS 'artista',
-CI.faixa AS 'classificacao',
+E.sinopse AS 'artista',
+CI.classificacao_indicativa AS 'classificacao',
 E.linksCom AS 'divulgacao',
 E.sinopse AS 'sinopse',
 E.fomento AS 'fomento',
@@ -115,11 +115,11 @@ FROM
 eventos AS E
 INNER JOIN tipo_eventos AS TE ON E.ig_tipo_evento_idTipoEvento = TE.id
 INNER JOIN instituicoes AS I ON E.idInstituicao = I.id
-INNER JOIN ig_etaria AS CI ON E.faixaEtaria = CI.idIdade
+INNER JOIN classificacao_indicativas AS CI ON E.faixaEtaria = CI.id
 LEFT JOIN produtores AS P ON E.ig_produtor_idProdutor = P.id
 INNER JOIN usuarios AS U ON E.usuario_id = U.id
 LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
-INNER JOIN ocorrencias AS O ON E.idEvento = O.idEvento
+INNER JOIN ocorrencias AS O ON E.idEvento = O.origem_ocorrencia_id
 INNER JOIN locais AS L ON O.local_id = L.id
 LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
 LEFT JOIN ig_periodo_dia AS DIA_PERI ON O.idPeriodoDia = DIA_PERI.id
@@ -208,12 +208,12 @@ ORDER BY O.data_inicio";
                     <div class="row">
                         <div class="col-md-offset-3 col-md-3">
                             <label>Data início *</label>
-                            <input type="date" name="inicio" class="form-control" id="dataInicio"
+                            <input type="date" name="inicio" class="form-control" id="inicio"
                                    onchange="desabilitaFiltrar()" placeholder="">
                         </div>
                         <div class="col-md-3">
                             <label>Data encerramento</label>
-                            <input type="date" name="final" class="form-control" id="dataEncerramento"
+                            <input type="date" name="final" class="form-control" id="final"
                                    placeholder="">
                             <br>
                         </div>
@@ -229,7 +229,7 @@ ORDER BY O.data_inicio";
             <?php
             if ($consulta == 1) {
                 ?>
-                <form method="post" action="../pdf/agendao_exportar_excel.php">
+                <form method="post" action="../pdf/exportar_excel_agendao.php">
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-8">
                             <br/>
@@ -422,7 +422,7 @@ ORDER BY O.data_inicio";
         var usuarios = [];
         $.getJSON("ajax_usuario.php", function (result) {
             $.each(result, function (i, field) {
-                usuarios.push(field.nomeCompleto);
+                usuarios.push(field.nome_completo);
             });
         });
 
