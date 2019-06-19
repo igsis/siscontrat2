@@ -111,7 +111,7 @@ if (isset($_POST['apagar'])) {
                                         <tbody>";
                                         while ($arquivo = mysqli_fetch_array($query)) {
                                             echo "<tr>";
-                                            echo "<td class='list_description'><a href='uploadsdocs/" . $arquivo['arquivo'] . "' target='_blank'>" . mb_strimwidth($arquivo['arquivo'], 15, 25, "...") . "</a></td>";
+                                            echo "<td class='list_description'><a href='../uploadsdocs/" . $arquivo['arquivo'] . "' target='_blank'>" . mb_strimwidth($arquivo['arquivo'], 15, 25, "...") . "</a></td>";
                                             echo "<td class='list_description'>(" . exibirDataBr($arquivo['data']) . ")</td>";
                                             echo "
                                           <td class='list_description'>
