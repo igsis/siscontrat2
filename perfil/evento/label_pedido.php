@@ -9,27 +9,12 @@ $verba = recuperaDados('verbas', 'id', $pedido['verba_id'])['verba'];
 if ($pedido != null) {
     $dadosPedido = [
         'Verba' => $verba,
-        'Valor Total' => "R$" . dinheiroParaBr($pedido['valor_total']),
+        'Valor Total' => dinheiroParaBr($pedido['valor_total']),
         'Número de Parcelas' => $pedido['numero_parcelas'],
         'Data Kit Pagamento' => exibirDataBr($pedido['data_kit_pagamento']),
         'Forma de Pagamento' => $pedido['forma_pagamento'],
         'Observação' => $pedido['observacao']
     ];
-
-    $idPedido = $pedido['id'];
-    $equipamentoValor = "SELECT local.local, valor.valor FROM valor_equipamentos valor
-                         INNER JOIN locais local ON local.id = valor.local_id WHERE pedido_id = '$idPedido'";
-
-    $queryEquipamentos = mysqli_query($con, $equipamentoValor);
-    $numRows = mysqli_num_rows($queryEquipamentos);
-    if($numRows > 0){
-        while ($equipamento = mysqli_fetch_array($queryEquipamentos)) {
-            $dadosPedido += [
-                $equipamento['local'] => "R$" . dinheiroParaBr($equipamento['valor'])
-            ];
-        }
-    }
-
 } else {
     $dadosPedido = null;
 }

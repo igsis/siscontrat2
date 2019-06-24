@@ -139,25 +139,6 @@ if (isset($pedido['numero_parcelas'])) {
     }
 }
 
-if(isset($_POST['gravarValorEquipamento'])){
-    $valoresEquipamentos = $_POST['valorEquipamento'];
-    $equipamentos = $_POST['equipamentos'];
-    $idPedido = $_SESSION['idPedido'];
-
-    $sql_delete = "DELETE FROM valor_equipamentos WHERE pedido_id = '$idPedido'";
-    mysqli_query($con, $sql_delete);
-
-    for ($i = 0; $i < count($valoresEquipamentos); $i++){
-        $valor = dinheiroDeBr($valoresEquipamentos[$i]);
-        $idLocal = $equipamentos[$i];
-
-        $sql_insert_valor = "INSERT INTO valor_equipamentos (local_id, pedido_id, valor) 
-                             VALUES ('$idLocal', '$idPedido', '$valor')";
-
-        mysqli_query($con, $sql_insert_valor);
-    }
-}
-
 $sqlOficina = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
 $queryOficina = mysqli_query($con, $sqlOficina);
 //$atracoes = mysqli_fetch_array($queryAtracao);
@@ -456,69 +437,47 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                         $queryEquipamento = mysqli_query($con, $sqlEquipamento);
                         $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
                         ?>
-
-                        <form method="POST" action="?perfil=evento&p=pedido_edita" name="form-valor-equipamento"
-                              role="form">
-                            <div class="form-group">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
+                        <div class="form-group">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th width="80%">Equipamento</th>
+                                    <th>Valor</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                if ($numRowsEquipamento == 0) {
+                                    ?>
                                     <tr>
-                                        <th width="80%">Equipamento</th>
-                                        <th>Valor</th>
+                                        <td width="100%" class="text-center">Não existe equipamentos cadastrados</td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
                                     <?php
-                                    if ($numRowsEquipamento == 0) {
+                                } else {
+                                    while ($equipamento = mysqli_fetch_array($queryEquipamento)) {
                                         ?>
                                         <tr>
-                                            <td width="100%" class="text-center">Não existe equipamentos cadastrados
+                                            <td><?= $equipamento['local'] ?></td>
+                                            <input type="hidden" value="<?= $equipamento['local_id'] ?>">
+                                            <td>
+                                                <input type="text" class="form-control">
                                             </td>
                                         </tr>
                                         <?php
-                                    } else {
-
-                                        while ($equipamento = mysqli_fetch_array($queryEquipamento)) {
-                                            $idEquipamento = $equipamento['local_id'];
-
-                                            $sql_valor = "SELECT * FROM valor_equipamentos WHERE pedido_id = '$idPedido' AND local_id = '$idEquipamento'";
-                                            $queryValor = mysqli_query($con, $sql_valor);
-                                            $arrayValorEquipamento = mysqli_fetch_array($queryValor);
-
-                                            ?>
-                                            <tr>
-                                                <td><?= $equipamento['local'] ?></td>
-                                                <input type="hidden" value="<?= $equipamento['local_id'] ?>">
-                                                <td>
-                                                    <input type="text" class="form-control" name="valorEquipamento[]"
-                                                           value="<?= dinheiroParaBr($arrayValorEquipamento['valor']) ?>" onkeyup="somaValorEquipamento()"
-                                                           onkeypress="return(moeda(this, '.', ',', event));">
-                                                    <input type="hidden" value="<?= $equipamento['local_id'] ?>" name="equipamentos[]">
-                                                </td>
-                                            </tr>
-                                            <?php
-                                        }
                                     }
-                                    ?>
-                                    <tr>
-                                        <td width="50%">Valor Total: <?= $pedido['valor_total'] ?></td>
-                                        <td width="50%">Valor Faltante: <span id="valorFaltante"></span></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="row col-md-offset-4 col-md-4">
-                                <div class="box-footer">
-                                    <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                    <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
-                                    <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
-                                    <button type="submit" name="gravarValorEquipamento" id="gravarValorEquipamento"
-                                            class="btn btn-primary btn-block"> Gravar Valor do Local
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                                }
+                                ?>
+                                <tr>
+                                    <td width="50%">Valor Total: <?= $pedido['valor_total'] ?></td>
+                                    <td width="50%">Valor Faltante: <span id="valorFaltante"> uou </span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
+                        <div class="row">
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1280,51 +1239,4 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
         }
     };
 
-</script>
-<script>
-    $(document).ready(somaValorEquipamento());
-
-    function somaValorEquipamento() {
-        let valorEquipamento = $("input[name='valorEquipamento[]']");
-        let valor_total = 0;
-
-        for (let i = 0; i < valorEquipamento.length; i++) {
-            if (valorEquipamento[i].value == "") {
-                valorEquipamento[i].value = "0,00"
-            }
-
-            let valor = parseFloat(valorEquipamento[i].value.replace('.', '').replace(',', '.'));
-            console.log(valor);
-
-            valor_total += valor;
-        }
-
-        console.log(valor_total);
-
-        let valorTotal = parseFloat($('#valor_total').val().replace('.', '').replace(',', '.'));
-        let valorDif;
-
-        if (valor_total != valorTotal) {
-            valorDif = valorTotal - valor_total;
-        } else {
-            valorDif = 0;
-        }
-
-        valorDif = parseFloat(valorDif.toFixed(2));
-        console.log(valorDif);
-
-        if (valorDif < 0) {
-            // VALOR DIGITADO MAIOR QUE O VALOR TOTAL DO EVENTO
-            $('#valorFaltante').html("<span style='color: red'>VALOR MAIOR QUE VALOR TOTAL</span>");
-            $('#gravarValorEquipamento').attr("disabled", true);
-        } else if (valorDif == 0) {
-            // VALOR DOS EQUIPAMENTOS IGUAL O DO VALOR TOTAL DO EVENTO
-            $('#valorFaltante').html("<span style='color: green'> VALOR OK </span>");
-            $('#gravarValorEquipamento').attr("disabled", false);
-        } else {
-            //  VALOR DIGITADO MENOR QUE O VALOR TOTAL DO EVENTO
-            $('#valorFaltante').html(valorDif);
-            $('#gravarValorEquipamento').attr("disabled", true);
-        }
-    }
 </script>
