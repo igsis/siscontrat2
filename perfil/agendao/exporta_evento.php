@@ -9,7 +9,6 @@
 if (isset($_POST['filtrar'])) {
     $datainicio = exibirDataMysql($_POST['inicio']);
     $datafim = $_POST['final'] ?? null;
-    $instituicao = $_POST['instituicao'] ?? null;
     $local = $_POST['local'] ?? null;
     $usuario = $_POST['inserido'] ?? null;
     $projeto = $_POST['projetoEspecial'] ?? null;
@@ -24,14 +23,6 @@ if (isset($_POST['filtrar'])) {
     } else {
         $mensagem = "Informe uma data para inicio da consulta";
         $consulta = 0;
-    }
-
-    if ($instituicao != '') {
-        $filtro_instituicao = "AND E.idInstituicao = '$instituicao'";
-    } else {
-        $filtro_instituicao = "";
-        /* $mensagem = "Selecione um local para consulta";
-        $consulta = 0;*/
     }
 
     if ($local != '') {
@@ -71,13 +62,13 @@ E.id,
 E.nome_evento AS 'nome',
 E.espaco_publico AS 'espaco_publico',
 E.projeto_especial_id AS 'projeto_especial_id',
-E.numero_apresentacao AS 'apresentacoes',
+AT.quantidade_apresentacao AS 'apresentacoes',
 TE.tipo_evento AS 'categoria',
 O.id AS 'idOcorrencia',
 O.horario_inicio AS 'hora_inicio',
 O.data_inicio AS 'data_inicio',
 O.data_fim AS 'data_fim',
-O.duracao AS 'duracao',
+O.horario_fim AS 'duracao',
 O.valor_ingresso AS 'valor_ingresso',
 O.segunda AS 'segunda',
 O.terca AS 'terca',
@@ -87,8 +78,6 @@ O.sexta AS 'sexta',
 O.sabado AS 'sabado',
 O.domingo AS 'domingo',
 L.local AS 'nome_local',
-I.sigla AS 'sigla',
-I.nome AS 'equipamento',
 L.logradouro AS 'logradouro',
 L.numero AS 'numero',
 L.complemento AS 'complemento',
@@ -96,10 +85,9 @@ L.bairro AS 'bairro',
 L.cidade AS 'cidade',
 L.uf AS 'estado',
 L.cep AS 'cep',
-I.telefone AS 'telefone',
 E.sinopse AS 'artista',
 CI.classificacao_indicativa AS 'classificacao',
-E.linksCom AS 'divulgacao',
+AT.links AS 'divulgacao',
 E.sinopse AS 'sinopse',
 E.fomento AS 'fomento',
 E.tipo_fomento AS 'tipoFomento',
@@ -110,16 +98,16 @@ U.nome_completo AS 'nomeCompleto',
 PE.projeto_especial,
 SUB_PRE.subprefeitura AS 'subprefeitura',
 DIA_PERI.periodo AS 'periodo',
-retirada.retirada AS 'retirada'
+retirada.retirada_ingresso AS 'retirada'
 FROM
 eventos AS E
-INNER JOIN tipo_eventos AS TE ON E.ig_tipo_evento_idTipoEvento = TE.id
-INNER JOIN instituicoes AS I ON E.idInstituicao = I.id
-INNER JOIN classificacao_indicativas AS CI ON E.faixaEtaria = CI.id
+INNER JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id
+INNER JOIN atracoes AS AT ON E.id = AT.evento_id
+INNER JOIN classificacao_indicativas AS CI ON AT.classificacao_indicativa_id = CI.id
 LEFT JOIN produtores AS P ON E.ig_produtor_idProdutor = P.id
 INNER JOIN usuarios AS U ON E.usuario_id = U.id
 LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
-INNER JOIN ocorrencias AS O ON E.idEvento = O.origem_ocorrencia_id
+INNER JOIN ocorrencias AS O ON E.id = O.origem_ocorrencia_id
 INNER JOIN locais AS L ON O.local_id = L.id
 LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
 LEFT JOIN ig_periodo_dia AS DIA_PERI ON O.idPeriodoDia = DIA_PERI.id
@@ -127,7 +115,6 @@ INNER JOIN retirada_ingressos AS retirada ON O.retirada_ingresso_id = retirada.i
 
 WHERE
 $filtro_data
-$filtro_instituicao
 $filtro_local
 $filtro_usuario
 $filtro_PE AND
@@ -176,18 +163,6 @@ ORDER BY O.data_inicio";
                                 <?php
                                     geraOpcaoPublicado("projeto_especiais", "");
                                 ?>
-                            </select>
-                            <br>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-offset-4 col-md-4" align="center">
-                            <label for="instituicao">Instituição</label>
-                            <select name="instituicao" class="form-control" id="instituicao">
-                                <option value="">Seleciona uma Opção...</option>
-                                <?php
-                                    geraOpcao("instituicoes", ""); ?>
                             </select>
                             <br>
                         </div>
