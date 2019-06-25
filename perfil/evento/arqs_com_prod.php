@@ -89,7 +89,10 @@ if (isset($_POST['apagar'])) {
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1 text-center">
-                                <div class="table-responsive list_info"><h4><strong>Nesta página você envia os arquivos como o rider, mapas de cenas e luz, logos de parceiros, programação de filmes de mostras de cinema, entre outros arquivos destinados à comunicação e produção.</strong></h4><br>
+                                <div class="table-responsive list_info"><h4><strong>Nesta página você envia os arquivos
+                                            como o rider, mapas de cenas e luz, logos de parceiros, programação de
+                                            filmes de mostras de cinema, entre outros arquivos destinados à comunicação
+                                            e produção.</strong></h4><br>
                                     <?php
                                     //lista arquivos de determinado pedido
                                     $sql = "SELECT * FROM arquivos as arq
@@ -158,14 +161,13 @@ if (isset($_POST['apagar'])) {
                                                     </tr>
                                                     <tr class="text-center">
                                                         <td class="text-center">
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
+                                                            <?php
+                                                            for ($i = 8; $i > $linhas; $i--) {
+                                                                ?>
+                                                                <input type='file' name='arquivo[]'><br>
+                                                                <?php
+                                                            }
+                                                            ?>
                                                         </td>
                                                     </tr>
                                                     </tbody>

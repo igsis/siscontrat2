@@ -112,7 +112,7 @@ if (isset($_POST['apagar'])) {
                                         while ($arquivo = mysqli_fetch_array($query)) {
                                             $NameArquivo = $arquivo['arquivo'];
                                             echo "<tr>";
-                                            echo "<td class='list_description'><a href='uploadsdocs/$NameArquivo' target='_blank'>" . mb_strimwidth($NameArquivo, 15, 25, "...") . "</a></td>";
+                                            echo "<td class='list_description'><a href='../uploadsdocs/$NameArquivo' target='_blank'>" . mb_strimwidth($NameArquivo, 15, 25, "...") . "</a></td>";
                                             echo "<td class='list_description'>(" . exibirDataBr($arquivo['data']) . ")</td>";
                                             echo "
                                           <td class='list_description'>
@@ -159,14 +159,13 @@ if (isset($_POST['apagar'])) {
                                                     </tr>
                                                     <tr class="text-center">
                                                         <td class="text-center">
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
-                                                            <input type='file' name='arquivo[]'><br>
+                                                            <?php
+                                                            for ($i = 8; $i > $linhas; $i--) {
+                                                                ?>
+                                                                <input type='file' name='arquivo[]'><br>
+                                                                <?php
+                                                            }
+                                                            ?>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -236,6 +235,5 @@ if (isset($_POST['apagar'])) {
         $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
         $(this).find('#idArquivo').attr('value', `${id}`);
         $(this).find('#tipoPessoa').attr('value', `${pessoa}`);
-
     })
 </script>
