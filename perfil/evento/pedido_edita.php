@@ -451,7 +451,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                         <?php
                         $sqlEquipamento = "SELECT DISTINCT oco.local_id as 'local_id', local.local as 'local' 
                             FROM ocorrencias oco
-                            INNER JOIN locais local ON local.id = oco.local_id";
+                            INNER JOIN locais local ON local.id = oco.local_id WHERE oco.origem_ocorrencia_id = '$idEvento'";
 
                         $queryEquipamento = mysqli_query($con, $sqlEquipamento);
                         $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
@@ -501,8 +501,8 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                                     }
                                     ?>
                                     <tr>
-                                        <td width="50%">Valor Total: <?= $pedido['valor_total'] ?></td>
-                                        <td width="50%">Valor Faltante: <span id="valorFaltante"></span></td>
+                                        <td width="50%">Valor Total: R$ <?= $pedido['valor_total'] ?></td>
+                                        <td width="50%">Valor Faltante: R$ <span id="valorFaltante"></span></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -1311,7 +1311,6 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
         }
 
         valorDif = parseFloat(valorDif.toFixed(2));
-        console.log(valorDif);
 
         if (valorDif < 0) {
             // VALOR DIGITADO MAIOR QUE O VALOR TOTAL DO EVENTO
