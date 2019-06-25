@@ -136,7 +136,7 @@ if (isset($_POST['apagar'])) {
                                 </div>
                                 <hr/>
                                 <?php
-                                if ($linhas != 8) {
+                                if ($linhas != 10) {
                                     ?>
                                     <div class="row">
                                         <div class="col-md-10 col-md-offset-1">
@@ -168,7 +168,7 @@ if (isset($_POST['apagar'])) {
                                                         <tr class="text-center">
                                                             <td class="text-center">
                                                                 <?php
-                                                                for ($i = 8; $i > $linhas; $i--) {
+                                                                for ($i = 10; $i > $linhas; $i--) {
                                                                     ?>
                                                                     <input type='file' name='arquivo[]'><br>
                                                                     <?php
