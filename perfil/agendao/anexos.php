@@ -89,7 +89,10 @@ if (isset($_POST['apagar'])) {
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1 text-center">
-                                <div class="table-responsive list_info"><h4><strong>Nesta página você envia os arquivos como o rider, mapas de cenas e luz, logos de parceiros, programação de filmes de mostras de cinema, entre outros arquivos destinados à comunicação e produção.</strong></h4><br>
+                                <div class="table-responsive list_info"><h4><strong>Nesta página você envia os arquivos
+                                            como o rider, mapas de cenas e luz, logos de parceiros, programação de
+                                            filmes de mostras de cinema, entre outros arquivos destinados à comunicação
+                                            e produção.</strong></h4><br>
                                     <?php
                                     //lista arquivos de determinado pedido
                                     $sql = "SELECT * FROM arquivos as arq
@@ -117,7 +120,7 @@ if (isset($_POST['apagar'])) {
                                             echo "
                                           <td class='list_description'>
                                                     <form id='formExcliuir' method='POST'>
-                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' data-nome='".  mb_strimwidth($NameArquivo, 15, 25, "...") . "' data-id='" . $arquivo['id'] . "'>
+                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' data-nome='" . mb_strimwidth($NameArquivo, 15, 25, "...") . "' data-id='" . $arquivo['id'] . "'>
                                                         </button></td>
                                                     </form>";
                                             echo "</tr>";
@@ -132,86 +135,95 @@ if (isset($_POST['apagar'])) {
                                     ?>
                                 </div>
                                 <hr/>
+                                <?php
+                                if ($linhas != 8) {
+                                    ?>
+                                    <div class="row">
+                                        <div class="col-md-10 col-md-offset-1">
+                                            <br/>
+                                            <div class="center">
+                                                <form method="POST" action="?perfil=agendao&p=anexos"
+                                                      enctype="multipart/form-data">
+                                                    <table class="table text-center table-striped">
+                                                        <tbody>
+                                                        <tr>
+                                                            <h1 class="text-center">Envio de Arquivos</h1>
+                                                        </tr>
+                                                        <tr>
+                                                            <h4 class="text-center"><em>O tamanho
+                                                                    máximo do arquivo deve ser 0,6 MB.</em>
 
-                                <div class="row">
-                                    <div class="col-md-10 col-md-offset-1">
-                                        <br/>
-                                        <div class="center">
-                                            <form method="POST" action="?perfil=agendao&p=anexos"
-                                                  enctype="multipart/form-data">
-                                                <table class="table text-center table-striped">
-                                                    <tbody>
-                                                    <tr>
-                                                        <h1 class="text-center">Envio de Arquivos</h1>
-                                                    </tr>
-                                                    <tr>
-                                                        <h4 class="text-center"><em>O tamanho
-                                                                máximo do arquivo deve ser 0,6 MB.</em>
+                                                                <br><br>Não envie cópias de documentos nesta página.
+                                                                Para o
+                                                                envio, vá até a área de <a
+                                                                        href="?perfil=evento&p=pedido">"Pedidos
+                                                                    de contratação"</a> e anexe direto em cada
+                                                                contratado.
 
-                                                            <br><br>Não envie cópias de documentos nesta página. Para o
-                                                            envio, vá até a área de <a href="?perfil=evento&p=pedido">"Pedidos
-                                                                de contratação"</a> e anexe direto em cada contratado.
-
-                                                            <br><br>Em caso de envio de fotografia, considerar as
-                                                            seguintes especificações técnicas:
-                                                            <br>- formato: horizontal
-                                                            <br>- tamanho: mínimo de 300dpi”</h4>
-                                                    </tr>
-                                                    <tr class="text-center">
-                                                        <td class="text-center">
-                                                            <?php
-                                                            for ($i = 8; $i > $linhas; $i--) {
-                                                                ?>
-                                                                <input type='file' name='arquivo[]'><br>
+                                                                <br><br>Em caso de envio de fotografia, considerar as
+                                                                seguintes especificações técnicas:
+                                                                <br>- formato: horizontal
+                                                                <br>- tamanho: mínimo de 300dpi”</h4>
+                                                        </tr>
+                                                        <tr class="text-center">
+                                                            <td class="text-center">
                                                                 <?php
-                                                            }
-                                                            ?>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                                <br>
-                                                <?php
-                                                if (isset($_POST['volta'])) {
-                                                    echo "<input type='hidden' name='volta' value='" . $_POST['volta'] . "' />";
-                                                }
-                                                ?>
-                                                <input type='hidden' name='idEvento' value='<?= $idEvento ?>'/>
-                                                <input type="submit" class="btn btn-primary btn-lg btn-block"
-                                                       name="enviar" value='Enviar'>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <!--.modal-->
-                                    <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
-                                        <div class="modal-dialog">
-                                            <!-- Modal content-->
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;
-                                                    </button>
-                                                    <h4 class="modal-title">Confirmação de Exclusão</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p>Tem certeza que deseja excluir este arquivo?</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form action="?perfil=agendao&p=anexos"
-                                                          method="post">
-                                                        <input type="hidden" name="idArquivo" id="idArquivo" value="">
-                                                        <input type="hidden" name="apagar" id="apagar">
-                                                        <button type="button" class="btn btn-default pull-left"
-                                                                data-dismiss="modal">Cancelar
-                                                        </button>
-                                                        <input class="btn btn-danger btn-outline" type="submit"
-                                                               name="excluir" value="Apagar">
-                                                    </form>
-                                                </div>
+                                                                for ($i = 8; $i > $linhas; $i--) {
+                                                                    ?>
+                                                                    <input type='file' name='arquivo[]'><br>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <br>
+                                                    <?php
+                                                    if (isset($_POST['volta'])) {
+                                                        echo "<input type='hidden' name='volta' value='" . $_POST['volta'] . "' />";
+                                                    }
+                                                    ?>
+                                                    <input type='hidden' name='idEvento' value='<?= $idEvento ?>'/>
+                                                    <input type="submit" class="btn btn-primary btn-lg btn-block"
+                                                           name="enviar" value='Enviar'>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-                                    <!--  Fim Modal de Upload de arquivo  -->
+                                    <?php
+                                }
+                                ?>
+                                <!--.modal-->
+                                <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
+                                    <div class="modal-dialog">
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;
+                                                </button>
+                                                <h4 class="modal-title">Confirmação de Exclusão</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Tem certeza que deseja excluir este arquivo?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form action="?perfil=agendao&p=anexos"
+                                                      method="post">
+                                                    <input type="hidden" name="idArquivo" id="idArquivo"
+                                                           value="">
+                                                    <input type="hidden" name="apagar" id="apagar">
+                                                    <button type="button" class="btn btn-default pull-left"
+                                                            data-dismiss="modal">Cancelar
+                                                    </button>
+                                                    <input class="btn btn-danger btn-outline" type="submit"
+                                                           name="excluir" value="Apagar">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <!--  Fim Modal de Upload de arquivo  -->
                             </div>
                         </div>
                         <div class="box-footer">

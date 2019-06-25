@@ -336,7 +336,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
             $('#valor_ingresso')
                 .attr('readonly', true)
-                .val('0,00');]
+                .val('0,00');
 
             getLocais(10, 626);
             getEspacos();
