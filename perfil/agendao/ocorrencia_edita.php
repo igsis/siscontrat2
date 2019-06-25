@@ -406,31 +406,25 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
        if($('#viradaNao').is(':checked')){
            $('#horaInicio')
                .attr('readonly', false)
-               .val('');
 
            $('#horaFim')
                .attr('readonly', false)
-               .val('');
 
            $('#instituicao')
                .attr('readonly', false)
-               .val($('option:contains("Selecione uma opção...")').val());
 
            $('#local')
                .attr('readonly', false)
-               .val($('option:contains("Selecione uma opção...")').val());
 
            $('#espaco')
                .attr('readonly', false)
-               .val($('option:contains("Selecione uma opção...")').val());
 
            $('#retiradaIngresso')
                .attr('readonly', false)
-               .val($('option:contains("Selecione uma opção...")').val());
 
            $('#valor_ingresso')
                .attr('readonly', false)
-               .val('');
+
        }else{
            $('#horaInicio')
                .attr('readonly', true)
@@ -458,10 +452,10 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
            $('#valor_ingresso')
                .attr('readonly', true)
                .val('0,00');
-       }
 
-       getLocais(10, 626);
-       getEspacos();
+           getLocais(10, 626);
+           getEspacos();
+       }
    }
 
     function getLocais(idInstituicao, selectedId){
