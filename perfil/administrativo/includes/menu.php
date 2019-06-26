@@ -12,7 +12,7 @@ $pasta = "?perfil=administrativo&p=";
             <li><a href="<?= $pasta ?>instituicao&sp=solicitacoes_local_espaco"><i class="fa fa-circle-o text-fuchsia"></i><span>Aprovar solicitações</span></a></li>
             <li><a href="<?= $pasta ?>atualizacoes&sp=atualizacoes_lista"><i class="fa fa-circle-o text-aqua"></i><span>Atualizações</span></a></li>
             <li><a href="<?= $pasta ?>categoria&sp=categoria_lista"><i class="fa fa-circle-o text-orange"></i><span>Categorias</span></a></li>
-            <li><a href="<?= $pasta ?>modulos&sp=modulos_lista"><i class="fa fa-circle-o text-white"></i><span>Gerenciar modulos</span></a></li>
+            <li><a href="<?= $pasta ?>modulos&sp=modulos_lista"><i class="fa fa-circle-o text-white"></i><span>Gerenciar módulos</span></a></li>
             <li><a href="<?= $pasta ?>instituicao&sp=instituicao_lista"><i class="fa fa-circle-o text-green"></i><span>Instituições</span></a></li>
             <li><a href="<?= $pasta ?>perfil&sp=perfil_lista"><i class="fa fa-circle-o text-purple"></i><span>Perfil</span></a></li>
             <li><a href="<?= $pasta ?>projeto_especial&sp=projeto_especial_lista"><i class="fa fa-circle-o text-blue"></i><span>Projeto Especial</span></a></li>
