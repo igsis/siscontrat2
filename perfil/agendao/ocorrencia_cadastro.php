@@ -207,6 +207,27 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="subprefeitura">Subprefeitura*</label> <br>
+                                    <select class="form-control" name="subprefeitura" id="subprefeitura" required>
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcao("subprefeituras");
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="periodo">Período*</label> <br>
+                                    <select class="form-control" name="periodo" id="periodo" required>
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcao("periodos");
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="observacao">Observação</label><br/>
                                 <textarea name="observacao" id="observacao" class="form-control" rows="5"></textarea>

@@ -28,6 +28,8 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $valor_ingresso = dinheiroDeBr($_POST['valor_ingresso']);
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $idOcorrencia =  $_POST['idOcorrencia'] ?? NULL;
+    $periodo_id = $_POST['periodo'];
+    $subprefeitura_id = $_POST['subprefeitura'];
     $virada = ($_POST['virada']);
 
 }
@@ -53,6 +55,8 @@ if (isset($_POST['cadastra'])) {
                                  retirada_ingresso_id,
                                  valor_ingresso,
                                  observacao,
+                                 periodo_id,
+                                 subprefeitura_id,
                                  virada)
                           VALUES ('$tipo_evento_id',
                                   '$origem_ocorrencia_id',
@@ -73,6 +77,8 @@ if (isset($_POST['cadastra'])) {
                                   '$retirada_ingresso_id',
                                   '$valor_ingresso',
                                   '$observacao',
+                                  '$periodo_id',
+                                  '$subprefeitura_id',
                                   '$virada')";
     
     if (mysqli_query($con, $sql)) 
@@ -106,6 +112,8 @@ if (isset($_POST['edita'])) {
                             horario_fim = '$horario_fim',
                             retirada_ingresso_id = '$retirada_ingresso_id',
                             valor_ingresso = '$valor_ingresso',
+                            periodo_id = '$periodo_id',
+                            subprefeitura_id = '$subprefeitura_id',
                             virada = '$virada',
                             observacao = '$observacao'
                             WHERE id = '$idOcorrencia'";
@@ -343,6 +351,27 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                     </button>
                                     <select class="form-control" id="espaco" name="espaco">
                                         <!-- Populando pelo js -->
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="subprefeitura">Subprefeitura*</label> <br>
+                                    <select class="form-control" name="subprefeitura" id="subprefeitura" required>
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcao("subprefeituras", $ocorrencia['subprefeitura_id']);
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="periodo">Período*</label> <br>
+                                    <select class="form-control" name="periodo" id="periodo" required>
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcao("periodos", $ocorrencia['periodo_id']);
+                                        ?>
                                     </select>
                                 </div>
                             </div>
