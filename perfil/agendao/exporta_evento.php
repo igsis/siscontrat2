@@ -7,7 +7,7 @@
     $displayBotoes = 'none';
 
 if (isset($_POST['filtrar'])) {
-    $datainicio = exibirDataMysql($_POST['inicio']);
+    $datainicio = ($_POST['inicio']);
     $datafim = $_POST['final'] ?? null;
     $local = $_POST['local'] ?? null;
     $usuario = $_POST['inserido'] ?? null;
@@ -15,7 +15,7 @@ if (isset($_POST['filtrar'])) {
 
     if ($datainicio != '') {
         if ($datafim != '') {
-            $datafim = exibirDataMysql($_POST['final']);
+            $datafim = ($_POST['final']);
             $filtro_data = "O.data_inicio BETWEEN '$datainicio' AND '$datafim'";
         } else {
             $filtro_data = "O.data_inicio > '$datainicio'";
@@ -58,7 +58,7 @@ if (isset($_POST['filtrar'])) {
 
 
     $sql = "SELECT
-E.id,
+E.id AS 'evento_id',
 E.nome_evento AS 'nome',
 E.espaco_publico AS 'espaco_publico',
 E.projeto_especial_id AS 'projeto_especial_id',
@@ -68,7 +68,7 @@ O.id AS 'idOcorrencia',
 O.horario_inicio AS 'hora_inicio',
 O.data_inicio AS 'data_inicio',
 O.data_fim AS 'data_fim',
-O.horario_fim AS 'duracao',
+O.horario_fim AS 'hora_fim',
 O.valor_ingresso AS 'valor_ingresso',
 O.segunda AS 'segunda',
 O.terca AS 'terca',
@@ -90,10 +90,9 @@ CI.classificacao_indicativa AS 'classificacao',
 AT.links AS 'divulgacao',
 E.sinopse AS 'sinopse',
 E.fomento AS 'fomento',
-E.tipo_fomento AS 'tipoFomento',
 P.nome AS 'produtor_nome',
 P.email AS 'produtor_email',
-P.telefone AS 'produtor_fone',
+P.telefone1 AS 'produtor_fone',
 U.nome_completo AS 'nomeCompleto',
 PE.projeto_especial,
 SUB_PRE.subprefeitura AS 'subprefeitura',
@@ -104,13 +103,13 @@ eventos AS E
 INNER JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id
 INNER JOIN atracoes AS AT ON E.id = AT.evento_id
 INNER JOIN classificacao_indicativas AS CI ON AT.classificacao_indicativa_id = CI.id
-LEFT JOIN produtores AS P ON E.ig_produtor_idProdutor = P.id
+LEFT JOIN produtores AS P ON AT.produtor_id = P.id
 INNER JOIN usuarios AS U ON E.usuario_id = U.id
 LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
 INNER JOIN ocorrencias AS O ON E.id = O.origem_ocorrencia_id
 INNER JOIN locais AS L ON O.local_id = L.id
 LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
-LEFT JOIN ig_periodo_dia AS DIA_PERI ON O.idPeriodoDia = DIA_PERI.id
+LEFT JOIN periodos AS DIA_PERI ON O.periodo_id = DIA_PERI.id
 INNER JOIN retirada_ingressos AS retirada ON O.retirada_ingresso_id = retirada.id
 
 WHERE
@@ -206,21 +205,17 @@ ORDER BY O.data_inicio";
                 ?>
                 <form method="post" action="../pdf/exportar_excel_agendao.php">
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-8">
                             <br/>
                             <input type="hidden" name="sql" value="<?= $sql ?>">
                             <input type="submit" class="btn btn-theme btn-block" name="exportar"
                                    value="Baixar Arquivo Excel">
                             <br>
-                        </div>
                     </div>
                 </form>
                 <div class="table-responsive list_info" id="tabelaEventos">
                     <table class='table table-condensed'>
                         <thead>
                         <tr class='list_menu'>
-                            <td>Instituição/Coordenadoria</td>
-                            <td>Equipamento</td>
                             <td>Espaço Público?</td>
                             <td>Local do Evento</td>
                             <td>Logradouro</td>
@@ -231,13 +226,12 @@ ORDER BY O.data_inicio";
                             <td>Estado</td>
                             <td>CEP</td>
                             <td>SubPrefeitura</td>
-                            <td>Telefone</td>
                             <td>Data Início</td>
                             <td>Data Fim</td>
                             <td>Dias da semana</td>
                             <td>Horário de início</td>
                             <td>Período</td>
-                            <td>Duração (em minutos)</td>
+                            <td>Horário do fim</td>
                             <td>Nº de atividades</td>
                             <td>Cobrança de ingresso</td>
                             <td>Valor do ingresso</td>
@@ -304,7 +298,7 @@ ORDER BY O.data_inicio";
                                 $idRepresentatividade = $arrayPublico['publico_id'];
                                 $sqlRepresen = "SELECT * FROM publicos WHERE id = '$idRepresentatividade'";
                                 $publicos = $con->query($sqlRepresen)->fetch_assoc();
-                                $representatividade[$i] = $publicos['representatividade_social'];
+                                $representatividade[$i] = $publicos['publico'];
                                 $i++;
                             }
 
@@ -312,15 +306,12 @@ ORDER BY O.data_inicio";
                                 $stringPublico = implode(", ", $representatividade);
                             }
 
-                            if ($linha['fomento'] == 1) {
-                                $sqlFomento = "SELECT * FROM fomento WHERE id = '" . $linha['tipoFomento'] . "'";
+                            if ($linha['fomento'] != 0) {
+                                $sqlFomento = "SELECT * FROM fomentos WHERE id = '" . $linha['fomento'] . "'";
                                 $fomento = $con->query($sqlFomento)->fetch_assoc();
                             }
-
                             ?>
                             <tr>
-                                <td class="list_description"><?= $linha['sigla'] ?></td>
-                                <td class="list_description"><?= $linha['equipamento'] ?> - <?= $linha['nome_local'] ?></td>
                                 <td class="list_description"><?= $linha['espaco_publico'] == 1 ? "SIM" : "NÃO" ?></td>
                                 <td class="list_description"><?= $linha['nome_local'] ?></td>
                                 <td class="list_description"><?= $linha['logradouro'] ?></td>
@@ -331,18 +322,17 @@ ORDER BY O.data_inicio";
                                 <td class="list_description"><?= $linha['estado'] ?></td>
                                 <td class="list_description"><?= $linha['cep'] ?></td>
                                 <td class="list_description"><?= $linha['subprefeitura'] ?></td>
-                                <td class="list_description"><?= $linha['telefone'] ?></td>
-                                <td class="list_description"><?= exibirDataBr($linha['dataInicio']) ?></td>
-                                <td class="list_description"><?= ($linha['dataFinal'] == "0000-00-00") ? "Não é Temporada" : exibirDataBr($linha['dataFinal']) ?></td>
+                                <td class="list_description"><?= exibirDataBr($linha['data_inicio']) ?></td>
+                                <td class="list_description"><?= ($linha['data_fim'] == "0000-00-00") ? "Não é Temporada" : exibirDataBr($linha['data_fim']) ?></td>
                                 <td class="list_description"><?= $totalDias ?></td>
-                                <td class="list_description"><?= exibirHora($linha['horaInicio']) ?></td>
+                                <td class="list_description"><?= exibirHora($linha['hora_inicio']) ?></td>
                                 <td class="list_description"><?= $linha['periodo'] ?></td>
-                                <td class="list_description"><?= $linha['duracao'] . " minutos." ?></td>
+                                <td class="list_description"><?= exibirHora($linha['hora_fim']) ?></td>
                                 <td class="list_description"><?= $linha['apresentacoes'] ?></td>
                                 <td class="list_description"><?= $linha['retirada'] ?></td>
-                                <td class="list_description"><?= ($linha['valorIngresso'] != '0.00') ? dinheiroParaBr($linha['valorIngresso']) . " reais." : "Gratuito" ?></td>
+                                <td class="list_description"><?= ($linha['valor_ingresso'] != '0.00') ? dinheiroParaBr($linha['valor_ingresso']) . " reais." : "Gratuito" ?></td>
                                 <td class="list_description"><?= $linha['nome'] ?></td>
-                                <td class="list_description"><?= $linha['projetoEspecial'] ?></td>
+                                <td class="list_description"><?= $linha['projeto_especial'] ?></td>
                                 <td class="list_description"><?= mb_strimwidth($linha['artista'], 0, 50, '...') ?></td>
                                 <td class="list_description"><?= $stringAcoes ?? "Não há ações." ?></td>
                                 <td class="list_description"><?= $stringPublico ?? "Não foi selecionado público." ?></td>
