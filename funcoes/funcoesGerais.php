@@ -1343,6 +1343,26 @@ function geraCheckboxEvento($tabela, $name, $tabelaRelacionamento, $idEvento = n
     }
 }
 
+function geraCheckBoxVerba($tabela, $name, $tabelaRelacionamento, $idUsuario = null){
+    $con = bancoMysqli();
+    $sqlConsulta = "SELECT * FROM $tabela ORDER BY 2";
+    $dados = $con->query($sqlConsulta);
+
+    $sqlConsultaRelacionamento = "SELECT * FROM $tabelaRelacionamento WHERE usuario_id = $idUsuario";
+    $resRelacionamento = $con->query($sqlConsultaRelacionamento);
+    $relacionamentos = ($resRelacionamento) ? $resRelacionamento->fetch_all(MYSQLI_ASSOC) : [];
+
+    while($checkbox = $dados->fetch_row()){
+        ?>
+            <div class="checkbox-grid-2 text-left col-md-6">
+                <input type="checkbox" name="<?=$name?>[]" id="<?=$checkbox[1]?>" value="<?=$checkbox[0]?>"
+                    <?=in_array_r($checkbox[0], $relacionamentos) ? "checked" : ""?>>
+                <label for="<?=$checkbox[1]?>"><?=$checkbox[1]?></label>
+            </div>
+        <?php
+    }
+}
+
 function atualizaRelacionamentoEvento($tabela, $idEvento, $post) {
     $con = bancoMysqli();
 
@@ -1373,6 +1393,42 @@ function atualizaRelacionamentoEvento($tabela, $idEvento, $post) {
         foreach ($post as $checkbox) {
             if (!(in_array_r($checkbox, $relacionamentos))) {
                 $sqlInsertRelacionamento = "INSERT INTO $tabela (evento_id, $coluna) VALUE ('$idEvento', '$checkbox')";
+                $con->query($sqlInsertRelacionamento);
+            }
+        }
+    }
+}
+
+function atualizaRelacionamentoVerbas($tabela, $idUser, $post) {
+    $con = bancoMysqli();
+
+    $sqlConsultaRelacionamento = "SELECT * FROM $tabela WHERE usuario_id = '$idUser'";
+    $relacionamento = $con->query($sqlConsultaRelacionamento);
+
+    $consultaColunas = $con->query("SHOW COLUMNS FROM $tabela");
+    while ($linha = $consultaColunas->fetch_assoc()) {
+        $colunas[] = $linha['Field'];
+    }
+
+    $coluna = $colunas[1];
+
+    if ($relacionamento->num_rows == 0) {
+        foreach ($post as $checkbox) {
+            $sqlInsertRelacionamento = "INSERT INTO $tabela (usuario_id, $coluna) VALUE ('$idUser', '$checkbox')";
+            $con->query($sqlInsertRelacionamento);
+        }
+    } else {
+        $relacionamentos = $relacionamento->fetch_all(MYSQLI_NUM);
+
+        foreach ($relacionamentos as $relacionamento) {
+            if (!(in_array_r($relacionamento[1], $post))) {
+                $sqlDeleteRelacionamento = "DELETE FROM $tabela WHERE usuario_id = '$idUser' AND $coluna = '".$relacionamento[1]."'";
+                $con->query($sqlDeleteRelacionamento);
+            }
+        }
+        foreach ($post as $checkbox) {
+            if (!(in_array_r($checkbox, $relacionamentos))) {
+                $sqlInsertRelacionamento = "INSERT INTO $tabela (usuario_id, $coluna) VALUE ('$idUser', '$checkbox')";
                 $con->query($sqlInsertRelacionamento);
             }
         }

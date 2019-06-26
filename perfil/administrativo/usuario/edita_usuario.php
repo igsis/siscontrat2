@@ -25,6 +25,10 @@ if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
             gravarLog($sql);
             $mensagem = mensagem("success", "Usuário cadastrado com sucesso!");
             $idUsuario = recuperaUltimo('usuarios');
+
+            if(isset($_POST['verba'])){
+                atualizaRelacionamentoVerbas('usuario_verbas', $idUsuario, $_POST['verba']);
+            }
         } else {
             $mensagem = mensagem("danger", "Erro no cadastro de usuário! Tente novamente.");
         }
@@ -39,6 +43,10 @@ if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
         if(mysqli_query($con, $sql)){
             gravarLog($sql);
             $mensagem = mensagem("success", "Usuário editado com sucesso!");
+
+            if(isset($_POST['verba'])){
+                atualizaRelacionamentoVerbas('usuario_verbas', $idUsuario, $_POST['verba']);
+            }
         }else{
             $mensagem = mensagem("danger", "Erro ao salvar o usuário! Tente novamente.");
         }
@@ -116,6 +124,16 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
                                         geraOpcao("perfis", $usuario['perfil_id']);
                                         ?>
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="acao">Verbas * <i>(multipla escolha) </i></label>
+                                    <br>
+                                    <?php
+                                    geraCheckBoxVerba('verbas', 'verba', 'usuario_verbas', $idUsuario);
+                                    ?>
                                 </div>
                             </div>
                         </div>

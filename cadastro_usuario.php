@@ -4,9 +4,9 @@ require "funcoes/funcoesConecta.php";
 
 $con = bancoMysqli();
 
-$url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_verifica_email.php';
+$url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_email.php';
 
-if(isset($_POST['cadastra'])){
+if (isset($_POST['cadastra'])) {
     $nome = $_POST['nome'];
     $jovemMonitor = $_POST['jovem_monitor'];
     $rgRf = $_POST['rgrf_usuario'];
@@ -18,28 +18,33 @@ if(isset($_POST['cadastra'])){
     $sql_perfil = "SELECT * FROM perfis WHERE token = '$perfil'";
     $query_perfil = mysqli_query($con, $sql_perfil);
 
-    if(mysqli_num_rows($query_perfil) > 0){
+    if (mysqli_num_rows($query_perfil) > 0) {
         $perfilSelecioado = mysqli_fetch_assoc($query_perfil);
         $perfil = $perfilSelecioado['id'];
         $acertou = 1;
-    }else{
+    } else {
         $acertou = 0;
     }
 
-    if($acertou){
+    if ($acertou) {
 
-        if($jovemMonitor == 0){
+        if ($jovemMonitor == 0) {
             // fazer um in_array() depois que ficar definido os modulos que terá acesso a eventos
             $fiscal = 1;
-        }else{
+        } else {
             $fiscal = 0;
         }
 
-        if(isset($_POST['cadastra'])){
+        if (isset($_POST['cadastra'])) {
             $sql = "INSERT INTO usuarios (nome_completo, jovem_monitor, rf_rg, usuario, email, telefone, perfil_id, fiscal)
         VALUES ('$nome', '$jovemMonitor','$rgRf', '$usuario', '$email', '$telefone', '$perfil', '$fiscal')";
 
             if (mysqli_query($con, $sql)) {
+                $usuarioNovo = recuperaUltimo('usuarios');
+
+                if(isset($_POST['verba'])){
+                    atualizaRelacionamentoVerbas('usuario_verbas', $usuarioNovo, $_POST['verba']);
+                }
                 $mensagem = mensagem("success", "Usuário cadastrado com sucesso! Você está sendo redirecionado para a tela de login.");
                 echo "<script type=\"text/javascript\">
 						  window.setTimeout(\"location.href='index.php';\", 4000);
@@ -49,7 +54,7 @@ if(isset($_POST['cadastra'])){
                 $mensagem = mensagem("danger", "Erro no cadastro de usuário! Tente novamente.");
             }
         }
-    }else{
+    } else {
         $mensagem = mensagem("danger", "Código inválido!");
     }
 }
@@ -89,7 +94,9 @@ if(isset($_POST['cadastra'])){
         <!-- START FORM-->
         <h2 class="page-header">Cadastro de Usuário</h2>
         <div class="row" align="center">
-            <?php if(isset($mensagem)){echo $mensagem;};?>
+            <?php if (isset($mensagem)) {
+                echo $mensagem;
+            }; ?>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -110,41 +117,59 @@ if(isset($_POST['cadastra'])){
 
                                 <div class="form-group col-md-2">
                                     <label for="tipo">É jovem monitor?* </label> <br>
-                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="1"> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0"> Não </label>
+                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="1"> Sim
+                                    </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0"> Não
+                                    </label>
                                 </div>
 
                                 <div class="form-group col-md-2">
                                     <label for="rf_usuario">RF/RG* </label>
-                                    <input type="text" id="rgrf_usuario" name="rgrf_usuario" class="form-control" disabled>
+                                    <input type="text" id="rgrf_usuario" name="rgrf_usuario" class="form-control"
+                                           disabled>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="rf_usuario">Usuário* </label>
                                     <div id='resposta'></div>
-                                    <input type="text" id="usuario" name="usuario" class="form-control" maxlength="7" required readonly>
+                                    <input type="text" id="usuario" name="usuario" class="form-control" maxlength="7"
+                                           required readonly>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-4" id="divEmail">
                                     <label for="email">E-mail* </label>
-                                    <input type="email" id="email" name="email" class="form-control" maxlength="100" required>
+                                    <input type="email" id="email" name="email" class="form-control" maxlength="100"
+                                           required>
                                     <span class="help-block" id="spanHelp"></span>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="tel_usuario">Telefone* </label>
-                                    <input type="text" data-mask="(00) 00000-0000" id="tel_usuario" name="tel_usuario" class="form-control" required>
+                                    <input type="text" data-mask="(00) 00000-0000" id="tel_usuario" name="tel_usuario"
+                                           class="form-control" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="perfil">Código* </label> <br>
-                                    <input type="text" required name="perfil" id="perfil" class="form-control" maxlength="9" minlength="9">
+                                    <input type="text" required name="perfil" id="perfil" class="form-control"
+                                           maxlength="9" minlength="9">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="acao">Verbas * <i>(multipla escolha) </i></label>
+                                    <br>
+                                    <?php
+                                    geraCheckBoxVerba('verbas', 'verba', 'usuario_verbas');
+                                    ?>
                                 </div>
                             </div>
                         </div>
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">Cadastrar</button>
+                            <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">
+                                Cadastrar
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -213,30 +238,30 @@ if(isset($_POST['cadastra'])){
 
         let jovemMonitor = document.getElementsByName("jovem_monitor");
 
-        for (i = 0; i < jovemMonitor.length; i++){
-            if(jovemMonitor[i].checked){
+        for (i = 0; i < jovemMonitor.length; i++) {
+            if (jovemMonitor[i].checked) {
                 let escolhido = jovemMonitor[i].value;
 
-                if(escolhido == 1){
+                if (escolhido == 1) {
                     $('#rgrf_usuario').val('');
                     $('#rgrf_usuario').focus();
                     $('#rgrf_usuario').unmask();
                     $('#rgrf_usuario').attr('maxlength', '');
-                    $('#rgrf_usuario').keypress(function(event) {
+                    $('#rgrf_usuario').keypress(function (event) {
                         geraUsuarioRg();
                     });
-                    $('#rgrf_usuario').blur(function(event) {
+                    $('#rgrf_usuario').blur(function (event) {
                         geraUsuarioRg();
                     });
 
-                } else if(escolhido == 0){
+                } else if (escolhido == 0) {
                     $('#rgrf_usuario').val('');
                     $('#rgrf_usuario').focus();
                     $('#rgrf_usuario').mask('000.000.0');
-                    $('#rgrf_usuario').keypress(function(event) {
+                    $('#rgrf_usuario').keypress(function (event) {
                         geraUsuarioRf();
                     });
-                    $('#rgrf_usuario').blur(function(event) {
+                    $('#rgrf_usuario').blur(function (event) {
                         geraUsuarioRf();
                     });
                 }
@@ -249,22 +274,22 @@ if(isset($_POST['cadastra'])){
     var email = $("#email");
 
     // adiciona o evento de onblur no campo de email
-    email.blur(function() {
+    email.blur(function () {
         $.ajax({
             url: url,
             type: 'POST',
-            data:{"email" : email.val()},
+            data: {"email": email.val()},
 
-            success: function(data) {
+            success: function (data) {
 
                 let divEmail = document.querySelector('#divEmail');
 
                 // verifica se o que esta sendo retornado é 1 ou 0
-                if(data.ok){
+                if (data.ok) {
                     divEmail.classList.remove("has-error");
                     document.getElementById("spanHelp").innerHTML = '';
                     $('#cadastra').attr('disabled', false);
-                }else{
+                } else {
                     divEmail.classList.add("has-error");
                     document.getElementById("spanHelp").innerHTML = "Email em uso!";
                     $('#cadastra').attr('disabled', true);
