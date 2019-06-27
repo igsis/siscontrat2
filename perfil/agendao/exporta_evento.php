@@ -318,7 +318,7 @@ ORDER BY O.data_inicio";
                                 <td class="list_description"><?= $linha['numero'] ?></td>
                                 <td class="list_description"><?= $linha['complemento'] ?></td>
                                 <td class="list_description"><?= $linha['bairro'] ?></td>
-                                <td class="list_description"><?= $linha['cidade'] ?> minutos</td>
+                                <td class="list_description"><?= $linha['cidade'] ?></td>
                                 <td class="list_description"><?= $linha['estado'] ?></td>
                                 <td class="list_description"><?= $linha['cep'] ?></td>
                                 <td class="list_description"><?= $linha['subprefeitura'] ?></td>
