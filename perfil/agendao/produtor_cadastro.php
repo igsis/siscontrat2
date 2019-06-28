@@ -15,8 +15,6 @@ if(isset($_POST['idAtracao'])){
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Cadastro de Evento</h2>
-
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
@@ -30,27 +28,23 @@ if(isset($_POST['idAtracao'])){
                         <div class="box-body">
                             <input type='hidden' name='idAtracoes' value='<?= $idAtracao?>'>
 
-                            <div class="form-group">
-                                <label for="nome">Nome: *</label>
+                            <div class="form-group" align="center">
+                                <label for="nome">Nome do produtor de evento *</label>
                                 <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome completo" maxlength="120" required>
                             </div>
-                            <div class="row">
+                            <div class="row" align="center">
                                 <div class="form-group col-md-6">
-                                    <label for="email">E-mail: *</label>
-                                    <input type="email" class="form-control" id="email" name="email" maxlength="60" placeholder="Digite o e-mail" required>
-                                </div>
-                                <div class="form-group col-md-3">
                                     <label for="telefone1">Telefone #1: *</label>
                                     <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone" name="telefone1" maxlength="15" onkeyup="mascara( this, mtel );" placeholder="Digite o Telefone principal" required>
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label for="telefone2">Telefone #2</label>
                                     <input type="text" data-mask="(00) 00000-0000" class="form-control" id="telefone" name="telefone2" maxlength="15" onkeyup="mascara( this, mtel );" placeholder="Digite o Telefone secundário">
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="observacao">Observação</label>
-                                <textarea name="observacao" id="observacao" class="form-control" rows="3"></textarea>
+                                <div class="form-group col-md-12">
+                                    <label for="email">E-mail: *</label>
+                                    <input type="email" class="form-control" id="email" name="email" maxlength="60" placeholder="Digite o e-mail" required>
+                                </div>
                             </div>
                         </div>
                         <div class="box-footer">
