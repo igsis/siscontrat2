@@ -28,14 +28,14 @@ include "includes/menu_interno.php";
                             </div>
 
                             <div class="form-group">
-                                <label for="categoria_atracao_id">Categoria da atração *</label>
-                                <select class="form-control" id="categoria_atracao_id" name="categoria_atracao_id"
-                                        required>
-                                    <option value="">Selecione...</option>
-                                    <?php
-                                    geraOpcao("categoria_atracoes")
-                                    ?>
-                                </select>
+                                <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla
+                                        escolha) </i></label>
+                                <button class='btn btn-default' type='button' data-toggle='modal'
+                                        data-target='#modalAcoes' style="border-radius: 30px;">
+                                    <i class="fa fa-question-circle"></i></button>
+                                <?php
+                                geraCheckboxEvento('acoes', 'acao', 'acao_evento');
+                                ?>
                             </div>
 
                                 <div class="row">

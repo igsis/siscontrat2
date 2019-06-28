@@ -5,7 +5,6 @@ $idEvento = $_SESSION['idEvento'];
 
 if(isset($_POST['cadastra']) || isset($_POST['edita'])){
     $nome_atracao = addslashes($_POST['nome_atracao']);
-    $categoria_atracao_id = $_POST['categoria_atracao_id'];
     $ficha_tecnica = addslashes($_POST['ficha_tecnica']);
     $integrantes = addslashes($_POST['integrantes']);
     $classificacao_indicativa_id = $_POST['classificacao_indicativa_id'];
@@ -15,10 +14,14 @@ if(isset($_POST['cadastra']) || isset($_POST['edita'])){
     $valor_individual = dinheiroDeBr($_POST['valor_individual']);
 }
 if(isset($_POST['cadastra'])){
-    $sql_atracoes = "INSERT INTO atracoes(evento_id, nome_atracao, categoria_atracao_id, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$idEvento','$nome_atracao', '$categoria_atracao_id', '$ficha_tecnica', '$integrantes', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
+    $sql_atracoes = "INSERT INTO atracoes(evento_id, nome_atracao, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$idEvento','$nome_atracao', '$ficha_tecnica', '$integrantes', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
     if(mysqli_query($con,$sql_atracoes)){
         $idAtracao = recuperaUltimo("atracoes");
         $mensagem = mensagem("success","Cadastrado com sucesso!");
+
+        if(isset($_POST['acao'])){
+            atualizaRelacionamentoEvento('acao_evento', $idEvento, $_POST['acao']);
+        }
 
         $dataAtual = date("Y-m-d");
         $sqlOcorrencia = "SELECT atr.valor_individual, ocr.data_inicio 
