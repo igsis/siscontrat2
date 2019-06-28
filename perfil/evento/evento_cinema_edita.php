@@ -48,7 +48,7 @@ if (isset($_POST['cadastra'])) {
 }
 
 if (isset($_POST['edita'])) {
-    $idFilme = $_POST['idFilme'];
+    $idFilme = recuperaUltimo("filmes");
     $sql = " UPDATE `filmes`
                 SET  titulo = '$tituloFilme',
                      titulo_original = '$tituloOriginal',
