@@ -22,6 +22,8 @@ $pasta = "?perfil=agendao&p=";
             }
             ?>
             <li><a href="<?=$pasta?>anexos"><i class='fa fa-circle-o text-teal'></i> <span>Anexar Arquivos</span></a></li>
+            <li><a href="<?=$pasta?>produtor_cadastro"><i class='fa fa-circle-o text-olive'></i> <span>Produtor</span></a></li>
+            <li><a href="<?=$pasta?>ocorrencia_cadastro"><i class='fa fa-circle-o text-blue'></i> <span>Ocorrência</span></a></li>
             <li><a href="<?=$pasta?>finalizar"><i class='fa fa-circle-o text-light-blue'></i> <span>Finalizar</span></a></li>
             <li><a href="?perfil=agendao"><i class="fa fa-reply"></i> <span>Voltar</span></a></li>
             <li class="header">MAIS</li>
