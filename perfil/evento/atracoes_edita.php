@@ -50,12 +50,15 @@ if(isset($_POST['cadastra'])){
 
 if(isset($_POST['edita'])){
     $idAtracao = $_POST['idAtracao'];
-    $sql_atracoes = "UPDATE atracoes SET nome_atracao = '$nome_atracao', ficha_tecnica = '$ficha_tecnica', integrantes = '$integrantes', classificacao_indicativa_id = '$classificacao_indicativa_id', release_comunicacao = '$release_comunicacao', links = '$links', quantidade_apresentacao = '$quantidade_apresentacao', valor_individual = '$valor_individual' WHERE id = '$idAtracao'";
+    $sql_atracoes = "UPDATE atracoes SET nome_atracao = '$nome_atracao', ficha_tecnica = '$ficha_tecnica', integrantes = '$integrantes', classificacao_indicativa_id = '$classificacao_indicativa_id', release_comunicacao = '$release_comunicacao', links = '$links', quantidade_apresentacao = '$quantidade_apresentacao', valor_individual = '$valor_individual', oficina = '$oficina' WHERE id = '$idAtracao'";
     if(mysqli_query($con,$sql_atracoes)){
+        if(isset($_POST['acao'])){
+            atualizaRelacionamentoAtracao('acao_atracao', $idAtracao, $_POST['acao']);
+        }
         $mensagem = mensagem("success","Atualizado com sucesso!");
     }
     else{
-        $mensagem = mensagem("danger","Erro ao atualizar! Tente novamente.").$sql_atracoes;
+        $mensagem = mensagem("danger","Erro ao atualizar! Tente novamente.");
     }
 }
 
