@@ -18,8 +18,8 @@ if(isset($_POST['apagar'])){
     }
 }
     
-$sql = "SELECT at.id AS idAtracao, nome_atracao, a2.categoria_atracao,produtor_id,at.categoria_atracao_id FROM atracoes AS at
-        INNER JOIN categoria_atracoes a2 on at.categoria_atracao_id = a2.id
+$sql = "SELECT at.id AS idAtracao, nome_atracao, produtor_id 
+        FROM atracoes AS at
         WHERE at.publicado = 1 AND at.evento_id = '$idEvento'";
 $query = mysqli_query($con,$sql);
 
@@ -53,7 +53,6 @@ $query = mysqli_query($con,$sql);
                             <thead>
                             <tr>
                                 <th>Nome da atração</th>
-                                <th>Categoria da atração</th>
                                 <th>Produtor</th>
                                 <th>Especificidade</th>
                                 <th>Ocorrência</th>
@@ -69,7 +68,6 @@ $query = mysqli_query($con,$sql);
 
                                 echo "<tr>";
                                 echo "<td>".$atracao['nome_atracao']."</td>";
-                                echo "<td>".$atracao['categoria_atracao']."</td>";
                                 if($atracao['produtor_id'] > 0){
                                     $idProdutor = $atracao['produtor_id'];
                                     $sql_produtor = "SELECT id,nome FROM produtores WHERE id = '$idProdutor'";
@@ -223,7 +221,6 @@ $query = mysqli_query($con,$sql);
                             <tfoot>
                             <tr>
                                 <th>Nome da atração</th>
-                                <th>Categoria da atração</th>
                                 <th>Produtor</th>
                                 <th>Especificidade</th>
                                 <th>Ocorrência</th>

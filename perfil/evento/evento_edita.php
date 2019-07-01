@@ -17,7 +17,6 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $fomento = $_POST['fomento'];
     $tipoLugar = $_POST['tipoLugar'];
     $idFomento = $_POST['tipoFomento'] ?? null;
-    $oficina = $_POST['oficina'];
 }
 
 if (isset($_POST['cadastra'])) {
@@ -34,8 +33,7 @@ if (isset($_POST['cadastra'])) {
                                  original, 
                                  evento_status_id,
                                  fomento, 
-                                 espaco_publico,
-                                 oficina) 
+                                 espaco_publico) 
                           VALUES ('$nomeEvento',
                                   '$relacao_juridica_id',
                                   '$projeto_especial_id',
@@ -48,8 +46,7 @@ if (isset($_POST['cadastra'])) {
                                   '$original',
                                   '$eventoStatus',
                                   '$fomento',
-                                  '$tipoLugar',
-                                  '$oficina')";
+                                  '$tipoLugar')";
 
     if(mysqli_query($con, $sql))
     {
@@ -95,8 +92,7 @@ if(isset($_POST['edita'])){
                               contratacao = '$contratacao', 
                               original = '$original',
                               fomento = '$fomento',
-                              espaco_publico = '$tipoLugar',
-                              oficina = '$oficina'
+                              espaco_publico = '$tipoLugar'
                               WHERE id = '$idEvento'";
     If(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com sucesso!");
@@ -219,14 +215,6 @@ include "includes/menu_interno.php";
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="tipo">Este evento é oficina?</label> <br>
-                                    <label><input type="radio" name="oficina" value="1" id="simOficina" <?= $evento['oficina'] == 1 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="oficina" value="0" <?= $evento['oficina'] == 0 ? 'checked' : NULL ?>> Não </label>
-                                </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="acao">Público (Representatividade e Visibilidade Sócio-cultural)* <i>(multipla
                                             escolha) </i></label>
@@ -280,42 +268,7 @@ include "includes/menu_interno.php";
     </section>
 </div>
 
-<div class="modal fade" id="modalAcoes" role="dialog" aria-labelledby="lblmodalAcoes" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Ações (Expressões Artístico-culturais)</h4>
-            </div>
-            <div class="modal-body" style="text-align: left;">
-                <table class="table table-bordered table-responsive">
-                    <thead>
-                    <tr>
-                        <th>Ação</th>
-                        <th>Descrição</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    $sqlConsultaAcoes = "SELECT acao, descricao FROM acoes WHERE publicado = '1' ORDER BY 1";
-                    foreach ($con->query($sqlConsultaAcoes)->fetch_all(MYSQLI_ASSOC) as $acao) {
-                        ?>
-                        <tr>
-                            <td><?= $acao['acao'] ?></td>
-                            <td><?= $acao['descricao'] ?></td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-theme" data-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <div class="modal fade" id="modalPublico" role="dialog" aria-labelledby="lblmodalPublico" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -353,7 +306,6 @@ include "includes/menu_interno.php";
         </div>
     </div>
 </div>
-
 
 <script>
     let fomento = $('.fomento');

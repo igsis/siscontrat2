@@ -1399,6 +1399,42 @@ function atualizaRelacionamentoEvento($tabela, $idEvento, $post) {
     }
 }
 
+function atualizaRelacionamentoAtracao($tabela, $idAtracao, $post) {
+    $con = bancoMysqli();
+
+    $sqlConsultaRelacionamento = "SELECT * FROM $tabela WHERE evento_id = '$idEvento'";
+    $relacionamento = $con->query($sqlConsultaRelacionamento);
+
+    $consultaColunas = $con->query("SHOW COLUMNS FROM $tabela");
+    while ($linha = $consultaColunas->fetch_assoc()) {
+        $colunas[] = $linha['Field'];
+    }
+
+    $coluna = $colunas[1];
+
+    if ($relacionamento->num_rows == 0) {
+        foreach ($post as $checkbox) {
+            $sqlInsertRelacionamento = "INSERT INTO $tabela (evento_id, $coluna) VALUE ('$idEvento', '$checkbox')";
+            $con->query($sqlInsertRelacionamento);
+        }
+    } else {
+        $relacionamentos = $relacionamento->fetch_all(MYSQLI_NUM);
+
+        foreach ($relacionamentos as $relacionamento) {
+            if (!(in_array_r($relacionamento[1], $post))) {
+                $sqlDeleteRelacionamento = "DELETE FROM $tabela WHERE evento_id = '$idEvento' AND $coluna = '".$relacionamento[1]."'";
+                $con->query($sqlDeleteRelacionamento);
+            }
+        }
+        foreach ($post as $checkbox) {
+            if (!(in_array_r($checkbox, $relacionamentos))) {
+                $sqlInsertRelacionamento = "INSERT INTO $tabela (evento_id, $coluna) VALUE ('$idEvento', '$checkbox')";
+                $con->query($sqlInsertRelacionamento);
+            }
+        }
+    }
+}
+
 function atualizaRelacionamentoVerbas($tabela, $idUser, $post) {
     $con = bancoMysqli();
 

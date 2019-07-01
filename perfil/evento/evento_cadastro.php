@@ -90,14 +90,6 @@ include "includes/menu_interno.php";
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="tipo">Este evento é oficina?</label> <br>
-                                    <label><input type="radio" name="oficina" value="1" id="simOficina" > Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="oficina" value="0" checked> Não </label>
-                                </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="acao">Público (Representatividade e Visibilidade Sócio-cultural)* <i>(multipla
                                             escolha) </i></label>
