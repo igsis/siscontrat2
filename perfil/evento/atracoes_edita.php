@@ -21,7 +21,7 @@ if(isset($_POST['cadastra'])){
         $mensagem = mensagem("success","Cadastrado com sucesso!");
 
         if(isset($_POST['acao'])){
-            atualizaRelacionamentoEvento('acao_atracao', $idAtracao, $_POST['acao']);
+            atualizaRelacionamentoAtracao('acao_atracao', $idAtracao, $_POST['acao']);
         }
 
         $dataAtual = date("Y-m-d");

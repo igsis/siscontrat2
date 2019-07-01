@@ -1402,7 +1402,7 @@ function atualizaRelacionamentoEvento($tabela, $idEvento, $post) {
 function atualizaRelacionamentoAtracao($tabela, $idAtracao, $post) {
     $con = bancoMysqli();
 
-    $sqlConsultaRelacionamento = "SELECT * FROM $tabela WHERE evento_id = '$idEvento'";
+    $sqlConsultaRelacionamento = "SELECT * FROM $tabela WHERE atracao_id = '$idAtracao'";
     $relacionamento = $con->query($sqlConsultaRelacionamento);
 
     $consultaColunas = $con->query("SHOW COLUMNS FROM $tabela");
@@ -1414,7 +1414,7 @@ function atualizaRelacionamentoAtracao($tabela, $idAtracao, $post) {
 
     if ($relacionamento->num_rows == 0) {
         foreach ($post as $checkbox) {
-            $sqlInsertRelacionamento = "INSERT INTO $tabela (evento_id, $coluna) VALUE ('$idEvento', '$checkbox')";
+            $sqlInsertRelacionamento = "INSERT INTO $tabela (atracao_id, $coluna) VALUE ('$idAtracao', '$checkbox')";
             $con->query($sqlInsertRelacionamento);
         }
     } else {
@@ -1422,13 +1422,13 @@ function atualizaRelacionamentoAtracao($tabela, $idAtracao, $post) {
 
         foreach ($relacionamentos as $relacionamento) {
             if (!(in_array_r($relacionamento[1], $post))) {
-                $sqlDeleteRelacionamento = "DELETE FROM $tabela WHERE evento_id = '$idEvento' AND $coluna = '".$relacionamento[1]."'";
+                $sqlDeleteRelacionamento = "DELETE FROM $tabela WHERE atracao_id = '$idAtracao' AND $coluna = '".$relacionamento[1]."'";
                 $con->query($sqlDeleteRelacionamento);
             }
         }
         foreach ($post as $checkbox) {
             if (!(in_array_r($checkbox, $relacionamentos))) {
-                $sqlInsertRelacionamento = "INSERT INTO $tabela (evento_id, $coluna) VALUE ('$idEvento', '$checkbox')";
+                $sqlInsertRelacionamento = "INSERT INTO $tabela (atracao_id, $coluna) VALUE ('$idAtracao', '$checkbox')";
                 $con->query($sqlInsertRelacionamento);
             }
         }
