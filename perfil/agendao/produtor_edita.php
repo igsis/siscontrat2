@@ -63,15 +63,12 @@
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
+        <h2 class="page-header">Produtor do Evento</h2>
         <!-- START FORM-->
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
                 <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Produtor do Evento</h3>
-                    </div>
                     <div class="row" align="center">
                         <?php if(isset($resultado)){echo $resultado;};?>
                     </div>
@@ -101,9 +98,11 @@
                                 </div>
                             </div>
                         </div>
+
+                        <button type="submit" name="edita" class="btn btn-theme btn-block" >ALTERAR</button>
                         <div class="box-footer">
                             <a href="?perfil=agendao&p=atracoes_lista"><button type="button" class="btn btn-default">Voltar</button></a>
-                            <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
+                            <a href="?perfil=agendao&p=ocorrencia_cadastro"><button type="button" class="btn btn-info pull-right">Avançar</button></a>
                         </div>
                     </form>
                 </div>

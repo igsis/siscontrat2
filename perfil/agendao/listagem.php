@@ -22,6 +22,8 @@ include "includes/menu_principal.php";
                 ?>
             </div>
         </div>
-
+        <a href="?perfil=agendao">
+            <button type="button" class="btn btn-default" id="voltar" name="voltar">Voltar</button>
+        </a>
     </section>
 </div>
