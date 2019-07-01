@@ -91,6 +91,30 @@ $query = mysqli_query($con,$sql);
                                 /*
                                  * Especificidades
                                  */
+                                $acoes = recuperaDados("acao_atracao","atracao_id",$idAtracao);
+                                $idAcao = $acoes['acao_id'];
+                                switch ($idAcao){
+                                    case 11: //teatro
+                                        $teatro = recuperaDados("teatro","atracao_id",$atracao['idAtracao']);
+                                        if($teatro != NULL){
+                                            echo "<td>
+                                                <form method=\"POST\" action=\"?perfil=evento&p=teatro_edita\" role=\"form\">
+                                                <input type=\"hidden\" name='idTeatro' value='".$teatro['id']."'>
+                                                <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
+                                                </form>
+                                                </td>";
+                                        }
+                                        else{
+                                            echo "<td>
+                                                <form method=\"POST\" action=\"?perfil=evento&p=teatro_cadastro\" role=\"form\">
+                                                <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
+                                                <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Especificidade</button>
+                                                </form>
+                                                </td>";
+                                        }
+                                    break;
+                                }
+                                /*
                                 $idCategoriaAtracao = $atracao['categoria_atracao_id'];
                                 $array_teatro = array(3,7,23,24);
                                 if(in_array($idCategoriaAtracao, $array_teatro)){
@@ -179,6 +203,7 @@ $query = mysqli_query($con,$sql);
                                         }
                                     }
                                 }
+                                */
                                 /*
                                  * Ocorrência
                                  */
