@@ -31,6 +31,8 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $periodo_id = $_POST['periodo'];
     $subprefeitura_id = $_POST['subprefeitura'];
     $virada = ($_POST['virada']);
+    $libras = $_POST['libras'] ?? 0;
+    $audiodescricao = $_POST['audiodescricao'] ?? 0;
 
 }
 
@@ -57,7 +59,9 @@ if (isset($_POST['cadastra'])) {
                                  observacao,
                                  periodo_id,
                                  subprefeitura_id,
-                                 virada)
+                                 virada,
+                                 libras,
+                                 audiodescricao)
                           VALUES ('$tipo_evento_id',
                                   '$origem_ocorrencia_id',
                                   '$instituicao_id',
@@ -79,7 +83,9 @@ if (isset($_POST['cadastra'])) {
                                   '$observacao',
                                   '$periodo_id',
                                   '$subprefeitura_id',
-                                  '$virada')";
+                                  '$virada',
+                                  '$libras',
+                                  '$audiodescricao')";
     
     if (mysqli_query($con, $sql)) 
     {
@@ -115,6 +121,8 @@ if (isset($_POST['edita'])) {
                             periodo_id = '$periodo_id',
                             subprefeitura_id = '$subprefeitura_id',
                             virada = '$virada',
+                            libras = '$libras',
+                            audiodescricao = '$audiodescricao',
                             observacao = '$observacao'
                             WHERE id = '$idOcorrencia'";
 
@@ -284,10 +292,20 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                     </label>
                                 </div>
 
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-2">
                                     <label for="virada">É virada?</label> &nbsp;
                                     <input type="radio" name="virada" id="viradaSim" value="1" <?= $ocorrencia['virada'] == 1 ? "checked" : NULL ?> class="virada"> Sim &nbsp;
                                     <input type="radio" name="virada" id="viradaNao" value="0" <?= $ocorrencia['virada'] == 0 ? "checked" : NULL ?>  class="virada" > Não
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <input type="checkbox" name="libras" id="libras" value="1" <?= $ocorrencia['libras'] == 1 ? "checked" : NULL ?>> &nbsp;
+                                    <label for="libras">Libras</label>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1" <?= $ocorrencia['audiodescricao'] == 1 ? "checked" : NULL ?>> &nbsp;
+                                    <label for="libras">Audiodescrição</label>
                                 </div>
                             </div>
 

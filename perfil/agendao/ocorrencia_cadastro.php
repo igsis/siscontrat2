@@ -140,12 +140,22 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                     </label>
                                 </div>
 
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-2">
                                     <label for="virada">É virada?</label> &nbsp;
                                     <input type="radio" name="virada" id="viradaSim" value="1" class="virada"> Sim
                                     &nbsp;
                                     <input type="radio" name="virada" id="viradaNao" value="0" checked class="virada">
                                     Não
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <input type="checkbox" name="libras" id="libras" value="1"> &nbsp;
+                                    <label for="libras">Libras</label>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1"> &nbsp;
+                                    <label for="libras">Audiodescrição</label>
                                 </div>
                             </div>
 

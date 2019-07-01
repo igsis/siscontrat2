@@ -8,7 +8,7 @@ include "includes/menu_interno.php";
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
-    $tipo_evento_id = $evento['tipo_evento_id'];
+    $tipo_evento_id = 3;
     $origem_ocorrencia_id = $_POST['idOrigem'] ?? NULL;
     $instituicao_id = $_POST['instituicao'];
     $local_id = $_POST['local'];
@@ -31,7 +31,8 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $periodo_id = $_POST['periodo'];
     $subprefeitura_id = $_POST['subprefeitura'];
     $virada = ($_POST['virada']);
-
+    $libras = $_POST['libras'];
+    $audiodescricao = $_POST['audiodescricao'];
 
 }
 
@@ -58,7 +59,9 @@ if (isset($_POST['cadastra'])) {
                                  observacao,
                                  periodo_id,
                                  subprefeitura_id,
-                                 virada)
+                                 virada,
+                                 libras,
+                                 audiodescricao)
                           VALUES ('$tipo_evento_id',
                                   '$origem_ocorrencia_id',
                                   '$instituicao_id',
@@ -80,7 +83,9 @@ if (isset($_POST['cadastra'])) {
                                   '$observacao',
                                   '$periodo_id',
                                   '$subprefeitura_id',
-                                  '$virada')";
+                                  '$virada',
+                                  '$libras',
+                                  '$audiodescricao')";
 
     if (mysqli_query($con, $sql)) 
     {
@@ -116,7 +121,9 @@ if (isset($_POST['edita'])) {
                             observacao = '$observacao',
                             periodo_id = '$periodo_id',
                             subprefeitura_id = '$subprefeitura_id',
-                            virada = '$virada'
+                            virada = '$virada',
+                            libras = '$libras',
+                            audiodescricao = '$audiodescricao'
                             WHERE id = '$idOcorrencia'";
 
     If (mysqli_query($con, $sql)) {
@@ -286,10 +293,20 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                     </label>
                                 </div>
 
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-2">
                                     <label for="virada">É virada?</label> &nbsp;
                                     <input type="radio" name="virada" id="viradaSim" value="1" <?= $ocorrencia['virada'] == 1 ? "checked" : NULL ?> class="virada"> Sim &nbsp;
                                     <input type="radio" name="virada" id="viradaNao" value="0" <?= $ocorrencia['virada'] == 0 ? "checked" : NULL ?>  class="virada" > Não
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <input type="checkbox" name="libras" id="libras" value="1" <?= $ocorrencia['libras'] == 1 ? "checked" : NULL ?>> &nbsp;
+                                    <label for="libras">Libras</label>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1" <?= $ocorrencia['audiodescricao'] == 1 ? "checked" : NULL ?>> &nbsp;
+                                    <label for="libras">Audiodescrição</label>
                                 </div>
                             </div>
 
