@@ -23,8 +23,6 @@ if (isset($_POST['cadastra'])) {
     $sql = "INSERT INTO agendoes (nome_evento, espaco_publico, projeto_especial_id, classificacao_indicativa_id, links, ficha_tecnica, sinopse, quantidade_apresentacao, fomento, tipo_evento_id, oficina, user_id)
                           VALUES ('$nomeEvento', '$tipoLugar', '$projeto_especial_id', '$classificacao', '$links', '$artistas', '$sinopse', '$qtdApresentacao', '$fomento', 3, '$oficina', '$idUsuario')";
 
-                          echo $sql;
-
     if(mysqli_query($con, $sql))
     {
         $idEvento = recuperaUltimo("agendoes");
@@ -62,7 +60,7 @@ if(isset($_POST['edita'])){
         $ehIgual = false;
     }
 
-    $sql = "UPDATE ";
+    $sql = "UPDATE agendoes SET nome_evento = '$nomeEvento', espaco_publico = '$tipoLugar', projeto_especial_id = '$projeto_especial_id', classificacao_indicativa_id = '$classificacao', links = '$links', ficha_tecnica = '$artistas', sinopse = '$sinopse', quantidade_apresentacao = '$qtdApresentacao', fomento = '$fomento', oficina = '$oficina'";
 
     if(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com sucesso!");
@@ -116,13 +114,19 @@ include "includes/menu_interno.php";
                     <div class="box-header with-border">
                         <h3 class="box-title">Informações Gerais</h3>
                     </div>
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                    </div>
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem2)){echo $mensagem2;};?>
+                    </div>
                     <form method="POST" action="?perfil=agendao&p=evento_edita" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="nomeEvento">Nome do evento *</label>
                                     <input type="text" class="form-control" id="nomeEvento" name="nomeEvento"
-                                           placeholder="Digite o nome do evento" maxlength="240" required value="<?php echo $evento['nome_evento']; ?>">
+                                           placeholder="Digite o nome do evento" maxlength="240" required value="<?= $evento['nome_evento']; ?>">
                                 </div>
                             </div>
 
@@ -133,7 +137,7 @@ include "includes/menu_interno.php";
                                             required>
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcaoPublicado("projeto_especiais", "");
+                                        geraOpcaoPublicado("projeto_especiais", $evento['projeto_especial_id']);
                                         ?>
                                     </select>
                                 </div>
@@ -143,7 +147,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-12">
                                     <label for="ficha_tecnica">Artistas</label><br/>
                                     <textarea id="ficha_tecnica" name="ficha_tecnica" class="form-control"
-                                              rows="8"></textarea>
+                                              rows="8"><?= $evento['ficha_tecnica'] ?></textarea>
                                 </div>
                             </div>
 
@@ -151,21 +155,21 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-3">
                                     <label for="contratacao">Espaço público?</label>
                                     <br>
-                                    <label><input type="radio" name="tipoLugar" value="1"> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="tipoLugar" value="0" checked> Não </label>
+                                    <label><input type="radio" name="tipoLugar" value="1" <?= $evento['espaco_publico'] == 1 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="tipoLugar" value="0" <?= $evento['espaco_publico'] == 0 ? 'checked' : NULL ?>> Não </label>
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="qtdApresentacao">Quantidade de apresentação: *</label>
-                                    <input type="number" min="1" class="form-control" name="qtdApresentacao" id="qtdApresentacao">
+                                    <input type="number" min="1" class="form-control" name="qtdApresentacao" id="qtdApresentacao" value="<?= $evento['quantidade_apresentacao'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="fomento">É fomento/programa?</label> <br>
-                                    <label><input type="radio" class="fomento" name="fomento" value="1" id="sim"> Sim
+                                    <label><input type="radio" class="fomento" name="fomento" value="1" id="sim" <?= $evento['fomento'] == 1 ? 'checked' : NULL ?>> Sim
                                     </label>&nbsp;&nbsp;
                                     <label><input type="radio" class="fomento" name="fomento" value="0" id="nao"
-                                                  checked> Não </label>
+                                            <?= $evento['fomento'] == 0 ? 'checked' : NULL ?>> Não </label>
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -173,17 +177,17 @@ include "includes/menu_interno.php";
                                     <select class="form-control" name="tipoFomento" id="tipoFomento">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao("fomentos");
+                                            geraOpcao("fomentos", $fomento['fomento_id']);
                                         ?>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="tipo">Este evento é oficina?</label> <br>
-                                    <label><input type="radio" name="oficina" value="1" id="simOficina"> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="oficina" value="0" checked> Não </label>
+                                    <label><input type="radio" name="oficina" value="1" id="simOficina" <?= $evento['oficina'] == 1 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="oficina" value="0" <?= $evento['oficina'] == 0 ? 'checked' : NULL ?>> Não </label>
                                 </div>
                             </div>
 
@@ -195,7 +199,7 @@ include "includes/menu_interno.php";
                                             data-target='#modalAcoes' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('acoes', 'acao', 'acao_evento');
+                                    geraCheckboxEvento('acoes', 'acao', 'acao_evento', $evento['id']);
                                     ?>
                                 </div>
 
@@ -206,7 +210,7 @@ include "includes/menu_interno.php";
                                             data-target='#modalPublico' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('publicos', 'publico', 'evento_publico');
+                                    geraCheckboxEvento('publicos', 'publico', 'evento_publico', $evento['id']);
                                     ?>
                                 </div>
                             </div>
@@ -217,7 +221,7 @@ include "includes/menu_interno.php";
                                     <select class="form-control" name="classificacao" id="classificacao">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao("classificacao_indicativas");
+                                        geraOpcao("classificacao_indicativas", $evento['classificacao']);
                                         ?>
                                     </select>
 
@@ -231,7 +235,7 @@ include "includes/menu_interno.php";
                                             style="color: gray; "><strong><i>Texto de exemplo:</strong><br/>Ana Cañas faz o show de lançamento do seu quarto disco, “Tô na Vida” (Som Livre/Guela Records). Produzido por Lúcio Maia (Nação Zumbi) em parceria com Ana e mixado por Mario Caldato Jr, é o primeiro disco totalmente autoral da carreira da cantora e traz parcerias com Arnaldo Antunes e Dadi entre outros.</span></i>
                                 </p>
                                 <textarea name="sinopse" id="sinopse" class="form-control" rows="5"
-                                          required></textarea>
+                                          required><?= $evento['sinopse'] ?></textarea>
                             </div>
 
                             <div class="form-group">

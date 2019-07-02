@@ -39,9 +39,9 @@ require "includes/menu_principal.php";
 
                             <div class="row ">
                                 <div class="form-group col-md-12">
-                                    <label for="ficha_tecnica">Artistas</label><br/>
+                                    <label for="ficha_tecnica">Artistas *</label><br/>
                                     <textarea id="ficha_tecnica" name="ficha_tecnica" class="form-control"
-                                              rows="8"></textarea>
+                                              rows="8" required></textarea>
                                 </div>
                             </div>
 
@@ -55,7 +55,8 @@ require "includes/menu_principal.php";
 
                                 <div class="form-group col-md-3">
                                     <label for="qtdApresentacao">Quantidade de apresentação: *</label>
-                                    <input type="number" min="1" class="form-control" name="qtdApresentacao" id="qtdApresentacao">
+                                    <input type="number" min="1" class="form-control" name="qtdApresentacao"
+                                           id="qtdApresentacao" required>
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -112,10 +113,10 @@ require "includes/menu_principal.php";
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="classificacao">Classificação indicativa *</label>
-                                    <select class="form-control" name="classificacao" id="classificacao">
+                                    <select class="form-control" name="classificacao" id="classificacao" required>
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("classificacao_indicativas");
+                                        geraOpcao("classificacao_indicativas");
                                         ?>
                                     </select>
 
@@ -139,7 +140,7 @@ require "includes/menu_principal.php";
                                 <p align="justify"><span
                                             style="color: gray; "><strong><i>Links de exemplo:</i></strong><br/> https://www.facebook.com/anacanasoficial/<br/>https://www.youtube.com/user/anacanasoficial</span></i>
                                 </p>
-                                <textarea id="links" name="links" class="form-control" rows="5"></textarea>
+                                <textarea id="links" name="links" class="form-control" rows="5" required></textarea>
                             </div>
                         </div>
 
