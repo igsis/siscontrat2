@@ -185,11 +185,11 @@ $query = mysqli_query($con, $sql);
                 <div class="col-md-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">Listagem de Espacos</h3>
+                            <h3 class="box-title">Listagem de Espaços</h3>
                             <form action="?perfil=administrativo&p=instituicao&sp=adicionar_espaco" method="POST">
                                 <input type="hidden" name="idLocal" id="idLocal" value="<?= $idLocal ?>">
                                 <button type="submit" class="text-right btn btn-success" style="float: right">Adicionar
-                                    Espaco
+                                    Espaço
                                 </button>
                             </form>
                         </div>
