@@ -9,8 +9,9 @@
     <div class="box-body">
         <div class="box-group" id="accordionOcorrencia">
             <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-            <?php foreach ($atracoes as $atracao) {
-                $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '".$atracao['id']."' AND publicado = '1'";
+            <?php
+                $idEvento = $_SESSION['idEvento'];
+                $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '".$idEvento."'  AND tipo_ocorrencia_id = 3 AND publicado = '1'";
                 $ocorrencias = $con->query($sqlOcorrencia);
 
                 $aberto = "in";
@@ -18,12 +19,10 @@
                 <div class="panel box box-primary">
                     <div class="box-header with-border">
                         <h4 class="box-title">
-                            <a data-toggle="collapse" data-parent="#accordionOcorrencia" href="#ocorrencia<?= $atracao['id'] ?>">
-                                Ocorrências da Atração: <?= $atracao['nome_atracao'] ?>
-                            </a>
+
                         </h4>
                     </div>
-                    <div id="ocorrencia<?= $atracao['id'] ?>" class="panel-collapse collapse <?=$aberto?>">
+                    <div id="ocorrencia" class="panel-collapse collapse <?=$aberto?>">
                         <div class="box-body">
                             <div class="table-responsive">
                                 <table class="table">
@@ -99,7 +98,6 @@
                         </div>
                     </div>
                 </div>
-            <?php } ?>
         </div>
     </div>
     <!-- /.box-body -->

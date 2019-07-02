@@ -2,30 +2,32 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
-$sqlEvento = "SELECT
-               eve.nome_evento AS 'Nome do Evento',
-               te.tipo_evento AS 'Tipo do Evento',
-               rj.relacao_juridica AS 'Tipo de Relação Jurídica',
-               pe.projeto_especial AS 'Projeto Especial',
-               eve.sinopse AS 'Sinopse',
-               fiscal.nome_completo AS 'Fiscal',
-               suplente.nome_completo AS 'Suplente'
-                FROM eventos AS eve
-                INNER JOIN tipo_eventos AS te ON eve.tipo_evento_id = te.id
-                INNER JOIN relacao_juridicas AS rj ON eve.relacao_juridica_id = rj.id
-                INNER JOIN projeto_especiais AS pe ON eve.projeto_especial_id = pe.id
-                INNER JOIN usuarios AS fiscal ON eve.fiscal_id = fiscal.id
-                INNER JOIN usuarios AS suplente ON eve.suplente_id = suplente.id
-                WHERE eve.id = '$idEvento'";
+$idEvento = $_SESSION['idEvento'];
 
-$resumoEvento = $con->query($sqlEvento)->fetch_assoc();
+$sqlEvento = "
+    SELECT
+    eve.nome_evento,
+    pe.projeto_especial,
+    eve.ficha_tecnica AS 'artistas',
+    eve.espaco_publico,
+    eve.quantidade_apresentacao,
+    eve.fomento,
+    ci.classificacao_indicativa,
+    eve.sinopse,
+    eve.links
+    FROM agendoes AS eve
+    INNER JOIN projeto_especiais AS pe ON eve.projeto_especial_id = pe.id
+    INNER JOIN classificacao_indicativas ci on eve.classificacao_indicativa_id = ci.id
+    WHERE eve.id = '$idEvento'";
+
+$agendao = $con->query($sqlEvento)->fetch_assoc();
 
 include "includes/validacoes.php";
 ?>
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>Pendencias</h1>
+        <h1>Pendências</h1>
     </section>
 
     <section class="content">
@@ -33,13 +35,13 @@ include "includes/validacoes.php";
             <div class="col-md-6">
                 <?php if (count($erros) == 0) { ?>
                     <div class="alert alert-success alert-dismissible">
-                        <h4><i class="icon fa fa-check"></i> Seu Evento Não Possui Pendencias!</h4>
+                        <h4><i class="icon fa fa-check"></i> Seu evento não possui pendências!</h4>
 
                         <p>Confirme todos os dados abaixo antes de enviar.</p>
                     </div>
                 <?php } else { ?>
                     <div class="alert alert-danger">
-                        <h4><i class="icon fa fa-ban"></i> Seu Evento Possui Pendencias!</h4>
+                        <h4><i class="icon fa fa-ban"></i> Seu evento possui pendências!</h4>
 
                         <ul>
                             <?php foreach ($erros as $erro) {
@@ -56,15 +58,7 @@ include "includes/validacoes.php";
 
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right">
-                <?php if ($evento['contratacao'] == 1) { ?>
-                    <li><a href="#pedido" data-toggle="tab">Pedido de Contratação</a></li>
-                <?php } ?>
                 <li><a href="#ocorrencia" data-toggle="tab">Ocorrências</a></li>
-                <li>
-                    <a href="#atracao" data-toggle="tab">
-                        <?= ($evento['tipo_evento_id'] == 1) ? "Atração" : "Filme"?>
-                    </a>
-                </li>
                 <li class="active"><a href="#evento" data-toggle="tab">Evento</a></li>
                 <li class="pull-left header">Confirmação dos Dados Inseridos</li>
             </ul>
@@ -75,39 +69,104 @@ include "includes/validacoes.php";
                             <h3 class="box-title">Dados do Evento</h3>
                         </div>
                         <div class="box-body">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="nomeEvento">Nome do evento:</label> <?= $agendao['nome_evento'] ?>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="projetoEspecial">Projeto Especial:</label> <?= $agendao['projeto_especial'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="ficha_tecnica">Artistas:</label> <?= $agendao['artistas'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="contratacao">Espaço público?</label>
+                                    <?php
+                                    if($agendao['espaco_publico'] == 1){
+                                        echo "Sim";
+                                    } else{
+                                       echo "Não";
+                                    }
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="qtdApresentacao">Quantidade de apresentação:</label> <?= $agendao['quantidade_apresentacao'] ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="fomento">É fomento/programa?</label>
+                                    <?php
+                                    if($agendao['fomento'] == 1){
+                                        $age_fom = recuperaDados("agendao_fomento", "evento_id", $idEvento);
+                                        $fomento = recuperaDados("fomentos","id",$age_fom['fomento_id']);
+                                        echo "Sim: ".$fomento['fomento'];
+                                    } else{
+                                        echo "Não";
+                                    }
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="classificacao">Classificação indicativa:</label> <?= $agendao['classificacao_indicativa'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6"><label for="acao">Ações (Expressões Artístico-culturais):</label>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="acao">Público (Representatividade e Visibilidade Sócio-cultural):</label>
+                                    <?php
+                                    $age_pub = "SELECT * FROM agendao_publico WHERE evento_id = $idEvento";
+                                    $query = mysqli_query($con,$age_pub);
+                                    while ($row = mysqli_fetch_array($query)){
+                                        $publico = recuperaDados("publicos","id",$row['publico_id']);
+                                        echo $publico['publico']."; ";
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="sinopse">Sinopse:</label> <?= $agendao['sinopse'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="links">Links:</label> <?= $agendao['links'] ?>
+                                </div>
+                            </div>
+
+                            <!--
                             <div class="table-responsive">
                                 <table class="table">
-                                    <?php foreach ($resumoEvento as $campo => $dado) { ?>
+                                    <tr>
+                                        <th width="30%"></th>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <th width="30%"></th>
+                                        <td></td>
+                                    </tr>
+
+                                    <?php /* foreach ($resumoEvento as $campo => $dado) { ?>
                                         <tr>
                                             <th width="30%"><?= $campo ?></th>
                                             <td><?=$dado?></td>
                                         </tr>
-                                    <?php } ?>
-                                </table>
+                                    <?php } */?>
+
+                                </table> -->
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="tab-pane" id="atracao">
-                    <?php if ($numAtracoes == 0) { ?>
-                        <div class="alert alert-danger">
-                            <h4><i class="icon fa fa-ban"></i>Não há atrações cadastradas</h4>
-                        </div>
-                    <?php } else {
-                        include "label_atracao_filme.php";
-                    } ?>
                 </div>
 
                 <div class="tab-pane" id="ocorrencia">
                     <?php include "label_ocorrencia.php" ?>
                 </div>
 
-                <?php if ($evento['contratacao'] == 1) { ?>
-                    <div class="tab-pane" id="pedido">
-                        <?php include "label_pedido.php" ?>
-                    </div>
-                <?php } ?>
             </div>
             <div class="box-footer">
                 <form action="?perfil=evento&p=resumo_evento_enviado" method="post">
