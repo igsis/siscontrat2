@@ -65,7 +65,6 @@ $query = mysqli_query($con,$sql);
                             <?php
                             echo "<tbody>";
                             while ($atracao = mysqli_fetch_array($query)){
-
                                 echo "<tr>";
                                 echo "<td>".$atracao['nome_atracao']."</td>";
                                 if($atracao['produtor_id'] > 0){
@@ -91,119 +90,89 @@ $query = mysqli_query($con,$sql);
                                 /*
                                  * Especificidades
                                  */
-                                $acoes = recuperaDados("acao_atracao","atracao_id",$idAtracao);
+                                $acoes = recuperaDados("acao_atracao","atracao_id",$atracao['idAtracao']);
                                 $idAcao = $acoes['acao_id'];
                                 switch ($idAcao){
                                     case 11: //teatro
+                                        $disabled = "";
                                         $teatro = recuperaDados("teatro","atracao_id",$atracao['idAtracao']);
                                         if($teatro != NULL){
-                                            echo "<td>
-                                                <form method=\"POST\" action=\"?perfil=evento&p=teatro_edita\" role=\"form\">
-                                                <input type=\"hidden\" name='idTeatro' value='".$teatro['id']."'>
-                                                <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
-                                                </form>
-                                                </td>";
+                                            $url = "?perfil=evento&p=teatro_edita";
+                                            $name = "idTeatro";
+                                            $value = $teatro['id'];
+                                            $icon = "<i class='fa fa-pencil-square-o'></i> Editar";
                                         }
                                         else{
-                                            echo "<td>
-                                                <form method=\"POST\" action=\"?perfil=evento&p=teatro_cadastro\" role=\"form\">
-                                                <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                                <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Especificidade</button>
-                                                </form>
-                                                </td>";
+                                            $url = "?perfil=evento&p=teatro_cadastro";
+                                            $name = "idAtracao";
+                                            $value = $atracao['idAtracao'];
+                                            $icon = "<i class='fa fa-plus'></i> Cadastrar";
                                         }
+                                        break;
+                                    case 7: //música
+                                    $disabled = "";
+                                    $musica = recuperaDados("musica","atracao_id",$atracao['idAtracao']);
+                                    if($musica != NULL){
+                                        $url = "?perfil=evento&p=musica_edita";
+                                        $name = "idMusica";
+                                        $value = $musica['id'];
+                                        $icon = "<i class='fa fa-pencil-square-o'></i> Editar";
+                                    }
+                                    else{
+                                        $url = "?perfil=evento&p=musica_cadastro";
+                                        $name = "idAtracao";
+                                        $value = $atracao['idAtracao'];
+                                        $icon = "<i class='fa fa-plus'></i> Cadastrar";
+                                    }
                                     break;
-                                }
-                                /*
-                                $idCategoriaAtracao = $atracao['categoria_atracao_id'];
-                                $array_teatro = array(3,7,23,24);
-                                if(in_array($idCategoriaAtracao, $array_teatro)){
-                                    $teatro = recuperaDados("teatro","atracao_id",$atracao['idAtracao']);
-                                    if($teatro != NULL){
-                                        echo "<td>
-                                                <form method=\"POST\" action=\"?perfil=evento&p=teatro_edita\" role=\"form\">
-                                                <input type=\"hidden\" name='idTeatro' value='".$teatro['id']."'>
-                                                <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i></button>
-                                                </form>
-                                                </td>";
-                                    }
-                                    else{
-                                        echo "<td>
-                                                <form method=\"POST\" action=\"?perfil=evento&p=teatro_cadastro\" role=\"form\">
-                                                <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                                <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Especificidade</button>
-                                                </form>
-                                                </td>";
-                                    }
-                                }
-                                else{
-                                    $array_musica = array(10,11,15,17);
-                                    if(in_array($idCategoriaAtracao, $array_musica)){
-                                        $musica = recuperaDados("musica","atracao_id",$atracao['idAtracao']);
-                                        if($musica != NULL){
-                                            echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento&p=musica_edita\" role=\"form\">
-                                                    <input type=\"hidden\" name='idMusica' value='".$musica['id']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i>Especificidade</button>
-                                                    </form>
-                                                    </td>";
+                                    case 5: //exposição (feira)
+                                        $disabled = "";
+                                        $exposicao = recuperaDados("exposicao","atracao_id",$atracao['idAtracao']);
+                                        if($exposicao != NULL){
+                                            $url = "?perfil=evento&p=exposicao_edita";
+                                            $name = "idExposicao";
+                                            $value = $exposicao['id'];
+                                            $icon = "<i class='fa fa-pencil-square-o'></i> Editar";
                                         }
                                         else{
-                                            echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento&p=musica_cadastro\" role=\"form\">
-                                                    <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i>Especificidade</button>
-                                                    </form>
-                                                    </td>";
+                                            $url = "?perfil=evento&p=exposicao_cadastro";
+                                            $name = "idAtracao";
+                                            $value = $atracao['idAtracao'];
+                                            $icon = "<i class='fa fa-plus'></i> Cadastrar";
                                         }
-                                    }
-                                    else{
-                                        if($idCategoriaAtracao == 2){
-                                            $exposicao = recuperaDados("exposicoes","atracao_id",$atracao['idAtracao']);
-                                            if($exposicao != NULL){
-                                                echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento&p=exposicao_edita\" role=\"form\">
-                                                    <input type='hidden' name='idExposicao' value='".$exposicao['id']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i>Especificidade</button>
-                                                    </form>
-                                                    </td>";
-                                            }
-                                            else{
-                                                echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento&p=exposicao_cadastro\" role=\"form\">
-                                                    <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i>Especificidade</button>
-                                                    </form>
-                                                    </td>";
-                                            }
+                                        break;
+                                    case 8: //exposição (feira)
+                                        $disabled = "";
+                                        $oficina = recuperaDados("oficina","atracao_id",$atracao['idAtracao']);
+                                        if($oficina != NULL){
+                                            $url = "?perfil=evento&p=oficina_edita";
+                                            $name = "idOficina";
+                                            $value = $oficina['id'];
+                                            $icon = "<i class='fa fa-pencil-square-o'></i> Editar";
                                         }
                                         else{
-                                            if($idCategoriaAtracao == 4 || $idCategoriaAtracao == 5){
-                                                $oficina = recuperaDados("oficinas","atracao_id",$atracao['idAtracao']);
-                                                if($oficina != NULL){
-                                                    echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento&p=oficina_edita\" role=\"form\">
-                                                    <input type='hidden' name='idOficina' value='".$oficina['id']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i>Especificidade</button>
-                                                    </form>
-                                                    </td>";
-                                                }
-                                                else{
-                                                    echo "<td>
-                                                    <form method=\"POST\" action=\"?perfil=evento&p=oficina_cadastro\" role=\"form\">
-                                                    <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Especificidade</button>
-                                                    </form>
-                                                    </td>";
-                                                }
-                                            }
-                                            else{
-                                                echo "<td>Não há especificidades.</td>";
-                                            }
+                                            $url = "?perfil=evento&p=oficina_cadastro";
+                                            $name = "idAtracao";
+                                            $value = $atracao['idAtracao'];
+                                            $icon = "<i class='fa fa-plus'></i> Cadastrar";
                                         }
-                                    }
+                                        break;
+                                    default:
+                                        $url = "#";
+                                        $name = "";
+                                        $value = "";
+                                        $icon = "Não se aplica";
+                                        $disabled = "disabled";
+                                        break;
                                 }
-                                */
+                                ?>
+                                <td>
+                                    <form method="POST" action="<?= $url ?>" role="form">
+                                        <input type="hidden" name="<?= $name ?>" value="<?= $value ?>">
+                                        <button type="submit" <?= $disabled ?>  name='carregar' class="btn btn-block btn-primary" ><?= $icon ?></button>
+                                    </form>
+                                </td>
+                            <?php
                                 /*
                                  * Ocorrência
                                  */
@@ -229,15 +198,14 @@ $query = mysqli_query($con,$sql);
                                         </form>
                                     </td>";
                                 }
-                                echo "<td>
+                                echo "<td width='5%'>
                                     <form method=\"POST\" action=\"?perfil=evento&p=atracoes_edita\" role=\"form\">
                                     <input type='hidden' name='idAtracao' value='".$atracao['idAtracao']."'>
-                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
+                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class='fa fa-file-text-o'></i> </button>
                                     </form>
                                 </td>";
-                                echo "<td>
-                                        
-                                        <buttonn class='btn btn-danger' data-toggle='modal' data-target='#apagar' data-ocorrencia-id='".$atracao['idAtracao']."' data-tittle='Apagar Atração' data-message='Você deseja mesmo apagar essa atração?' onclick ='passarId(".$atracao['idAtracao'].")'><span class='glyphicon glyphicon-trash'></span></buttonn>
+                                echo "<td width='5%'>                                        
+                                        <buttonn class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-ocorrencia-id='".$atracao['idAtracao']."' data-tittle='Apagar Atração' data-message='Você deseja mesmo apagar essa atração?' onclick ='passarId(".$atracao['idAtracao'].")'><span class='glyphicon glyphicon-trash'></span></buttonn>
                                   </td>";
                                 echo "</tr>";
                             }
