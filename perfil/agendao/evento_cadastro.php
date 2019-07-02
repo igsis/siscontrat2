@@ -55,7 +55,7 @@ require "includes/menu_principal.php";
 
                                 <div class="form-group col-md-3">
                                     <label for="qtdApresentacao">Quantidade de apresentação: *</label>
-                                    <input type="number" min="1" class="form-control">
+                                    <input type="number" min="1" class="form-control" name="qtdApresentacao" id="qtdApresentacao">
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -115,7 +115,7 @@ require "includes/menu_principal.php";
                                     <select class="form-control" name="classificacao" id="classificacao">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao("classificacao_indicativas");
+                                            geraOpcao("classificacao_indicativas");
                                         ?>
                                     </select>
 
