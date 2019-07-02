@@ -13,13 +13,7 @@ $pasta = "?perfil=agendao&p=";
             else{
                 echo "<li><a href=\"".$pasta."evento_cadastro\"><i class='fa fa-circle-o text-green'></i> <span>Evento</span></a></li>";
             }
-            if(isset($_SESSION['idEvento'])){
-                $idEvento = $_SESSION['idEvento'];
-                $evento = recuperaDados("eventos", "id",$idEvento);
-                if($evento['tipo_evento_id'] == 1){ //atração
-                    echo "<li><a href=\"".$pasta."atracoes_lista\"><i class=\"fa fa-circle-o text-lime\"></i> <span>Atração</span></a></li>";
-                }
-            }
+
             ?>
             <li><a href="<?=$pasta?>anexos"><i class='fa fa-circle-o text-teal'></i> <span>Anexar Arquivos</span></a></li>
             <li><a href="<?=$pasta?>produtor_cadastro"><i class='fa fa-circle-o text-olive'></i> <span>Produtor</span></a></li>
