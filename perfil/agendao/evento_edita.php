@@ -51,7 +51,7 @@ if (isset($_POST['cadastra'])) {
 }
 
 if(isset($_POST['edita'])){
-    $idEvento = $_POST['idEvento'];
+    $idEvento = $_SESSION['idEvento'];
     $evento = recuperaDados("agendoes", "id", $idEvento);
 
     if($evento['fomento'] == $fomento){
@@ -199,7 +199,7 @@ include "includes/menu_interno.php";
                                             data-target='#modalAcoes' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('acoes', 'acao', 'acao_evento', $evento['id']);
+                                    geraCheckboxEvento('acoes', 'acao', 'acao_agendao', $evento['id']);
                                     ?>
                                 </div>
 
@@ -210,7 +210,7 @@ include "includes/menu_interno.php";
                                             data-target='#modalPublico' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('publicos', 'publico', 'evento_publico', $evento['id']);
+                                    geraCheckboxEvento('publicos', 'publico', 'agendao_publico', $evento['id']);
                                     ?>
                                 </div>
                             </div>
@@ -221,7 +221,7 @@ include "includes/menu_interno.php";
                                     <select class="form-control" name="classificacao" id="classificacao">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao("classificacao_indicativas", $evento['classificacao']);
+                                        geraOpcao("classificacao_indicativas", $evento['classificacao_indicativa_id']);
                                         ?>
                                     </select>
 
@@ -328,6 +328,7 @@ include "includes/menu_interno.php";
                 </table>
             </div>
             <div class="modal-footer">
+                <input type="hidden" id="idEvento" name="idEvento" value="<?= $evento['id'] ?>">
                 <button type="button" class="btn btn-theme" data-dismiss="modal">Fechar</button>
             </div>
         </div>
