@@ -3,10 +3,8 @@ $con = bancoMysqli();
 include "includes/menu_interno.php";
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espacos.php';
 
-$_SESSION['idOrigem'] = $_POST['idOrigem'];
-
-
-$evento = recuperaDados('eventos', 'id', $idEvento);
+$idEvento = $_SESSION['idEvento'];
+$evento = recuperaDados('agendoes', 'id', $idEvento);
 
 ?>
 <script type="text/javascript">
@@ -249,7 +247,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             <a href="?perfil=agendao&p=ocorrencia_lista">
                                 <button type="button" class="btn btn-default" id="voltar" name="voltar">Voltar</button>
                             </a>
-                            <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
                             <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
                                 Cadastrar
                             </button>

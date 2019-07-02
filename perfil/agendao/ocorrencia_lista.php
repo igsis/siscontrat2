@@ -1,5 +1,6 @@
 <?php
 include "includes/menu_interno.php";
+$idOrigem = $_SESSION['idEvento'];
 
 $con = bancoMysqli();
 $conn = bancoPDO();
@@ -51,19 +52,9 @@ if(isset($_POST['duplicar'])){
 
 }
 
-$evento = recuperaDados('eventos', 'id', $_SESSION['idEvento']);
+$evento = recuperaDados('agendoes', 'id', $_SESSION['idEvento']);
 
 $tipo_ocorrencia_id = $evento['tipo_evento_id'];
-
-if(isset($_POST['carregar'])){
-    $idOrigem = $_POST['idOrigem'];
-    unset($_SESSION['idOrigem']);
-    $_SESSION['idOrigem'] = $idOrigem;
-}else if(isset($_SESSION['idOrigem'])){
-    $idOrigem = $_SESSION['idOrigem'];
-}else{
-    $idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
-}
 
 $sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim 
         FROM ocorrencias as o
@@ -83,7 +74,6 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
         <div class="row">
             <div class="col-md-2">
                 <form method="POST" action="?perfil=agendao&p=ocorrencia_cadastro">
-                    <input type="hidden" name="idOrigem" value="<?= $idOrigem ?>">
                     <button type="submit" class="btn btn-block btn-info"><i class="fa fa-plus"></i> Adiciona</button>
                 </form>
             </div>
@@ -168,7 +158,7 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
 <div class="modal fade" id="duplicar" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" id='formDuplicar' action="?perfil=evento&p=ocorrencia_lista" class="form-horizontal" role="form">
+            <form method="POST" id='formDuplicar' action="?perfil=agendao&p=ocorrencia_lista" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">Replicando ocorrência</h4>
@@ -192,7 +182,7 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
 <div class="modal fade" id="apagar" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" id='formApagar' action="?perfil=evento&p=ocorrencia_lista" class="form-horizontal" role="form">
+            <form method="POST" id='formApagar' action="?perfil=agendao&p=ocorrencia_lista" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">Apagar ocorrência</h4>
