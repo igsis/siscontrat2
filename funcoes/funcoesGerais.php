@@ -1343,6 +1343,26 @@ function geraCheckboxEvento($tabela, $name, $tabelaRelacionamento, $idEvento = n
     }
 }
 
+function geraCheckboxAtracao($tabela, $name, $tabelaRelacionamento, $idAtracao = null) {
+    $con = bancoMysqli();
+    $sqlConsulta = "SELECT * FROM $tabela WHERE publicado = '1' ORDER BY 1";
+    $dados = $con->query($sqlConsulta);
+
+    $sqlConsultaRelacionamento = "SELECT * FROM $tabelaRelacionamento WHERE atracao_id = $idAtracao";
+    $resRelacionamentos = $con->query($sqlConsultaRelacionamento);
+    $relacionamentos = ($resRelacionamentos) ? $resRelacionamentos->fetch_all(MYSQLI_ASSOC) : [];
+
+    while ($checkbox = $dados->fetch_row()) {
+        ?>
+        <div class="checkbox-grid-2 text-left">
+            <input type="checkbox" name="<?=$name?>[]" id="<?=$checkbox[1]?>" value="<?=$checkbox[0]?>"
+                <?=in_array_r($checkbox[0], $relacionamentos) ? "checked" : ""?>>
+            <label for="<?=$checkbox[1]?>"><?=$checkbox[1]?></label>
+        </div>
+        <?php
+    }
+}
+
 function geraCheckBoxVerba($tabela, $name, $tabelaRelacionamento, $idUsuario = null){
     $con = bancoMysqli();
     $sqlConsulta = "SELECT * FROM $tabela ORDER BY 2";
@@ -1414,7 +1434,7 @@ function atualizaRelacionamentoAtracao($tabela, $idAtracao, $post) {
 
     if ($relacionamento->num_rows == 0) {
         foreach ($post as $checkbox) {
-            $sqlInsertRelacionamento = "INSERT INTO $tabela (atracao_id, $coluna) VALUE ('$idAtracao', '$checkbox')";
+            $sqlInsertRelacionamento = "INSERT INTO $tabela (acao_id, $coluna) VALUE ('$checkbox', '$idAtracao')";
             $con->query($sqlInsertRelacionamento);
         }
     } else {
@@ -1428,7 +1448,7 @@ function atualizaRelacionamentoAtracao($tabela, $idAtracao, $post) {
         }
         foreach ($post as $checkbox) {
             if (!(in_array_r($checkbox, $relacionamentos))) {
-                $sqlInsertRelacionamento = "INSERT INTO $tabela (atracao_id, $coluna) VALUE ('$idAtracao', '$checkbox')";
+                $sqlInsertRelacionamento = "INSERT INTO $tabela (acao_id, $coluna) VALUE ('$checkbox', '$idAtracao')";
                 $con->query($sqlInsertRelacionamento);
             }
         }

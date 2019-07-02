@@ -40,7 +40,7 @@ include "includes/menu_interno.php";
                                 <button class='btn btn-default' type='button' data-toggle='modal' data-target='#modalAcoes' style="border-radius: 30px;">
                                     <i class="fa fa-question-circle"></i></button>
                                 <?php
-                                    geraCheckboxEvento('acoes', 'acao', 'acao_evento');
+                                    geraCheckboxAtracao('acoes', 'acao', 'acao_atracao');
                                 ?>
                             </div>
 
