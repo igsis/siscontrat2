@@ -1,5 +1,4 @@
 <?php
-
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
@@ -9,18 +8,20 @@ $conn = bancoPDO();
 
 if(isset($_POST['excluir'])){
     $evento = $_POST['idEvent'];
-    $stmt = $conn->prepare("UPDATE eventos SET publicado = 0 WHERE id =:id");
+    $stmt = $conn->prepare("UPDATE agendoes SET publicado = 0 WHERE id =:id");
     $stmt->execute(['id' => $evento]);
     $mensagem = mensagem("success", "Evento excluido com sucesso!");
 }
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status FROM eventos AS ev
+$sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status FROM agendoes AS ev
         INNER JOIN tipo_eventos AS te on ev.tipo_evento_id = te.id
         INNER JOIN evento_status es on ev.evento_status_id = es.id
-        WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id = 1 AND agendao = 1";
+        WHERE publicado = 1 AND usuario_id = '$idUser' AND evento_status_id = 1";
+
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
+
 if ($linha >= 1) {
     $tem = 1;
 } else {
@@ -35,7 +36,7 @@ if ($linha >= 1) {
                         <h3 class="box-title">Listagem</h3>
                     </div>
                     <?php
-                    if ($tem == 0) {
+                    if ($tem == 0)  {
                         $mensagemEvento = mensagem("info", "Não existe eventos enviados!");
                         echo $mensagemEvento;
                     } else {

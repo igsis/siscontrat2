@@ -20,7 +20,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
 
 if (isset($_POST['cadastra'])) {
 
-    $sql = "INSERT INTO agendoes (nome_evento, espaco_publico, projeto_especial_id, classificacao_indicativa_id, links, ficha_tecnica, sinopse, quantidade_apresentacao, fomento, tipo_evento_id, oficina, user_id)
+    $sql = "INSERT INTO agendoes (nome_evento, espaco_publico, projeto_especial_id, classificacao_indicativa_id, links, ficha_tecnica, sinopse, quantidade_apresentacao, fomento, tipo_evento_id, oficina, usuario_id)
                           VALUES ('$nomeEvento', '$tipoLugar', '$projeto_especial_id', '$classificacao', '$links', '$artistas', '$sinopse', '$qtdApresentacao', '$fomento', 3, '$oficina', '$idUsuario')";
 
     if(mysqli_query($con, $sql))

@@ -8,7 +8,7 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos WHERE publicado = 1 AND agendao = 1 AND contratacao = 0 AND evento_status_id >= 3 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+$sql = "SELECT * FROM agendoes WHERE publicado = 1 AND evento_status_id >= 3 AND usuario_id = '$idUser'";
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
 if ($linha >= 1) {
