@@ -14,10 +14,8 @@ if(isset($_POST['excluir'])){
 }
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status FROM agendoes AS ev
-        INNER JOIN tipo_eventos AS te on ev.tipo_evento_id = te.id
-        INNER JOIN evento_status es on ev.evento_status_id = es.id
-        WHERE publicado = 1 AND usuario_id = '$idUser' AND evento_status_id = 1";
+$sql = "SELECT ev.id AS idEvento, ev.nome_evento FROM agendoes AS ev
+        WHERE publicado = 1 AND user_id = '$idUser' ";
 
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
@@ -53,8 +51,6 @@ if ($linha >= 1) {
                                 <thead>
                                 <tr>
                                     <th>Nome do evento</th>
-                                    <th>Tipo do evento</th>
-                                    <th>Status</th>
                                     <th>Visualizar</th>
                                     <th>Apagar</th>
                                 </tr>
@@ -65,8 +61,6 @@ if ($linha >= 1) {
                                 while ($evento = mysqli_fetch_array($query)) {
                                     echo "<tr>";
                                     echo "<td>" . $evento['nome_evento'] . "</td>";
-                                    echo "<td>" . $evento['tipo_evento'] . "</td>";
-                                    echo "<td>" . $evento['status'] . "</td>";
                                     echo "<td>
                                     <form method=\"POST\" action=\"?perfil=agendao&p=evento_edita\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
@@ -92,8 +86,6 @@ if ($linha >= 1) {
                                 <tfoot>
                                 <tr>
                                     <th>Nome do evento</th>
-                                    <th>Tipo do evento</th>
-                                    <th>Status</th>
                                     <th colspan="2" width="15%"></th>
                                 </tr>
                                 </tfoot>
