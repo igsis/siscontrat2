@@ -24,77 +24,97 @@
                     </div>
                     <div id="ocorrencia" class="panel-collapse collapse <?=$aberto?>">
                         <div class="box-body">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <?php
-                                    if ($ocorrencias->num_rows > 0) {
-                                        $i = 1;
-                                        if ($i != 1){
-                                            $aberto = "";
-                                        }
-                                        foreach ($ocorrencias as $ocorrencia) {
-                                            $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
-                                            $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
-                                            $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
-                                            $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
-                                        ?>
-                                            <tr>
-                                                <th class="text-center bg-primary" colspan="2">Ocorrência #<?=$i?></th>
-                                            </tr>
-                                            <tr>
-                                                <th width="30%">Data de Inicio:</th>
-                                                <td><?=exibirDataBr($ocorrencia['data_inicio'])?></td>
-                                            </tr>
-                                            <tr>
-                                                <th width="30%">Data de Encerramento:</th>
-                                                <td><?=$ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada"?></td>
-                                            </tr>
-                                            <tr>
-                                                <th width="30%">Hora de Início:</th>
-                                                <td><?=date("H:i", strtotime($ocorrencia['horario_inicio']))?></td>
-                                            </tr>
-                                            <tr>
-                                                <th width="30%">Hora de Encerramento:</th>
-                                                <td><?=date("H:i", strtotime($ocorrencia['horario_fim']))?></td>
-                                            </tr>
-                                            <tr>
-                                                <th width="30%">Retirada de Ingresso:</th>
-                                                <td><?=$retiradaIngresso?></td>
-                                            </tr>
-                                            <tr>
-                                                <th width="30%">Valor do Ingresso:</th>
-                                                <td><?=dinheiroParaBr($ocorrencia['valor_ingresso'])?></td>
-                                            </tr>
-                                            <tr>
-                                                <th width="30%">Instituição:</th>
-                                                <td><?=$instituicao?></td>
-                                            </tr>
-                                            <tr>
-                                                <th width="30%">Local:</th>
-                                                <td><?=$local?></td>
-                                            </tr>
-                                            <?php if ($ocorrencia['espaco_id'] != 0) { ?>
-                                                <tr>
-                                                    <th width="30%">Espaço:</th>
-                                                    <td><?= $espaco ?></td>
-                                                </tr>
-                                            <?php } ?>
-                                            <tr>
-                                                <th width="30%">Observação:</th>
-                                                <td><?=$ocorrencia['observacao']?></td>
-                                            </tr>
-                                        <?php
-                                            $i++;
-                                        }
-                                    } else { ?>
-                                        <tr>
-                                            <th class="text-center bg-danger" colspan="2">Não há ocorrências inseridas</th>
-                                        </tr>
+                            <?php
+                            if ($ocorrencias->num_rows > 0) {
+                            $i = 1;
+                            if ($i != 1){
+                                $aberto = "";
+                            }
+                                foreach ($ocorrencias as $ocorrencia) {
+                                    $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
+                                    $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
+                                    $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
+                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                    $periodo = recuperaDados("periodos","id",$ocorrencia['periodo_id']);
+                                    $subprefeitura = recuperaDados("subprefeituras","id",$ocorrencia['subprefeitura_id']);
+                                    ?>
+                                    <div class="row text-center bg-primary">
+                                        Ocorrência #<?=$i?>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-3">
+                                            <label>Data de Início:</label> <?= exibirDataBr($ocorrencia['data_inicio']) ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Data de Encerramento:</label> <?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada" ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Hora de Início:</label> <?= date("H:i", strtotime($ocorrencia['horario_inicio'])) ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Hora de Encerramento:</label> <?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-2">
+                                            <label>Libras:</label>
+                                            <?php
+                                            if($ocorrencia['libras'] == 1){
+                                                echo "Sim";
+                                            } else{
+                                                echo "Não";
+                                            }
+                                            ?>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label>Audiodrescrição:</label>
+                                            <?php
+                                            if($ocorrencia['audiodescricao'] == 1){
+                                                echo "Sim";
+                                            } else{
+                                                echo "Não";
+                                            }
+                                            ?>
+                                        </div>
+                                        <div class="form-group col-md-5">
+                                            <label>Retirada de Ingresso:</label> <?= $retiradaIngresso ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Valor do Ingresso:</label> <?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label>Local:</label> <?= $local ?>  <?php if ($ocorrencia['espaco_id'] != 0) {
+                                                echo " - " . $espaco;
+                                            } ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Subprefeitura:</label> <?= $subprefeitura['subprefeitura'] ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Período:</label> <?= $periodo['periodo'] ?>
+                                        </div>
+                                    </div>
+                                    <?php if($ocorrencia['observacao'] != ''){ ?>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label>Observação:</label> <?= $ocorrencia['observacao'] ?>
+                                            </div>
+                                        </div>
                                     <?php
                                     }
-                                    ?>
-                                </table>
-                            </div>
+                                    $i++;
+                                }
+                            } else { ?>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <div class="row text-center bg-danger">Não há ocorrências inseridas</div>
+                                    </div>
+                                </div>
+                            <?php
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>

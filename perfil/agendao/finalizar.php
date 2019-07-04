@@ -36,13 +36,11 @@ include "includes/validacoes.php";
                 <?php if (count($erros) == 0) { ?>
                     <div class="alert alert-success alert-dismissible">
                         <h4><i class="icon fa fa-check"></i> Seu evento não possui pendências!</h4>
-
                         <p>Confirme todos os dados abaixo antes de enviar.</p>
                     </div>
                 <?php } else { ?>
                     <div class="alert alert-danger">
                         <h4><i class="icon fa fa-ban"></i> Seu evento possui pendências!</h4>
-
                         <ul>
                             <?php foreach ($erros as $erro) {
                                 echo "<li>$erro</li>";
@@ -59,6 +57,7 @@ include "includes/validacoes.php";
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right">
                 <li><a href="#ocorrencia" data-toggle="tab">Ocorrências</a></li>
+                <li><a href="#produtor" data-toggle="tab">Produtor</a></li>
                 <li class="active"><a href="#evento" data-toggle="tab">Evento</a></li>
                 <li class="pull-left header">Confirmação dos Dados Inseridos</li>
             </ul>
@@ -114,13 +113,19 @@ include "includes/validacoes.php";
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6"><label for="acao">Ações (Expressões Artístico-culturais):</label>
+                                    <?php
+                                    $age_acoes = $con->query("SELECT * FROM acao_agendao WHERE evento_id = $idEvento");
+                                    while ($row = mysqli_fetch_array($age_acoes)){
+                                        $acao = recuperaDados("acoes","id",$row['acao_id']);
+                                        echo $acao['acao']."; ";
+                                    }
+                                    ?>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="acao">Público (Representatividade e Visibilidade Sócio-cultural):</label>
                                     <?php
-                                    $age_pub = "SELECT * FROM agendao_publico WHERE evento_id = $idEvento";
-                                    $query = mysqli_query($con,$age_pub);
-                                    while ($row = mysqli_fetch_array($query)){
+                                    $age_pub = $con->query("SELECT * FROM agendao_publico WHERE evento_id = $idEvento");
+                                    while ($row = mysqli_fetch_array($age_pub)){
                                         $publico = recuperaDados("publicos","id",$row['publico_id']);
                                         echo $publico['publico']."; ";
                                     }
@@ -137,32 +142,13 @@ include "includes/validacoes.php";
                                     <label for="links">Links:</label> <?= $agendao['links'] ?>
                                 </div>
                             </div>
-
-                            <!--
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tr>
-                                        <th width="30%"></th>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <th width="30%"></th>
-                                        <td></td>
-                                    </tr>
-
-                                    <?php /* foreach ($resumoEvento as $campo => $dado) { ?>
-                                        <tr>
-                                            <th width="30%"><?= $campo ?></th>
-                                            <td><?=$dado?></td>
-                                        </tr>
-                                    <?php } */?>
-
-                                </table> -->
-                            </div>
                         </div>
                     </div>
                 </div>
 
+                <div class="tab-pane" id="produtor">
+                    <?php include "label_produtor.php" ?>
+                </div>
                 <div class="tab-pane" id="ocorrencia">
                     <?php include "label_ocorrencia.php" ?>
                 </div>
