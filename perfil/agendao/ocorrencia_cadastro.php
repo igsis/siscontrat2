@@ -29,7 +29,6 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
 
         desmarca();
     }
-
     $(document).ready(function () {
         validate();
         $('#datepicker11').change(validate);
@@ -73,18 +72,23 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
     }
 
     function comparaData() {
+        var isMsgData = $('#msgEscondeData');
+        isMsgData.hide();
         var dataInicio = document.querySelector('#datepicker10').value;
         var dataFim = document.querySelector('#datepicker11').value;
 
 
-        var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
+        if(dataInicio != ""){
+            var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
+        }
         if (dataFim != "") {
             var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
 
             if (dataFim <= dataInicio) {
-                alert("Data final menor que a data inicial");
+                isMsgData.show();
                 $('#cadastra').attr("disabled", true);
             } else {
+                isMsgData.hide();
                 $('#cadastra').attr("disabled", false);
             }
         }
@@ -124,17 +128,23 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
                                            placeholder="DD/MM/AAAA" onblur="validate()">
                                 </div>
                             </div>
-
+ 
+                            <div class="row" id="msgEscondeData">
+                                <div class="form-group col-md-offset-6 col-md-6">
+                                    <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
+                                </div>
+                            </div>
+                            
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label>
-                                        <input type="checkbox" name="domingo" id="diasemana07" value="1"> Domingo &nbsp;
-                                        <input type="checkbox" name="segunda" id="diasemana01" value="1"> Segunda &nbsp;
-                                        <input type="checkbox" name="terca" id="diasemana02" value="1"> Terça &nbsp;
-                                        <input type="checkbox" name="quarta" id="diasemana03" value="1"> Quarta &nbsp;
-                                        <input type="checkbox" name="quinta" id="diasemana04" value="1"> Quinta &nbsp;
-                                        <input type="checkbox" name="sexta" id="diasemana05" value="1"> Sexta &nbsp;
-                                        <input type="checkbox" name="sabado" id="diasemana06" value="1"> Sábado &nbsp;
+                                        <input type="checkbox" name="domingo" id="diasemana07" value="1" class="semana"> Domingo &nbsp;
+                                        <input type="checkbox" name="segunda" id="diasemana01" value="1" class="semana"> Segunda &nbsp;
+                                        <input type="checkbox" name="terca" id="diasemana02" value="1" class="semana"> Terça &nbsp;
+                                        <input type="checkbox" name="quarta" id="diasemana03" value="1" class="semana"> Quarta &nbsp;
+                                        <input type="checkbox" name="quinta" id="diasemana04" value="1" class="semana"> Quinta &nbsp;
+                                        <input type="checkbox" name="sexta" id="diasemana05" value="1" class="semana"> Sexta &nbsp;
+                                        <input type="checkbox" name="sabado" id="diasemana06" value="1" class="semana"> Sábado &nbsp;
                                     </label>
                                 </div>
 
@@ -154,6 +164,12 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
                                 <div class="form-group col-md-2">
                                     <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1"> &nbsp;
                                     <label for="libras">Audiodescrição</label>
+                                </div>
+                            </div>
+
+                            <div class="row" id="msgEsconde">
+                                <div class="form-group col-md-6">
+                                    <span style="color: red;">Selecione ao menos um dia da semana!</span>
                                 </div>
                             </div>
 
@@ -420,4 +436,34 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
 
 </script>
 
+<script>
+function validaDiaSemana(){
+    var dataInicio = document.querySelector('#datepicker10').value;
+    var isMsg = $('#msgEsconde');
+    isMsg.hide();
+    if(dataInicio != ""){
+        var i = 0;
+        var counter = 0;
+        var diaSemana = $('.semana');
 
+        for (; i < diaSemana.length; i++) {
+            if (diaSemana[i].checked) {
+                counter++;
+            }
+        }
+
+        if (counter==0){
+            $('#cadastra').attr("disabled", true);
+            isMsg.show();
+            return false;
+        }
+
+        $('#cadastra').attr("disabled", false);
+        isMsg.hide();
+        return true;
+    }
+}
+
+var diaSemana = $('.semana');
+diaSemana.change(validaDiaSemana);
+</script>
