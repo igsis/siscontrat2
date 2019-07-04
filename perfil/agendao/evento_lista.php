@@ -15,7 +15,7 @@ if(isset($_POST['excluir'])){
 
 $idUser = $_SESSION['idUser'];
 $sql = "SELECT ev.id AS idEvento, ev.nome_evento FROM agendoes AS ev
-        WHERE publicado = 1 AND user_id = '$idUser' ";
+        WHERE publicado = 1 AND usuario_id = '$idUser' ";
 
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
