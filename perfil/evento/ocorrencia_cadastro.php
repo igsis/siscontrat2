@@ -116,7 +116,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 <div class="form-group col-md-6">
                                     <label for="data_inicio">Data Início*</label> <br>
                                     <input type="date" name="data_inicio" class="form-control" id="datepicker10"
-                                           required placeholder="DD/MM/AAAA" onblur="mudaData()">
+                                           required placeholder="DD/MM/AAAA" onblur="validate()">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="data_fim">Data Encerramento (apenas se for temporada)</label> <br>
@@ -190,7 +190,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="instituicao">Instituição</label>
+                                    <label for="instituicao">Instituição *</label>
                                     <select class="form-control" name="instituicao" id="instituicao" required>
                                         <option value="">Selecione uma opção...</option>
                                         <?php
@@ -200,7 +200,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="local">Local</label>
+                                    <label for="local">Local *</label>
                                     <button type="button" name="idAtracao" data-toggle='modal'
                                             data-target='#modaLocal' class="btn-success pull-right">
                                         <i class="fa fa-plus"></i></button>

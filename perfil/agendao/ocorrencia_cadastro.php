@@ -116,7 +116,7 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
                                 <div class="form-group col-md-6">
                                     <label for="data_inicio">Data Início*</label> <br>
                                     <input type="date" name="data_inicio" class="form-control" id="datepicker10"
-                                           required placeholder="DD/MM/AAAA" onblur="mudaData()">
+                                           required placeholder="DD/MM/AAAA" onblur="validate()">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="data_fim">Data Encerramento (apenas se for temporada)</label> <br>
@@ -190,18 +190,18 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
 
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="instituicao">Instituição</label>
+                                    <label for="instituicao">Instituição *</label>
                                     <select class="form-control" name="instituicao" id="instituicao">
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
-                                        geraOpcao("instituicoes");
+                                            geraOpcao("instituicoes");
                                         ?>
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="local">Local</label>
+                                    <label for="local">Local *</label>
                                     <select class="form-control" id="local" name="local">
                                         <!-- Populando pelo js -->
                                     </select>

@@ -255,7 +255,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-6">
                                     <label for="data_inicio">Data Início*</label> <br>
                                     <input type="date" name="data_inicio" class="form-control" id="datepicker10"
-                                           placeholder="DD/MM/AAAA" required value="<?= $ocorrencia['data_inicio'] ?>" onblur="arrumaData()">
+                                           placeholder="DD/MM/AAAA" required value="<?= $ocorrencia['data_inicio'] ?>" onblur="validate()">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="data_fim">Data Encerramento (apenas se for temporada)</label> <br>
@@ -342,7 +342,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="instituicao">Instituição</label>
+                                    <label for="instituicao">Instituição *</label>
                                     <select class="form-control" name="instituicao" id="instituicao">
                                         <option value="">Selecione uma opção...</option>
 
@@ -353,7 +353,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="local">Local</label>
+                                    <label for="local">Local *</label>
                                     <button type="button" data-toggle='modal' data-target='#modaLocal' class="btn-success pull-right">
                                         <i class="fa fa-plus"></i>
                                     </button>
