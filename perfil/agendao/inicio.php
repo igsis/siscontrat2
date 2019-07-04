@@ -1,5 +1,6 @@
 <?php
 include "includes/menu_principal.php";
+unset($_SESSION['idEvento']);
 ?>
 
 <!-- Content Wrapper. Contains page content -->
