@@ -78,6 +78,8 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
     }
 
     function comparaData() {
+        var isMsgData = $('#msgEscondeData');
+        isMsgData.hide();
         var dataInicio = document.querySelector('#datepicker10').value;
         var dataFim = document.querySelector('#datepicker11').value;
 
@@ -89,9 +91,10 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
             var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
 
             if (dataFim <= dataInicio) {
-                alert("Data final menor que a data inicial");
+                isMsgData.show();
                 $('#cadastra').attr("disabled", true);
             } else {
+                isMsgData.hide();
                 $('#cadastra').attr("disabled", false);
             }
         }
@@ -123,10 +126,18 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                     <input type="date" name="data_inicio" class="form-control" id="datepicker10"
                                            required placeholder="DD/MM/AAAA" onblur="validate()">
                                 </div>
+
                                 <div class="form-group col-md-6">
                                     <label for="data_fim">Data Encerramento (apenas se for temporada)</label> <br>
                                     <input type="date" name="data_fim" class="form-control" id="datepicker11"
                                            placeholder="DD/MM/AAAA" onblur="validate()">
+                                </div>
+                            </div>
+
+                            
+                            <div class="row" id="msgEscondeData">
+                                <div class="form-group col-md-offset-6 col-md-6">
+                                    <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
                                 </div>
                             </div>
 
@@ -159,6 +170,12 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 <div class="form-group col-md-2">
                                     <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1"> &nbsp;
                                     <label for="libras">Audiodescrição</label>
+                                </div>
+                            </div>
+
+                            <div class="row" id="msgEsconde">
+                                <div class="form-group col-md-6">
+                                    <span style="color: red;">Selecione ao menos um dia da semana!</span>
                                 </div>
                             </div>
 
@@ -754,9 +771,11 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 <script>
 function validaDiaSemana(){
     var dataInicio = document.querySelector('#datepicker10').value;
+    var isMsg = $('#msgEsconde');
+    isMsg.hide();
     if(dataInicio != ""){
-        var i = 0
-        var counter = 0
+        var i = 0;
+        var counter = 0;
         var diaSemana = $('.semana');
 
         for (; i < diaSemana.length; i++) {
@@ -766,12 +785,13 @@ function validaDiaSemana(){
         }
 
         if (counter==0){
-            alert("Selecione ao menos um dia da semana!");
             $('#cadastra').attr("disabled", true);
+            isMsg.show();
             return false;
         }
 
         $('#cadastra').attr("disabled", false);
+        isMsg.hide();
         return true;
     }
 }
