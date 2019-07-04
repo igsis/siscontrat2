@@ -2,22 +2,29 @@
 include "includes/menu_principal.php";
 $con = bancoMysqli();
 
-if (isset($_POST['carregar'])) {
+if(isset($_POST['enviar'])){
     $idEvento = $_POST['idEvento'];
-    $evento = recuperaDados('eventos', 'id', $idEvento);
-    $protocolo = recuperaDados('protocolos', 'origem_id', $idEvento);
-    $tipo_evento = recuperaDados('tipo_eventos', 'id', $evento['tipo_evento_id']);
-    $original = $evento['original'] == 1 ? 'Sim' : 'Não';
-    $relacao_juridica = recuperaDados('relacao_juridicas', 'id', $evento['relacao_juridica_id']);
-    $projeto_especial = recuperaDados('projeto_especiais', 'id', $evento['projeto_especial_id']);
-    $fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
-    $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
-    $usuario = recuperaDados('usuarios', 'id', $evento['usuario_id']);
-    $contratacao = $evento['contratacao'] == 1 ? 'Sim' : 'Não';
-    $evento_status = recuperaDados('evento_status', 'id', $evento['evento_status_id']);
-    $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
-
+    $now = date('Y-m-d H:i:s');
+    $sql_cadastra = $con->query("UPDATE agendoes SET evento_status_id = 3, data_envio = '$now' WHERE id = '$idEvento'");
+    if($sql_cadastra){
+        $mensagem = mensagem("success","Evento enviado com sucesso!");
+    }
+    else{
+        $mensagem = mensagem("danger", "Erro ao enviar evento. Tente novamente!");
+    }
 }
+
+$sqlEvento = "SELECT * FROM agendoes AS eve
+    INNER JOIN projeto_especiais AS pe ON eve.projeto_especial_id = pe.id
+    INNER JOIN classificacao_indicativas ci on eve.classificacao_indicativa_id = ci.id
+    WHERE eve.id = '$idEvento'";
+$agendao = $con->query($sqlEvento)->fetch_array();
+
+$idProdutor = $agendao['produtor_id'];
+$produtor = $con->query("SELECT * FROM produtores WHERE id = '$idProdutor'")->fetch_array();
+
+$ocorrencias = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento'  AND tipo_ocorrencia_id = 3 AND publicado = '1'");
+
 ?>
 
 <div class="content-wrapper">
@@ -26,206 +33,86 @@ if (isset($_POST['carregar'])) {
 
         <!-- START ACCORDION-->
         <h2 class="page-header">Informações do Evento</h2>
-
+        <?= $mensagem ?? $mensagem ?>
         <div class="row">
             <div class="col-md-12">
-                <div class="box box-info">
+                <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><strong><?= $evento['nome_evento']; ?></strong></h3><hr>
+                        <h3 class="box-title"><strong><?= $agendao['nome_evento']; ?></strong></h3><hr>
                         <div class="box-body">
-                            <div class="box-group" id="accordion">
-                                <div class="row">
-                                    <div class="box-body">
-                                        <div class="form-group col-md-12">
-                                            <div align="center">
-                                                <h3>Informações sobre o evento</h3><hr>
-                                            </div>
-                                            <strong>Protocolo: </strong><?= $protocolo['protocolo'] ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Nome do Evento: </strong><?= $evento ['nome_evento']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Período: </strong><?= retornaPeriodoNovo($idEvento); ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Tipo evento: </strong><?= $tipo_evento['tipo_evento']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>É original? </strong><?= $original ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Relação
-                                                Juridica: </strong><?= $relacao_juridica['relacao_juridica']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Projeto
-                                                Especial: </strong><?= $projeto_especial['projeto_especial']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Sinopse:</strong><?= $evento['sinopse']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <div align="center">
-                                                <h3>Informações sobre cadastramento</h3>
-                                                <hr>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Fiscal: </strong><?= $fiscal['nome_completo'] ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Suplente: </strong><?= $suplente['nome_completo']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Cadastramento realizado
-                                                por: </strong><?= $usuario['nome_completo'] ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Haverá contratação? </strong><?= $contratacao ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Status do Evento: </strong><?= $evento_status['status']; ?>
-                                        </div>
-                                        <hr>
-                                        <?php
-                                        $query_atracao = mysqli_query($con, $sql_atracao);
-                                        while ($atracao = mysqli_fetch_array($query_atracao)) {
-
-                                        $categoria_atracao = recuperaDados('categoria_atracoes', 'id', $atracao['categoria_atracao_id']);
-                                        $classificacao_indicativa = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
-
-                                        $idAtracao = $atracao['id'];
-                                        $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = 1";
-
-                                        ?>
-                                        <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                                        <div class="form-group col-md-12">
-                                            <div align="center">
-                                                <h3>Informações sobre a atração</h3>
-                                                <hr>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Nome da atração: </strong><?= $atracao['nome_atracao']; ?>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <strong>Categoria da
-                                                atração: </strong><?= $categoria_atracao['categoria_atracao']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Ficha técnica: </strong><?= $atracao['ficha_tecnica']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Integrantes: </strong><?= $atracao['integrantes']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Classificação
-                                                Indicativa: </strong><?= $classificacao_indicativa['classificacao_indicativa']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Quantidade de
-                                                Apresentação: </strong><?= $atracao['quantidade_apresentacao']; ?>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <strong>Release: </strong><?= $atracao['release_comunicacao']; ?>
-                                        </div>
-                                        <?php
-                                        if ($atracao['links'] != NULL) {
-                                            ?>
-                                            <div class="form-group col-md-12">
-                                                <strong>Links: </strong><?= $atracao['links']; ?>
-                                            </div>
-                                        <?php } ?>
-
-                                        <?php
-                                        if ($atracao['valor_individual'] != NULL) {
-                                            ?>
-                                            <p>Valor
-                                                individual: <?= $atracao['valor_individual']; ?></p>
-                                        <?php }
-
-                                        if ($atracao['produtor_id'] != NULL) {
-                                            $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
-                                            ?>
-                                            <div class="form-group col-md-12">
-                                                <div align="center">
-                                                    <h3>Informações sobre a produção</h3>
-                                                    <hr>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <strong>Nome Produtor: </strong><?= $produtor['nome']; ?>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <strong>Email do Produtor: </strong><?= $produtor['email']; ?>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <strong>Telefone 1: </strong><?= $produtor['telefone1']; ?>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <strong>Telefone 2: </strong><?= $produtor['telefone2']; ?>
-                                            </div>
-                                            <hr>
-                                            <div class="form-group col-md-12">
-                                                <strong>Observação:</strong><?= $produtor['observacao']; ?>
-                                            </div>
-                                        <?php } ?>
-                            <?php
-                            $query_ocorrencia = mysqli_query($con, $sql_ocorrencia);
-                            while ($ocorrencia = mysqli_fetch_array($query_ocorrencia)) {
-
-                            $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
-                            $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
-
-                            ?>
-
-
-                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-
-
-                                        <div class="form-group col-md-12">
-                                            <div align="center">
-                                                <h3>Ocorrências</h3><hr>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Local: </strong><?= $local['local']; ?>
-                                        </div>
-                                        <?php
-                                        if ($ocorrencia['horario_inicio'] != NULL) {
-                                            ?>
-                                            <div class="form-group col-md-12">
-                                                <strong>Horário
-                                                    Inicial: </strong><?= exibirHora($ocorrencia['horario_inicio']); ?>
-                                            </div>
-                                        <?php } ?>
-                                        <?php
-                                        if ($ocorrencia['horario_fim'] != NULL) {
-                                            ?>
-                                            <div class="form-group col-md-12">
-                                                <strong>Horário
-                                                    Final: </strong><?= exibirHora($ocorrencia['horario_fim']); ?>
-                                            </div>
-                                        <?php } ?>
-                                        <div class="form-group col-md-12">
-                                            <strong>Retirada de
-                                                Ingresso:</strong> <?= $retirada_ingresso['retirada_ingresso'] ?>
-                                        </div>
-                                        <?php }
-                                        }
-
-                                        ?>
-                                        <div class="box-footer" align="center">
-                                            <a href="?perfil=agendao&p=lista_eventos_enviados">
-                                                <button type="button" class="btn btn-default">Voltar</button>
-                                            </a>
-                                    </div>
-                                </div>
+                            <div class="form-group col-md-12">
+                                <p><b>Projeto Especial:</b> <?= $agendao['projeto_especial'] ?></p>
+                                <p><b>Artistas:</b> <?= $agendao['ficha_tecnica'] ?></p>
+                                <p><b>Espaço público?</b>
+                                    <?php
+                                    if($agendao['espaco_publico'] == 1){
+                                        echo "Sim";
+                                    } else{
+                                        echo "Não";
+                                    }
+                                    ?>
+                                </p>
+                                <p><b>Quantidade de apresentação:</b> <?= $agendao['quantidade_apresentacao'] ?></p>
+                                <p><b>É fomento/programa?</b>
+                                    <?php
+                                    if($agendao['fomento'] == 1){
+                                        $age_fom = recuperaDados("agendao_fomento", "evento_id", $idEvento);
+                                        $fomento = recuperaDados("fomentos","id",$age_fom['fomento_id']);
+                                        echo "Sim: ".$fomento['fomento'];
+                                    } else{
+                                        echo "Não";
+                                    }
+                                    ?>
+                                </p>
+                                <p><b>Classificação indicativa:</b> <?= $agendao['classificacao_indicativa'] ?></p>
+                                <p><b>Ações (Expressões Artístico-culturais):</b>
+                                    <?php
+                                    $age_acoes = $con->query("SELECT * FROM acao_agendao WHERE evento_id = $idEvento");
+                                    while ($row = mysqli_fetch_array($age_acoes)){
+                                        $acao = recuperaDados("acoes","id",$row['acao_id']);
+                                        echo $acao['acao']."; ";
+                                    }
+                                    ?>
+                                </p>
+                                <p><b>Público (Representatividade e Visibilidade Sócio-cultural):</b>
+                                    <?php
+                                    $age_pub = $con->query("SELECT * FROM agendao_publico WHERE evento_id = $idEvento");
+                                    while ($row = mysqli_fetch_array($age_pub)){
+                                        $publico = recuperaDados("publicos","id",$row['publico_id']);
+                                        echo $publico['publico']."; ";
+                                    }
+                                    ?>
+                                </p>
+                                <p><b>Sinopse:</b> <?= $agendao['sinopse'] ?></p>
+                                <p><b>Links:</b> <?= $agendao['links'] ?></p>
+                                <hr/>
                             </div>
-                        </div>
+
+                            <div class="form-group col-md-12"></div>
+
+                            <div class="form-group col-md-12">
+                                <h3 class="box-title"><b>Produtor</b></h3><br><br>
+                                <p><b>Nome do produtor:</b> <?= $produtor['nome'] ?></p>
+                                <p><b>Email:</b> <?= $produtor['email'] ?></p>
+                                <p><b>Telefone:</b> <?= $produtor['telefone1'] . " " . $produtor['telefone1'] ?></p>
+                                <p><b>Observação do produtor:</b> <?= $produtor['observacao'] ?></p>
+                                <hr/>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <h3 class="box-title"><b>Ocorrências</b></h3><br><br>
+                                <?php
+                                foreach ($ocorrencias as $ocorrencia) {
+                                    ?>
+                                    <p><b>Data:</b> <?= exibirDataBr($ocorrencia['data_inicio']) ?> - <?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Data única" ?></p>
+                                    <p><b>Horário:</b> <?= date("H:i", strtotime($ocorrencia['horario_inicio'])) ?> às <?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?></p>
+                                    <p><b></b></p>
+                                    <p><b></b></p>
+                                    <?php
+                                }
+                                ?>
+                            </div>
+
                     </div>
                 </div>
             </div>
