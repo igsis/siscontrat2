@@ -767,7 +767,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
 </script>
 
-
 <script>
 function validaDiaSemana(){
     var dataInicio = document.querySelector('#datepicker10').value;
