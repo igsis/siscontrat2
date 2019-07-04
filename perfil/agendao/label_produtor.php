@@ -25,8 +25,6 @@ if($idProdutor != NULL){
                     <div class="box-body">
                         <?php
                         if($idProdutor != NULL) {
-                            var_dump($agendao);
-                            echo $idProdutor;
                             ?>
                             <div class="row">
                                 <div class="form-group col-md-12">
