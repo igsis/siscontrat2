@@ -43,7 +43,7 @@ if($idProdutor != NULL){
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label>Observador:</label> <?= $produtor['observacao'] ?>
+                                    <label>Observação:</label> <?= $produtor['observacao'] ?>
                                 </div>
                             </div>
                             <?php
