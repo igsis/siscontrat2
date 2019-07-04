@@ -1345,7 +1345,7 @@ function geraCheckboxEvento($tabela, $name, $tabelaRelacionamento, $idEvento = n
 
 function geraCheckboxAtracao($tabela, $name, $tabelaRelacionamento, $idAtracao = null) {
     $con = bancoMysqli();
-    $sqlConsulta = "SELECT * FROM $tabela WHERE publicado = '1' ORDER BY 1";
+    $sqlConsulta = "SELECT * FROM $tabela WHERE publicado = '1' ORDER BY 2";
     $dados = $con->query($sqlConsulta);
 
     $sqlConsultaRelacionamento = "SELECT * FROM $tabelaRelacionamento WHERE atracao_id = $idAtracao";
