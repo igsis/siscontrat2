@@ -143,7 +143,7 @@ $query = mysqli_query($con,$sql);
                                         break;
                                     case 8: //exposição (feira)
                                         $disabled = "";
-                                        $oficina = recuperaDados("oficina","atracao_id",$atracao['idAtracao']);
+                                        $oficina = recuperaDados("oficinas","atracao_id",$atracao['idAtracao']);
                                         if($oficina != NULL){
                                             $url = "?perfil=evento&p=oficina_edita";
                                             $name = "idOficina";
