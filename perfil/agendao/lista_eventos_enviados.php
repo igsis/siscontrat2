@@ -8,7 +8,7 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM agendoes WHERE publicado = 1 AND evento_status_id >= 3 AND usuario_id = '$idUser'";
+$sql = "SELECT * FROM agendoes WHERE publicado = 1 AND evento_status_id = 3 AND usuario_id = '$idUser'";
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
 if ($linha >= 1) {
@@ -47,11 +47,9 @@ $num_atracoes = 0;
                             <table id="tblEvento" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>Protocolo</th>
-                                    <th>Objeto</th>
+                                    <th>Nome do evento</th>
                                     <th>Local</th>
                                     <th>Período</th>
-                                    <th>Status</th>
                                     <th>Visualizar</th>
                                 </tr>
                                 </thead>
@@ -61,34 +59,14 @@ $num_atracoes = 0;
                                 while ($evento = mysqli_fetch_array($query)) {
                                     $idEvento = $evento['id'];
                                     $locais = listaLocais($idEvento);
-
-                                    $protocolos = recuperaDados("protocolos", "origem_id", $idEvento);
-                                    $status = recuperaDados("evento_status", "id", $evento['evento_status_id']);
-
-                                    $sql_atracoes = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
-                                    $query_atracoes = mysqli_query($con, $sql_atracoes);
-                                    $num_atracoes = mysqli_num_rows($query_atracoes);
-
                                     echo "<tr>";
-                                    echo "<td>" . $protocolos['protocolo'] . "</td>";
-                                    echo "<td>";
-                                    while ($atracao = mysqli_fetch_array($query_atracoes)) {
-                                        $categorias = recuperaDados("categoria_atracoes", "id", $atracao['categoria_atracao_id']);
-
-                                        ?>
-                                        <p><?= $categorias['categoria_atracao'] . " - " . $evento['nome_evento'] ?></p>
-                                        <hr>
-                                        <?php
-                                        $num_atracoes++;
-                                    }
-                                    echo "</td>";
+                                    echo "<td>". $evento['nome_evento']."</td>";
                                     echo "<td>" . $locais . "</td>";
                                     echo "<td>" . retornaPeriodoNovo($evento['id']) . "</td>";
-                                    echo "<td>" . $status['status'] . "</td>";
                                     echo "<td>
                                     <form method=\"POST\" action=\"?perfil=agendao&p=resumo_evento_enviado\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>
-                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
+                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class='fa fa-file-text-o'></i></button>
                                     </form>
                                 </td>";
                                     echo "</tr>";
@@ -97,11 +75,9 @@ $num_atracoes = 0;
                                 ?>
                                 <tfoot>
                                 <tr>
-                                    <th>Protocolo</th>
                                     <th>Objeto</th>
                                     <th>Local</th>
                                     <th>Período</th>
-                                    <th>Status</th>
                                     <th>Visualizar</th>
                                 </tr>
                                 </tfoot>

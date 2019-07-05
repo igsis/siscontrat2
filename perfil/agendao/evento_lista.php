@@ -15,7 +15,7 @@ if(isset($_POST['excluir'])){
 
 $idUser = $_SESSION['idUser'];
 $sql = "SELECT ev.id AS idEvento, ev.nome_evento FROM agendoes AS ev
-        WHERE publicado = 1 AND usuario_id = '$idUser'";
+        WHERE publicado = 1 AND usuario_id = '$idUser' AND evento_status_id = 1";
 
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
@@ -26,7 +26,6 @@ if ($linha >= 1) {
     $tem = 0;
 }
 ?>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -51,20 +50,25 @@ if ($linha >= 1) {
                                 <thead>
                                 <tr>
                                     <th>Nome do evento</th>
-                                    <th>Visualizar</th>
-                                    <th>Apagar</th>
+                                    <th>Local</th>
+                                    <th>Período</th>
+                                    <th width="10%">Visualizar</th>
+                                    <th width="10%">Apagar</th>
                                 </tr>
                                 </thead>
 
                                 <?php
                                 echo "<tbody>";
                                 while ($evento = mysqli_fetch_array($query)) {
+                                    $locais = listaLocais($evento['idEvento']);
                                     echo "<tr>";
                                     echo "<td>" . $evento['nome_evento'] . "</td>";
+                                    echo "<td>" . $locais . "</td>";
+                                    echo "<td>" . retornaPeriodoNovo($evento['idEvento']) . "</td>";
                                     echo "<td>
                                     <form method=\"POST\" action=\"?perfil=agendao&p=evento_edita\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
-                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
+                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class='fa fa-file-text-o'></i></button>
                                     </form>
                                 </td>";
                                     ?>
@@ -86,7 +90,10 @@ if ($linha >= 1) {
                                 <tfoot>
                                 <tr>
                                     <th>Nome do evento</th>
-                                    <th colspan="2" width="15%"></th>
+                                    <th>Local</th>
+                                    <th>Período</th>
+                                    <th>Visualizar</th>
+                                    <th>Apagar</th>
                                 </tr>
                                 </tfoot>
                             </table>
