@@ -207,6 +207,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                 $("#diasemana06").prop("checked", true);
             }
         }
+
+        validaDiaSemana();
     }
 
     function comparaData(){

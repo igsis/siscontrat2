@@ -69,6 +69,8 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
                 $("#diasemana06").prop("checked", true);
             }
         }
+
+        validaDiaSemana();
     }
 
     function comparaData() {
