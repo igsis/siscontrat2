@@ -23,8 +23,7 @@ $agendao = $con->query($sqlEvento)->fetch_array();
 $idProdutor = $agendao['produtor_id'];
 $produtor = $con->query("SELECT * FROM produtores WHERE id = '$idProdutor'")->fetch_array();
 
-$ocorrencias = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento'  AND tipo_ocorrencia_id = 3 AND publicado = '1'");
-
+$ocorrencias = $con->query("SELECT * FROM ocorrencias INNER JOIN retirada_ingressos ri on ocorrencias.retirada_ingresso_id = ri.id INNER JOIN subprefeituras s on ocorrencias.subprefeitura_id = s.id INNER JOIN periodos p on ocorrencias.periodo_id = p.id WHERE origem_ocorrencia_id = '$idEvento'  AND tipo_ocorrencia_id = 3 AND publicado = '1'");
 ?>
 
 <div class="content-wrapper">
@@ -103,28 +102,46 @@ $ocorrencias = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id
                                 <h3 class="box-title"><b>Ocorrências</b></h3><br><br>
                                 <?php
                                 foreach ($ocorrencias as $ocorrencia) {
+                                    $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
+                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
                                     ?>
                                     <p><b>Data:</b> <?= exibirDataBr($ocorrencia['data_inicio']) ?> - <?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Data única" ?></p>
                                     <p><b>Horário:</b> <?= date("H:i", strtotime($ocorrencia['horario_inicio'])) ?> às <?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?></p>
-                                    <p><b></b></p>
-                                    <p><b></b></p>
+                                    <p><b>Acessibilidade</b>
+                                        <?php
+                                        if($ocorrencia['libras'] == 1){
+                                            echo "Libras; ";
+                                        }elseif($ocorrencia['audiodescricao'] == 1) {
+                                            echo "Audiodescrição";
+                                        }else{
+                                            echo "Não";
+                                        }
+                                        ?>
+                                    </p>
+                                    <p><b>Retirada de Ingresso:</b> <?= $ocorrencia['retirada_ingresso'] ?></p>
+                                    <p><b>Valor do Ingresso:</b> <?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></p>
+                                    <p><b>Local:</b><?= $local ?>  <?php if ($ocorrencia['espaco_id'] != 0) {
+                                            echo " - " . $espaco;
+                                        } ?>
+                                    </p>
+                                    <p><b>Subprefeitura:</b> <?= $ocorrencia['subprefeitura'] ?></p>
+                                    <p><b>Período:</b> <?= $ocorrencia['periodo'] ?></p>
+                                    <p><b>Observação:</b> <?= $ocorrencia['observacao'] ?></p>
+                                    <hr/>
                                     <?php
                                 }
                                 ?>
                             </div>
+                        </div>
 
                     </div>
                 </div>
+                <!-- /.box-body -->
+            <!-- /.box -->
             </div>
-            <!-- /.box-body -->
-
-        <!-- /.box -->
-</div>
-<!-- /.col -->
-</div>
-<!-- /.row -->
-<!-- END ACCORDION & CAROUSEL-->
-
-</section>
+    <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
 <!-- /.content -->
 </div>
