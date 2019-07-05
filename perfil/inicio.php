@@ -31,9 +31,6 @@ if (isset($_SESSION['idEvento'])) {
                                 $msg = $avisos['mensagem'];
                                 $titulo = $avisos['titulo'];
 
-                                $att = substr($msg, -31);
-                                $new_msg = substr($msg, 0, -31);
-
                                 if ($i == 1) {
                                     $cor = "box-warning";
                                     $aberto = "in";
@@ -55,7 +52,7 @@ if (isset($_SESSION['idEvento'])) {
                                         <div class="box-body bg-warning">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <h4><?= $new_msg . "<br><br>" . $att; ?></h4>
+                                                    <h4><?= $msg; ?></h4>
                                                 </div>
                                             </div>
                                         </div>
