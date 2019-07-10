@@ -99,7 +99,7 @@ SUB_PRE.subprefeitura AS 'subprefeitura',
 DIA_PERI.periodo AS 'periodo',
 retirada.retirada_ingresso AS 'retirada'
 FROM
-eventos AS E
+agendoes AS E
 INNER JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id
 INNER JOIN atracoes AS AT ON E.id = AT.evento_id
 INNER JOIN classificacao_indicativas AS CI ON AT.classificacao_indicativa_id = CI.id
@@ -117,7 +117,7 @@ $filtro_data
 $filtro_local
 $filtro_usuario
 $filtro_PE AND
-E.evento_status_id = 1 AND
+E.evento_status_id = 3 AND
 E.publicado = 1
 ORDER BY O.data_inicio";
 
@@ -249,8 +249,9 @@ ORDER BY O.data_inicio";
                             <td>Telefone de contato</td>
                         </tr>
                         </thead>
-                        <tbody>
+
                         <?php
+                        echo "<tbody>";
                         while ($linha = mysqli_fetch_array($query)) {
 
                             $totalDias = '';
@@ -346,8 +347,8 @@ ORDER BY O.data_inicio";
                             </tr>
                             <?php
                         }
+                        echo "</tbody>";
                         ?>
-                        </tbody>
                     </table>
                 </div>
                 <?php

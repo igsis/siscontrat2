@@ -2,6 +2,10 @@
 include "includes/menu_principal.php";
 $con = bancoMysqli();
 
+if(isset($_POST['idEvento'])){
+    $idEvento = $_POST['idEvento'];
+}
+
 if(isset($_POST['enviar'])){
     $idEvento = $_POST['idEvento'];
     $now = date('Y-m-d H:i:s');
@@ -32,7 +36,7 @@ $ocorrencias = $con->query("SELECT * FROM ocorrencias INNER JOIN retirada_ingres
 
         <!-- START ACCORDION-->
         <h2 class="page-header">Informações do Evento</h2>
-        <?= $mensagem ?? $mensagem ?>
+        <?= isset($mensagem) ?? $mensagem ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">

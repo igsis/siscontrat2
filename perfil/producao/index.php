@@ -14,7 +14,8 @@ include "includes/menu.php";
                 <div class="row">
                     <div class="col-md-12 border-right">
                         <div class="description-block">
-                            <span class="description-header">Esse módulo tem a função de cancelar ou aprovar pedidos de contratação com prazos expirados.<br/><br/></span>
+                            <?php //<span class="description-header">Esse módulo tem a função de cancelar ou aprovar pedidos de contratação com prazos expirados.<br/><br/></span> ?>
+                            <span class="description-header">Esse módulo tem a função de listar os eventos da instituição e visualizar detalhes pertinentes à produção.<br/><br/></span>
                         </div>
                         <!-- /.description-block -->
                     </div>
