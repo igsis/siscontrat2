@@ -1,7 +1,15 @@
 <?php
+$con = bancoMysqli();
+
+$sqlLocais = "SELECT * FROM locais WHERE publicado = 2";
+$queryLocais = mysqli_query($con, $sqlLocais);
+$numeroLocais = mysqli_num_rows($queryLocais);
+
+$sqlEspacos = "SELECT * FROM espacos WHERE publicado = 2";
+$queryEspacos = mysqli_query($con, $sqlEspacos);
+$numeroEspacos = mysqli_num_rows($queryEspacos);
 
 @include "includes/menu.php";
-
 ?>
 
 <div class="content-wrapper">
@@ -25,39 +33,36 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3 col-md-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-aqua"><i class="fa fa-user-o"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Usuários para aprovar</span>
-                        <span class="info-box-number">1,410</span>
-                    </div>
-                </div>
-            </div>
             <!-- /.col -->
-            <div class="col-md-3 col-md-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Locais para aprovar</span>
-                        <span class="info-box-number">410</span>
+            <?php
+            if ($numeroLocais != 0) {
+                ?>
+                <div class="col-md-3 col-md-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Locais para aprovar</span>
+                            <span class="info-box-number"><?= $numeroLocais ?></span>
+                        </div>
                     </div>
-                    <!-- /.info-box-content -->
                 </div>
-                <!-- /.info-box -->
-            </div>
-            <!-- /.col -->
-            <div class="col-md-3 col-md-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-yellow"><i class="fa fa-flag-o"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Espaços para aprovar</span>
-                        <span class="info-box-number">410</span>
+                <?php
+            }
+
+            if ($numeroEspacos != 0) {
+                ?>
+                <div class="col-md-3 col-md-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-yellow"><i class="fa fa-flag-o"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Espaços para aprovar</span>
+                            <span class="info-box-number"><?= $numeroEspacos ?></span>
+                        </div>
                     </div>
-                    <!-- /.info-box-content -->
                 </div>
-                <!-- /.info-box -->
-            </div>
+                <?php
+            }
+            ?>
             <!-- /.col -->
         </div>
 
@@ -65,7 +70,8 @@
         <div class="box box-solid">
             <!-- /.box-header -->
             <div class="box-body center-block" align="center">
-                <img src="https://media.giphy.com/media/fdXR4TOByOVIwLNhlW/giphy.gif" alt="para bens" class="img-responsive">
+                <img src="https://media.giphy.com/media/fdXR4TOByOVIwLNhlW/giphy.gif" alt="para bens"
+                     class="img-responsive">
             </div>
         </div>
     </section>
