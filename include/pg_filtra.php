@@ -389,8 +389,6 @@ ORDER BY O.data_inicio";
             $.each(result, function (i, field) {
                 usuarios.push(field.nome_completo);
             });
-
-            console.log(usuarios);
         });
 
         $("#inserido").autocomplete({

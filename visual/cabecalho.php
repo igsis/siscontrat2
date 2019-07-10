@@ -64,6 +64,7 @@ else
       <script src="bower_components/fullcalendar/packages/timegrid/main.js"></script>
       <script src="bower_components/fullcalendar/packages/list/main.js"></script>
       <script src="bower_components/fullcalendar/packages/core/locales/pt-br.js"></script>
+      <?php include "../include/script.php"; ?>
   </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
