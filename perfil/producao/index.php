@@ -1,5 +1,10 @@
 <?php
 include "includes/menu.php";
+$con = bancoMysqli();
+
+$sql = "SELECT * FROM eventos WHERE evento_status_id >= 3 AND publicado = 1";
+$query = mysqli_query($con,$sql);
+$numEventos = mysqli_num_rows($query);
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -24,5 +29,23 @@ include "includes/menu.php";
                 <!-- /.row -->
             </div>
         </div>
+        <div class="row">
+            <!-- /.col -->
+            <?php
+
+            if ($numEventos > 0) {
+                ?>
+                <div class="col-md-5 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Eventos a serem visualizados</span>
+                            <span class="info-box-number"><?= $numEventos ?></span>
+                        </div>
+                    </div>
+                </div>
+                <?php
+            }
+            ?>
     </section>
 </div>
