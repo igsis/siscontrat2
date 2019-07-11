@@ -11,6 +11,7 @@ else
 {
     $logado = $_SESSION['login'];
 }
+
 ?>
 <html lang="pt-br">
   <head>
@@ -50,6 +51,7 @@ else
     <script src="dist/js/jquery-1.12.4.min.js"></script>
     <script src="dist/js/jquery.mask.js"></script>
     <script src="dist/js/scripts.js"></script>
+
     <!-- jQuery 3 -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -65,8 +67,6 @@ else
       <script src="bower_components/fullcalendar/packages/list/main.js"></script>
       <script src="bower_components/fullcalendar/packages/core/locales/pt-br.js"></script>
       <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-      <?php include "../include/script.php"; ?>
-
       <style>
           .ui-menu-item{
               text-align: center !important;

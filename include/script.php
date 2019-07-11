@@ -1,10 +1,4 @@
-﻿<script type="text/javascript" src="js/autocomplete.js"></script>
-<script src="js/modernizr.custom.js"></script>
-<script src="js/jquery-1.9.1.js"></script>
-<script src="js/jquery-ui.js"></script>
-<script type="text/javascript" src="jquery-ui-1.12.1.custom/jquery-ui.structure.min.css"></script>
-<script src="js/jquery.maskedinput.js" type="text/javascript"></script>
-<script src="js/jquery.maskMoney.js" type="text/javascript"></script>
+﻿
   <script>
   $(function(){
 	$( "#hora" ).mask("99:99");
