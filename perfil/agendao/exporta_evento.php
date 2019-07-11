@@ -18,7 +18,7 @@ if (isset($_POST['filtrar'])) {
             $datafim = ($_POST['final']);
             $filtro_data = "O.data_inicio BETWEEN '$datainicio' AND '$datafim'";
         } else {
-            $filtro_data = "O.data_inicio > '$datainicio'";
+            $filtro_data = "O.data_inicio >= '$datainicio'";
         }
     } else {
         $mensagem = "Informe uma data para inicio da consulta";
@@ -61,8 +61,7 @@ if (isset($_POST['filtrar'])) {
 E.id AS 'evento_id',
 E.nome_evento AS 'nome',
 E.espaco_publico AS 'espaco_publico',
-E.projeto_especial_id AS 'projeto_especial_id',
-AT.quantidade_apresentacao AS 'apresentacoes',
+E.quantidade_apresentacao AS 'apresentacoes',
 TE.tipo_evento AS 'categoria',
 O.id AS 'idOcorrencia',
 O.horario_inicio AS 'hora_inicio',
@@ -87,7 +86,7 @@ L.uf AS 'estado',
 L.cep AS 'cep',
 E.sinopse AS 'artista',
 CI.classificacao_indicativa AS 'classificacao',
-AT.links AS 'divulgacao',
+E.links AS 'divulgacao',
 E.sinopse AS 'sinopse',
 E.fomento AS 'fomento',
 P.nome AS 'produtor_nome',
@@ -98,12 +97,10 @@ PE.projeto_especial,
 SUB_PRE.subprefeitura AS 'subprefeitura',
 DIA_PERI.periodo AS 'periodo',
 retirada.retirada_ingresso AS 'retirada'
-FROM
-agendoes AS E
+FROM agendoes AS E
 INNER JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id
-INNER JOIN atracoes AS AT ON E.id = AT.evento_id
-INNER JOIN classificacao_indicativas AS CI ON AT.classificacao_indicativa_id = CI.id
-LEFT JOIN produtores AS P ON AT.produtor_id = P.id
+INNER JOIN classificacao_indicativas AS CI ON E.classificacao_indicativa_id = CI.id
+LEFT JOIN produtores AS P ON E.produtor_id = P.id
 INNER JOIN usuarios AS U ON E.usuario_id = U.id
 LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
 INNER JOIN ocorrencias AS O ON E.id = O.origem_ocorrencia_id
@@ -120,6 +117,8 @@ $filtro_PE AND
 E.evento_status_id = 3 AND
 E.publicado = 1
 ORDER BY O.data_inicio";
+
+    echo $sql;
 
     $query = mysqli_query($con, $sql);
     $num = mysqli_num_rows($query);
@@ -272,7 +271,7 @@ ORDER BY O.data_inicio";
                             }
 
                             //Ações
-                            $sqlAcao = "SELECT * FROM acao_evento WHERE evento_id = '" . $linha['evento_id'] . "'";
+                            $sqlAcao = "SELECT * FROM acao_agendao WHERE evento_id = '" . $linha['evento_id'] . "'";
                             $queryAcao = mysqli_query($con, $sqlAcao);
                             $acoes = [];
                             $i = 0;
