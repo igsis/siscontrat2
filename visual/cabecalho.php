@@ -64,7 +64,14 @@ else
       <script src="bower_components/fullcalendar/packages/timegrid/main.js"></script>
       <script src="bower_components/fullcalendar/packages/list/main.js"></script>
       <script src="bower_components/fullcalendar/packages/core/locales/pt-br.js"></script>
+      <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
       <?php include "../include/script.php"; ?>
+
+      <style>
+          .ui-menu-item{
+              text-align: center !important;
+          }
+      </style>
   </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">

@@ -58,68 +58,68 @@ if (isset($_POST['filtrar'])) {
 
 
     $sql = "SELECT
-E.id AS 'evento_id',
-E.nome_evento AS 'nome',
-E.espaco_publico AS 'espaco_publico',
-E.projeto_especial_id AS 'projeto_especial_id',
-AT.quantidade_apresentacao AS 'apresentacoes',
-TE.tipo_evento AS 'categoria',
-O.id AS 'idOcorrencia',
-O.horario_inicio AS 'hora_inicio',
-O.data_inicio AS 'data_inicio',
-O.data_fim AS 'data_fim',
-O.horario_fim AS 'hora_fim',
-O.valor_ingresso AS 'valor_ingresso',
-O.segunda AS 'segunda',
-O.terca AS 'terca',
-O.quarta AS 'quarta',
-O.quinta AS 'quinta',
-O.sexta AS 'sexta',
-O.sabado AS 'sabado',
-O.domingo AS 'domingo',
-L.local AS 'nome_local',
-L.logradouro AS 'logradouro',
-L.numero AS 'numero',
-L.complemento AS 'complemento',
-L.bairro AS 'bairro',
-L.cidade AS 'cidade',
-L.uf AS 'estado',
-L.cep AS 'cep',
-E.sinopse AS 'artista',
-CI.classificacao_indicativa AS 'classificacao',
-AT.links AS 'divulgacao',
-E.sinopse AS 'sinopse',
-E.fomento AS 'fomento',
-P.nome AS 'produtor_nome',
-P.email AS 'produtor_email',
-P.telefone1 AS 'produtor_fone',
-U.nome_completo AS 'nomeCompleto',
-PE.projeto_especial,
-SUB_PRE.subprefeitura AS 'subprefeitura',
-DIA_PERI.periodo AS 'periodo',
-retirada.retirada_ingresso AS 'retirada'
-FROM
-eventos AS E
-INNER JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id
-INNER JOIN atracoes AS AT ON E.id = AT.evento_id
-INNER JOIN classificacao_indicativas AS CI ON AT.classificacao_indicativa_id = CI.id
-LEFT JOIN produtores AS P ON AT.produtor_id = P.id
-INNER JOIN usuarios AS U ON E.usuario_id = U.id
-LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
-INNER JOIN ocorrencias AS O ON E.id = O.origem_ocorrencia_id
-INNER JOIN locais AS L ON O.local_id = L.id
-LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
-LEFT JOIN periodos AS DIA_PERI ON O.periodo_id = DIA_PERI.id
-INNER JOIN retirada_ingressos AS retirada ON O.retirada_ingresso_id = retirada.id
-
-WHERE
-$filtro_data
-$filtro_local
-$filtro_usuario
-$filtro_PE AND
-E.evento_status_id = 1 AND
-E.publicado = 1
-ORDER BY O.data_inicio";
+        E.id AS 'evento_id',
+        E.nome_evento AS 'nome',
+        E.espaco_publico AS 'espaco_publico',
+        E.projeto_especial_id AS 'projeto_especial_id',
+        AT.quantidade_apresentacao AS 'apresentacoes',
+        TE.tipo_evento AS 'categoria',
+        O.id AS 'idOcorrencia',
+        O.horario_inicio AS 'hora_inicio',
+        O.data_inicio AS 'data_inicio',
+        O.data_fim AS 'data_fim',
+        O.horario_fim AS 'hora_fim',
+        O.valor_ingresso AS 'valor_ingresso',
+        O.segunda AS 'segunda',
+        O.terca AS 'terca',
+        O.quarta AS 'quarta',
+        O.quinta AS 'quinta',
+        O.sexta AS 'sexta',
+        O.sabado AS 'sabado',
+        O.domingo AS 'domingo',
+        L.local AS 'nome_local',
+        L.logradouro AS 'logradouro',
+        L.numero AS 'numero',
+        L.complemento AS 'complemento',
+        L.bairro AS 'bairro',
+        L.cidade AS 'cidade',
+        L.uf AS 'estado',
+        L.cep AS 'cep',
+        E.sinopse AS 'artista',
+        CI.classificacao_indicativa AS 'classificacao',
+        AT.links AS 'divulgacao',
+        E.sinopse AS 'sinopse',
+        E.fomento AS 'fomento',
+        P.nome AS 'produtor_nome',
+        P.email AS 'produtor_email',
+        P.telefone1 AS 'produtor_fone',
+        U.nome_completo AS 'nomeCompleto',
+        PE.projeto_especial,
+        SUB_PRE.subprefeitura AS 'subprefeitura',
+        DIA_PERI.periodo AS 'periodo',
+        retirada.retirada_ingresso AS 'retirada'
+        FROM
+        eventos AS E
+        INNER JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id
+        INNER JOIN atracoes AS AT ON E.id = AT.evento_id
+        INNER JOIN classificacao_indicativas AS CI ON AT.classificacao_indicativa_id = CI.id
+        LEFT JOIN produtores AS P ON AT.produtor_id = P.id
+        INNER JOIN usuarios AS U ON E.usuario_id = U.id
+        LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
+        INNER JOIN ocorrencias AS O ON E.id = O.origem_ocorrencia_id
+        INNER JOIN locais AS L ON O.local_id = L.id
+        LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
+        LEFT JOIN periodos AS DIA_PERI ON O.periodo_id = DIA_PERI.id
+        INNER JOIN retirada_ingressos AS retirada ON O.retirada_ingresso_id = retirada.id
+        
+        WHERE
+        $filtro_data
+        $filtro_local
+        $filtro_usuario
+        $filtro_PE AND
+        E.evento_status_id = 1 AND
+        E.publicado = 1
+        ORDER BY O.data_inicio";
 
     $query = mysqli_query($con, $sql);
     $num = mysqli_num_rows($query);
@@ -136,7 +136,6 @@ ORDER BY O.data_inicio";
     }
 }
 ?>
-
 <div class="content-wrapper">
     <section class="content-header">
         <h3 class="box-title">Eventos - Gerar Excel - Filtrar</h3>
