@@ -1,5 +1,5 @@
 <?php
-include "includes/menu.php";
+include "includes/menu_interno.php";
 
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
@@ -19,7 +19,7 @@ $idUser = $_SESSION['idUser'];
 $sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status FROM eventos AS ev
         INNER JOIN tipo_eventos AS te on ev.tipo_evento_id = te.id
         INNER JOIN evento_status es on ev.evento_status_id = es.id
-        WHERE publicado = 1 AND (usuario_id = 'idUser' OR fiscal_id = 'idUser' OR suplente_id = 'idUser') AND evento_status_id = 1";
+        WHERE publicado <> 0 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id = 3";
 
 $query = mysqli_query($con,$sql);
 ?>
@@ -33,7 +33,7 @@ $query = mysqli_query($con,$sql);
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">Listagem</h3>
-            </div>
+                     </div>
 
             <div class="row" align="center">
                 <?php
@@ -46,11 +46,11 @@ $query = mysqli_query($con,$sql);
                 <table id="tblEvento" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>Nome do evento< </th>
+                        <th>Nome do evento </th>
                         <th>Tipo do evento</th>
                         <th>Status</th>
                         <th>Visualizar</th>
-                        <th>Apagar
+
                     </tr>
                     </thead>
                     <?php
@@ -60,22 +60,13 @@ $query = mysqli_query($con,$sql);
                             echo "<td>" . $evento['nome_evento']. "</td>";
                             echo "<td>" . $evento['tipo_evento']. "</td>";
                             echo "<td>" . $evento['status']. "</td>";
-                            echo"<td><form method=\'POST\' action=\"?perfil=producao&p=producao_evento\" role=\"form\">
+                            echo "<td>                               
+                            <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_evento' role='form'>
                             <input type='hidden' name='idEvent' value='". $evento['idEvento'] ."'>
-                            <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'> </span></button>
+                            <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'> </span></button>
                             </form>
-                            </<td>";
-                            ?>
-                            <td>
-                                <form type="post" id="formExcluir">
-                                <input type="hidden" name="idEvent" value="<?= $evento['idEvento'] ?>">
-                                <button type='button' class='btn btn-block btn-danger' id='excluiEvento'
-                                        data-toggle="modal" data-target="#exclusao" name="excluiEvento"
-                                        data-name="<?= $evento['nome_evento'] ?>"
-                                        data-id="<?= $evento['idEvento']?> "> <span class="glyphicon glyphicon-trash"></span></button>"
-                                </form>
-                            </td>
-                        <?php
+                            </td>";
+
                             echo "</tr>";
                         }
                         echo"</tbody>";
@@ -85,7 +76,7 @@ $query = mysqli_query($con,$sql);
                             <th>Nome do Evento</th>
                             <th>Tipo do Evento</th>
                             <th>Status</th>
-                            <th colspan="2" width="15%"></th>
+
                         </tr>
                     </tfoot>
 
@@ -97,28 +88,6 @@ $query = mysqli_query($con,$sql);
             </div>
         </div>
 
-       <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
-           <div class="modal-dialog">
-               <div class="modal-content">
-                   <div class="modal-header">
-                       <button type="button" class="close" data-dismiss="modal">&times;</button>
-                       <h4 class="modal-title">Confirmação de Exclusão</h4>
-                   </div>
-                   <div class="modal-body">
-                       <p>Tem certeza que deseja excluir este evento?</p>
-                   </div>
-                   <div class="modal-footer">
-                       <form action="perfil=producao&p=eventos_producao" method="post">
-                           <input type="hidden" name="idEvent" value="">
-                           <input type="hidden" name="apagar" id="apagar">
-                           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
-                           <input type="submit" class="btn btn-danger btn-outline" name="excluir" value="Apagar">
-                       </form>
-                   </div>
-               </div>
-           </div>
-
-       </div>
 
 
     </section>
@@ -139,13 +108,4 @@ $query = mysqli_query($con,$sql);
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
-</script>
-<script type="text/javascript">
-    $('#exclusao').on('show.bs.modal', function (e){
-        let evento = $(e.relatedTarget).attr('data-name');
-        let id = $(e.relatedTarget).attr('data-id');
-
-        $(this).find('p').text(`Tem certeza que deseja excluir o evento ${evento} ?`);
-        $(this).find('#idEvent').attr('value', `${id}`);
-    })
 </script>
