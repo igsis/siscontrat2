@@ -75,7 +75,7 @@ $num_atracoes = 0;
                                 ?>
                                 <tfoot>
                                 <tr>
-                                    <th>Objeto</th>
+                                    <th>Nome do evento</th>
                                     <th>Local</th>
                                     <th>Período</th>
                                     <th>Visualizar</th>

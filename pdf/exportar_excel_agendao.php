@@ -26,10 +26,10 @@ $objPHPExcel->getProperties()->setCategory("Inscritos");
 
 // Criamos as colunas
 $objPHPExcel->setActiveSheetIndex(0)
-    ->setCellValue("A1", "Local do Evento")
-    ->setCellValue("B1", "Endereço Completo")
-    ->setCellValue("C1", "SubPrefeitura")
-    ->setCellValue("D1", "Nome do Evento")
+    ->setCellValue("A1", "Nome do Evento")
+    ->setCellValue("B1", "Local do Evento")
+    ->setCellValue("C1", "Endereço Completo")
+    ->setCellValue("D1", "SubPrefeitura")
     ->setCellValue("E1", "Artistas")
     ->setCellValue("F1", "Data Início")
     ->setCellValue("G1", "Data Fim")
@@ -45,7 +45,7 @@ $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue("Q1", "Classificação indicativa")
     ->setCellValue("R1", "Link de Divulgação")
     ->setCellValue("S1", "Sinopse")
-    ->setCellValue("T1", "Calendário Macro")
+    ->setCellValue("T1", "Projeto Especial")
     ->setCellValue("U1", "Caso Seja Fomento / Programa da smc Qual o Fomento ou Programa?")
     ->setCellValue("V1", "Produtor do Evento")
     ->setCellValue("W1", "E-mail de contato")
@@ -163,10 +163,10 @@ while($linha = mysqli_fetch_array($query))
     ];
 
     $objPHPExcel->setActiveSheetIndex(0)
-        ->setCellValue($a, $linha['nome_local'])
-        ->setCellValue($b, implode(", ", $enderecoCompleto)." - CEP: ".$linha['cep'])
-        ->setCellValue($c, $linha['subprefeitura'])
-        ->setCellValue($d, $linha['nome'])
+        ->setCellValue($a, $linha['nome'])
+        ->setCellValue($b, $linha['nome_local'])
+        ->setCellValue($c, implode(", ", $enderecoCompleto)." - CEP: ".$linha['cep'])
+        ->setCellValue($d, $linha['subprefeitura'])
         ->setCellValue($e, $linha['artista'])
         ->setCellValue($f, exibirDataBr($linha['data_inicio']))
         ->setCellValue($g, ($linha['data_fim'] == "0000-00-00") ? "Não é Temporada" : exibirDataBr($linha['data_fim']))
@@ -182,7 +182,7 @@ while($linha = mysqli_fetch_array($query))
         ->setCellValue($q, $linha['classificacao'])
         ->setCellValue($r, isset($linha['divulgacao']) ? $linha['divulgacao'] : "Sem link de divulgação.")
         ->setCellValue($s, $linha['sinopse'])
-        ->setCellValue($t, $linha['projetoEspecial'])
+        ->setCellValue($t, $linha['projeto_especial'])
         ->setCellValue($u, isset($fomento['fomento']) ? $fomento['fomento'] : "Não")
         ->setCellValue($v, $linha['produtor_nome'])
         ->setCellValue($w, $linha['produtor_email'])
@@ -208,7 +208,7 @@ $objPHPExcel->setActiveSheetIndex(0);
 ob_end_clean();
 ob_start();
 
-$nome_arquivo = "eventos_pesquisa.xls";
+$nome_arquivo = date("YmdHis") . "_eventos_pesquisa.xls";
 
 
 // Cabeçalho do arquivo para ele baixar(Excel2007)
