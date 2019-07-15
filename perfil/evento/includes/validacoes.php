@@ -13,7 +13,7 @@ $atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AN
 
 $errosArqs = [];
 
-if($pedidos != null) {
+if ($pedidos != null) {
     while ($atracao = mysqli_fetch_array($atracoes)) {
         $tipoPessoa = $pedidos['pessoa_tipo_id'];
 
@@ -65,7 +65,8 @@ $numAtracoes = $atracoes->num_rows;
  * 'bool' - false ou true <br>
  * 'especificidade' - indice do array multidimencional onde foi encontrado o valor </p>
  */
-function in_array_key($needle, $haystack) {
+function in_array_key($needle, $haystack)
+{
     $return = [
         'bool' => false,
         'especificidade' => null
@@ -86,27 +87,38 @@ function in_array_key($needle, $haystack) {
 $erros = [];
 
 if ($evento['tipo_evento_id'] == 1) {
-    $especificidades = [
-        'teatro' => ['3', '7', '23', '24'],
-        'musica' => ['10', '11', '15', '17'],
-        'exposicoes' => ['2'],
-        'oficinas' => ['4', '5']
-    ];
-
     if ($numAtracoes == 0) {
         array_push($erros, "Não possui atrações cadastradas");
     } else {
         foreach ($atracoes as $atracao) {
             if (($atracao['produtor_id'] == "") || ($atracao['produtor_id'] == null)) {
-                array_push($erros,"Produtor não cadastrado na atração <b>".$atracao['nome_atracao']."</b>");
+                array_push($erros, "Produtor não cadastrado na atração <b>" . $atracao['nome_atracao'] . "</b>");
             }
 
-            $especificidade = in_array_key($atracao['categoria_atracao_id'], $especificidades);
             $idAtracao = $atracao['id'];
-            if ($especificidade['bool']) {
-                $tabela = $especificidade['especificidade'];
+            $acoes = recuperaDados('acao_atracao', 'atracao_id', $idAtracao);
+            $idAcao = $acoes['acao_id'];
+            $possui = true;
+            switch ($idAcao) {
+                case 11 : // teatro
+                    $tabela = 'teatro';
+                    break;
+                case 7 : // música
+                    $tabela = 'musica';
+                    break;
+                case 5 : // exposição (feira)
+                    $tabela = 'exposicoes';
+                    break;
+                case 8 : // oficina
+                    $tabela = 'oficinas';
+                    break;
+                default :
+                    $possui = false;
+            }
+
+            if ($possui) {
                 $numEspecificidades = $con->query("SELECT * FROM $tabela WHERE atracao_id = '$idAtracao'")->num_rows;
-                if ($numEspecificidades == 0) {
+                if($numEspecificidades == 0){
                     array_push($erros, "Não há especificidade cadastrada para a atração <b>" . $atracao['nome_atracao'] . "</b>");
                 }
             }
@@ -115,19 +127,19 @@ if ($evento['tipo_evento_id'] == 1) {
             $ocorrenciasAssocs = $ocorrencias->fetch_assoc();
             $numOcorrencias = $ocorrencias->num_rows;
             if ($numOcorrencias == 0) {
-                array_push($erros, "Não há ocorrência cadastrada para a atração <b>" .$atracao['nome_atracao']. "</b>");
+                array_push($erros, "Não há ocorrência cadastrada para a atração <b>" . $atracao['nome_atracao'] . "</b>");
             } else {
                 $hoje = new DateTime(date("Y-m-d"));
                 $dataInicio = new DateTime($ocorrenciasAssocs['data_inicio']);
                 $diff = $hoje->diff($dataInicio);
 
                 if ($diff->d < 30) {
-                    $mensagem = "Hoje é dia ". $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                    $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
                     O prazo para contratos é de 30 dias.<br>";
                     $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
                     $fora = 1;
                 } else {
-                    $mensagem = "Hoje é dia ". $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                    $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
                     O prazo para contratos é de 30 dias.<br>";
                     $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
                 }
@@ -147,7 +159,7 @@ if ($evento['tipo_evento_id'] == 1) {
                 $pj = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
 
                 if (($pj['representante_legal1_id'] == null) && ($pj['representante_legal2_id'] == null)) {
-                    array_push($erros, "Não há Representante Legal cadastrado no proponente <b>".$pj['razao_social']."</b>");
+                    array_push($erros, "Não há Representante Legal cadastrado no proponente <b>" . $pj['razao_social'] . "</b>");
                 }
             }
         }
