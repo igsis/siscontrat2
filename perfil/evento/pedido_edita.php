@@ -35,6 +35,8 @@ if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
         if (mysqli_query($con, $sqlFirst)) {
             $_SESSION['idPedido'] = recuperaUltimo("pedidos");
             $idPedido = $_SESSION['idPedido'];
+        } else {
+            echo $sqlFirst;
         }
     }
 
@@ -163,10 +165,28 @@ $queryOficina = mysqli_query($con, $sqlOficina);
 //$atracoes = mysqli_fetch_array($queryAtracao);
 
 while ($atracoes = mysqli_fetch_array($queryOficina)) {
-    if ($atracoes['categoria_atracao_id'] == 4) {
-        $oficina = 4;
+    $valores [] = $atracoes['valor_individual'];
+    if ($atracoes['oficina'] == 1) {
+        $oficina = 1;
     }
 }
+
+$valor_total = 0;
+foreach ($valores as $valor) {
+    $valor_total += $valor;
+}
+
+if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total']) {
+    $sqlUpdate = "UPDATE pedidos SET valor_total = '$valor_total' WHERE id = $idPedido";
+    if (mysqli_query($con, $sqlUpdate)) {
+        $mensagem = mensagem("warning", "O valor da sua atração foi alterado e com isso o valor total do seu pedido também mudou, verifique se o mesmo se está correto e altere novamente na atração caso necessário.");
+        $pedido = recuperaDados('pedidos', 'id', $idPedido);
+    } else {
+        echo $sqlUpdate;
+    }
+}
+
+
 
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -365,7 +385,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                                     echo "<td>" . $atracao['nome'] . "</td>";
                                     echo "<td>
                                             <form method=\"POST\" action=\"?perfil=evento&p=pf_pesquisa\" role=\"form\">
-                                            <input type='hidden' name='idAtracao' value='" . $atracao['id'] . "'>
+                                            <input type='hidden' name='oficina' value='" . $atracao['id'] . "'>
                                             <input type='hidden' name='lider' value='$idPedido'>
                                             <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class='fa fa-refresh'></i> Trocar</button>
                                             </form>
@@ -373,7 +393,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                                 } else {
                                     echo "<td>
                                             <form method=\"POST\" action=\"?perfil=evento&p=pf_pesquisa\" role=\"form\">
-                                            <input type='hidden' name='idAtracao' value='" . $atracao['id'] . "'>
+                                            <input type='hidden' name='oficina' value='" . $atracao['id'] . "'>
                                             <input type='hidden' name='lider' value='$idPedido'>
                                             <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-plus'></i> Adicionar</button>
                                             </form>
@@ -549,7 +569,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                 <form action="#" id="formParcela">
                 </form>
                 <div class="row">
-                    <h4 class="text-center" id="somaParcelas"><b>Valor restante</b> <em><p
+                    <h4 class="text-center" id="valor_restante_text"><b>Valor restante</b> <em><p
                                     id="valor_restante"><?= isset($somaParcelas) ? "0,00" : dinheiroParaBr($pedido['valor_total']) ?></p>
                         </em>
                     </h4>
@@ -621,7 +641,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
-                            <h4 class="text-center" id="somaParcelas"><b>Valor restante </b> <em><p
+                            <h4 class="text-center" id="valor_restante_text"><b>Valor restante </b> <em><p
                                             id="valor_restante"><?= isset($somaParcelas) ? "0,00" : dinheiroParaBr($pedido['valor_total']) ?> </p>
                                 </em></h4>
                         </div>
@@ -706,9 +726,9 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
 
     function somar() {
 
-        var idAtracao = parseInt("<?= isset($oficina) ? $oficina : '' ?>");
+        var oficina = parseInt("<?= isset($oficina) ? $oficina : '' ?>");
 
-        if (idAtracao == 4) {
+        if (oficina == 1) {
 
             if ($("#numero_parcelas").val() == 4) {
                 //$("#numero_parcelas").val("3");
@@ -743,7 +763,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
             restante -= arrayValor[i];
         }
 
-        if (idAtracao == 4) {
+        if (oficina == 1) {
             $('#modalOficina').find('#soma').html(soma.toFixed(2).replace('.', ','));
             $('#modalOficina').find('#valor_restante').html(restante.toFixed(2).replace('.', ','));
 
@@ -768,7 +788,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
             $('#modalParcelas').find('#soma').html(soma.toFixed(2).replace('.', ','));
             $('#modalParcelas').find('#valor_restante').html(restante.toFixed(2).replace('.', ','));
 
-            if (Math.sign(restante) != -1) {
+            if (Math.sign(restante) != 0) {
                 console.log(Math.sign(restante));
                 $("#salvarModal").attr("disabled", true);
                 $("#editarModal").attr("disabled", true);
@@ -776,7 +796,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
             } else {
                 $("#salvarModal").attr("disabled", false);
                 $("#editarModal").attr("disabled", false);
-                $('#modalParcelas').find('#valor_restante').html(0);
+                $('#modalParcelas').find('#valor_restante_text').hide();
 
                 var nums = "<?= isset($numRows) ? $numRows : ''; ?>";
 
@@ -821,9 +841,9 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
 
         var StringDatas = "<?= isset($StringDatas) ? $StringDatas : ''; ?>";
 
-        var idAtracao = parseInt("<?= isset($oficina) ? $oficina : '' ?>");
+        var oficina = parseInt("<?= isset($oficina) ? $oficina : '' ?>");
 
-        if (idAtracao == 4) {
+        if (oficina == 1) {
             var sourceOficina = document.getElementById("templateOficina").innerHTML;
             var templateOficina = Handlebars.compile(sourceOficina);
 
@@ -1019,7 +1039,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
 
 
     var salvarModal = function () {
-        var idAtracao = "<?= isset($oficina) ? $oficina : '' ?>";
+        var oficina = "<?= isset($oficina) ? $oficina : '' ?>";
 
         var count = 0;
         $("#formParcela input").each(function () {
@@ -1032,7 +1052,7 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
             swal("Preencha todas as informações para editar as parcelas!", "", "warning");
         } else {
 
-            if (idAtracao == 4) {
+            if (oficina == 1) {
                 if ($("#numero_parcelas").val() == 4) {
                     // $("#numero_parcelas").val("3");
                     var parcelas = $("#numero_parcelas").val() - 1;
@@ -1157,9 +1177,9 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
             swal("Preencha todas as parcelas para edita-lás!", "", "warning");
 
         } else {
-            var idAtracao = "<?= isset($oficina) ? $oficina : ''?>";
+            var oficina = "<?= isset($oficina) ? $oficina : ''?>";
 
-            if (idAtracao == 4) {
+            if (oficina == 1) {
                 if ($("#numero_parcelas").val() == 4) {
                     // $("#numero_parcelas").val("3");
                     var parcelas = $("#numero_parcelas").val() - 1;

@@ -1,6 +1,7 @@
 //Script CEP
 $(document).ready(function() {
-    function limpa_formulário_cep() {
+    'use strict';
+    function limpa_formulario_cep() {
         // Limpa valores do formulário de cep.
         $("#rua").val("");
         $("#bairro").val("");
@@ -53,20 +54,20 @@ $(document).ready(function() {
                     }
                     else {
                         //CEP pesquisado não foi encontrado.
-                        limpa_formulário_cep();
+                        limpa_formulario_cep();
                         alert("CEP não encontrado.");
                     }
                 });
             }
             else {
                 //cep é inválido.
-                limpa_formulário_cep();
+                limpa_formulario_cep();
                 alert("Formato de CEP inválido.");
             }
         }
         else {
             //cep sem valor, limpa formulário.
-            limpa_formulário_cep();
+            limpa_formulario_cep();
         }
     });
 });

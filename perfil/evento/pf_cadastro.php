@@ -22,12 +22,14 @@ $idEvento = $_SESSION['idEvento'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
 if($evento['tipo_evento_id'] == 1){
-    $atracoesTipo = array('3', '7', '11', '13', '23');
+    $atracoesTipo = array('3', '7', '10', '11');
 
     $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
-    $categoria_atracao_id = $atracao['categoria_atracao_id'];
+    $atracaoId = $atracao['id'];
+    $acao_atracao = recuperaDados('acao_atracao', 'atracao_id', $atracaoId);
+    $acaoID = $acao_atracao['acao_id'];
 
-    if(in_array($categoria_atracao_id, $atracoesTipo)){
+    if(in_array($acaoID, $atracoesTipo)){
         $mostraDRT = true;
     }else{
         $mostraDRT = false;

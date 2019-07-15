@@ -31,7 +31,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
 while ($atracao = mysqli_fetch_array($queryAtracao)) {
     $valores [] = $atracao['valor_individual'];
 
-    if ($atracao['categoria_atracao_id'] == 4) {
+    if ($atracao['oficina'] == 1) {
         $oficina = 4;
     }
 }

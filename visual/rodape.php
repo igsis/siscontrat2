@@ -49,10 +49,8 @@
 <script src="./dist/js/scripts.js"></script>
 
 <script type="text/javascript" src="js/autocomplete.js"></script>
-<script src="js/modernizr.custom.js"></script>
 <script src="js/jquery-ui.js"></script>
-<script src="js/jquery.maskedinput.js" type="text/javascript"></script>
-<script src="js/jquery.maskMoney.js" type="text/javascript"></script>
+
 
 <!-- page script -->
 <script>
