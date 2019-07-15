@@ -141,7 +141,7 @@ $query = mysqli_query($con,$sql);
                                             $icon = "<i class='fa fa-plus'></i> Cadastrar";
                                         }
                                         break;
-                                    case 8: //exposição (feira)
+                                    case 8: //oficina
                                         $disabled = "";
                                         $oficina = recuperaDados("oficinas","atracao_id",$atracao['idAtracao']);
                                         if($oficina != NULL){
