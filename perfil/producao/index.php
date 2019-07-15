@@ -1,9 +1,9 @@
 <?php
-include "includes/menu.php";
+include "../perfil/producao/includes/menu.php";
 $con = bancoMysqli();
 
 $sql = "SELECT * FROM eventos WHERE evento_status_id >= 3 AND publicado = 1";
-$query = mysqli_query($con,$sql);
+$query = mysqli_query($con, $sql);
 $numEventos = mysqli_num_rows($query);
 ?>
 

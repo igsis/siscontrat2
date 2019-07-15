@@ -1,5 +1,5 @@
 <?php
-include "includes/menu_interno.php";
+include "../perfil/producao/includes/menu_interno.php";
 
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
@@ -8,7 +8,7 @@ unset($_SESSION['idPf']);
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-if(isset($_POST['excluir'])){
+if (isset($_POST['excluir'])) {
     $evento = $_POST['idEvent'];
     $stmt = $conn->prepare("UPDATE eventos SET publicado = 0 WHERE  id = :id");
     $stmt->execute(['id' => $evento]);
@@ -21,7 +21,7 @@ $sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status FROM
         INNER JOIN evento_status es on ev.evento_status_id = es.id
         WHERE publicado <> 0 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id = 3";
 
-$query = mysqli_query($con,$sql);
+$query = mysqli_query($con, $sql);
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -33,61 +33,60 @@ $query = mysqli_query($con,$sql);
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">Listagem</h3>
-                     </div>
+                    </div>
 
-            <div class="row" align="center">
-                <?php
-                    if(isset($mensagem)) {
-                        echo $mensagem;
-                    } ?>
-            </div>
+                    <div class="row" align="center">
+                        <?php
+                        if (isset($mensagem)) {
+                            echo $mensagem;
+                        } ?>
+                    </div>
 
-            <div class="box-body">
-                <table id="tblEvento" class="table table-bordered table-striped">
-                    <thead>
-                    <tr>
-                        <th>Nome do evento </th>
-                        <th>Tipo do evento</th>
-                        <th>Status</th>
-                        <th>Visualizar</th>
+                    <div class="box-body">
+                        <table id="tblEvento" class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Nome do evento</th>
+                                <th>Tipo do evento</th>
+                                <th>Status</th>
+                                <th>Visualizar</th>
 
-                    </tr>
-                    </thead>
-                    <?php
-                        echo"<tbody>";
-                        while($evento=mysqli_fetch_array($query)){
-                            echo "<tr>";
-                            echo "<td>" . $evento['nome_evento']. "</td>";
-                            echo "<td>" . $evento['tipo_evento']. "</td>";
-                            echo "<td>" . $evento['status']. "</td>";
-                            echo "<td>                               
+                            </tr>
+                            </thead>
+                            <?php
+                            echo "<tbody>";
+                            while ($evento = mysqli_fetch_array($query)) {
+                                echo "<tr>";
+                                echo "<td>" . $evento['nome_evento'] . "</td>";
+                                echo "<td>" . $evento['tipo_evento'] . "</td>";
+                                echo "<td>" . $evento['status'] . "</td>";
+                                echo "<td>                               
                             <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_evento' role='form'>
-                            <input type='hidden' name='idEvent' value='". $evento['idEvento'] ."'>
+                            <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
                             <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'> </span></button>
                             </form>
                             </td>";
 
-                            echo "</tr>";
-                        }
-                        echo"</tbody>";
-                        ?>
-                    <tfoot>
-                        <tr>
-                            <th>Nome do Evento</th>
-                            <th>Tipo do Evento</th>
-                            <th>Status</th>
+                                echo "</tr>";
+                            }
+                            echo "</tbody>";
+                            ?>
+                            <tfoot>
+                            <tr>
+                                <th>Nome do Evento</th>
+                                <th>Tipo do Evento</th>
+                                <th>Status</th>
 
-                        </tr>
-                    </tfoot>
+                            </tr>
+                            </tfoot>
 
 
-                </table>
+                        </table>
 
+                    </div>
+
+                </div>
             </div>
-
-            </div>
-        </div>
-
 
 
     </section>
