@@ -10,7 +10,8 @@
         <div class="box-group" id="accordionAtracao">
             <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
             <?php foreach ($atracoes as $atracao) {
-                $categoria = recuperaDados('categoria_atracoes', 'id', $atracao['categoria_atracao_id'])['categoria_atracao'];
+                $acaoId = recuperaDados('acao_atracao', 'atracao_id', $atracao['id'])['acao_id'];
+                $categoria = recuperaDados('acoes', 'id', $acaoId)['acao'];
                 $classificacao = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id'])['classificacao_indicativa'];
                 $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
             ?>
@@ -78,24 +79,24 @@
                                         <td><?=$produtor['observacao']?></td>
                                     </tr>
                                     <?php
-                                        /*@TODO: Passar este bloco para uma função*/
+/*                                        /*@TODO: Passar este bloco para uma função
                                         $especificidade = in_array_key($atracao['categoria_atracao_id'], $especificidades);
                                         if ($especificidade['bool']) {
                                             $dadosEspecificidade = recuperaDados($especificidade['especificidade'], 'atracao_id', $atracao['id']);
                                             if ($dadosEspecificidade != null) {
-                                            ?>
+                                            */?><!--
                                             <tr>
                                                 <th class="text-center bg-primary" colspan="2">Dados da Especificidade</th>
                                             </tr>
-                                            <?php foreach ($dadosEspecificidade as $campo => $dado) { ?>
+                                            < ?php /*foreach ($dadosEspecificidade as $campo => $dado) { */?>
                                                 <tr>
-                                                    <th width="30%"><?=$campo?>>:</th>
-                                                    <td><?=$dado?></td>
+                                                    <th width="30%">< ?/*=$campo*/?>>:</th>
+                                                    <td>< ?/*=$dado?></td>
                                                 </tr>
-                                            <?php }
+                                            < ?php }
                                             }
                                         }
-                                    ?>
+                                    ?> -->
                                 </table>
                             </div>
                         </div>

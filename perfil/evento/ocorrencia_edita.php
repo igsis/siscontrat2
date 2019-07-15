@@ -95,6 +95,7 @@ if (isset($_POST['cadastra'])) {
     } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
+        echo $sql;
     }
 
 }
