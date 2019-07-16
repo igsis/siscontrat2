@@ -29,6 +29,8 @@ $sqlEvento = "SELECT
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
+include "producao_validacoes.php";
+
 include "../perfil/producao/includes/menu_interno.php";
 ?>
 
@@ -110,12 +112,12 @@ include "../perfil/producao/includes/menu_interno.php";
                         </div>
 
                         <div class="tab-pane" id="ocorrencia">
-                            <?php include "../eventos/label_ocorrencia.php"; ?>
+                            <?php include "label_ocorrencia_producao.php"; ?>
                         </div>
 
                         <?php if ($evento['contratacao'] == 1) { ?>
                             <div class="tab-pane" id="pedido">
-                                <?php include "../evento/label_pedido.php"; ?>
+                                <?php include "label_pedido_producao.php"; ?>
                             </div>
                         <?php } else {
 
