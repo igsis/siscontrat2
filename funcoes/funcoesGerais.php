@@ -1328,6 +1328,61 @@ function in_array_r($needle, $haystack, $strict = false) {
     return false;
 }
 
+// PRECISA IMPLEMENTAR NO CODIGO E FAZER TESTES AINDA 
+// PROVAVELMENTE TERA QUE FAZER ALGUMA COISA EM RELAÇÃO AO ID INICIAL, PELO MENOS Q EU ESTAVA TESTANDO O ID 1 BUGA BOA PARTE DAS COISAS
+/*
+function geraCheckBox($tabela, $name, $tabelaRelacionamento, $colMd, $campo, $campoRequirido, $id = null){
+    $con = bancoMysqli();
+    $sqlConsulta = "SELECT * FROM $tabela WHERE publicado = 1 ORDER BY 2";
+    $dados = $con->query($sqlConsulta);
+
+	$sqlConsultaRelacionamento = "SELECT $campoRequirido FROM $tabelaRelacionamento WHERE $campo = $id";
+	echo $sqlConsultaRelacionamento;
+    $resRelacionamentos = $con->query($sqlConsultaRelacionamento);
+    $relacionamentos = ($resRelacionamentos) ? $resRelacionamentos->fetch_all(MYSQLI_ASSOC) : [];
+
+    while($checkbox = $dados->fetch_row()){
+        ?>
+        <div class="checkbox-grid-2 text-left <?= $colMd ?>">
+            <input type="checkbox" name="<?=$name?>[]" id="<?=$checkbox[1]?>" value="<?=$checkbox[0]?>"
+                <?=in_array_r($checkbox[0], $relacionamentos) ? "checked" : ""?>>
+            <label for="<?=$checkbox[1]?>"><?=$checkbox[1]?></label>
+        </div>
+        <?php
+    }
+}
+
+function atualizaDadosRelacionamento($tabela, $id, $post, $campo, $coluna){
+    $con = bancoMysqli();
+
+    $sqlConsultaRelacionamento = "SELECT * FROM $tabela WHERE $campo = $id";
+    $relacionamento = $con->query($sqlConsultaRelacionamento);
+
+    if($relacionamento->num_rows == 0) {
+        foreach ($post as $checkbox) {
+            $sqlInsertRelacionamento = "INSERT INTO $tabela ($campo, $coluna) VALUES ($id, $checkbox)";
+            $con->query($sqlInsertRelacionamento);
+        }
+    } else {
+        $relacionamentos = $relacionamento->fetch_all(MYSQLI_NUM);
+
+        foreach ($relacionamentos as $relacionamento) {
+			$valor = $relacionamento[1];
+            if (!(in_array_r($relacionamento[1], $post))) {
+                $sqlDeleteRelacionamento = "DELETE FROM $tabela WHERE $campo = $id AND $coluna = $valor";
+                $con->query($sqlDeleteRelacionamento);
+            }
+        }
+        foreach ($post as $checkbox) {
+            if (!(in_array_r($checkbox, $relacionamentos))) {
+                $sqlInsertRelacionamento = "INSERT INTO $tabela ($campo, $coluna) VALUES ($id, $checkbox)";
+                $con->query($sqlInsertRelacionamento);
+            }
+        }
+    }
+}
+*/
+
 function geraCheckboxEvento($tabela, $name, $tabelaRelacionamento, $idEvento = null) {
     $con = bancoMysqli();
     $sqlConsulta = "SELECT * FROM $tabela WHERE publicado = '1' ORDER BY 2";
