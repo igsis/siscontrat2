@@ -29,6 +29,7 @@ $sqlEvento = "SELECT
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
+
 include "producao_validacoes.php";
 
 include "../perfil/producao/includes/menu_interno.php";
@@ -126,8 +127,7 @@ include "../perfil/producao/includes/menu_interno.php";
                         <div class="box-footer">
                             <form action="?perfil=producao&p=eventos_producao" method="post">
                                 <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
-                                <input type="hidden" name="fora" value="<?= $fora ?? 0 ?>">
-                                <button type="submit" name="enviar" class="btn btn-success"> Enviar Eventos</button>
+                                <button type="submit" name="checar" class="btn btn-success"> Checar visualização</button>
                             </form>
                         </div>
 

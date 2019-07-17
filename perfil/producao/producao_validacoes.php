@@ -1,17 +1,19 @@
 <?php
+$con = bancoMysqli();
 
-$sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
-$pedidos = mysqli_query($con,$sqlPedidos);
+$pedidos = recuperaDados('pedidos', 'origem_id', $idEvento);
+echo "VAI DA O CU" . $pedidos['pessoa_tipo_id'];
 
 $sqlAtracoes = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
 $atracoes = mysqli_query($con, $sqlAtracoes);
 
 if($pedidos != null){
     while ($atracao = mysqli_fetch_array($atracoes)){
+
         $tipoPessoa = $pedidos['pessoa_tipo_id'];
 
-        if($pedidos['pessoa_tipo_id'] == 1){
-            $idPessoa = $pedidos['pessoa_fisica_id_id'];
+        if($tipoPessoa == 1){
+            $idPessoa = $pedidos['pessoa_fisica_id'];
             $pf = recuperaDados("pessoa_fisicas", "id", $idPessoa);
             $sqlArqs = "SELECT FROM arquivos WHERE lista_documento_id = 2 or lista_documento_id = 3";
             $queryArqs = mysqli_query($con, $sqlArqs);
@@ -77,7 +79,7 @@ if ($evento['tipo_evento_id'] == 1) {
             }
         }
 
-        $ocorrencias = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = 1");
+        $ocorrencias = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = 1");
         $ocorrenciasAssocs = $ocorrencias->fetch_assoc();
         $numOcorrencias = $ocorrencias->num_rows;
         if ($numOcorrencias == 0) {

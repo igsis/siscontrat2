@@ -70,8 +70,201 @@ switch ($pedido['pessoa_tipo_id']) {
         break;
 
     case 2:
+        $tipo = "Pessoa Jurídica";
+        $proponente = recuperaDados('pessoa_juridica', 'id', $pedido['pessoa_juridica_id']);
+        $endereco = recuperaDados('pj_enderecos', 'pessoa_juridica_id', $pedido['pessoa_juridica_id']);
+        $pjBancos = recuperaDados('pj_bancos', 'pessoa_juridica_id', $pedido['pessoa_juridica_id']);
+        $banco = recuperaDados('bancos', 'id', $pjBancos['banco_id'])['banco'];
+        $idRepresentante1 = $pedido['representante_legal1_id'] ?? "";
+        $idRepresentante2 = $pedido['representante_legal2_id'] ?? "";
+        $representante1 = recuperaDados('representante_legais', 'id', $idRepresentante1);
+        $representante2 = recuperaDados('representante_legais', 'id', $idRepresentante2);
 
+        $dadosPreponente = [
+            'Razão Social' => $proponente['razao_social'],
+            'CNPJ' => $proponente['cnpj'],
+            'CCM' => $proponente['ccm']
+        ];
+
+        $dadosEndereco = [
+            'CEP' => $endereco['cep'],
+            'Logradouro' => $endereco['logradouro'],
+            'Complemento' => $endereco['complemento'],
+            'Bairro' => $endereco['bairro'],
+            'Cidade' => $endereco['cidade'],
+            'Estado' => $endereco['uf']
+        ];
+
+        $dadosBancarios = [
+            'Banco' => $banco,
+            'Agência' => $pjBancos['agencia'],
+            'Conta' => $pjBancos['conta']
+        ];
+
+        $dadosRepresentante1 = [
+            'Nome' => $representante1['nome'],
+            'RG' => $representante1['rg'],
+            'CPF' => $representante1['cpf']
+        ];
+
+        $dadosRepresentante2 = [
+            'Nome' => $representante2['nome'],
+            'RG' => $representante2['rg'],
+            'CPF' => $representante2['cpf']
+        ];
+        break;
+
+    default:
+        $tipo = "";
+        $dadosPreponente = ["Não há Dados Cadastrados" => ""];
+        $dadosEndereco = ["Não há Dados Cadastrados" => ""];
+        $dadosBancarios = ["Não há Dados Cadastrados" => ""];
         break;
 }
 
+$parcelado = false;
 ?>
+
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title"> Dados do Pedido </h3>
+    </div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table class="table">
+                <?php
+                if ($dadosPedido != null) {
+                    foreach ($dadosPedido as $campo => $dado) { ?>
+                        <tr>
+                            <th width="40%"><?= $campo ?>:</th>
+                            <td><?= $dado ?></td>
+                        </tr>
+                        <?php
+                    }
+                }
+                ?>
+            </table>
+        </div>
+    </div>
+</div>
+
+<h2 class="page-header">Proponente
+    <small><?= $tipo ?></small>
+</h2>
+<div class="row">
+    <div class="col-md-6">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Dados do Preponente</h3>
+            </div>
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <?php foreach ($dadosPreponente as $campo => $dado) {
+                            if (($campo == "Passaporte") && ($dado == "")) {
+                                continue;
+                            } elseif (($campo == "CPF") && ($dado == "")) {
+                                continue;
+                            } ?>
+                            <tr>
+                                <th width="40%"><?= $campo ?></th>
+                                <td><?= $dado ?></td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <?php if ($pedido['pessoa_tipo_id'] == 2) { ?>
+            <div class="box-group" id="accordionRepresentante">
+                <div class="panel box box-primary">
+                    <div class="box-header with-border">
+                        <h4 class="box-title">
+                            <a data-toggle="collapse" data-parent="#accordionRepresentante"
+                               href="#collapseRepresentante1">
+                                Representante Legal #1
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseRepresentante1" class="panel-collapse collapse">
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <?php foreach ($dadosRepresentante1 as $campo => $dado) { ?>
+                                        <tr>
+                                            <th width="40%"><?= $campo ?>:</th>
+                                            <td><?= $dado ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel box box-primary">
+                    <div class="box-header with-border">
+                        <h4 class="box-title">
+                            <a data-toggle="collapse" data-parent="#accordionRepresentante"
+                               href="#collapseRepresentante2">
+                                Representante Legal #2
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseRepresentante2" class="panel-collapse collapse">
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <?php foreach ($dadosRepresentante2 as $campo => $dado) { ?>
+                                        <tr>
+                                            <th width="40%"><?= $campo ?>:</th>
+                                            <td><?= $dado ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Endereço do Preponente</h3>
+            </div>
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <?php foreach ($dadosEndereco as $campo => $dado) { ?>
+                            <tr>
+                                <th width="40%"><?= $campo ?>:</th>
+                                <td><?= $dado ?></td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"> Dados Bancarios</h3>
+            </div>
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <?php foreach ($dadosBancarios as $campo => $dado) { ?>
+                            <tr>
+                                <th width="40%"><?= $campo ?>:</th>
+                                <td><?= $dado ?></td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
