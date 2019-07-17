@@ -53,7 +53,7 @@ if(isset($_POST['edita'])){
     $sql_atracoes = "UPDATE atracoes SET nome_atracao = '$nome_atracao', ficha_tecnica = '$ficha_tecnica', integrantes = '$integrantes', classificacao_indicativa_id = '$classificacao_indicativa_id', release_comunicacao = '$release_comunicacao', links = '$links', quantidade_apresentacao = '$quantidade_apresentacao', valor_individual = '$valor_individual', oficina = '$oficina' WHERE id = '$idAtracao'";
     if(mysqli_query($con,$sql_atracoes)){
         if(isset($_POST['acao'])){
-            atualizaRelacionamentoAtracao('acao_atracao', $idAtracao, $_POST['acao']);
+            atualizaDadosRelacionamento('acao_atracao', $idAtracao, $_POST['acao'], 'atracao_id', 'acao_id');
         }
         $mensagem = mensagem("success","Atualizado com sucesso!");
     }
@@ -107,15 +107,17 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla escolha) </i></label>
-                                <button class='btn btn-default' type='button' data-toggle='modal' data-target='#modalAcoes' style="border-radius: 30px;">
-                                    <i class="fa fa-question-circle"></i></button>
-                                <?php
-                                geraCheckboxAtracao('acoes', 'acao', 'acao_atracao',$idAtracao);
-                                ?>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla escolha) </i></label>
+                                    <button class='btn btn-default' type='button' data-toggle='modal' data-target='#modalAcoes' style="border-radius: 30px;">
+                                        <i class="fa fa-question-circle"></i></button>
+                                    <?php
+                                    geraCheckBox('acoes', 'acao', 'acao_atracao', 'col-md-6', 'atracao_id', 'acao_id', $idAtracao);
+                                    ?>
+                                </div>
                             </div>
-
+                            
                             <div class="row ">
                                 <div class="form-group col-md-6">
                                     <label for="ficha_tecnica">Ficha técnica completa *</label><br/>

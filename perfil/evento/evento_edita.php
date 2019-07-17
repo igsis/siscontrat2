@@ -60,7 +60,7 @@ if (isset($_POST['cadastra'])) {
         }
 
         if(isset($_POST['publico'])){
-            atualizaRelacionamentoEvento('evento_publico', $idEvento, $_POST['publico']);
+            atualizaDadosRelacionamento('evento_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
         }
 
         $mensagem = mensagem("success","Cadastrado com sucesso!");
@@ -222,7 +222,7 @@ include "includes/menu_interno.php";
                                             data-target='#modalPublico' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('publicos', 'publico', 'evento_publico', $idEvento);
+                                        geraCheckBox('publicos', 'publico', 'evento_publico', 'col-md-6', 'evento_id', 'publico_id', $idEvento);
                                     ?>
                                 </div>
                             </div>

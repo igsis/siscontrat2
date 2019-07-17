@@ -35,15 +35,17 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla escolha) </i></label>
-                                <button class='btn btn-default' type='button' data-toggle='modal' data-target='#modalAcoes' style="border-radius: 30px;">
-                                    <i class="fa fa-question-circle"></i></button>
-                                <?php
-                                    geraCheckboxAtracao('acoes', 'acao', 'acao_atracao');
-                                ?>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla escolha) </i></label>
+                                    <button class='btn btn-default' type='button' data-toggle='modal' data-target='#modalAcoes' style="border-radius: 30px;">
+                                        <i class="fa fa-question-circle"></i></button>
+                                    <?php
+                                        geraCheckBox('acoes', 'acao', 'acao_atracao', 'col-md-6', 'atracao_id', 'acao_id', null);
+                                    ?>
+                                </div>
                             </div>
-
+                            
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="ficha_tecnica">Ficha técnica completa *</label><br/>

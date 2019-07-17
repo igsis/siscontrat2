@@ -1330,14 +1330,13 @@ function in_array_r($needle, $haystack, $strict = false) {
 
 // PRECISA IMPLEMENTAR NO CODIGO E FAZER TESTES AINDA 
 // PROVAVELMENTE TERA QUE FAZER ALGUMA COISA EM RELAÇÃO AO ID INICIAL, PELO MENOS Q EU ESTAVA TESTANDO O ID 1 BUGA BOA PARTE DAS COISAS
-/*
+
 function geraCheckBox($tabela, $name, $tabelaRelacionamento, $colMd, $campo, $campoRequirido, $id = null){
     $con = bancoMysqli();
     $sqlConsulta = "SELECT * FROM $tabela WHERE publicado = 1 ORDER BY 2";
     $dados = $con->query($sqlConsulta);
 
 	$sqlConsultaRelacionamento = "SELECT $campoRequirido FROM $tabelaRelacionamento WHERE $campo = $id";
-	echo $sqlConsultaRelacionamento;
     $resRelacionamentos = $con->query($sqlConsultaRelacionamento);
     $relacionamentos = ($resRelacionamentos) ? $resRelacionamentos->fetch_all(MYSQLI_ASSOC) : [];
 
@@ -1381,7 +1380,6 @@ function atualizaDadosRelacionamento($tabela, $id, $post, $campo, $coluna){
         }
     }
 }
-*/
 
 function geraCheckboxEvento($tabela, $name, $tabelaRelacionamento, $idEvento = null) {
     $con = bancoMysqli();

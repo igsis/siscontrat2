@@ -97,7 +97,7 @@ include "includes/menu_interno.php";
                                             data-target='#modalPublico' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('publicos', 'publico', 'evento_publico');
+                                        geraCheckBox('publicos', 'publico', 'evento_publico', 'col-md-6', 'evento_id', 'publico_id', null);
                                     ?>
                                 </div>
                             </div>
