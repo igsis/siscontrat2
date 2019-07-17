@@ -94,7 +94,7 @@ require "includes/menu_principal.php";
                                             data-target='#modalAcoes' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('acoes', 'acao', 'acao_evento');
+                                        geraCheckBox('acoes', 'acao', 'acao_agendao', 'col-md-6', 'evento_id', 'acao_id', null);
                                     ?>
                                 </div>
 
@@ -105,7 +105,7 @@ require "includes/menu_principal.php";
                                             data-target='#modalPublico' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('publicos', 'publico', 'evento_publico');
+                                        geraCheckBox('publicos', 'publico', 'evento_publico', 'col-md-6', 'evento_id', 'publico_id', null);
                                     ?>
                                 </div>
                             </div>

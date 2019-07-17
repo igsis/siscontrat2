@@ -35,11 +35,11 @@ if (isset($_POST['cadastra'])) {
         }
 
         if(isset($_POST['acao'])){
-            atualizaRelacionamentoEvento('acao_agendao', $idEvento, $_POST['acao']);
+            atualizaDadosRelacionamento('acao_agendao', $idEvento, $_POST['acao'], 'evento_id', 'acao_id');
         }
 
         if(isset($_POST['publico'])){
-            atualizaRelacionamentoEvento('agendao_publico', $idEvento, $_POST['publico']);
+            atualizaDadosRelacionamento('agendao_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
         }
 
         $mensagem = mensagem("success","Cadastrado com sucesso!");
@@ -81,10 +81,10 @@ if(isset($_POST['edita'])){
         mysqli_query($con, $sql);
 
         if(isset($_POST['acao'])){
-            atualizaRelacionamentoEvento('acao_agendao', $idEvento, $_POST['acao']);
+            atualizaDadosRelacionamento('acao_agendao', $idEvento, $_POST['acao'], 'evento_id', 'acao_id');
         }
         if(isset($_POST['publico'])){
-            atualizaRelacionamentoEvento('agendao_publico', $idEvento, $_POST['publico']);
+            atualizaDadosRelacionamento('agendao_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
         }
         //gravarLog($sql);
     }else{
@@ -199,7 +199,7 @@ include "includes/menu_interno.php";
                                             data-target='#modalAcoes' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('acoes', 'acao', 'acao_agendao', $evento['id']);
+                                        geraCheckBox('acoes', 'acao', 'acao_agendao', 'col-md-6', 'evento_id', 'acao_id', $evento['id']);
                                     ?>
                                 </div>
 
@@ -210,7 +210,7 @@ include "includes/menu_interno.php";
                                             data-target='#modalPublico' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
                                     <?php
-                                    geraCheckboxEvento('publicos', 'publico', 'agendao_publico', $evento['id']);
+                                        geraCheckBox('publicos', 'publico', 'evento_publico', 'col-md-6', 'evento_id', 'publico_id', $evento['id']);
                                     ?>
                                 </div>
                             </div>
