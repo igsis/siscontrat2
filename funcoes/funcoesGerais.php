@@ -1357,27 +1357,14 @@ function atualizaDadosRelacionamento($tabela, $id, $post, $campo, $coluna){
     $sqlConsultaRelacionamento = "SELECT * FROM $tabela WHERE $campo = $id";
     $relacionamento = $con->query($sqlConsultaRelacionamento);
 
-    if($relacionamento->num_rows == 0) {
-        foreach ($post as $checkbox) {
-            $sqlInsertRelacionamento = "INSERT INTO $tabela ($campo, $coluna) VALUES ($id, $checkbox)";
-            $con->query($sqlInsertRelacionamento);
-        }
-    } else {
-        $relacionamentos = $relacionamento->fetch_all(MYSQLI_NUM);
+    if($relacionamento->num_rows != 0) {
+        $sqlDelete = "DELETE FROM $tabela WHERE $campo = $id";
+        $con->query($sqlDelete);
+    }
 
-        foreach ($relacionamentos as $relacionamento) {
-			$valor = $relacionamento[1];
-            if (!(in_array_r($relacionamento[1], $post))) {
-                $sqlDeleteRelacionamento = "DELETE FROM $tabela WHERE $campo = $id AND $coluna = $valor";
-                $con->query($sqlDeleteRelacionamento);
-            }
-        }
-        foreach ($post as $checkbox) {
-            if (!(in_array_r($checkbox, $relacionamentos))) {
-                $sqlInsertRelacionamento = "INSERT INTO $tabela ($campo, $coluna) VALUES ($id, $checkbox)";
-                $con->query($sqlInsertRelacionamento);
-            }
-        }
+    foreach ($post as $checkbox) {
+        $sqlInsertRelacionamento = "INSERT INTO $tabela ($campo, $coluna) VALUES ($id, $checkbox)";
+        $con->query($sqlInsertRelacionamento);
     }
 }
 

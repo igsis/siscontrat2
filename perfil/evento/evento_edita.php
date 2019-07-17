@@ -113,7 +113,7 @@ if(isset($_POST['edita'])){
         mysqli_query($con, $sql);
 
         if(isset($_POST['publico'])){
-            atualizaRelacionamentoEvento('evento_publico', $idEvento, $_POST['publico']);
+            atualizaDadosRelacionamento('evento_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
         }
         //gravarLog($sql);
     }else{
