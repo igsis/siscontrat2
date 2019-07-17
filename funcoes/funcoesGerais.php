@@ -1367,23 +1367,3 @@ function atualizaDadosRelacionamento($tabela, $id, $post, $campo, $coluna){
         $con->query($sqlInsertRelacionamento);
     }
 }
-
-function geraCheckboxEvento($tabela, $name, $tabelaRelacionamento, $idEvento = null) {
-    $con = bancoMysqli();
-    $sqlConsulta = "SELECT * FROM $tabela WHERE publicado = '1' ORDER BY 2";
-    $dados = $con->query($sqlConsulta);
-
-    $sqlConsultaRelacionamento = "SELECT * FROM $tabelaRelacionamento WHERE evento_id = $idEvento";
-    $resRelacionamentos = $con->query($sqlConsultaRelacionamento);
-    $relacionamentos = ($resRelacionamentos) ? $resRelacionamentos->fetch_all(MYSQLI_ASSOC) : [];
-
-    while ($checkbox = $dados->fetch_row()) {
-        ?>
-        <div class="checkbox-grid-2 text-left">
-            <input type="checkbox" name="<?=$name?>[]" id="<?=$checkbox[1]?>" value="<?=$checkbox[0]?>"
-                <?=in_array_r($checkbox[0], $relacionamentos) ? "checked" : ""?>>
-            <label for="<?=$checkbox[1]?>"><?=$checkbox[1]?></label>
-        </div>
-        <?php
-    }
-}
