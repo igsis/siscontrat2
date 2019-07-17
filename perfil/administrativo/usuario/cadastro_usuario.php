@@ -69,7 +69,7 @@
                                     <label for="acao">Verbas * <i>(multipla escolha) </i></label>
                                     <br>
                                     <?php
-                                        geraCheckBoxVerba('verbas', 'verba', 'usuario_verbas');
+                                        geraCheckBox('verbas', 'verba', 'usuario_verbas', 'col-md-6', 'usuario_id', 'verba_id', $idUsuario);
                                     ?>
                                 </div>
                             </div>

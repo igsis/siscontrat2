@@ -27,7 +27,7 @@ if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
             $idUsuario = recuperaUltimo('usuarios');
 
             if(isset($_POST['verba'])){
-                atualizaRelacionamentoVerbas('usuario_verbas', $idUsuario, $_POST['verba']);
+                atualizaDadosRelacionamento('usuario_verbas', $idUsuario, $_POST['verba'], 'usuario_id', 'verba_id');
             }
         } else {
             $mensagem = mensagem("danger", "Erro no cadastro de usuário! Tente novamente.");
@@ -45,7 +45,7 @@ if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
             $mensagem = mensagem("success", "Usuário editado com sucesso!");
 
             if(isset($_POST['verba'])){
-                atualizaRelacionamentoVerbas('usuario_verbas', $idUsuario, $_POST['verba']);
+                atualizaDadosRelacionamento('usuario_verbas', $idUsuario, $_POST['verba'], 'usuario_id', 'verba_id');
             }
         }else{
             $mensagem = mensagem("danger", "Erro ao salvar o usuário! Tente novamente.");
@@ -132,7 +132,7 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
                                     <label for="acao">Verbas * <i>(multipla escolha) </i></label>
                                     <br>
                                     <?php
-                                    geraCheckBoxVerba('verbas', 'verba', 'usuario_verbas', $idUsuario);
+                                    geraCheckBox('verbas', 'verba', 'usuario_verbas', 'col-md-6', 'usuario_id', 'verba_id', $idUsuario);
                                     ?>
                                 </div>
                             </div>

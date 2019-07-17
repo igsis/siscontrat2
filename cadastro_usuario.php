@@ -43,7 +43,7 @@ if (isset($_POST['cadastra'])) {
                 $usuarioNovo = recuperaUltimo('usuarios');
 
                 if(isset($_POST['verba'])){
-                    atualizaRelacionamentoVerbas('usuario_verbas', $usuarioNovo, $_POST['verba']);
+                    atualizaDadosRelacionamento('usuario_verbas', $usuarioNovo, $_POST['verba'], 'usuario_id', 'verba_id');
                 }
                 $mensagem = mensagem("success", "Usuário cadastrado com sucesso! Você está sendo redirecionado para a tela de login.");
                 echo "<script type=\"text/javascript\">
@@ -159,7 +159,7 @@ if (isset($_POST['cadastra'])) {
                                     <label for="acao">Verbas * <i>(multipla escolha) </i></label>
                                     <br>
                                     <?php
-                                    geraCheckBoxVerba('verbas', 'verba', 'usuario_verbas');
+                                        geraCheckBox('verbas', 'verba', 'usuario_verbas', 'col-md-6', 'usuario_id', 'verba_id', null);
                                     ?>
                                 </div>
                             </div>
