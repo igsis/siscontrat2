@@ -492,7 +492,7 @@ if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total
                                     if ($numRowsEquipamento == 0) {
                                         ?>
                                         <tr>
-                                            <td width="100%" class="text-center">Não existe equipamentos cadastrados
+                                            <td width="100%" class="text-center" colspan="2">Não existe equipamentos cadastrados
                                             </td>
                                         </tr>
                                         <?php
@@ -521,7 +521,7 @@ if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total
                                     }
                                     ?>
                                     <tr>
-                                        <td width="50%">Valor Total: R$ <?= $pedido['valor_total'] ?></td>
+                                        <td width="50%">Valor Total: R$ <?= dinheiroParaBr($pedido['valor_total']) ?></td>
                                         <td width="50%">Valor Faltante: R$ <span id="valorFaltante"></span></td>
                                     </tr>
                                     </tbody>
