@@ -3,8 +3,8 @@
  * Conteúdo da label "#pedido" do arquivo "vizualizacao_evento.php"
  */
 
-$pedido = $con->query("SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' publicado = '1'");
-$verba = recuperaDados('verbas', 'id', $pedido['verba_id']) ['verba'];
+$pedido = $con->query("SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'")->fetch_assoc();
+$verba = recuperaDados('verbas', 'id', $pedido['verba_id'])['verba'];
 
 if ($pedido != null) {
     $dadosPedido = [
@@ -33,13 +33,13 @@ if ($pedido != null) {
 switch ($pedido['pessoa_tipo_id']) {
     case 1:
         $tipo = "Pessoa Física";
-        $sqlTelefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '" . $pedido['pessoa_fisica_id'] . "' AND publicado = '1'";
+        $sqlTelefones = "SELECT telefone FROM pf_telefones WHERE pessoa_fisica_id = '" . $pedido['pessoa_fisica_id'] . "' AND publicado = '1'";
         $telefones = $con->query($sqlTelefones)->fetch_all();
         $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
         $nacionalidade = recuperaDados('nacionalidades', 'id', $proponente['nacionalidade_id'])['nacionalidade'];
         $endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $pedido['pessoa_fisica_id']);
         $pfBancos = recuperaDados('pf_bancos', 'pessoa_fisica_id', $pedido['pessoa_fisica_id']);
-        $banco = recuperaDados('bancos', 'id', $pedido['banco_id']) ['banco'];
+        $banco = recuperaDados('bancos', 'id', $pfBancos['banco_id'])['banco'];
         $dadosPreponente = [
             'Nome' => $proponente['nome'],
             'Nome Artístico' => $proponente['nome_artistico'],
@@ -50,9 +50,9 @@ switch ($pedido['pessoa_tipo_id']) {
             'CCM' => $proponente['ccm'],
             'Data de Nascimento' => exibirDataBr($proponente['data_nascimento']),
             'E-Mail' => $proponente['email'],
-            'Telfone #1' => $telefones [0] [0] ?? "Não Cadastrado",
-            'Telfone #2' => $telefones [1] [0] ?? "Não Cadastrado",
-            'Telfone #3' => $telefones [2] [0] ?? null,
+            'Telfone #1' => $telefones[0][0] ?? "Não Cadastrado",
+            'Telfone #2' => $telefones[1][0] ?? "Não Cadastrado",
+            'Telfone #3' => $telefones[2][0] ?? "Não Cadastrado",
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],

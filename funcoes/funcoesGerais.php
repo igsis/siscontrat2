@@ -1218,7 +1218,7 @@ function retornaPeriodoNovo($id)
 {
     //retorna o período
     $con = bancoMysqli();
-    $sql_virada = "SELECT DISTINCT oco.local_id FROM ocorrencias oco INNER JOIN atracoes atr ON atr.id = oco.origem_ocorrencia_id WHERE atr.evento_id = '$id' AND oco.publicado = '1' AND virada = '1' ";
+    $sql_virada = "SELECT DISTINCT oco.local_id FROM ocorrencias oco INNER JOIN eventos e ON e.id = oco.origem_ocorrencia_id WHERE e.id = '$id' AND oco.publicado = '1' AND oco.virada = '1' ";
     $query_virada = mysqli_query($con,$sql_virada);
     $num = mysqli_num_rows($query_virada);
     if($num > 0)
@@ -1226,7 +1226,7 @@ function retornaPeriodoNovo($id)
         $sql_anterior = "SELECT * FROM ocorrencias oco INNER JOIN atracoes atr ON atr.id = oco.origem_ocorrencia_id WHERE atr.evento_id = '$id' AND oco.publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1"; //a data inicial mais antecedente
         $query_anterior = mysqli_query($con,$sql_anterior);
         $data = mysqli_fetch_array($query_anterior);
-        $data_inicio = $data['dataInicio'] ?? null;
+        $data_inicio = $data['dataInicio'];
         $sql_posterior01 = "SELECT * FROM ocorrencias oco INNER JOIN atracoes atr ON atr.id = oco.origem_ocorrencia_id WHERE atr.evento_id = '$id' AND oco.publicado = '1' ORDER BY data_fim DESC LIMIT 0,1"; //quando existe data final
         $sql_posterior02 = "SELECT * FROM ocorrencias oco INNER JOIN atracoes atr ON atr.id = oco.origem_ocorrencia_id WHERE atr.evento_id = '$id' AND oco.publicado = '1' ORDER BY data_inicio DESC LIMIT 0,1"; //quando há muitas datas únicas
         $query_anterior01 = mysqli_query($con,$sql_posterior01);

@@ -5,24 +5,20 @@ unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
 
+$idUser = $_SESSION['idUser'];
+
 $con = bancoMysqli();
 $conn = bancoPDO();
 
 if (isset($_POST['checar'])) {
     $idEvento = $_POST['idEvento'];
-    $sqlPedido = "UPDATE eventos SET publicado = 2 WHERE id = '$idEvento'";
+    $sqlPedido = "UPDATE eventos SET visualizao = 1 WHERE id = '$idEvento'";
     if (mysqli_query($con, $sqlPedido)) {
-        $mensagem = mensagem("success", "Evento marcado como checado!");
+        $mensagem = mensagem("success", "Evento marcado como visualizado!");
     }
 }
 
-$idUser = $_SESSION['idUser'];
-$sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status FROM eventos AS ev
-        INNER JOIN tipo_eventos AS te on ev.tipo_evento_id = te.id
-        INNER JOIN evento_status es on ev.evento_status_id = es.id
-        WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id = 3";
-
-$query = mysqli_query($con, $sql);
+$sqlEvento = "SELECT * FROM eventos WHERE publicado = 1 AND evento_status_id = 3";
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -47,23 +43,24 @@ $query = mysqli_query($con, $sql);
                         <table id="tblEvento" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>Nome do evento</th>
-                                <th>Tipo do evento</th>
-                                <th>Status</th>
+                                <th>Protocolo</th>
+                                <th>Nome do Evento</th>
+                                <th>Periodo</th>
                                 <th>Visualizar</th>
 
                             </tr>
                             </thead>
                             <?php
                             echo "<tbody>";
+                            $query = mysqli_query($con, $sqlEvento);
                             while ($evento = mysqli_fetch_array($query)) {
                                 echo "<tr>";
+                                echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
-                                echo "<td>" . $evento['tipo_evento'] . "</td>";
-                                echo "<td>" . $evento['status'] . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($evento['id']) . "</td>";
                                 echo "<td>                               
                             <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_evento' role='form'>
-                            <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
+                            <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>
                             <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'> </span></button>
                             </form>
                             </td>";
@@ -74,10 +71,10 @@ $query = mysqli_query($con, $sql);
                             ?>
                             <tfoot>
                             <tr>
+                                <th>Protocolo</th>
                                 <th>Nome do Evento</th>
-                                <th>Tipo do Evento</th>
-                                <th>Status</th>
-
+                                <th>Periodo</th>
+                                <th>Visualizar</th>
                             </tr>
                             </tfoot>
 

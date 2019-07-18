@@ -29,9 +29,6 @@ $sqlEvento = "SELECT
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
-
-include "producao_validacoes.php";
-
 include "../perfil/producao/includes/menu_interno.php";
 ?>
 
@@ -101,44 +98,40 @@ include "../perfil/producao/includes/menu_interno.php";
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="atracao"
-                            ">
-                            <?php if ($numAtracoes == 0) { ?>
-                                <div class="alert alert-danger">
-                                    <h4><i class="icon fa fa-ban">Não há atrações cadastradas </i></h4>
+                            <div class="tab-pane" id="atracao">
+                                <?php
+                                    include "includes/label_atracao_filme.php"
+                                ?>
+                            </div>
+
+                            <div class="tab-pane" id="ocorrencia">
+                                <?php include "includes/label_ocorrencia_producao.php"; ?>
+                            </div>
+
+                            <?php if ($evento['contratacao'] == 1) { ?>
+                                <div class="tab-pane" id="pedido">
+                                    <?php include "includes/label_pedido_producao.php"; ?>
                                 </div>
                             <?php } else {
-                                include "../evento/label_atracao_filme.php";
+
                             } ?>
-                        </div>
 
-                        <div class="tab-pane" id="ocorrencia">
-                            <?php include "label_ocorrencia_producao.php"; ?>
-                        </div>
-
-                        <?php if ($evento['contratacao'] == 1) { ?>
-                            <div class="tab-pane" id="pedido">
-                                <?php include "label_pedido_producao.php"; ?>
+                            <div class="box-footer">
+                                <form action="?perfil=producao&p=eventos_producao" method="post">
+                                    <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
+                                    <button type="submit" name="checar" class="btn btn-success"> Checar visualização
+                                    </button>
+                                </form>
                             </div>
-                        <?php } else {
 
-                        } ?>
-
-                        <div class="box-footer">
-                            <form action="?perfil=producao&p=eventos_producao" method="post">
-                                <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
-                                <button type="submit" name="checar" class="btn btn-success"> Checar visualização</button>
-                            </form>
                         </div>
+
 
                     </div>
-
-
                 </div>
             </div>
         </div>
-</div>
-</section>
+    </section>
 </div>
 
 

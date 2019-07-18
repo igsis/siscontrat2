@@ -56,7 +56,7 @@ switch ($pedido['pessoa_tipo_id']) {
             'E-mail' => $proponente['email'],
             'Telefone #1' => $telefones[0][0] ?? "Não Cadastrado",
             'Telefone #2' => $telefones[1][0] ?? "Não Cadastrado",
-            'Telefone #3' => $telefones[2][0] ?? null,
+            'Telefone #3' => $telefones[2][0] ?? "Não Cadastrado",
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],

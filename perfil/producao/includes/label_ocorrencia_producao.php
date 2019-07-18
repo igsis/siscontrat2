@@ -9,7 +9,7 @@
         <div class="box-group" id="accordionOcorrencia">
             <?php
             foreach ($atracoes as $atracao) {
-                $sqlOcorrencias = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '" . $atracao['id'] . "' AND publicado = 1";
+                $sqlOcorrencias = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = 1";
                 $ocorrencias = $con->query($sqlOcorrencias);
                 ?>
                 <div class="panel box box-primary">
