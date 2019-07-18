@@ -12,7 +12,7 @@ if (isset($_POST['enviar'])) {
     $fora = $_POST['fora'];
     if ($fora == 1) {
         $sqlPedido = "UPDATE pedidos SET status_pedido_id = 1 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
-        if (mysqli_query($con, $sqlPedido)){
+        if (mysqli_query($con, $sqlPedido)) {
             $mensagemPedido = mensagem("warning", "Seu pedido está aguardando aprovação!");
         }
     } else {
@@ -54,12 +54,17 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publica
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><strong><?= $evento['nome_evento']; ?></strong></h3><hr>
+                        <h3 class="box-title"><strong><?= $evento['nome_evento']; ?></strong></h3>
+                        <hr>
                         <div class="row" align="center">
-                            <?php if(isset($mensagem)){echo $mensagem;};?>
+                            <?php if (isset($mensagem)) {
+                                echo $mensagem;
+                            }; ?>
                         </div>
                         <div class="row" align="center">
-                            <?php if(isset($mensagemPedido)){echo $mensagemPedido;};?>
+                            <?php if (isset($mensagemPedido)) {
+                                echo $mensagemPedido;
+                            }; ?>
                         </div>
                         <div class="box-body">
                             <div class="box-group" id="accordion">
@@ -67,7 +72,8 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publica
                                     <div class="box-body">
                                         <div class="form-group col-md-12">
                                             <div align="center">
-                                                <h3>Informações sobre o evento</h3><hr>
+                                                <h3>Informações sobre o evento</h3>
+                                                <hr>
                                             </div>
                                             <strong>Protocolo: </strong><?= $evento['protocolo'] ?>
                                         </div>
@@ -121,144 +127,169 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publica
                                         $query_atracao = mysqli_query($con, $sql_atracao);
                                         while ($atracao = mysqli_fetch_array($query_atracao)) {
 
-                                        $categoria_atracao = recuperaDados('categoria_atracoes', 'id', $atracao['categoria_atracao_id']);
-                                        $classificacao_indicativa = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
+                                            $classificacao_indicativa = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
 
-                                        $idAtracao = $atracao['id'];
-                                        $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = 1";
+                                            $idAtracao = $atracao['id'];
+                                            $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = 1";
 
-                                        ?>
-                                        <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                                        <div class="form-group col-md-12">
-                                            <div align="center">
-                                                <h3>Informações sobre a atração</h3>
-                                                <hr>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Nome da atração: </strong><?= $atracao['nome_atracao']; ?>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <strong>Categoria da
-                                                atração: </strong><?= $categoria_atracao['categoria_atracao']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Ficha técnica: </strong><?= $atracao['ficha_tecnica']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Integrantes: </strong><?= $atracao['integrantes']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Classificação
-                                                Indicativa: </strong><?= $classificacao_indicativa['classificacao_indicativa']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Quantidade de
-                                                Apresentação: </strong><?= $atracao['quantidade_apresentacao']; ?>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <strong>Release: </strong><?= $atracao['release_comunicacao']; ?>
-                                        </div>
-                                        <?php
-                                        if ($atracao['links'] != NULL) {
                                             ?>
-                                            <div class="form-group col-md-12">
-                                                <strong>Links: </strong><?= $atracao['links']; ?>
-                                            </div>
-                                        <?php } ?>
-
-                                        <?php
-                                        if ($atracao['valor_individual'] != NULL) {
-                                            ?>
-                                            <p>Valor
-                                                individual: <?= dinheiroParaBr($atracao['valor_individual']); ?></p>
-                                        <?php }
-
-                                        if ($atracao['produtor_id'] != NULL) {
-                                            $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
-                                            ?>
+                                            <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                                             <div class="form-group col-md-12">
                                                 <div align="center">
-                                                    <h3>Informações sobre a produção</h3>
+                                                    <h3>Informações sobre a atração</h3>
                                                     <hr>
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-12">
-                                                <strong>Nome Produtor: </strong><?= $produtor['nome']; ?>
+                                                <strong>Nome da atração: </strong><?= $atracao['nome_atracao']; ?>
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <strong>Email do Produtor: </strong><?= $produtor['email']; ?>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <strong>Telefone 1: </strong><?= $produtor['telefone1']; ?>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <strong>Telefone 2: </strong><?= $produtor['telefone2']; ?>
-                                            </div>
-                                            <hr>
-                                            <div class="form-group col-md-12">
-                                                <strong>Observação:</strong><?= $produtor['observacao']; ?>
-                                            </div>
-                                        <?php } ?>
-                            <?php
-                            $query_ocorrencia = mysqli_query($con, $sql_ocorrencia);
-                            while ($ocorrencia = mysqli_fetch_array($query_ocorrencia)) {
 
-                            $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
-                            $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
-
-                            ?>
-
-
-                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-
-
-                                        <div class="form-group col-md-12">
-                                            <div align="center">
-                                                <h3>Ocorrências</h3><hr>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Local: </strong><?= $local['local']; ?>
-                                        </div>
-                                        <?php
-                                        if ($ocorrencia['horario_inicio'] != NULL) {
-                                            ?>
                                             <div class="form-group col-md-12">
-                                                <strong>Horário
-                                                    Inicial: </strong><?= exibirHora($ocorrencia['horario_inicio']); ?>
-                                            </div>
-                                        <?php } ?>
-                                        <?php
-                                        if ($ocorrencia['horario_fim'] != NULL) {
-                                            ?>
-                                            <div class="form-group col-md-12">
-                                                <strong>Horário
-                                                    Final: </strong><?= exibirHora($ocorrencia['horario_fim']); ?>
-                                            </div>
-                                        <?php } ?>
-                                        <div class="form-group col-md-12">
-                                            <strong>Retirada de
-                                                Ingresso:</strong> <?= $retirada_ingresso['retirada_ingresso'] ?>
-                                        </div>
-                                        <?php
-                                        if ($ocorrencia['virada'] != NULL) {
-                                            ?>
-                                            <div class="form-group col-md-12">
-                                                <strong>Virada:</strong> <?= $ocorrencia['virada']; ?>
-                                            </div>
-                                        <?php } ?>
-                                        <?php
-                                        if ($ocorrencia['publicado'] != NULL) {
-                                            ?>
-                                            <div class="form-group col-md-12">
-                                                <strong>Publicado:</strong> <?= $ocorrencia['publicado']; ?>
-                                            </div>
-                                        <?php } ?>
+                                                <strong>Ação: </strong>
+                                                <?php
 
-                                        <?php }
+                                                $sqlAcao = "SELECT a.acao FROM acao_atracao at INNER JOIN acoes a on at.acao_id = a.id WHERE atracao_id = '$idAtracao'";
+                                                $queryAcao = mysqli_query($con, $sqlAcao);
+
+                                                $acaoArray[] = '';
+
+                                                while ($acao = mysqli_fetch_array($queryAcao)) {
+                                                    echo $acao['acao'] . '; ';
+                                                }
+                                                ?>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <strong>Ficha técnica: </strong><?= $atracao['ficha_tecnica']; ?>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <strong>Integrantes: </strong><?= $atracao['integrantes']; ?>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <strong>Classificação
+                                                    Indicativa: </strong><?= $classificacao_indicativa['classificacao_indicativa']; ?>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <strong>Quantidade de
+                                                    Apresentação: </strong><?= $atracao['quantidade_apresentacao']; ?>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <strong>Release: </strong><?= $atracao['release_comunicacao']; ?>
+                                            </div>
+                                            <?php
+                                            if ($atracao['links'] != NULL) {
+                                                ?>
+                                                <div class="form-group col-md-12">
+                                                    <strong>Links: </strong><?= $atracao['links']; ?>
+                                                </div>
+                                            <?php } ?>
+
+                                            <?php
+                                            if ($atracao['valor_individual'] != NULL) {
+                                                ?>
+                                                <div class="form-group col-md-12">
+                                                    <strong> Valor
+                                                        individual: </strong>
+                                                    R$ <?= dinheiroParaBr($atracao['valor_individual']); ?>
+                                                </div>
+                                            <?php }
+
+                                            if ($atracao['produtor_id'] != NULL) {
+                                                $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
+                                                ?>
+                                                <div class="form-group col-md-12">
+                                                    <div align="center">
+                                                        <h3>Informações sobre a produção</h3>
+                                                        <hr>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <strong>Nome Produtor: </strong><?= $produtor['nome']; ?>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <strong>Email do Produtor: </strong><?= $produtor['email']; ?>
+                                                </div>
+                                                <?php
+                                                if ($produtor['telefone1'] != '') {
+                                                    ?>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Telefone 1: </strong><?= $produtor['telefone1']; ?>
+                                                    </div>
+                                                    <?php
+                                                }
+                                                ?>
+                                                <?php
+                                                if ($produtor['telefone2'] != '') {
+                                                    ?>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Telefone 2: </strong><?= $produtor['telefone2']; ?>
+                                                    </div>
+                                                    <?php
+                                                }
+                                                ?>
+                                                <hr>
+                                                <div class="form-group col-md-12">
+                                                    <strong>Observação:</strong><?= $produtor['observacao']; ?>
+                                                </div>
+                                            <?php } ?>
+                                            <?php
+                                            $query_ocorrencia = mysqli_query($con, $sql_ocorrencia);
+                                            while ($ocorrencia = mysqli_fetch_array($query_ocorrencia)) {
+
+                                                $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
+                                                $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
+
+                                                ?>
+
+
+                                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+
+
+                                                <div class="form-group col-md-12">
+                                                    <div align="center">
+                                                        <h3>Ocorrências</h3>
+                                                        <hr>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <strong>Local: </strong><?= $local['local']; ?>
+                                                </div>
+                                                <?php
+                                                if ($ocorrencia['horario_inicio'] != NULL) {
+                                                    ?>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Horário
+                                                            Inicial: </strong><?= exibirHora($ocorrencia['horario_inicio']); ?>
+                                                    </div>
+                                                <?php } ?>
+                                                <?php
+                                                if ($ocorrencia['horario_fim'] != NULL) {
+                                                    ?>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Horário
+                                                            Final: </strong><?= exibirHora($ocorrencia['horario_fim']); ?>
+                                                    </div>
+                                                <?php } ?>
+                                                <div class="form-group col-md-12">
+                                                    <strong>Retirada de
+                                                        Ingresso:</strong> <?= $retirada_ingresso['retirada_ingresso'] ?>
+                                                </div>
+                                                <?php
+                                                if ($ocorrencia['virada'] != NULL) {
+                                                    ?>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Virada:</strong> <?= $ocorrencia['virada']; ?>
+                                                    </div>
+                                                <?php } ?>
+                                                <?php
+                                                if ($ocorrencia['publicado'] != NULL) {
+                                                    ?>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Publicado:</strong> <?= $ocorrencia['publicado']; ?>
+                                                    </div>
+                                                <?php } ?>
+
+                                            <?php }
                                         }
 
                                         ?>
@@ -266,22 +297,22 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publica
                                             <a href="?perfil=evento">
                                                 <button type="button" class="btn btn-default">Voltar</button>
                                             </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- /.box-body -->
+
+                <!-- /.box -->
             </div>
-            <!-- /.box-body -->
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        <!-- END ACCORDION & CAROUSEL-->
 
-        <!-- /.box -->
-</div>
-<!-- /.col -->
-</div>
-<!-- /.row -->
-<!-- END ACCORDION & CAROUSEL-->
-
-</section>
-<!-- /.content -->
+    </section>
+    <!-- /.content -->
 </div>

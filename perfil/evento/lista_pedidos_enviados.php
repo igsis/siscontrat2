@@ -76,9 +76,7 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $proponente . "</td>";
                                 echo "<td>";
-                                    while ($atracao = mysqli_fetch_array($query_atracao)){
-                                         echo $atracao['categoria_atracao'] . " - " . $evento['nome_evento'] . " ";
-                                    }
+                                    echo $evento['nome_evento'];
                                 echo "</td>";
                                 echo "<td>" . $locais. "</td>";
                                 echo "<td>" . dinheiroParaBr($evento['valor_total']) . "</td>";

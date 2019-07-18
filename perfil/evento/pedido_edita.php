@@ -185,9 +185,6 @@ if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total
         echo $sqlUpdate;
     }
 }
-
-
-
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
