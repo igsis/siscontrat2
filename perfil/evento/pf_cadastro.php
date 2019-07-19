@@ -38,7 +38,7 @@ if($evento['tipo_evento_id'] == 1){
     $mostraDRT = false;
 }
 
-$sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'";
+$sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
 $atracao = mysqli_query($con,$sql);
 ?>
 

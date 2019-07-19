@@ -1,15 +1,21 @@
 <?php
 $con = bancoMysqli();
 
-$evento = recuperaDados('eventos', 'id', $_SESSION['idEvento']);
+$idEvento = $_SESSION['idEvento'];
+
+$evento = recuperaDados('eventos', 'id', $idEvento);
 $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.php';
 
 include "includes/menu_interno.php";
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
+    // origem_ocorrencia_id = idEvento
+    // atracao_id = idAtracao/idOrigem
+
     $tipo_evento_id = $evento['tipo_evento_id'];
-    $origem_ocorrencia_id = $_POST['idOrigem'] ?? NULL;
+    $origem_ocorrencia_id = $idEvento;
+    $atracao_id = $_POST['idOrigem'];
     $instituicao_id = $_POST['instituicao'];
     $local_id = $_POST['local'];
     $espaco_id = $_POST['espaco'] ?? NULL;
@@ -40,6 +46,7 @@ if (isset($_POST['cadastra'])) {
 
     $sql = "INSERT INTO ocorrencias (tipo_ocorrencia_id,
                                  origem_ocorrencia_id,
+                                 atracao_id,
                                  instituicao_id, 
                                  local_id,
                                  espaco_id,
@@ -64,6 +71,7 @@ if (isset($_POST['cadastra'])) {
                                  audiodescricao)
                           VALUES ('$tipo_evento_id',
                                   '$origem_ocorrencia_id',
+                                  '$atracao_id',
                                   '$instituicao_id',
                                   '$local_id',
                                   '$espaco_id',

@@ -130,7 +130,7 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publica
                                             $classificacao_indicativa = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
 
                                             $idAtracao = $atracao['id'];
-                                            $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = 1";
+                                            $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = 1";
 
                                             ?>
                                             <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
@@ -278,17 +278,9 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publica
                                                 if ($ocorrencia['virada'] != NULL) {
                                                     ?>
                                                     <div class="form-group col-md-12">
-                                                        <strong>Virada:</strong> <?= $ocorrencia['virada']; ?>
+                                                        <strong>Virada:</strong> <?= $ocorrencia['virada'] = 1 ? "Sim" : "Não"; ?>
                                                     </div>
                                                 <?php } ?>
-                                                <?php
-                                                if ($ocorrencia['publicado'] != NULL) {
-                                                    ?>
-                                                    <div class="form-group col-md-12">
-                                                        <strong>Publicado:</strong> <?= $ocorrencia['publicado']; ?>
-                                                    </div>
-                                                <?php } ?>
-
                                             <?php }
                                         }
 

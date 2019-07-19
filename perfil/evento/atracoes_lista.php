@@ -13,6 +13,8 @@ if(isset($_POST['apagar'])){
 
     if($query = mysqli_query($con,$consulta)){
         $mensagem = mensagem("success","Atração apagada com sucesso");
+        $deletaOcorrenciasAtracao = "UPDATE ocorrencias SET publicado = 0 WHERE atracao_id = '$idAtracao'";
+        mysqli_query($con, $deletaOcorrenciasAtracao);
     }else{
         $mensagem = mensagem("danger","Erro ao tentar executar operação na atração");
     }
@@ -90,7 +92,7 @@ $query = mysqli_query($con,$sql);
                                 /*
                                  * Especificidades
                                  */
-                                $acoes = recuperaDados("acao_atracao","atracao_id",$atracao['idAtracao']);
+                                $acoes = recuperaDados("acao_atracao","atracao_id", $atracao['idAtracao']);
                                 $idAcao = $acoes['acao_id'];
                                 switch ($idAcao){
                                     case 11: //teatro

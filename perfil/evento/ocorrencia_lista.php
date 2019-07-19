@@ -4,6 +4,8 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
 
+$idEvento = $_SESSION['idEvento'];
+
 if(isset($_POST['apagar'])){
 
     $idOcorrencia = $_POST['idOcorrenciaApaga'];
@@ -51,7 +53,7 @@ if(isset($_POST['duplicar'])){
 
 }
 
-$evento = recuperaDados('eventos', 'id', $_SESSION['idEvento']);
+$evento = recuperaDados('eventos', 'id', $idEvento);
 
 $tipo_ocorrencia_id = $evento['tipo_evento_id'];
 
@@ -65,10 +67,10 @@ if(isset($_POST['carregar'])){
     $idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
 }
 
-$sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim 
+$sql = "SELECT o.id, o.atracao_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim 
         FROM ocorrencias as o
         INNER JOIN  locais as l ON o.local_id = l.id
-        WHERE o.origem_ocorrencia_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id' AND o.publicado = 1
+        WHERE o.atracao_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id' AND o.publicado = 1
         ORDER BY local, data_inicio, horario_inicio, horario_fim";
 
 $query = mysqli_query($con,$sql);

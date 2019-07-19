@@ -10,7 +10,7 @@
         <div class="box-group" id="accordionOcorrencia">
             <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
             <?php foreach ($atracoes as $atracao) {
-                $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '".$atracao['id']."' AND publicado = '1'";
+                $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE atracao_id = '".$atracao['id']."' AND publicado = '1'";
                 $ocorrencias = $con->query($sqlOcorrencia);
                 ?>
                 <div class="panel box box-primary">

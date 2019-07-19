@@ -123,7 +123,7 @@ if ($evento['tipo_evento_id'] == 1) {
                 }
             }
 
-            $ocorrencias = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = '1'");
+            $ocorrencias = $con->query("SELECT * FROM ocorrencias WHERE atracao_id = '$idAtracao' AND publicado = '1'");
             $ocorrenciasAssocs = $ocorrencias->fetch_assoc();
             $numOcorrencias = $ocorrencias->num_rows;
             if ($numOcorrencias == 0) {
