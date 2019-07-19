@@ -11,7 +11,7 @@
             <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
             <?php
                 $idEvento = $_SESSION['idEvento'];
-                $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '".$idEvento."'  AND tipo_ocorrencia_id = 3 AND publicado = '1'";
+                $sqlOcorrencia = "SELECT * FROM agendao_ocorrencias WHERE origem_ocorrencia_id = '".$idEvento."'  AND tipo_ocorrencia_id = 3 AND publicado = '1'";
                 $ocorrencias = $con->query($sqlOcorrencia);
 
                 $aberto = "in";

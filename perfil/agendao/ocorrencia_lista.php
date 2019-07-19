@@ -9,7 +9,7 @@ if(isset($_POST['apagar'])){
 
     $idOcorrencia = $_POST['idOcorrenciaApaga'];
 
-    $sql ="UPDATE siscontrat.ocorrencias SET publicado = 0 WHERE id = '$idOcorrencia'";
+    $sql ="UPDATE siscontrat.agendao_ocorrencias SET publicado = 0 WHERE id = '$idOcorrencia'";
 
     if (mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Ocorrência apagada com sucesso");
@@ -23,7 +23,7 @@ if(isset($_POST['duplicar'])){
     $idProjeto = $_POST['idProjeto'];
     $numeroDuplica = $_POST['numeroDuplica'];
 
-    $sqlProjeto = "SELECT * FROM siscontrat.ocorrencias WHERE id = :id";
+    $sqlProjeto = "SELECT * FROM siscontrat.agendao_ocorrencias WHERE id = :id";
 
     $stmt = $conn->prepare($sqlProjeto);
     $stmt->bindValue(':id', $idProjeto);
@@ -31,7 +31,7 @@ if(isset($_POST['duplicar'])){
     $cloneOcorrencia = $stmt->fetch();
 
     array_shift($cloneOcorrencia);
-    $inserir = "INSERT INTO siscontrat.ocorrencias 
+    $inserir = "INSERT INTO siscontrat.agendao_ocorrencias 
             (" . implode(',', array_keys($cloneOcorrencia)). ") VALUES 
             (" . sprintf( "'%s'", implode( "','", $cloneOcorrencia )).")";
 
@@ -57,7 +57,7 @@ $evento = recuperaDados('agendoes', 'id', $_SESSION['idEvento']);
 $tipo_ocorrencia_id = $evento['tipo_evento_id'];
 
 $sql = "SELECT o.id, o.origem_ocorrencia_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim 
-        FROM ocorrencias as o
+        FROM agendao_ocorrencias as o
         INNER JOIN  locais as l ON o.local_id = l.id
         WHERE o.origem_ocorrencia_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id' AND o.publicado = 1
         ORDER BY local, data_inicio, horario_inicio, horario_fim";

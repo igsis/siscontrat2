@@ -102,7 +102,7 @@ if (isset($_POST['filtrar'])) {
                 LEFT JOIN produtores AS P ON E.produtor_id = P.id
                 INNER JOIN usuarios AS U ON E.usuario_id = U.id
                 LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
-                INNER JOIN ocorrencias AS O ON E.id = O.origem_ocorrencia_id
+                INNER JOIN agendao_ocorrencias AS O ON E.id = O.origem_ocorrencia_id
                 INNER JOIN locais AS L ON O.local_id = L.id
                 LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
                 LEFT JOIN periodos AS DIA_PERI ON O.periodo_id = DIA_PERI.id

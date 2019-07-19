@@ -27,7 +27,7 @@ $agendao = $con->query($sqlEvento)->fetch_array();
 $idProdutor = $agendao['produtor_id'];
 $produtor = $con->query("SELECT * FROM produtores WHERE id = '$idProdutor'")->fetch_array();
 
-$ocorrencias = $con->query("SELECT * FROM ocorrencias INNER JOIN retirada_ingressos ri on ocorrencias.retirada_ingresso_id = ri.id INNER JOIN subprefeituras s on ocorrencias.subprefeitura_id = s.id INNER JOIN periodos p on ocorrencias.periodo_id = p.id WHERE origem_ocorrencia_id = '$idEvento'  AND tipo_ocorrencia_id = 3 AND publicado = '1'");
+$ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias INNER JOIN retirada_ingressos ri on ocorrencias.retirada_ingresso_id = ri.id INNER JOIN subprefeituras s on ocorrencias.subprefeitura_id = s.id INNER JOIN periodos p on ocorrencias.periodo_id = p.id WHERE origem_ocorrencia_id = '$idEvento'  AND tipo_ocorrencia_id = 3 AND publicado = '1'");
 ?>
 
 <div class="content-wrapper">

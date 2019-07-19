@@ -38,7 +38,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
 if (isset($_POST['cadastra'])) {
 
-    $sql = "INSERT INTO ocorrencias (tipo_ocorrencia_id,
+    $sql = "INSERT INTO agendao_ocorrencias (tipo_ocorrencia_id,
                                  origem_ocorrencia_id,
                                  instituicao_id, 
                                  local_id,
@@ -89,7 +89,7 @@ if (isset($_POST['cadastra'])) {
 
     if (mysqli_query($con, $sql)) 
     {
-        $idOcorrencia = recuperaUltimo('ocorrencias');
+        $idOcorrencia = recuperaUltimo('agendao_ocorrencias');
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
     } else {
@@ -101,7 +101,7 @@ if (isset($_POST['cadastra'])) {
 
 if (isset($_POST['edita'])) {
 
-    $sql = "UPDATE ocorrencias SET
+    $sql = "UPDATE agendao_ocorrencias SET
                             instituicao_id = '$instituicao_id',
                             local_id = '$local_id',
                             espaco_id = '$espaco_id',
@@ -139,7 +139,7 @@ if (isset($_POST['carregar'])) {
     $idOcorrencia = $_POST['idOcorrencia'];
 }
 
-$ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
+$ocorrencia = recuperaDados('agendao_ocorrencias', 'id', $idOcorrencia);
 
 ?>
 
