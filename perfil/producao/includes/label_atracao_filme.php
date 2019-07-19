@@ -2,7 +2,7 @@
 /**
  * Conteúdo da label "#atracao" do arquivo "finalizar.php"
  */
-$atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'");
+$atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'")
 ?>
 
 <div class="box box-solid">

@@ -2,6 +2,7 @@
 /**
  * Conteúdo da label "#ocorrencia" do arquivo "vizualizacao_evento.php"
  */
+
 ?>
 
 <div class="box box-solid">
@@ -9,7 +10,7 @@
         <div class="box-group" id="accordionOcorrencia">
             <?php
             foreach ($atracoes as $atracao) {
-                $sqlOcorrencias = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = 1";
+                $sqlOcorrencias = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1'")->fetch_assoc();
                 $ocorrencias = $con->query($sqlOcorrencias);
                 ?>
                 <div class="panel box box-primary">

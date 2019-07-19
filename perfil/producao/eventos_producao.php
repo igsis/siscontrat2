@@ -24,7 +24,7 @@ $sqlEvento = "SELECT * FROM eventos WHERE publicado = 1 AND evento_status_id = 3
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Eventos - Producao</h2>
+        <h2 class="page-header">Eventos - Produçãoo</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -40,7 +40,7 @@ $sqlEvento = "SELECT * FROM eventos WHERE publicado = 1 AND evento_status_id = 3
                     </div>
 
                     <div class="box-body">
-                        <table id="tblEvento" class="table table-bordered table-striped">
+                        <table id="tblEventosProducao" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
@@ -95,7 +95,7 @@ $sqlEvento = "SELECT * FROM eventos WHERE publicado = 1 AND evento_status_id = 3
 
 <script type="text/javascript">
     $(function () {
-        $('#tblEvento').DataTable({
+        $('#tblEventosProducao').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },
