@@ -2,21 +2,24 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
-
-$sql = "SELECT e.protocolo AS 'Protocolo', 
+$sql = "SELECT
+               e.id,
+               e.protocolo AS 'Protocolo', 
                e.nome_evento AS 'Nome do Evento',
                l.local AS 'Local',
                u.fiscal AS 'Fiscal',
-               suplente.nome_completo AS 'Fiscal'
+               suplente.nome_completo AS 'Suplente'
                FROM eventos AS e
+               INNER JOIN pedidos AS p ON p.origem_id = e.id 
                INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
                INNER JOIN locais AS l ON l.id = o.local_id
                INNER JOIN usuarios AS u ON e.fiscal_id
                INNER JOIN usuarios AS suplente ON e.suplente_id
- WHERE evento_status_id = 2 AND e.publicado = 1;";
+               WHERE evento_status_id = 3 AND e.publicado = 1 AND p.status_pedido_id = 1";
 
 
 
+$query = mysqli_query($con, $sql);
 ?>
 
 <div class="content-wrapper">
@@ -45,26 +48,34 @@ $sql = "SELECT e.protocolo AS 'Protocolo',
                                 <th>Período</th>
                                 <th>Fiscal</th>
                                 <th>Suplente</th>
+                                <th>Visualizar</th>
+                                <th>Deletar</th>
                             </tr>
                             </thead>
                             <?php
                             echo "<tbody>";
-                            $query = mysqli_query($con, $sql);
+
                             while ($eventos = mysqli_fetch_array($query)) {
                                 echo "<tr>";
-                                echo "<td>" . $eventos['protocolo'] . "</td>";
-                                echo "<td>" . $eventos['nome_evento'] . "</td>";
-                                echo "<td>" . $eventos['locais'] . "</td>";
+                                echo "<td>" . $eventos['Protocolo'] . "</td>";
+                                echo "<td>" . $eventos['Nome do Evento'] . "</td>";
+                                echo "<td>" . $eventos['Local'] . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($eventos['id']) . "</td>";
-                                echo "<td>" . $eventos['fiscal'] . "</td>";
-                                echo "<td>" . $eventos['suplente'] . "</td>";
+                                echo "<td>" . $eventos['Fiscal'] . "</td>";
+                                echo "<td>" . $eventos['Suplente'] . "</td>";
                                 echo "<td>
                                                 <form method='POST' action='' role=''>
                                                 <input type='hidden' name='idEvento' value='" . $eventos['id'] . "'>
                                                 <button type='submit' name='aprova' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span> </button>
-                                                <button type='submit' name='revoga' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span> </button>                         
-                                                </form>
+                                                
                                         </td>";
+                                echo "<td>
+                                                    <button type='button' name='revoga' class='btn btn-block btn-danger' id='excluiEvento'
+                                                        data-toggle='modal' data-target='#exclusao' name='excluiEvento'
+                                                        ><span class='glyphicon glyphicon-trash'></span></button>                         
+                                                </form>
+                                    </td>";
+
                             }
                             echo "</tbody>"
                             ?>
@@ -76,6 +87,8 @@ $sql = "SELECT e.protocolo AS 'Protocolo',
                                 <th>Período</th>
                                 <th>Fiscal</th>
                                 <th>Suplente</th>
+                                <th>Visualizar</th>
+                                <th>Deletar</th>
                             </tr>
                             </tfoot>
                         </table>

@@ -18,7 +18,9 @@ if (isset($_POST['checar'])) {
     }
 }
 
-$sqlEvento = "SELECT * FROM eventos WHERE publicado = 1 AND evento_status_id = 3";
+$sqlEvento = "SELECT * FROM eventos AS e
+            INNER JOIN pedidos AS p ON p.origem_id = e.id 
+WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 1";
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -47,7 +49,6 @@ $sqlEvento = "SELECT * FROM eventos WHERE publicado = 1 AND evento_status_id = 3
                                 <th>Nome do Evento</th>
                                 <th>Periodo</th>
                                 <th>Visualizar</th>
-
                             </tr>
                             </thead>
                             <?php
