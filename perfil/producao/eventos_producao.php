@@ -12,7 +12,7 @@ $conn = bancoPDO();
 
 if (isset($_POST['checar'])) {
     $idEvento = $_POST['idEvento'];
-    $sqlPedido = "UPDATE eventos SET visualizao = 1 WHERE id = '$idEvento'";
+    $sqlPedido = "UPDATE eventos SET visualizado = 1 WHERE id = '$idEvento'";
     if (mysqli_query($con, $sqlPedido)) {
         $mensagem = mensagem("success", "Evento marcado como visualizado!");
     }
@@ -26,7 +26,7 @@ WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 1";
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Eventos - Produçãoo</h2>
+        <h2 class="page-header">Eventos - Produção</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -55,7 +55,17 @@ WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 1";
                             echo "<tbody>";
                             $query = mysqli_query($con, $sqlEvento);
                             while ($evento = mysqli_fetch_array($query)) {
-                                echo "<tr>";
+
+                            if ($evento['visualizado'] != 1){
+                            ?>
+                            <tr style="background-color: rgba(255, 0, 0, 0.6);">
+                                <?php
+                                } else {
+                                ?>
+
+                            <tr>
+                                <?php
+                                }
                                 echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($evento['id']) . "</td>";
@@ -67,17 +77,17 @@ WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 1";
                             </td>";
 
                                 echo "</tr>";
-                            }
-                            echo "</tbody>";
-                            ?>
-                            <tfoot>
-                            <tr>
-                                <th>Protocolo</th>
-                                <th>Nome do Evento</th>
-                                <th>Periodo</th>
-                                <th>Visualizar</th>
-                            </tr>
-                            </tfoot>
+                                }
+                                echo "</tbody>";
+                                ?>
+                                <tfoot>
+                                <tr>
+                                    <th>Protocolo</th>
+                                    <th>Nome do Evento</th>
+                                    <th>Periodo</th>
+                                    <th>Visualizar</th>
+                                </tr>
+                                </tfoot>
 
 
                         </table>

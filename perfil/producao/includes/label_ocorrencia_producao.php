@@ -10,7 +10,7 @@
         <div class="box-group" id="accordionOcorrencia">
             <?php
             foreach ($atracoes as $atracao) {
-                $sqlOcorrencias = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1'")->fetch_assoc();
+                $sqlOcorrencias = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1'";
                 $ocorrencias = $con->query($sqlOcorrencias);
                 ?>
                 <div class="panel box box-primary">
@@ -30,10 +30,10 @@
                                     if ($ocorrencias->num_rows > 0) {
                                         $i = 1;
                                         foreach ($ocorrencias as $ocorrencia) {
-                                            $retiradaIngresso = recuperaDados("retirada_ingressos", "id", $ocorrencias['retirada_ingressos_id']) ['retirada_ingressos'];
-                                            $instituicao = recuperaDados("instituicoes", "id", $ocorrencias['instituicoes_id']) ['nome'];
-                                            $local = recuperaDados("locais", "id", $ocorrencias['locais_id']) ['local'];
-                                            $espaco = recuperaDados("espacos", "id", $ocorrencias['espacos_id']) ['espaco'];
+                                            $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
+                                            $instituicao = recuperaDados("instituicoes", "id", $ocorrencia['instituicao_id']);
+                                            $local = recuperaDados("locais", "id", $ocorrencia['local_id']);
+                                            $espaco = recuperaDados("espacos", "id", $ocorrencia['espaco_id']) ['espaco'];
                                             ?>
                                             <tr>
                                                 <th class="text center bg-primary" colspan="2"> Ocorrências
@@ -41,15 +41,15 @@
                                             </tr>
                                             <tr>
                                                 <th width="30%"> Data de Início:</th>
-                                                <td><?= exibirDataBr($ocorrencias['data_inicio']) ?></td>
+                                                <td><?= exibirDataBr($ocorrencia['data_inicio']) ?></td>
                                             </tr>
                                             <tr>
                                                 <th width="30%"> Data de Encerramento:</th>
-                                                <td><?= $ocorrencias['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada" ?></td>
+                                                <td><?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada" ?></td>
                                             </tr>
                                             <tr>
                                                 <th width="30%"> Hora de Início:</th>
-                                                <td><?= date("H:i", strtotime($ocorrencias['horario_inicio'])) ?></td>
+                                                <td><?= date("H:i", strtotime($ocorrencia['horario_inicio'])) ?></td>
                                             </tr>
                                             <tr>
                                                 <th width="30%"> Hora de Encerramento:</th>
@@ -57,7 +57,7 @@
                                             </tr>
                                             <tr>
                                                 <th width="30%"> Retirada de Ingressos:</th>
-                                                <td><?= $retiradaIngresso ?></td>
+                                                <td><?= $retiradaIngresso['retirada_ingresso'] ?></td>
                                             </tr>
                                             <tr>
                                                 <th width="30%"> Valor do Ingresso:</th>
@@ -65,16 +65,16 @@
                                             </tr>
                                             <tr>
                                                 <th width="30%"> Instituição:</th>
-                                                <td><?= $instituicao ?></td>
+                                                <td><?= $instituicao['nome'] ?></td>
                                             </tr>
                                             <tr>
                                                 <th width="30%"> Local:</th>
-                                                <td><?= $local ?></td>
+                                                <td><?= $local['local'] ?></td>
                                             </tr>
-                                            <?php if ($ocorrencia('espaco_id') != 0) { ?>
+                                            <?php if ($ocorrencia['espaco_id'] != 0) { ?>
                                                 <tr>
                                                     <th width="30%"> Espaço:</th>
-                                                    <td></td>
+                                                    <td><?= $espaco['espaco'] ?></td>
                                                 </tr>
                                             <?php } ?>
                                             <tr>
