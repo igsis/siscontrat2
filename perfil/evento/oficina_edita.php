@@ -211,7 +211,7 @@ include "includes/menu_interno.php";
 
     function verificaVenda () {
         if ($('#sim').is(':checked')) {
-            $('#material    ')
+            $('#material')
                 .attr('readonly', false)
         } else {
             $('#material')
