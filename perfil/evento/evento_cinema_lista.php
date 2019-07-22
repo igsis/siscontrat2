@@ -78,8 +78,8 @@ $resul = mysqli_query($con, $query);
 
 
                                // OCORRENCIAS 
-
-                                $ocorrencias = recuperaOcorrenciaDados($filmes['id'], $evento['tipo_evento_id']);
+                                // se no 'campo' nao for 'atracao_id' é origem_ocorrencia_id
+                                $ocorrencias = recuperaOcorrenciaDados('ocorrencias', 'atracao_id', $filmes['id'], $evento['tipo_evento_id']);
 
                                 if($ocorrencias > 0){
 

@@ -188,7 +188,7 @@ $query = mysqli_query($con, $sql);
                                 /*
                                  * Ocorrência
                                  */
-                                $ocorrencias = recuperaOcorrenciaDados($atracao['idAtracao'], $evento['tipo_evento_id']);
+                                $ocorrencias = recuperaOcorrenciaDados('ocorrencias', 'atracao_id',$atracao['idAtracao'], $evento['tipo_evento_id']);
 
                                 if ($ocorrencias > 0) {
                                     $idProdutor = $atracao['produtor_id'];
@@ -198,7 +198,7 @@ $query = mysqli_query($con, $sql);
                                     echo "<td>
                                               <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_lista\" role=\"form\">
                                         <input type='hidden' name='idOrigem' value='" . $atracao['idAtracao'] . "'>
-                                        <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i> Listar ocorrência</button>
+                                        <button type=\"submit\" name='carregar' class=\"btn btn-block    btn-primary\"><i class=\"fa fa-pencil-square-o\"></i> Listar ocorrência</button>
                                         </form>
                                         </td>";
                                 } else {
