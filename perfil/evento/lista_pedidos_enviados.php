@@ -45,7 +45,7 @@ $query = mysqli_query($con, $sql);
                             <tr>
                                 <th>Protocolo</th>
                                 <th>Proponente</th>
-                                <th width="25%">Objeto</th>
+                                <th width="15%">Objeto</th>
                                 <th>Local</th>
                                 <th>Valor</th>
                                 <th width="17%">Período</th>

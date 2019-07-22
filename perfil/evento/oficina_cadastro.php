@@ -40,8 +40,8 @@ $idAtracao = $_POST['idAtracao'];
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="venda">Venda de material?</label> <br>
-                                    <label><input type="radio" name="venda" value="1" checked> Sim </label>
-                                    <label><input type="radio" name="venda" value="0"> Não </label>
+                                    <label><input type="radio" name="venda" class="venda" value="1" id="sim"> Sim </label>
+                                    <label><input type="radio" name="venda" class="venda" value="0" checked id="nao"> Não </label>
                                 </div>
                             </div>
                             <div class="row">
@@ -53,7 +53,7 @@ $idAtracao = $_POST['idAtracao'];
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="material">Material Requisitado: </label>
-                                    <textarea  name="material" id="material" class="form-control" rows="3"></textarea>
+                                    <textarea  name="material" id="material" class="form-control" rows="3" readonly></textarea>
                                 </div>
                             </div>
                             <div class="row">
@@ -102,3 +102,18 @@ $idAtracao = $_POST['idAtracao'];
         </div>
     </section>
 </div>
+
+<script>
+    var venda = $('.venda');
+    venda.on("change", function () {
+        if($('#sim').is(':checked')){
+            $('#material')
+                .attr('readonly', false)
+                .val('');
+        }else{
+            $('#material')
+                .attr('readonly', true)
+                .val('');
+        }
+    });
+</script>
