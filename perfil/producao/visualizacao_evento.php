@@ -36,7 +36,7 @@ include "../perfil/producao/includes/menu_interno.php";
     <section class="content-header">
         <div>
             <div class="box">
-                <div class="box-reader">
+                <div class="box-header">
                     <h3 class="page-header"> Evento selecionado </h3><em class="pull-right"><?php if (isset($prazo)) {
                             echo $prazo;
                         }; ?></em>
@@ -71,7 +71,6 @@ include "../perfil/producao/includes/menu_interno.php";
                                                 <?php foreach ($resumoEvento as $campo => $dado) { ?>
                                                     <tr>
                                                         <th width="30%"><?= $campo ?>  </th>
-                                                        </th>
                                                         <?php
                                                         if ($campo == "Evento Público") {
                                                             if ($dado == 0) {
@@ -112,9 +111,7 @@ include "../perfil/producao/includes/menu_interno.php";
                                 <div class="tab-pane" id="pedido">
                                     <?php include "includes/label_pedido_producao.php"; ?>
                                 </div>
-                            <?php } else {
-
-                            } ?>
+                            <?php }?>
 
                             <div class="box-footer">
                                 <form action="?perfil=producao&p=eventos_producao" method="post">

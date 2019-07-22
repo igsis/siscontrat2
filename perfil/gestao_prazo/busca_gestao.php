@@ -3,33 +3,37 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
 $sql = "SELECT
-               e.id,
-               e.protocolo AS 'Protocolo', 
-               e.nome_evento AS 'Nome do Evento',
-               l.local AS 'Local',
-               u.fiscal AS 'Fiscal',
-               suplente.nome_completo AS 'Suplente'
+               e.id AS 'id',
+               e.protocolo AS 'protocolo', 
+               e.nome_evento AS 'nome_evento',
+               l.local AS 'local',
+               e.suplente_id,
+               e.fiscal_id
                FROM eventos AS e
                INNER JOIN pedidos AS p ON p.origem_id = e.id 
                INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
                INNER JOIN locais AS l ON l.id = o.local_id
-               INNER JOIN usuarios AS u ON e.fiscal_id
-               INNER JOIN usuarios AS suplente ON e.suplente_id
                WHERE evento_status_id = 3 AND e.publicado = 1 AND p.status_pedido_id = 1";
 
-
+if(isset($_POST['vetar'])){
+    $idEvento = $eventos['id'] ;
+    $sqlDelete = "DELETE FROM eventos WHERE id = '$idEvento'";
+    if(mysqli_query($con, $sqlDelete)){
+        $mensagem = mensagem("success", "Evento deletado com sucesso!");
+    }
+}
 
 $query = mysqli_query($con, $sql);
 ?>
 
 <div class="content-wrapper">
     <section class="content">
-        <h3 class="box-title">Eventos - Gestão</h3>
+        <h3 class="box-title">Pedidos - Gestão</h3>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Lista de eventos fora do prazo</h3>
+                        <h3 class="box-title">Lista de pedidos fora do prazo</h3>
                     </div>
                     <div class="row" align="center">
                         <?php
@@ -49,33 +53,26 @@ $query = mysqli_query($con, $sql);
                                 <th>Fiscal</th>
                                 <th>Suplente</th>
                                 <th>Visualizar</th>
-                                <th>Deletar</th>
                             </tr>
                             </thead>
                             <?php
                             echo "<tbody>";
-
                             while ($eventos = mysqli_fetch_array($query)) {
+                                $suplente = recuperaDados('usuarios', 'id', $eventos['suplente_id']);
+                                $fiscal = recuperaDados('usuarios', 'id', $eventos['fiscal_id']);
                                 echo "<tr>";
-                                echo "<td>" . $eventos['Protocolo'] . "</td>";
-                                echo "<td>" . $eventos['Nome do Evento'] . "</td>";
-                                echo "<td>" . $eventos['Local'] . "</td>";
+                                echo "<td>" . $eventos['protocolo'] . "</td>";
+                                echo "<td>" . $eventos['nome_evento'] . "</td>";
+                                echo "<td>" . $eventos['local'] . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($eventos['id']) . "</td>";
-                                echo "<td>" . $eventos['Fiscal'] . "</td>";
-                                echo "<td>" . $eventos['Suplente'] . "</td>";
+                                echo "<td>" . $suplente['nome_completo'] . "</td>";
+                                echo "<td>" . $suplente['nome_completo'] . "</td>";
                                 echo "<td>
-                                                <form method='POST' action='' role=''>
+                                                <form method='POST' action='?perfil=gestao_prazo&p=detalhes_gestao' role='form'>
                                                 <input type='hidden' name='idEvento' value='" . $eventos['id'] . "'>
-                                                <button type='submit' name='aprova' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span> </button>
+                                                <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span> </button>
                                                 
                                         </td>";
-                                echo "<td>
-                                                    <button type='button' name='revoga' class='btn btn-block btn-danger' id='excluiEvento'
-                                                        data-toggle='modal' data-target='#exclusao' name='excluiEvento'
-                                                        ><span class='glyphicon glyphicon-trash'></span></button>                         
-                                                </form>
-                                    </td>";
-
                             }
                             echo "</tbody>"
                             ?>
@@ -88,7 +85,6 @@ $query = mysqli_query($con, $sql);
                                 <th>Fiscal</th>
                                 <th>Suplente</th>
                                 <th>Visualizar</th>
-                                <th>Deletar</th>
                             </tr>
                             </tfoot>
                         </table>

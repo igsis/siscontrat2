@@ -18,9 +18,15 @@ if (isset($_POST['checar'])) {
     }
 }
 
-$sqlEvento = "SELECT * FROM eventos AS e
+$sqlEvento = "SELECT
+                    e.id AS 'id',
+                    e.protocolo AS 'protocolo',
+                    e.nome_evento AS 'nome_evento',
+                    e.visualizado AS 'visualizado'
+            FROM eventos AS e
             INNER JOIN pedidos AS p ON p.origem_id = e.id 
 WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 1";
+$query = mysqli_query($con, $sqlEvento);
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -53,16 +59,13 @@ WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 1";
                             </thead>
                             <?php
                             echo "<tbody>";
-                            $query = mysqli_query($con, $sqlEvento);
                             while ($evento = mysqli_fetch_array($query)) {
-
                             if ($evento['visualizado'] != 1){
                             ?>
                             <tr style="background-color: rgba(255, 0, 0, 0.6);">
                                 <?php
                                 } else {
                                 ?>
-
                             <tr>
                                 <?php
                                 }
