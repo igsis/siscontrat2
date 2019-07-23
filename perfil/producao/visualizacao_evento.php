@@ -7,15 +7,16 @@ $idUser = $_SESSION['idUser'];
 $idEvento = $_SESSION['idEvento'];
 
 $sqlEvento = "SELECT
-                eve.nome_evento AS 'Nome do Evento',
-                te.tipo_evento AS 'Tipo do Evento',
-                rj.relacao_juridica AS 'Tipo de Relação Jurídica',
-                pe.projeto_especial AS 'Projeto Especial',
-                eve.sinopse AS 'Sinopse',
-                fiscal.nome_completo AS 'Fiscal',
-                suplente.nome_completo AS 'Suplente',
-                eve.espaco_publico AS 'Evento Público',
-                eve.fomento AS 'Fomento'
+                eve.nome_evento AS 'Nome do Evento:',
+                te.tipo_evento AS 'Tipo do Evento:',
+                rj.relacao_juridica AS 'Tipo de Relação Jurídica:',
+                pe.projeto_especial AS 'Projeto Especial:',
+                eve.sinopse AS 'Sinopse:',
+                fiscal.nome_completo AS 'Fiscal:',
+                suplente.nome_completo AS 'Suplente:',
+                eve.espaco_publico AS 'Evento Público:',
+                eve.fomento AS 'Fomento:',
+                eve.visualizado AS 'Visualizado:'
                 
                 FROM eventos AS eve
                 INNER JOIN tipo_eventos AS te ON eve.tipo_evento_id = te.id
@@ -116,7 +117,19 @@ include "../perfil/producao/includes/menu_interno.php";
                             <div class="box-footer">
                                 <form action="?perfil=producao&p=eventos_producao" method="post">
                                     <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
+                                    <?php
+
+                                    if($evento['visualizado'] == 0){
+                                        ?>
                                     <button type="submit" name="checar" class="btn btn-success"> Checar visualização
+                                    <?php
+                                    }else {
+                                        ?>
+                                        <button type="submit" name="voltar" class="btn btn-success"> Voltar
+                                        <?php
+                                    }
+
+                                    ?>
                                     </button>
                                 </form>
                             </div>

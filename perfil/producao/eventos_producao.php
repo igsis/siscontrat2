@@ -25,7 +25,7 @@ $sqlEvento = "SELECT
                     e.visualizado AS 'visualizado'
             FROM eventos AS e
             INNER JOIN pedidos AS p ON p.origem_id = e.id 
-WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 1";
+WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 2";
 $query = mysqli_query($con, $sqlEvento);
 ?>
 

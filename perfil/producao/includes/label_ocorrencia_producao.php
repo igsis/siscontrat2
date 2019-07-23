@@ -33,7 +33,7 @@
                                             $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
                                             $instituicao = recuperaDados("instituicoes", "id", $ocorrencia['instituicao_id']);
                                             $local = recuperaDados("locais", "id", $ocorrencia['local_id']);
-                                            $espaco = recuperaDados("espacos", "id", $ocorrencia['espaco_id']) ['espaco'];
+                                            $espaco = recuperaDados("espacos", "id", $ocorrencia['espaco_id']);
                                             ?>
                                             <tr>
                                                 <th class="text center bg-primary" colspan="2"> Ocorrências

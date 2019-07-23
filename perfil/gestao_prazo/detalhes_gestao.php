@@ -3,17 +3,17 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $_SESSION['idEvento'] = $_POST['idEvento'];
-
+$idEvento = $_POST['idEvento'];
 $sqlCarregar = "SELECT
-                eve.nome_evento AS 'Nome do Evento',
-                te.tipo_evento AS 'Tipo do Evento',
-                rj.relacao_juridica AS 'Tipo de Relação Jurídica',
-                pe.projeto_especial AS 'Projeto Especial',
-                eve.sinopse AS 'Sinopse',
-                fiscal.nome_completo AS 'Fiscal',
-                suplente.nome_completo AS 'Suplente',
-                eve.espaco_publico AS 'Evento Público',
-                eve.fomento AS 'Fomento'
+                eve.nome_evento AS 'Nome do Evento:',
+                te.tipo_evento AS 'Tipo do Evento:',
+                rj.relacao_juridica AS 'Tipo de Relação Jurídica:',
+                pe.projeto_especial AS 'Projeto Especial:',
+                eve.sinopse AS 'Sinopse:',
+                fiscal.nome_completo AS 'Fiscal:',
+                suplente.nome_completo AS 'Suplente:',
+                eve.espaco_publico AS 'Evento Público:',
+                eve.fomento AS 'Fomento:'
                 
                 FROM eventos AS eve
                 INNER JOIN tipo_eventos AS te ON eve.tipo_evento_id = te.id
@@ -36,7 +36,7 @@ include "includes/menu_interno.php";
                 <div class="box-header">
                     <h3 class="page-header">Pedido Selecionado</h3><em class="pull-right"><?php if (isset($prazo)) {
                             echo $prazo;
-                        }
+                        };
                         ?></em>
                 </div>
             </div>
@@ -65,9 +65,7 @@ include "includes/menu_interno.php";
                                 <div class="box-body">
                                     <div class="table-responsive">
                                         <table class="table">
-                                            <?php foreach ($resumoCarregamento
-
-                                                           as $campo => $dado) { ?>
+                                            <?php foreach ($resumoCarregamento as $campo => $dado) { ?>
                                                 <tr>
                                                     <th width="30%"><?= $campo ?></th>
                                                     <?php
@@ -98,18 +96,18 @@ include "includes/menu_interno.php";
                         </div>
                         <div class="tab-pane" id="atracao">
                             <?php
-                            include "includes/label_atracao_gestao";
+                            include "includes/label_atracao_filme.php";
                             ?>
                         </div>
                         <div class="tab-pane" id="ocorrencia">
                             <?php
-                            include "includes/label_ocorrencia_gestao";
+                            include "includes/label_ocorrencia_gestao.php";
                             ?>
                         </div>
                         <?php if($evento['contratacao'] == 1) { ?>
                         <div class="tab-pane" id="pedido">
                             <?php
-                            include "includes/label_pedido_gestao";
+                            include "includes/label_pedido_gestao.php";
                             ?>
                         </div>
                         <?php } ?>
