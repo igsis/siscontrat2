@@ -1,6 +1,6 @@
 <?php
 /**
- * Conteúdo da label "#atracao" do arquivo "finalizar.php"
+ * Conteúdo da label "#atracao" do arquivo "visualizacao_producao.php"
  */
 $atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'")
 ?>
@@ -14,11 +14,12 @@ $atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AN
                 $categoria = recuperaDados('acoes', 'id', $acaoId)['acao'];
                 $classificacao = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id'])['classificacao_indicativa'];
                 $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
-            ?>
+                ?>
                 <div class="panel box box-primary">
                     <div class="box-header with-border">
                         <h4 class="box-title">
-                            <a data-toggle="collapse" data-parent="#accordionAtracao" href="#collapse<?= $atracao['id'] ?>">
+                            <a data-toggle="collapse" data-parent="#accordionAtracao"
+                               href="#collapse<?= $atracao['id'] ?>">
                                 Resumo da Atração: <?= $atracao['nome_atracao'] ?>
                             </a>
                         </h4>
@@ -29,74 +30,58 @@ $atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AN
                                 <table class="table">
                                     <tr>
                                         <th width="30%">Nome da Atração:</th>
-                                        <td><?=$atracao['nome_atracao']?></td>
+                                        <td><?= $atracao['nome_atracao'] ?></td>
                                     </tr>
                                     <tr>
                                         <th width="30%">Categoria da Atração:</th>
-                                        <td><?=$categoria?></td>
+                                        <td><?= $categoria ?></td>
                                     </tr>
                                     <tr>
                                         <th width="30%">Ficha Técnica:</th>
-                                        <td><?=$atracao['ficha_tecnica']?></td>
+                                        <td><?= $atracao['ficha_tecnica'] ?></td>
                                     </tr>
                                     <tr>
                                         <th width="30%">Integrantes:</th>
-                                        <td><?=$atracao['integrantes']?></td>
+                                        <td><?= $atracao['integrantes'] ?></td>
                                     </tr>
                                     <tr>
                                         <th width="30%">Classificação Indicativa:</th>
-                                        <td><?=$classificacao?></td>
+                                        <td><?= $classificacao ?></td>
                                     </tr>
                                     <tr>
                                         <th width="30%">Release:</th>
-                                        <td><?=$atracao['release_comunicacao']?></td>
+                                        <td><?= $atracao['release_comunicacao'] ?></td>
                                     </tr>
                                     <tr>
                                         <th width="30%">Links:</th>
-                                        <td><?=$atracao['links']?></td>
+                                        <td><?= $atracao['links'] ?></td>
                                     </tr>
                                     <tr>
                                         <th class="text-center bg-primary" colspan="2">Dados do Produtor</th>
                                     </tr>
                                     <tr>
                                         <th width="30%">Nome:</th>
-                                        <td><?=$produtor['nome']?></td>
+                                        <td><?= $produtor['nome'] ?></td>
                                     </tr>
                                     <tr>
                                         <th width="30%">Email:</th>
-                                        <td><?=$produtor['email']?></td>
+                                        <td><?= $produtor['email'] ?></td>
                                     </tr>
                                     <tr>
                                         <th width="30%">Telefone #1:</th>
-                                        <td><?=$produtor['telefone1']?></td>
-                                    </tr>
-                                    <tr>
-                                        <th width="30%">Telefone #2:</th>
-                                        <td><?=$produtor['telefone2']?></td>
-                                    </tr>
-                                    <tr>
-                                        <th width="30%">Observação:</th>
-                                        <td><?=$produtor['observacao']?></td>
+                                        <td><?= $produtor['telefone1'] ?></td>
                                     </tr>
                                     <?php
-/*                                        /*@TODO: Passar este bloco para uma função
-                                        $especificidade = in_array_key($atracao['categoria_atracao_id'], $especificidades);
-                                        if ($especificidade['bool']) {
-                                            $dadosEspecificidade = recuperaDados($especificidade['especificidade'], 'atracao_id', $atracao['id']);
-                                            if ($dadosEspecificidade != null) {
-                                            */?><!--
-                                            <tr>
-                                                <th class="text-center bg-primary" colspan="2">Dados da Especificidade</th>
-                                            </tr>
-                                            < ?php /*foreach ($dadosEspecificidade as $campo => $dado) { */?>
-                                                <tr>
-                                                    <th width="30%">< ?/*=$campo*/?>>:</th>
-                                                    <td>< ?/*=$dado?></td>
-                                                </tr>
-                                            < ?php }
-                                            }
-                                        }
-                                    ?> -->
+                                    if ($produtor['telefone2'] != null) { ?>
+                                        <tr>
+                                            <th width="30%">Telefone #2:</th>
+                                            <td><?= $produtor['telefone2'] ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                    <tr>
+                                        <th width="30%">Observação:</th>
+                                        <td><?= $produtor['observacao'] ?></td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
