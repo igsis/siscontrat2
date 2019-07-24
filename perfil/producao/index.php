@@ -2,7 +2,14 @@
 include "../perfil/producao/includes/menu.php";
 $con = bancoMysqli();
 
-$sql = "SELECT * FROM eventos WHERE evento_status_id >= 3 AND publicado = 1 AND visualizado = 1";
+$sql = "SELECT
+                    e.id AS 'id',
+                    e.protocolo AS 'protocolo',
+                    e.nome_evento AS 'nome_evento',
+                    e.visualizado AS 'visualizado'
+            FROM eventos AS e
+            INNER JOIN pedidos AS p ON p.origem_id = e.id 
+WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 2 AND e.visualizado = 0";
 $query = mysqli_query($con, $sql);
 $numEventos = mysqli_num_rows($query);
 ?>

@@ -34,7 +34,7 @@ include "includes/menu_interno.php";
         <div class="box">
             <div>
                 <div class="box-header">
-                    <h3 class="page-header">Pedido Selecionado</h3><em class="pull-right"><?php if (isset($prazo)) {
+                    <h3 class="page-header">Evento Selecionado</h3><em class="pull-right"><?php if (isset($prazo)) {
                             echo $prazo;
                         };
                         ?></em>
@@ -69,14 +69,14 @@ include "includes/menu_interno.php";
                                                 <tr>
                                                     <th width="30%"><?= $campo ?></th>
                                                     <?php
-                                                    if ($campo == "Evento Público") {
+                                                    if ($campo == "Evento Público:") {
                                                         if ($dado == 0) {
                                                             $dado = "Não";
                                                         } else {
                                                             $dado = "Sim";
                                                         }
                                                     }
-                                                    if ($campo == "Fomento") {
+                                                    if ($campo == "Fomento:") {
                                                         if ($dado == 0) {
                                                             $dado = "Não possui";
                                                         } else {
@@ -113,13 +113,37 @@ include "includes/menu_interno.php";
                         <?php } ?>
 
                         <div class="box-footer">
-                            <form action="?=perfil=gestao_prazo&p=busca_gestao" method="post">
-                                <input type="hidden" name="idEvento" value="<?=$idEvento?>">
-                                <button type='button' name='vetar' class='btn btn-block btn-danger' id='excluiEvento'
-                                        data-toggle='modal' data-target='#exclusao' name='excluiEvento'
-                                ><span class='glyphicon glyphicon-trash'></span></button>
+                            <form action="?perfil=gestao_prazo&p=busca_gestao" method="post">
+                                <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
+                                <button type="submit" name="aprovar" class="btn btn-success"> Aprovar </button>
+                                <button type="button" class="btn btn-danger" id="vetarEvento"
+                                        data-toggle="modal" data-target="#vetacao" name="vetarEvento"
+                                        data-name="<?=$evento['nome_evento']?>"
+                                        data-id="<?=$evento['id']?>">
+                                    Vetar </button>
                             </form>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="vetacao" class="modal modal-danger modal fade in" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Confirmação de Vetação</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Tem certeza que deseja vetar este evento?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="?perfil=gestao_prazo&p=busca_gestao" method="post">
+                            <input type="hidden" name="idEvento" id="idEvento" value="<?=$idEvento?>">
+                            <input type="hidden" name="vetar" id="vetar">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                            <input type="submit" class="btn btn-danger btn-outline" name="veta" value="Vetar">
+                        </form>
                     </div>
                 </div>
             </div>

@@ -44,8 +44,8 @@ switch ($pedido['pessoa_tipo_id']) {
             'Nome:' => $proponente['nome'],
             'Nome Artístico:' => $proponente['nome_artistico'],
             'Nacionalidade:' => $nacionalidade,
-            'RG:' => $proponente['rg'],
-            'Passaporte:' => $proponente['passaporte'],
+            'RG:' => $proponente['rg'] ?? "Não cadastrado",
+            'Passaporte' => $proponente['passaporte'] ?? "Não cadastrado",
             'CPF:' => $proponente['cpf'],
             'CCM:' => $proponente['ccm'],
             'Data de Nascimento:' => exibirDataBr($proponente['data_nascimento']),
@@ -57,7 +57,7 @@ switch ($pedido['pessoa_tipo_id']) {
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
             'Logradouro' => $endereco['logradouro'],
-            'Complemento' => $endereco['complemento'],
+            'Complemento' => $endereco['complemento'] ?? "Não possui",
             'Bairro' => $endereco['bairro'],
             'Cidade' => $endereco['cidade'],
             'Estado' => $endereco['uf']
@@ -89,7 +89,7 @@ switch ($pedido['pessoa_tipo_id']) {
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
             'Logradouro' => $endereco['logradouro'],
-            'Complemento' => $endereco['complemento'],
+            'Complemento' => $endereco['complemento'] ?? "Não cadastrado",
             'Bairro' => $endereco['bairro'],
             'Cidade' => $endereco['cidade'],
             'Estado' => $endereco['uf']

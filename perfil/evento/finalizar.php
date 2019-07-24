@@ -55,37 +55,42 @@ include "includes/validacoes.php";
                 <?php } ?>
             </div>
             <div class="col-md-6">
-                <?php if (count($errosArqs) == 0) { ?>
-                    <div class="alert alert-success alert-dismissible">
-                        <h4><i class="icon fa fa-check"></i> Todos os Arquivos Foram Enviados!</h4>
+                <?php
+                if ($evento['tipo_evento_id'] == 1) {
+                    if (count($errosArqs) == 0) { ?>
+                        <div class="alert alert-success alert-dismissible">
+                            <h4><i class="icon fa fa-check"></i> Todos os Arquivos Foram Enviados!</h4>
 
-                        <p>Confirme todos os dados abaixo antes de enviar.</p>
-                    </div>
-                <?php } else { ?>
-                    <div class="alert alert-danger">
-                        <h4><i class="icon fa fa-ban"></i> Alguns Arquivos não Foram Enviados!</h4>
+                            <p>Confirme todos os dados abaixo antes de enviar.</p>
+                        </div>
+                    <?php } else { ?>
+                        <div class="alert alert-danger">
+                            <h4><i class="icon fa fa-ban"></i> Alguns Arquivos não Foram Enviados!</h4>
 
-                        <ul>
-                            <?php foreach ($errosArqs as $erroArq) {
-                                echo "<li>$erroArq</li>";
-                            }
-                            ?>
-                        </ul>
-                    </div>
-                <?php } ?>
+                            <ul>
+                                <?php foreach ($errosArqs as $erroArq) {
+                                    echo "<li>$erroArq</li>";
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                    <?php }
+                } ?>
             </div>
         </div>
 
-        <h2 class="page-header">Finalizar <em class="pull-right"><?php if(isset($prazo)){echo $prazo;};?></em></h2>
+        <h2 class="page-header">Finalizar <em class="pull-right"><?php if (isset($prazo)) {
+                    echo $prazo;
+                }; ?></em></h2>
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right">
-                <?php if ($evento['contratacao'] == 1) { ?>
+                <?php if ($evento['contratacao'] == 1 && $evento['tipo_evento_id'] == 1) { ?>
                     <li><a href="#pedido" data-toggle="tab">Pedido de Contratação</a></li>
                 <?php } ?>
                 <li><a href="#ocorrencia" data-toggle="tab">Ocorrências</a></li>
                 <li>
                     <a href="#atracao" data-toggle="tab">
-                        <?= ($evento['tipo_evento_id'] == 1) ? "Atração" : "Filme"?>
+                        <?= ($evento['tipo_evento_id'] == 1) ? "Atração" : "Filme" ?>
                     </a>
                 </li>
                 <li class="active"><a href="#evento" data-toggle="tab">Evento</a></li>
@@ -104,25 +109,25 @@ include "includes/validacoes.php";
                                         <tr>
                                             <th width="30%"><?= $campo ?></th>
                                             <?php
-                                                if ($campo == "Evento Público"){
-                                                    if ($dado == 0){
+                                            if ($campo == "Evento Público") {
+                                                if ($dado == 0) {
                                                     $dado = "Não";
-                                                    }else{
-                                                        $dado = "Sim";
-                                                    }
+                                                } else {
+                                                    $dado = "Sim";
                                                 }
-                                                if($campo == "Fomento"){
-                                                    if ($dado == 0){
-                                                        $dado = "Não possui";
-                                                    }else{
-                                                        $fomentoRelacionado = recuperaDados("evento_fomento", "evento_id", $idEvento);
-                                                        $fomento = recuperaDados("fomentos", "id", $fomentoRelacionado['fomento_id']);
+                                            }
+                                            if ($campo == "Fomento") {
+                                                if ($dado == 0) {
+                                                    $dado = "Não possui";
+                                                } else {
+                                                    $fomentoRelacionado = recuperaDados("evento_fomento", "evento_id", $idEvento);
+                                                    $fomento = recuperaDados("fomentos", "id", $fomentoRelacionado['fomento_id']);
 
-                                                        $dado = $fomento['fomento'];
-                                                    }
+                                                    $dado = $fomento['fomento'];
                                                 }
+                                            }
                                             ?>
-                                            <td><?=$dado?></td>
+                                            <td><?= $dado ?></td>
                                         </tr>
                                     <?php } ?>
                                 </table>
@@ -132,12 +137,20 @@ include "includes/validacoes.php";
                 </div>
 
                 <div class="tab-pane" id="atracao">
-                    <?php if ($numAtracoes == 0) { ?>
+                    <?php if ($numAtracoes == 0 && $evento['tipo_evento_id'] == 1) { ?>
                         <div class="alert alert-danger">
                             <h4><i class="icon fa fa-ban"></i>Não há atrações cadastradas</h4>
                         </div>
                     <?php } else {
-                        include "label_atracao_filme.php";
+                        if ($numFilmes == 0 && $evento['tipo_evento_id'] == 2) {
+                            ?>
+                            <div class="alert alert-danger">
+                                <h4><i class="icon fa fa-ban"></i>Não há filmes cadastrados</h4>
+                            </div>
+                            <?php
+                        } else {
+                            include "label_atracao_filme.php";
+                        }
                     } ?>
                 </div>
 
@@ -145,7 +158,7 @@ include "includes/validacoes.php";
                     <?php include "label_ocorrencia.php" ?>
                 </div>
 
-                <?php if ($evento['contratacao'] == 1) { ?>
+                <?php if ($evento['contratacao'] == 1 && $evento['tipo_evento_id'] == 1) { ?>
                     <div class="tab-pane" id="pedido">
                         <?php include "label_pedido.php" ?>
                     </div>
@@ -153,9 +166,12 @@ include "includes/validacoes.php";
             </div>
             <div class="box-footer">
                 <form action="?perfil=evento&p=resumo_evento_enviado" method="post">
-                    <input type="hidden" name="idEvento" id="idEvento" value="<?=$idEvento?>">
+                    <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                     <input type="hidden" name="fora" value="<?= $fora ?? 0 ?>">
-                    <button class="btn btn-success" name="enviar" type="submit" <?= (count($erros) != 0 or count($errosArqs) != 0) ? "disabled" : "" ?>>Enviar Evento</button>
+                    <button class="btn btn-success" name="enviar"
+                            type="submit" <?= (count($erros) != 0 or count($errosArqs) != 0) ? "disabled" : "" ?>>Enviar
+                        Evento
+                    </button>
                 </form>
             </div>
         </div>
