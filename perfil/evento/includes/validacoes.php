@@ -48,7 +48,9 @@ if ($pedidos != null) {
         }
     }
 } else {
-    array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
+    if ($evento['tipo_evento_id'] == 1) {
+        array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
+    }
 }
 
 $numAtracoes = $atracoes->num_rows;
@@ -118,7 +120,7 @@ if ($evento['tipo_evento_id'] == 1) {
 
             if ($possui) {
                 $numEspecificidades = $con->query("SELECT * FROM $tabela WHERE atracao_id = '$idAtracao'")->num_rows;
-                if($numEspecificidades == 0){
+                if ($numEspecificidades == 0) {
                     array_push($erros, "Não há especificidade cadastrada para a atração <b>" . $atracao['nome_atracao'] . "</b>");
                 }
             }
@@ -162,6 +164,28 @@ if ($evento['tipo_evento_id'] == 1) {
                 if (($pj['representante_legal1_id'] == null) && ($pj['representante_legal2_id'] == null)) {
                     array_push($erros, "Não há Representante Legal cadastrado no proponente <b>" . $pj['razao_social'] . "</b>");
                 }
+            }
+        }
+    }
+}
+
+if ($evento['tipo_evento_id'] == 2) {
+    $filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
+    $filmes = mysqli_query($con, $filme);
+    $numFilmes = mysqli_num_rows($filmes);
+
+    if ($numFilmes == 0) {
+        array_push($erros, "Não possui filmes cadastrados");
+    } else {
+        foreach ($filmes as $filme) {
+
+            $idAtracao = $filme['id'];
+            $ocorrencias = $con->query("SELECT * FROM ocorrencias WHERE atracao_id = '$idAtracao'");
+            $ocorrenciasAssocs = $ocorrencias->fetch_assoc();
+            $numOcorrencias = $ocorrencias->num_rows;
+
+            if ($numOcorrencias == 0) {
+                array_push($erros, "Não há ocorrência cadastrada para o filme <b>" . $filme['nome_atracao'] . "</b>");
             }
         }
     }
