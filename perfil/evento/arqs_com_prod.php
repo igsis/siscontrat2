@@ -164,17 +164,20 @@ if (isset($_POST['apagar'])) {
                                                                 <br>- formato: horizontal
                                                                 <br>- tamanho: mínimo de 300dpi”</h4>
                                                         </tr>
-                                                        <tr class="text-center">
-                                                            <td class="text-center">
+
                                                                 <?php
                                                                 for ($i = 10    ; $i > $linhas; $i--) {
                                                                     ?>
-                                                                    <input type='file' name='arquivo[]'><br>
+                                                            <tr>
+                                                                <td>
+                                                                        <input class="text-center" type='file' name='arquivo[]'><br>
+                                                                </td>
+                                                            </tr>
                                                                     <?php
+
                                                                 }
                                                                 ?>
-                                                            </td>
-                                                        </tr>
+
                                                         </tbody>
                                                     </table>
                                                     <br>
@@ -247,5 +250,8 @@ if (isset($_POST['apagar'])) {
         $(this).find('#idArquivo').attr('value', `${id}`);
         $(this).find('#tipoPessoa').attr('value', `${pessoa}`);
 
-    })
+    });
+
+
+
 </script>
