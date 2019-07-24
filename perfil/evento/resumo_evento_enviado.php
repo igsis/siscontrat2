@@ -37,6 +37,7 @@ if (isset($_POST['enviar'])) {
     }
 }
 
+$evento = recuperaDados('eventos', 'id', $idEvento);
 $tipo_evento = recuperaDados('tipo_eventos', 'id', $evento['tipo_evento_id']);
 $original = $evento['original'] == 1 ? 'Sim' : 'Não';
 $relacao_juridica = recuperaDados('relacao_juridicas', 'id', $evento['relacao_juridica_id']);
