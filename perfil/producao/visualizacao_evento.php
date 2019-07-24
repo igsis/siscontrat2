@@ -73,20 +73,27 @@ include "../perfil/producao/includes/menu_interno.php";
                                                     <tr>
                                                         <th width="30%"><?= $campo ?>  </th>
                                                         <?php
-                                                        if ($campo == "Evento Público") {
+                                                        if ($campo == "Evento Público:") {
                                                             if ($dado == 0) {
                                                                 $dado = "Não";
                                                             } else {
                                                                 $dado = "Sim";
                                                             }
                                                         }
-                                                        if ($campo == "Fomento") {
+                                                        if ($campo == "Fomento:") {
                                                             if ($dado == 0) {
                                                                 $dado = "Não possui";
                                                             } else {
                                                                 $fomentoRelacionado = recuperaDados("evento_fomento", "evento_id", $idEvento);
                                                                 $fomento = recuperaDados("fomentos", "id", $fomentoRelacionado['fomento_id']);
                                                                 $dado = $fomento['fomento'];
+                                                            }
+                                                        }
+                                                        if($campo == "Visualizado:"){
+                                                            if($dado == 0){
+                                                                $dado = "Não";
+                                                            }else{
+                                                                $dado = "Sim";
                                                             }
                                                         }
                                                         ?>

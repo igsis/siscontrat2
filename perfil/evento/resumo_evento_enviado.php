@@ -20,7 +20,11 @@ if (isset($_POST['enviar'])) {
     } else {
         $sqlPedido = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
         if (mysqli_query($con, $sqlPedido)) {
-            $mensagemPedido = mensagem("successs", "Pedido aprovado!");
+            $mensagemPedido = mensagem("success", "Pedido aprovado!");
+            $data = date("Y-m-d H:i:s",strtotime("now"));
+            $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
+            $queryEnvia = mysqli_query($con, $sqlEnvia);
+            $mensagemPedido = mensagem("success", "Evento enviado com sucesso!");
         }
     }
 
