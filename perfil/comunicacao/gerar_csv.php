@@ -99,8 +99,7 @@ if (isset($_POST['filtrar'])) {
                                     </div>
                                     <div class="col-md-3">
                                         <label for="data_encerramento"> Data encerramento</label>
-                                        <input type="text" name="data_encerramento" class="form-control datepicker"
-                                               id="encerramento">
+                                        <input type="text" name="data_encerramento" class="form-control datepicker"  id="encerramento">
                                     </div>
                                 </div>
                                 <br>
@@ -148,7 +147,7 @@ if (isset($_POST['filtrar'])) {
                         <?php
                         if (isset($consulta)):
                             ?>
-                        <div id="resultadoConsulta">
+                            <div id="resultadoConsulta">
                             <form method="post" action="../pdf/exportar_csv.php">
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-8">
@@ -185,7 +184,6 @@ if (isset($_POST['filtrar'])) {
                                 while ($acao_atracao = mysqli_fetch_array($queryAcaoAtracao)) {
                                     $sqlAcao = "SELECT acao FROM acoes WHERE id = '" . $acao_atracao['acao_id'] . "'";
                                     $queryAction = mysqli_query($con, $sqlAcao);
-
                                     while ($acoes = mysqli_fetch_array($queryAction)) {
                                         $categorias .= $acoes['acao'] . "; ";
                                     }
@@ -234,11 +232,11 @@ if (isset($_POST['filtrar'])) {
             $('#filtrar').prop('disabled', true);
         }
 
-        let consulta = "<?=isset($consulta) ? 1 : 0?>";
+        let consulta = "<?= isset($consulta) ? 1 : 0 ?>";
 
         if (consulta == 1) {
             $('#gerarCSV').hide();
-            $('#novaPesquisa').fadeIn();
+            $('#novaPesquisa').show();
         }
 
     });
