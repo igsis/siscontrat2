@@ -227,10 +227,14 @@ if (isset($_POST['filtrar'])) {
     $(function () {
         $(".datepicker").datepicker();
 
-        if ($('#data_inicio').val() == '') {
-            $('#msgSemInicio').show();
-            $('#filtrar').prop('disabled', true);
-        }
+
+
+        $('#filtrar').mouseover(function () {
+            if ($('#data_inicio').val() == '') {
+                $('#msgSemInicio').show();
+                $('#filtrar').prop('disabled', true);
+            }
+        })
 
         let consulta = "<?= isset($consulta) ? 1 : 0 ?>";
 
