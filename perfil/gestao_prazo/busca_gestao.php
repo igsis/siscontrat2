@@ -74,7 +74,7 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . $eventos['protocolo'] . "</td>";
                                 echo "<td>" . $eventos['nome_evento'] . "</td>";
                                 echo "<td>" . $eventos['local'] . "</td>";
-                                echo "<td>" . retornaPeriodoNovo($eventos['id']) . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($eventos['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $fiscal['nome_completo'] . "</td>";
                                 echo "<td>
                                                 <form method='POST' action='?perfil=gestao_prazo&p=detalhes_gestao' role='form'>

@@ -62,7 +62,7 @@ $num_atracoes = 0;
                                     echo "<tr>";
                                     echo "<td>". $evento['nome_evento']."</td>";
                                     echo "<td>" . $locais . "</td>";
-                                    echo "<td>" . retornaPeriodoNovo($evento['id']) . "</td>";
+                                    echo "<td>" . retornaPeriodoNovo($evento['id'], 'agendao_ocorrencias') . "</td>";
                                     echo "<td>
                                     <form method=\"POST\" action=\"?perfil=agendao&p=resumo_evento_enviado\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>

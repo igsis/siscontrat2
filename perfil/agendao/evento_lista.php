@@ -64,7 +64,7 @@ if ($linha >= 1) {
                                     echo "<tr>";
                                     echo "<td>" . $evento['nome_evento'] . "</td>";
                                     echo "<td>" . $locais . "</td>";
-                                    echo "<td>" . retornaPeriodoNovo($evento['idEvento']) . "</td>";
+                                    echo "<td>" . retornaPeriodoNovo($evento['idEvento'], 'agendao_ocorrencias') . "</td>";
                                     echo "<td>
                                     <form method=\"POST\" action=\"?perfil=agendao&p=evento_edita\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>

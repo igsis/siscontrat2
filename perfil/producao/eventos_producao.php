@@ -71,7 +71,7 @@ $query = mysqli_query($con, $sqlEvento);
                                 }
                                 echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
-                                echo "<td>" . retornaPeriodoNovo($evento['id']) . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($evento['id'], 'ocorrencias') . "</td>";
                                 echo "<td>                               
                             <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_evento' role='form'>
                             <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>

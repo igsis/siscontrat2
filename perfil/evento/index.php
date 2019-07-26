@@ -137,7 +137,7 @@ if ($linha >= 1) {
                                                 ?>
                                                 <p><b>Enviado por: </b><?= $usuario['nome_completo'] ?>
                                                     <b>em:</b> <?= exibirDataBr($dataEnvio['data_envio']) ?> </p>
-                                                <p><b>Período:</b> <?= retornaPeriodoNovo($evento['id']) ?> </p>
+                                                <p><b>Período:</b> <?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?> </p>
                                                 <p><b>Local:</b> <?= $locais ?></p>
                                             </div>
                                         </div>

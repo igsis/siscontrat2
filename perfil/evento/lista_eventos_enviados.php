@@ -76,7 +76,7 @@ $num_atracoes = 0;
                                 }
                                 echo "</td>";
                                 echo "<td>" . $locais. "</td>";
-                                echo "<td>" . retornaPeriodoNovo($evento['id']) . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($evento['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $status['status'] . "</td>";
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=resumo_evento_enviado\" role=\"form\">

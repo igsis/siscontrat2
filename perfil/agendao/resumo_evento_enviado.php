@@ -27,7 +27,7 @@ $agendao = $con->query($sqlEvento)->fetch_array();
 $idProdutor = $agendao['produtor_id'];
 $produtor = $con->query("SELECT * FROM produtores WHERE id = '$idProdutor'")->fetch_array();
 
-$ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias INNER JOIN retirada_ingressos ri on ocorrencias.retirada_ingresso_id = ri.id INNER JOIN subprefeituras s on ocorrencias.subprefeitura_id = s.id INNER JOIN periodos p on ocorrencias.periodo_id = p.id WHERE origem_ocorrencia_id = '$idEvento'  AND tipo_ocorrencia_id = 3 AND publicado = '1'");
+$ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias ocorrencias INNER JOIN retirada_ingressos ri on ocorrencias.retirada_ingresso_id = ri.id INNER JOIN subprefeituras s on ocorrencias.subprefeitura_id = s.id INNER JOIN periodos p on ocorrencias.periodo_id = p.id WHERE origem_ocorrencia_id = '$idEvento'  AND tipo_ocorrencia_id = 3 AND publicado = '1'");
 ?>
 
 <div class="content-wrapper">
@@ -42,7 +42,7 @@ $ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias INNER JOIN retirad
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong><?= $agendao['nome_evento']; ?></strong></h3><hr>
-                        <div class="box-body">
+                        <div class="box-body">Telefones
                             <div class="form-group col-md-12">
                                 <p><b>Projeto Especial:</b> <?= $agendao['projeto_especial'] ?></p>
                                 <p><b>Artistas:</b> <?= $agendao['ficha_tecnica'] ?></p>
@@ -97,7 +97,7 @@ $ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias INNER JOIN retirad
                                 <h3 class="box-title"><b>Produtor</b></h3><br><br>
                                 <p><b>Nome do produtor:</b> <?= $produtor['nome'] ?></p>
                                 <p><b>Email:</b> <?= $produtor['email'] ?></p>
-                                <p><b>Telefone:</b> <?= $produtor['telefone1'] . " " . $produtor['telefone1'] ?></p>
+                                <p><b>Telefone(s):</b> <?= $produtor['telefone1'] ?? NULL . " " . $produtor['telefone2'] ?? NULL ?></p>
                                 <p><b>Observação do produtor:</b> <?= $produtor['observacao'] ?></p>
                                 <hr/>
                             </div>

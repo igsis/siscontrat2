@@ -80,7 +80,7 @@ $query = mysqli_query($con, $sql);
                                 echo "</td>";
                                 echo "<td>" . $locais. "</td>";
                                 echo "<td>" . dinheiroParaBr($evento['valor_total']) . "</td>";
-                                echo "<td>" . retornaPeriodoNovo($idEvento) . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</td>";
                                 echo "<td>" . $evento['status'] . "</td>";
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=resumo_evento_enviado\" role=\"form\">

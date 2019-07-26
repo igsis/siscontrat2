@@ -91,7 +91,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                             <strong>Nome do Evento: </strong><?= $evento ['nome_evento']; ?>
                                         </div>
                                         <div class="form-group col-md-12">
-                                            <strong>Período: </strong><?= retornaPeriodoNovo($idEvento); ?>
+                                            <strong>Período: </strong><?= retornaPeriodoNovo($idEvento, 'ocorrencias'); ?>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <strong>Tipo evento: </strong><?= $tipo_evento['tipo_evento']; ?>
