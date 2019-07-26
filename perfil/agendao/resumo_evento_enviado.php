@@ -101,7 +101,7 @@ $ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias ocorrencias INNER 
                                 <h3 class="box-title"><b>Produtor</b></h3><br><br>
                                 <p><b>Nome do produtor:</b> <?= $produtor['nome'] ?></p>
                                 <p><b>Email:</b> <?= $produtor['email'] ?></p>
-                                <p><b>Telefone(s):</b> <?= $produtor['telefone1'] ?? NULL . " " . $produtor['telefone2'] ?? NULL ?></p>
+                                <p><b>Telefone(s):</b> <?= $produtor['telefone1'] ?? NULL ?>  <?= " | " . $produtor['telefone2'] ?? NULL ?></p>
                                 <p><b>Observação do produtor:</b> <?= $produtor['observacao'] ?></p>
                                 <hr/>
                             </div>
