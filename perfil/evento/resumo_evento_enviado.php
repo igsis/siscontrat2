@@ -24,7 +24,7 @@ if (isset($_POST['enviar'])) {
             $data = date("Y-m-d H:i:s",strtotime("now"));
             $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
             $queryEnvia = mysqli_query($con, $sqlEnvia);
-            $mensagemPedido = mensagem("success", "Evento enviado com sucesso!");
+            $mensagemPedido = mensagem("success", "Pedido enviado com sucesso!");
         }
     }
 
@@ -108,7 +108,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                 Especial: </strong><?= $projeto_especial['projeto_especial']; ?>
                                         </div>
                                         <div class="form-group col-md-12">
-                                            <strong>Sinopse:</strong><?= $evento['sinopse']; ?>
+                                            <strong>Sinopse: </strong><?= $evento['sinopse']; ?>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <div align="center">

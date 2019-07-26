@@ -36,13 +36,17 @@ $ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias ocorrencias INNER 
 
         <!-- START ACCORDION-->
         <h2 class="page-header">Informações do Evento</h2>
-        <?= isset($mensagem) ?? $mensagem ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong><?= $agendao['nome_evento']; ?></strong></h3><hr>
-                        <div class="box-body">Telefones
+                        <div class="row" align="center">
+                            <?php if (isset($mensagem)) {
+                                echo $mensagem;
+                            }; ?>
+                        </div>
+                        <div class="box-body">
                             <div class="form-group col-md-12">
                                 <p><b>Projeto Especial:</b> <?= $agendao['projeto_especial'] ?></p>
                                 <p><b>Artistas:</b> <?= $agendao['ficha_tecnica'] ?></p>
