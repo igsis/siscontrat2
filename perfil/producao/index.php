@@ -2,7 +2,7 @@
 include "../perfil/producao/includes/menu.php";
 $con = bancoMysqli();
 
-$sql = "SELECT
+$sqlNovos = "SELECT
                     e.id AS 'id',
                     e.protocolo AS 'protocolo',
                     e.nome_evento AS 'nome_evento',
@@ -10,8 +10,21 @@ $sql = "SELECT
             FROM eventos AS e
             INNER JOIN pedidos AS p ON p.origem_id = e.id 
 WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 2 AND e.visualizado = 0";
-$query = mysqli_query($con, $sql);
-$numEventos = mysqli_num_rows($query);
+$queryNovos = mysqli_query($con, $sqlNovos);
+$numNovos = mysqli_num_rows($queryNovos);
+
+$sqlVisualizados = "SELECT
+                    e.id AS 'id',
+                    e.protocolo AS 'protocolo',
+                    e.nome_evento AS 'nome_evento',
+                    e.visualizado AS 'visualizado'
+            FROM eventos AS e
+            INNER JOIN pedidos AS p ON p.origem_id = e.id 
+WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 2 AND e.visualizado = 1";
+$queryVisualizados = mysqli_query($con, $sqlVisualizados);
+$numVisualizados = mysqli_num_rows($queryVisualizados);
+
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -40,17 +53,34 @@ $numEventos = mysqli_num_rows($query);
             <!-- /.col -->
             <?php
 
-            if ($numEventos > 0) {
+            if ($numNovos > 0) {
                 ?>
                 <div class="col-md-5 col-xs-12">
                     <div class="info-box">
                         <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">Eventos a serem visualizados</span>
-                            <span class="info-box-number"><?= $numEventos ?></span>
+                            <span class="info-box-number"><?= $numNovos ?></span>
                         </div>
                     </div>
                 </div>
+                <?php
+            }
+            ?>
+
+            <?php
+            if ($numVisualizados > 0) {
+                ?>
+                <div class="col-md-5 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Eventos Visualizados</span>
+                            <span class="info-box-number"><?=$numVisualizados?></span>
+                        </div>
+                    </div>
+                </div>
+
                 <?php
             }
             ?>
