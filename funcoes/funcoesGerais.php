@@ -1177,38 +1177,35 @@ function anexosNaPagina ($idDocumento, $idPessoa, $nomeModal, $documento) {
 function listaLocais($idEvento, $tiraLinha = "")
 {
     $con = bancoMysqli();
-    $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
-    $query_atracao = mysqli_query($con, $sql_atracao);
     $locais = "";
     $negrito = 0;
-    while ($atracao = mysqli_fetch_array($query_atracao)) {
-        $idAtracao = $atracao['id'];
-        $sql_virada = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = '1' AND virada = '1'";
-        $query_virada = mysqli_query($con, $sql_virada);
-        $num = mysqli_num_rows($query_virada);
-        if ($num > 0) {
-            $locais = " DE ACORDO COM PROGRAMAÇÃO DO EVENTO NO PERÍODO DA VIRADA CULTURAL.  ";
-        } else {
-            $sql = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idAtracao' AND publicado = '1'";
-            $query = mysqli_query($con, $sql);
-            while ($local = mysqli_fetch_array($query)) {
-                if($tiraLinha == 1){
 
-                    $sala = recuperaDados("locais", 'id', $local['local_id']);
-                    $instituicao = recuperaDados("instituicoes", 'id', $sala['instituicao_id']);
-                    $locais = $locais . " " . $sala['local'] . " (" . $instituicao['sigla'] . ") -  ";
+    $sql_virada = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1' AND virada = '1'";
+    $query_virada = mysqli_query($con, $sql_virada);
+    $num = mysqli_num_rows($query_virada);
+    if ($num > 0) {
+        $locais = " DE ACORDO COM PROGRAMAÇÃO DO EVENTO NO PERÍODO DA VIRADA CULTURAL.  ";
+    } else {
+        $sql = "SELECT DISTINCT local_id FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1'";
+        $query = mysqli_query($con, $sql);
+        while ($local = mysqli_fetch_array($query)) {
+            if($tiraLinha == 1){
 
-                    $negrito++;
-                }else{
-                    $sala = recuperaDados("locais", 'id', $local['local_id']);
-                    $instituicao = recuperaDados("instituicoes", 'id', $sala['instituicao_id']);
-                    $locais = "<p>" . $locais . " " . $sala['local'] . " (" . $instituicao['sigla'] . ") </p><hr>";
+                $sala = recuperaDados("locais", 'id', $local['local_id']);
+                $instituicao = recuperaDados("instituicoes", 'id', $sala['instituicao_id']);
+                $locais = $locais . " " . $sala['local'] . " (" . $instituicao['sigla'] . ") -  ";
 
-                    $negrito++;
-                }
+                $negrito++;
+            }else{
+                $sala = recuperaDados("locais", 'id', $local['local_id']);
+                $instituicao = recuperaDados("instituicoes", 'id', $sala['instituicao_id']);
+                $locais = "<p>" . $locais . " " . $sala['local'] . " (" . $instituicao['sigla'] . ") </p><hr>";
+
+                $negrito++;
             }
         }
     }
+
     $locais = substr($locais, 0, strlen($locais) - 4);
     //$locais = $locais . "";
     return $locais;
