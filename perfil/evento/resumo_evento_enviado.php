@@ -12,23 +12,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
 if (isset($_POST['enviar'])) {
     $fora = $_POST['fora'];
-    if ($fora == 1) {
-        $sqlPedido = "UPDATE pedidos SET status_pedido_id = 1 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
-        $sqlEvento = "UPDATE eventos SET evento_status_id = 2 WHERE id = '$idEvento'";
-        if (mysqli_query($con, $sqlPedido)) {
-            mysqli_query($con, $sqlEvento);
-            $mensagemPedido = mensagem("warning", "Seu pedido está aguardando aprovação!");
-        }
-    } else {
-        $sqlPedido = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
-        if (mysqli_query($con, $sqlPedido)) {
-            $mensagemPedido = mensagem("success", "Pedido aprovado!");
-            $data = date("Y-m-d H:i:s",strtotime("now"));
-            $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
-            $queryEnvia = mysqli_query($con, $sqlEnvia);
-            $mensagemPedido = mensagem("success", "Pedido enviado com sucesso!");
-        }
-    }
 
     if ($evento['tipo_evento_id'] == 1) {
         $protocolo = geraProtocolo($idEvento) . "-E";
@@ -36,11 +19,33 @@ if (isset($_POST['enviar'])) {
         $protocolo = geraProtocolo($idEvento) . "-C";
     }
 
-    $sqlEnviaEvento = "UPDATE eventos SET evento_status_id = '3', protocolo = '$protocolo' WHERE id = '$idEvento'";
-    if ($con->query($sqlEnviaEvento)) {
-        $mensagem = mensagem('success', 'Evento Enviado com Sucesso');
-    } else {
-        $mensagem = mensagem('danger', 'Falha ao Enviar o Evento');
+    if($evento['contratacao'] == 1){
+        if ($fora == 1) {
+            $sqlPedido = "UPDATE pedidos SET status_pedido_id = 1 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
+            $sqlEvento = "UPDATE eventos SET evento_status_id = 2 WHERE id = '$idEvento'";
+            if (mysqli_query($con, $sqlPedido)) {
+                mysqli_query($con, $sqlEvento);
+                $mensagemPedido = mensagem("warning", "Seu pedido está aguardando aprovação!");
+            }
+        } else {
+            $sqlPedido = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
+            if (mysqli_query($con, $sqlPedido)) {
+                $mensagemPedido = mensagem("success", "Pedido aprovado!");
+
+                $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3 WHERE id = '$idEvento'";
+                mysqli_query($con, $sqlEnviaEvento);
+
+                $data = date("Y-m-d H:i:s",strtotime("now"));
+                $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
+                $queryEnvia = mysqli_query($con, $sqlEnvia);
+                $mensagem = mensagem("success", "Evento enviado com sucesso!");
+            }
+        }
+
+    }else{
+        $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3 WHERE id = '$idEvento'";
+        mysqli_query($con, $sqlEnviaEvento);
+        $mensagem = mensagem("success", "Evento enviado com sucesso!");
     }
 }
 

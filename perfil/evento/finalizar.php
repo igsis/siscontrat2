@@ -137,18 +137,26 @@ include "includes/validacoes.php";
                 </div>
 
                 <div class="tab-pane" id="atracao">
-                    <?php if ($numAtracoes == 0 && $evento['tipo_evento_id'] == 1) { ?>
+                    <?php
+
+                    $mostra = true;
+
+                    if ((isset($numAtracoes) && $numAtracoes == 0) && $evento['tipo_evento_id'] == 1) { ?>
                         <div class="alert alert-danger">
                             <h4><i class="icon fa fa-ban"></i>Não há atrações cadastradas</h4>
                         </div>
-                    <?php } else {
-                        if ($numFilmes == 0 && $evento['tipo_evento_id'] == 2) {
+                    <?php
+                        $mostra = false;
+                    } else {
+                        if ((isset($numFilmes) && $numFilmes == 0) && $evento['tipo_evento_id'] == 2) {
                             ?>
                             <div class="alert alert-danger">
                                 <h4><i class="icon fa fa-ban"></i>Não há filmes cadastrados</h4>
                             </div>
                             <?php
-                        } else {
+                            $mostra = false;
+                        }
+                        if($mostra){
                             include "label_atracao_filme.php";
                         }
                     } ?>
