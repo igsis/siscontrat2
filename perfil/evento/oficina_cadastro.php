@@ -36,7 +36,7 @@ $idAtracao = $_POST['idAtracao'];
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="vagas">Vagas</label> <br>
-                                    <input class="form-control" style="max-width: 175px;" type="number" name="vagas">
+                                    <input class="form-control" style="max-width: 175px;" type="number" name="vagas" min="1">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="venda">Venda de material?</label> <br>
@@ -53,7 +53,7 @@ $idAtracao = $_POST['idAtracao'];
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="material">Material Requisitado: </label>
-                                    <textarea  name="material" id="material" class="form-control" rows="3" readonly></textarea>
+                                    <textarea  name="material" id="material" class="form-control" rows="3"></textarea>
                                 </div>
                             </div>
                             <div class="row">
@@ -102,18 +102,3 @@ $idAtracao = $_POST['idAtracao'];
         </div>
     </section>
 </div>
-
-<script>
-    var venda = $('.venda');
-    venda.on("change", function () {
-        if($('#sim').is(':checked')){
-            $('#material')
-                .attr('readonly', false)
-                .val('');
-        }else{
-            $('#material')
-                .attr('readonly', true)
-                .val('');
-        }
-    });
-</script>

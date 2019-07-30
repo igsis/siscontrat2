@@ -121,7 +121,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-4">
                                     <label for="vagas">Vagas</label> <br>
                                     <input class="form-control" style="max-width: 175px;" type="number" name="vagas"
-                                           value="<?= $oficina['vagas'] ?>">
+                                           value="<?= $oficina['vagas'] ?>" min="1">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="venda">Venda de material?</label> <br>
@@ -144,7 +144,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-12">
                                     <label for="material">Material Requisitado: </label>
                                     <textarea name="material" id="material" class="form-control"
-                                              rows="2" readonly><?= $oficina['material_requisitado'] ?></textarea>
+                                              rows="2"><?= $oficina['material_requisitado'] ?></textarea>
                                 </div>
                             </div>
                             <div class="row">
@@ -202,21 +202,3 @@ include "includes/menu_interno.php";
         </div>
     </section>
 </div>
-
-
-<script>
-    var venda = $('.venda');
-    venda.on("change", verificaVenda);
-    $(document).ready(verificaVenda());
-
-    function verificaVenda () {
-        if ($('#sim').is(':checked')) {
-            $('#material')
-                .attr('readonly', false)
-        } else {
-            $('#material')
-                .attr('readonly', true)
-                .val('');
-        }
-    }
-</script>
