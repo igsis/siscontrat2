@@ -185,7 +185,7 @@ if ($evento['tipo_evento_id'] == 2) {
             $numOcorrencias = $ocorrencias->num_rows;
 
             if ($numOcorrencias == 0) {
-                array_push($erros, "Não há ocorrência cadastrada para o filme <b>" . $filme['nome_atracao'] . "</b>");
+                array_push($erros, "Não há ocorrência cadastrada para o filme <b>" . $filme['titulo'] . "</b>");
             }
         }
     }

@@ -29,7 +29,7 @@ include "includes/validacoes.php";
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>Pendencias </h1>
+        <h1>Pendências </h1>
     </section>
 
     <section class="content">
@@ -37,13 +37,13 @@ include "includes/validacoes.php";
             <div class="col-md-6">
                 <?php if (count($erros) == 0) { ?>
                     <div class="alert alert-success alert-dismissible">
-                        <h4><i class="icon fa fa-check"></i> Seu Evento Não Possui Pendencias!</h4>
+                        <h4><i class="icon fa fa-check"></i> Seu Evento Não Possui Pendências !</h4>
 
                         <p>Confirme todos os dados abaixo antes de enviar.</p>
                     </div>
                 <?php } else { ?>
                     <div class="alert alert-danger">
-                        <h4><i class="icon fa fa-ban"></i> Seu Evento Possui Pendencias!</h4>
+                        <h4><i class="icon fa fa-ban"></i> Seu Evento Possui Pendências !</h4>
 
                         <ul>
                             <?php foreach ($erros as $erro) {
