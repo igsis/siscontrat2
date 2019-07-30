@@ -12,16 +12,28 @@ $sql = "SELECT
                INNER JOIN pedidos AS p ON p.origem_id = e.id 
                INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
                INNER JOIN locais AS l ON l.id = o.local_id
-               WHERE evento_status_id = 3 AND e.publicado = 1 AND p.status_pedido_id = 1";
+               WHERE evento_status_id = 2 AND e.publicado = 1 AND p.status_pedido_id = 1";
 
 if(isset($_POST['aprovar'])){
     $idEvento = $_POST['idEvento'];
+    $evento = recuperaDados('eventos', 'id', $idEvento);
     $sqlAprova = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_id = '$idEvento'";
     if(mysqli_query($con, $sqlAprova)){
         $data = date("Y-m-d H:i:s",strtotime("now"));
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
         $queryEnvia = mysqli_query($con, $sqlEnvia);
         $mensagem = mensagem("success", "Evento aprovado com sucesso!");
+
+        if ($evento['tipo_evento_id'] == 1) {
+            $protocolo = geraProtocolo($idEvento) . "-E";
+        } else if ($evento['tipo_evento_id'] == 2) {
+            $protocolo = geraProtocolo($idEvento) . "-C";
+        }
+        if($evento['contratado'] == 1){
+            $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3";
+            mysqli_query($con, $sqlEnviaEvento);
+        }
+
     }
 }
 

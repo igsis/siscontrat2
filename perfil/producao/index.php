@@ -2,7 +2,7 @@
 include "../perfil/producao/includes/menu.php";
 $con = bancoMysqli();
 
-$sqlNovos = "SELECT
+$sqlEventos = "SELECT
                     e.id AS 'id',
                     e.protocolo AS 'protocolo',
                     e.nome_evento AS 'nome_evento',
@@ -10,19 +10,14 @@ $sqlNovos = "SELECT
             FROM eventos AS e
             INNER JOIN pedidos AS p ON p.origem_id = e.id 
 WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 2 AND e.visualizado = 0";
-$queryNovos = mysqli_query($con, $sqlNovos);
-$numNovos = mysqli_num_rows($queryNovos);
+$queryEventos = mysqli_query($con, $sqlEventos);
+$numEventos = mysqli_num_rows($queryEventos);
 
-$sqlVisualizados = "SELECT
-                    e.id AS 'id',
-                    e.protocolo AS 'protocolo',
-                    e.nome_evento AS 'nome_evento',
-                    e.visualizado AS 'visualizado'
-            FROM eventos AS e
-            INNER JOIN pedidos AS p ON p.origem_id = e.id 
-WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 2 AND e.visualizado = 1";
-$queryVisualizados = mysqli_query($con, $sqlVisualizados);
-$numVisualizados = mysqli_num_rows($queryVisualizados);
+$sqlAgendao = "SELECT *
+            FROM agendoes 
+WHERE publicado = 1 AND evento_status_id = 3 AND visualizado = 0";
+$queryAgendao = mysqli_query($con, $sqlAgendao);
+$numAgendao= mysqli_num_rows($queryAgendao);
 
 
 ?>
@@ -53,14 +48,14 @@ $numVisualizados = mysqli_num_rows($queryVisualizados);
             <!-- /.col -->
             <?php
 
-            if ($numNovos > 0) {
+            if ($numEventos > 0) {
                 ?>
                 <div class="col-md-5 col-xs-12">
                     <div class="info-box">
                         <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">Eventos a serem visualizados</span>
-                            <span class="info-box-number"><?= $numNovos ?></span>
+                            <span class="info-box-number"><?= $numEventos ?></span>
                         </div>
                     </div>
                 </div>
@@ -69,14 +64,14 @@ $numVisualizados = mysqli_num_rows($queryVisualizados);
             ?>
 
             <?php
-            if ($numVisualizados > 0) {
+            if ($numAgendao > 0) {
                 ?>
-                <div class="col-md-5 col-xs-12">
+                <div class="col-md-6 col-xs-12">
                     <div class="info-box">
                         <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Eventos Visualizados</span>
-                            <span class="info-box-number"><?=$numVisualizados?></span>
+                            <span class="info-box-text">Agendões a serem visualizados</span>
+                            <span class="info-box-number"><?=$numAgendao?></span>
                         </div>
                     </div>
                 </div>

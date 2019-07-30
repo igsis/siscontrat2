@@ -122,7 +122,7 @@ include "../perfil/producao/includes/menu_interno.php";
                             <?php }?>
 
                             <div class="box-footer">
-                                <form action="?perfil=producao&p=eventos_producao" method="post">
+                                <form action="?perfil=producao&p=eventos_verificados_producao" method="post">
                                     <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                                     <?php
 

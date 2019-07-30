@@ -1,5 +1,5 @@
 <?php
-include "../perfil/producao/includes/menu_interno.php";
+include "includes/menu_interno.php";
 
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
@@ -18,21 +18,40 @@ if (isset($_POST['checar'])) {
     }
 }
 
-$sqlEvento = "SELECT
+/*$sqlEvento = "SELECT*
                     e.id AS 'id',
                     e.protocolo AS 'protocolo',
                     e.nome_evento AS 'nome_evento',
                     e.visualizado AS 'visualizado'
             FROM eventos AS e
-            INNER JOIN pedidos AS p ON p.origem_id = e.id 
-WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 2";
+            INNER JOIN pedidos AS p ON p.origem_id = e.id
+WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 2 AND e.visualizado = 1";*/
+
+$sqlEvento = "SELECT
+                    eve.id AS 'id',
+                    eve.protocolo AS 'protocolo',
+                    eve.nome_evento AS 'nome_evento',
+                    l.local AS 'local',
+                    esp.espaco AS 'espaco',
+                    env.data_envio AS 'data_envio',
+                    u.nome_completo as 'usuário',
+                    eve.visualizado AS 'visualizado'
+            FROM eventos AS eve
+            INNER JOIN ocorrencias as o on o.id = eve.id
+            LEFT JOIN locais as l ON l.id = o.local_id
+            LEFT JOIN espacos as esp on esp.id = o.espaco_id
+            INNER JOIN evento_envios as env on env.evento_id = eve.id
+            INNER JOIN usuarios as u on u.id = eve.usuario_id
+            INNER JOIN pedidos AS ped ON ped.origem_id = eve.id 
+WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND eve.visualizado = 0";
+
 $query = mysqli_query($con, $sqlEvento);
 ?>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Eventos - Produção</h2>
+        <h2 class="page-header">Eventos Visualizados</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -48,30 +67,32 @@ $query = mysqli_query($con, $sqlEvento);
                     </div>
 
                     <div class="box-body">
-                        <table id="tblEventosProducao" class="table table-bordered table-striped">
+                        <table id="tblEventosVisualizadosProducao" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
-                                <th>Nome do Evento</th>
+                                <th>Nome</th>
+                                <th>Locais</th>
+                                <th>Espaços</th>
                                 <th>Periodo</th>
+                                <th>Data do Envio</th>
+                                <th>Usuário</th>
                                 <th>Visualizar</th>
                             </tr>
                             </thead>
                             <?php
                             echo "<tbody>";
-                            while ($evento = mysqli_fetch_array($query)) {
-                            if ($evento['visualizado'] != 1){
-                            ?>
-                            <tr style="background-color: rgba(255, 0, 0, 0.6);">
-                                <?php
-                                } else {
-                                ?>
+                            while ($evento = mysqli_fetch_array($query)) { ?>
                             <tr>
                                 <?php
-                                }
+
                                 echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
+                                echo "<td>" . $evento['local'] . "</td>";
+                                echo "<td>" . $evento['espaco'] . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($evento['id'], 'ocorrencias') . "</td>";
+                                echo "<td>" . $evento['data_envio'] ."</td>";
+                                echo "<td>" . $evento['usuario'] . "</td>";
                                 echo "<td>                               
                             <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_evento' role='form'>
                             <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>
@@ -87,20 +108,18 @@ $query = mysqli_query($con, $sqlEvento);
                                 <tr>
                                     <th>Protocolo</th>
                                     <th>Nome do Evento</th>
+                                    <th>Locais</th>
+                                    <th>Espaços</th>
                                     <th>Periodo</th>
+                                    <th>Data do Envio</th>
+                                    <th>Usuário</th>
                                     <th>Visualizar</th>
                                 </tr>
                                 </tfoot>
-
-
                         </table>
-
                     </div>
-
                 </div>
             </div>
-
-
     </section>
 </div>
 
@@ -109,7 +128,7 @@ $query = mysqli_query($con, $sqlEvento);
 
 <script type="text/javascript">
     $(function () {
-        $('#tblEventosProducao').DataTable({
+        $('#tblEventosVisualizadosProducao').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },
