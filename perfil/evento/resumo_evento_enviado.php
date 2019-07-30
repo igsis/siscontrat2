@@ -35,11 +35,6 @@ if (isset($_POST['enviar'])) {
     } else if ($evento['tipo_evento_id'] == 2) {
         $protocolo = geraProtocolo($idEvento) . "-C";
     }
-    /*else if ($eveto['tipo_evento_id'] == ?){
-        $protocolo = geraProtocolo($idEvento) . "-F";
-    } else if($evento['tipo_evento_id'] == ??){
-        $protocolo = geraProtocolo($idEvento) . "-M";
-    }*/
 
     $sqlEnviaEvento = "UPDATE eventos SET evento_status_id = '3', protocolo = '$protocolo' WHERE id = '$idEvento'";
     if ($con->query($sqlEnviaEvento)) {
