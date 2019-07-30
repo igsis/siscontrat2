@@ -2,6 +2,7 @@
 $con = bancoMysqli();
 
 $idEvento = $_SESSION['idEvento'];
+$idOrigem = $_SESSION['idOrigem'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.php';
@@ -11,11 +12,11 @@ include "includes/menu_interno.php";
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
     // origem_ocorrencia_id = idEvento
-    // atracao_id = idAtracao/idOrigem
+    // atracao_id = idAtracao/idOrigem/idFilme
 
     $tipo_evento_id = $evento['tipo_evento_id'];
     $origem_ocorrencia_id = $idEvento;
-    $atracao_id = $_POST['idOrigem'];
+    $atracao_id = $idOrigem;
     $instituicao_id = $_POST['instituicao'];
     $local_id = $_POST['local'];
     $espaco_id = $_POST['espaco'] ?? NULL;
