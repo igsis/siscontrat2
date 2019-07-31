@@ -40,6 +40,11 @@ include "includes/menu_interno.php";
                                     <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla escolha) </i></label>
                                     <button class='btn btn-default' type='button' data-toggle='modal' data-target='#modalAcoes' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
+                                    <div class="row" id="msgEsconde">
+                                        <div class="form-group col-md-12">
+                                            <span style="color: red;">Selecione ao menos uma expressões artístico-culturais!</span>
+                                        </div>
+                                    </div>
                                     <?php
                                         geraCheckBox('acoes', 'acao', 'acao_atracao', 'col-md-6', 'atracao_id', 'acao_id', null);
                                     ?>
@@ -124,7 +129,7 @@ include "includes/menu_interno.php";
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
+                            <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
                     </form>
                 </div>
@@ -232,8 +237,10 @@ include "includes/menu_interno.php";
     function verificaOficina() {
         if ($('#simOficina').is(':checked')) {
             checaCampos(oficinaOficial);
+            acaoValidacao()
         } else {
             checaCampos("");
+            acaoValidacao()
         }
     }
 
@@ -290,4 +297,35 @@ include "includes/menu_interno.php";
                 .attr('required', false)
         }
     }
+</script>
+
+<script>
+    function acaoValidacao() {
+        var isMsg = $('#msgEsconde');
+        isMsg.hide();
+
+        var i = 0;
+        var counter = 0;
+        var acao = $('.acao');
+
+        for (; i < acao.length; i++) {
+            if (acao[i].checked) {
+                counter++;
+            }
+        }
+
+        if (counter == 0) {
+            $('#cadastra').attr("disabled", true);
+            isMsg.show();
+            return false;
+        }
+
+        $('#cadastra').attr("disabled", false);
+        isMsg.hide();
+        return true;
+    }
+
+    $(document).ready(acaoValidacao);
+
+    $('.acao').on("change", acaoValidacao);
 </script>

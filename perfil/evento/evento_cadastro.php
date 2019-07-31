@@ -96,8 +96,13 @@ include "includes/menu_interno.php";
                                     <button class='btn btn-default' type='button' data-toggle='modal'
                                             data-target='#modalPublico' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
+                                    <div class="row" id="msgEsconde">
+                                        <div class="form-group col-md-6">
+                                            <span style="color: red;">Selecione ao menos uma representatividade!</span>
+                                        </div>
+                                    </div>
                                     <?php
-                                        geraCheckBox('publicos', 'publico', 'evento_publico', 'col-md-6', 'evento_id', 'publico_id', null);
+                                    geraCheckBox('publicos', 'publico', 'evento_publico', 'col-md-6', 'evento_id', 'publico_id', null);
                                     ?>
                                 </div>
                             </div>
@@ -135,7 +140,7 @@ include "includes/menu_interno.php";
                         </div>
 
                         <div class="box-footer">
-                            <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
+                            <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
                     </form>
                 </div>
@@ -233,11 +238,11 @@ include "includes/menu_interno.php";
         }
     }
 
-    function checaCampos(obj){
-        if(obj.id == oficinaId && obj.value == '8'){
+    function checaCampos(obj) {
+        if (obj.id == oficinaId && obj.value == '8') {
 
-            for(i = 0; i < acao.size(); i++){
-                if (!(acao[i] == obj)){
+            for (i = 0; i < acao.size(); i++) {
+                if (!(acao[i] == obj)) {
                     let acoes = acao[i].id;
 
                     document.getElementById(acoes).disabled = true;
@@ -249,10 +254,10 @@ include "includes/menu_interno.php";
 
                 }
             }
-        }else{
-            for(i = 0; i < acao.size(); i++){
+        } else {
+            for (i = 0; i < acao.size(); i++) {
 
-                if (!(acao[i] == acao[8])){
+                if (!(acao[i] == acao[8])) {
                     let acoes = acao[i].id;
 
                     document.getElementById(acoes).disabled = false;
@@ -286,4 +291,36 @@ include "includes/menu_interno.php";
                 .attr('required', false)
         }
     }
+</script>
+
+<script>
+
+    function publicoValidacao() {
+        var isMsg = $('#msgEsconde');
+        isMsg.hide();
+
+        var i = 0;
+        var counter = 0;
+        var publico = $('.publico');
+
+        for (; i < publico.length; i++) {
+            if (publico[i].checked) {
+                counter++;
+            }
+        }
+
+        if (counter == 0) {
+            $('#cadastra').attr("disabled", true);
+            isMsg.show();
+            return false;
+        }
+
+        $('#cadastra').attr("disabled", false);
+        isMsg.hide();
+        return true;
+    }
+
+    $(document).ready(publicoValidacao);
+
+    $('.publico').on("change", publicoValidacao);
 </script>

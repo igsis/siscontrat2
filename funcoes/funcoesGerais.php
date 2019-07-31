@@ -1345,7 +1345,7 @@ function geraCheckBox($tabela, $name, $tabelaRelacionamento, $colMd, $campo, $ca
     while($checkbox = $dados->fetch_row()){
         ?>
         <div class="checkbox-grid-2 text-left <?= $colMd ?>">
-            <input type="checkbox" name="<?=$name?>[]" id="<?=$checkbox[1]?>" value="<?=$checkbox[0]?>"
+            <input type="checkbox" name="<?=$name?>[]" id="<?=$checkbox[1]?>" value="<?=$checkbox[0]?>" class="<?= $name ?>"
                 <?=in_array_r($checkbox[0], $relacionamentos) ? "checked" : ""?>>
             <label for="<?=$checkbox[1]?>"><?=$checkbox[1]?></label>
         </div>
