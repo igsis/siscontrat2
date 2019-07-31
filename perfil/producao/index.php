@@ -19,7 +19,6 @@ WHERE publicado = 1 AND evento_status_id = 3 AND visualizado = 0";
 $queryAgendao = mysqli_query($con, $sqlAgendao);
 $numAgendao= mysqli_num_rows($queryAgendao);
 
-
 ?>
 
 <!-- Content Wrapper. Contains page content -->

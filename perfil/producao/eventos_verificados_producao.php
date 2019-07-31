@@ -2,8 +2,8 @@
 include "includes/menu_interno.php";
 
 unset($_SESSION['idEvento']);
-unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
+unset($_SESSION['idPj']);
 
 $idUser = $_SESSION['idUser'];
 
@@ -18,15 +18,6 @@ if (isset($_POST['checar'])) {
     }
 }
 
-/*$sqlEvento = "SELECT*
-                    e.id AS 'id',
-                    e.protocolo AS 'protocolo',
-                    e.nome_evento AS 'nome_evento',
-                    e.visualizado AS 'visualizado'
-            FROM eventos AS e
-            INNER JOIN pedidos AS p ON p.origem_id = e.id
-WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 2 AND e.visualizado = 1";*/
-
 $sqlEvento = "SELECT
                     eve.id AS 'id',
                     eve.protocolo AS 'protocolo',
@@ -34,7 +25,7 @@ $sqlEvento = "SELECT
                     l.local AS 'local',
                     esp.espaco AS 'espaco',
                     env.data_envio AS 'data_envio',
-                    u.nome_completo as 'usuário',
+                    u.nome_completo as 'usuario',
                     eve.visualizado AS 'visualizado'
             FROM eventos AS eve
             INNER JOIN ocorrencias as o on o.id = eve.id
@@ -43,9 +34,9 @@ $sqlEvento = "SELECT
             INNER JOIN evento_envios as env on env.evento_id = eve.id
             INNER JOIN usuarios as u on u.id = eve.usuario_id
             INNER JOIN pedidos AS ped ON ped.origem_id = eve.id 
-WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND eve.visualizado = 0";
+WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND eve.visualizado = 1";
 
-$query = mysqli_query($con, $sqlEvento);
+$queryEvento = mysqli_query($con, $sqlEvento);
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -82,7 +73,9 @@ $query = mysqli_query($con, $sqlEvento);
                             </thead>
                             <?php
                             echo "<tbody>";
-                            while ($evento = mysqli_fetch_array($query)) { ?>
+                            while ($evento = mysqli_fetch_array($queryEvento)) {
+                                                            ?>
+
                             <tr>
                                 <?php
 
