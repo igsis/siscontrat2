@@ -2,6 +2,8 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
+$nomeFilme = $_POST['nomeFilme'] ?? NULL;
+
 ?>
 
 <div class="content-wrapper">
@@ -18,7 +20,7 @@ include "includes/menu_interno.php";
                     <div class="box-body">
                         <div class="form-group">
                             <label for="tituloFilme">Título do filme *:</label>
-                            <input type="text" class="form-control" id="tituloFilme" name="tituloFilme" placeholder="Digite o título do filme" maxlength="100" required>
+                            <input type="text" class="form-control" id="tituloFilme" name="tituloFilme" placeholder="Digite o título do filme" maxlength="100" required value="<?= $nomeFilme ?>" <?= isset($nomeFilme) ? "readonly" : NULL ?>>
                         </div>
                         <div class="form-group">
                             <label for="tituloOriginal">Título original:</label>

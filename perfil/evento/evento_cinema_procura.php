@@ -38,7 +38,8 @@ if (isset($_POST['procurar'])){
                 $resultado .= "<td>
                                      <form action='?perfil=evento&p=evento_cinema_edita' method='post'>
                                         <input type='hidden' name='idFilme' value='".$filmes['id']."'>
-                                        <input class='btn btn-primary' type='submit' name='carregar' value='Selecionar'>
+                                        <td><input class='btn btn-primary' type='submit' name='adicionar' value='Adicionar'></td>
+                                        <td><input class='btn btn-primary' type='submit' name='carregar' value='Selecionar'></td>
                                      </form>
                                </td>";
                 $resultado .= "</tr>";
@@ -50,10 +51,10 @@ if (isset($_POST['procurar'])){
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <a class=\"btn btn-primary\" href=\"?perfil=evento&p=evento_cinema_cadastro\">
-                            <i class=\"glyphicon glyphicon-plus\">        
-                            </i>Adicionar
-                         </a>
+                         <form action=\"?perfil=evento&p=evento_cinema_cadastro\" method=\"post\">
+                            <input type='hidden' name='nomeFilme' value='$procurar'>
+                            <button class='btn btn-primary'><i class='glyphicon glyphicon-plus'> Adicionar</i></button>
+                         </form>
                       </td>";
 
         }
@@ -101,6 +102,7 @@ if (isset($_POST['procurar'])){
                                             <th>Ano</th>
                                             <th>Duração</th>
                                             <th>Diretor</th>
+                                            <th width="10%"></th>
                                             <th width="10%"></th>
                                         </tr>
                                     </thead>
