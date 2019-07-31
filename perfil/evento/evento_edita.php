@@ -2,11 +2,11 @@
 $con = bancoMysqli();
 $idEvento = isset($_SESSION['idEvento']) ?? null;
 
-if (isset($_POST['cadastra']) || isset($_POST['edita'])){
-    $nomeEvento =  addslashes($_POST['nomeEvento']);
+if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
+    $nomeEvento = addslashes($_POST['nomeEvento']);
     $relacao_juridica_id = $_POST['relacaoJuridica'];
     $projeto_especial_id = $_POST['projetoEspecial'];
-    $sinopse =  addslashes($_POST['sinopse']);
+    $sinopse = addslashes($_POST['sinopse']);
     $tipo = $_POST['tipo'];
     $fiscal_id = $_POST['fiscal'];
     $suplente_id = $_POST['suplente'];
@@ -48,36 +48,34 @@ if (isset($_POST['cadastra'])) {
                                   '$fomento',
                                   '$tipoLugar')";
 
-    if(mysqli_query($con, $sql))
-    {
+    if (mysqli_query($con, $sql)) {
         $idEvento = recuperaUltimo("eventos");
         $_SESSION['idEvento'] = $idEvento;
 
-        if($idFomento != null)
-        {
+        if ($idFomento != null) {
             $sql = "INSERT INTO evento_fomento  (evento_id, fomento_id) VALUES ('$idEvento', '$idFomento')";
             mysqli_query($con, $sql);
         }
 
-        if(isset($_POST['publico'])){
+        if (isset($_POST['publico'])) {
             atualizaDadosRelacionamento('evento_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
         }
 
-        $mensagem = mensagem("success","Cadastrado com sucesso!");
+        $mensagem = mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
-    }else{
-        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
+    } else {
+        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
 }
 
-if(isset($_POST['edita'])){
+if (isset($_POST['edita'])) {
     $idEvento = $_POST['idEvento'];
-    $evento = recuperaDados("eventos","id",$idEvento);
+    $evento = recuperaDados("eventos", "id", $idEvento);
 
-    if($evento['fomento'] == $fomento){
+    if ($evento['fomento'] == $fomento) {
         $ehIgual = true;
-    }else{
+    } else {
         $ehIgual = false;
     }
 
@@ -94,42 +92,41 @@ if(isset($_POST['edita'])){
                               fomento = '$fomento',
                               espaco_publico = '$tipoLugar'
                               WHERE id = '$idEvento'";
-    If(mysqli_query($con,$sql)){
-        $mensagem = mensagem("success","Gravado com sucesso!");
+    If (mysqli_query($con, $sql)) {
+        $mensagem = mensagem("success", "Gravado com sucesso!");
 
-        if($idFomento == null)
-        {
+        if ($idFomento == null) {
             $sql = "DELETE FROM evento_fomento WHERE evento_id = '$idEvento'";
 
-        }else{
-            if($ehIgual){
+        } else {
+            if ($ehIgual) {
                 $sql = "UPDATE evento_fomento SET fomento_id = '$idFomento' WHERE evento_id = '$idEvento'";
-            }
-            else{
+            } else {
                 $sql = "INSERT INTO evento_fomento VALUES ('$idEvento', '$idFomento')";
             }
         }
 
         mysqli_query($con, $sql);
 
-        if(isset($_POST['publico'])){
+        if (isset($_POST['publico'])) {
             atualizaDadosRelacionamento('evento_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
         }
         //gravarLog($sql);
-    }else{
-        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
+    } else {
+        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
 }
-if(isset($_POST['carregar'])){
+if (isset($_POST['carregar'])) {
     $idEvento = $_POST['idEvento'];
     $_SESSION['idEvento'] = $idEvento;
 }
 
-$evento = recuperaDados("eventos","id",$idEvento);
-$fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
+$evento = recuperaDados("eventos", "id", $idEvento);
 
 include "includes/menu_interno.php";
+
+$fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
 ?>
 
 <div class="content-wrapper">
@@ -144,7 +141,9 @@ include "includes/menu_interno.php";
                         <h3 class="box-title">Informações Gerais</h3>
                     </div>
                     <div class="row" align="center">
-                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
                     </div>
 
                     <form method="POST" action="?perfil=evento&p=evento_edita" role="form">
@@ -153,36 +152,53 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="original">É um evento original?</label> <br>
-                                    <label><input type="radio" name="original" value="1" <?= $evento['original'] == 1 ? 'checked' : NULL ?>> Sim </label>
-                                    <label><input type="radio" name="original" value="0" <?= $evento['original'] == 0 ? 'checked' : NULL ?>> Não </label>
+                                    <label><input type="radio" name="original"
+                                                  value="1" <?= $evento['original'] == 1 ? 'checked' : NULL ?>> Sim
+                                    </label>
+                                    <label><input type="radio" name="original"
+                                                  value="0" <?= $evento['original'] == 0 ? 'checked' : NULL ?>> Não
+                                    </label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="contratacao">Haverá contratação?</label> <br>
-                                    <label><input type="radio" name="contratacao" value="1" <?= $evento['contratacao'] == 1 ? 'checked' : NULL ?>> Sim </label>
-                                    <label><input type="radio" name="contratacao" value="0" <?= $evento['contratacao'] == 0 ? 'checked' : NULL ?>> Não </label>
+                                    <label><input type="radio" name="contratacao"
+                                                  value="1" <?= $evento['contratacao'] == 1 ? 'checked' : NULL ?>> Sim
+                                    </label>
+                                    <label><input type="radio" name="contratacao"
+                                                  value="0" <?= $evento['contratacao'] == 0 ? 'checked' : NULL ?>> Não
+                                    </label>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="contratacao">Espaço em que será realizado o evento é público?</label> <br>
+                                    <label for="contratacao">Espaço em que será realizado o evento é público?</label>
+                                    <br>
                                     <label><input type="radio" name="tipoLugar" value="1"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="tipoLugar" value="0" checked> Não </label>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="tipo">Este evento é cinema?</label> <br>
-                                    <label><input type="radio" name="tipo" value="2" <?= $evento['tipo_evento_id'] == 2 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="tipo" value="1" <?= $evento['tipo_evento_id'] == 1 ? 'checked' : NULL ?>> Não </label>
+                                    <label><input type="radio" name="tipo"
+                                                  value="2" <?= $evento['tipo_evento_id'] == 2 ? 'checked' : NULL ?>>
+                                        Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="tipo"
+                                                  value="1" <?= $evento['tipo_evento_id'] == 1 ? 'checked' : NULL ?>>
+                                        Não </label>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="fomento">É fomento/programa?</label> <br>
-                                    <label><input type="radio" class="fomento" name="fomento" value="1" id="sim"  <?= $evento['fomento'] == 1 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" class="fomento" name="fomento" value="0" id="nao"  <?= $evento['fomento'] == 0 ? 'checked' : NULL ?>> Não </label>
+                                    <label><input type="radio" class="fomento" name="fomento" value="1"
+                                                  id="sim" <?= $evento['fomento'] == 1 ? 'checked' : NULL ?>> Sim
+                                    </label>&nbsp;&nbsp;
+                                    <label><input type="radio" class="fomento" name="fomento" value="0"
+                                                  id="nao" <?= $evento['fomento'] == 0 ? 'checked' : NULL ?>> Não
+                                    </label>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="tipoFomento">Fomento/Programa</label> <br>
+                                    <label for="tipoFomento">Fomento/Programa </label> <br>
                                     <select class="form-control" name="tipoFomento" id="tipoFomento">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao("fomentos", $fomento['fomento_id']);
+                                        geraOpcao("fomentos", $fomento['fomento_id']);
                                         ?>
                                     </select>
                                 </div>
@@ -190,7 +206,8 @@ include "includes/menu_interno.php";
 
                             <div class="form-group">
                                 <label for="nomeEvento">Nome do evento *</label>
-                                <input type="text" class="form-control" id="nomeEvento" name="nomeEvento" maxlength="240" required value="<?= $evento['nome_evento']?>">
+                                <input type="text" class="form-control" id="nomeEvento" name="nomeEvento"
+                                       maxlength="240" required value="<?= $evento['nome_evento'] ?>">
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -221,8 +238,13 @@ include "includes/menu_interno.php";
                                     <button class='btn btn-default' type='button' data-toggle='modal'
                                             data-target='#modalPublico' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
+                                    <div class="row" id="msgEsconde">
+                                        <div class="form-group col-md-6">
+                                            <span style="color: red;">Selecione ao menos uma representatividade!</span>
+                                        </div>
+                                    </div>
                                     <?php
-                                        geraCheckBox('publicos', 'publico', 'evento_publico', 'col-md-6', 'evento_id', 'publico_id', $idEvento);
+                                    geraCheckBox('publicos', 'publico', 'evento_publico', 'col-md-6', 'evento_id', 'publico_id', $idEvento);
                                     ?>
                                 </div>
                             </div>
@@ -230,8 +252,11 @@ include "includes/menu_interno.php";
                             <div class="form-group">
                                 <label for="sinopse">Sinopse *</label><br/>
                                 <i>Esse campo deve conter uma breve descrição do que será apresentado no evento.</i>
-                                <p align="justify"><span style="color: gray; "><strong><i>Texto de exemplo:</strong><br/>Ana Cañas faz o show de lançamento do seu quarto disco, “Tô na Vida” (Som Livre/Guela Records). Produzido por Lúcio Maia (Nação Zumbi) em parceria com Ana e mixado por Mario Caldato Jr, é o primeiro disco totalmente autoral da carreira da cantora e traz parcerias com Arnaldo Antunes e Dadi entre outros.</span></i></p>
-                                <textarea name="sinopse" id="sinopse" class="form-control" rows="5" required><?= $evento['sinopse'] ?></textarea>
+                                <p align="justify"><span
+                                            style="color: gray; "><strong><i>Texto de exemplo:</strong><br/>Ana Cañas faz o show de lançamento do seu quarto disco, “Tô na Vida” (Som Livre/Guela Records). Produzido por Lúcio Maia (Nação Zumbi) em parceria com Ana e mixado por Mario Caldato Jr, é o primeiro disco totalmente autoral da carreira da cantora e traz parcerias com Arnaldo Antunes e Dadi entre outros.</span></i>
+                                </p>
+                                <textarea name="sinopse" id="sinopse" class="form-control" rows="5"
+                                          required><?= $evento['sinopse'] ?></textarea>
                             </div>
 
                             <div class="row ">
@@ -258,7 +283,7 @@ include "includes/menu_interno.php";
 
                         <div class="box-footer">
                             <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                            <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
+                            <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>
                     </form>
                 </div>
@@ -267,8 +292,6 @@ include "includes/menu_interno.php";
 
     </section>
 </div>
-
-
 
 <div class="modal fade" id="modalPublico" role="dialog" aria-labelledby="lblmodalPublico" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -322,11 +345,11 @@ include "includes/menu_interno.php";
         }
     }
 
-    function checaCampos(obj){
-        if(obj.id == oficinaId && obj.value == '8'){
+    function checaCampos(obj) {
+        if (obj.id == oficinaId && obj.value == '8') {
 
-            for(i = 0; i < acao.size(); i++){
-                if (!(acao[i] == obj)){
+            for (i = 0; i < acao.size(); i++) {
+                if (!(acao[i] == obj)) {
                     let acoes = acao[i].id;
 
                     document.getElementById(acoes).disabled = true;
@@ -338,10 +361,10 @@ include "includes/menu_interno.php";
 
                 }
             }
-        }else{
-            for(i = 0; i < acao.size(); i++){
+        } else {
+            for (i = 0; i < acao.size(); i++) {
 
-                if (!(acao[i] == acao[8])){
+                if (!(acao[i] == acao[8])) {
                     let acoes = acao[i].id;
 
                     document.getElementById(acoes).disabled = false;
@@ -374,4 +397,36 @@ include "includes/menu_interno.php";
                 .attr('required', false)
         }
     }
+</script>
+
+
+<script>
+    function publicoValidacao() {
+        var isMsg = $('#msgEsconde');
+        isMsg.hide();
+
+        var i = 0;
+        var counter = 0;
+        var publico = $('.publico');
+
+        for (; i < publico.length; i++) {
+            if (publico[i].checked) {
+                counter++;
+            }
+        }
+
+        if (counter == 0) {
+            $('#edita').attr("disabled", true);
+            isMsg.show();
+            return false;
+        }
+
+        $('#edita').attr("disabled", false);
+        isMsg.hide();
+        return true;
+    }
+
+    $(document).ready(publicoValidacao);
+
+    $('.publico').on("change", publicoValidacao);
 </script>

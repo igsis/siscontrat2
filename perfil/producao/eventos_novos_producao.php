@@ -4,9 +4,7 @@ include "includes/menu_interno.php";
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
-
 $idUser = $_SESSION['idUser'];
-
 $con = bancoMysqli();
 $conn = bancoPDO();
 
@@ -17,7 +15,7 @@ $sqlEvento = "SELECT
                     l.local AS 'local',
                     esp.espaco AS 'espaco',
                     env.data_envio AS 'data_envio',
-                    u.nome_completo as 'usuário',
+                    u.nome_completo as 'usuario',
                     eve.visualizado AS 'visualizado'
             FROM eventos AS eve
             INNER JOIN ocorrencias as o on o.id = eve.id
@@ -26,7 +24,7 @@ $sqlEvento = "SELECT
             INNER JOIN evento_envios as env on env.evento_id = eve.id
             INNER JOIN usuarios as u on u.id = eve.usuario_id
             INNER JOIN pedidos AS ped ON ped.origem_id = eve.id 
-WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND eve.visualizado = 1";
+WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND eve.visualizado = 0";
 
 $queryEvento = mysqli_query($con, $sqlEvento);
 
@@ -65,16 +63,13 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                             </thead>
                             <?php
                             echo "<tbody>";
-                            while ($evento = mysqli_fetch_array($queryEvento)) {
-                                $local = recuperaDados('locais', 'id', $evento['id']);
-                                echo $local['local'];
-                                ?>
+                            while ($evento = mysqli_fetch_array($queryEvento)) {?>
                             <tr>
 
                                 <?php
                                 echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
-                                echo "<td>" . $local['local'] . "</td>";
+                                echo "<td>" . $evento['local'] . "</td>";
                                 echo "<td>" . $evento['espaco'] . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($evento['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $evento['data_envio'] ."</td>";
