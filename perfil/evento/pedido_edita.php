@@ -209,7 +209,7 @@ if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="verba_id">Verba</label>
+                                    <label for="verba_id">Verba *</label>
                                     <select class="form-control" id="verba_id" name="verba_id" required>
                                         <option value="">Selecione...</option>
                                         <?php
@@ -229,7 +229,7 @@ if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="numero_parcelas">Número de Parcelas</label>
+                                    <label for="numero_parcelas">Número de Parcelas *</label>
                                     <select class="form-control" id="numero_parcelas" name="numero_parcelas"
                                             required>
                                         <option value="">Selecione...</option>
@@ -267,7 +267,7 @@ if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total
                             ?>
 
                             <div class="form-group col-md-2">
-                                <label for="numero_parcelas">Número de Parcelas</label>
+                                <label for="numero_parcelas">Número de Parcelas *</label>
                                 <select class="form-control" id="numero_parcelas" name="numero_parcelas"
                                         required>
                                     <option value="">Selecione...</option>
@@ -599,13 +599,13 @@ if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total
             <input type='number' value="{{count}}" class='form-control' disabled>
         </div>
         <div class='form-group col-md-3'>
-            <label for='valor'>Valor </label>
+            <label for='valor'>Valor *</label>
             <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" required
                    placeholder="Valor em reais"
                    onkeypress="return(moeda(this, '.', ',', event));" onkeyup="somar()" class='form-control'>
         </div>
         <div class='form-group col-md-4'>
-            <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
+            <label for='modal_data_kit_pagamento'>Data Kit Pagamento *</label>
             <input type='date' id='modal_data_kit_pagamento' value="{{kit}}" required
                    name='modal_data_kit_pagamento[{{count}}]'
                    class='form-control'>
