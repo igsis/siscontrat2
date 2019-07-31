@@ -117,7 +117,7 @@ if (isset($_POST['filtrar'])) {
         $filtro_local
         $filtro_usuario
         $filtro_PE AND
-        E.evento_status_id = 1 AND
+        E.evento_status_id = 3 AND
         E.publicado = 1
         ORDER BY O.data_inicio";
 

@@ -24,6 +24,7 @@ if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
         $tipoPessoa = $_POST['pessoa_tipo_id'];
         $idPessoa = $_POST['pessoa_id'];
         $valorTotal = $_POST['valor'];
+        $tipoEvento = $_POST['tipoEvento'];
 
         if ($tipoPessoa == 1) {
             $campo = "pessoa_fisica_id";
@@ -31,7 +32,7 @@ if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
             $campo = "pessoa_juridica_id";
         }
         $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
-                                  VALUES ('1', $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
+                                  VALUES ($tipoEvento, $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
         if (mysqli_query($con, $sqlFirst)) {
             $_SESSION['idPedido'] = recuperaUltimo("pedidos");
             $idPedido = $_SESSION['idPedido'];
@@ -49,7 +50,7 @@ if (isset($_POST['edita'])) {
     $justificativa = addslashes($_POST['justificativa']);
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
-    $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? NULL;
+    $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? '0000-00-00';
 
     if ($tipoPessoa == 1) {
         $campo = "pessoa_fisica_id";
@@ -77,6 +78,10 @@ if (isset($_POST['edita'])) {
 }
 
 $pedido = recuperaDados("pedidos", "id", $idPedido);
+
+/*if ($pedido['origem_tipo_id'] == 1) {
+    $eventos = recuperaDados("")
+}*/
 
 if ($pedido['pessoa_tipo_id'] == 2) {
     $pj = recuperaDados("pessoa_juridicas", "id", $pedido['pessoa_juridica_id']);
@@ -171,18 +176,24 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
     }
 }
 
-$valor_total = 0;
-foreach ($valores as $valor) {
-    $valor_total += $valor;
+if (isset($valores) && $valores > 0) {
+    $valorTotal = 0;
+    foreach ($valores as $valor) {
+        $valorTotal += $valor;
+    }
+} else {
+    $valorTotal = 0;
 }
 
-if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total']) {
-    $sqlUpdate = "UPDATE pedidos SET valor_total = '$valor_total' WHERE id = $idPedido";
-    if (mysqli_query($con, $sqlUpdate)) {
-        $mensagem = mensagem("warning", "O valor da sua atração foi alterado e com isso o valor total do seu pedido também mudou, verifique se o mesmo se está correto e altere novamente na atração caso necessário.");
-        $pedido = recuperaDados('pedidos', 'id', $idPedido);
-    } else {
-        echo $sqlUpdate;
+if ($pedido['origem_tipo_id'] != 2) {
+    if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total']) {
+        $sqlUpdate = "UPDATE pedidos SET valor_total = '$valor_total' WHERE id = $idPedido";
+        if (mysqli_query($con, $sqlUpdate)) {
+            $mensagem = mensagem("warning", "O valor da sua atração foi alterado e com isso o valor total do seu pedido também mudou, verifique se o mesmo se está correto e altere novamente na atração caso necessário.");
+            $pedido = recuperaDados('pedidos', 'id', $idPedido);
+        } else {
+            echo $sqlUpdate;
+        }
     }
 }
 ?>
@@ -217,11 +228,20 @@ if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total
                                         ?>
                                     </select>
                                 </div>
+
+                                <?php
+                                if ($pedido['origem_tipo_id'] != 2) {
+                                    $readonly = 'readonly';
+                                } else {
+                                    $readonly = '';
+                                }
+                                ?>
+
                                 <div class="form-group col-md-2">
                                     <label for="valor_total">Valor Total</label>
                                     <input type="text" onkeypress="return(moeda(this, '.', ',', event))"
                                            id="valor_total" name="valor_total" class="form-control"
-                                           value="<?= dinheiroParaBr($pedido['valor_total']) ?>" readonly>
+                                           value="<?= dinheiroParaBr($pedido['valor_total']) ?>" <?=$readonly?>>
                                 </div>
                                 <?php
                                 if (isset($oficina)) {
@@ -808,18 +828,29 @@ if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total
 
     var ocultarBotao = function () {
 
+        let valorPedido = "<?=$pedido['valor_total']?>";
+
         var optionSelect = document.querySelector("#numero_parcelas").value;
         var editarParcelas = document.querySelector('#editarParcelas');
         var dataKit = document.querySelector("#data_kit_pagamento");
 
-        if (optionSelect == "1" || optionSelect == 0) {
-            dataKit.required = true;
-            editarParcelas.style.display = "none";
-            dataKit.style.display = "block";
+        console.log (valorPedido);
+
+        console.log ($('#valor_total').val());
+
+        if (valorPedido != '0.00') {
+            if (optionSelect == "1" || optionSelect == 0) {
+                dataKit.required = true;
+                editarParcelas.style.display = "none";
+                dataKit.style.display = "block";
+            } else {
+                $("#data_kit_pagamento").attr("required", false);
+                editarParcelas.style.display = "block";
+                dataKit.style.display = "none";
+            }
         } else {
-            $("#data_kit_pagamento").attr("required", false);
-            editarParcelas.style.display = "block";
-            dataKit.style.display = "none";
+            $("#numero_parcelas").attr('title', 'Grave o valor do pedido para poder editar as parcelas!');
+            dataKit.style.display = 'none';
         }
     }
 

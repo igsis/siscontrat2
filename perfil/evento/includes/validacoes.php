@@ -6,7 +6,9 @@ $idEvento = $_SESSION['idEvento'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
-$sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
+$tipoEvento = $evento['tipo_evento_id'];
+
+$sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = $tipoEvento AND origem_id = '$idEvento' AND publicado = 1";
 $pedidos = $con->query($sqlPedidos)->fetch_assoc();
 
 $atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'");

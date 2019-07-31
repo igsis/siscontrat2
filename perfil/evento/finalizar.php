@@ -56,7 +56,7 @@ include "includes/validacoes.php";
             </div>
             <div class="col-md-6">
                 <?php
-                if ($evento['tipo_evento_id'] == 1) {
+                if ($evento['contratacao'] == 1) {
                     if (count($errosArqs) == 0) { ?>
                         <div class="alert alert-success alert-dismissible">
                             <h4><i class="icon fa fa-check"></i> Todos os Arquivos Foram Enviados!</h4>

@@ -629,6 +629,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
                                 <input type="hidden" name="idProponente" value="<?= $pj['id'] ?>">
                                 <input type="hidden" name="tipoPessoa" value="2">
+                                <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id']?>">
                                 <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
                                     contratação
                                 </button>
@@ -641,6 +642,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 <input type="hidden" name="pessoa_tipo_id" value="2">
                                 <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
                                 <input type="hidden" name="valor" value="<?= $atracao['valor_individual'] ?>">
+                                <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id']?>">
                                 <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
                                     contratação
                                 </button>

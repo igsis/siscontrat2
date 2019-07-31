@@ -39,6 +39,8 @@ $pasta = "?perfil=evento&p=";
                 <?php
                 if($evento['contratacao'] == 1 && $nAtracoes > 0) {
                     echo "<li><a href=\"".$pasta."pedido\"><i class=\"fa fa-circle-o text-aqua\"></i> <span>Pedido</span></a></li>";
+                } elseif ($evento['contratacao'] == 1 && $evento['tipo_evento_id'] == 2) {
+                    echo "<li><a href=\"".$pasta."pedido\"><i class=\"fa fa-circle-o text-aqua\"></i> <span>Pedido</span></a></li>";
                 }
                 echo "<li><a href=\"".$pasta."finalizar\"><i class=\"fa fa-circle-o text-light-blue\"></i> <span>Finalizar</span></a></li>";
             }

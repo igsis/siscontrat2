@@ -302,9 +302,13 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
     }
 }
 
-$valorTotal = 0;
-foreach ($valores as $valor) {
-    $valorTotal += $valor;
+if (isset($valores) && $valores > 0) {
+    $valorTotal = 0;
+    foreach ($valores as $valor) {
+        $valorTotal += $valor;
+    }
+} else {
+    $valorTotal = 0;
 }
 
 
@@ -723,6 +727,7 @@ include "includes/menu_interno.php";
                                             <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
                                             <input type="hidden" name="idProponente" value="<?= $pf['id'] ?>">
                                             <input type="hidden" name="tipoPessoa" value="1">
+                                            <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id']?>">
                                             <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
                                                 contratação
                                             </button>
@@ -735,6 +740,7 @@ include "includes/menu_interno.php";
                                             <input type="hidden" name="pessoa_tipo_id" value="1">
                                             <input type="hidden" name="pessoa_id" value="<?= $pf['id'] ?>">
                                             <input type="hidden" name="valor" value="<?= $valorTotal ?>">
+                                            <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id']?>">
                                             <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
                                                 contratação
                                             </button>

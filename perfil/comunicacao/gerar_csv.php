@@ -94,8 +94,8 @@ if (isset($_POST['filtrar'])) {
                                         <input type="text" name="data_inicio" id="data_inicio"
                                                class="form-control datepicker" onchange="btnfiltrar()" required
                                                autocomplete="off">
-                                        <i class="text-danger" style="display: none;" id="msgSemInicio">Informe uma data
-                                            de início!</i>
+                                     <!--   <i class="text-danger" style="display: none;" id="msgSemInicio">Informe uma data
+                                            de início!</i>-->
                                     </div>
                                     <div class="col-md-3">
                                         <label for="data_encerramento"> Data encerramento</label>
@@ -126,8 +126,8 @@ if (isset($_POST['filtrar'])) {
                                 <br>
                                 <div class="row text-center">
                                     <div class="col-md-12" id="btnFiltrar">
-                                        <button type="submit" class="btn btn-info" name="filtrar" id="filtrar">Filtrar
-                                        </button>
+                                        <span id="spanFiltrar" title="Informe uma data de início!"><button type="submit" class="btn btn-info" name="filtrar" id="filtrar">Filtrar
+                                        </button></span>
                                     </div>
                                 </div>
                             </form>
@@ -227,14 +227,12 @@ if (isset($_POST['filtrar'])) {
     $(function () {
         $(".datepicker").datepicker();
 
-
-
         $('#filtrar').mouseover(function () {
             if ($('#data_inicio').val() == '') {
                 $('#msgSemInicio').show();
                 $('#filtrar').prop('disabled', true);
             }
-        })
+        });
 
         let consulta = "<?= isset($consulta) ? 1 : 0 ?>";
 
@@ -277,12 +275,11 @@ if (isset($_POST['filtrar'])) {
     function btnfiltrar() {
         if ($('#data_inicio').val() == '') {
             $('#filtrar').prop('disabled', true);
-            $('#msgSemInicio').show();
-            //$('#filtrar').on('mouseover', mostrarMsg);
+            $('#spanFiltrar').attr('title', 'Informe uma data de início!');
 
         } else {
             $('#filtrar').prop('disabled', false);
-            $('#msgSemInicio').hide();
+            $('#spanFiltrar').attr('title', '');
         }
 
     }

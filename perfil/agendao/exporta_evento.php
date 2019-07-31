@@ -96,7 +96,7 @@ if (isset($_POST['filtrar'])) {
                 SUB_PRE.subprefeitura AS 'subprefeitura',
                 DIA_PERI.periodo AS 'periodo',
                 retirada.retirada_ingresso AS 'retirada'
-                FROM agendoes AS E
+                FROM eventos AS E
                 INNER JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id
                 INNER JOIN classificacao_indicativas AS CI ON E.classificacao_indicativa_id = CI.id
                 LEFT JOIN produtores AS P ON E.produtor_id = P.id
@@ -116,7 +116,9 @@ if (isset($_POST['filtrar'])) {
                 E.publicado = 1
                 ORDER BY O.data_inicio";
 
-    $query = mysqli_query($con, $sql);
+    if (!$query = mysqli_query($con, $sql)) {
+        echo $sql;
+    };
     $num = mysqli_num_rows($query);
 
     if ($num > 0) {
