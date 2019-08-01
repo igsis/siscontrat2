@@ -198,6 +198,11 @@ include "includes/menu_interno.php";
                                     <button class='btn btn-default' type='button' data-toggle='modal'
                                             data-target='#modalAcoes' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
+                                        <div class="row" id="msgEscondeAcao">
+                                        <div class="form-group col-md-12">
+                                            <span style="color: red;">Selecione ao menos uma expressões artístico-culturais!</span>
+                                        </div>
+                                    </div>
                                     <?php
                                         geraCheckBox('acoes', 'acao', 'acao_agendao', 'col-md-6', 'evento_id', 'acao_id', $evento['id']);
                                     ?>
@@ -209,8 +214,13 @@ include "includes/menu_interno.php";
                                     <button class='btn btn-default' type='button' data-toggle='modal'
                                             data-target='#modalPublico' style="border-radius: 30px;">
                                         <i class="fa fa-question-circle"></i></button>
+                                    <div class="row" id="msgEscondePublico">
+                                        <div class="form-group col-md-6">
+                                            <span style="color: red;">Selecione ao menos uma representatividade!</span>
+                                        </div>
+                                    </div>
                                     <?php
-                                        geraCheckBox('publicos', 'publico', 'evento_publico', 'col-md-6', 'evento_id', 'publico_id', $evento['id']);
+                                        geraCheckBox('publicos', 'publico', 'agendao_publico', 'col-md-6', 'evento_id', 'publico_id', $evento['id']);
                                     ?>
                                 </div>
                             </div>
@@ -395,8 +405,10 @@ include "includes/menu_interno.php";
     function verificaOficina() {
         if ($('#simOficina').is(':checked')) {
             checaCampos(oficinaOficial);
+            acaoValidacao();
         } else {
             checaCampos("");
+            acaoValidacao();
         }
     }
 
@@ -452,4 +464,81 @@ include "includes/menu_interno.php";
                 .attr('required', false)
         }
     }
+</script>
+
+<script>
+    let isAcaoSelected = false;
+    let isPublicoSelected = false;
+
+    function publicoValidacao() {
+        var isMsg = $('#msgEscondePublico');
+        isMsg.hide();
+
+        var i = 0;
+        var counter = 0;
+        var publico = $('.publico');
+
+        for (; i < publico.length; i++) {
+            if (publico[i].checked) {
+                counter++;
+            }
+        }
+
+        if (counter == 0) {
+            $('#cadastra').attr("disabled", true);
+            isAcaoSelected = false;
+            isMsg.show();
+            return false;
+        }
+        isAcaoSelected = true;
+        if(!isPublicoSelected){
+            $('#cadastra').attr("disabled", true);
+            return false;
+        }
+
+        $('#cadastra').attr("disabled", false);
+        isMsg.hide();
+        return true;
+    }
+
+    $(document).ready(publicoValidacao);
+
+    $('.publico').on("change", publicoValidacao);
+
+
+    function acaoValidacao() {
+        var isMsg = $('#msgEscondeAcao');
+        isMsg.hide();
+
+        var i = 0;
+        var counter = 0;
+        var acao = $('.acao');
+
+        for (; i < acao.length; i++) {
+            if (acao[i].checked) {
+                counter++;
+            }
+        }
+
+        if (counter == 0) {
+            $('#cadastra').attr("disabled", true);
+            isPublicoSelected = false;
+            isMsg.show();
+            return false;
+        }
+        isPublicoSelected = true;
+        if(!isAcaoSelected){
+            $('#cadastra').attr("disabled", true);
+            return false;
+        }
+
+
+        $('#cadastra').attr("disabled", false);
+        isMsg.hide();
+        return true;
+    }
+
+    $(document).ready(acaoValidacao);
+
+    $('.acao').on("change", acaoValidacao);
 </script>
