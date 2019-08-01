@@ -10,10 +10,13 @@ $idUser = $_SESSION['idUser'];
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-if (isset($_POST['checar'])) {
+if (isset($_POST['checarEvento'])) {
     $idEvento = $_POST['idEvento'];
     $sqlPedido = "UPDATE eventos SET visualizado = 1 WHERE id = '$idEvento'";
     if (mysqli_query($con, $sqlPedido)) {
+        $data = date("Y-m-d H:i:s", strtotime("now"));
+        $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
+        $queryEnvio = mysqli_query($con,$sqlEnvio);
         $mensagem = mensagem("success", "Evento marcado como visualizado!");
     }
 }

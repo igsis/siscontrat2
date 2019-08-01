@@ -2,11 +2,24 @@
 include "includes/menu_interno.php";
 
 unset($_SESSION['idEvento']);
-unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
+unset($_SESSION['idPj']);
+
+$idUser = $_SESSION['idUser'];
 
 $con = bancoMysqli();
 $conn = bancoPDO();
+
+if (isset($_POST['checarAgendao'])) {
+    $idEvento = $_POST['idEvento'];
+    $sqlPedido = "UPDATE agendoes SET visualizado = 1 WHERE id = '$idEvento'";
+    if (mysqli_query($con, $sqlPedido)) {
+        $data = date("Y-m-d H:i:s", strtotime("now"));
+        $sqlEnvio = "INSERT INTO producao_agendoes (agendao_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
+        $queryEnvio = mysqli_query($con,$sqlEnvio);
+        $mensagem = mensagem("success", "Agendão marcado como visualizado!");
+    }
+}
 
 $sqlAgendaoVisualizado = "SELECT
 	    a.id AS 'id',
@@ -20,6 +33,7 @@ $sqlAgendaoVisualizado = "SELECT
         LEFT JOIN espacos AS esp ON esp.id = ao.espaco_id
         WHERE a.publicado = 1 AND a.visualizado = 1 AND evento_status_id = 3;";
 $queryAgendaoVisualizado = mysqli_query($con, $sqlAgendaoVisualizado);
+
 ?>
 
 <div class="content-wrapper">

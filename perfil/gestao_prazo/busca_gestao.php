@@ -20,7 +20,7 @@ if(isset($_POST['aprovar'])){
     $sqlAprova = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_id = '$idEvento'";
     if(mysqli_query($con, $sqlAprova)){
         $data = date("Y-m-d H:i:s",strtotime("now"));
-        $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
+        $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data')";
         $queryEnvia = mysqli_query($con, $sqlEnvia);
         $mensagem = mensagem("success", "Evento aprovado com sucesso!");
 

@@ -30,7 +30,7 @@ $sqlEvento = "SELECT
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
-include "../perfil/producao/includes/menu_interno.php";
+include "includes/menu_interno.php";
 ?>
 
 <div class="content-wrapper">
@@ -38,9 +38,7 @@ include "../perfil/producao/includes/menu_interno.php";
         <div>
             <div class="box">
                 <div class="box-header">
-                    <h3 class="page-header"> Evento selecionado </h3><em class="pull-right"><?php if (isset($prazo)) {
-                            echo $prazo;
-                        }; ?></em>
+                    <h3 class="page-header"> Evento selecionado </h3>
                 </div>
 
             </div>
@@ -128,7 +126,7 @@ include "../perfil/producao/includes/menu_interno.php";
 
                                     if($evento['visualizado'] == 0){
                                         ?>
-                                    <button type="submit" name="checar" class="btn btn-success"> Checar visualização
+                                    <button type="submit" name="checarEvento" class="btn btn-success"> Checar visualização
                                     <?php
                                     }else {
                                         ?>
