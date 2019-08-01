@@ -31,8 +31,8 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $periodo_id = $_POST['periodo'];
     $subprefeitura_id = $_POST['subprefeitura'];
     $virada = ($_POST['virada']);
-    $libras = $_POST['libras'] ?? null;
-    $audiodescricao = $_POST['audiodescricao'] ?? null;
+    $libras = $_POST['libras'] ?? 0;
+    $audiodescricao = $_POST['audiodescricao'] ?? 0;
 
 }
 
@@ -94,6 +94,7 @@ if (isset($_POST['cadastra'])) {
         //gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+        echo $sql;
         //gravarLog($sql);
     }
 

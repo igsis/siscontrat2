@@ -57,9 +57,10 @@ if (isset($_POST['filtrar'])) {
 
     $sql = "SELECT
                 E.id AS 'evento_id',
+                E.tipo_evento_id AS 'tipo_evento',
                 E.nome_evento AS 'nome',
                 E.espaco_publico AS 'espaco_publico',
-                E.quantidade_apresentacao AS 'apresentacoes',
+                A.quantidade_apresentacao AS 'apresentacoes',
                 PE.projeto_especial AS 'projeto_especial',
                 TE.tipo_evento AS 'categoria',
                 O.id AS 'idOcorrencia',
@@ -85,7 +86,7 @@ if (isset($_POST['filtrar'])) {
                 L.cep AS 'cep',
                 E.sinopse AS 'artista',
                 CI.classificacao_indicativa AS 'classificacao',
-                E.links AS 'divulgacao',
+                A.links AS 'divulgacao',
                 E.sinopse AS 'sinopse',
                 E.fomento AS 'fomento',
                 P.nome AS 'produtor_nome',
@@ -97,16 +98,18 @@ if (isset($_POST['filtrar'])) {
                 DIA_PERI.periodo AS 'periodo',
                 retirada.retirada_ingresso AS 'retirada'
                 FROM eventos AS E
-                INNER JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id
-                INNER JOIN classificacao_indicativas AS CI ON E.classificacao_indicativa_id = CI.id
-                LEFT JOIN produtores AS P ON E.produtor_id = P.id
-                INNER JOIN usuarios AS U ON E.usuario_id = U.id
+                LEFT JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id  
+                LEFT JOIN ocorrencias AS O ON O.origem_ocorrencia_id = E.id          
+                LEFT JOIN usuarios AS U ON E.usuario_id = U.id
                 LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
-                INNER JOIN agendao_ocorrencias AS O ON E.id = O.origem_ocorrencia_id
-                INNER JOIN locais AS L ON O.local_id = L.id
+                LEFT JOIN agendao_ocorrencias AS AO ON E.id = AO.origem_ocorrencia_id
+                LEFT JOIN locais AS L ON O.local_id = L.id
                 LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
                 LEFT JOIN periodos AS DIA_PERI ON O.periodo_id = DIA_PERI.id
-                INNER JOIN retirada_ingressos AS retirada ON O.retirada_ingresso_id = retirada.id
+                LEFT JOIN retirada_ingressos AS retirada ON O.retirada_ingresso_id = retirada.id
+                LEFT JOIN atracoes AS A ON A.evento_id = E.id 
+                LEFT JOIN classificacao_indicativas AS CI ON A.classificacao_indicativa_id = CI.id
+                LEFT JOIN produtores AS P ON A.produtor_id = P.id
                 WHERE
                 $filtro_data
                 $filtro_local
@@ -116,10 +119,78 @@ if (isset($_POST['filtrar'])) {
                 E.publicado = 1
                 ORDER BY O.data_inicio";
 
+    $sqlAgendao = "SELECT
+                agendao.id AS 'evento_id',
+                agendao.nome_evento AS 'nome',
+                agendao.espaco_publico AS 'espaco_publico',
+                agendao.quantidade_apresentacao AS 'apresentacoes',
+                PE.projeto_especial AS 'projeto_especial',
+                O.id AS 'idOcorrencia',
+                O.horario_inicio AS 'hora_inicio',
+                O.data_inicio AS 'data_inicio',
+                O.data_fim AS 'data_fim',
+                O.horario_fim AS 'hora_fim',
+                O.valor_ingresso AS 'valor_ingresso',
+                O.segunda AS 'segunda',
+                O.terca AS 'terca',
+                O.quarta AS 'quarta',
+                O.quinta AS 'quinta',
+                O.sexta AS 'sexta',
+                O.sabado AS 'sabado',
+                O.domingo AS 'domingo',
+                L.local AS 'nome_local',
+                L.logradouro AS 'logradouro',
+                L.numero AS 'numero',
+                L.complemento AS 'complemento',
+                L.bairro AS 'bairro',
+                L.cidade AS 'cidade',
+                L.uf AS 'estado',
+                L.cep AS 'cep',
+                agendao.ficha_tecnica AS 'artista',
+                CI.classificacao_indicativa AS 'classificacao',
+                agendao.links AS 'divulgacao',
+                agendao.sinopse AS 'sinopse',
+                agendao.fomento AS 'fomento',
+                P.nome AS 'produtor_nome',
+                P.email AS 'produtor_email',
+                P.telefone1 AS 'produtor_fone',
+                U.nome_completo AS 'nomeCompleto',
+                PE.projeto_especial,
+                SUB_PRE.subprefeitura AS 'subprefeitura',
+                DIA_PERI.periodo AS 'periodo',
+                retirada.retirada_ingresso AS 'retirada'
+                FROM agendoes AS agendao
+                LEFT JOIN agendao_ocorrencias AS O ON agendao.id = O.origem_ocorrencia_id
+                LEFT JOIN locais AS L ON O.local_id = L.id
+                LEFT JOIN instituicoes AS I ON O.instituicao_id = I.id
+                LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
+                LEFT JOIN usuarios AS U ON agendao.usuario_id = U.id
+                LEFT JOIN periodos AS DIA_PERI ON O.periodo_id = DIA_PERI.id
+                LEFT JOIN projeto_especiais AS PE ON agendao.projeto_especial_id = PE.id
+                LEFT JOIN retirada_ingressos AS retirada ON O.retirada_ingresso_id = retirada.id
+                LEFT JOIN classificacao_indicativas AS CI ON agendao.classificacao_indicativa_id = CI.id
+                LEFT JOIN produtores AS P ON agendao.produtor_id = P.id
+                WHERE
+                $filtro_data
+                $filtro_local
+                $filtro_usuario
+                $filtro_PE AND
+                agendao.evento_status_id = 3 AND
+                agendao.publicado = 1
+                ORDER BY O.data_inicio";
+
     if (!$query = mysqli_query($con, $sql)) {
-        echo $sql;
-    };
-    $num = mysqli_num_rows($query);
+        echo "sql Eventos: " . $sql;
+    }
+
+    if ((!$queryAgendao = mysqli_query($con, $sqlAgendao))) {
+        echo "sql Agendao: " . $sqlAgendao;
+    }
+
+    $numComuns = mysqli_num_rows($query);
+    $numAgendao = mysqli_num_rows($queryAgendao);
+
+    $num = $numComuns + $numAgendao;
 
     if ($num > 0) {
         $mensagem = "Foram encontrados $num resultados";
@@ -140,7 +211,7 @@ if (isset($_POST['filtrar'])) {
         <h6><?php if (isset($mensagem)) {
                 echo $mensagem;
             } ?></h6>
-        <div class="box box-primary">
+        <div class="box box-primary" id="filtro">
             <form method="POST" action="?perfil=agendao&p=exporta_evento">
                 <div class="box-body">
                     <div class="row">
@@ -179,50 +250,53 @@ if (isset($_POST['filtrar'])) {
                     <div class="row">
                         <div class="col-md-offset-3 col-md-3">
                             <label>Data início *</label>
-                            <input type="date" name="inicio" class="form-control" id="inicio"
-                                   onchange="desabilitaFiltrar()" placeholder="">
+                            <input type="text" name="inicio" class="form-control datepicker" id="data_inicio"
+                                   onchange="btnfiltrar()" autocomplete="off">
                         </div>
                         <div class="col-md-3">
                             <label>Data encerramento</label>
-                            <input type="date" name="final" class="form-control" id="final"
-                                   placeholder="">
+                            <input type="text" name="final" class="form-control datepicker" id="final" autocomplete="off">
                             <br>
                         </div>
                     </div>
-                    <input type="submit" class="btn btn-primary btn-theme btn-block" name="filtrar" id="filtrar"
-                           value="Filtrar"
-                           disabled>
+                    <span id="spanFiltrar" title="Informe uma data de início!">
+                        <input type="submit" class="btn btn-primary btn-theme btn-block" name="filtrar" id="filtrar" value="Filtrar">
+                    </span>
                 </div>
             </form>
         </div>
-    </section>
-</div>
+        <div class="row text-center" id="novaPesquisa" style="display: none">
+            <br>
+            <div class="col-md-12">
+                <button type="button" class="btn btn-info" id="btnNovaPesquisa">Nova pesquisa</button>
+            </div>
+        </div>
+
 <?php
 if ($consulta == 1) {
     ?>
-    <div class="content-wrapper">
-        <section class="content-header">
+    <div id="resultadoPesquisa">
+        <div class="box-header">
+            <form method="post" action="../pdf/exportar_excel_agendao.php">
+                <div class="form-group">
+                    <br>
+                    <input type="hidden" name="sql" value="<?= $sql ?>">
+                    <input type="hidden" name="sqlAgendao" value="<?= $sqlAgendao ?>">
+                    <input type="submit" class="btn btn-success btn-theme btn-block" name="exportar"
+                           value="Baixar Arquivo Excel">
+                </div>
+            </form>
+        </div>
+
             <h3 class="box-title">Resultado da pesquisa
                 <button class='btn btn-default' type='button' data-toggle='modal'
                         data-target='#modal' style="border-radius: 30px;">
                     <i class="fa fa-question-circle"></i></button>
             </h3>
             <div class="box box-success">
-                <div class="box-header">
-                    <form method="post" action="../pdf/exportar_excel_agendao.php">
-                        <div class="form-group">
-                            <br>
-                            <input type="hidden" name="sql" value="<?= $sql ?>">
-                            <input type="submit" class="btn btn-success btn-theme btn-block" name="exportar"
-                                   value="Baixar Arquivo Excel">
-                            <br>
-                        </div>
-                    </form>
-                </div>
-
-                <h3 class="box-title">Resumo da pesquisa</h3>
                 <div class="box-body">
-                    <table id="tblEvento" class="table table-bordered table-striped table-responsive">
+                    <h3 class="box-title">Resumo da pesquisa eventos Agendão</h3>
+                    <table id="tblAgendao" class="table table-bordered table-striped table-responsive">
                         <thead>
                         <tr>
                             <th>Nome do Evento</th>
@@ -237,14 +311,14 @@ if ($consulta == 1) {
 
                         <tbody>
                         <?php
-                        while ($linha = mysqli_fetch_array($query)) {
+                        while ($linha = mysqli_fetch_array($queryAgendao)) {
                             ?>
                             <tr>
                                 <td><?= $linha['nome'] ?></td>
                                 <td><?= $linha['nome_local'] ?></td>
                                 <td><?= $linha['classificacao'] ?></td>
                                 <td><?= $linha['subprefeitura'] ?></td>
-                                <td><?= 'R$ ' . dinheiroParaBr($linha['valor_ingresso']) ?></td>
+                                <td><?= $linha['valor_ingresso'] == '0.00' ? 'Grátis' : 'R$ ' .dinheiroParaBr($linha['valor_ingresso']) ?></td>
                                 <td><?= $linha['apresentacoes'] ?></td>
                                 <td><?= $linha['artista'] ?></td>
                             </tr>
@@ -265,6 +339,64 @@ if ($consulta == 1) {
                         </tr>
                         </tfoot>
                     </table>
+                </div>
+            </div>
+
+                <div class="box box-success">
+                    <div class="box-body">
+                        <h3 class="box-title">Resumo da pesquisa eventos comuns</h3>
+                        <table id="tblEvento" class="table table-bordered table-striped table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Nome do Evento</th>
+                                <th>Local do Evento</th>
+                                <th>Classificação indicativa</th>
+                                <th>SubPrefeitura</th>
+                                <th>Valor do ingresso</th>
+                                <th>Nº de atividades</th>
+                                <th>Artistas</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <?php
+                            while ($linha = mysqli_fetch_array($query)) {
+                                if ($linha['tipo_evento'] == 2) {
+                                    $filme = recuperaDados("filmes", "id", $linha['evento_id']);
+                                    $classificao = recuperaDados("classificacao_indicativas", "id", $filme['classificacao_indicativa_id']);
+
+                                    $linha ['classificacao'] = $classificao['classificacao_indicativa'];
+                                }
+
+
+                                ?>
+                                <tr>
+                                    <td><?= $linha['nome'] ?></td>
+                                    <td><?= $linha['nome_local'] ?></td>
+                                    <td><?= $linha['classificacao'] ?></td>
+                                    <td><?= $linha['subprefeitura'] ?></td>
+                                    <td><?= $linha['valor_ingresso'] == '0.00' ? 'Grátis' : 'R$ ' .dinheiroParaBr($linha['valor_ingresso']) ?></td>
+                                    <td><?= $linha['apresentacoes'] == '' ? 'Este evento é filme!' : $linha['apresentacoes'] ?></td>
+                                    <td><?= $linha['artista'] ?></td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                            </tbody>
+
+                            <tfoot>
+                            <tr>
+                                <th>Nome do Evento</th>
+                                <th>Local do Evento</th>
+                                <th>Classificação indicativa</th>
+                                <th>SubPrefeitura</th>
+                                <th>Valor do ingresso</th>
+                                <th>Nº de atividades</th>
+                                <th>Artistas</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
 
             </div>
@@ -337,6 +469,46 @@ if ($consulta == 1) {
             filtrar.disabled = true;
         }
     }
+
+    $(function () {
+        $(".datepicker").datepicker();
+
+        $('#filtrar').mouseover(function () {
+            if ($('#data_inicio').val() == '') {
+                $('#msgSemInicio').show();
+                $('#filtrar').prop('disabled', true);
+            }
+        });
+
+        let consulta = "<?= isset($consulta) ? 1 : 0 ?>";
+
+        if (consulta == 1) {
+            $('#filtro').hide();
+            $('#novaPesquisa').show();
+        }
+
+    });
+
+    $('#btnNovaPesquisa').on('click', function () {
+        $('#filtro').fadeIn();
+        $('#novaPesquisa').hide();
+        $('#resultadoPesquisa').fadeOut();
+    });
+
+    function btnfiltrar() {
+        if ($('#data_inicio').val() == '') {
+            $('#filtrar').prop('disabled', true);
+            $('#spanFiltrar').attr('title', 'Informe uma data de início!');
+
+        } else {
+            $('#filtrar').prop('disabled', false);
+            $('#spanFiltrar').attr('title', '');
+        }
+
+    }
+
+
+
 </script>
 
 <script>
@@ -358,6 +530,18 @@ if ($consulta == 1) {
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">
+    $(function () {
+        $('#tblAgendao').DataTable({
+            "language": {
+                "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
+            },
+            "responsive": true,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+        });
+    });
+
     $(function () {
         $('#tblEvento').DataTable({
             "language": {

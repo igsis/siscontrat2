@@ -36,7 +36,7 @@ if ($pedidos != null) {
                 }
 
             } elseif (mysqli_num_rows($queryArqs) == 0) {
-                array_push($errosArqs, "Cópias de RG e CPF não anexadas na pessoa fisica ");
+                array_push($errosArqs, "Cópias de RG e CPF não anexadas na pessoa fisica");
             }
 
         } else {
@@ -99,6 +99,8 @@ if ($evento['tipo_evento_id'] == 1) {
                 array_push($erros, "Produtor não cadastrado na atração <b>" . $atracao['nome_atracao'] . "</b>");
             }
 
+            $ocorrencias;
+
             $idAtracao = $atracao['id'];
             $acoes = recuperaDados('acao_atracao', 'atracao_id', $idAtracao);
             $idAcao = $acoes['acao_id'];
@@ -127,7 +129,7 @@ if ($evento['tipo_evento_id'] == 1) {
                 }
             }
 
-            $ocorrencias = $con->query("SELECT * FROM ocorrencias WHERE atracao_id = '$idAtracao' AND publicado = '1'");
+            $ocorrencias = $con->query("SELECT * FROM ocorrencias WHERE tipo_ocorrencia_id = $tipoEvento AND atracao_id = '$idAtracao' AND publicado = '1'");
             $ocorrenciasAssocs = $ocorrencias->fetch_assoc();
             $numOcorrencias = $ocorrencias->num_rows;
             if ($numOcorrencias == 0) {

@@ -185,9 +185,9 @@ if (isset($valores) && $valores > 0) {
     $valorTotal = 0;
 }
 
-if ($pedido['origem_tipo_id'] != 2) {
-    if ($valor_total > $pedido['valor_total'] || $valor_total < $pedido['valor_total']) {
-        $sqlUpdate = "UPDATE pedidos SET valor_total = '$valor_total' WHERE id = $idPedido";
+if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
+    if ($valorTotal > $pedido['valor_total'] || $valorTotal < $pedido['valor_total']) {
+        $sqlUpdate = "UPDATE pedidos SET valor_total = '$valorTotal' WHERE id = $idPedido";
         if (mysqli_query($con, $sqlUpdate)) {
             $mensagem = mensagem("warning", "O valor da sua atração foi alterado e com isso o valor total do seu pedido também mudou, verifique se o mesmo se está correto e altere novamente na atração caso necessário.");
             $pedido = recuperaDados('pedidos', 'id', $idPedido);

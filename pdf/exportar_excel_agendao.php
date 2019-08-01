@@ -11,6 +11,8 @@ require_once("../funcoes/funcoesGerais.php");
 $sql = $_POST['sql'];
 $query = mysqli_query($con, $sql);
 
+$sqlAgendao = $_POST['sqlAgendao'];
+$queryAgendao = mysqli_query($con, $sqlAgendao);
 // Instanciamos a classe
 $objPHPExcel = new PHPExcel();
 
@@ -24,39 +26,92 @@ $objPHPExcel->getProperties()->setDescription("Gerado automaticamente a partir d
 $objPHPExcel->getProperties()->setKeywords("office 2007 openxml php");
 $objPHPExcel->getProperties()->setCategory("Inscritos");
 
-// Criamos as colunas
-$objPHPExcel->setActiveSheetIndex(0)
-    ->setCellValue("A1", "Nome do Evento")
-    ->setCellValue("B1", "Local do Evento")
-    ->setCellValue("C1", "Endereço Completo")
-    ->setCellValue("D1", "SubPrefeitura")
-    ->setCellValue("E1", "Artistas")
-    ->setCellValue("F1", "Data Início")
-    ->setCellValue("G1", "Data Fim")
-    ->setCellValue("H1", "Horário de início")
-    ->setCellValue("I1", "Horário do fim")
-    ->setCellValue("J1", "Nº de Apresentações")
-    ->setCellValue("K1", "Período")
-    ->setCellValue("L1", "Ação / Expressão Artística Principal")
-    ->setCellValue("M1", "Público / Representatividade Social Principal")
-    ->setCellValue("N1", "Espaço Público?" )
-    ->setCellValue("O1", "Entrada")
-    ->setCellValue("P1", "Valor do Ingresso (no caso de cobrança)")
-    ->setCellValue("Q1", "Classificação indicativa")
-    ->setCellValue("R1", "Link de Divulgação")
-    ->setCellValue("S1", "Sinopse")
-    ->setCellValue("T1", "Projeto Especial")
-    ->setCellValue("U1", "Caso Seja Fomento / Programa da smc Qual o Fomento ou Programa?")
-    ->setCellValue("V1", "Produtor do Evento")
-    ->setCellValue("W1", "E-mail de contato")
-    ->setCellValue("X1", "Telefone de contato");
 
-// Definimos o estilo da fonte
+$objPHPExcel->setActiveSheetIndex(0)
+    ->setCellValue("A1" )
+    ->setCellValue("B1" )
+    ->setCellValue("C1" )
+    ->setCellValue("D1" )
+    ->setCellValue("E1")
+    ->setCellValue("F1")
+    ->setCellValue("G1")
+    ->setCellValue("H1")
+    ->setCellValue("I1")
+    ->setCellValue("J1")
+    ->setCellValue("K1" )
+    ->setCellValue("L1" )
+    ->setCellValue("M1", "Eventos Comum")
+    ->setCellValue("N1" )
+    ->setCellValue("O1" )
+    ->setCellValue("P1" )
+    ->setCellValue("Q1")
+    ->setCellValue("R1" )
+    ->setCellValue("S1" )
+    ->setCellValue("T1" )
+    ->setCellValue("U1" )
+    ->setCellValue("V1" )
+    ->setCellValue("W1" )
+    ->setCellValue("X1" );
+
 $objPHPExcel->getActiveSheet()->getStyle('A1:AH1')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->getStyle('A1:AH1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+$objPHPExcel->getActiveSheet()->getRowDimension(1)->setRowHeight(40);
+$objPHPExcel->getActiveSheet()->getStyle('A1:AH1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 
+
+
+
+// Criamos as colunas
+$objPHPExcel->setActiveSheetIndex(0)
+    ->setCellValue("A2", "Nome do Evento")
+    ->setCellValue("B2", "Local do Evento")
+    ->setCellValue("C2", "Endereço Completo")
+    ->setCellValue("D2", "SubPrefeitura")
+    ->setCellValue("E2", "Artistas")
+    ->setCellValue("F2", "Data Início")
+    ->setCellValue("G2", "Data Fim")
+    ->setCellValue("H2", "Horário de início")
+    ->setCellValue("I2", "Horário do fim")
+    ->setCellValue("J2", "Nº de Apresentações")
+    ->setCellValue("K2", "Período")
+    ->setCellValue("L2", "Ação / Expressão Artística Principal")
+    ->setCellValue("M2", "Público / Representatividade Social Principal")
+    ->setCellValue("N2", "Espaço Público?" )
+    ->setCellValue("O2", "Entrada")
+    ->setCellValue("P2", "Valor do Ingresso (no caso de cobrança)")
+    ->setCellValue("Q2", "Classificação indicativa")
+    ->setCellValue("R2", "Link de Divulgação")
+    ->setCellValue("S2", "Sinopse")
+    ->setCellValue("T2", "Projeto Especial")
+    ->setCellValue("U2", "Caso Seja Fomento / Programa da smc Qual o Fomento ou Programa?")
+    ->setCellValue("V2", "Produtor do Evento")
+    ->setCellValue("W2", "E-mail de contato")
+    ->setCellValue("X2", "Telefone de contato");
+
+// Definimos o estilo da fonte
+$objPHPExcel->getActiveSheet()->getStyle('A2:AH2')->getFont()->setBold(true);
+$objPHPExcel->getActiveSheet()->getStyle('A2:AH2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+$objPHPExcel->getActiveSheet()->getRowDimension(2)->setRowHeight(25);
+$objPHPExcel->getActiveSheet()->getStyle('A2:AH2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+
+$objPHPExcel->getActiveSheet()->getRowDimension(3)->setRowHeight(5);
 //Colorir a primeira linha
 $objPHPExcel->getActiveSheet()->getStyle('A1:AH1')->applyFromArray
+(
+    array
+    (
+        'fill' => array
+        (
+            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+            'color' => array('rgb' => '3c8dbc')
+        ),
+    )
+);
+
+
+//Colorir a primeira linha
+$objPHPExcel->getActiveSheet()->getStyle('A2:AH2')->applyFromArray
 (
     array
     (
@@ -68,7 +123,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:AH1')->applyFromArray
     )
 );
 
-$cont = 2;
+$cont = 4;
 while($linha = mysqli_fetch_array($query))
 {
     $totalDias = '';
@@ -191,6 +246,8 @@ while($linha = mysqli_fetch_array($query))
     $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $z)->getAlignment()->setWrapText(true);
     $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $z)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
     $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $z)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+    $objPHPExcel->getActiveSheet()->getRowDimension($cont)->setRowHeight(20);
 
     $cont++;
 
