@@ -314,12 +314,12 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                         ?>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="forma_pagamento">Forma de pagamento</label><br/>
+                                <label for="forma_pagamento">Forma de pagamento *</label><br/>
                                 <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
                                           rows="8"><?= $pedido['forma_pagamento'] ?></textarea>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="justificativa">Justificativa</label><br/>
+                                <label for="justificativa">Justificativa *</label><br/>
                                 <textarea id="justificativa" name="justificativa" class="form-control"
                                           rows="8"><?= $pedido['justificativa'] ?></textarea>
                             </div>
