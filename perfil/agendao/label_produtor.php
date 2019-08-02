@@ -38,7 +38,7 @@ if($idProdutor != NULL){
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label>Telefone:</label> <?= $produtor['telefone1'] . " " . $produtor['telefone1'] ?>
+                                    <label>Telefone(s):</label> <?= $produtor['telefone1'] . " " . $produtor['telefone2'] ?>
                                 </div>
                             </div>
                             <div class="row">

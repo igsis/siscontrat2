@@ -25,7 +25,6 @@ $sqlCarregar = "SELECT
                 WHERE eve.id = '$idEvento'";
 $resumoCarregamento = $con->query($sqlCarregar)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
-
 include "includes/menu_interno.php";
 ?>
 
@@ -34,10 +33,7 @@ include "includes/menu_interno.php";
         <div class="box">
             <div>
                 <div class="box-header">
-                    <h3 class="page-header">Evento Selecionado</h3><em class="pull-right"><?php if (isset($prazo)) {
-                            echo $prazo;
-                        };
-                        ?></em>
+                    <h3 class="page-header">Evento Selecionado</h3>
                 </div>
             </div>
         </div>

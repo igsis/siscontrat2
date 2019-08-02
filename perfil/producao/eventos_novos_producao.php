@@ -16,15 +16,16 @@ $sqlEvento = "SELECT
                     esp.espaco AS 'espaco',
                     env.data_envio AS 'data_envio',
                     u.nome_completo as 'usuario',
-                    eve.visualizado AS 'visualizado'
+                    en.visualizado AS 'visualizado'
             FROM eventos AS eve
             INNER JOIN ocorrencias as o on o.id = eve.id
             left join locais as l ON l.id = o.local_id
             left join espacos as esp on esp.id = o.espaco_id
             INNER JOIN evento_envios as env on env.evento_id = eve.id
             INNER JOIN usuarios as u on u.id = eve.usuario_id
-            INNER JOIN pedidos AS ped ON ped.origem_id = eve.id 
-WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND eve.visualizado = 0";
+            INNER JOIN pedidos AS ped ON ped.origem_id = eve.id
+            INNER JOIN producao_eventos AS en ON en.evento_id = eve.id 
+WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND en.visualizado = 0";
 
 $queryEvento = mysqli_query($con, $sqlEvento);
 

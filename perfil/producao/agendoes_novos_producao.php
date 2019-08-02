@@ -18,7 +18,8 @@ $sqlAgendaoNovo = "SELECT
         INNER JOIN agendao_ocorrencias AS ao ON ao.id = a.id
         LEFT JOIN locais AS l ON l.id = ao.local_id
         LEFT JOIN espacos AS esp ON esp.id = ao.espaco_id
-        WHERE a.publicado = 1 AND a.visualizado = 0 AND evento_status_id = 3;";
+        INNER JOIN producao_agendoes AS env ON env.agendao_id = a.id
+        WHERE a.publicado = 1 AND env.visualizado = 0 AND evento_status_id = 3;";
 $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
 ?>
 

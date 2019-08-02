@@ -12,11 +12,9 @@ $conn = bancoPDO();
 
 if (isset($_POST['checarEvento'])) {
     $idEvento = $_POST['idEvento'];
-    $sqlPedido = "UPDATE eventos SET visualizado = 1 WHERE id = '$idEvento'";
-    if (mysqli_query($con, $sqlPedido)) {
-        $data = date("Y-m-d H:i:s", strtotime("now"));
-        $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-        $queryEnvio = mysqli_query($con,$sqlEnvio);
+    $sqlView = "UPDATE producao_eventos SET visualizado = 1 WHERE id = '$idEvento'";
+    $queryView = mysqli_query($con, $sqlView);
+    if (mysqli_query($con, $sqlView)) {
         $mensagem = mensagem("success", "Evento marcado como visualizado!");
     }
 }
@@ -29,15 +27,16 @@ $sqlEvento = "SELECT
                     esp.espaco AS 'espaco',
                     env.data_envio AS 'data_envio',
                     u.nome_completo as 'usuario',
-                    eve.visualizado AS 'visualizado'
+                    en.visualizado AS 'visualizado'
             FROM eventos AS eve
             INNER JOIN ocorrencias as o on o.id = eve.id
             LEFT JOIN locais as l ON l.id = o.local_id
             LEFT JOIN espacos as esp on esp.id = o.espaco_id
             INNER JOIN evento_envios as env on env.evento_id = eve.id
             INNER JOIN usuarios as u on u.id = eve.usuario_id
-            INNER JOIN pedidos AS ped ON ped.origem_id = eve.id 
-WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND eve.visualizado = 1";
+            INNER JOIN pedidos AS ped ON ped.origem_id = eve.id
+            INNER JOIN producao_eventos AS en ON en.evento_id = eve.id 
+WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND en.visualizado = 1";
 
 $queryEvento = mysqli_query($con, $sqlEvento);
 ?>
@@ -77,7 +76,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                             <?php
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($queryEvento)) {
-                                                            ?>
+                            ?>
 
                             <tr>
                                 <?php
@@ -87,7 +86,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                                 echo "<td>" . $evento['local'] . "</td>";
                                 echo "<td>" . $evento['espaco'] . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($evento['id'], 'ocorrencias') . "</td>";
-                                echo "<td>" . $evento['data_envio'] ."</td>";
+                                echo "<td>" . $evento['data_envio'] . "</td>";
                                 echo "<td>" . $evento['usuario'] . "</td>";
                                 echo "<td>                               
                             <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_evento' role='form'>
