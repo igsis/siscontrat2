@@ -6,6 +6,21 @@ $idEvento = $_SESSION['idEvento'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
+if (isset($_POST['apagar'])) {
+
+    $idFilme = $_POST['idFilme'];
+
+    $sqlDelete = "DELETE FROM filme_eventos WHERE filme_id = '$idFilme' AND evento_id = '$idEvento'";
+
+    if ($query = mysqli_query($con, $sqlDelete)) {
+        $mensagem = mensagem("success", "Filme deletado com sucesso");
+
+        $deletaOcorrenciasFilme = "UPDATE ocorrencias SET publicado = 0 WHERE atracao_id = '$idFilme' AND tipo_ocorrencia_id = 2";
+        mysqli_query($con, $deletaOcorrenciasFilme);
+    } else {
+        $mensagem = mensagem("danger", "Erro ao tentar executar operação na atração");
+    }
+}
 
 if (isset($_POST['selecionar'])) {
     $idFilme = $_POST['idFilme'];
@@ -20,7 +35,6 @@ if (isset($_POST['selecionar'])) {
     }
 
 }
-
 
 $query = "SELECT f.id, f.titulo, f.ano_producao, f.duracao, f.direcao 
 FROM filmes f
@@ -44,16 +58,14 @@ $resul = mysqli_query($con, $query);
             </div>
         </div>
         <br/>
-
         <div class="row">
-            <?php
-            if (isset($mensagem))
-                echo $mensagem;
-            ?>
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">Listagem</h3>
+                    </div>
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem)){echo $mensagem;};?>
                     </div>
                     <div class="box-body">
 
@@ -106,7 +118,7 @@ $resul = mysqli_query($con, $query);
                                 </form>
                                 </td>";
                                 echo "<td>
-                                <button type=\"button\" class=\"btn btn-block btn-danger\"><span class='glyphicon glyphicon-trash'></span></button>
+                                <buttonn class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-ocorrencia-id='" . $filmes['id'] . "' data-tittle='Apagar Filme' data-message='Deseja mesmo excluir o filme do evento?' onclick ='passarId(" . $filmes['id'] . ")'><span class='glyphicon glyphicon-trash'></span></buttonn>
                                 </td>";
                                 echo "</tr>";
                             }
@@ -134,6 +146,29 @@ $resul = mysqli_query($con, $query);
     </section>
 </div>
 
+<!--Apagar filme do evento-->
+<div class="modal fade" id="apagar" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" id='formApagar' action="?perfil=evento&p=evento_cinema_lista" class="form-horizontal"
+                  role="form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><p>Apagar filme</p></h4>
+                </div>
+                <div class="modal-body">
+                    <p>Deseja mesmo excluir o filme do evento? </p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="idFilme">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type='submit' class='btn btn-danger btn-sm' name="apagar">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
@@ -150,4 +185,11 @@ $resul = mysqli_query($con, $query);
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
+</script>
+
+<script>
+
+    function passarId(id) {
+        document.querySelector('#formApagar input[name="idFilme"]').value = id;
+    }
 </script>

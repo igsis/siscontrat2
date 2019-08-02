@@ -13,7 +13,7 @@ if (isset($_POST['apagar'])) {
 
     if ($query = mysqli_query($con, $consulta)) {
         $mensagem = mensagem("success", "Atração apagada com sucesso");
-        $deletaOcorrenciasAtracao = "UPDATE ocorrencias SET publicado = 0 WHERE atracao_id = '$idAtracao'";
+        $deletaOcorrenciasAtracao = "UPDATE ocorrencias SET publicado = 0 WHERE atracao_id = '$idAtracao' AND tipo_ocorrencia_id = 1";
         mysqli_query($con, $deletaOcorrenciasAtracao);
     } else {
         $mensagem = mensagem("danger", "Erro ao tentar executar operação na atração");
@@ -48,9 +48,9 @@ $query = mysqli_query($con, $sql);
                         <h3 class="box-title">Listagem</h3>
                     </div>
 
-                    <?php if (isset($mensagem)) {
-                        echo $mensagem;
-                    } ?>
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                    </div>
                     <!-- /.box-header -->
                     <div class="box-body">
                         <table id="tblAtracao" class="table table-bordered table-striped">
@@ -247,7 +247,7 @@ $query = mysqli_query($con, $sql);
     <!-- /.content -->
 </div>
 
-<!--Apagar ocorrência-->
+<!--Apagar atracao-->
 <div class="modal fade" id="apagar" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
