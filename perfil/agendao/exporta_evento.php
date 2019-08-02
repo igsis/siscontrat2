@@ -84,7 +84,7 @@ if (isset($_POST['filtrar'])) {
                 L.cidade AS 'cidade',
                 L.uf AS 'estado',
                 L.cep AS 'cep',
-                E.sinopse AS 'artista',
+                E.sinopse AS 'artistas',
                 CI.classificacao_indicativa AS 'classificacao',
                 A.links AS 'divulgacao',
                 E.sinopse AS 'sinopse',
@@ -96,13 +96,14 @@ if (isset($_POST['filtrar'])) {
                 PE.projeto_especial,
                 SUB_PRE.subprefeitura AS 'subprefeitura',
                 DIA_PERI.periodo AS 'periodo',
-                retirada.retirada_ingresso AS 'retirada'
+                retirada.retirada_ingresso AS 'retirada',
+                I.sigla AS 'instiSigla'
                 FROM eventos AS E
                 LEFT JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id  
                 LEFT JOIN ocorrencias AS O ON O.origem_ocorrencia_id = E.id          
                 LEFT JOIN usuarios AS U ON E.usuario_id = U.id
                 LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
-                LEFT JOIN agendao_ocorrencias AS AO ON E.id = AO.origem_ocorrencia_id
+                LEFT JOIN instituicoes AS I ON I.id = O.instituicao_id
                 LEFT JOIN locais AS L ON O.local_id = L.id
                 LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
                 LEFT JOIN periodos AS DIA_PERI ON O.periodo_id = DIA_PERI.id
@@ -146,7 +147,7 @@ if (isset($_POST['filtrar'])) {
                 L.cidade AS 'cidade',
                 L.uf AS 'estado',
                 L.cep AS 'cep',
-                agendao.ficha_tecnica AS 'artista',
+                agendao.ficha_tecnica AS 'artistas',
                 CI.classificacao_indicativa AS 'classificacao',
                 agendao.links AS 'divulgacao',
                 agendao.sinopse AS 'sinopse',
@@ -158,7 +159,8 @@ if (isset($_POST['filtrar'])) {
                 PE.projeto_especial,
                 SUB_PRE.subprefeitura AS 'subprefeitura',
                 DIA_PERI.periodo AS 'periodo',
-                retirada.retirada_ingresso AS 'retirada'
+                retirada.retirada_ingresso AS 'retirada',
+                I.sigla AS 'instiSigla'
                 FROM agendoes AS agendao
                 LEFT JOIN agendao_ocorrencias AS O ON agendao.id = O.origem_ocorrencia_id
                 LEFT JOIN locais AS L ON O.local_id = L.id
@@ -206,7 +208,7 @@ if (isset($_POST['filtrar'])) {
 ?>
 
 <div class="content-wrapper">
-    <section class="content-header">
+    <section class="content">
         <h3 class="box-title">Eventos - Gerar Excel - Filtrar</h3>
         <h6><?php if (isset($mensagem)) {
                 echo $mensagem;
@@ -255,92 +257,98 @@ if (isset($_POST['filtrar'])) {
                         </div>
                         <div class="col-md-3">
                             <label>Data encerramento</label>
-                            <input type="text" name="final" class="form-control datepicker" id="final" autocomplete="off">
+                            <input type="text" name="final" class="form-control datepicker" id="final"
+                                   autocomplete="off">
                             <br>
                         </div>
                     </div>
                     <span id="spanFiltrar" title="Informe uma data de início!">
-                        <input type="submit" class="btn btn-primary btn-theme btn-block" name="filtrar" id="filtrar" value="Filtrar">
+                        <input type="submit" class="btn btn-primary btn-theme btn-block" name="filtrar" id="filtrar"
+                               value="Filtrar">
                     </span>
                 </div>
             </form>
         </div>
-        <div class="row text-center" id="novaPesquisa" style="display: none">
-            <br>
-            <div class="col-md-12">
-                <button type="button" class="btn btn-info" id="btnNovaPesquisa">Nova pesquisa</button>
-            </div>
-        </div>
+    </section>
+
 
 <?php
 if ($consulta == 1) {
     ?>
-    <div id="resultadoPesquisa">
-        <div class="box-header">
-            <form method="post" action="../pdf/exportar_excel_agendao.php">
-                <div class="form-group">
-                    <br>
-                    <input type="hidden" name="sql" value="<?= $sql ?>">
-                    <input type="hidden" name="sqlAgendao" value="<?= $sqlAgendao ?>">
-                    <input type="submit" class="btn btn-success btn-theme btn-block" name="exportar"
-                           value="Baixar Arquivo Excel">
-                </div>
-            </form>
-        </div>
-
-            <h3 class="box-title">Resultado da pesquisa
-                <button class='btn btn-default' type='button' data-toggle='modal'
-                        data-target='#modal' style="border-radius: 30px;">
-                    <i class="fa fa-question-circle"></i></button>
-            </h3>
-            <div class="box box-success">
-                <div class="box-body">
-                    <h3 class="box-title">Resumo da pesquisa eventos Agendão</h3>
-                    <table id="tblAgendao" class="table table-bordered table-striped table-responsive">
-                        <thead>
-                        <tr>
-                            <th>Nome do Evento</th>
-                            <th>Local do Evento</th>
-                            <th>Classificação indicativa</th>
-                            <th>SubPrefeitura</th>
-                            <th>Valor do ingresso</th>
-                            <th>Nº de atividades</th>
-                            <th>Artistas</th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        <?php
-                        while ($linha = mysqli_fetch_array($queryAgendao)) {
-                            ?>
-                            <tr>
-                                <td><?= $linha['nome'] ?></td>
-                                <td><?= $linha['nome_local'] ?></td>
-                                <td><?= $linha['classificacao'] ?></td>
-                                <td><?= $linha['subprefeitura'] ?></td>
-                                <td><?= $linha['valor_ingresso'] == '0.00' ? 'Grátis' : 'R$ ' .dinheiroParaBr($linha['valor_ingresso']) ?></td>
-                                <td><?= $linha['apresentacoes'] ?></td>
-                                <td><?= $linha['artista'] ?></td>
-                            </tr>
-                            <?php
-                        }
-                        ?>
-                        </tbody>
-
-                        <tfoot>
-                        <tr>
-                            <th>Nome do Evento</th>
-                            <th>Local do Evento</th>
-                            <th>Classificação indicativa</th>
-                            <th>SubPrefeitura</th>
-                            <th>Valor do ingresso</th>
-                            <th>Nº de atividades</th>
-                            <th>Artistas</th>
-                        </tr>
-                        </tfoot>
-                    </table>
+        <section class="content" style="margin-top: -20%">
+            <div class="row text-center" id="novaPesquisa" style="display: none">
+                <br>
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-info" id="btnNovaPesquisa">Nova pesquisa</button>
                 </div>
             </div>
+            <br>
+            <div id="resultadoPesquisa"  style="margin-top: 10px;">
+                <div class="box-header">
+                    <form method="post" action="../pdf/exportar_excel_agendao.php">
+                        <div class="form-group">
+                            <br>
+                            <input type="hidden" name="sql" value="<?= $sql ?>">
+                            <input type="hidden" name="sqlAgendao" value="<?= $sqlAgendao ?>">
+                            <input type="submit" class="btn btn-success btn-theme btn-block" name="exportar"
+                                   value="Baixar Arquivo Excel">
+                        </div>
+                    </form>
+                </div>
+
+                <h3 class="box-title">Resultado da pesquisa
+                    <button class='btn btn-default' type='button' data-toggle='modal'
+                            data-target='#modal' style="border-radius: 30px;">
+                        <i class="fa fa-question-circle"></i></button>
+                </h3>
+                <div class="box box-success">
+                    <div class="box-body">
+                        <h3 class="box-title">Resumo da pesquisa eventos Agendão</h3>
+                        <table id="tblAgendao" class="table table-bordered table-striped table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Nome do Evento</th>
+                                <th>Local do Evento</th>
+                                <th>Classificação indicativa</th>
+                                <th>SubPrefeitura</th>
+                                <th>Valor do ingresso</th>
+                                <th>Nº de atividades</th>
+                                <th>Artistas</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <?php
+                            while ($linha = mysqli_fetch_array($queryAgendao)) {
+                                ?>
+                                <tr>
+                                    <td><?= $linha['nome'] ?></td>
+                                    <td><?= $linha['nome_local'] ?></td>
+                                    <td><?= $linha['classificacao'] ?></td>
+                                    <td><?= $linha['subprefeitura'] ?></td>
+                                    <td><?= $linha['valor_ingresso'] == '0.00' ? 'Grátis' : 'R$ ' . dinheiroParaBr($linha['valor_ingresso']) ?></td>
+                                    <td><?= $linha['apresentacoes'] ?></td>
+                                    <td><?= $linha['artistas'] ?></td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                            </tbody>
+
+                            <tfoot>
+                            <tr>
+                                <th>Nome do Evento</th>
+                                <th>Local do Evento</th>
+                                <th>Classificação indicativa</th>
+                                <th>SubPrefeitura</th>
+                                <th>Valor do ingresso</th>
+                                <th>Nº de atividades</th>
+                                <th>Artistas</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
 
                 <div class="box box-success">
                     <div class="box-body">
@@ -368,16 +376,15 @@ if ($consulta == 1) {
                                     $linha ['classificacao'] = $classificao['classificacao_indicativa'];
                                 }
 
-
                                 ?>
                                 <tr>
                                     <td><?= $linha['nome'] ?></td>
                                     <td><?= $linha['nome_local'] ?></td>
                                     <td><?= $linha['classificacao'] ?></td>
                                     <td><?= $linha['subprefeitura'] ?></td>
-                                    <td><?= $linha['valor_ingresso'] == '0.00' ? 'Grátis' : 'R$ ' .dinheiroParaBr($linha['valor_ingresso']) ?></td>
+                                    <td><?= $linha['valor_ingresso'] == '0.00' ? 'Grátis' : 'R$ ' . dinheiroParaBr($linha['valor_ingresso']) ?></td>
                                     <td><?= $linha['apresentacoes'] == '' ? 'Este evento é filme!' : $linha['apresentacoes'] ?></td>
-                                    <td><?= $linha['artista'] ?></td>
+                                    <td><?= $linha['artistas'] ?></td>
                                 </tr>
                                 <?php
                             }
@@ -398,11 +405,12 @@ if ($consulta == 1) {
                         </table>
                     </div>
                 </div>
-
             </div>
         </section>
-    </div>
+
 <?php } ?>
+
+</div>
 
 <div class="modal fade" id="modal" role="dialog" aria-labelledby="lblModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -447,40 +455,17 @@ if ($consulta == 1) {
 </div>
 
 <script>
-    function mostraDiv() {
-        let form = document.querySelector('#testeTana');
-        form.style.display = 'block';
-
-        let botoes = document.querySelector('#botoes');
-        botoes.style.display = 'none';
-
-        let resultado = document.querySelector('#resultado');
-        resultado.style.display = 'none';
-    }
-
-    function desabilitaFiltrar() {
-
-        var inicio = document.querySelector("#inicio");
-        var filtrar = document.querySelector("#filtrar");
-
-        if (inicio.value.length != 0) {
-            filtrar.disabled = false;
-        } else {
-            filtrar.disabled = true;
-        }
-    }
 
     $(function () {
         $(".datepicker").datepicker();
 
         $('#filtrar').mouseover(function () {
             if ($('#data_inicio').val() == '') {
-                $('#msgSemInicio').show();
                 $('#filtrar').prop('disabled', true);
             }
         });
 
-        let consulta = "<?= isset($consulta) ? 1 : 0 ?>";
+        let consulta = "<?= $consulta ?>";
 
         if (consulta == 1) {
             $('#filtro').hide();
@@ -504,9 +489,7 @@ if ($consulta == 1) {
             $('#filtrar').prop('disabled', false);
             $('#spanFiltrar').attr('title', '');
         }
-
     }
-
 
 
 </script>
