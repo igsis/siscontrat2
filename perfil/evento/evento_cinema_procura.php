@@ -39,7 +39,6 @@ if (isset($_POST['procurar'])){
                                      <form action='?perfil=evento&p=evento_cinema_edita' method='post'>
                                         <input type='hidden' name='idFilme' value='".$filmes['id']."'>
                                         <td><input class='btn btn-primary' type='submit' name='adicionar' value='Adicionar'></td>
-                                        <td><input class='btn btn-primary' type='submit' name='carregar' value='Selecionar'></td>
                                      </form>
                                </td>";
                 $resultado .= "</tr>";
@@ -102,8 +101,7 @@ if (isset($_POST['procurar'])){
                                             <th>Ano</th>
                                             <th>Duração</th>
                                             <th>Diretor</th>
-                                            <th width="10%"></th>
-                                            <th width="10%"></th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
