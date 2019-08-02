@@ -25,6 +25,7 @@ $sqlAgendao = "SELECT
     WHERE a.id = '$idEvento'";
 
 $agendao = $con->query($sqlAgendao)->fetch_assoc();
+$view = recuperaDados('producao_agendoes', 'id', $idEvento);
 ?>
 
 <div class="content-wrapper">
@@ -130,7 +131,7 @@ $agendao = $con->query($sqlAgendao)->fetch_assoc();
                                             <div class="form-group col-md-6">
                                                 <label for="visualizado">Visualizado:</label>
                                                 <?php
-                                                if($agendao['visualizado'] == 1){
+                                                if($view['visualizado'] == 1){
                                                     echo "Sim";
                                                 }else{
                                                     echo "Não";
@@ -142,10 +143,10 @@ $agendao = $con->query($sqlAgendao)->fetch_assoc();
                                 </div>
                             </div>
                             <div class="tab-pane" id="produtor">
-                                <?php include "label_produtor_producao.php"?>
+                                <?php include "includes/label_produtor_agendao.php"?>
                             </div>
                             <div class="tab-pane" id="ocorrencia">
-                                <?php include "label_ocorrencia_producao.php";?>
+                                <?php include "includes/label_ocorrencia_agendao.php";?>
                             </div>
                         </div>
                         <div class="box-footer">
@@ -153,7 +154,7 @@ $agendao = $con->query($sqlAgendao)->fetch_assoc();
                                 <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                                 <?php
 
-                                if($agendao['visualizado'] == 0){
+                                if($view['visualizado'] == 0){
                                 ?>
                                 <button type="submit" name="checarAgendao" class="btn btn-success"> Checar visualização
                                     <?php

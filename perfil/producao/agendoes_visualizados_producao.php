@@ -12,11 +12,10 @@ $conn = bancoPDO();
 
 if (isset($_POST['checarAgendao'])) {
     $idEvento = $_POST['idEvento'];
-    $sqlPedido = "UPDATE agendoes SET visualizado = 1 WHERE id = '$idEvento'";
-    if (mysqli_query($con, $sqlPedido)) {
-        $data = date("Y-m-d H:i:s", strtotime("now"));
-        $sqlEnvio = "INSERT INTO producao_agendoes (agendao_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-        $queryEnvio = mysqli_query($con,$sqlEnvio);
+    $data = date("Y-m-d H:i:s", strtotime("now"));
+    $sqlView = "UPDATE producao_agendoes SET visualizado = 1 WHERE id = '$idEvento'";
+    $queryView = mysqli_query($con,$sqlView);
+    if (mysqli_query($con, $sqlView)) {
         $mensagem = mensagem("success", "Agendão marcado como visualizado!");
     }
 }
@@ -26,12 +25,14 @@ $sqlAgendaoVisualizado = "SELECT
 		a.nome_evento AS 'nome',
 		l.local AS 'local',
         esp.espaco AS 'espaco',
-        a.data_envio AS 'data_envio'
+        a.data_envio AS 'data_envio',
+        env.visualizado AS 'visualizado'
 		from agendoes AS a
         INNER JOIN agendao_ocorrencias AS ao ON ao.id = a.id
         LEFT JOIN locais AS l ON l.id = ao.local_id
         LEFT JOIN espacos AS esp ON esp.id = ao.espaco_id
-        WHERE a.publicado = 1 AND a.visualizado = 1 AND evento_status_id = 3;";
+        INNER JOIN producao_agendoes AS env ON env.agendao_id = a.id 
+        WHERE a.publicado = 1 AND env.visualizado = 1 AND evento_status_id = 3;";
 $queryAgendaoVisualizado = mysqli_query($con, $sqlAgendaoVisualizado);
 
 ?>

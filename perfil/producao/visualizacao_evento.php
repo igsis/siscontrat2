@@ -16,7 +16,7 @@ $sqlEvento = "SELECT
                 suplente.nome_completo AS 'Suplente:',
                 eve.espaco_publico AS 'Evento Público:',
                 eve.fomento AS 'Fomento:',
-                eve.visualizado AS 'Visualizado:'
+                env.visualizado AS 'Visualizado:'
                 
                 FROM eventos AS eve
                 INNER JOIN tipo_eventos AS te ON eve.tipo_evento_id = te.id
@@ -24,12 +24,12 @@ $sqlEvento = "SELECT
                 INNER JOIN projeto_especiais AS pe ON eve.projeto_especial_id = pe.id
                 INNER JOIN usuarios AS fiscal ON eve.fiscal_id = fiscal.id
                 INNER JOIN usuarios AS suplente ON eve.suplente_id = suplente_id
-                
+                INNER JOIN producao_eventos AS env ON env.evento_id = eve.id 
                 WHERE eve.id = '$idEvento'";
 
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
-
+$view = recuperaDados('producao_eventos', 'id', $idEvento);
 include "includes/menu_interno.php";
 ?>
 
@@ -124,7 +124,7 @@ include "includes/menu_interno.php";
                                     <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                                     <?php
 
-                                    if($evento['visualizado'] == 0){
+                                    if($view['visualizado'] == 0){
                                         ?>
                                     <button type="submit" name="checarEvento" class="btn btn-success"> Checar visualização
                                     <?php

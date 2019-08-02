@@ -22,6 +22,9 @@ if(isset($_POST['aprovar'])){
         $data = date("Y-m-d H:i:s",strtotime("now"));
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data')";
         $queryEnvia = mysqli_query($con, $sqlEnvia);
+        $idUser = $_SESSION['idUser'];
+        $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
+        $queryEnvio = mysqli_query($con,$sqlEnvio);
         $mensagem = mensagem("success", "Evento aprovado com sucesso!");
 
         if ($evento['tipo_evento_id'] == 1) {
@@ -29,7 +32,7 @@ if(isset($_POST['aprovar'])){
         } else if ($evento['tipo_evento_id'] == 2) {
             $protocolo = geraProtocolo($idEvento) . "-C";
         }
-        if($evento['contratado'] == 1){
+        if($evento['contratacao'] == 1){
             $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3";
             mysqli_query($con, $sqlEnviaEvento);
         }
