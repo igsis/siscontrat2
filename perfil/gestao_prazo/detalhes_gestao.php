@@ -20,7 +20,7 @@ $sqlCarregar = "SELECT
                 INNER JOIN relacao_juridicas AS rj ON eve.relacao_juridica_id = rj.id
                 INNER JOIN projeto_especiais AS pe ON eve.projeto_especial_id = pe.id
                 INNER JOIN usuarios AS fiscal ON eve.fiscal_id = fiscal.id
-                INNER JOIN usuarios AS suplente ON eve.suplente_id = suplente_id
+                INNER JOIN usuarios AS suplente ON eve.suplente_id = suplente.id
                 
                 WHERE eve.id = '$idEvento'";
 $resumoCarregamento = $con->query($sqlCarregar)->fetch_assoc();
@@ -42,11 +42,11 @@ include "includes/menu_interno.php";
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs pull-right">
                         <?php if ($evento['contratacao'] == 1) { ?>
-                            <li><a href="#pedido" data-toggle="tab">Pedido de Contratção</a></li>
+                            <li><a href="#pedido" data-toggle="tab">Pedido de Contratação</a></li>
                         <?php } ?>
                         <li><a href="#ocorrencia" data-toggle="tab">Ocorrência</a></li>
                         <li><a href="#atracao" data-toggle="tab">
-                                <?= $evento['tipo_evento_id'] == 1 ? "Atrcação" : "Filme" ?>
+                                <?= $evento['tipo_evento_id'] == 1 ? "Atração" : "Filme" ?>
                             </a>
                         </li>
                         <li class="active"><a href="#evento" data-toggle="tab">Eventos</a></li>
