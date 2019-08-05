@@ -67,7 +67,7 @@ $numAgendao= mysqli_num_rows($queryAgendao);
             <?php
             if ($numAgendao > 0) {
                 ?>
-                <div class="col-md-6 col-xs-12">
+                <div class="col-md-5 col-xs-12">
                     <div class="info-box">
                         <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>
                         <div class="info-box-content">

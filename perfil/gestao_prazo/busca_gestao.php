@@ -78,6 +78,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Locais</th>
                                 <th>Período</th>
                                 <th>Fiscal</th>
+                                <th>Operador</th>
                                 <th>Visualizar</th>
                             </tr>
                             </thead>
@@ -85,12 +86,14 @@ $query = mysqli_query($con, $sql);
                             echo "<tbody>";
                             while ($eventos = mysqli_fetch_array($query)) {
                                 $fiscal = recuperaDados('usuarios', 'id', $eventos['fiscal_id']);
+                                $operador = recuperaDados('contratos','id', $eventos['']);
                                 echo "<tr>";
                                 echo "<td>" . $eventos['protocolo'] . "</td>";
                                 echo "<td>" . $eventos['nome_evento'] . "</td>";
                                 echo "<td>" . $eventos['local'] . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($eventos['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $fiscal['nome_completo'] . "</td>";
+                                echo "<td>" . $operador ['usuario_contrato_id'] . "</td>";
                                 echo "<td>
                                                 <form method='POST' action='?perfil=gestao_prazo&p=detalhes_gestao' role='form'>
                                                 <input type='hidden' name='idEvento' value='" . $eventos['id'] . "'>
@@ -107,6 +110,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Locais</th>
                                 <th>Período</th>
                                 <th>Fiscal</th>
+                                <th>Operador</th>
                                 <th>Visualizar</th>
                             </tr>
                             </tfoot>

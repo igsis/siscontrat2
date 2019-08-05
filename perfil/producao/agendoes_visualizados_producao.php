@@ -23,16 +23,14 @@ if (isset($_POST['checarAgendao'])) {
 $sqlAgendaoVisualizado = "SELECT
 	    a.id AS 'id',
 		a.nome_evento AS 'nome',
-		l.local AS 'local',
-        esp.espaco AS 'espaco',
+		ao.local_id AS 'local_id',
+        ao.espaco_id AS 'espaco_id',
         a.data_envio AS 'data_envio',
         env.visualizado AS 'visualizado'
 		from agendoes AS a
         INNER JOIN agendao_ocorrencias AS ao ON ao.id = a.id
-        LEFT JOIN locais AS l ON l.id = ao.local_id
-        LEFT JOIN espacos AS esp ON esp.id = ao.espaco_id
-        INNER JOIN producao_agendoes AS env ON env.agendao_id = a.id 
-        WHERE a.publicado = 1 AND env.visualizado = 1 AND evento_status_id = 3;";
+        INNER JOIN producao_agendoes AS env ON env.agendao_id = a.id
+        WHERE a.publicado = 1 AND env.visualizado = 1 AND evento_status_id = 3";
 $queryAgendaoVisualizado = mysqli_query($con, $sqlAgendaoVisualizado);
 
 ?>
@@ -68,18 +66,21 @@ $queryAgendaoVisualizado = mysqli_query($con, $sqlAgendaoVisualizado);
                             </thead>
                             <?php
                             echo "<tbody>";
-                            while ($agendaovisualizado = mysqli_fetch_array($queryAgendaoVisualizado)) {?>
+                            while ($agendaoVerif = mysqli_fetch_array($queryAgendaoVisualizado)) {
+                            $locais = recuperaDados('locais','id', $agendaoVerif['local_id']);
+                            $espacos = recuperaDados('espacos', 'id', $agendaoVerif['espaco_id']);
+                                ?>
                             <tr>
 
                             <?php
-                                echo "<td>" . $agendaovisualizado['nome'] . "</td>";
-                                echo "<td>" . $agendaovisualizado['local'] . "</td>";
-                                echo "<td>" . $agendaovisualizado['espaco'] . "</td>";
-                                echo "<td>" . retornaPeriodoNovo($agendaovisualizado['id'], 'agendao_ocorrencias') . "</td>";
-                                echo "<td>" . $agendaovisualizado['data_envio'] . "</td>";
+                                echo "<td>" . $agendaoVerif['nome'] . "</td>";
+                                echo "<td>" . $locais['local'] . "</td>";
+                                echo "<td>" . $espacos['espaco'] . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($agendaoVerif['id'], 'agendao_ocorrencias') . "</td>";
+                                echo "<td>" . $agendaoVerif['data_envio'] . "</td>";
                                 echo "<td>
                                         <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_agendao' role='form'>
-                                        <input type='hidden' name='idEvento' value='" . $agendaovisualizado['id'] . "'>
+                                        <input type='hidden' name='idEvento' value='" . $agendaoVerif['id'] . "'>
                                         <button type='submit' name='carregaAgendao' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span>
                                         </button>
                                         </form> 

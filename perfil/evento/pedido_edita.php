@@ -36,6 +36,8 @@ if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
         if (mysqli_query($con, $sqlFirst)) {
             $_SESSION['idPedido'] = recuperaUltimo("pedidos");
             $idPedido = $_SESSION['idPedido'];
+            $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+            $queryContratado = mysqli_query($con,$sqlContratado);
         } else {
             echo $sqlFirst;
         }

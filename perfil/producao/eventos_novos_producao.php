@@ -12,15 +12,13 @@ $sqlEvento = "SELECT
                     eve.id AS 'id',
                     eve.protocolo AS 'protocolo',
                     eve.nome_evento AS 'nome_evento',
-                    l.local AS 'local',
-                    esp.espaco AS 'espaco',
+                    o.local_id AS 'local_id',
+                    o.espaco_id AS 'espaco_id',
                     env.data_envio AS 'data_envio',
                     u.nome_completo as 'usuario',
                     en.visualizado AS 'visualizado'
             FROM eventos AS eve
             INNER JOIN ocorrencias as o on o.id = eve.id
-            left join locais as l ON l.id = o.local_id
-            left join espacos as esp on esp.id = o.espaco_id
             INNER JOIN evento_envios as env on env.evento_id = eve.id
             INNER JOIN usuarios as u on u.id = eve.usuario_id
             INNER JOIN pedidos AS ped ON ped.origem_id = eve.id
@@ -64,20 +62,22 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                             </thead>
                             <?php
                             echo "<tbody>";
-                            while ($evento = mysqli_fetch_array($queryEvento)) {?>
+                            while ($eventoNovo = mysqli_fetch_array($queryEvento)) {
+                                $locais = recuperaDados('locais','id', $eventoNovo['local_id']);
+                                $espacos = recuperaDados('espacos', 'id', $eventoNovo['espaco_id']);
+                                ?>
                             <tr>
-
                                 <?php
-                                echo "<td>" . $evento['protocolo'] . "</td>";
-                                echo "<td>" . $evento['nome_evento'] . "</td>";
-                                echo "<td>" . $evento['local'] . "</td>";
-                                echo "<td>" . $evento['espaco'] . "</td>";
-                                echo "<td>" . retornaPeriodoNovo($evento['id'], 'ocorrencias') . "</td>";
-                                echo "<td>" . $evento['data_envio'] ."</td>";
-                                echo "<td>" . $evento['usuario'] . "</td>";
+                                echo "<td>" . $eventoNovo['protocolo'] . "</td>";
+                                echo "<td>" . $eventoNovo['nome_evento'] . "</td>";
+                                echo "<td>" . $locais['local'] . "</td>";
+                                echo "<td>" . $espacos['espaco'] . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($eventoNovo['id'], 'ocorrencias') . "</td>";
+                                echo "<td>" . $eventoNovo['data_envio'] ."</td>";
+                                echo "<td>" . $eventoNovo['usuario'] . "</td>";
                                 echo "<td>                               
                             <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_evento' role='form'>
-                            <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>
+                            <input type='hidden' name='idEvento' value='" . $eventoNovo['id'] . "'>
                             <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'> </span></button>
                             </form>
                             </td>";

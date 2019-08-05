@@ -11,15 +11,13 @@ $conn = bancoPDO();
 $sqlAgendaoNovo = "SELECT
 	    a.id AS 'id',
 		a.nome_evento AS 'nome',
-		l.local AS 'local',
-        esp.espaco AS 'espaco',
-        a.data_envio AS 'data_envio'
+        ao.espaco_id AS 'espaco_id',
+        a.data_envio AS 'data_envio',
+        env.visualizado AS 'visualizado'
 		from agendoes AS a
-        INNER JOIN agendao_ocorrencias AS ao ON ao.id = a.id
-        LEFT JOIN locais AS l ON l.id = ao.local_id
-        LEFT JOIN espacos AS esp ON esp.id = ao.espaco_id
+        JOIN agendao_ocorrencias AS ao ON ao.id = a.id
         INNER JOIN producao_agendoes AS env ON env.agendao_id = a.id
-        WHERE a.publicado = 1 AND env.visualizado = 0 AND evento_status_id = 3;";
+        WHERE a.publicado = 1 AND env.visualizado = 0 AND evento_status_id = 3";
 $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
 ?>
 
@@ -54,18 +52,21 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
                             </thead>
                             <?php
                             echo "<tbody>";
-                            while ($agendaonovo = mysqli_fetch_array($queryAgendaoNovo)) {?>
+                            while ($agendaoNovo = mysqli_fetch_array($queryAgendaoNovo)) {
+                            $locais = listaLocais($agendaoNovo['id'],'3');
+                            $espacos = recuperaDados('espacos', 'id', $agendaoNovo['espaco_id']);
+                                ?>
                             <tr>
 
                             <?php
-                                echo "<td>" . $agendaonovo['nome'] . "</td>";
-                                echo "<td>" . $agendaonovo['local'] . "</td>";
-                                echo "<td>" . $agendaonovo['espaco'] . "</td>";
-                                echo "<td>" . retornaPeriodoNovo($agendaonovo['id'], 'agendao_ocorrencias') . "</td>";
-                                echo "<td>" . $agendaonovo['data_envio'] . "</td>";
+                                echo "<td>" . $agendaoNovo['nome'] . "</td>";
+                                echo "<td>" . $locais. "</td>";
+                                echo "<td>" . $espacos['espaco'] . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($agendaoNovo['id'], 'agendao_ocorrencias') . "</td>";
+                                echo "<td>" . $agendaoNovo['data_envio'] . "</td>";
                                 echo "<td>
                                         <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_agendao' role='form'>
-                                        <input type='hidden' name='idEvento' value='" . $agendaonovo['id'] . "'>
+                                        <input type='hidden' name='idEvento' value='" . $agendaoNovo['id'] . "'>
                                         <button type='submit' name='carregaAgendao' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span>
                                         </button>
                                         </form> 
