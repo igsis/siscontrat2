@@ -251,7 +251,7 @@ include "includes/menu_interno.php";
                             </div>
 
                             <div class="form-group">
-                                <label for="links">Links</label><br/>
+                                <label for="links">Links *</label><br/>
                                 <i>Esse campo deve conter os links relacionados ao espetáculo, ao artista/grupo
                                     que auxiliem na divulgação do evento.</i>
                                 <p align="justify"><span
