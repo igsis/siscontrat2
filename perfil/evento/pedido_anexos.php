@@ -222,7 +222,7 @@ if(isset($_POST['apagar']))
                         </div>
                     </div>
                         <div class="box-footer">
-                            <form action="?perfil=evento&p=pedido_edita" method="post">
+                            <form action="?perfil=evento&p=pedido" method="post">
                                 <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
                                 <button type="submit" name="Voltar" class="btn btn-default pull-left">Voltar</button>
                             </form>
