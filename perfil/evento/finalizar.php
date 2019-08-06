@@ -75,7 +75,10 @@ include "includes/validacoes.php";
                             </ul>
                         </div>
                     <?php }
-                } ?>
+                } else{
+                    $errosArqs = [];
+                }
+                    ?>
             </div>
         </div>
 
@@ -177,8 +180,7 @@ include "includes/validacoes.php";
                     <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                     <input type="hidden" name="fora" value="<?= $fora ?? 0 ?>">
                     <button class="btn btn-success" name="enviar"
-                            type="submit" <?= (count($erros) != 0 or count($errosArqs) != 0) ? "disabled" : "" ?>>Enviar
-                        Evento
+                            type="submit" <?= (count($erros) != 0 or count($errosArqs) != 0) ? "disabled" : "" ?>>Enviar Evento
                     </button>
                 </form>
             </div>
