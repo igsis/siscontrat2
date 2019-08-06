@@ -83,7 +83,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         var dataInicio = document.querySelector('#datepicker10').value;
         var dataFim = document.querySelector('#datepicker11').value;
 
-        if(dataInicio != ""){
+        if (dataInicio != "") {
             var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
         }
 
@@ -134,7 +134,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 </div>
                             </div>
 
-                            
+
                             <div class="row" id="msgEscondeData">
                                 <div class="form-group col-md-offset-6 col-md-6">
                                     <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
@@ -144,13 +144,20 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label>
-                                        <input type="checkbox" name="domingo" id="diasemana07" value="1" class="semana"> Domingo &nbsp;
-                                        <input type="checkbox" name="segunda" id="diasemana01" value="1" class="semana"> Segunda &nbsp;
-                                        <input type="checkbox" name="terca" id="diasemana02" value="1" class="semana"> Terça &nbsp;
-                                        <input type="checkbox" name="quarta" id="diasemana03" value="1" class="semana"> Quarta &nbsp;
-                                        <input type="checkbox" name="quinta" id="diasemana04" value="1" class="semana"> Quinta &nbsp;
-                                        <input type="checkbox" name="sexta" id="diasemana05" value="1" class="semana"> Sexta &nbsp;
-                                        <input type="checkbox" name="sabado" id="diasemana06" value="1" class="semana"> Sábado &nbsp;
+                                        <input type="checkbox" name="domingo" id="diasemana07" value="1" class="semana">
+                                        Domingo &nbsp;
+                                        <input type="checkbox" name="segunda" id="diasemana01" value="1" class="semana">
+                                        Segunda &nbsp;
+                                        <input type="checkbox" name="terca" id="diasemana02" value="1" class="semana">
+                                        Terça &nbsp;
+                                        <input type="checkbox" name="quarta" id="diasemana03" value="1" class="semana">
+                                        Quarta &nbsp;
+                                        <input type="checkbox" name="quinta" id="diasemana04" value="1" class="semana">
+                                        Quinta &nbsp;
+                                        <input type="checkbox" name="sexta" id="diasemana05" value="1" class="semana">
+                                        Sexta &nbsp;
+                                        <input type="checkbox" name="sabado" id="diasemana06" value="1" class="semana">
+                                        Sábado &nbsp;
                                     </label>
                                 </div>
 
@@ -161,7 +168,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                     <input type="radio" name="virada" id="viradaNao" value="0" checked class="virada">
                                     Não
                                 </div>
-                                
+
                                 <div class="form-group col-md-2">
                                     <input type="checkbox" name="libras" id="libras" value="1"> &nbsp;
                                     <label for="libras">Libras</label>
@@ -223,9 +230,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
                                 <div class="form-group col-md-4">
                                     <label for="local">Local *</label>
-                                    <button type="button" name="idAtracao" data-toggle='modal'
-                                            data-target='#modaLocal' class="btn-success pull-right">
-                                        <i class="fa fa-plus"></i></button>
                                     <select class="form-control" id="local" name="local">
                                         <!-- Populando pelo js -->
                                     </select>
@@ -234,9 +238,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
                                 <div class="form-group col-md-4">
                                     <label for="espaco">Espaço</label>
-                                    <button type="button" data-toggle="modal" data-target="#modalEspaco"
-                                            class="btn-success pull-right"><i class="fa fa-plus"></i>
-                                    </button>
                                     <select class="form-control" id="espaco" name="espaco">
                                         <!-- Populando pelo js -->
                                     </select>
@@ -286,145 +287,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         </div>
     </section>
 </div>
-
-<!-- Modal solicitar local -->
-<div class="modal fade" id="modaLocal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title text-bold"><p>Solicitar adição de Local</p></h4>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="#" role="form">
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <label for="instituicoes">Instituição: *</label>
-                            <select name="instituicoes" id="instituicoes" class="form-control" required>
-                                <?php
-                                geraOpcao('instituicoes');
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <label for="cep">Local: *</label>
-                            <input type="text" class="form-control" name="localModal" id="localModal" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-3">
-                            <label for="cep">CEP: *</label>
-                            <input type="text" class="form-control" name="cep" id="cep" maxlength="9"
-                                   placeholder="Digite o CEP" required data-mask="00000-000" onblur="cepPesquisa();">
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="cep">Zona: *</label>
-                            <select class="form-control" id="zona" name="zona">
-                                <?php
-                                geraOpcao('zonas');
-                                ?>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="numero">Número: *</label>
-                            <input type="number" name="numero" class="form-control" placeholder="Ex.: 10"
-                                   required>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="complemento">Complemento:</label>
-                            <input type="text" name="complemento" class="form-control" maxlength="20"
-                                   placeholder="Ex.: Ap. 100">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <label for="rua">Rua: *</label>
-                            <input type="text" class="form-control" name="rua" id="rua"
-                                   placeholder="Digite a rua" maxlength="200" readonly>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-5">
-                            <label for="bairro">Bairro: *</label>
-                            <input type="text" class="form-control" name="bairro" id="bairro"
-                                   placeholder="Digite o Bairro" maxlength="80" readonly>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="cidade">Cidade: *</label>
-                            <input type="text" class="form-control" name="cidade" id="cidade"
-                                   placeholder="Digite a cidade" maxlength="50" readonly>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="estado">Estado: *</label>
-                            <input type="text" class="form-control" name="estado" id="estado" maxlength="2"
-                                   placeholder="Ex.: SP" readonly>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!-- /.box-body -->
-            <div class="modal-footer">
-                <input type="hidden" name="cadastraLocal">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button type='button' class='btn btn-success' name="cadastraLocal" id="cadastraLocal"
-                        onclick="cadastraLocal()">Solicitar
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal solicitar espaco -->
-<div class="modal fade" id="modalEspaco" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title"><p>Solicitar adição de Espaço</p></h4>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="#" role="form">
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <label for="instituicaoModal">Instituição</label>
-                            <select class="form-control" name="instituicaoModal" id="instituicaoModal" onchange="insti_local()" required>
-                                <option value="">Selecione uma opção...</option>
-                                <?php
-                                geraOpcao("instituicoes");
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <label for="SelectLocal">Local: </label>
-                            <select name="SelectLocal" id="SelectLocal" class="form-control" required>
-                                <!-- Populado pelo JS -->
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <label for="sigla">Espaço: </label>
-                            <input type="text" class="form-control" id="espaco" name="espaco" required>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!-- /.box-body -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button type='button' class='btn btn-success' name="cadastraEspaco" id="cadastraEspaco"
-                        onclick="cadastraEspaco()">Solicitar
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <script type="text/javascript">
 
@@ -768,33 +630,33 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 </script>
 
 <script>
-function validaDiaSemana(){
-    var dataInicio = document.querySelector('#datepicker10').value;
-    var isMsg = $('#msgEsconde');
-    isMsg.hide();
-    if(dataInicio != ""){
-        var i = 0;
-        var counter = 0;
-        var diaSemana = $('.semana');
-
-        for (; i < diaSemana.length; i++) {
-            if (diaSemana[i].checked) {
-                counter++;
-            }
-        }
-
-        if (counter==0){
-            $('#cadastra').attr("disabled", true);
-            isMsg.show();
-            return false;
-        }
-
-        $('#cadastra').attr("disabled", false);
+    function validaDiaSemana() {
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var isMsg = $('#msgEsconde');
         isMsg.hide();
-        return true;
-    }
-}
+        if (dataInicio != "") {
+            var i = 0;
+            var counter = 0;
+            var diaSemana = $('.semana');
 
-var diaSemana = $('.semana');
-diaSemana.change(validaDiaSemana);
+            for (; i < diaSemana.length; i++) {
+                if (diaSemana[i].checked) {
+                    counter++;
+                }
+            }
+
+            if (counter == 0) {
+                $('#cadastra').attr("disabled", true);
+                isMsg.show();
+                return false;
+            }
+
+            $('#cadastra').attr("disabled", false);
+            isMsg.hide();
+            return true;
+        }
+    }
+
+    var diaSemana = $('.semana');
+    diaSemana.change(validaDiaSemana);
 </script>

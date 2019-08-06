@@ -4,20 +4,15 @@ include "includes/menu_principal.php";
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_cep.php';
 ?>
 <div class="content-wrapper">
-    <!-- Main content -->
     <section class="content">
-        <!-- START FORM-->
         <h2 class="page-header">Solicitar adição de Local</h2>
         <div class="row">
             <div class="col-md-12">
-                <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">Local</h3>
                     </div>
-                    <!-- /.box-header -->
-                    <!-- form start -->
-                    <form method="POST" action="?perfil=evento&p=index"
+                    <form method="POST" action="?perfil=agendao&p=inicio"
                           role="form">
                         <div class="box-body">
 
@@ -54,7 +49,6 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_ce
                                         </thead>
 
                                         <tbody id="tabelaLocais">
-                                        <!-- Preenchendo pelo ajax-->
                                         </tbody>
 
                                         <tfoot>
@@ -111,12 +105,9 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_ce
                                            placeholder="Ex.: SP" readonly>
                                 </div>
                             </div>
-
                         </div>
-                        <!-- /.box-body -->
-
                         <div class="box-footer">
-                            <a href="?perfil=evento">
+                            <a href="?perfil=agendao">
                                 <button type="button" class="btn btn-default">Voltar</button>
                             </a>
                             <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
@@ -127,15 +118,10 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_ce
                         </div>
                     </form>
                 </div>
-                <!-- /.box -->
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
-        <!-- END ACCORDION & CAROUSEL-->
 
     </section>
-    <!-- /.content -->
 </div>
 
 <script>
