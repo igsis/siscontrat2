@@ -149,7 +149,7 @@ if (isset($_POST['apagar'])) {
                                                     <tr>
                                                         <h4 class="text-center">Nesta página, você envia documentos
                                                             digitalizados. O tamanho máximo do arquivo deve ser
-                                                            60MB.</h4>
+                                                            05MB.</h4>
                                                     </tr>
                                                     <?php
                                                     $sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (2, 3, 4, 25, 31, 51, 60, 62) AND tipo_documento_id = '$tipoPessoa' and publicado = 1";
