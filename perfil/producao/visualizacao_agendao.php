@@ -54,99 +54,105 @@ $view = recuperaDados('producao_agendoes', 'id', $idEvento);
                                         <h3 class="box-title"> Dados do Evento</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <label for="nomeEvento">Nome do Evento:</label> <?=$agendao['nome_evento']?>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="projetoEspecial">Projeto Especial:</label> <?=$agendao['projeto_especial']?>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-md-12">
-                                                <div>
-                                                    <label for="fichaTecnica">Artistas:</label><?=$agendao['artistas']?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-md-3">
-                                                <label for="contratacao">Espaco público?</label>
-                                                <?php
-                                                    if($agendao['espaco_publico'] == 1){
-                                                        echo "Sim";
-                                                    }else{
-                                                        echo "Não";
-                                                    }
-                                                ?>
-                                            </div>
-                                            <div class="form-group col-md-3">
-                                                <label for="qtdApresentacao">Quantidade de Apresentações:</label> <?=$agendao['quantidade_apresentacao']?>
-                                            </div>
-                                            <div class="form-group col-md-3">
-                                                <label for="fomento">É fomento/programa?</label>
-                                                <?php
-                                                    if($agendao['fomento'] == 1){
-                                                        $age_fom = recuperaDados('agendao_fomento', 'evento_id',$idEvento);
-                                                        $fomento = recuperaDados('fomentos', 'id', $age_fom['fomento_id']);
-                                                        echo "Sim ". $fomento['fomento'];
-                                                    }else{
-                                                        echo "Não";
-                                                    }
-                                                ?>
-                                            </div>
-                                            <div class="form-group col-md-3">
-                                                <label for="classificacao">Classificação indicativa:</label><?=$agendao['classificacao_indicativa']?>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="acao">Ações (Expressões Artístico-culturais):</label>
-                                                <?php
-                                                    $age_acao = $con->query("SELECT * FROM acao_agendao WHERE evento_id = '$idEvento'");
-                                                    while($row = mysqli_fetch_array($age_acao)){
-                                                        $acao = recuperaDados('acoes', 'id', $row['acao_id']);
-                                                        echo $acao['acao'] . "; ";
-                                                    }
-                                                ?>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="publico">Público(Representatividade e Visibilidade Sócio-cultural):</label>
-                                                <?php
-                                                    $age_pub = $con->query("SELECT * FROM agendao_publico WHERE evento_id = '$idEvento'");
-                                                    while ($row = mysqli_fetch_array($age_pub)){
-                                                        $pub = recuperaDados('publicos', 'id', $row['publico_id']);
-                                                        echo $pub['publico'] . "; ";
-                                                    }
-                                                ?>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-md-12">
-                                                <label for="sinopse">Sinopse:</label> <?=$agendao['sinopse']?>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <label for="links">Links:</label> <?=$agendao['links']?>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="visualizado">Visualizado:</label>
-                                                <?php
-                                                if($view['visualizado'] == 1){
-                                                    echo "Sim";
-                                                }else{
-                                                    echo "Não";
-                                                }
-                                                ?>
-                                            </div>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tr>
+                                                    <th width="30%">Nome do Evento:</th>
+                                                    <td><?= $agendao['nome_evento'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Projeto Especial:</th>
+                                                    <td><?= $agendao['projeto_especial'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Artistas:</th>
+                                                    <td><?= $agendao['artistas'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Espaco público?</th>
+                                                    <td>
+                                                        <?php
+                                                        if ($agendao['espaco_publico'] == 1) {
+                                                            echo "Sim";
+                                                        } else {
+                                                            echo "Não";
+                                                        }
+                                                        ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Quantidade de Apresentações:</th>
+                                                    <td><?= $agendao['quantidade_apresentacao'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">É fomento/programa?</th>
+                                                    <td>
+                                                        <?php
+                                                        if ($agendao['fomento'] == 1) {
+                                                            $age_fom = recuperaDados('agendao_fomento', 'evento_id', $idEvento);
+                                                            $fomento = recuperaDados('fomentos', 'id', $age_fom['fomento_id']);
+                                                            echo "Sim " . $fomento['fomento'];
+                                                        } else {
+                                                            echo "Não";
+                                                        }
+                                                        ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Classificação indicativa:</th>
+                                                    <td><?= $agendao['classificacao_indicativa'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Ações (Expressões Artístico-culturais):</th>
+                                                    <td>
+                                                        <?php
+                                                        $age_acao = $con->query("SELECT * FROM acao_agendao WHERE evento_id = '$idEvento'");
+                                                        while ($row = mysqli_fetch_array($age_acao)) {
+                                                            $acao = recuperaDados('acoes', 'id', $row['acao_id']);
+                                                            echo $acao['acao'] . "; ";
+                                                        }
+                                                        ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="50%">Público(Representatividade e Visibilidade
+                                                        Sócio-cultural):
+                                                    </th>
+                                                    <td>
+                                                        <?php
+                                                        $age_pub = $con->query("SELECT * FROM agendao_publico WHERE evento_id = '$idEvento'");
+                                                        while ($row = mysqli_fetch_array($age_pub)) {
+                                                            $pub = recuperaDados('publicos', 'id', $row['publico_id']);
+                                                            echo $pub['publico'] . "; ";
+                                                        }
+                                                        ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Sinopse:</th>
+                                                    <td><?= $agendao['sinopse'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Links:</th>
+                                                    <td><?= $agendao['links'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Visualizado:</th>
+                                                    <td>
+                                                        <?php
+                                                        if ($view['visualizado'] == 1) {
+                                                            echo "Sim";
+                                                        } else {
+                                                            echo "Não";
+                                                        }
+                                                        ?></td>
+                                                </tr>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="tab-pane" id="produtor">
-                                <?php include "includes/label_produtor_agendao.php"?>
+                                <?php include "includes/label_produtor_agendao.php" ?>
                             </div>
                             <div class="tab-pane" id="ocorrencia">
-                                <?php include "includes/label_ocorrencia_agendao.php";?>
+                                <?php include "includes/label_ocorrencia_agendao.php"; ?>
                             </div>
                         </div>
                         <div class="box-footer">
@@ -154,7 +160,7 @@ $view = recuperaDados('producao_agendoes', 'id', $idEvento);
                                 <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                                 <?php
 
-                                if($view['visualizado'] == 0){
+                                if ($view['visualizado'] == 0){
                                 ?>
                                 <button type="submit" name="checarAgendao" class="btn btn-success"> Checar visualização
                                     <?php
@@ -168,7 +174,6 @@ $view = recuperaDados('producao_agendoes', 'id', $idEvento);
                                     </button>
                             </form>
                         </div>
-
                     </div>
                 </div>
             </div>

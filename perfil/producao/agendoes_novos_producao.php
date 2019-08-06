@@ -11,7 +11,6 @@ $conn = bancoPDO();
 $sqlAgendaoNovo = "SELECT
 	    a.id AS 'id',
 		a.nome_evento AS 'nome',
-        ao.espaco_id AS 'espaco_id',
         a.data_envio AS 'data_envio',
         env.visualizado AS 'visualizado'
 		from agendoes AS a
@@ -53,15 +52,29 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
                             <?php
                             echo "<tbody>";
                             while ($agendaoNovo = mysqli_fetch_array($queryAgendaoNovo)) {
-                            $locais = listaLocais($agendaoNovo['id'],'3');
-                            $espacos = recuperaDados('espacos', 'id', $agendaoNovo['espaco_id']);
-                                ?>
+                                $idAgendao = $agendaoNovo['id'];
+                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
+                                $queryLocal = mysqli_query($con, $sqlLocal);
+                                $local = '';
+                                while ($locais = mysqli_fetch_array($queryLocal)){
+                                    $local = $local . '; ' . $locais['local'];
+                                }
+                                $local = substr($local, 1);
+
+                                $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN agendao_ocorrencias AS ao ON ao.espaco_id = e.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
+                                $queryEspaco = mysqli_query($con, $sqlEspaco);
+                                $espaco = '';
+                                while($espacos = mysqli_fetch_array($queryEspaco)){
+                                    $espaco = $espaco . '; ' . $espacos['espaco'];
+                                }
+                                $espaco = substr($espaco, 1);
+                            ?>
                             <tr>
 
-                            <?php
+                                <?php
                                 echo "<td>" . $agendaoNovo['nome'] . "</td>";
-                                echo "<td>" . $locais. "</td>";
-                                echo "<td>" . $espacos['espaco'] . "</td>";
+                                echo "<td>" . $local . "</td>";
+                                echo "<td>" . $espaco . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($agendaoNovo['id'], 'agendao_ocorrencias') . "</td>";
                                 echo "<td>" . $agendaoNovo['data_envio'] . "</td>";
                                 echo "<td>
@@ -73,19 +86,19 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
                                         </td>
                                         ";
                                 echo "</tr>";
-                            }
-                            echo "</tbody>";
-                            ?>
-                            <tfoot>
-                            <tr>
-                                <th>Nome do Evento</th>
-                                <th>Locais</th>
-                                <th>Espaços</th>
-                                <th>Periodo</th>
-                                <th>Data do Envio</th>
-                                <th>Visualizar</th>
-                            </tr>
-                            </tfoot>
+                                }
+                                echo "</tbody>";
+                                ?>
+                                <tfoot>
+                                <tr>
+                                    <th>Nome do Evento</th>
+                                    <th>Locais</th>
+                                    <th>Espaços</th>
+                                    <th>Periodo</th>
+                                    <th>Data do Envio</th>
+                                    <th>Visualizar</th>
+                                </tr>
+                                </tfoot>
                         </table>
                     </div>
                 </div>
@@ -93,7 +106,8 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
     </section>
 </div>
 
-<<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<
+<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">

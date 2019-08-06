@@ -23,8 +23,6 @@ $sqlEvento = "SELECT
                     eve.id AS 'id',
                     eve.protocolo AS 'protocolo',
                     eve.nome_evento AS 'nome_evento',
-                    o.local_id AS 'local_id',
-                    o.espaco_id AS 'espaco_id',
                     env.data_envio AS 'data_envio',
                     u.nome_completo as 'usuario',
                     en.visualizado AS 'visualizado'
@@ -74,8 +72,22 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                             <?php
                             echo "<tbody>";
                             while ($eventoVerf = mysqli_fetch_array($queryEvento)) {
-                            $locais = recuperaDados('locais','id', $eventoVerf['local_id']);
-                            $espacos = recuperaDados('espacos', 'id', $eventoVerf['espaco_id']);
+                            $idEvento = $eventoVerf['id'];
+                            $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento'";
+                            $queryLocal = mysqli_query($con, $sqlLocal);
+                            $local = '';
+                            while ($locais = mysqli_fetch_array($queryLocal)){
+                                $local = $local . '; ' . $locais['local'];
+                            }
+                            $local = substr($local, 1);
+
+                            $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN ocorrencias AS o ON o.espaco_id = e.id WHERE o.origem_ocorrencia_id = '$idEvento'";
+                            $queryEspaco = mysqli_query($con, $sqlEspaco);
+                            $espaco = '';
+                            while($espacos = mysqli_fetch_array($queryEspaco)){
+                                $espaco = $espaco . '; ' . $espacos['espaco'];
+                            }
+                            $espaco = substr($espaco, 1);
                             ?>
 
                             <tr>
@@ -83,8 +95,8 @@ $queryEvento = mysqli_query($con, $sqlEvento);
 
                                 echo "<td>" . $eventoVerf['protocolo'] . "</td>";
                                 echo "<td>" . $eventoVerf['nome_evento'] . "</td>";
-                                echo "<td>" . $locais['local'] . "</td>";
-                                echo "<td>" . $espacos['espaco'] . "</td>";
+                                echo "<td>" . $local . "</td>";
+                                echo "<td>" . $espaco . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($eventoVerf['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $eventoVerf['data_envio'] . "</td>";
                                 echo "<td>" . $eventoVerf['usuario'] . "</td>";

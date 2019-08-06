@@ -23,8 +23,6 @@ if (isset($_POST['checarAgendao'])) {
 $sqlAgendaoVisualizado = "SELECT
 	    a.id AS 'id',
 		a.nome_evento AS 'nome',
-		ao.local_id AS 'local_id',
-        ao.espaco_id AS 'espaco_id',
         a.data_envio AS 'data_envio',
         env.visualizado AS 'visualizado'
 		from agendoes AS a
@@ -67,15 +65,29 @@ $queryAgendaoVisualizado = mysqli_query($con, $sqlAgendaoVisualizado);
                             <?php
                             echo "<tbody>";
                             while ($agendaoVerif = mysqli_fetch_array($queryAgendaoVisualizado)) {
-                            $locais = recuperaDados('locais','id', $agendaoVerif['local_id']);
-                            $espacos = recuperaDados('espacos', 'id', $agendaoVerif['espaco_id']);
+                            $idAgendao = $agendaoVerif['id'];
+                            $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
+                            $queryLocal = mysqli_query($con, $sqlLocal);
+                            $local = '';
+                            while ($locais = mysqli_fetch_array($queryLocal)){
+                                $local = $local . '; ' . $locais['local'];
+                            }
+                            $local = substr($local, 1);
+
+                            $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN agendao_ocorrencias AS ao ON ao.espaco_id = e.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
+                            $queryEspaco = mysqli_query($con, $sqlEspaco);
+                            $espaco = '';
+                            while($espacos = mysqli_fetch_array($queryEspaco)){
+                                $espaco = $espaco . '; ' . $espacos['espaco'];
+                            }
+                            $espaco = substr($espaco, 1);
                                 ?>
                             <tr>
 
                             <?php
                                 echo "<td>" . $agendaoVerif['nome'] . "</td>";
-                                echo "<td>" . $locais['local'] . "</td>";
-                                echo "<td>" . $espacos['espaco'] . "</td>";
+                                echo "<td>" . $local . "</td>";
+                                echo "<td>" . $espaco . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($agendaoVerif['id'], 'agendao_ocorrencias') . "</td>";
                                 echo "<td>" . $agendaoVerif['data_envio'] . "</td>";
                                 echo "<td>
