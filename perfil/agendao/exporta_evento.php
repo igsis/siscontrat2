@@ -7,7 +7,7 @@ $displayForm = 'block';
 $displayBotoes = 'none';
 
 if (isset($_POST['filtrar'])) {
-    $datainicio = ($_POST['inicio']);
+    $datainicio = exibirDataMysql($_POST['inicio']);
     $datafim = $_POST['final'] ?? null;
     $local = $_POST['local'] ?? null;
     $usuario = $_POST['inserido'] ?? null;
@@ -49,11 +49,10 @@ if (isset($_POST['filtrar'])) {
     }
 
     if ($projeto != '') {
-        $filtro_PE = "AND E.projeto_especial_id = $projeto";
+        $filtro_PE = "AND PE.id = $projeto";
     } else {
         $filtro_PE = "";
     }
-
 
     $sql = "SELECT
                 E.id AS 'evento_id',
@@ -202,7 +201,7 @@ if (isset($_POST['filtrar'])) {
 
     } else {
         $consulta = 0;
-        $mensagem = "Não foram encontrados resultados para esta pesquisa!";
+        $mensagem2 = mensagem("warning", "Não foram encontrados resultados para esta pesquisa!");
     }
 }
 ?>
@@ -213,6 +212,11 @@ if (isset($_POST['filtrar'])) {
         <h6><?php if (isset($mensagem)) {
                 echo $mensagem;
             } ?></h6>
+        <div class="row" align="center">
+            <?php if (isset($mensagem2)) {
+                echo $mensagem2;
+            }; ?>
+        </div>
         <div class="box box-primary" id="filtro">
             <form method="POST" action="?perfil=agendao&p=exporta_evento">
                 <div class="box-body">
@@ -263,7 +267,7 @@ if (isset($_POST['filtrar'])) {
                         </div>
                     </div>
                     <span id="spanFiltrar" title="Informe uma data de início!">
-                        <input type="submit" class="btn btn-primary btn-theme btn-block" name="filtrar" id="filtrar"
+                        <input type="submit" class="btn btn-primary btn-theme center-block" name="filtrar" id="filtrar"
                                value="Filtrar">
                     </span>
                 </div>
