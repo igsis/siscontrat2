@@ -2,47 +2,42 @@
 $con = bancoMysqli();
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
-    $idAtracao = $_POST['idAtracao'] ?? NULL;
     $idOficina = $_POST['idOficina'] ?? NULL;
-    $idForma_inscricao = $_POST['inscricao'] ?? NULL;
-    $certificado = ($_POST['certificado']);
-    $vagas = $_POST['vagas'];
-    $venda = ($_POST['venda']);
-    $publico_alvo = addslashes($_POST['publico_alvo']);
-    $material = addslashes($_POST['material']);
-    $carga_horaria = $_POST['carga_horaria'];
+    $idAtracao = $_POST['idAtracao'] ?? NULL;
+    $modalidade = $_POST['modalidade'] ?? NULL;
+    $desc_modalidade = $_POST['desc_modalidade'];
+    $data_inicio = $_POST ['data_inicio'];
+    $data_fim = $_POST ['data_fim'];
+  //  $execucao_dia1_id = $_POST['execucaod1'];
+    //$execucao_dia2_id = $_POST['execucaod2'];
     $valor_hora = dinheiroDeBr($_POST['valor_hora']);
-    $inicio = $_POST ['inicio_inscricao'];
-    $encerramento = $_POST ['encerramento_inscricao'];
-    $divulgacao = $_POST['data_divulgacao'];
+    $carga_horaria = $_POST['carga_horaria'];
+}
+$sqlModalidade = "INSERT INTO modalidades (modalidade,
+                                                    descricao)
+                                                    VALUES(
+                                                    '$modalidade',
+                                                    '$desc_modalidade' 
+                                                    )";
+if(mysqli_query($con,$sqlModalidade)){
+    $idModalidade = recuperaDados('modalidade','id',$);
+    $sqlPublica = "UPDATE modalidades SET publicado = 1 WHERE id = '$idModalidade'";
 }
 
 if (isset($_POST['cadastra'])) {
 
     $sql = "INSERT INTO oficinas (atracao_id, 
-                                  forma_inscricao_id,
-                                  certificado,
-                                  vagas,
-                                  venda,
-                                  publico_alvo,
-                                  material_requisitado,
-                                  carga_horaria,
-                                  inicio_inscricao,
-                                  encerramento_inscricao,
+                                  modalidade_id,
+                                  data_inicio,
+                                  data_fim,
                                   valor_hora,
-                                  data_divulgacao) 
+                                  carga_horaria) 
                           VALUES ('$idAtracao',
-                                  '$idForma_inscricao',
-                                  '$certificado',
-                                  '$vagas',
-                                  '$venda',
-                                  '$publico_alvo',
-                                  '$material',
-                                  '$carga_horaria',
-                                  '$inicio',
-                                  '$encerramento',
+                                  '$idModalidade',
+                                  '$data_inicio',
+                                  '$data_fim',
                                   '$valor_hora',
-                                  '$divulgacao')";
+                                  '$carga_horaria')";
 
     if (mysqli_query($con, $sql)) {
 
@@ -58,17 +53,10 @@ if (isset($_POST['cadastra'])) {
 
 if (isset($_POST['edita'])) {
     $sql = "UPDATE oficinas SET
-                            forma_inscricao_id = '$idForma_inscricao',
-                            certificado = '$certificado',
-                            vagas = '$vagas',
-                            venda = '$venda',
-                            publico_alvo = '$publico_alvo',
-                            material_requisitado = '$material',
                             carga_horaria = '$carga_horaria',
-                            inicio_inscricao = '$inicio',
-                            encerramento_inscricao = '$encerramento',
+                            data_inicio = '$data_inicio',
+                            data_fim = '$data_fim',
                             valor_hora = '$valor_hora',
-                            data_divulgacao = '$divulgacao'
                             WHERE id = '$idOficina'";
 
     if (mysqli_query($con, $sql)) {

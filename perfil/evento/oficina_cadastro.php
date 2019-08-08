@@ -6,14 +6,15 @@ $idAtracao = $_POST['idAtracao'];
 
 ?>
 
-<script language="JavaScript" >
-    function barraData(n){
-        if(n.value.length==2)
+<script language="JavaScript">
+    function barraData(n) {
+        if (n.value.length == 2)
             c.value += '/';
-        if(n.value.length==5)
+        if (n.value.length == 5)
             c.value += '/';
     }
 </script>
+
 
 <div class="content-wrapper">
     <section class="content">
@@ -30,74 +31,54 @@ $idAtracao = $_POST['idAtracao'];
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="certificado">Certficado?</label><br/>
-                                    <label><input type="radio" name="certificado" value="1" checked> Sim </label>
-                                    <label><input type="radio" name="certificado" value="0"> Não </label>
+                                    <label for="modalidade">Modalidade:</label>
+                                    <input type="text" id="modalidade"  name="modalidade" class="form-control">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="vagas">Vagas</label> <br>
-                                    <input class="form-control" style="max-width: 175px;" type="number" name="vagas" min="1">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="venda">Venda de material?</label> <br>
-                                    <label><input type="radio" name="venda" class="venda" value="1" id="sim"> Sim </label>
-                                    <label><input type="radio" name="venda" class="venda" value="0" checked id="nao"> Não </label>
+                                    <label for="desc_modalidade">Descrição da Modalidade:</label><br/>
+                                    <textarea name="desc_modalidade" id="desc_modalidade" class="form-control"
+                                              rows="3"></textarea>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="publico_alvo">Público-alvo *</label>
-                                    <textarea name="publico_alvo" id="publico_alvo" class="form-control" rows="5"></textarea>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="material">Material Requisitado: </label>
-                                    <textarea  name="material" id="material" class="form-control" rows="3"></textarea>
-                                </div>
+                                    <div class="form-group col-md-6">
+                                        <label>dia da semana1:</label>
+                                        <label>dia da semana2:</label>
+                                    </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="inscricao">Forma de inscrição: </label><br>
-                                    <select class="form-control" style="max-width: 175px;" id="inscricao" name="inscricao">
-                                        <option value="">Selecione</option>
-                                        <?php geraOpcao('forma_inscricao') ?>
-                                    </select>
+                                    <label for="valor_hora">Valor hora/aula: </label><br>
+                                    <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora"
+                                            onkeypress="return(moeda(this, '.', ',', event))">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="carga_horaria">Carga Horária (em horas): </label><br>
-                                    <input class="form-control" style="max-width: 175px;" type="number" name="carga_horaria"/>
+                                    <input class="form-control" style="max-width: 175px;" type="number"
+                                           name="carga_horaria"/>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="valor_hora">Valor hora/aula: </label><br>
-                                    <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora" placeholder="5,00" onkeypress="return(moeda(this, '.', ',', event))">
-                                </div>
-
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="inicio_inscricao">Início de inscrição: </label> <br/>
-                                    <input class="form-control" style="max-width: 175px;" type="date" name="inicio_inscricao" onkeyup="barraData(this);"/>
+                                    <label for="data_inicio">Início de inscrição: </label> <br/>
+                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_inicio"
+                                           onkeyup="barraData(this);"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="encerramento_inscricao">Encerramento de inscrição: </label> <br>
-                                    <input class="form-control" style="max-width: 175px;" type="date" name="encerramento_inscricao"/>
+                                    <label for="data_fim">Encerramento de inscrição: </label> <br>
+                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_fim"/>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="data_divulgacao">Divulgação de inscrição: </label> <br/>
-                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_divulgacao"/>
-                                </div>
-                            </div>
-                            <div class="box-footer">
-                                <a href="?perfil=evento&p=atracoes_lista">
-                                    <button type="button" class="btn btn-default">Voltar</button>
-                                </a>
-                                <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
-                                <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
                             </div>
                         </div>
-                    </form>
+                        <div class="box-footer">
+                            <a href="?perfil=evento&p=atracoes_lista">
+                                <button type="button" class="btn btn-default">Voltar</button>
+                            </a>
+                            <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
+                            <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
+                        </div>
                 </div>
+                </form>
             </div>
         </div>
     </section>
