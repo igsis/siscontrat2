@@ -7,6 +7,7 @@ $idAtracao = $_POST['idAtracao'];
 ?>
 
 <script language="JavaScript">
+
     function barraData(n) {
         if (n.value.length == 2)
             c.value += '/';
@@ -42,8 +43,7 @@ $idAtracao = $_POST['idAtracao'];
                             </div>
                             <div class="row">
                                     <div class="form-group col-md-6">
-                                        <label>dia da semana1:</label>
-                                        <label>dia da semana2:</label>
+                                        
                                     </div>
                             </div>
                             <div class="row">

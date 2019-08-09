@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-
+$id = 1;
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $idOficina = $_POST['idOficina'] ?? NULL;
     $idAtracao = $_POST['idAtracao'] ?? NULL;
@@ -13,27 +13,28 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $valor_hora = dinheiroDeBr($_POST['valor_hora']);
     $carga_horaria = $_POST['carga_horaria'];
 }
-$sqlModalidade = "INSERT INTO modalidades (modalidade,
+$sqlModalidade = "INSERT INTO modalidades (id,
+                                                    modalidade,
                                                     descricao)
                                                     VALUES(
+                                                    '$id',
                                                     '$modalidade',
                                                     '$desc_modalidade' 
                                                     )";
 if(mysqli_query($con,$sqlModalidade)){
-    $idModalidade = recuperaDados('modalidade','id',$);
-    $sqlPublica = "UPDATE modalidades SET publicado = 1 WHERE id = '$idModalidade'";
+    $id++;
+    //$idModalidade = recuperaDados('oficinas','modalidade_id', $idOficina);
+    //$sqlPublica = "UPDATE modalidades SET publicado = 1 WHERE id = '$idModalidade'";
 }
 
 if (isset($_POST['cadastra'])) {
 
     $sql = "INSERT INTO oficinas (atracao_id, 
-                                  modalidade_id,
                                   data_inicio,
                                   data_fim,
                                   valor_hora,
                                   carga_horaria) 
                           VALUES ('$idAtracao',
-                                  '$idModalidade',
                                   '$data_inicio',
                                   '$data_fim',
                                   '$valor_hora',
@@ -72,7 +73,7 @@ if (isset($_POST['carregar'])) {
 }
 
 $oficina = recuperaDados("oficinas", "id", $idOficina);
-
+$modalidade = recuperaDados('modalidades','id', $idAtracao);
 
 include "includes/menu_interno.php";
 
@@ -96,84 +97,45 @@ include "includes/menu_interno.php";
                     </div>
                     <form method="POST" action="?perfil=evento&p=oficina_edita" role="form">
                         <div class="box-body">
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="certificado">Certficado?</label><br/>
-                                    <label><input type="radio" name="certificado"
-                                                  value="1" <?= $oficina['certificado'] == 1 ? 'checked' : NULL ?> > Sim
-                                    </label>
-                                    <label><input type="radio" name="certificado"
-                                                  value="0" <?= $oficina['certificado'] == 0 ? 'checked' : NULL ?> > Não
-                                    </label>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="vagas">Vagas</label> <br>
-                                    <input class="form-control" style="max-width: 175px;" type="number" name="vagas"
-                                           value="<?= $oficina['vagas'] ?>" min="1">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="venda">Venda de material?</label> <br>
-                                    <label><input type="radio" name="venda" class="venda"
-                                                  value="1" <?= $oficina['venda'] == 1 ? 'checked' : NULL ?> id="sim"> Sim
-                                    </label>
-                                    <label><input type="radio" name="venda" class="venda"
-                                                  value="0" <?= $oficina['venda'] == 0 ? 'checked' : NULL ?> id="nao"> Não
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="publico_alvo">Público-alvo *</label>
-                                    <textarea name="publico_alvo" id="publico_alvo" class="form-control"
-                                              rows="5"><?= $oficina['publico_alvo'] ?></textarea>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="material">Material Requisitado: </label>
-                                    <textarea name="material" id="material" class="form-control"
-                                              rows="2"><?= $oficina['material_requisitado'] ?></textarea>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="inscricao">Forma de inscrição: </label><br>
-                                    <select class="form-control" style="max-width: 175px;" id="inscricao"
-                                            name="inscricao">
-                                        <option value="0">Selecione</option>
-                                        <?php geraOpcao('forma_inscricao', $oficina['forma_inscricao_id']) ?>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="carga_horaria">Carga Horária (em horas): </label><br>
-                                    <input class="form-control" style="max-width: 175px;" type="number"
-                                           name="carga_horaria" value="<?= $oficina['carga_horaria'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="valor_hora">Valor hora/aula:</label><br>
-                                    <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora"
-                                           placeholder="5,00" onkeypress="return(moeda(this, '.', ',', event))"
-                                           value="<?= dinheiroParaBr($oficina['valor_hora']) ?>">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="inicio_inscricao">Início de inscrição: </label> <br/>
-                                    <input class="form-control" style="max-width: 175px;" type="date"
-                                           name="inicio_inscricao" value="<?= $oficina['inicio_inscricao'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="encerramento_inscricao">Encerramento de inscrição: </label>
-                                    <input class="form-control" style="max-width: 175px;" type="date"
-                                           name="encerramento_inscricao"
-                                           value="<?= $oficina['encerramento_inscricao'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="data_divulgacao">Data de divulgação da inscrição: </label> <br/>
-                                    <input class="form-control" style="max-width: 175px;" type="date"
-                                           name="data_divulgacao" value="<?= $oficina['data_divulgacao'] ?>">
-                                </div>
-                            </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="modalidade">Modalidade:</label>
+                                            <input type="text" id="modalidade"  name="modalidade" class="form-control" value="<?=$modalidade['modalidade']?>">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="desc_modalidade">Descrição da Modalidade:</label><br/>
+                                            <textarea name="desc_modalidade" id="desc_modalidade" class="form-control"
+                                                      rows="3" ><?=$modalidade['descricao']?></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="valor_hora">Valor hora/aula: </label><br>
+                                            <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora"
+                                                   onkeypress="return(moeda(this, '.', ',', event))" value="<?=dinheiroParaBr($oficina['valor_hora'])?>">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="carga_horaria">Carga Horária (em horas): </label><br>
+                                            <input class="form-control" style="max-width: 175px;" type="number"
+                                                   name="carga_horaria" value="<?=$oficina['carga_horaria']?>"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="data_inicio">Início de inscrição: </label> <br/>
+                                            <input class="form-control" style="max-width: 175px;" type="date" name="data_inicio" value="<?=$oficina['data_inicio']?>"
+                                                   onkeyup="barraData(this);"/>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="data_fim">Encerramento de inscrição: </label> <br>
+                                            <input class="form-control" style="max-width: 175px;" type="date" name="data_fim" value="<?=$oficina['data_fim']?>"/>
+                                        </div>
+                                    </div>
 
                             <div class="box-footer">
                                 <a href="?perfil=evento&p=atracoes_lista">
