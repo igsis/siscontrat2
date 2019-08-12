@@ -134,7 +134,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 </div>
                             </div>
 
-
                             <div class="row" id="msgEscondeData">
                                 <div class="form-group col-md-offset-6 col-md-6">
                                     <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
@@ -180,12 +179,12 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                 </div>
                             </div>
 
+
                             <div class="row" id="msgEsconde">
                                 <div class="form-group col-md-6">
                                     <span style="color: red;">Selecione ao menos um dia da semana!</span>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="horaInicio">Hora de Início*</label> <br>

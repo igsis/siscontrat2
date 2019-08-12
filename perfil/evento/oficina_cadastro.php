@@ -16,6 +16,100 @@ $idAtracao = $_POST['idAtracao'];
     }
 </script>
 
+<script type="text/javascript">
+    function desmarca() {
+        $("#diasemana01").prop("checked", false);
+        $("#diasemana02").prop("checked", false);
+        $("#diasemana03").prop("checked", false);
+        $("#diasemana04").prop("checked", false);
+        $("#diasemana05").prop("checked", false);
+        $("#diasemana06").prop("checked", false);
+        $("#diasemana07").prop("checked", false);
+    }
+
+    function mudaData(valor) {
+        $("#diasemana01").prop("disabled", valor);
+        $("#diasemana02").prop("disabled", valor);
+        $("#diasemana03").prop("disabled", valor);
+        $("#diasemana04").prop("disabled", valor);
+        $("#diasemana05").prop("disabled", valor);
+        $("#diasemana06").prop("disabled", valor);
+        $("#diasemana07").prop("disabled", valor);
+
+        desmarca();
+    }
+
+    $(document).ready(function () {
+        validate();
+        $('#datepicker11').change(validate);
+    });
+
+    function validate() {
+        comparaData();
+        if ($('#datepicker11').val().length > 0) {
+            mudaData(false);
+        } else {
+            mudaData(true);
+
+            var data = document.querySelector('input[name="data_inicio"]').value;
+            data = new Date(data);
+            dayName = new Array("0", "1", "2", "3", "4", "5", "6", "0");
+            let dia = dayName[data.getDay() + 1];
+
+            if (dia == 0) {
+                $("#diasemana07").prop("disabled", false);
+                $("#diasemana07").prop("checked", true);
+            } else if (dia == 1) {
+                $("#diasemana01").prop("disabled", false);
+                $("#diasemana01").prop("checked", true);
+            } else if (dia == 2) {
+                $("#diasemana02").prop("disabled", false);
+                $("#diasemana02").prop("checked", true);
+            } else if (dia == 3) {
+                $("#diasemana03").prop("disabled", false);
+                $("#diasemana03").prop("checked", true);
+            } else if (dia == 4) {
+                $("#diasemana04").prop("disabled", false);
+                $("#diasemana04").prop("checked", true);
+            } else if (dia == 5) {
+                $("#diasemana05").prop("disabled", false);
+                $("#diasemana05").prop("checked", true);
+            } else if (dia == 6) {
+                $("#diasemana06").prop("disabled", false);
+                $("#diasemana06").prop("checked", true);
+            }
+        }
+
+        validaDiaSemana();
+    }
+
+    function comparaData() {
+        var isMsgData = $('#msgEscondeData');
+        isMsgData.hide();
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var dataFim = document.querySelector('#datepicker11').value;
+
+        if (dataInicio != "") {
+            var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
+        }
+
+        if (dataFim != "") {
+            var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
+
+            if (dataFim <= dataInicio) {
+                isMsgData.show();
+                $('#cadastra').attr("disabled", true);
+            } else {
+                isMsgData.hide();
+                $('#cadastra').attr("disabled", false);
+            }
+        }
+
+        if (dataFim == "") {
+            $('#cadastra').attr("disabled", false);
+        }
+    }
+</script>
 
 <div class="content-wrapper">
     <section class="content">
@@ -42,11 +136,6 @@ $idAtracao = $_POST['idAtracao'];
                                 </div>
                             </div>
                             <div class="row">
-                                    <div class="form-group col-md-6">
-                                        
-                                    </div>
-                            </div>
-                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="valor_hora">Valor hora/aula: </label><br>
                                     <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora"
@@ -61,12 +150,41 @@ $idAtracao = $_POST['idAtracao'];
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="data_inicio">Início de inscrição: </label> <br/>
-                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_inicio"
-                                           onkeyup="barraData(this);"/>
+                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_inicio" id="datepicker10"
+                                           onkeyup="barraData(this);"onblur="validate()"/>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="data_fim">Encerramento de inscrição: </label> <br>
-                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_fim"/>
+                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_fim" id="datepicker11" onblur="validate()"/>
+                                </div>
+                            </div>
+                            <div class="row" id="msgEscondeData">
+                                <div class="form-group col-md-6">
+                                    <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>
+                                        <input type="checkbox" name="domingo" id="diasemana07" value="1" class="semana">
+                                        Domingo &nbsp;
+                                        <input type="checkbox" name="segunda" id="diasemana01" value="1" class="semana">
+                                        Segunda &nbsp;
+                                        <input type="checkbox" name="terca" id="diasemana02" value="1" class="semana">
+                                        Terça &nbsp;
+                                        <input type="checkbox" name="quarta" id="diasemana03" value="1" class="semana">
+                                        Quarta &nbsp;
+                                        <input type="checkbox" name="quinta" id="diasemana04" value="1" class="semana">
+                                        Quinta &nbsp;
+                                        <input type="checkbox" name="sexta" id="diasemana05" value="1" class="semana">
+                                        Sexta &nbsp;
+                                        <input type="checkbox" name="sabado" id="diasemana06" value="1" class="semana">
+                                        Sábado
+                                </div>
+                            </div>
+                            <div class="row" id="msgEsconde">
+                                <div class="form-group col-md-6">
+                                    <span style="color: red;">Selecione ao menos um dia da semana!</span>
                                 </div>
                             </div>
                         </div>
@@ -83,3 +201,34 @@ $idAtracao = $_POST['idAtracao'];
         </div>
     </section>
 </div>
+<script>
+    function validaDiaSemana() {
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var isMsg = $('#msgEsconde');
+        isMsg.hide();
+        if (dataInicio != "") {
+            var i = 0;
+            var counter = 0;
+            var diaSemana = $('.semana');
+
+            for (; i < diaSemana.length; i++) {
+                if (diaSemana[i].checked) {
+                    counter++;
+                }
+            }
+
+            if (counter == 0) {
+                $('#cadastra').attr("disabled", true);
+                isMsg.show();
+                return false;
+            }
+
+            $('#cadastra').attr("disabled", false);
+            isMsg.hide();
+            return true;
+        }
+    }
+
+    var diaSemana = $('.semana');
+    diaSemana.change(validaDiaSemana);
+</script>
