@@ -3,9 +3,9 @@ date_default_timezone_set('America/Sao_Paulo');
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-$server = "http://".$_SERVER['SERVER_NAME']."/siscontrat2"; //mudar para pasta do igsis
-$http = $server."/pdf/";
-$link_facc = $http."rlt_fac_pf.php";
+$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
+$http = $server . "/pdf/";
+$link_facc = $http . "rlt_fac_pf.php";
 $tipoPessoa = 1;
 
 
@@ -33,7 +33,7 @@ if (isset($_POST['cadastraLider'])) {
 
     $sqlDeleteLider = "DELETE FROM lideres WHERE atracao_id = '$idAtracao'";
 
-    if(mysqli_query($con, $sqlDeleteLider)){
+    if (mysqli_query($con, $sqlDeleteLider)) {
         $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
                                 VALUES ('$idPedido', '$idAtracao', '$idPf')";
         if (mysqli_query($con, $sqLider)) {
@@ -44,7 +44,7 @@ if (isset($_POST['cadastraLider'])) {
 }
 
 
-if (isset($_POST['cadastra']) || isset($_POST['edita']) ||  isset($_POST['cadastraComLider'])) {
+if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider'])) {
     $nome = addslashes($_POST['nome']);
     $nomeArtistico = addslashes($_POST['nomeArtistico']);
     $rg = $_POST['rg'] ?? NULL;
@@ -122,7 +122,7 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
 
             $sqlDeleteLider = "DELETE FROM lideres WHERE atracao_id = '$idAtracao'";
 
-            if(mysqli_query($con, $sqlDeleteLider)){
+            if (mysqli_query($con, $sqlDeleteLider)) {
                 $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
                                 VALUES ('$idPedido', '$idAtracao', '$idPf')";
                 if (mysqli_query($con, $sqLider)) {
@@ -335,9 +335,9 @@ if (isset($_POST["enviar"])) {
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
                 $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-                $ext = strtolower(substr($nome_arquivo,-4));
+                $ext = strtolower(substr($nome_arquivo, -4));
 
-                if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
                 {
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
                         $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPf', '$y', '$new_name', '$hoje', '1'); ";
@@ -365,18 +365,14 @@ if (isset($_POST["enviar"])) {
     }
 }
 
-if(isset($_POST['apagar']))
-{
+if (isset($_POST['apagar'])) {
     $idArquivo = $_POST['idArquivo'];
     $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
-    if(mysqli_query($con,$sql_apagar_arquivo))
-    {
-        $arq = recuperaDados("arquivos",$idArquivo,"id");
-        $mensagem = mensagem("success", "Arquivo ".$arq['arquivo']."apagado com sucesso!");
+    if (mysqli_query($con, $sql_apagar_arquivo)) {
+        $arq = recuperaDados("arquivos", $idArquivo, "id");
+        $mensagem = mensagem("success", "Arquivo " . $arq['arquivo'] . "apagado com sucesso!");
         gravarLog($sql_apagar_arquivo);
-    }
-    else
-    {
+    } else {
         $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
     }
 }
@@ -391,6 +387,9 @@ $drts = recuperaDados("drts", "pessoa_fisica_id", $idPf);
 $nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
 $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
 $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
+
+$sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+$atracao = mysqli_query($con,$sql);
 
 include "includes/menu_interno.php";
 ?>
@@ -478,19 +477,19 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <?php
-                                        if (!empty($pf['cpf'])){
-                                            anexosNaPagina(2, $idPf, "modal-rg", "RG");
+                                    if (!empty($pf['cpf'])){
+                                    anexosNaPagina(2, $idPf, "modal-rg", "RG");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                            anexosNaPagina(3, $idPf, "modal-cpf", "CPF");
+                                    anexosNaPagina(3, $idPf, "modal-cpf", "CPF");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                            anexosNaPagina(31, $idPf, "modal-ccm", "FDC - CCM");
-                                        }
+                                    anexosNaPagina(31, $idPf, "modal-ccm", "FDC - CCM");
+                                    }
                                     ?>
                                 </div>
                             </div>
@@ -559,7 +558,8 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
-                                    <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required class="form-control"
+                                    <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
+                                           class="form-control"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -568,13 +568,15 @@ include "includes/menu_interno.php";
                                     <?php
                                     if (isset($arrayTelefones[1])) {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -584,7 +586,8 @@ include "includes/menu_interno.php";
                                     <label for="recado">Telefone #3</label>
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
@@ -592,7 +595,8 @@ include "includes/menu_interno.php";
                                     } else {
                                         ?>
 
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"class="form-control"
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
                                                id="telefone2" name="telefone2">
 
                                         <?php
@@ -638,38 +642,47 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <hr/>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="banco">Banco:</label>
-                                    <select id="banco" name="banco" class="form-control">
-                                        <option value="">Selecione um banco...</option>
-                                        <?php
-                                        geraOpcao("bancos", $banco['banco_id']);
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="agencia">Agência: *</label>
-                                    <input type="text" name="agencia" class="form-control"
-                                           placeholder="Digite a Agência" maxlength="12" required
-                                           value="<?= $banco['agencia'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="conta">Conta: *</label>
-                                    <input type="text" name="conta" class="form-control"
-                                           placeholder="Digite a Conta" maxlength="12" required
-                                           value="<?= $banco['conta'] ?>">
-                                </div>
-                            </div>
+                            <?php
+                            foreach ($atracao as $row) {
+                                if ($row['valor_individual'] != 0.00) {
+                                    ?>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="banco">Banco:</label>
+                                            <select id="banco" name="banco" class="form-control">
+                                                <option value="">Selecione um banco...</option>
+                                                <?php
+                                                geraOpcao("bancos", $banco['banco_id']);
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="agencia">Agência: *</label>
+                                            <input type="text" name="agencia" class="form-control"
+                                                   placeholder="Digite a Agência" maxlength="12" required
+                                                   value="<?= $banco['agencia'] ?>">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="conta">Conta: *</label>
+                                            <input type="text" name="conta" class="form-control"
+                                                   placeholder="Digite a Conta" maxlength="12" required
+                                                   value="<?= $banco['conta'] ?>">
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                            }
+                            ?>
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <?php
-                                    $sqlFACC= "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
-                                    $queryFACC = mysqli_query($con,$sqlFACC);
+                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
+                                    $queryFACC = mysqli_query($con, $sqlFACC);
                                     ?>
 
                                     <label>Gerar FACC</label><br>
-                                    <a href="<?= $link_facc . "?id=". $idPf ?>" target="_blank" type="button" class="btn btn-primary btn-block">Clique aqui para
+                                    <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
+                                       class="btn btn-primary btn-block">Clique aqui para
                                         gerar a FACC
                                     </a>
                                 </div>
@@ -691,83 +704,83 @@ include "includes/menu_interno.php";
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
 
                         </form>
-                        <?=$voltar?>
+                        <?= $voltar ?>
                     </div>
-                    </div>
-                    <!-- /.box-body -->
                 </div>
-                <!-- /.box -->
+                <!-- /.box-body -->
             </div>
-            <!-- /.col -->
+            <!-- /.box -->
         </div>
-        <!-- /.row -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="box box-default">
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <form method="POST" action="?perfil=evento&p=pf_demais_anexos" role="form">
-                                    <button type="submit" name="idPf" value="<?= $pf['id'] ?>"
-                                            class="btn btn-info btn-block">Demais Anexos
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="form-group col-md-3 pull-right">
-                                <?php
-                                    $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
-                                    $queryPedidos = mysqli_query($con, $sqlPedidos);
-                                    $pedidos = mysqli_fetch_array($queryPedidos);
-
-                                    if (($pedidos['pessoa_tipo_id'] == 1) && ($pedidos['pessoa_fisica_id'] == $idPf) ) {
-
-                                        ?>
-                                        <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                            <input type="hidden" name="pessoa_tipo_id" value="1">
-                                            <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
-                                            <input type="hidden" name="idProponente" value="<?= $pf['id'] ?>">
-                                            <input type="hidden" name="tipoPessoa" value="1">
-                                            <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id']?>">
-                                            <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
-                                                contratação
-                                            </button>
-                                        </form>
-
-                                        <?php
-                                    }else {
-                                        ?>
-                                        <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                            <input type="hidden" name="pessoa_tipo_id" value="1">
-                                            <input type="hidden" name="pessoa_id" value="<?= $pf['id'] ?>">
-                                            <input type="hidden" name="valor" value="<?= $valorTotal ?>">
-                                            <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id']?>">
-                                            <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
-                                                contratação
-                                            </button>
-                                        </form>
-                                        <?php
-                                    }
-                                ?>
-                            </div>
-                        </div>
+        <!-- /.col -->
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <form method="POST" action="?perfil=evento&p=pf_demais_anexos" role="form">
+                            <button type="submit" name="idPf" value="<?= $pf['id'] ?>"
+                                    class="btn btn-info btn-block">Demais Anexos
+                            </button>
+                        </form>
                     </div>
-                    <!-- /. box-body -->
+                    <div class="form-group col-md-3 pull-right">
+                        <?php
+                        $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
+                        $queryPedidos = mysqli_query($con, $sqlPedidos);
+                        $pedidos = mysqli_fetch_array($queryPedidos);
+
+                        if (($pedidos['pessoa_tipo_id'] == 1) && ($pedidos['pessoa_fisica_id'] == $idPf)) {
+
+                            ?>
+                            <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                                <input type="hidden" name="pessoa_tipo_id" value="1">
+                                <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
+                                <input type="hidden" name="idProponente" value="<?= $pf['id'] ?>">
+                                <input type="hidden" name="tipoPessoa" value="1">
+                                <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
+                                <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
+                                    contratação
+                                </button>
+                            </form>
+
+                            <?php
+                        } else {
+                            ?>
+                            <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                                <input type="hidden" name="pessoa_tipo_id" value="1">
+                                <input type="hidden" name="pessoa_id" value="<?= $pf['id'] ?>">
+                                <input type="hidden" name="valor" value="<?= $valorTotal ?>">
+                                <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
+                                <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
+                                    contratação
+                                </button>
+                            </form>
+                            <?php
+                        }
+                        ?>
+                    </div>
                 </div>
             </div>
+            <!-- /. box-body -->
         </div>
+    </div>
+</div>
 
-        <?php
-        modalUploadArquivoUnico("modal-rg", "?perfil=evento&p=pf_edita", "RG", "rg", $idPf, "1");
-        modalUploadArquivoUnico("modal-cpf", "?perfil=evento&p=pf_edita", "CPF", "cpf", $idPf, "1");
-        modalUploadArquivoUnico("modal-ccm", "?perfil=evento&p=pf_edita", "FDC - CCM", "ccm", $idPf, "1");
-        modalUploadArquivoUnico("modal-nit", "?perfil=evento&p=pf_edita", "NIT", "pis_pasep_", $idPf, "1");
-        modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pf_edita", "FACC", "faq", $idPf, "1");
-        modalUploadArquivoUnico("modal-drt", "?perfil=evento&p=pf_edita", "DRT", "drt", $idPf, "1");
-        modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprovante de endereço", "residencia", $idPf, "1");
-        ?>
+<?php
+modalUploadArquivoUnico("modal-rg", "?perfil=evento&p=pf_edita", "RG", "rg", $idPf, "1");
+modalUploadArquivoUnico("modal-cpf", "?perfil=evento&p=pf_edita", "CPF", "cpf", $idPf, "1");
+modalUploadArquivoUnico("modal-ccm", "?perfil=evento&p=pf_edita", "FDC - CCM", "ccm", $idPf, "1");
+modalUploadArquivoUnico("modal-nit", "?perfil=evento&p=pf_edita", "NIT", "pis_pasep_", $idPf, "1");
+modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pf_edita", "FACC", "faq", $idPf, "1");
+modalUploadArquivoUnico("modal-drt", "?perfil=evento&p=pf_edita", "DRT", "drt", $idPf, "1");
+modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprovante de endereço", "residencia", $idPf, "1");
+?>
 
-    </section>
-    <!-- /.content -->
+</section>
+<!-- /.content -->
 </div>
 
 <!--.modal-->
@@ -785,7 +798,7 @@ include "includes/menu_interno.php";
             <div class="modal-footer">
                 <form action="?perfil=evento&p=pf_edita" method="post">
                     <input type="hidden" name="idArquivo" id="idArquivo" value="">
-                    <input type="hidden" name="idPf" id="idPf" value="<?=$idPf?>">
+                    <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
                     <input type="hidden" name="apagar" id="apagar">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                     </button>

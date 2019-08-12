@@ -171,6 +171,19 @@ if ($evento['tipo_evento_id'] == 1) {
                     array_push($erros, "Não há Representante Legal cadastrado no proponente <b>" . $pj['razao_social'] . "</b>");
                 }
             }
+
+            if ($pedido['verba_id'] == null)
+                array_push($erros, "Não há verba cadastrada no pedido");
+
+
+            if ($pedido['numero_parcelas'] == null)
+                array_push($erros, "Não há número de parcelas cadastrada no pedido");
+
+            if ($pedido['justificativa'] == null)
+                array_push($erros, "Não há justificativa cadastrada no pedido");
+
+            if ($pedido['forma_pagamento'] == null)
+                array_push($erros, "Não há forma de pagamento cadastrada no pedido");
         }
     }
 }
