@@ -1,14 +1,7 @@
 <?php
 $con = bancoMysqli();
-
-function checarDiaSemana($id)
-{
-    //funcao para imprimir checked do checkbox
-    if ($id != 0) {
-        echo "checked";
-    }
-}
-
+$execucaodia1 = null;
+$execucaodia2 = null;
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $idOficina = $_POST['idOficina'] ?? NULL;
     $idAtracao = $_POST['idAtracao'] ?? NULL;
@@ -25,15 +18,41 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $domingo = $_POST['domingo'] ?? 0;
     $valor_hora = dinheiroDeBr($_POST['valor_hora']);
     $carga_horaria = $_POST['carga_horaria'];
-    $execucaodia1 = "";
-    $execucaodia2 = "";
 }
-
+/*//reliza os testes para preencher as variaveis execucaodia1 e execucaodia2
 if($segunda != 0){
-
-}elseif ($terca != 0){
-
-}
+    $execucaodia1 = $segunda;
+}elseif ($terca == 0){
+    $execucaodia1 = $terca;
+    if($execucaodia1 == 0){
+    $execucaodia2 = $terca;
+    }
+}elseif ($quarta != 0){
+    $execucaodia1 = $quarta;
+    if($execucaodia1 == 0){
+        $execucaodia2 = $quarta;
+    }
+}elseif ($quinta != 0){
+    $execucaodia1 = $quinta;
+    if($execucaodia1 == 0){
+        $execucaodia2 = $quinta;
+    }
+}elseif ($sexta != 0){
+    $execucaodia1 = $sexta;
+    if($execucaodia1 == 0){
+        $execucaodia2 = $sexta;
+    }
+}elseif ($sabado != 0){
+    $execucaodia1 = $sabado;
+    if($execucaodia1 == 0){
+        $execucaodia2 = $sabado;
+    }
+}elseif ($domingo != 0){
+    $execucaodia1 = $domingo;
+    if($execucaodia1 == 0){
+        $execucaodia2 = $domingo;
+    }
+}*/
 
 $sqlModalidade = "INSERT INTO modalidades (         modalidade,
                                                     descricao)
@@ -42,7 +61,7 @@ $sqlModalidade = "INSERT INTO modalidades (         modalidade,
                                                     '$desc_modalidade' 
                                                     )";
 if (mysqli_query($con, $sqlModalidade)) {
-    $idModalidade = recuperaDados('modalidades', 'id', $idOficina);
+    $idModalidade = recuperaUltimo('modalidades');
     $sqlPublica = "UPDATE modalidades SET publicado = 1 WHERE id = '$idModalidade'";
 }
 
@@ -57,14 +76,14 @@ if (isset($_POST['cadastra'])) {
                                   valor_hora,
                                   carga_horaria) 
                           VALUES ('$idAtracao',
-                                   '$idModalidade'
+                                   '$idModalidade',
                                   '$data_inicio',
                                   '$data_fim',
                                   '$execucaodia1',
                                   '$execucaodia2',
                                   '$valor_hora',
                                   '$carga_horaria')";
-
+echo $sql;
     if (mysqli_query($con, $sql)) {
 
         $idOficina = recuperaUltimo("oficinas");
@@ -262,31 +281,52 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label>
                                         <input type="checkbox" name="domingo" id="diasemana07"
-                                               value="1" <?php checarDiaSemana($oficina['execucao_dia1_id'] || $oficina['execucao_dia2_id'])?>
+                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 7 || $oficina['execucao_dia2_id'] == 7) {
+                                                        echo "checked";
+                                                            }
+                                        ?>
                                                class="semana"> Domingo
                                         &nbsp;
                                         <input type="checkbox" name="segunda" id="diasemana01"
-                                               value="1" <?php checarDiaSemana($oficina['execucao_dia1_id'] || $oficina['execucao_dia2_id'])?>
+                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 1 || $oficina['execucao_dia2_id'] == 1) {
+                                            echo "checked";
+                                        }
+                                        ?>
                                                class="semana"> Segunda
                                         &nbsp;
                                         <input type="checkbox" name="terca" id="diasemana02"
-                                               value="1" <?php checarDiaSemana($oficina['execucao_dia1_id'] || $oficina['execucao_dia2_id'])?>
-                                               class="semana" > Terça
+                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 2 || $oficina['execucao_dia2_id'] == 2) {
+                                            echo "checked";
+                                        }
+                                        ?>
+                                               class="semana"> Terça
                                         &nbsp;
                                         <input type="checkbox" name="quarta" id="diasemana03"
-                                               value="1" <?php checarDiaSemana($oficina['execucao_dia1_id'] || $oficina['execucao_dia2_id'])?>
+                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 3 || $oficina['execucao_dia2_id'] == 3) {
+                                            echo "checked";
+                                        }
+                                        ?>
                                                class="semana"> Quarta
                                         &nbsp;
                                         <input type="checkbox" name="quinta" id="diasemana04"
-                                               value="1" <?php checarDiaSemana($oficina['execucao_dia1_id'] || $oficina['execucao_dia2_id'])?>
+                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 4 || $oficina['execucao_dia2_id'] == 4) {
+                                            echo "checked";
+                                        }
+                                        ?>
                                                class="semana"> Quinta
                                         &nbsp;
                                         <input type="checkbox" name="sexta" id="diasemana05"
-                                               value="1" <?php checarDiaSemana($oficina['execucao_dia1_id'] || $oficina['execucao_dia2_id'])?>
+                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 5 || $oficina['execucao_dia2_id'] == 5) {
+                                            echo "checked";
+                                        }
+                                        ?>
                                                class="semana"> Sexta
                                         &nbsp;
                                         <input type="checkbox" name="sabado" id="diasemana06"
-                                               value="1" <?php checarDiaSemana($oficina['execucao_dia1_id'] || $oficina['execucao_dia2_id'])?>
+                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 6 || $oficina['execucao_dia2_id'] == 6) {
+                                            echo "checked";
+                                        }
+                                        ?>
                                                class="semana"> Sábado
                                         &nbsp;</label>
                                 </div>
