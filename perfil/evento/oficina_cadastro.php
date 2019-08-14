@@ -3,7 +3,8 @@ $con = bancoMysqli();
 include "includes/menu_interno.php";
 
 $idAtracao = $_POST['idAtracao'];
-
+$sqlDias = "SELECT * FROM execucao_dias";
+$queryDias = mysqli_query($con, $sqlDias);
 ?>
 
 <script language="JavaScript">
@@ -127,7 +128,7 @@ $idAtracao = $_POST['idAtracao'];
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="modalidade">Modalidade:</label>
-                                    <input type="text" id="modalidade"  name="modalidade" class="form-control">
+                                    <input type="text" id="modalidade" name="modalidade" class="form-control">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="desc_modalidade">Descrição da Modalidade:</label><br/>
@@ -139,7 +140,7 @@ $idAtracao = $_POST['idAtracao'];
                                 <div class="form-group col-md-4">
                                     <label for="valor_hora">Valor hora/aula: </label><br>
                                     <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora"
-                                            onkeypress="return(moeda(this, '.', ',', event))">
+                                           onkeypress="return(moeda(this, '.', ',', event))">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="carga_horaria">Carga Horária (em horas): </label><br>
@@ -150,12 +151,14 @@ $idAtracao = $_POST['idAtracao'];
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="data_inicio">Início de inscrição: </label> <br/>
-                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_inicio" id="datepicker10"
-                                           onkeyup="barraData(this);"onblur="validate()"/>
+                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_inicio"
+                                           id="datepicker10"
+                                           onkeyup="barraData(this);" onblur="validate()"/>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="data_fim">Encerramento de inscrição: </label> <br>
-                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_fim" id="datepicker11" onblur="validate()"/>
+                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_fim"
+                                           id="datepicker11" onblur="validate()"/>
                                 </div>
                             </div>
                             <div class="row" id="msgEscondeData">
@@ -163,29 +166,40 @@ $idAtracao = $_POST['idAtracao'];
                                     <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
                                 </div>
                             </div>
-                            <?php/*
+
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label>
-                                        <input type="checkbox" name="semana[]" id="diasemana07" value="7" class="semana">
-                                        Domingo &nbsp;
-                                        <input type="checkbox" name="semana[]" id="diasemana01" value="1" class="semana">
-                                        Segunda &nbsp;
-                                        <input type="checkbox" name="semana[]" id="diasemana02" value="2" class="semana">
-                                        Terça &nbsp;
-                                        <input type="checkbox" name="semana[]" id="diasemana03" value="3" class="semana">
-                                        Quarta &nbsp;
-                                        <input type="checkbox" name="semana[]" id="diasemana04" value="4" class="semana">
-                                        Quinta &nbsp;
-                                        <input type="checkbox" name="semana[]" id="diasemana05" value="5" class="semana">
-                                        Sexta &nbsp;
-                                        <input type="checkbox" name="semana[]" id="diasemana06" value="6" class="semana">
-                                        Sábado
+
+                                    <label>Selecione o primeiro dia de execução:</label>
+                                    <select name="idDia1">
+                                        <option>Selecione o Dia</option>
+                                        <?php
+                                        while ($dias = mysqli_fetch_array($queryDias)) {
+
+                                            echo "<option value='" . $dias['id'] . "'>" . $dias['dia'] . "</option>";
+                                            ?>
+
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
-                            </div> */?>
-                            <div class="row" id="msgEsconde">
                                 <div class="form-group col-md-6">
-                                    <span style="color: red;">Selecione ao menos um dia da semana!</span>
+
+                                    <label>Selecione o segundo dia de execução:</label>
+                                    <select name="idDia2">
+                                        <option>Selecione o Dia</option>
+                                        <?php
+                                        $sqlDias = "SELECT * FROM execucao_dias";
+                                        $queryDias = mysqli_query($con, $sqlDias);
+                                        while ($dias2 = mysqli_fetch_array($queryDias)) {
+
+                                            echo "<option value='" . $dias2['id'] . "'>" . $dias2['dia'] . "</option>";
+                                            ?>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                         </div>

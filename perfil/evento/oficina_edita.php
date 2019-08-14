@@ -1,7 +1,6 @@
 <?php
 $con = bancoMysqli();
-$execucaodia1 = null;
-$execucaodia2 = null;
+
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $idOficina = $_POST['idOficina'] ?? NULL;
     $idAtracao = $_POST['idAtracao'] ?? NULL;
@@ -9,65 +8,29 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $desc_modalidade = $_POST['desc_modalidade'];
     $data_inicio = $_POST ['data_inicio'];
     $data_fim = $_POST ['data_fim'];
-    $segunda = $_POST['segunda'] ?? 0;
-    $terca = $_POST['terca'] ?? 0;
-    $quarta = $_POST['quarta'] ?? 0;
-    $quinta = $_POST['quinta'] ?? 0;
-    $sexta = $_POST['sexta'] ?? 0;
-    $sabado = $_POST['sabado'] ?? 0;
-    $domingo = $_POST['domingo'] ?? 0;
+    $execucaodia1 = $_POST['idDia1'];
+    $execucaodia2 = $_POST['idDia2'];
     $valor_hora = dinheiroDeBr($_POST['valor_hora']);
     $carga_horaria = $_POST['carga_horaria'];
-}
-/*//reliza os testes para preencher as variaveis execucaodia1 e execucaodia2
-if($segunda != 0){
-    $execucaodia1 = $segunda;
-}elseif ($terca == 0){
-    $execucaodia1 = $terca;
-    if($execucaodia1 == 0){
-    $execucaodia2 = $terca;
-    }
-}elseif ($quarta != 0){
-    $execucaodia1 = $quarta;
-    if($execucaodia1 == 0){
-        $execucaodia2 = $quarta;
-    }
-}elseif ($quinta != 0){
-    $execucaodia1 = $quinta;
-    if($execucaodia1 == 0){
-        $execucaodia2 = $quinta;
-    }
-}elseif ($sexta != 0){
-    $execucaodia1 = $sexta;
-    if($execucaodia1 == 0){
-        $execucaodia2 = $sexta;
-    }
-}elseif ($sabado != 0){
-    $execucaodia1 = $sabado;
-    if($execucaodia1 == 0){
-        $execucaodia2 = $sabado;
-    }
-}elseif ($domingo != 0){
-    $execucaodia1 = $domingo;
-    if($execucaodia1 == 0){
-        $execucaodia2 = $domingo;
-    }
-}*/
 
-$sqlModalidade = "INSERT INTO modalidades (         modalidade,
+}
+if(isset($_POST['cadastra']) || isset($_POST['edita'])){
+
+    $sqlModalidade = "INSERT INTO modalidades (         modalidade,
                                                     descricao)
                                                     VALUES(
                                                     '$modalidade',
                                                     '$desc_modalidade' 
                                                     )";
-if (mysqli_query($con, $sqlModalidade)) {
-    $idModalidade = recuperaUltimo('modalidades');
-    $sqlPublica = "UPDATE modalidades SET publicado = 1 WHERE id = '$idModalidade'";
+    if (mysqli_query($con, $sqlModalidade)) {
+        $idModalidade = recuperaUltimo('modalidades');
+        $sqlPublica = "UPDATE modalidades SET publicado = 1 WHERE id = '$idModalidade'";
+    }
 }
 
-if (isset($_POST['cadastra'])) {
+    if (isset($_POST['cadastra'])) {
 
-    $sql = "INSERT INTO oficinas (atracao_id,
+        $sql = "INSERT INTO oficinas (atracao_id,
                                   modalidade_id, 
                                   data_inicio,
                                   data_fim,
@@ -83,47 +46,62 @@ if (isset($_POST['cadastra'])) {
                                   '$execucaodia2',
                                   '$valor_hora',
                                   '$carga_horaria')";
-echo $sql;
-    if (mysqli_query($con, $sql)) {
 
-        $idOficina = recuperaUltimo("oficinas");
+        if (mysqli_query($con, $sql)) {
 
-        $mensagem = mensagem("success", "Cadastrado com sucesso!");
-        //gravarLog($sql);
-    } else {
-        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
-        //gravarLog($sql);
+            $idOficina = recuperaUltimo("oficinas");
+
+            $mensagem = mensagem("success", "Cadastrado com sucesso!");
+            //gravarLog($sql);
+        } else {
+            $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+            //gravarLog($sql);
+        }
     }
-}
 
-if (isset($_POST['edita'])) {
-    $sql = "UPDATE oficinas SET
+    if (isset($_POST['edita'])) {
+        $sql = "UPDATE oficinas SET
                             carga_horaria = '$carga_horaria',
                             data_inicio = '$data_inicio',
                             data_fim = '$data_fim',
                             execucao_dia1_id = '$execucaodia1',
                             execucao_dia2_id = '$execucaodia2',
-                            valor_hora = '$valor_hora',
+                            valor_hora = '$valor_hora'
                             WHERE id = '$idOficina'";
 
-    if (mysqli_query($con, $sql)) {
-        $mensagem = mensagem("success", "Gravado com sucesso!");
-        //gravarLog($sql);
-    } else {
-        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
-        //gravarLog($sql);
+
+        if (mysqli_query($con, $sql)) {
+            $mensagem = mensagem("success", "Gravado com sucesso!");
+            //gravarLog($sql);
+        } else {
+            $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+            //gravarLog($sql);
+        }
     }
-}
-if (isset($_POST['carregar'])) {
-    $idOficina = $_POST['idOficina'];
-}
+    if (isset($_POST['carregar'])) {
+        $idOficina = $_POST['idOficina'];
+    }
+if(isset($_POST['cadastra']) || isset($_POST['edita'])){
+    $d1 = recuperaDados('execucao_dias', 'id', $execucaodia1);
+    $d2 = recuperaDados('execucao_dias', 'id', $execucaodia2);
 
-$oficina = recuperaDados("oficinas", "id", $idOficina);
-$modalidade = recuperaDados('modalidades', 'id', $idAtracao);
+    $oficina = recuperaDados("oficinas", "id", $idOficina);
+    $modalidade = recuperaDados('modalidades', 'id', $idAtracao);
 
+}
 include "includes/menu_interno.php";
 
 ?>
+<script language="JavaScript">
+
+    function barraData(n) {
+        if (n.value.length == 2)
+            c.value += '/';
+        if (n.value.length == 5)
+            c.value += '/';
+    }
+</script>
+
 <script type="text/javascript">
     function desmarca() {
         $("#diasemana01").prop("checked", false);
@@ -146,6 +124,11 @@ include "includes/menu_interno.php";
 
         desmarca();
     }
+
+    $(document).ready(function () {
+        validate();
+        $('#datepicker11').change(validate);
+    });
 
     function validate() {
         comparaData();
@@ -254,7 +237,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-4">
                                     <label for="carga_horaria">Carga Horária (em horas): </label><br>
                                     <input class="form-control" style="max-width: 175px;" type="number"
-                                           name="carga_horaria" value="<?= $oficina['carga_horaria'] ?>"/>
+                                           name="carga_horaria" value="<?= $oficina['carga_horaria'] ?>">
                                 </div>
                             </div>
                             <div class="row">
@@ -262,78 +245,63 @@ include "includes/menu_interno.php";
                                     <label for="data_inicio">Início de inscrição: </label> <br/>
                                     <input class="form-control" style="max-width: 175px;" type="date" name="data_inicio"
                                            value="<?= $oficina['data_inicio'] ?>"
-                                           onkeyup="barraData(this);"/>
+                                           onkeyup="barraData(this);" onblur="validate()">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="data_fim">Encerramento de inscrição: </label> <br>
                                     <input class="form-control" style="max-width: 175px;" type="date" name="data_fim"
-                                           value="<?= $oficina['data_fim'] ?>"/>
+                                           value="<?= $oficina['data_fim'] ?>" onblur="validate()">
                                 </div>
                             </div>
                             <div class="row" id="msgEscondeData">
-                                <div class="form-group col-md-offset-6 col-md-6">
+                                <div class="form-group col-md-6">
                                     <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
                                 </div>
                             </div>
 
-
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label>
-                                        <input type="checkbox" name="domingo" id="diasemana07"
-                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 7 || $oficina['execucao_dia2_id'] == 7) {
-                                                        echo "checked";
-                                                            }
-                                        ?>
-                                               class="semana"> Domingo
-                                        &nbsp;
-                                        <input type="checkbox" name="segunda" id="diasemana01"
-                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 1 || $oficina['execucao_dia2_id'] == 1) {
-                                            echo "checked";
-                                        }
-                                        ?>
-                                               class="semana"> Segunda
-                                        &nbsp;
-                                        <input type="checkbox" name="terca" id="diasemana02"
-                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 2 || $oficina['execucao_dia2_id'] == 2) {
-                                            echo "checked";
-                                        }
-                                        ?>
-                                               class="semana"> Terça
-                                        &nbsp;
-                                        <input type="checkbox" name="quarta" id="diasemana03"
-                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 3 || $oficina['execucao_dia2_id'] == 3) {
-                                            echo "checked";
-                                        }
-                                        ?>
-                                               class="semana"> Quarta
-                                        &nbsp;
-                                        <input type="checkbox" name="quinta" id="diasemana04"
-                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 4 || $oficina['execucao_dia2_id'] == 4) {
-                                            echo "checked";
-                                        }
-                                        ?>
-                                               class="semana"> Quinta
-                                        &nbsp;
-                                        <input type="checkbox" name="sexta" id="diasemana05"
-                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 5 || $oficina['execucao_dia2_id'] == 5) {
-                                            echo "checked";
-                                        }
-                                        ?>
-                                               class="semana"> Sexta
-                                        &nbsp;
-                                        <input type="checkbox" name="sabado" id="diasemana06"
-                                               value="1" <?php if ($oficina['execucao_dia1_id'] == 6 || $oficina['execucao_dia2_id'] == 6) {
-                                            echo "checked";
-                                        }
-                                        ?>
-                                               class="semana"> Sábado
-                                        &nbsp;</label>
+                                    <label>Primeiro dia selecionado: <?=$d1['dia']?></label>
+                            </div>
+                                <div class="form-group col-md-6">
+                                    <label>Segundo dia selecionado: <?=$d2['dia']?></label>
                                 </div>
                             </div>
-                            <div class="row" id="msgEsconde">
+                            <div class="row">
                                 <div class="form-group col-md-6">
-                                    <span style="color: red;">Selecione ao menos um dia da semana!</span>
+
+                                    <label>Selecione o primeiro dia de execução:</label>
+                                    <select name="idDia1">
+                                        <option>Selecione o Dia</option>
+                                        <?php
+                                        $sqlDias = "SELECT * FROM execucao_dias";
+                                        $queryDias = mysqli_query($con, $sqlDias);
+                                        while ($dias = mysqli_fetch_array($queryDias)) {
+
+                                            echo "<option value='" . $dias['id'] . "'>" . $dias['dia'] . "</option>";
+                                            ?>
+
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+
+                                    <label>Selecione o segundo dia de execução:</label>
+                                    <select name="idDia2">
+                                        <option>Selecione o Dia</option>
+                                        <?php
+                                        $sqlDias = "SELECT * FROM execucao_dias";
+                                        $queryDias = mysqli_query($con, $sqlDias);
+                                        while ($dias2 = mysqli_fetch_array($queryDias)) {
+
+                                            echo "<option value='" . $dias2['id'] . "'>" . $dias2['dia'] . "</option>";
+                                            ?>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                             <div class="box-footer">
