@@ -126,41 +126,45 @@ $queryDias = mysqli_query($con, $sqlDias);
                     <form method="POST" action="?perfil=evento&p=oficina_edita" role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-12">
                                     <label for="modalidade">Modalidade:</label>
                                     <input type="text" id="modalidade" name="modalidade" class="form-control">
                                 </div>
-                                <div class="form-group col-md-4">
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
                                     <label for="desc_modalidade">Descrição da Modalidade:</label><br/>
                                     <textarea name="desc_modalidade" id="desc_modalidade" class="form-control"
                                               rows="3"></textarea>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label for="valor_hora">Valor hora/aula: </label><br>
                                     <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora"
                                            onkeypress="return(moeda(this, '.', ',', event))">
                                 </div>
-                                <div class="form-group col-md-4">
+
+                                <div class="form-group col-md-3">
                                     <label for="carga_horaria">Carga Horária (em horas): </label><br>
                                     <input class="form-control" style="max-width: 175px;" type="number"
                                            name="carga_horaria"/>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-4">
+
+                                <div class="form-group col-md-3">
                                     <label for="data_inicio">Início de inscrição: </label> <br/>
                                     <input class="form-control" style="max-width: 175px;" type="date" name="data_inicio"
                                            id="datepicker10"
                                            onkeyup="barraData(this);" onblur="validate()"/>
                                 </div>
-                                <div class="form-group col-md-4">
+
+                                <div class="form-group col-md-3">
                                     <label for="data_fim">Encerramento de inscrição: </label> <br>
                                     <input class="form-control" style="max-width: 175px;" type="date" name="data_fim"
                                            id="datepicker11" onblur="validate()"/>
                                 </div>
                             </div>
+
                             <div class="row" id="msgEscondeData">
                                 <div class="form-group col-md-6">
                                     <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
@@ -171,51 +175,44 @@ $queryDias = mysqli_query($con, $sqlDias);
                                 <div class="form-group col-md-6">
 
                                     <label>Selecione o primeiro dia de execução:</label>
-                                    <select name="idDia1">
+                                    <select name="idDia1" id="dia1" class="form-control">
                                         <option>Selecione o Dia</option>
                                         <?php
-                                        while ($dias = mysqli_fetch_array($queryDias)) {
-
-                                            echo "<option value='" . $dias['id'] . "'>" . $dias['dia'] . "</option>";
-                                            ?>
-
-                                            <?php
-                                        }
+                                        geraOpcao('execucao_dias')
                                         ?>
                                     </select>
                                 </div>
+
                                 <div class="form-group col-md-6">
 
                                     <label>Selecione o segundo dia de execução:</label>
-                                    <select name="idDia2">
+                                    <select name="idDia2" id="dia2" class="form-control">
                                         <option>Selecione o Dia</option>
                                         <?php
-                                        $sqlDias = "SELECT * FROM execucao_dias";
-                                        $queryDias = mysqli_query($con, $sqlDias);
-                                        while ($dias2 = mysqli_fetch_array($queryDias)) {
-
-                                            echo "<option value='" . $dias2['id'] . "'>" . $dias2['dia'] . "</option>";
-                                            ?>
-                                            <?php
-                                        }
+                                        geraOpcao('execucao_dias')
+                                        ?>
                                         ?>
                                     </select>
                                 </div>
                             </div>
                         </div>
+
                         <div class="box-footer">
                             <a href="?perfil=evento&p=atracoes_lista">
                                 <button type="button" class="btn btn-default">Voltar</button>
                             </a>
-                            <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
-                            <button type="submit" name="cadastra" class="btn btn-info pull-right">Cadastrar</button>
+                            <input type="hidden" name="idAtracao" id="idAtracao" value="<?= $idAtracao ?>">
+                            <button type="submit" id="cadastra" name="cadastra" class="btn btn-info pull-right">
+                                Cadastrar
+                            </button>
                         </div>
+                    </form>
                 </div>
-                </form>
             </div>
         </div>
     </section>
 </div>
+
 <script>
     function validaDiaSemana() {
         var dataInicio = document.querySelector('#datepicker10').value;
@@ -246,4 +243,28 @@ $queryDias = mysqli_query($con, $sqlDias);
 
     var diaSemana = $('.semana');
     diaSemana.change(validaDiaSemana);
+</script>
+
+<script>
+    let dia1 = $('#dia1');
+    let dia2 = $('#dia2');
+    let botao = $('#cadastra');
+
+    function igual() {
+        if (dia1.val() == "Selecione o Dia" || dia2.val() == "Selecione o Dia") {
+            botao.prop('disabled', true)
+        } else {
+            botao.prop('disabled', false)
+            if (dia1.val() == dia2.val()) {
+                botao.prop('disabled', true)
+            } else {
+                botao.prop('disabled', false)
+            }
+        }
+    }
+
+    dia2.on('change', igual)
+    dia1.on('change', igual)
+
+    $(document).ready(igual)
 </script>
