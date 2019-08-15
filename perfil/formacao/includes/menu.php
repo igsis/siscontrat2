@@ -1,12 +1,12 @@
 <?php
-$pasta = "?perfil=agendao&p=";
+$pasta = "?perfil=formacao&p=";
 ?>
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu" data-widget="tree">
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">FORMAÇÃO</li>
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>administrativo&sp=index"><i class="fa fa-circle-o"></i>
                     <span>Acesso administrativo</span></a></li>
 
             <li class="treeview">
