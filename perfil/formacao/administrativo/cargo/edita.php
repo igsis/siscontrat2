@@ -3,8 +3,8 @@ $con = bancoMysqli();
 $idUser = $_SESSION['idUser'];
 
 if (isset($_POST['cadastra'])) {
-    $cargo = $_POST['cargo'];
-    $justificativa = $_POST['justificativa'];
+    $cargo = addslashes($_POST['cargo']);
+    $justificativa = addslashes($_POST['justificativa']);
 
     $sql = "INSERT INTO formacao_cargos (cargo, justificativa) VALUES ('$cargo', '$justificativa')";
 
@@ -18,8 +18,8 @@ if (isset($_POST['cadastra'])) {
 }
 
 if (isset($_POST['edita'])) {
-    $cargo = $_POST['cargo'];
-    $justificativa = $_POST['justificativa'];
+    $cargo = addslashes($_POST['cargo']);
+    $justificativa = addslashes($_POST['justificativa']);
     $idCargo = $_POST['idCargo'];
 
     $sql = "UPDATE formacao_cargos SET cargo = '$cargo', justificativa = '$justificativa' WHERE id = '$idCargo'";

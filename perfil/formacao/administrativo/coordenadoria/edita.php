@@ -3,7 +3,7 @@ $con = bancoMysqli();
 $idUser = $_SESSION['idUser'];
 
 if (isset($_POST['cadastra'])) {
-    $coordenadoria = $_POST['coordenadoria'];
+    $coordenadoria = addslashes($_POST['coordenadoria']);
 
     $sql = "INSERT INTO coordenadorias (coordenadoria) VALUES ('$coordenadoria')";
 
@@ -17,7 +17,7 @@ if (isset($_POST['cadastra'])) {
 }
 
 if (isset($_POST['edita'])) {
-    $coordenadoria = $_POST['coordenadoria'];
+    $coordenadoria = addslashes($_POST['coordenadoria']);
     $idCoordenadoria = $_POST['idCoordenadoria'];
 
     $sql = "UPDATE coordenadorias SET coordenadoria = '$coordenadoria' WHERE id = '$idCoordenadoria'";
@@ -51,7 +51,7 @@ $coordenadoria = recuperaDados('coordenadorias', 'id', $idCoordenadoria);
                     <div class="box-header with-border">
                         <h3 class="box-title">Coordenadoria</h3>
                     </div>
-                    <form method="POST" action=""
+                    <form method="POST" action="?perfil=formacao&p=administrativo&sp=coordenadoria&spp=edita"
                           role="form">
                         <div class="box-body">
                             <div class="row">
