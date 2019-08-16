@@ -100,23 +100,24 @@ include "includes/menu_interno.php";
                             include "includes/label_ocorrencia_gestao.php";
                             ?>
                         </div>
-                        <?php if($evento['contratacao'] == 1) { ?>
-                        <div class="tab-pane" id="pedido">
-                            <?php
-                            include "includes/label_pedido_gestao.php";
-                            ?>
-                        </div>
+                        <?php if ($evento['contratacao'] == 1) { ?>
+                            <div class="tab-pane" id="pedido">
+                                <?php
+                                include "includes/label_pedido_gestao.php";
+                                ?>
+                            </div>
                         <?php } ?>
 
                         <div class="box-footer">
                             <form action="?perfil=gestao_prazo&p=busca_gestao" method="post">
                                 <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
-                                <button type="submit" name="aprovar" class="btn btn-success"> Aprovar </button>
+                                <button type="submit" name="aprovar" class="btn btn-success"> Aprovar</button>
                                 <button type="button" class="btn btn-danger" id="vetarEvento"
                                         data-toggle="modal" data-target="#vetacao" name="vetarEvento"
-                                        data-name="<?=$evento['nome_evento']?>"
-                                        data-id="<?=$evento['id']?>">
-                                    Vetar </button>
+                                        data-name="<?= $evento['nome_evento'] ?>"
+                                        data-id="<?= $evento['id'] ?>">
+                                    Vetar
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -128,16 +129,29 @@ include "includes/menu_interno.php";
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Reabertura do Evento <?= $evento['nome_evento'] ?></h3>
                         <h4 class="modal-title">Confirmação de Vetação</h4>
                     </div>
                     <div class="modal-body">
                         <p>Tem certeza que deseja vetar este evento?</p>
+                        <form method="post">
+                            <label for="motivo">Motivo da Vetação:</label>
+                            <select name="motivo" class="form-control">
+                                <option>Selecione o Motivo</option>
+                                <?php
+                                geraOpcao('chamado_tipos');
+                                ?>
+                            </select>
+                            <label for="justificativa">Justificativa:</label>
+                            <textarea name="justificativa" class="form-control" rows="3"></textarea>
+                        </form>
                     </div>
                     <div class="modal-footer">
                         <form action="?perfil=gestao_prazo&p=busca_gestao" method="post">
-                            <input type="hidden" name="idEvento" id="idEvento" value="<?=$idEvento?>">
+                            <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                             <input type="hidden" name="vetar" id="vetar">
-                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                            </button>
                             <input type="submit" class="btn btn-danger btn-outline" name="veta" value="Vetar">
                         </form>
                     </div>

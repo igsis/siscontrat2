@@ -14,17 +14,17 @@ $sql = "SELECT
                INNER JOIN locais AS l ON l.id = o.local_id
                WHERE evento_status_id = 2 AND e.publicado = 1 AND p.status_pedido_id = 1";
 
-if(isset($_POST['aprovar'])){
+if (isset($_POST['aprovar'])) {
     $idEvento = $_POST['idEvento'];
     $evento = recuperaDados('eventos', 'id', $idEvento);
     $sqlAprova = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_id = '$idEvento'";
-    if(mysqli_query($con, $sqlAprova)){
-        $data = date("Y-m-d H:i:s",strtotime("now"));
+    if (mysqli_query($con, $sqlAprova)) {
+        $data = date("Y-m-d H:i:s", strtotime("now"));
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data')";
         $queryEnvia = mysqli_query($con, $sqlEnvia);
         $idUser = $_SESSION['idUser'];
         $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-        $queryEnvio = mysqli_query($con,$sqlEnvio);
+        $queryEnvio = mysqli_query($con, $sqlEnvio);
         $mensagem = mensagem("success", "Evento aprovado com sucesso!");
 
         if ($evento['tipo_evento_id'] == 1) {
@@ -32,7 +32,7 @@ if(isset($_POST['aprovar'])){
         } else if ($evento['tipo_evento_id'] == 2) {
             $protocolo = geraProtocolo($idEvento) . "-C";
         }
-        if($evento['contratacao'] == 1){
+        if ($evento['contratacao'] == 1) {
             $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3";
             mysqli_query($con, $sqlEnviaEvento);
         }
@@ -40,12 +40,31 @@ if(isset($_POST['aprovar'])){
     }
 }
 
-if(isset($_POST['vetar'])){
+if (isset($_POST['vetar'])) {
     $idEvento = $_POST['idEvento'];
     $sqlVeta = "UPDATE pedidos SET status_pedido_id = 3 WHERE origem_id = '$idEvento'";
-    if(mysqli_query($con, $sqlVeta)){
+    if (mysqli_query($con, $sqlVeta)) {
         $sqlVeta = "UPDATE eventos SET evento_status_id = 5 WHERE id = '$idEvento'";
-        $queryVeta = mysqli_query($con,$sqlVeta);
+        $queryVeta = mysqli_query($con, $sqlVeta);
+        $motivo = $_POST['motivo'];
+        $justificativa = $_POST['justificativa'];
+        $titulo = "";
+        $idUser = $_SESSION['idUser'];
+        $data = $data = date("Y-m-d H:i:s", strtotime("now"));
+        $sqlChamado = "INSERT INTO chamados (evento_id, 
+                                             chamado_tipo_id, 
+                                             titulo, 
+                                             justificativa, 
+                                             usuario_id, 
+                                             data) 
+                                        VALUES(
+                                            '$idEvento',
+                                            '$motivo',   
+                                            '$titulo',
+                                            '$justificativa',
+                                            '$idUser',
+                                             '$data')";
+        $queryChamado = mysqli_query($con, $sqlChamado);
         $mensagem = mensagem("success", "Evento vetado com sucesso!");
     }
 }
@@ -78,7 +97,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Locais</th>
                                 <th>Período</th>
                                 <th>Fiscal</th>
-                                <th>Operador</th>
+                                <?php //<th>Operador</th> ?>
                                 <th>Visualizar</th>
                             </tr>
                             </thead>
@@ -86,14 +105,14 @@ $query = mysqli_query($con, $sql);
                             echo "<tbody>";
                             while ($eventos = mysqli_fetch_array($query)) {
                                 $fiscal = recuperaDados('usuarios', 'id', $eventos['fiscal_id']);
-                                $operador = recuperaDados('contratos','id', $eventos['']);
+                                //$operador = recuperaDados('contratos','id', $eventos['']);
                                 echo "<tr>";
                                 echo "<td>" . $eventos['protocolo'] . "</td>";
                                 echo "<td>" . $eventos['nome_evento'] . "</td>";
                                 echo "<td>" . $eventos['local'] . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($eventos['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $fiscal['nome_completo'] . "</td>";
-                                echo "<td>" . $operador ['usuario_contrato_id'] . "</td>";
+                                //echo "<td>" . $operador ['usuario_contrato_id'] . "</td>";
                                 echo "<td>
                                                 <form method='POST' action='?perfil=gestao_prazo&p=detalhes_gestao' role='form'>
                                                 <input type='hidden' name='idEvento' value='" . $eventos['id'] . "'>
@@ -110,7 +129,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Locais</th>
                                 <th>Período</th>
                                 <th>Fiscal</th>
-                                <th>Operador</th>
+                                <?php //<th>Operador</th> ?>
                                 <th>Visualizar</th>
                             </tr>
                             </tfoot>

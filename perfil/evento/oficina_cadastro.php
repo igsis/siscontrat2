@@ -18,28 +18,6 @@ $queryDias = mysqli_query($con, $sqlDias);
 </script>
 
 <script type="text/javascript">
-    function desmarca() {
-        $("#diasemana01").prop("checked", false);
-        $("#diasemana02").prop("checked", false);
-        $("#diasemana03").prop("checked", false);
-        $("#diasemana04").prop("checked", false);
-        $("#diasemana05").prop("checked", false);
-        $("#diasemana06").prop("checked", false);
-        $("#diasemana07").prop("checked", false);
-    }
-
-    function mudaData(valor) {
-        $("#diasemana01").prop("disabled", valor);
-        $("#diasemana02").prop("disabled", valor);
-        $("#diasemana03").prop("disabled", valor);
-        $("#diasemana04").prop("disabled", valor);
-        $("#diasemana05").prop("disabled", valor);
-        $("#diasemana06").prop("disabled", valor);
-        $("#diasemana07").prop("disabled", valor);
-
-        desmarca();
-    }
-
     $(document).ready(function () {
         validate();
         $('#datepicker11').change(validate);
@@ -48,9 +26,9 @@ $queryDias = mysqli_query($con, $sqlDias);
     function validate() {
         comparaData();
         if ($('#datepicker11').val().length > 0) {
-            mudaData(false);
+
         } else {
-            mudaData(true);
+
 
             var data = document.querySelector('input[name="data_inicio"]').value;
             data = new Date(data);
@@ -85,6 +63,7 @@ $queryDias = mysqli_query($con, $sqlDias);
     }
 
     function comparaData() {
+        let botao = $('#cadastra');
         var isMsgData = $('#msgEscondeData');
         isMsgData.hide();
         var dataInicio = document.querySelector('#datepicker10').value;
@@ -98,9 +77,11 @@ $queryDias = mysqli_query($con, $sqlDias);
             var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
 
             if (dataFim <= dataInicio) {
+                botao.prop('disabled', true);
                 isMsgData.show();
                 $('#cadastra').attr("disabled", true);
             } else {
+                botao.prop('disabled', false);
                 isMsgData.hide();
                 $('#cadastra').attr("disabled", false);
             }
@@ -148,20 +129,20 @@ $queryDias = mysqli_query($con, $sqlDias);
                                 <div class="form-group col-md-3">
                                     <label for="carga_horaria">Carga Horária (em horas): </label><br>
                                     <input class="form-control" style="max-width: 175px;" type="number"
-                                           name="carga_horaria"/>
+                                           name="carga_horaria">
                                 </div>
 
                                 <div class="form-group col-md-3">
                                     <label for="data_inicio">Início de inscrição: </label> <br/>
-                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_inicio"
-                                           id="datepicker10"
-                                           onkeyup="barraData(this);" onblur="validate()"/>
+                                    <input class="form-control semana" style="max-width: 175px;" type="date"
+                                           name="data_inicio"
+                                           onkeyup="barraData(this);" onblur="validate()" id="datepicker10">
                                 </div>
-
                                 <div class="form-group col-md-3">
                                     <label for="data_fim">Encerramento de inscrição: </label> <br>
-                                    <input class="form-control" style="max-width: 175px;" type="date" name="data_fim"
-                                           id="datepicker11" onblur="validate()"/>
+                                    <input class="form-control semana" style="max-width: 175px;" type="date"
+                                           name="data_fim"
+                                           onblur="validate()" id="datepicker11">
                                 </div>
                             </div>
 
@@ -191,10 +172,17 @@ $queryDias = mysqli_query($con, $sqlDias);
                                         <?php
                                         geraOpcao('execucao_dias')
                                         ?>
-                                        ?>
+
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="row" id="msgEscondeDias">
+                                <div class="form-group col-md-6">
+                                    <span style="color: red;"><b>Os dias de execução escolhidos são iguais!</b></span>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="box-footer">
@@ -249,22 +237,25 @@ $queryDias = mysqli_query($con, $sqlDias);
     let dia1 = $('#dia1');
     let dia2 = $('#dia2');
     let botao = $('#cadastra');
-
+    var isMsgDia = $('#msgEscondeDias');
+    isMsgDia.hide();
     function igual() {
         if (dia1.val() == "Selecione o Dia" || dia2.val() == "Selecione o Dia") {
             botao.prop('disabled', true)
         } else {
-            botao.prop('disabled', false)
+            botao.prop('disabled', false);
             if (dia1.val() == dia2.val()) {
-                botao.prop('disabled', true)
+                botao.prop('disabled', true);
+                isMsgDia.show();
             } else {
-                botao.prop('disabled', false)
+                botao.prop('disabled', false);
+                isMsgDia.hide();
             }
         }
     }
 
-    dia2.on('change', igual)
-    dia1.on('change', igual)
+    dia2.on('change', igual);
+    dia1.on('change', igual);
 
     $(document).ready(igual)
 </script>

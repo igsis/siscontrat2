@@ -102,9 +102,9 @@ include "includes/menu_interno.php";
     function validate() {
         comparaData();
         if ($('#datepicker11').val().length > 0) {
-            mudaData(false);
+
         } else {
-            mudaData(true);
+
 
             var data = document.querySelector('input[name="data_inicio"]').value;
             data = new Date(data);
@@ -139,6 +139,7 @@ include "includes/menu_interno.php";
     }
 
     function comparaData() {
+        let botao = $('#edita');
         var isMsgData = $('#msgEscondeData');
         isMsgData.hide();
         var dataInicio = document.querySelector('#datepicker10').value;
@@ -152,9 +153,11 @@ include "includes/menu_interno.php";
             var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
 
             if (dataFim <= dataInicio) {
+                botao.prop('disabled', true);
                 isMsgData.show();
                 $('#edita').attr("disabled", true);
             } else {
+                botao.prop('disabled', false);
                 isMsgData.hide();
                 $('#edita').attr("disabled", false);
             }
@@ -238,10 +241,10 @@ include "includes/menu_interno.php";
                                     <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
                                 </div>
                             </div>
-                                    <?php
-                                    $d1 = recuperaDados('execucao_dias', 'id', $execucaodia1);
-                                    $d2 = recuperaDados('execucao_dias', 'id', $execucaodia2);
-                                    ?>
+                            <?php
+                            $d1 = recuperaDados('execucao_dias', 'id', $execucaodia1);
+                            $d2 = recuperaDados('execucao_dias', 'id', $execucaodia2);
+                            ?>
 
 
                             <div class="row">
@@ -266,6 +269,13 @@ include "includes/menu_interno.php";
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="row" id="msgEscondeDias">
+                                <div class="form-group col-md-6">
+                                    <span style="color: red;"><b>Os dias de execução escolhidos são iguais!</b></span>
+                                </div>
+                            </div>
+
                             <div class="box-footer">
                                 <a href="?perfil=evento&p=atracoes_lista">
                                     <button type="button" class="btn btn-default">Voltar</button>
@@ -318,23 +328,27 @@ include "includes/menu_interno.php";
 <script>
     let dia1 = $('#dia1');
     let dia2 = $('#dia2');
-    let botao = $('#edita');
+    let botao = $('#cadastra');
+    var isMsgDia = $('#msgEscondeDias');
+    isMsgDia.hide();
 
     function igual() {
         if (dia1.val() == "Selecione o Dia" || dia2.val() == "Selecione o Dia") {
-            botao.prop('disabled', true)
+            botao.prop('disabled', true);
         } else {
-            botao.prop('disabled', false)
+            botao.prop('disabled', false);
             if (dia1.val() == dia2.val()) {
-                botao.prop('disabled', true)
+                botao.prop('disabled', true);
+                isMsgDia.show();
             } else {
-                botao.prop('disabled', false)
+                botao.prop('disabled', false);
+                isMsgDia.hide();
             }
         }
     }
 
-    dia2.on('change', igual)
-    dia1.on('change', igual)
+    dia2.on('change', igual);
+    dia1.on('change', igual);
 
     $(document).ready(igual)
 </script>

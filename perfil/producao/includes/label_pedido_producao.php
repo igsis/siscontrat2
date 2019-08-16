@@ -50,14 +50,14 @@ switch ($pedido['pessoa_tipo_id']) {
             'CCM:' => $proponente['ccm'],
             'Data de Nascimento:' => exibirDataBr($proponente['data_nascimento']),
             'E-Mail:' => $proponente['email'],
-            'Telfone #1:' => $telefones[0][0] ?? "Não Cadastrado",
-            'Telfone #2:' => $telefones[1][0] ?? "Não Cadastrado",
-            'Telfone #3:' => $telefones[2][0] ?? "Não Cadastrado",
+            'Telefone #1:' => $telefones[0][0] ? : "Não Cadastrado",
+            'Telefone #2:' => $telefones[1][0] ? : "Não Cadastrado",
+            'Telefone #3:' => $telefones[2][0] ? : "Não Cadastrado",
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
             'Logradouro' => $endereco['logradouro'],
-            'Complemento' => $endereco['complemento'] ?? "Não possui",
+            'Complemento' => $endereco['complemento'] ? : "Não possui",
             'Bairro' => $endereco['bairro'],
             'Cidade' => $endereco['cidade'],
             'Estado' => $endereco['uf']
