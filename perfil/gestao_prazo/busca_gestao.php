@@ -48,7 +48,7 @@ if (isset($_POST['vetar'])) {
         $queryVeta = mysqli_query($con, $sqlVeta);
         $motivo = $_POST['motivo'];
         $justificativa = $_POST['justificativa'];
-        $titulo = "";
+        $titulo = "Reabertura do Evento: " . $_POST['titulo'];
         $idUser = $_SESSION['idUser'];
         $data = $data = date("Y-m-d H:i:s", strtotime("now"));
         $sqlChamado = "INSERT INTO chamados (evento_id, 
@@ -63,7 +63,7 @@ if (isset($_POST['vetar'])) {
                                             '$titulo',
                                             '$justificativa',
                                             '$idUser',
-                                             '$data')";
+                                            '$data')";
         $queryChamado = mysqli_query($con, $sqlChamado);
         $mensagem = mensagem("success", "Evento vetado com sucesso!");
     }
@@ -97,7 +97,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Locais</th>
                                 <th>Período</th>
                                 <th>Fiscal</th>
-                                <?php //<th>Operador</th> ?>
+                                <th>Operador</th>
                                 <th>Visualizar</th>
                             </tr>
                             </thead>
@@ -105,14 +105,18 @@ $query = mysqli_query($con, $sql);
                             echo "<tbody>";
                             while ($eventos = mysqli_fetch_array($query)) {
                                 $fiscal = recuperaDados('usuarios', 'id', $eventos['fiscal_id']);
-                                //$operador = recuperaDados('contratos','id', $eventos['']);
+                                $operador = recuperaDados('contratos', 'pedido_id', $eventos['id']);
                                 echo "<tr>";
                                 echo "<td>" . $eventos['protocolo'] . "</td>";
                                 echo "<td>" . $eventos['nome_evento'] . "</td>";
                                 echo "<td>" . $eventos['local'] . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($eventos['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $fiscal['nome_completo'] . "</td>";
-                                //echo "<td>" . $operador ['usuario_contrato_id'] . "</td>";
+                                if($operador['usuario_contrato_id'] == 0){
+                                    echo "<td>" . " " . "</td>";
+                                }else{
+                                    echo "<td>" . $operador['usuario_contrato_id'] . "</td>";
+                                }
                                 echo "<td>
                                                 <form method='POST' action='?perfil=gestao_prazo&p=detalhes_gestao' role='form'>
                                                 <input type='hidden' name='idEvento' value='" . $eventos['id'] . "'>
@@ -129,7 +133,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Locais</th>
                                 <th>Período</th>
                                 <th>Fiscal</th>
-                                <?php //<th>Operador</th> ?>
+                                <th>Operador</th>
                                 <th>Visualizar</th>
                             </tr>
                             </tfoot>
