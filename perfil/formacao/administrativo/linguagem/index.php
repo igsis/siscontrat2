@@ -2,21 +2,20 @@
 $con = bancoMysqli();
 
 if (isset($_POST['excluir'])) {
-    $idCoordenadoria = $_POST['idCoordenadoria'];
+    $idLinguagem = $_POST['idLinguagem'];
 
-    $sql = "UPDATE coordenadorias SET publicado = 0 WHERE id = '$idCoordenadoria'";
+    $sql = "UPDATE linguagens SET publicado = 0 WHERE id = '$idLinguagem'";
 
     if (mysqli_query($con, $sql)) {
-        $mensagem = mensagem("success", "Coordenadoria excluida com sucesso");
+        $mensagem = mensagem("success", "Linguagem excluida com sucesso");
     } else {
-        $mensagem = mensagem("danger", "Erro ao excluir a coordenadoria. Tente novamente!");
+        $mensagem = mensagem("danger", "Erro ao excluir a linguagem. Tente novamente!");
     }
 }
 
-$sql = "SELECT * FROM coordenadorias WHERE publicado = 1";
+$sql = "SELECT * FROM linguagens WHERE publicado = 1";
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
-
 ?>
 
 <div class="content-wrapper">
@@ -24,9 +23,9 @@ $num_arrow = mysqli_num_rows($query);
     <section class="content">
 
         <!-- START FORM-->
-        <h3 class="box-title">Lista de Coordenadorias</h3>
-        <a href="?perfil=formacao&p=administrativo&sp=coordenadoria&spp=cadastro" class="text-right btn btn-success"
-           style="float: right">Adicionar Coordenadoria</a>
+        <h3 class="box-title">Lista de Linguagem</h3>
+        <a href="?perfil=formacao&p=administrativo&sp=linguagem&spp=cadastro" class="text-right btn btn-success"
+           style="float: right">Adicionar Linguagem</a>
         <div class="row" align="center">
             <?php if (isset($mensagem)) {
                 echo $mensagem;
@@ -40,10 +39,10 @@ $num_arrow = mysqli_num_rows($query);
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblCoordenadoria" class="table table-bordered table-striped">
+                        <table id="tblLinguagem" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>Coordenadoria</th>
+                                <th>Linguagem</th>
                                 <th width="5%">Visualizar</th>
                                 <th width="5%">Excluir</th>
                             </tr>
@@ -58,15 +57,15 @@ $num_arrow = mysqli_num_rows($query);
                                 </tr>
                                 <?php
                             } else {
-                                while ($coordenadoria = mysqli_fetch_array($query)) {
+                                while ($linguagem = mysqli_fetch_array($query)) {
                                     ?>
                                     <tr>
-                                        <td><?= $coordenadoria['coordenadoria'] ?></td>
+                                        <td><?= $linguagem['linguagem'] ?></td>
                                         <td>
-                                            <form action="?perfil=formacao&p=administrativo&sp=coordenadoria&spp=edita"
+                                            <form action="?perfil=formacao&p=administrativo&sp=linguagem&spp=edita"
                                                   method="POST">
-                                                <input type="hidden" name="idCoordenadoria" id="idCoordenadoria"
-                                                       value="<?= $coordenadoria['id'] ?>">
+                                                <input type="hidden" name="idLinguagem" id="idLinguagem"
+                                                       value="<?= $linguagem['id'] ?>">
                                                 <button type="submit" name="carregar" id="carregar"
                                                         class="btn btn-primary btn-block">
                                                     <i class='fa fa-file-text-o'></i>
@@ -75,13 +74,11 @@ $num_arrow = mysqli_num_rows($query);
                                         </td>
                                         <td>
                                             <form method='POST' id='formExcliuir'>
-                                                <input type="hidden" name='idCoordenadoria' id="idCoordenadoria"
-                                                       value="<?= $coordenadoria['id'] ?>">
-                                                <button type="button" class="btn btn-danger btn-block"
-                                                        id="excluiCoordenadoria"
-                                                        data-toggle="modal" data-target="#exclusao"
-                                                        name="excluiCoordenadoria"
-                                                        data-id="<?= $coordenadoria['id'] ?>"><span
+                                                <input type="hidden" name='idLinguagem' id="idLinguagem"
+                                                       value="<?= $linguagem['id'] ?>">
+                                                <button type="button" class="btn btn-danger btn-block" id="excluiLinguagem"
+                                                        data-toggle="modal" data-target="#exclusao" name="excluiLinguagem"
+                                                        data-id="<?= $linguagem['id'] ?>"><span
                                                             class='glyphicon glyphicon-trash'></span></button>
                                             </form>
                                         </td>
@@ -94,7 +91,7 @@ $num_arrow = mysqli_num_rows($query);
 
                             <tfoot>
                             <tr>
-                                <th>Coordenadoria</th>
+                                <th>Linguagem</th>
                                 <th width="5%">Visualizar</th>
                                 <th width="5%">Excluir</th>
                             </tr>
@@ -114,11 +111,11 @@ $num_arrow = mysqli_num_rows($query);
                         <h4 class="modal-title">Confirmação de Exclusão</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Tem certeza que deseja excluir esta coordenadoria?</p>
+                        <p>Tem certeza que deseja excluir este linguagem?</p>
                     </div>
                     <div class="modal-footer">
-                        <form action="?perfil=formacao&p=administrativo&sp=coordenadoria&spp=index" method="post">
-                            <input type="hidden" name="idCoordenadoria" id="idCoordenadoria" value="">
+                        <form action="?perfil=formacao&p=administrativo&sp=linguagem&spp=index" method="post">
+                            <input type="hidden" name="idLinguagem" id="idLinguagem" value="">
                             <input type="hidden" name="apagar" id="apagar">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                             </button>
@@ -137,7 +134,7 @@ $num_arrow = mysqli_num_rows($query);
     $('#exclusao').on('show.bs.modal', function (e) {
         let id = $(e.relatedTarget).attr('data-id');
 
-        $(this).find('#coordenadoria').attr('value', `${id}`);
+        $(this).find('#idLinguagem').attr('value', `${id}`);
     })
 </script>
 
@@ -146,7 +143,7 @@ $num_arrow = mysqli_num_rows($query);
 
 <script type="text/javascript">
     $(function () {
-        $('#tblCoordenadoria').DataTable({
+        $('#tblLinguagem').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },
@@ -157,3 +154,4 @@ $num_arrow = mysqli_num_rows($query);
         });
     });
 </script>
+

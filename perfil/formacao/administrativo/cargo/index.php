@@ -55,7 +55,7 @@ $num_arrow = mysqli_num_rows($query);
                             if ($num_arrow == 0) {
                                 ?>
                                 <tr>
-                                    <th colspan="4"><p align="center">Não foram encontrados registors</p></th>
+                                    <th colspan="4"><p align="center">Não foram encontrados registros</p></th>
                                 </tr>
                                 <?php
                             } else {
