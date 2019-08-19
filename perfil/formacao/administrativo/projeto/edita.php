@@ -23,7 +23,7 @@ if (isset($_POST['edita'])) {
     $sql = "UPDATE projetos SET projeto = '$projeto' WHERE id = '$idProjeto'";
 
     if (mysqli_query($con, $sql)) {
-        $mensagem = mensagem("success", "Projeto atualizada com sucesso");
+        $mensagem = mensagem("success", "Projeto atualizado com sucesso");
         gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Ocorreu um erro ao atualizar o projeto. Tente novamente!");

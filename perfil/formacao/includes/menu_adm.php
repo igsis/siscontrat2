@@ -21,22 +21,22 @@ $pasta = "?perfil=formacao&p=administrativo&sp=";
             <li><a href="<?= $pasta ?>projeto&spp=index"><i class="fa fa-circle-o"></i>
                     <span>Projeto</span></a></li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>subprefeitura&spp=index"><i class="fa fa-circle-o"></i>
                     <span>Subprefeitura</span></a></li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>territorio&spp=index"><i class="fa fa-circle-o"></i>
                     <span>Território</span></a></li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>vigencia&spp=index"><i class="fa fa-circle-o"></i>
                     <span>Vigência</span></a></li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>capacstatus&spp=index"><i class="fa fa-circle-o"></i>
                     <span>Habilitar / Desabilitar CAPAC</span></a></li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>capac&spp=index"><i class="fa fa-circle-o"></i>
                     <span>Inscritos no CAPAC</span></a></li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="?perfil=formacao"><i class="fa fa-circle-o"></i>
                     <span>Voltar ao menu principal</span></a></li>
             <?php
             include "../perfil/includes/menu_mais.php";
