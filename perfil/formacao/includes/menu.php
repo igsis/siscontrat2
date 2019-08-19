@@ -41,7 +41,8 @@ $pasta = "?perfil=formacao&p=";
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Lista</a></li>
+                    <li><a href="<?= $pasta ?>pedido_contratacao&sp=cadastro"><i class="fa fa-circle-o"></i> Cadastrar </a></li>
+                    <li><a href="<?= $pasta ?>pedido_contratacao&sp=listagem"><i class="fa fa-circle-o"></i> Lista </a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i> Exportar para Excel</a></li>
                 </ul>
             </li>
