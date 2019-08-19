@@ -18,7 +18,7 @@ $pasta = "?perfil=formacao&p=administrativo&sp=";
             <li><a href="<?= $pasta ?>linguagem&spp=index"><i class="fa fa-circle-o"></i>
                     <span>Linguagem</span></a></li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>projeto&spp=index"><i class="fa fa-circle-o"></i>
                     <span>Projeto</span></a></li>
 
             <li><a href="#"><i class="fa fa-circle-o"></i>
