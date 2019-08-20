@@ -1,16 +1,113 @@
+<?php
+$con = bancoMysqli();
+
+if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
+    $pessoas = "";
+    $ano = $_POST['ano'];
+    $status = "1";
+    $chamado = $_POST['chamado'];
+    $classificacao_indicativa = $_POST['classificacao'];
+    $territorio = $_POST['territorio'];
+    $coordenadoria = $_POST['coordenadoria'];
+    $subprefeitura = $_POST['subprefeitura'];
+    $programa = $_POST['programa'];
+    $linguagem = $_POST['linguagem'];
+    $projeto = $_POST['projeto'];
+    $cargo = $_POST['cargo'];
+    $vigencia = $_POST['vigencia'];
+    $observacao = $_POST['observacao'];
+    $idPedido = "";
+    $fiscal = $_POST['fiscal'];
+    $suplente = $_POST['suplente'];
+
+    $usuario = $_SESSION['idUser'];
+    $data = date("Y-m-d H:i:s", strtotime("now"));
+}
+if (isset($_POST['cadastra'])) {
+    $sqlInsert = "INSERT INTO formacao_contratacoes ( 
+                                   pessoa_fisica_id, 
+                                   ano, 
+                                   form_status_id, 
+                                   chamado, 
+                                   classificacao, 
+                                   territorio_id, 
+                                   coordenadoria_id, 
+                                   subprefeitura_id, 
+                                   programa_id, 
+                                   linguagem_id, 
+                                   projeto_id, 
+                                   form_cargo_id, 
+                                   form_vigencia_id, 
+                                   observacao, 
+                                   pedido_id, 
+                                   fiscal_id, 
+                                   suplente_id, 
+                                   num_processo_pagto, 
+                                   usuario_id, 
+                                   data_envio 
+                                   )
+                                   VALUES(
+                                          '$pessoas'
+                                          '$ano',
+                                          '$status',
+                                          '$chamado',
+                                          '$classificacao_indicativa',
+                                          '$territorio',
+                                          '$coordenadoria',
+                                          '$subprefeitura',
+                                          '$programa',
+                                          '$linguagem',
+                                          '$projeto',
+                                          '$cargo',
+                                          '$vigencia',
+                                          '$observacao',
+                                          '$idPedido',
+                                          '$fiscal',
+                                          '$suplente',
+                                          '$usuario',
+                                          '$data',
+                                   )";
+    $queryInsert = mysqli_query($con, $sqlInsert);
+    echo $sqlInsert;
+}
+
+if (isset($_POST['editar'])) {
+    $sqlUpdate = "UPDATE formacao_contratacoes SET 
+                                 ano = '$ano',
+                                 chamado = '$chamado',
+                                 classificacao = '$classificacao_indicativa',
+                                 territorio_id = '$territorio',
+                                 coordenadoria_id = '$coordenadoria',
+                                 subprefeitura_id = '$subprefeitura',
+                                 programa_id = '$programa',
+                                 linguagem_id = '$linguagem',
+                                 projeto_id = '$projeto',
+                                 form_cargo_id = '$cargo',
+                                 form_vigencia_id = '$vigencia',
+                                 observacao = '$observacao',
+                                 fiscal_id = '$fiscal',
+                                 suplente_id = '$suplente'
+                                WHERE id = ''";
+
+    $queryUpdate = mysqli_query($con, $sqlUpdate);
+}
+
+$form_contr = recuperaDados('formacao_contratacoes');
+?>
 <div class="content-wrapper">
-    <section class="content">
+    <div class="content">
         <h2 class="page-header">Cadastro de Pedido de Contratação</h2>
         <div class="box box-primary">
             <div class="box-header">
                 <h4 class="box-title">Pedido de Contratação</h4>
             </div>
-            <div class="box-body">
-            <form method="POST" action="?perfil=formacao&p=pedido_contratacao&sp=editar" role="form">
+            <form action="?perfil=formacao&p=pedido_contratacao&sp=editar" role="form">
+                <div class="box-body">
                     <div class="row">
                         <div class="form-group col-md-2">
                             <label for="ano">Ano *</label>
-                            <input type="number" min="2018" id="ano" name="ano" required class="form-control">
+                            <input type="number" min="2018" id="ano" name="ano" required class="form-control"
+                                   value="<?= $form_contr['ano'] ?>">
                         </div>
 
                         <div class="form-group col-md-6">
@@ -26,7 +123,7 @@
                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                     data-target="#modal-default"><i class="fa fa-info"></i></button>
                             <select class="form-control" name="classificacao" id="classificacao" required>
-                                <option>Selecione...</option>
+                                <option></option>
                                 <?php
                                 geraOpcao("classificacao_indicativas");
                                 ?>
@@ -38,7 +135,7 @@
                         <div class="form-group col-md-4">
                             <label for="territorio">Território *</label>
                             <select class="form-control" name="territorio" id="territorio" required>
-                                <option>Selecione o território...</option>
+                                <option></option>
                                 <?php
                                 geraOpcao("territorios");
                                 ?>
@@ -48,7 +145,7 @@
                         <div class="form-group col-md-4">
                             <label for="coordenadoria">Coordenadoria *</label>
                             <select class="form-control" name="coordenadoria" id="coordenadoria" required>
-                                <option>Selecione a coordenadoria...</option>
+                                <option></option>
                                 <?php
                                 geraOpcao("coordenadorias");
                                 ?>
@@ -58,7 +155,7 @@
                         <div class="form-group col-md-4">
                             <label for="subprefeitura">Subprefeitura *</label>
                             <select class="form-control" name="subprefeitura" id="subprefeitura" required>
-                                <option>Selecione a subprefeitura...</option>
+                                <option></option>
                                 <?php
                                 geraOpcao("subprefeituras");
                                 ?>
@@ -70,7 +167,7 @@
                         <div class="form-group col-md-4">
                             <label for="programa">Programa *</label>
                             <select class="form-control" name="programa" id="programa" required>
-                                <option>Selecione o programa...</option>
+                                <option></option>
                                 <?php
                                 geraOpcao("programas");
                                 ?>
@@ -80,7 +177,7 @@
                         <div class="form-group col-md-4">
                             <label for="linguagem">Linguagem *</label>
                             <select class="form-control" name="linguagem" id="linguagem" required>
-                                <option>Selecione a linguagem...</option>
+                                <option></option>
                                 <?php
                                 geraOpcao("linguagens");
                                 ?>
@@ -90,7 +187,7 @@
                         <div class="form-group col-md-4">
                             <label for="projeto">Projeto *</label>
                             <select class="form-control" name="projeto" id="projeto" required>
-                                <option>Selecione o projeto...</option>
+                                <option></option>
                                 <?php
                                 geraOpcao("projetos");
                                 ?>
@@ -102,7 +199,7 @@
                         <div class="form-group col-md-4">
                             <label for="cargo">Cargo *</label>
                             <select class="form-control" name="cargo" id="cargo" required>
-                                <option>Selecione o cargo...</option>
+                                <option></option>
                                 <?php
                                 geraOpcao("formacao_cargos");
                                 ?>
@@ -112,7 +209,7 @@
                         <div class="form-group col-md-4">
                             <label for="vigencia">Vigência *</label>
                             <select class="form-control" name="vigencia" id="vigencia" required>
-                                <option>Selecione a vigência...</option>
+                                <option></option>
                                 <?php
                                 geraOpcao("formacao_vigencias");
                                 ?>
@@ -124,7 +221,8 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="observacao">Observação: </label>
-                            <textarea name="observacao" id="observacao" rows="3" class="form-control"> </textarea>
+                            <textarea name="observacao" id="observacao" rows="3"
+                                      class="form-control"><?= $form_contr['observacao'] ?></textarea>
                         </div>
                     </div>
 
@@ -132,7 +230,7 @@
                         <div class="form-group col-md-6">
                             <label for="fiscal">Fiscal *</label>
                             <select name="fiscal" id="fiscal" class="form-control" required>
-                                <option>Selecione um fiscal...</option>
+                                <option></option>
                                 <?php
                                 geraOpcaoUsuario('usuarios', 1, $evento['fiscal_id']);
                                 ?>
@@ -142,25 +240,26 @@
                         <div class="form-group col-md-6">
                             <label for="fiscal">Suplente </label>
                             <select name="suplente" id="suplente" class="form-control">
-                                <option>Selecione um suplente...</option>
+                                <option></option>
                                 <?php
                                 geraOpcaoUsuario('usuarios', 1, $evento['suplente_id']);
                                 ?>
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="box-footer">
-                    <a href="?perfil=formacao&p=pedido_contratacao&sp=listagem">
-                        <button type="button" class="btn btn-default">Voltar</button>
-                    </a>
-                    <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">
-                        Cadastrar
-                    </button>
-                </div>
-        </form>
+
+            </form>
+        </div>
+        <div class="box-footer">
+            <a href="?perfil&p=pedido_contratacao&sp=listagem">
+                <button type="button" class="btn btn-default">Voltar</button>
+            </a>
+            <button type="submit" name="editar" id="editar" class="btn btn-primary pull-right">
+                Salvar
+            </button>
+        </div>
     </div>
-</section>
+</div>
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
         <div class="modal-content">
