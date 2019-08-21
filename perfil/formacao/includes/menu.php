@@ -47,7 +47,7 @@ $pasta = "?perfil=formacao&p=";
                 </ul>
             </li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>pagamento&sp=index"><i class="fa fa-circle-o"></i>
                     <span>Pagamento</span></a></li>
 
             <li><a href="#"><i class="fa fa-circle-o"></i>
