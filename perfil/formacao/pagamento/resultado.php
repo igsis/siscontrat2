@@ -23,7 +23,6 @@ if(isset($_POST['proponente']) && $_POST['proponente'] != null){
 }
 
 $sql = "SELECT fc.id, fc.protocolo, fc.pessoa_fisica_id, fc.num_processo_pagto FROM formacao_contratacoes fc INNER JOIN pedidos p on fc.pedido_id = p.id WHERE fc.publicado = 1 AND p.status_pedido_id = '19' $proponente $numProcesso $protocolo";
-echo $sql;
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
 ?>
