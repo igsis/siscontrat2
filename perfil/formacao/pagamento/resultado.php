@@ -68,13 +68,18 @@ $num_arrow = mysqli_num_rows($query);
                             } else {
                                 while ($formacao = mysqli_fetch_array($query)) {
                                     $proponente = recuperaDados('pessoa_fisicas', 'id', $formacao['pessoa_fisica_id'])['nome'];
+                                    $pagamento = recuperaDados('pagamentos', 'id', $formacao['pedido_id']);
+                                    if ($pagamento['nota_empenho'] != null)
+                                        $action = "?perfil=formacao&p=pagamento&sp=cargo&spp=empenho";
+                                    else
+                                        $action = "?perfil=formacao&p=pagamento&sp=cargo&spp=empenho_edita";
                                     ?>
                                     <tr>
                                         <td><?= $formacao['num_processo_pagto'] ?></td>
                                         <td><?= $formacao['protocolo'] ?></td>
                                         <td><?= $proponente ?></td>
                                         <td>
-                                            <form action="?perfil=formacao&p=pagamento&sp=cargo&spp=empenho"
+                                            <form action="<?= $action ?>"
                                                   method="POST">
                                                 <input type="hidden" name="idFormacao" id="idFormacao"
                                                        value="<?= $formacao['id'] ?>">
