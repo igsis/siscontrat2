@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 
 if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
-    $pessoas = "";
+    $idPf = recuperaUltimo("pessoa_fisicas");
     $ano = $_POST['ano'];
     $status = "1";
     $chamado = $_POST['chamado'];
@@ -16,10 +16,8 @@ if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
     $cargo = $_POST['cargo'];
     $vigencia = $_POST['vigencia'];
     $observacao = $_POST['observacao'];
-    $idPedido = "";
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'];
-
     $usuario = $_SESSION['idUser'];
     $data = date("Y-m-d H:i:s", strtotime("now"));
 }
@@ -39,15 +37,13 @@ if (isset($_POST['cadastra'])) {
                                    form_cargo_id, 
                                    form_vigencia_id, 
                                    observacao, 
-                                   pedido_id, 
                                    fiscal_id, 
-                                   suplente_id, 
-                                   num_processo_pagto, 
+                                   suplente_id,  
                                    usuario_id, 
                                    data_envio 
                                    )
                                    VALUES(
-                                          '$pessoas'
+                                          '$idPf',
                                           '$ano',
                                           '$status',
                                           '$chamado',
@@ -61,17 +57,15 @@ if (isset($_POST['cadastra'])) {
                                           '$cargo',
                                           '$vigencia',
                                           '$observacao',
-                                          '$idPedido',
                                           '$fiscal',
                                           '$suplente',
                                           '$usuario',
-                                          '$data',
-                                   )";
+                                          '$data')";
     $queryInsert = mysqli_query($con, $sqlInsert);
-    echo $sqlInsert;
 }
 
 if (isset($_POST['editar'])) {
+    $idContrat = recuperaUltimo('formacao_contratacoes');
     $sqlUpdate = "UPDATE formacao_contratacoes SET 
                                  ano = '$ano',
                                  chamado = '$chamado',
@@ -87,12 +81,13 @@ if (isset($_POST['editar'])) {
                                  observacao = '$observacao',
                                  fiscal_id = '$fiscal',
                                  suplente_id = '$suplente'
-                                WHERE id = ''";
+                                WHERE id = '$idContrat'";
 
     $queryUpdate = mysqli_query($con, $sqlUpdate);
 }
 
-$form_contr = recuperaDados('formacao_contratacoes');
+//$form_contr = recuperaDados('formacao_contratacoes');
+
 ?>
 <div class="content-wrapper">
     <div class="content">
@@ -107,7 +102,7 @@ $form_contr = recuperaDados('formacao_contratacoes');
                         <div class="form-group col-md-2">
                             <label for="ano">Ano *</label>
                             <input type="number" min="2018" id="ano" name="ano" required class="form-control"
-                                   value="<?= $form_contr['ano'] ?>">
+                                   value="<? //$form_contr['ano'] ?>">
                         </div>
 
                         <div class="form-group col-md-6">
@@ -222,7 +217,7 @@ $form_contr = recuperaDados('formacao_contratacoes');
                         <div class="form-group col-md-12">
                             <label for="observacao">Observação: </label>
                             <textarea name="observacao" id="observacao" rows="3"
-                                      class="form-control"><?= $form_contr['observacao'] ?></textarea>
+                                      class="form-control"></textarea>
                         </div>
                     </div>
 
