@@ -13,10 +13,6 @@ if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
 }
 
-if (isset($_POST['editProponente'])) {
-    $idPedido = $_SESSION['idPedido'];
-}
-
 $voltar = "<form action='?perfil=formacao' method='post'>
                         <button type='submit' class='btn btn-default'>Voltar</button>
                     </form>";
@@ -39,7 +35,6 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $uf = $_POST['estado'];
     $email = $_POST['email'];
     $telefones = $_POST['telefone'];
-    $drt = $_POST['drt'] ?? NULL;
     $nit = $_POST['nit'] ?? NULL;
     $incricoes = $_POST['inscricaoPissInss'] ?? NULL;
     $observacao = addslashes($_POST['observacao']) ?? NULL;
@@ -80,12 +75,6 @@ if (isset($_POST['cadastra'])) {
             }
         }
 
-        if ($drt != NULL) {
-            $sqlDRT = "INSERT INTO siscontrat.`drts` (pessoa_fisica_id, drt, publicado)  VALUES ('$idPf','$drt',1)";
-            if (!mysqli_query($con, $sqlDRT)) {
-                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlDRT;
-            }
-        }
         if ($nit != NULL) {
             $sqlNit = "INSERT INTO siscontrat.`nits` (pessoa_fisica_id, nit, publicado)  VALUES ('$idPf','$nit',1)";
             if (!mysqli_query($con, $sqlNit)) {
@@ -178,21 +167,7 @@ if (isset($_POST['edita'])) {
                 }
             }
         }
-        //edita drt
-        if ($drt != NULL) {
-            $drt_existe = verificaExiste("drts", "pessoa_fisica_id", $idPf, 0);
-            if ($drt_existe['numero'] > 0) {
-                $sqlNit = "UPDATE drts SET drt = '$drt' WHERE pessoa_fisica_id = '$idPf'";
-                if (!mysqli_query($con, $sqlNit)) {
-                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlNit;
-                }
-            } else {
-                $sqlNit = "INSERT INTO siscontrat.`drts` (pessoa_fisica_id, drt, publicado)  VALUES ('$idPf','$drt',1)";
-                if (!mysqli_query($con, $sqlNit)) {
-                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlNit;
-                }
-            }
-        }
+
         //edita observação
         if ($observacao != NULL) {
             $obs_existe = verificaExiste("pf_observacoes", "pessoa_fisica_id", $idPf, 0);
@@ -571,7 +546,6 @@ modalUploadArquivoUnico("modal-cpf", "?perfil=formacao&p=pessoa_fisica&sp=edita"
 modalUploadArquivoUnico("modal-ccm", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
 modalUploadArquivoUnico("modal-nit", "?perfil=formacao&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
 modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
-modalUploadArquivoUnico("modal-drt", "?perfil=formacao&p=pessoa_fisica&sp=edita", "DRT", "drt", $idPf, "1");
 modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "1");
 ?>
 
