@@ -182,6 +182,27 @@ if (isset($_POST['adicionar'])) {
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="banco">Banco</label>
+                                    <select name="banco" id="banco" class="form-control">
+                                        <?php
+                                            geraOpcao('bancos');
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="agencia">Agência</label>
+                                    <input type="text" id="agencia" name="agencia" class="form-control">
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="conta">Conta</label>
+                                    <input type="text" id="conta" name="conta" class="form-control">
+                                </div>
+                            </div>
+
                             <div class="box-footer">
                                 <?= $botoesFooter ?>
                             </div>

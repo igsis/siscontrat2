@@ -5,17 +5,13 @@ $conn = bancoPDO();
 
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
-$link_facc = $http . "rlt_fac_pf.php";
-$tipoPessoa = 1;
-
+$linkResumo = $http . "rlt_formacao_pf.php";
 
 if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
 }
 
-$voltar = "<form action='?perfil=formacao' method='post'>
-                        <button type='submit' class='btn btn-default'>Voltar</button>
-                    </form>";
+$_SESSION['idPf'] = $idPf;
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $nome = addslashes($_POST['nome']);
@@ -499,64 +495,96 @@ $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
                                               class="form-control"><?= $observacao['observacao'] ?></textarea>
                                 </div>
                             </div>
+
                             <div class="row">
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
-                                    $queryFACC = mysqli_query($con, $sqlFACC);
-                                    ?>
-
-                                    <label>Gerar FACC</label><br>
-                                    <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
-                                       class="btn btn-primary btn-block">Clique aqui para
-                                        gerar a FACC
-                                    </a>
-                                </div>
-
-                                <div class="form-group col-md-5">
-                                    <label>&nbsp;</label><br>
-                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                        no campo correspondente.</p>
-                                </div>
                                 <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(51, $idPf, "modal-facc", "FACC");
-                                    ?>
+                                    <label for="banco">Banco</label>
+                                    <select name="banco" id="banco" class="form-control">
+                                        <?php
+                                            geraOpcao('bancos');
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="agencia">Agência</label>
+                                    <input type="text" id="agencia" name="agencia" class="form-control">
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="conta">Conta</label>
+                                    <input type="text" id="conta" name="conta" class="form-control">
                                 </div>
                             </div>
+
+                            <?php
+                            if (false) {
+                                ?>
+                                <div class="row">
+                                    <div class="form-group col-md-3">
+                                        <?php
+                                        $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
+                                        $queryFACC = mysqli_query($con, $sqlFACC);
+                                        ?>
+
+                                        <label>Gerar FACC</label><br>
+                                        <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
+                                           class="btn btn-primary btn-block">Clique aqui para
+                                            gerar a FACC
+                                        </a>
+                                    </div>
+
+                                    <div class="form-group col-md-5">
+                                        <label>&nbsp;</label><br>
+                                        <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                            documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                            no campo correspondente.</p>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <?php
+                                        anexosNaPagina(51, $idPf, "modal-facc", "FACC");
+                                        ?>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            ?>
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
-                                <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
 
+                                <div class="row">
+                                    <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
+
+                                    <a href="?perfil=formacao">
+                                        <button type="button" class="btn btn-default pull-left">Voltar</button>
+                                    </a>
+
+                                    <a href="<?= $linkResumo ?>" target="_blank">
+                                        <button type="button" name="pdf" id="pdf" class="btn btn-primary center-block"
+                                                style="align-items: center;">Imprimir resumo
+                                        </button>
+                                    </a>
+                                </div>
                         </form>
-                        <?= $voltar ?>
                     </div>
                 </div>
-                <!-- /.box-body -->
             </div>
-            <!-- /.box -->
         </div>
-        <!-- /.col -->
+
+        <?php
+        modalUploadArquivoUnico("modal-rg", "?perfil=formacao&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
+        modalUploadArquivoUnico("modal-cpf", "?perfil=formacao&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
+        modalUploadArquivoUnico("modal-ccm", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
+        modalUploadArquivoUnico("modal-nit", "?perfil=formacao&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
+        modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
+        modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "1");
+        ?>
+
+    </section>
 </div>
 
-<?php
-modalUploadArquivoUnico("modal-rg", "?perfil=formacao&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
-modalUploadArquivoUnico("modal-cpf", "?perfil=formacao&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
-modalUploadArquivoUnico("modal-ccm", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
-modalUploadArquivoUnico("modal-nit", "?perfil=formacao&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
-modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
-modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "1");
-?>
-
-</section>
-<!-- /.content -->
-</div>
-
-<!--.modal-->
 <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
     <div class="modal-dialog">
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -578,7 +606,6 @@ modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=e
         </div>
     </div>
 </div>
-<!--  Fim Modal de Upload de arquivo  -->
 
 <script type="text/javascript">
     $('#exclusao').on('show.bs.modal', function (e) {
@@ -587,6 +614,5 @@ modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=e
 
         $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
         $(this).find('#idArquivo').attr('value', `${id}`);
-
     })
 </script>
