@@ -5,6 +5,7 @@
             <div class="box-header">
                 <h4 class="box-title">Pedido de Contratação</h4>
             </div>
+
             <div class="box-body">
             <form method="POST" action="?perfil=formacao&p=pedido_contratacao&sp=editar" role="form">
                     <div class="row">
@@ -25,8 +26,8 @@
                             <label for="classificacao">Classificação Indicativa *</label>
                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                     data-target="#modal-default"><i class="fa fa-info"></i></button>
-                            <select class="form-control" name="classificacao" id="classificacao" required>
-                                <option>Selecione...</option>
+                            <select required class="form-control" name="classificacao" id="classificacao">
+                                <option value="">Selecione...</option>
                                 <?php
                                 geraOpcao("classificacao_indicativas");
                                 ?>
@@ -38,7 +39,7 @@
                         <div class="form-group col-md-4">
                             <label for="territorio">Território *</label>
                             <select class="form-control" name="territorio" id="territorio" required>
-                                <option>Selecione o território...</option>
+                                <option value="">Selecione o território...</option>
                                 <?php
                                 geraOpcao("territorios");
                                 ?>
@@ -48,7 +49,7 @@
                         <div class="form-group col-md-4">
                             <label for="coordenadoria">Coordenadoria *</label>
                             <select class="form-control" name="coordenadoria" id="coordenadoria" required>
-                                <option>Selecione a coordenadoria...</option>
+                                <option value="">Selecione a coordenadoria...</option>
                                 <?php
                                 geraOpcao("coordenadorias");
                                 ?>
@@ -58,7 +59,7 @@
                         <div class="form-group col-md-4">
                             <label for="subprefeitura">Subprefeitura *</label>
                             <select class="form-control" name="subprefeitura" id="subprefeitura" required>
-                                <option>Selecione a subprefeitura...</option>
+                                <option value="">Selecione a subprefeitura...</option>
                                 <?php
                                 geraOpcao("subprefeituras");
                                 ?>
@@ -70,7 +71,7 @@
                         <div class="form-group col-md-4">
                             <label for="programa">Programa *</label>
                             <select class="form-control" name="programa" id="programa" required>
-                                <option>Selecione o programa...</option>
+                                <option value="">Selecione o programa...</option>
                                 <?php
                                 geraOpcao("programas");
                                 ?>
@@ -80,7 +81,7 @@
                         <div class="form-group col-md-4">
                             <label for="linguagem">Linguagem *</label>
                             <select class="form-control" name="linguagem" id="linguagem" required>
-                                <option>Selecione a linguagem...</option>
+                                <option value="">Selecione a linguagem...</option>
                                 <?php
                                 geraOpcao("linguagens");
                                 ?>
@@ -90,7 +91,7 @@
                         <div class="form-group col-md-4">
                             <label for="projeto">Projeto *</label>
                             <select class="form-control" name="projeto" id="projeto" required>
-                                <option>Selecione o projeto...</option>
+                                <option value="">Selecione o projeto...</option>
                                 <?php
                                 geraOpcao("projetos");
                                 ?>
@@ -102,7 +103,7 @@
                         <div class="form-group col-md-4">
                             <label for="cargo">Cargo *</label>
                             <select class="form-control" name="cargo" id="cargo" required>
-                                <option>Selecione o cargo...</option>
+                                <option value="">Selecione o cargo...</option>
                                 <?php
                                 geraOpcao("formacao_cargos");
                                 ?>
@@ -112,12 +113,16 @@
                         <div class="form-group col-md-4">
                             <label for="vigencia">Vigência *</label>
                             <select class="form-control" name="vigencia" id="vigencia" required>
-                                <option>Selecione a vigência...</option>
+                                <option value="">Selecione a vigência...</option>
                                 <?php
                                 geraOpcao("formacao_vigencias");
                                 ?>
                             </select>
                         </div>
+
+                            <div class="form-group col-md-4 pull-right" id="msgEsconde">
+                                <span style="color: red;"><b>Ano escolhido é menor que a vigência!</b></span>
+                            </div>
 
                     </div>
 
@@ -132,7 +137,7 @@
                         <div class="form-group col-md-6">
                             <label for="fiscal">Fiscal *</label>
                             <select name="fiscal" id="fiscal" class="form-control" required>
-                                <option>Selecione um fiscal...</option>
+                                <option value="">Selecione um fiscal...</option>
                                 <?php
                                 geraOpcaoUsuario('usuarios', 1, $evento['fiscal_id']);
                                 ?>
@@ -204,3 +209,26 @@
     </div>
 </div>
 </div>
+
+<script>
+    let ano = $('#ano');
+    let vigencia = $('#vigencia');
+    let botao = $('#cadastra');
+    var isMsgAno = $('#msgEsconde');
+    isMsgAno.hide();
+
+    function maior() {
+        if (ano.val() < vigencia.val()) {
+            botao.prop('disabled', true);
+            isMsgAno.show();
+        } else {
+            botao.prop('disabled', false);
+            isMsgAno.hide();
+        }
+    }
+
+    vigencia.on('change', maior);
+    ano.on('change', maior);
+
+    $(document).ready(maior)
+</script>

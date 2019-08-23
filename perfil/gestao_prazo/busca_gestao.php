@@ -33,7 +33,7 @@ if (isset($_POST['aprovar'])) {
             $protocolo = geraProtocolo($idEvento) . "-C";
         }
         if ($evento['contratacao'] == 1) {
-            $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3";
+            $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3 WHERE id = '$idEvento'";
             mysqli_query($con, $sqlEnviaEvento);
         }
 
