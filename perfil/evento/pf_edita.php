@@ -389,7 +389,7 @@ $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
 $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
 $sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
-$atracao = mysqli_query($con,$sql);
+$atracao = mysqli_query($con, $sql);
 
 include "includes/menu_interno.php";
 ?>
@@ -642,37 +642,31 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <hr/>
-                            <?php
-                            foreach ($atracao as $row) {
-                                if ($row['valor_individual'] != 0.00) {
-                                    ?>
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="banco">Banco:</label>
-                                            <select id="banco" name="banco" class="form-control">
-                                                <option value="">Selecione um banco...</option>
-                                                <?php
-                                                geraOpcao("bancos", $banco['banco_id']);
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="agencia">Agência: *</label>
-                                            <input type="text" name="agencia" class="form-control"
-                                                   placeholder="Digite a Agência" maxlength="12" required
-                                                   value="<?= $banco['agencia'] ?>">
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="conta">Conta: *</label>
-                                            <input type="text" name="conta" class="form-control"
-                                                   placeholder="Digite a Conta" maxlength="12" required
-                                                   value="<?= $banco['conta'] ?>">
-                                        </div>
-                                    </div>
-                                    <?php
-                                }
-                            }
-                            ?>
+
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="banco">Banco:</label>
+                                    <select id="banco" name="banco" class="form-control" required>
+                                        <option value="">Selecione um banco...</option>
+                                        <?php
+                                        geraOpcao("bancos", $banco['banco_id']);
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="agencia">Agência: *</label>
+                                    <input type="text" name="agencia" class="form-control"
+                                           placeholder="Digite a Agência" maxlength="12" required
+                                           value="<?= $banco['agencia'] ?>">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="conta">Conta: *</label>
+                                    <input type="text" name="conta" class="form-control"
+                                           placeholder="Digite a Conta" maxlength="12" required
+                                           value="<?= $banco['conta'] ?>">
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <?php

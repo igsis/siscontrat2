@@ -187,7 +187,7 @@ if (isset($_POST['adicionar'])) {
                                     <label for="banco">Banco</label>
                                     <select name="banco" id="banco" class="form-control">
                                         <?php
-                                            geraOpcao('bancos');
+                                        geraOpcao('bancos');
                                         ?>
                                     </select>
                                 </div>

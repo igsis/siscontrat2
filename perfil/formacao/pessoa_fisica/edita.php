@@ -11,8 +11,6 @@ if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
 }
 
-$_SESSION['idPf'] = $idPf;
-
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $nome = addslashes($_POST['nome']);
     $nomeArtistico = addslashes($_POST['nomeArtistico']);
@@ -164,6 +162,22 @@ if (isset($_POST['edita'])) {
             }
         }
 
+        //edita banco
+        if ($banco != NULL) {
+            $banco_existe = verificaExiste("pf_bancos", "pessoa_fisica_id", $idPf, 0);
+            if ($banco_existe['numero'] > 0) {
+                $sqlBanco = "UPDATE pf_bancos SET banco_id = '$banco', agencia = '$agencia', conta = '$conta' WHERE pessoa_fisica_id = '$idPf'";
+                if (!mysqli_query($con, $sqlBanco)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlBanco;
+                }
+            } else {
+                $sqlBanco = "INSERT INTO pf_bancos (pessoa_fisica_id, banco_id, agencia, conta) VALUES ('$idPf', '$banco', '$agencia', '$conta')";
+                if (!mysqli_query($con, $sqlBanco)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlBanco;
+                }
+            }
+        }
+
         //edita observação
         if ($observacao != NULL) {
             $obs_existe = verificaExiste("pf_observacoes", "pessoa_fisica_id", $idPf, 0);
@@ -195,6 +209,7 @@ if (isset($_POST["enviar"])) {
     $tipoPessoa = $_POST['tipoPessoa'];
 
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+
     $query_arquivos = mysqli_query($con, $sql_arquivos);
 
     while ($arq = mysqli_fetch_array($query_arquivos)) {
@@ -213,6 +228,9 @@ if (isset($_POST["enviar"])) {
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
                 $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                if ($y == 59) {
+                    $allowedExts = array(".png", ".PNG", ".JPG", ".jpg"); //Extensões permitidas
+                }
                 $ext = strtolower(substr($nome_arquivo, -4));
 
                 if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
@@ -255,6 +273,7 @@ if (isset($_POST['apagar'])) {
     }
 }
 
+$_SESSION['idPf'] = $idPf;
 
 $sqlTelefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
@@ -263,7 +282,16 @@ $pf = recuperaDados("pessoa_fisicas", "id", $idPf);
 $endereco = recuperaDados("pf_enderecos", "pessoa_fisica_id", $idPf);
 $nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
 $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
+$banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
+$foto = "select arquivo from arquivos WHERE lista_documento_id = 59 AND publicado = 1 AND origem_id = '$idPf'";
+$foto = $con->query($foto)->fetch_assoc()['arquivo'];
+if ($foto == null) {
+    $foto = "avatar_default.png";
+    $fotoImg = "../visual/images/$foto";
+} else {
+    $fotoImg = "../uploadsdocs/$foto";
+}
 ?>
 
 <script language="JavaScript">
@@ -288,7 +316,11 @@ $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
                         <?= $mensagem ?? NULL; ?>
                     </div>
                     <div class="box-header">
-                        <h3 class="box-title">Pessoa física</h3>
+
+                        <h3 class="box-title col-md-6">Pessoa física</h3>
+                        <img src="<?= $fotoImg ?>" alt="<?= $foto ?>" class="img-circle img-responsive col-md-6"
+                             style="width: 9%; height: 12%">
+
                     </div>
                     <div class="box-body">
                         <form action="?perfil=formacao&p=pessoa_fisica&sp=edita" method="post">
@@ -374,6 +406,12 @@ $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
                                 <div class="form-group col-md-2">
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <?php
+                                    anexosNaPagina(59, $idPf, "modal-foto", "Foto 3x4");
+                                    ?>
                                 </div>
                             </div>
                             <div class="row">
@@ -499,56 +537,53 @@ $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="banco">Banco</label>
-                                    <select name="banco" id="banco" class="form-control">
+                                    <select name="banco" id="banco" class="form-control" required>
                                         <?php
-                                            geraOpcao('bancos');
+                                        geraOpcao('bancos', $banco['banco_id']);
                                         ?>
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="agencia">Agência</label>
-                                    <input type="text" id="agencia" name="agencia" class="form-control">
+                                    <input type="text" id="agencia" name="agencia" class="form-control"
+                                           value="<?= $banco['agencia'] ?>" required>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="conta">Conta</label>
-                                    <input type="text" id="conta" name="conta" class="form-control">
+                                    <input type="text" id="conta" name="conta" class="form-control"
+                                           value="<?= $banco['conta'] ?>" required>
                                 </div>
                             </div>
 
-                            <?php
-                            if (false) {
-                                ?>
-                                <div class="row">
-                                    <div class="form-group col-md-3">
-                                        <?php
-                                        $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
-                                        $queryFACC = mysqli_query($con, $sqlFACC);
-                                        ?>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <?php
+                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
+                                    $queryFACC = mysqli_query($con, $sqlFACC);
+                                    ?>
 
-                                        <label>Gerar FACC</label><br>
-                                        <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
-                                           class="btn btn-primary btn-block">Clique aqui para
-                                            gerar a FACC
-                                        </a>
-                                    </div>
-
-                                    <div class="form-group col-md-5">
-                                        <label>&nbsp;</label><br>
-                                        <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                            documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                            no campo correspondente.</p>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <?php
-                                        anexosNaPagina(51, $idPf, "modal-facc", "FACC");
-                                        ?>
-                                    </div>
+                                    <label>Gerar FACC</label><br>
+                                    <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
+                                       class="btn btn-primary btn-block">Clique aqui para
+                                        gerar a FACC
+                                    </a>
                                 </div>
-                                <?php
-                            }
-                            ?>
+
+                                <div class="form-group col-md-5">
+                                    <label>&nbsp;</label><br>
+                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                        no campo correspondente.</p>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <?php
+                                    anexosNaPagina(51, $idPf, "modal-facc", "FACC");
+                                    ?>
+                                </div>
+                            </div>
+
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
 
@@ -573,6 +608,7 @@ $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
 
         <?php
         modalUploadArquivoUnico("modal-rg", "?perfil=formacao&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
+        modalUploadArquivoUnico("modal-foto", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "1");
         modalUploadArquivoUnico("modal-cpf", "?perfil=formacao&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
         modalUploadArquivoUnico("modal-ccm", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
         modalUploadArquivoUnico("modal-nit", "?perfil=formacao&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
