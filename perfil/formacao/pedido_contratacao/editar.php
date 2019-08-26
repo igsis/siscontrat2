@@ -126,7 +126,7 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="chamado">Chamado *</label>
+                            <label for="chamado">Chamado? *</label>
                             <label><input type="radio" name="chamado"
                                           value="1" <?= $form_contr['chamado'] == 1 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
                             <label><input type="radio" name="chamado"
@@ -245,10 +245,8 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
                             </select>
                         </div>
 
-                        <div class="row" id="msgEsconde">
-                            <div class="form-group col-md-6">
-                                <span style="color: red;"><b>Ano escolhido é menor que a vigência!</b></span>
-                            </div>
+                        <div class="form-group col-md-4 pull-right" id="msgEsconde">
+                            <span style="color: red;"><b>Ano escolhido é maior que a vigência!</b></span>
                         </div>
 
                     </div>
@@ -346,3 +344,27 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
         </div>
     </div>
 </div>
+
+<script>
+    let ano = $('#ano');
+    let vigencia = $('#vigencia');
+    let botao = $('#cadastra');
+    var isMsgAno = $('#msgEsconde');
+    isMsgAno.hide();
+
+    function maior() {
+        let valorvigencia = $('#vigencia option:selected');
+        valorvigencia = parseInt(valorvigencia.text())
+        if (ano.val() > valorvigencia) {
+            botao.prop('disabled', true);
+            isMsgAno.show();
+        } else {
+            botao.prop('disabled', false);
+            isMsgAno.hide();
+        }
+    }
+    ano.on('change', maior);
+    vigencia.on('change', maior);
+
+    $(document).ready(maior)
+</script>

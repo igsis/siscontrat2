@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
-$sqlPedidos = "SELECT c.protocolo AS 'protocolo',
+$sqlPedidos = "SELECT
+       c.id AS 'id',
+       c.protocolo AS 'protocolo',
 		pf.nome AS 'pessoa',
 		c.ano AS 'ano',
         p.programa AS 'programa',
@@ -45,10 +47,10 @@ $queryPedidos = mysqli_query($con,$sqlPedidos);
                                 echo"<td>" . $pedidos['cargo'] . "</td>";
                                 echo"<td>
                                 
-                                <form method='POST' action='#'>
-                                    <input type='hidden' name='idPedido' value=''>
-                                    <button type='submit' name='carrega' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span></button>
-                                </form>
+                            <form method='POST' action='?perfil=formacao&p=pedido_contratacao&sp=detalhes' role='form'>
+                            <input type='hidden' name='idPC' value='" . $pedidos['id'] . "'>
+                            <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'> </span></button>
+                            </form>
                                 </td>";
                                 echo "</tbody>";
                             }?>

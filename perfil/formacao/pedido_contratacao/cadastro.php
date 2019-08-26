@@ -15,7 +15,7 @@
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="chamado">Chamado *</label>
+                            <label for="chamado">Chamado? *</label>
                             <label><input type="radio" name="chamado" value="1" checked> Sim </label>&nbsp;&nbsp;
                             <label><input type="radio" name="chamado" value="0"> Não </label>
                         </div>
@@ -121,7 +121,7 @@
                         </div>
 
                             <div class="form-group col-md-4 pull-right" id="msgEsconde">
-                                <span style="color: red;"><b>Ano escolhido é menor que a vigência!</b></span>
+                                <span style="color: red;"><b>Ano escolhido é maior que a vigência!</b></span>
                             </div>
 
                     </div>
@@ -218,7 +218,9 @@
     isMsgAno.hide();
 
     function maior() {
-        if (ano.val() < vigencia.val()) {
+        let valorvigencia = $('#vigencia option:selected');
+        valorvigencia = parseInt(valorvigencia.text())
+        if (ano.val() > valorvigencia) {
             botao.prop('disabled', true);
             isMsgAno.show();
         } else {
@@ -226,9 +228,8 @@
             isMsgAno.hide();
         }
     }
-
-    vigencia.on('change', maior);
     ano.on('change', maior);
+    vigencia.on('change', maior);
 
     $(document).ready(maior)
 </script>
