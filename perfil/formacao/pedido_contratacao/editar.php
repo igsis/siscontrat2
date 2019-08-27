@@ -6,6 +6,12 @@ if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
     $ano = $_POST['ano'];
     $status = "1";
     $chamado = $_POST['chamado'];
+    $valor = $_POST['valor'];
+    $numParcelas = $_POST['numParcelas'];
+    $data_inicio = $_POST['data_inicio'];
+    $data_fim = $_POST['data_fim'];
+    $data_pgt = $_POST['data_pgt'];
+    $cargaHoraria = $_POST['carga_horaria'];
     $classificacao_indicativa = $_POST['classificacao'];
     $territorio = $_POST['territorio'];
     $coordenadoria = $_POST['coordenadoria'];
@@ -72,6 +78,24 @@ if (isset($_POST['cadastra'])) {
     }else{
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
+
+    $sqlInsertParcelas = "INSERT INTO formacao_parcelas
+                        (formacao_vigencia_id, 
+                         numero_parcelas, 
+                         valor, 
+                         data_inicio, 
+                         data_fim, 
+                         data_pagamento, 
+                         carga_horaria) 
+                        VALUES
+                        ('$vigencia',
+                         '$numParcelas',
+                         '$valor',
+                         '$data_inicio',
+                         '$data_fim',
+                         '$data_pgt',
+                         '$cargaHoraria')";
+    $queryInsertParcelas = mysqli_query($con,$sqlInsertParcelas);
 }
 
 if (isset($_POST['editar'])) {
@@ -98,12 +122,100 @@ if (isset($_POST['editar'])) {
     }else{
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
+    $idParcela = recuperaUltimo('formacao_parcelas');
+    $sqlUpdateParcelas = "UPDATE formacao_parcelas SET
+                            formacao_vigencia_id = '$vigencia',
+                             numero_parcelas = '$numParcelas',
+                            valor = '$valor',
+                            data_inicio = '$data_inicio',
+                            data_fim = '$data_fim',
+                            data_pagamento = '$data_pgt',
+                            carga_horaria = '$cargaHoraria'
+                            WHERE id = '$idParcela'";
+    $queryUpdateParcelas = mysqli_query($con,$sqlUpdateParcelas);
 }
 
 $idContrat = recuperaUltimo('formacao_contratacoes');
 $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
 
 ?>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        validate();
+        $('#datepicker11').change(validate);
+    });
+
+    function validate() {
+        comparaData();
+        if ($('#datepicker11').val().length > 0) {
+
+        } else {
+
+
+            var data = document.querySelector('input[name="data_inicio"]').value;
+            data = new Date(data);
+            dayName = new Array("0", "1", "2", "3", "4", "5", "6", "0");
+            let dia = dayName[data.getDay() + 1];
+
+            if (dia == 0) {
+                $("#diasemana07").prop("disabled", false);
+                $("#diasemana07").prop("checked", true);
+            } else if (dia == 1) {
+                $("#diasemana01").prop("disabled", false);
+                $("#diasemana01").prop("checked", true);
+            } else if (dia == 2) {
+                $("#diasemana02").prop("disabled", false);
+                $("#diasemana02").prop("checked", true);
+            } else if (dia == 3) {
+                $("#diasemana03").prop("disabled", false);
+                $("#diasemana03").prop("checked", true);
+            } else if (dia == 4) {
+                $("#diasemana04").prop("disabled", false);
+                $("#diasemana04").prop("checked", true);
+            } else if (dia == 5) {
+                $("#diasemana05").prop("disabled", false);
+                $("#diasemana05").prop("checked", true);
+            } else if (dia == 6) {
+                $("#diasemana06").prop("disabled", false);
+                $("#diasemana06").prop("checked", true);
+            }
+        }
+
+        validaDiaSemana();
+    }
+
+    function comparaData() {
+        let botao = $('#cadastra');
+        var isMsgData = $('#msgEscondeData');
+        isMsgData.hide();
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var dataFim = document.querySelector('#datepicker11').value;
+
+        if (dataInicio != "") {
+            var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
+        }
+
+        if (dataFim != "") {
+            var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
+
+            if (dataFim <= dataInicio) {
+                botao.prop('disabled', true);
+                isMsgData.show();
+                $('#cadastra').attr("disabled", true);
+            } else {
+                botao.prop('disabled', false);
+                isMsgData.hide();
+                $('#cadastra').attr("disabled", false);
+            }
+        }
+
+        if (dataFim == "") {
+            $('#cadastra').attr("disabled", false);
+        }
+    }
+</script>
+
 <div class="content-wrapper">
     <section class="content">
         <h2 class="page-header">Cadastro de Pedido de Contratação</h2>
@@ -121,16 +233,81 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
                     <div class="row">
                         <div class="form-group col-md-2">
                             <label for="ano">Ano *</label>
-                            <input type="number" min="2018" id="ano" name="ano" required class="form-control"
-                                   value="<?= $form_contr['ano'] ?>">
+                            <input type="number" min="2018" id="ano" name="ano" required class="form-control"  value="<?= $form_contr['ano'] ?>">
                         </div>
 
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-3">
                             <label for="chamado">Chamado? *</label>
                             <label><input type="radio" name="chamado"
                                           value="1" <?= $form_contr['chamado'] == 1 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
                             <label><input type="radio" name="chamado"
                                           value="0" <?= $form_contr['chamado'] == 0 ? 'checked' : NULL ?>> Não </label>
+                        </div>
+
+                        <?php
+                        $idParcela = recuperaUltimo('formacao_parcelas');
+                        $sqlParcelas = "SELECT p.valor AS 'valor',
+                                               po.quantidade_de_parcelas AS 'qtparcelas',
+                                               p.data_inicio AS 'data_inicio',
+                                               p.data_fim AS 'data_fim',
+                                               p.data_pagamento AS 'data_pgt',
+                                               p.carga_horaria AS 'carga_horaria'
+                                        FROM formacao_parcelas AS p
+                                        INNER JOIN parcela_opcoes AS po ON po.id = p.numero_parcelas
+                                        WHERE p.id = '$idParcela'";
+                        $parcelas = $con->query($sqlParcelas)->fetch_assoc();
+                        $nomeParcela = recuperaDados('parcela_opcoes','id', $parcelas['qtparcelas']);
+                        ?>
+
+                        <div class="form-group col-md-4">
+                            <label for="valor">Valor *</label> <i>Preencher 0,00 quando não houver valor</i>
+                            <input type="text" id="valor" name="valor"
+                                   class="form-control" required
+                                   value="<?=$parcelas['valor']?>" onKeyPress="return(moeda(this,'.',',',event))">
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <label for="numParcelas">Numero de Parcelas: *</label>
+                            <select class="form-control" id="numParcelas" name="numParcelas" required>
+                                <option value="<?=$nomeParcela['id']?>"><?=$nomeParcela['quantidade_de_parcelas']?></option>
+                                <?php
+                                geraOpcaoParcelas("parcela_opcoes");
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            <label for="data_inicio">Data de início: *</label> <br/>
+                            <input class="form-control semana" style="max-width: 175px;" type="date"
+                                   name="data_inicio" value="<?=$parcelas['data_inicio']?>"
+                                   onblur="validate()" id="datepicker10">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label for="data_fim">Data de Encerramento: *</label> <br>
+                            <input class="form-control semana" style="max-width: 175px;" type="date"
+                                   name="data_fim" value="<?=$parcelas['data_fim']?>"
+                                   onblur="validate()" id="datepicker11">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label for="data_pgt">Data de Pagamento: *</label>
+                            <input class="form-control" style="max-width: 175px;" type="date" value="<?=$parcelas['data_pgt']?>" name="data_pgt">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label for="carga_horaria">Carga Horária (em horas): </label><br>
+                            <input class="form-control" style="max-width: 175px;" type="number"
+                                   value="<?=$parcelas['carga_horaria']?>" name="carga_horaria">
+                        </div>
+
+                    </div>
+
+                    <div class="row" id="msgEscondeData">
+                        <div class="form-group col-md-6">
+                            <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
                         </div>
                     </div>
 
@@ -245,7 +422,8 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
                             </select>
                         </div>
 
-                        <div class="form-group col-md-4 pull-right" id="msgEsconde">
+
+                        <div class="form-group col-md-4 pull-right" id="msgEscondeAno">
                             <span style="color: red;"><b>Ano escolhido é maior que a vigência!</b></span>
                         </div>
 
@@ -346,10 +524,42 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
 </div>
 
 <script>
+    function validaDiaSemana() {
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var isMsg = $('#msgEsconde');
+        isMsg.hide();
+        if (dataInicio != "") {
+            var i = 0;
+            var counter = 0;
+            var diaSemana = $('.semana');
+
+            for (; i < diaSemana.length; i++) {
+                if (diaSemana[i].checked) {
+                    counter++;
+                }
+            }
+
+            if (counter == 0) {
+                $('#cadastra').attr("disabled", true);
+                isMsg.show();
+                return false;
+            }
+
+            $('#cadastra').attr("disabled", false);
+            isMsg.hide();
+            return true;
+        }
+    }
+
+    var diaSemana = $('.semana');
+    diaSemana.change(validaDiaSemana);
+</script>
+
+<script>
     let ano = $('#ano');
     let vigencia = $('#vigencia');
     let botao = $('#cadastra');
-    var isMsgAno = $('#msgEsconde');
+    var isMsgAno = $('#msgEscondeAno');
     isMsgAno.hide();
 
     function maior() {
