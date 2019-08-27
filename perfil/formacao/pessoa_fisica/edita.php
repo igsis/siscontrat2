@@ -284,7 +284,7 @@ $nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
 $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
 $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
-$foto = "select arquivo from arquivos WHERE lista_documento_id = 59 AND publicado = 1 AND origem_id = '$idPf'";
+$foto = "SELECT arquivo FROM arquivos WHERE lista_documento_id = 59 AND publicado = 1 AND origem_id = '$idPf'";
 $foto = $con->query($foto)->fetch_assoc()['arquivo'];
 if ($foto == null) {
     $foto = "avatar_default.png";
