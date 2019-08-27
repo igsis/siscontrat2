@@ -5,8 +5,9 @@ $idUser = $_SESSION['idUser'];
 if (isset($_POST['cadastra'])) {
     $ano = $_POST['ano'];
     $descricao = addslashes($_POST['descricao']);
+    $num = $_POST['num_parcela'];
 
-    $sql = "INSERT INTO formacao_vigencias (ano, descricao) VALUES ('$ano', '$descricao')";
+    $sql = "INSERT INTO formacao_vigencias (ano, descricao, numero_parcelas) VALUES ('$ano', '$descricao', '$num')";
 
     if (mysqli_query($con, $sql)) {
         $mensagem = mensagem("success", "Vigência cadastrada com sucesso");
@@ -21,8 +22,12 @@ if (isset($_POST['edita'])) {
     $ano = $_POST['ano'];
     $descricao = addslashes($_POST['descricao']);
     $idVigencia = $_POST['idVigencia'];
+    $num = $_POST['num_parcela'];
 
-    $sql = "UPDATE formacao_vigencias SET ano = '$ano', descricao = '$descricao' WHERE id = '$idVigencia'";
+    $sql = "DELETE FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia'";
+    mysqli_query($con, $sql);
+
+    $sql = "UPDATE formacao_vigencias SET ano = '$ano', descricao = '$descricao', numero_parcelas = '$num' WHERE id = '$idVigencia'";
 
     if (mysqli_query($con, $sql)) {
         $mensagem = mensagem("success", "Vigência atualizado com sucesso");
@@ -33,11 +38,35 @@ if (isset($_POST['edita'])) {
 
 }
 
-if (isset($_POST['carregar'])) {
+if (isset($_POST['carregar']))
     $idVigencia = $_POST['idVigencia'];
-}
 
 $vigencia = recuperaDados('formacao_vigencias', 'id', $idVigencia);
+
+if (isset($_POST['edita'])) {
+    $parcelas = $_POST['parcela'];
+    $valores = $_POST['valor'];
+    $data_inicios = $_POST['data_inicio'];
+    $data_fins = $_POST['data_fim'];
+    $data_pagamentos = $_POST['data_pagamento'];
+    $cargas = $_POST['carga'];
+
+    $i = $vigencia['numero_parcelas'];
+
+    for ($count = 0; $count < $i; $count++) {
+        $parcela = $parcelas[$count] ?? NULL;
+        $valor = $valores[$count] ?? NULL;
+        $data_inicio = $data_inicios[$count] ?? NULL;
+        $data_fim = $data_fins[$count] ?? NULL;
+        $data_pagamento = $data_pagamentos[$count] ?? NULL;
+        $carga = $cargas[$count] ?? NULL;
+
+        $sql = "INSERT INTO formacao_parcelas (formacao_vigencia_id, numero_parcelas, valor, data_inicio, data_fim, data_pagamento, carga_horaria) 
+                                       VALUES ('$idVigencia', '$parcela', '$valor', '$data_inicio', '$data_fim', '$data_pagamento', '$carga')";
+
+        mysqli_query($con, $sql);
+    }
+}
 ?>
 
 <div class="content-wrapper">
@@ -60,14 +89,70 @@ $vigencia = recuperaDados('formacao_vigencias', 'id', $idVigencia);
                             <div class="row">
                                 <div class="form-group col-md-2">
                                     <label for="ano">Ano *</label>
-                                    <input type="number" min="2018" id="ano" name="ano" required class="form-control" value="<?= $vigencia['ano'] ?>">
+                                    <input type="number" min="2018" id="ano" name="ano" required class="form-control"
+                                           value="<?= $vigencia['ano'] ?>">
                                 </div>
 
-                                <div class="form-group col-md-10">
+                                <div class="form-group col-md-2">
+                                    <label for="num_parcela">Qtd. Parcelas *</label>
+                                    <input type="number" min="1" id="num_parcela" name="num_parcela" required
+                                           class="form-control"
+                                           value="<?= $vigencia['numero_parcelas'] ?>">
+                                </div>
+
+                                <div class="form-group col-md-8">
                                     <label for="descricao">Descrição *</label>
-                                    <input type="text" id="descricao" name="descricao" class="form-control" required value="<?= $vigencia['descricao'] ?>">
+                                    <input type="text" id="descricao" name="descricao" class="form-control" required
+                                           value="<?= $vigencia['descricao'] ?>">
                                 </div>
                             </div>
+
+                            <?php
+                            for ($i = 1; $i < $vigencia['numero_parcelas'] + 1; $i++) {
+                                $sql = "SELECT * FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND numero_parcelas = '$i'";
+                                $parcela = mysqli_fetch_array(mysqli_query($con, $sql));
+                                ?>
+                                <hr>
+                                <div class="row">
+                                    <div class="form-group col-md-2">
+                                        <label for="parcela[]">Parcela:</label>
+                                        <input type="number" readonly class="form-control" value="<?= $i ?>"
+                                               name="parcela[]" id="parcela[]" required>
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <label for="valor[]">Valor:</label>
+                                        <input type="text" id="valor[]" name="valor[]"
+                                               class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcela['valor']) ?>">
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <label for="data_inicio">Data inicial:</label>
+                                        <input type="date" name="data_inicio[]" class="form-control" id="datepicker10"
+                                               placeholder="DD/MM/AAAA" value="<?= $parcela['data_inicio'] ?? NULL ?>">
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <label for="data_fim">Data final: </label>
+                                        <input type="date" name="data_fim[]" class="form-control" id="datepicker11"
+                                               placeholder="DD/MM/AAAA" value="<?= $parcela['data_fim'] ?? NULL ?>">
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <label for="data_pagamento">Data pagamento: </label>
+                                        <input type="date" name="data_pagamento[]" class="form-control"
+                                               id="datepicker12" placeholder="DD/MM/AAAA" value="<?= $parcela['data_pagamento'] ?? NULL ?>">
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <label for="carga[]">Carga horária: </label>
+                                        <input type="time" name="carga[]" class="form-control" id="carga[]"
+                                               value="<?= $parcela['carga_horaria'] ?? NULL ?>"  placeholder="hh:mm">
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            ?>
                         </div>
                         <div class="box-footer">
                             <a href="?perfil=formacao&p=administrativo&sp=vigencia&spp=index">
