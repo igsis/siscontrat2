@@ -9,15 +9,14 @@
             <div class="box-body">
                 <form method="POST" action="?perfil=formacao&p=dados_contratacao&sp=editar" role="form">
                     <div class="row">
-                        <div class="form-group col-md-2">
-                            <label for="ano">Ano *</label>
+                        <div class="form-group col-md-6">
+                            <label for="ano">Ano: *</label>
                             <input type="number" min="2018" id="ano" name="ano" required class="form-control">
                         </div>
 
-                        <div class="form-group col-md-3">
-                            <label for="chamado">Chamado? *</label>
-                            <label><input type="radio" name="chamado" value="1" checked> Sim </label>&nbsp;&nbsp;
-                            <label><input type="radio" name="chamado" value="0"> Não </label>
+                        <div class="form-group col-md-6">
+                            <label for="chamado">Chamado: *</label>
+                            <input type="text" id="chamado" name="chamado" required class="form-control">
                         </div>
                     </div>
 
@@ -120,10 +119,17 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-md-4 pull-right" id="msgEscondeAno">
-                            <span style="color: red;"><b>Ano escolhido é maior que a vigência!</b></span>
+                        <div class="form-group col-md-4">
+                            <label for="numpgt">Número do Processo de Pagamento: *</label>
+                            <input type="text" class="form-control" name="numpgt" id="numpgt" required>
                         </div>
 
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-4" id="msgEscondeAno">
+                            <span style="color: red;"><b>Ano escolhido é maior que a vigência!</b></span>
+                        </div>
                     </div>
 
                     <div class="row">

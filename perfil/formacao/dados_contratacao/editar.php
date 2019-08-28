@@ -6,12 +6,6 @@ if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
     $ano = $_POST['ano'];
     $status = "1";
     $chamado = $_POST['chamado'];
-    $valor = $_POST['valor'];
-    $numParcelas = $_POST['numParcelas'];
-    $data_inicio = $_POST['data_inicio'];
-    $data_fim = $_POST['data_fim'];
-    $data_pgt = $_POST['data_pgt'];
-    $cargaHoraria = $_POST['carga_horaria'];
     $classificacao_indicativa = $_POST['classificacao'];
     $territorio = $_POST['territorio'];
     $coordenadoria = $_POST['coordenadoria'];
@@ -22,6 +16,7 @@ if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
     $cargo = $_POST['cargo'];
     $vigencia = $_POST['vigencia'];
     $observacao = $_POST['observacao'];
+    $numpgt = $_POST['numpgt'];
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'];
     $usuario = $_SESSION['idUser'];
@@ -45,6 +40,7 @@ if (isset($_POST['cadastra'])) {
                                    observacao, 
                                    fiscal_id, 
                                    suplente_id,  
+                                   num_processo_pagto,
                                    usuario_id, 
                                    data_envio 
                                    )
@@ -65,6 +61,7 @@ if (isset($_POST['cadastra'])) {
                                           '$observacao',
                                           '$fiscal',
                                           '$suplente',
+                                          '$numpgt',
                                           '$usuario',
                                           '$data')";
     if(mysqli_query($con, $sqlInsert)){
@@ -78,7 +75,6 @@ if (isset($_POST['cadastra'])) {
     }else{
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
-
 }
 
 if (isset($_POST['editar'])) {
@@ -98,6 +94,7 @@ if (isset($_POST['editar'])) {
                                  observacao = '$observacao',
                                  fiscal_id = '$fiscal',
                                  suplente_id = '$suplente'
+                                 num_processo_pagto = '$numpgt'
                                 WHERE id = '$idContrat'";
 
     if(mysqli_query($con, $sqlUpdate)){
@@ -127,17 +124,14 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
             <form action="?perfil=formacao&p=dados_contratacao&sp=editar" role="form" method="POST">
                 <div class="box-body">
                     <div class="row">
-                        <div class="form-group col-md-2">
-                            <label for="ano">Ano *</label>
+                        <div class="form-group col-md-6">
+                            <label for="ano">Ano: *</label>
                             <input type="number" min="2018" id="ano" name="ano" required class="form-control"  value="<?= $form_contr['ano'] ?>">
                         </div>
 
-                        <div class="form-group col-md-3">
-                            <label for="chamado">Chamado? *</label>
-                            <label><input type="radio" name="chamado"
-                                          value="1" <?= $form_contr['chamado'] == 1 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
-                            <label><input type="radio" name="chamado"
-                                          value="0" <?= $form_contr['chamado'] == 0 ? 'checked' : NULL ?>> Não </label>
+                        <div class="form-group col-md-6">
+                            <label for="chamado">Chamado: *</label>
+                            <input type="text" id="chamado" name="chamado" value="<?=$form_contr['chamado']?>" required class="form-control">
                         </div>
 
                     </div>
@@ -253,11 +247,17 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
                             </select>
                         </div>
 
-
-                        <div class="form-group col-md-4 pull-right" id="msgEscondeAno">
-                            <span style="color: red;"><b>Ano escolhido é maior que a vigência!</b></span>
+                        <div class="form-group col-md-4">
+                            <label for="numpgt">Número do Processo de Pagamento: *</label>
+                            <input type="text" class="form-control" name="numpgt" id="numpgt" required value="<?=$form_contr['num_processo_pagto']?>">
                         </div>
 
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-4" id="msgEscondeAno">
+                            <span style="color: red;"><b>Ano escolhido é maior que a vigência!</b></span>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -353,38 +353,6 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
         </div>
     </div>
 </div>
-
-<script>
-    function validaDiaSemana() {
-        var dataInicio = document.querySelector('#datepicker10').value;
-        var isMsg = $('#msgEsconde');
-        isMsg.hide();
-        if (dataInicio != "") {
-            var i = 0;
-            var counter = 0;
-            var diaSemana = $('.semana');
-
-            for (; i < diaSemana.length; i++) {
-                if (diaSemana[i].checked) {
-                    counter++;
-                }
-            }
-
-            if (counter == 0) {
-                $('#cadastra').attr("disabled", true);
-                isMsg.show();
-                return false;
-            }
-
-            $('#cadastra').attr("disabled", false);
-            isMsg.hide();
-            return true;
-        }
-    }
-
-    var diaSemana = $('.semana');
-    diaSemana.change(validaDiaSemana);
-</script>
 
 <script>
     let ano = $('#ano');

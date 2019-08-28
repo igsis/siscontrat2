@@ -1,5 +1,11 @@
 <?php
 $con = bancoMysqli();
+if(isset($_POST['despublica'])){
+    $idDados = $_POST['idDados'];
+    $sqlDespublica = "UPDATE formacao_contratacoes SET publicado = 0 WHERE id = '$idDados'";
+    $queryDespublica = mysqli_query($con,$sqlDespublica);
+}
+$ano = date('Y');
 $sqlPedidos = "SELECT
        c.id AS 'id',
        c.protocolo AS 'protocolo',
@@ -15,6 +21,7 @@ $sqlPedidos = "SELECT
         INNER JOIN formacao_cargos AS fc ON fc.id = c.form_cargo_id
         WHERE c.publicado = 1";
 $queryPedidos = mysqli_query($con,$sqlPedidos);
+
 ?>
 <div class="content-wrapper">
     <section class="content">
