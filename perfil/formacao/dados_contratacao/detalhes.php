@@ -35,13 +35,13 @@ $fc = $con->query($sql)->fetch_assoc();
     <section class="content">
         <div class="box">
             <div class="box-header">
-                <h2 class="box-title">Pedido Selecionado</h2>
+                <h2 class="box-title">Contratação Selecionado</h2>
             </div>
         </div>
         <div class="box">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title"> Dados do Pedido</h3>
+                    <h3 class="box-title"> Dados da Contratação</h3>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
@@ -107,7 +107,7 @@ $fc = $con->query($sql)->fetch_assoc();
                 </div>
             </div>
             <div class="box-footer">
-                <a href="?perfil=formacao&p=pedido_contratacao&sp=listagem">
+                <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
                     <button type="button" class="btn btn-default">Voltar</button>
                 </a>
                 <a href="#">

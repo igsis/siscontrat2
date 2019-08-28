@@ -76,14 +76,14 @@
 
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Cadastro de Pedido de Contratação</h2>
+        <h2 class="page-header">Cadastro de Dados para Contratação</h2>
         <div class="box box-primary">
             <div class="box-header">
-                <h4 class="box-title">Pedido de Contratação</h4>
+                <h4 class="box-title">Dados para Contratação</h4>
             </div>
 
             <div class="box-body">
-                <form method="POST" action="?perfil=formacao&p=pedido_contratacao&sp=editar" role="form">
+                <form method="POST" action="?perfil=formacao&p=dados_contratacao&sp=editar" role="form">
                     <div class="row">
                         <div class="form-group col-md-2">
                             <label for="ano">Ano *</label>
@@ -282,7 +282,7 @@
                     </div>
             </div>
             <div class="box-footer">
-                <a href="?perfil=formacao&p=pedido_contratacao&sp=listagem">
+                <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
                     <button type="button" class="btn btn-default">Voltar</button>
                 </a>
                 <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">

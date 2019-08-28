@@ -47,7 +47,7 @@ $queryPedidos = mysqli_query($con,$sqlPedidos);
                                 echo"<td>" . $pedidos['cargo'] . "</td>";
                                 echo"<td>
                                 
-                            <form method='POST' action='?perfil=formacao&p=pedido_contratacao&sp=detalhes' role='form'>
+                            <form method='POST' action='?perfil=formacao&p=dados_contratacao&sp=detalhes' role='form'>
                             <input type='hidden' name='idPC' value='" . $pedidos['id'] . "'>
                             <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'> </span></button>
                             </form>

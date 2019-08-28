@@ -218,17 +218,17 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
 
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Cadastro de Pedido de Contratação</h2>
+        <h2 class="page-header">Cadastro de Dados para Contratação</h2>
         <div class="box box-primary">
             <div class="box-header">
-                <h4 class="box-title">Pedido de Contratação</h4>
+                <h4 class="box-title">Dados para Contratação</h4>
             </div>
             <div class="row" align="center">
                 <?php if (isset($mensagem)) {
                     echo $mensagem;
                 }; ?>
             </div>
-            <form action="?perfil=formacao&p=pedido_contratacao&sp=editar" role="form" method="POST">
+            <form action="?perfil=formacao&p=dados_contratacao&sp=editar" role="form" method="POST">
                 <div class="box-body">
                     <div class="row">
                         <div class="form-group col-md-2">
@@ -460,7 +460,7 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
                     </div>
                 </div>
                 <div class="box-footer">
-                    <a href="?perfil=formacao&p=pedido_contratacao&sp=listagem">
+                    <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
                     <button type="submit" name="editar" id="editar" class="btn btn-primary pull-right">
