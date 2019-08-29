@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$idPC = $_POST['idPC'];
+$idPC = $_POST['idPCView'];
 
 $sql = "SELECT f.id AS 'id', 
                f.ano AS 'ano',
@@ -124,7 +124,7 @@ $fc = $con->query($sql)->fetch_assoc();
                     <button type="button" class="btn btn-default">Voltar</button>
                 </a>
                     <input type="hidden" name="idDados" id="idDados" value="<?= $fc['id'] ?>">
-                    <button type="button" class="btn btn-danger" id="despublica"
+                    <button type="button" class="btn btn-danger pull-right" id="despublica"
                             data-toggle="modal" data-target="#despublicacao" name="despublica"
                             data-id="<?= $fc['id'] ?>">
                         Despublicar

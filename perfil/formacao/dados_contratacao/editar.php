@@ -1,10 +1,8 @@
 <?php
 $con = bancoMysqli();
 
-if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
-    $idPf = recuperaUltimo("pessoa_fisicas");
+if (isset($_POST['editar'])) {
     $ano = $_POST['ano'];
-    $status = "1";
     $chamado = $_POST['chamado'];
     $classificacao_indicativa = $_POST['classificacao'];
     $territorio = $_POST['territorio'];
@@ -19,65 +17,7 @@ if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
     $numpgt = $_POST['numpgt'];
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'];
-    $usuario = $_SESSION['idUser'];
-    $data = date("Y-m-d H:i:s", strtotime("now"));
-}
-if (isset($_POST['cadastra'])) {
-    $sqlInsert = "INSERT INTO formacao_contratacoes (
-                                   pessoa_fisica_id, 
-                                   ano, 
-                                   form_status_id, 
-                                   chamado, 
-                                   classificacao, 
-                                   territorio_id, 
-                                   coordenadoria_id, 
-                                   subprefeitura_id, 
-                                   programa_id, 
-                                   linguagem_id, 
-                                   projeto_id, 
-                                   form_cargo_id, 
-                                   form_vigencia_id, 
-                                   observacao, 
-                                   fiscal_id, 
-                                   suplente_id,  
-                                   num_processo_pagto,
-                                   usuario_id, 
-                                   data_envio 
-                                   )
-                                   VALUES(
-                                          '$idPf',
-                                          '$ano',
-                                          '$status',
-                                          '$chamado',
-                                          '$classificacao_indicativa',
-                                          '$territorio',
-                                          '$coordenadoria',
-                                          '$subprefeitura',
-                                          '$programa',
-                                          '$linguagem',
-                                          '$projeto',
-                                          '$cargo',
-                                          '$vigencia',
-                                          '$observacao',
-                                          '$fiscal',
-                                          '$suplente',
-                                          '$numpgt',
-                                          '$usuario',
-                                          '$data')";
-    if(mysqli_query($con, $sqlInsert)){
-        $mensagem = mensagem("success", "Gravado com sucesso!");
-        $idContrat = recuperaUltimo('formacao_contratacoes');
-        $protocolo = geraProtocolo($idContrat);
-        $sqlProtcolo = "UPDATE formacao_contratacoes SET
-                                        protocolo = '$protocolo' 
-                                        WHERE id = '$idContrat'";
-        $queryProtocolo = mysqli_query($con,$sqlProtcolo);
-    }else{
-        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
-    }
-}
 
-if (isset($_POST['editar'])) {
     $idContrat = recuperaUltimo('formacao_contratacoes');
     $sqlUpdate = "UPDATE formacao_contratacoes SET 
                                  ano = '$ano',
@@ -93,19 +33,30 @@ if (isset($_POST['editar'])) {
                                  form_vigencia_id = '$vigencia',
                                  observacao = '$observacao',
                                  fiscal_id = '$fiscal',
-                                 suplente_id = '$suplente'
+                                 suplente_id = '$suplente',
                                  num_processo_pagto = '$numpgt'
                                 WHERE id = '$idContrat'";
 
-    if(mysqli_query($con, $sqlUpdate)){
+    if (mysqli_query($con, $sqlUpdate)) {
         $mensagem = mensagem("success", "Gravado com sucesso!");
-    }else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
 }
 
-$idContrat = recuperaUltimo('formacao_contratacoes');
-$form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
+if (isset($_POST['edit'])) {
+    $idPC = $_POST['idPCEdit'];
+    $fc = recuperaDados('formacao_contratacoes', 'id', $idPC);
+    $classificacao_indicativa = $fc['classificacao'];
+    $territorio = $fc['territorio_id'];
+    $coordenadoria = $fc['coordenadoria_id'];
+    $subprefeitura = $fc['subprefeitura_id'];
+    $programa = $fc['programa_id'];
+    $linguagem = $fc['linguagem_id'];
+    $projeto = $fc['projeto_id'];
+    $cargo = $fc['form_cargo_id'];
+    $vigencia = $fc['form_vigencia_id'];
+}
 
 ?>
 
@@ -126,12 +77,14 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="ano">Ano: *</label>
-                            <input type="number" min="2018" id="ano" name="ano" required class="form-control"  value="<?= $form_contr['ano'] ?>">
+                            <input type="number" min="2018" id="ano" name="ano" required class="form-control"
+                                   value="<?= $fc['ano'] ?>">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="chamado">Chamado: *</label>
-                            <input type="text" id="chamado" name="chamado" value="<?=$form_contr['chamado']?>" required class="form-control">
+                            <input type="number" min="0" max="127" id="chamado" name="chamado"
+                                   value="<?= $fc['chamado'] ?>" required class="form-control">
                         </div>
 
                     </div>
@@ -249,7 +202,8 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
 
                         <div class="form-group col-md-4">
                             <label for="numpgt">Número do Processo de Pagamento: *</label>
-                            <input type="text" class="form-control" name="numpgt" id="numpgt" required value="<?=$form_contr['num_processo_pagto']?>">
+                            <input type="text" class="form-control" name="numpgt" id="numpgt" required
+                                   value="<?= $fc['num_processo_pagto'] ?>">
                         </div>
 
                     </div>
@@ -264,7 +218,7 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
                         <div class="form-group col-md-12">
                             <label for="observacao">Observação: </label>
                             <textarea name="observacao" id="observacao" rows="3"
-                                      class="form-control"><?= $form_contr['observacao'] ?></textarea>
+                                      class="form-control"><?= $fc['observacao'] ?></textarea>
                         </div>
                     </div>
 
@@ -274,7 +228,7 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
                             <select name="fiscal" id="fiscal" class="form-control" required>
                                 <option>Selecione um fiscal...</option>
                                 <?php
-                                geraOpcaoUsuario('usuarios', 1, $evento['fiscal_id']);
+                                geraOpcaoUsuario('usuarios', 1, $fc['fiscal_id']);
                                 ?>
                             </select>
                         </div>
@@ -284,15 +238,21 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
                             <select name="suplente" id="suplente" class="form-control">
                                 <option>Selecione um suplente...</option>
                                 <?php
-                                geraOpcaoUsuario('usuarios', 1, $evento['suplente_id']);
+                                geraOpcaoUsuario('usuarios', 1, $fc['suplente_id']);
                                 ?>
                             </select>
+                        </div>
+                        <div class="col-md-6">
+
                         </div>
                     </div>
                 </div>
                 <div class="box-footer">
                     <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
                         <button type="button" class="btn btn-default">Voltar</button>
+                    </a>
+                    <a href="#">
+                        <button class="btn btn-primary">Gerar pedido de contratação</button>
                     </a>
                     <button type="submit" name="editar" id="editar" class="btn btn-primary pull-right">
                         Salvar
@@ -372,6 +332,7 @@ $form_contr = recuperaDados('formacao_contratacoes', 'id', $idContrat);
             isMsgAno.hide();
         }
     }
+
     ano.on('change', maior);
     vigencia.on('change', maior);
 

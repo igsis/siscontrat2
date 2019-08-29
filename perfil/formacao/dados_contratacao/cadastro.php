@@ -7,7 +7,7 @@
             </div>
 
             <div class="box-body">
-                <form method="POST" action="?perfil=formacao&p=dados_contratacao&sp=editar" role="form">
+                <form method="POST" action="?perfil=formacao&p=dados_contratacao&sp=listagem" role="form">
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="ano">Ano: *</label>
@@ -16,7 +16,7 @@
 
                         <div class="form-group col-md-6">
                             <label for="chamado">Chamado: *</label>
-                            <input type="text" id="chamado" name="chamado" required class="form-control">
+                            <input type="number" min="0" max="127" id="chamado" name="chamado" max="127" required class="form-control">
                         </div>
                     </div>
 
@@ -145,7 +145,7 @@
                             <select name="fiscal" id="fiscal" class="form-control" required>
                                 <option value="">Selecione um fiscal...</option>
                                 <?php
-                                geraOpcaoUsuario('usuarios', 1, $evento['fiscal_id']);
+                                geraOpcaoUsuario("usuarios", 1, "");
                                 ?>
                             </select>
                         </div>
@@ -155,7 +155,7 @@
                             <select name="suplente" id="suplente" class="form-control">
                                 <option>Selecione um suplente...</option>
                                 <?php
-                                geraOpcaoUsuario('usuarios', 1, $evento['suplente_id']);
+                                geraOpcaoUsuario("usuarios", 1, "");
                                 ?>
                             </select>
                         </div>
@@ -247,4 +247,5 @@
 
     $(document).ready(maior)
 </script>
+
 
