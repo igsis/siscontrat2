@@ -2,6 +2,8 @@
 $con = bancoMysqli();
 
 if (isset($_POST['editar'])) {
+    $idPC = $_POST['idFC'];
+    $idPF = $_POST['idPF'];
     $ano = $_POST['ano'];
     $chamado = $_POST['chamado'];
     $classificacao_indicativa = $_POST['classificacao'];
@@ -18,8 +20,8 @@ if (isset($_POST['editar'])) {
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'];
 
-    $idContrat = recuperaUltimo('formacao_contratacoes');
     $sqlUpdate = "UPDATE formacao_contratacoes SET 
+                                 pessoa_fisica_id = '$idPF',
                                  ano = '$ano',
                                  chamado = '$chamado',
                                  classificacao = '$classificacao_indicativa',
@@ -35,18 +37,20 @@ if (isset($_POST['editar'])) {
                                  fiscal_id = '$fiscal',
                                  suplente_id = '$suplente',
                                  num_processo_pagto = '$numpgt'
-                                WHERE id = '$idContrat'";
+                                WHERE id = '$idPC'";
 
     if (mysqli_query($con, $sqlUpdate)) {
         $mensagem = mensagem("success", "Gravado com sucesso!");
     } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
+    $fc = recuperaDados('formacao_contratacoes', 'id', $idPC);
 }
 
 if (isset($_POST['edit'])) {
     $idPC = $_POST['idPCEdit'];
     $fc = recuperaDados('formacao_contratacoes', 'id', $idPC);
+    $idPF = $fc['pessoa_fisica_id'];
     $classificacao_indicativa = $fc['classificacao'];
     $territorio = $fc['territorio_id'];
     $coordenadoria = $fc['coordenadoria_id'];
@@ -72,7 +76,7 @@ if (isset($_POST['edit'])) {
                     echo $mensagem;
                 }; ?>
             </div>
-            <form action="?perfil=formacao&p=dados_contratacao&sp=editar" role="form" method="POST">
+            <form method="post" action="?perfil=formacao&p=dados_contratacao&sp=editar" role="form">
                 <div class="box-body">
                     <div class="row">
                         <div class="form-group col-md-6">
@@ -90,6 +94,7 @@ if (isset($_POST['edit'])) {
                     </div>
 
                     <?php
+                    $pfEsc = recuperaDados('pessoa_fisicas', 'id', $idPF);
                     $classificacaoEsc = recuperaDados('classificacao_indicativas', 'id', $classificacao_indicativa);
                     $territorioEsc = recuperaDados('territorios', 'id', $territorio);
                     $coordenadoriaEsc = recuperaDados('coordenadorias', 'id', $coordenadoria);
@@ -100,6 +105,18 @@ if (isset($_POST['edit'])) {
                     $cargoEsc = recuperaDados('formacao_cargos', 'id', $cargo);
                     $vigenciaEsc = recuperaDados('formacao_vigencias', 'id', $vigencia);
                     ?>
+
+                    <div class="row">
+                        <div class="from-group col-md-12">
+                            <label for="pf">Pessoa Física: *</label>
+                            <select required name="idPF" id="idPF" class="form-control">
+                                <option value="<?= $pfEsc['id'] ?>"> <?= $pfEsc['nome'] ?> </option>
+                                <?php
+                                geraOpcao('pessoa_fisicas');
+                                ?>
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="form-group col-md-12">
@@ -242,21 +259,19 @@ if (isset($_POST['edit'])) {
                                 ?>
                             </select>
                         </div>
-                        <div class="col-md-6">
-
-                        </div>
                     </div>
                 </div>
                 <div class="box-footer">
                     <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
-                    <a href="#">
-                        <button class="btn btn-primary">Gerar pedido de contratação</button>
-                    </a>
+                    <input type="hidden" name="idFC" value="<?=$idPC?>" id="idFC">
                     <button type="submit" name="editar" id="editar" class="btn btn-primary pull-right">
                         Salvar
                     </button>
+                    <a href="#">
+                        <button class="btn btn-default pull-right">Gerar pedido de contratação</button>
+                    </a>
                 </div>
             </form>
         </div>

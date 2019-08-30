@@ -21,6 +21,18 @@
                     </div>
 
                     <div class="row">
+                        <div class="from-group col-md-12">
+                            <label for="pf">Pessoa Física: *</label>
+                            <select required value="" name="idPF" id="idPF" class="form-control">
+                                <option>Selecione a pessoa física...</option>
+                                <?php
+                                geraOpcao('pessoa_fisicas');
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <div class="form-group col-md-12">
                             <label for="classificacao">Classificação Indicativa *</label>
                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"

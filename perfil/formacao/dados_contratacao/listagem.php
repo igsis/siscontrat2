@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 
 if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
-    $idPf = recuperaUltimo("pessoa_fisicas");
+    $idPF = $_POST['idPF'];
     $ano = $_POST['ano'];
     $status = "1";
     $chamado = $_POST['chamado'];
@@ -45,7 +45,7 @@ if (isset($_POST['cadastra'])) {
                                    data_envio 
                                    )
                                    VALUES(
-                                          '$idPf',
+                                          '$idPF',
                                           '$ano',
                                           '$status',
                                           '$chamado',
@@ -137,6 +137,7 @@ $year = "";
             $queryDados = mysqli_query($con,$sqlDados);
             ?>
             <div class="box-body">
+                <span class="pull-right ">Exibindo resultados do ano: <?=$year?></span>
                     <table id="tblDadosContratacao" class="table table-striped table-responsive">
                         <thead>
                         <tr>
