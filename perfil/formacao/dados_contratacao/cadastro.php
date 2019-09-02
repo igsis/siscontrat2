@@ -29,6 +29,7 @@
                                     geraOpcao('pessoa_fisicas');
                                 ?>
                             </select>
+                            <br>
                         </div>
                     </div>
 
@@ -47,7 +48,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="territorio">Território *</label>
                             <select class="form-control" name="territorio" id="territorio" required>
                                 <option value="">Selecione o território...</option>
@@ -57,7 +58,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="coordenadoria">Coordenadoria *</label>
                             <select class="form-control" name="coordenadoria" id="coordenadoria" required>
                                 <option value="">Selecione a coordenadoria...</option>
@@ -67,7 +68,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="subprefeitura">Subprefeitura *</label>
                             <select class="form-control" name="subprefeitura" id="subprefeitura" required>
                                 <option value="">Selecione a subprefeitura...</option>
@@ -76,20 +77,20 @@
                                 ?>
                             </select>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="programa">Programa *</label>
                             <select class="form-control" name="programa" id="programa" required>
                                 <option value="">Selecione o programa...</option>
                                 <?php
-                                    geraOpcao("programas");
+                                geraOpcao("programas");
                                 ?>
                             </select>
                         </div>
+                    </div>
 
-                        <div class="form-group col-md-4">
+                    <div class="row">
+                        <div class="form-group col-md-3">
                             <label for="linguagem">Linguagem *</label>
                             <select class="form-control" name="linguagem" id="linguagem" required>
                                 <option value="">Selecione a linguagem...</option>
@@ -99,7 +100,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="projeto">Projeto *</label>
                             <select class="form-control" name="projeto" id="projeto" required>
                                 <option value="">Selecione o projeto...</option>
@@ -108,29 +109,26 @@
                                 ?>
                             </select>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="cargo">Cargo *</label>
                             <select class="form-control" name="cargo" id="cargo" required>
                                 <option value="">Selecione o cargo...</option>
                                 <?php
-                                    geraOpcao("formacao_cargos");
+                                geraOpcao("formacao_cargos");
                                 ?>
                             </select>
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="vigencia">Vigência *</label>
                             <select class="form-control" name="vigencia" id="vigencia" required>
                                 <option value="">Selecione a vigência...</option>
                                 <?php
-                                    geraOpcao("formacao_vigencias");
+                                geraOpcao("formacao_vigencias");
                                 ?>
                             </select>
                         </div>
-
                     </div>
 
                     <div class="row">

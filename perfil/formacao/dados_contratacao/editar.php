@@ -101,9 +101,10 @@ $_SESSION['idPc'] = $idPC;
                                     geraOpcao('pessoa_fisicas', $fc['pessoa_fisica_id']);
                                 ?>
                             </select>
+                            <br>
                         </div>
                     </div>
-                    <br>
+
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="classificacao">Classificação Indicativa *</label>
@@ -118,7 +119,7 @@ $_SESSION['idPc'] = $idPC;
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="territorio">Território *</label>
                             <select class="form-control" name="territorio" id="territorio" required>
                                 <?php
@@ -127,7 +128,7 @@ $_SESSION['idPc'] = $idPC;
                             </select>
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="coordenadoria">Coordenadoria *</label>
                             <select class="form-control" name="coordenadoria" id="coordenadoria" required>
                                 <?php
@@ -136,7 +137,7 @@ $_SESSION['idPc'] = $idPC;
                             </select>
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="subprefeitura">Subprefeitura *</label>
                             <select class="form-control" name="subprefeitura" id="subprefeitura" required>
                                 <?php
@@ -144,19 +145,19 @@ $_SESSION['idPc'] = $idPC;
                                 ?>
                             </select>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="programa">Programa *</label>
                             <select class="form-control" name="programa" id="programa" required>
                                 <?php
-                                    geraOpcao("programas", $fc['programa_id']);
+                                geraOpcao("programas", $fc['programa_id']);
                                 ?>
                             </select>
                         </div>
+                    </div>
 
-                        <div class="form-group col-md-4">
+                    <div class="row">
+                        <div class="form-group col-md-3">
                             <label for="linguagem">Linguagem *</label>
                             <select class="form-control" name="linguagem" id="linguagem" required>
                                 <?php
@@ -165,7 +166,7 @@ $_SESSION['idPc'] = $idPC;
                             </select>
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="projeto">Projeto *</label>
                             <select class="form-control" name="projeto" id="projeto" required>
                                 <?php
@@ -173,26 +174,24 @@ $_SESSION['idPc'] = $idPC;
                                 ?>
                             </select>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="cargo">Cargo *</label>
                             <select class="form-control" name="cargo" id="cargo" required>
                                 <?php
-                                    geraOpcao("formacao_cargos", $fc['form_cargo_id']);
+                                geraOpcao("formacao_cargos", $fc['form_cargo_id']);
                                 ?>
                             </select>
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="vigencia">Vigência *</label>
                             <select class="form-control" name="vigencia" id="vigencia" required>
                                 <?php
-                                  geraOpcao("formacao_vigencias", $fc['form_vigencia_id']);
+                                geraOpcao("formacao_vigencias", $fc['form_vigencia_id']);
                                 ?>
                             </select>
-                        </div>
+                    </div>
 
                     </div>
 

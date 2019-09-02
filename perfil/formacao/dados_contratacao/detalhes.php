@@ -158,7 +158,7 @@ $fc = $con->query($sql)->fetch_assoc();
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <form action="?perfil=formacao&p=dados_contratacao&sp=listagem" method="post">
+                <form action="?perfil=formacao&p=pedido_contratacao&sp=editar" method="post">
                 <h4 class="modal-title">Confirmação de Despublicação</h4>
             </div>
             <div class="modal-body">

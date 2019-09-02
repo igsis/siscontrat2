@@ -159,7 +159,7 @@ $queryDias = mysqli_query($con, $sqlDias);
                                     <select name="idDia1" id="dia1" class="form-control">
                                         <option>Selecione o Dia</option>
                                         <?php
-                                        geraOpcao('execucao_dias')
+                                            geraOpcao('execucao_dias')
                                         ?>
                                     </select>
                                 </div>
@@ -170,7 +170,7 @@ $queryDias = mysqli_query($con, $sqlDias);
                                     <select name="idDia2" id="dia2" class="form-control">
                                         <option>Selecione o Dia</option>
                                         <?php
-                                        geraOpcao('execucao_dias')
+                                             geraOpcao('execucao_dias')
                                         ?>
 
                                     </select>

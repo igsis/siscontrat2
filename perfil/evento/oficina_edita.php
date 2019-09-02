@@ -241,20 +241,14 @@ include "includes/menu_interno.php";
                                     <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
                                 </div>
                             </div>
-                            <?php
-                            $d1 = recuperaDados('execucao_dias', 'id', $execucaodia1);
-                            $d2 = recuperaDados('execucao_dias', 'id', $execucaodia2);
-                            ?>
-
 
                             <div class="row">
                                 <div class="form-group col-md-6">
 
                                     <label>Selecione o primeiro dia de execução:</label>
                                     <select name="idDia1" id="dia1" class="form-control">
-                                        <option value="<?= $d1['id'] ?>"><?= $d1['dia'] ?></option>
                                         <?php
-                                        geraOpcao('execucao_dias', $execucaodia1)
+                                            geraOpcao('execucao_dias', $oficina['execucao_dia1_id'])
                                         ?>
                                     </select>
                                 </div>
@@ -262,9 +256,8 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label>Selecione o segundo dia de execução:</label>
                                     <select name="idDia2" id="dia2" class="form-control">
-                                        <option value="<?= $d2['id'] ?>"><?= $d2['dia'] ?></option>
                                         <?php
-                                        geraOpcao('execucao_dias', $execucaodia2)
+                                            geraOpcao('execucao_dias', $oficina['execucao_dia2_id'])
                                         ?>
                                     </select>
                                 </div>
