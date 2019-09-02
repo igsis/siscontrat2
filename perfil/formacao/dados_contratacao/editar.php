@@ -62,6 +62,8 @@ if (isset($_POST['edit'])) {
     $vigencia = $fc['form_vigencia_id'];
 }
 
+$_SESSION['idPc'] = $idPC;
+
 ?>
 
 <div class="content-wrapper">
@@ -117,7 +119,7 @@ if (isset($_POST['edit'])) {
                             </select>
                         </div>
                     </div>
-
+                    <br>
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="classificacao">Classificação Indicativa *</label>
@@ -269,8 +271,8 @@ if (isset($_POST['edit'])) {
                     <button type="submit" name="editar" id="editar" class="btn btn-primary pull-right">
                         Salvar
                     </button>
-                    <a href="#">
-                        <button class="btn btn-default pull-right">Gerar pedido de contratação</button>
+                    <a href="?perfil=formacao&p=pedido_contratacao&sp=editar">
+                        <button type="button" class="btn btn-default pull-right">Gerar pedido de contratação</button>
                     </a>
                 </div>
             </form>
