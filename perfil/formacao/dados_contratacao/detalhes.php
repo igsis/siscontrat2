@@ -54,62 +54,82 @@ $fc = $con->query($sql)->fetch_assoc();
                                 <th width="30%">Ano:</th>
                                 <td><?= $fc['ano'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Chamado:</th>
                                 <td><?= $fc['chamado'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Classificacao Indicativa:</th>
                                 <td><?= $fc['classificacao'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Território:</th>
                                 <td><?= $fc['territorio'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Coordenadoria:</th>
                                 <td><?= $fc['coordenadoria'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Subprefeitura:</th>
                                 <td><?= $fc['subprefeitura'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Programa:</th>
                                 <td><?= $fc['programa'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Linguagem:</th>
                                 <td><?= $fc['linguagem'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Projeto:</th>
                                 <td><?= $fc['projeto'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Cargo:</th>
                                 <td><?= $fc['cargo'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Vigência:</th>
                                 <td><?= $fc['vigencia'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Observação:</th>
                                 <td><?= $fc['observacao'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Fiscal:</th>
                                 <td><?= $fc['fiscal'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Suplente:</th>
                                 <td><?= $fc['suplente'] ?></td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Número do Processo de Pagamento:</th>
-                                <td><?= $fc['numpgt'] ?></td>
+                                <td><?php if($fc['numpgt'] == NULL){
+                                        echo "Não Cadastrado";
+                                    }else{
+                                        echo $fc['numpgt'];
+                                    }
+                                    ?>  </td>
                             </tr>
+
                             <tr>
                                 <th width="30%">Publicado?</th>
                                 <td><?= $fc['publicado'] ? "Sim" : "Não" ?></td>

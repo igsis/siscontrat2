@@ -16,7 +16,6 @@ if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
     $cargo = $_POST['cargo'];
     $vigencia = $_POST['vigencia'];
     $observacao = $_POST['observacao'];
-    $numpgt = $_POST['numpgt'];
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'];
     $usuario = $_SESSION['idUser'];
@@ -40,7 +39,6 @@ if (isset($_POST['cadastra'])) {
                                    observacao, 
                                    fiscal_id, 
                                    suplente_id,  
-                                   num_processo_pagto,
                                    usuario_id, 
                                    data_envio 
                                    )
@@ -61,7 +59,6 @@ if (isset($_POST['cadastra'])) {
                                           '$observacao',
                                           '$fiscal',
                                           '$suplente',
-                                          '$numpgt',
                                           '$usuario',
                                           '$data')";
     if(mysqli_query($con, $sqlInsert)){

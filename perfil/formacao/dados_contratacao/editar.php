@@ -16,7 +16,6 @@ if (isset($_POST['editar'])) {
     $cargo = $_POST['cargo'];
     $vigencia = $_POST['vigencia'];
     $observacao = $_POST['observacao'];
-    $numpgt = $_POST['numpgt'];
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'];
 
@@ -35,8 +34,7 @@ if (isset($_POST['editar'])) {
                                  form_vigencia_id = '$vigencia',
                                  observacao = '$observacao',
                                  fiscal_id = '$fiscal',
-                                 suplente_id = '$suplente',
-                                 num_processo_pagto = '$numpgt'
+                                 suplente_id = '$suplente'
                                 WHERE id = '$idPC'";
 
     if (mysqli_query($con, $sqlUpdate)) {
@@ -95,26 +93,12 @@ $_SESSION['idPc'] = $idPC;
 
                     </div>
 
-                    <?php
-                    $pfEsc = recuperaDados('pessoa_fisicas', 'id', $idPF);
-                    $classificacaoEsc = recuperaDados('classificacao_indicativas', 'id', $classificacao_indicativa);
-                    $territorioEsc = recuperaDados('territorios', 'id', $territorio);
-                    $coordenadoriaEsc = recuperaDados('coordenadorias', 'id', $coordenadoria);
-                    $subprefeituraEsc = recuperaDados('subprefeituras', 'id', $subprefeitura);
-                    $programaEsc = recuperaDados('programas', 'id', $programa);
-                    $linguagemEsc = recuperaDados('linguagens', 'id', $linguagem);
-                    $projetoEsc = recuperaDados('projetos', 'id', $projeto);
-                    $cargoEsc = recuperaDados('formacao_cargos', 'id', $cargo);
-                    $vigenciaEsc = recuperaDados('formacao_vigencias', 'id', $vigencia);
-                    ?>
-
                     <div class="row">
                         <div class="from-group col-md-12">
                             <label for="pf">Pessoa Física: *</label>
                             <select required name="idPF" id="idPF" class="form-control">
-                                <option value="<?= $pfEsc['id'] ?>"> <?= $pfEsc['nome'] ?> </option>
                                 <?php
-                                geraOpcao('pessoa_fisicas');
+                                    geraOpcao('pessoa_fisicas', $fc['pessoa_fisica_id']);
                                 ?>
                             </select>
                         </div>
@@ -126,9 +110,8 @@ $_SESSION['idPc'] = $idPC;
                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                     data-target="#modal-default"><i class="fa fa-info"></i></button>
                             <select class="form-control" name="classificacao" id="classificacao" required>
-                                <option value="<?= $classificacaoEsc['id'] ?>"> <?= $classificacaoEsc['classificacao_indicativa'] ?> </option>
                                 <?php
-                                geraOpcao("classificacao_indicativas");
+                                    geraOpcao("classificacao_indicativas", $fc['classificacao']);
                                 ?>
                             </select>
                         </div>
@@ -138,9 +121,8 @@ $_SESSION['idPc'] = $idPC;
                         <div class="form-group col-md-4">
                             <label for="territorio">Território *</label>
                             <select class="form-control" name="territorio" id="territorio" required>
-                                <option value="<?= $territorioEsc['id'] ?>"> <?= $territorioEsc['territorio'] ?> </option>
                                 <?php
-                                geraOpcao("territorios");
+                                    geraOpcao("territorios", $fc['territorio_id']);
                                 ?>
                             </select>
                         </div>
@@ -148,9 +130,8 @@ $_SESSION['idPc'] = $idPC;
                         <div class="form-group col-md-4">
                             <label for="coordenadoria">Coordenadoria *</label>
                             <select class="form-control" name="coordenadoria" id="coordenadoria" required>
-                                <option value="<?= $coordenadoriaEsc['id'] ?>"> <?= $coordenadoriaEsc['coordenadoria'] ?> </option>
                                 <?php
-                                geraOpcao("coordenadorias");
+                                    geraOpcao("coordenadorias", $fc['coordenadoria_id']);
                                 ?>
                             </select>
                         </div>
@@ -158,9 +139,8 @@ $_SESSION['idPc'] = $idPC;
                         <div class="form-group col-md-4">
                             <label for="subprefeitura">Subprefeitura *</label>
                             <select class="form-control" name="subprefeitura" id="subprefeitura" required>
-                                <option value="<?= $subprefeituraEsc['id'] ?>"> <?= $subprefeituraEsc['subprefeitura'] ?> </option>
                                 <?php
-                                geraOpcao("subprefeituras");
+                                    geraOpcao("subprefeituras", $fc['subprefeitura_id']);
                                 ?>
                             </select>
                         </div>
@@ -170,9 +150,8 @@ $_SESSION['idPc'] = $idPC;
                         <div class="form-group col-md-4">
                             <label for="programa">Programa *</label>
                             <select class="form-control" name="programa" id="programa" required>
-                                <option value="<?= $programaEsc['id'] ?>"> <?= $programaEsc['programa'] ?> </option>
                                 <?php
-                                geraOpcao("programas");
+                                    geraOpcao("programas", $fc['programa_id']);
                                 ?>
                             </select>
                         </div>
@@ -180,9 +159,8 @@ $_SESSION['idPc'] = $idPC;
                         <div class="form-group col-md-4">
                             <label for="linguagem">Linguagem *</label>
                             <select class="form-control" name="linguagem" id="linguagem" required>
-                                <option value="<?= $linguagemEsc['id'] ?>"> <?= $linguagemEsc['linguagem'] ?> </option>
                                 <?php
-                                geraOpcao("linguagens");
+                                    geraOpcao("linguagens", $fc['linguagem_id']);
                                 ?>
                             </select>
                         </div>
@@ -190,9 +168,8 @@ $_SESSION['idPc'] = $idPC;
                         <div class="form-group col-md-4">
                             <label for="projeto">Projeto *</label>
                             <select class="form-control" name="projeto" id="projeto" required>
-                                <option value="<?= $projetoEsc['id'] ?>"> <?= $projetoEsc['projeto'] ?> </option>
                                 <?php
-                                geraOpcao("projetos");
+                                    geraOpcao("projetos", $fc['projeto_id']);
                                 ?>
                             </select>
                         </div>
@@ -202,9 +179,8 @@ $_SESSION['idPc'] = $idPC;
                         <div class="form-group col-md-4">
                             <label for="cargo">Cargo *</label>
                             <select class="form-control" name="cargo" id="cargo" required>
-                                <option value="<?= $cargoEsc['id'] ?>"> <?= $cargoEsc['cargo'] ?> </option>
                                 <?php
-                                geraOpcao("formacao_cargos");
+                                    geraOpcao("formacao_cargos", $fc['form_cargo_id']);
                                 ?>
                             </select>
                         </div>
@@ -212,17 +188,10 @@ $_SESSION['idPc'] = $idPC;
                         <div class="form-group col-md-4">
                             <label for="vigencia">Vigência *</label>
                             <select class="form-control" name="vigencia" id="vigencia" required>
-                                <option value="<?= $vigenciaEsc['id'] ?>"> <?= $vigenciaEsc['ano'] ?> </option>
                                 <?php
-                                geraOpcao("formacao_vigencias");
+                                  geraOpcao("formacao_vigencias", $fc['form_vigencia_id']);
                                 ?>
                             </select>
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label for="numpgt">Número do Processo de Pagamento: *</label>
-                            <input type="text" class="form-control" name="numpgt" id="numpgt" required
-                                   value="<?= $fc['num_processo_pagto'] ?>">
                         </div>
 
                     </div>
@@ -247,7 +216,7 @@ $_SESSION['idPc'] = $idPC;
                             <select name="fiscal" id="fiscal" class="form-control" required>
                                 <option>Selecione um fiscal...</option>
                                 <?php
-                                geraOpcaoUsuario('usuarios', 1, $fc['fiscal_id']);
+                                     geraOpcaoUsuario('usuarios', 1, $fc['fiscal_id']);
                                 ?>
                             </select>
                         </div>
@@ -257,7 +226,7 @@ $_SESSION['idPc'] = $idPC;
                             <select name="suplente" id="suplente" class="form-control">
                                 <option>Selecione um suplente...</option>
                                 <?php
-                                geraOpcaoUsuario('usuarios', 1, $fc['suplente_id']);
+                                     geraOpcaoUsuario('usuarios', 1, $fc['suplente_id']);
                                 ?>
                             </select>
                         </div>

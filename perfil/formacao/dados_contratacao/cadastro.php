@@ -26,7 +26,7 @@
                             <select required value="" name="idPF" id="idPF" class="form-control">
                                 <option>Selecione a pessoa física...</option>
                                 <?php
-                                geraOpcao('pessoa_fisicas');
+                                    geraOpcao('pessoa_fisicas');
                                 ?>
                             </select>
                         </div>
@@ -40,7 +40,7 @@
                             <select required class="form-control" name="classificacao" id="classificacao">
                                 <option value="">Selecione...</option>
                                 <?php
-                                geraOpcao("classificacao_indicativas");
+                                    geraOpcao("classificacao_indicativas");
                                 ?>
                             </select>
                         </div>
@@ -52,7 +52,7 @@
                             <select class="form-control" name="territorio" id="territorio" required>
                                 <option value="">Selecione o território...</option>
                                 <?php
-                                geraOpcao("territorios");
+                                    geraOpcao("territorios");
                                 ?>
                             </select>
                         </div>
@@ -62,7 +62,7 @@
                             <select class="form-control" name="coordenadoria" id="coordenadoria" required>
                                 <option value="">Selecione a coordenadoria...</option>
                                 <?php
-                                geraOpcao("coordenadorias");
+                                    geraOpcao("coordenadorias");
                                 ?>
                             </select>
                         </div>
@@ -72,7 +72,7 @@
                             <select class="form-control" name="subprefeitura" id="subprefeitura" required>
                                 <option value="">Selecione a subprefeitura...</option>
                                 <?php
-                                geraOpcao("subprefeituras");
+                                    geraOpcao("subprefeituras");
                                 ?>
                             </select>
                         </div>
@@ -84,7 +84,7 @@
                             <select class="form-control" name="programa" id="programa" required>
                                 <option value="">Selecione o programa...</option>
                                 <?php
-                                geraOpcao("programas");
+                                    geraOpcao("programas");
                                 ?>
                             </select>
                         </div>
@@ -94,7 +94,7 @@
                             <select class="form-control" name="linguagem" id="linguagem" required>
                                 <option value="">Selecione a linguagem...</option>
                                 <?php
-                                geraOpcao("linguagens");
+                                    geraOpcao("linguagens");
                                 ?>
                             </select>
                         </div>
@@ -104,7 +104,7 @@
                             <select class="form-control" name="projeto" id="projeto" required>
                                 <option value="">Selecione o projeto...</option>
                                 <?php
-                                geraOpcao("projetos");
+                                    geraOpcao("projetos");
                                 ?>
                             </select>
                         </div>
@@ -116,7 +116,7 @@
                             <select class="form-control" name="cargo" id="cargo" required>
                                 <option value="">Selecione o cargo...</option>
                                 <?php
-                                geraOpcao("formacao_cargos");
+                                    geraOpcao("formacao_cargos");
                                 ?>
                             </select>
                         </div>
@@ -126,14 +126,9 @@
                             <select class="form-control" name="vigencia" id="vigencia" required>
                                 <option value="">Selecione a vigência...</option>
                                 <?php
-                                geraOpcao("formacao_vigencias");
+                                    geraOpcao("formacao_vigencias");
                                 ?>
                             </select>
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label for="numpgt">Número do Processo de Pagamento: *</label>
-                            <input type="text" class="form-control" name="numpgt" id="numpgt" required>
                         </div>
 
                     </div>
@@ -157,7 +152,7 @@
                             <select name="fiscal" id="fiscal" class="form-control" required>
                                 <option value="">Selecione um fiscal...</option>
                                 <?php
-                                geraOpcaoUsuario("usuarios", 1, "");
+                                    geraOpcaoUsuario("usuarios", 1, "");
                                 ?>
                             </select>
                         </div>
@@ -167,7 +162,7 @@
                             <select name="suplente" id="suplente" class="form-control">
                                 <option>Selecione um suplente...</option>
                                 <?php
-                                geraOpcaoUsuario("usuarios", 1, "");
+                                    geraOpcaoUsuario("usuarios", 1, "");
                                 ?>
                             </select>
                         </div>
