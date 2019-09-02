@@ -1,8 +1,16 @@
 <?php
 $con = bancoMysqli();
 
-$sql = "SELECT * FROM formacao_contratacoes WHERE form_status_id <> 5 AND publicado = 1";
-// inner join pf, locais,
+$sql = "SELECT p.id, fc.num_processo_pagto, pf.nome, l.local, v.verba, fs.status, fc.form_status_id 
+            FROM pedidos p 
+            INNER JOIN formacao_contratacoes fc ON fc.id = p.origem_id 
+            INNER JOIN pessoa_fisicas pf ON fc.pessoa_fisica_id = pf.id 
+            INNER JOIN formacao_locais fl on fc.id = fl.form_pre_pedido_id 
+            INNER JOIN locais l on fl.local_id = l.id 
+            INNER JOIN verbas v on p.verba_id = v.id 
+            INNER JOIN formacao_status fs on fc.form_status_id = fs.id
+            WHERE fc.form_status_id != 5 AND p.publicado = 1 AND fc.publicado = 1";
+
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
 
@@ -51,20 +59,20 @@ $num_arrow = mysqli_num_rows($query);
                                 </tr>
                                 <?php
                             } else {
-                                while ($contrato = mysqli_fetch_array($query)) {
-                                    if ($contrato['form_status_id'] == '2' || $contrato['form_status_id'] == '4')
+                                while ($row = mysqli_fetch_array($query)) {
+                                    if ($row['form_status_id'] == '2' || $row['form_status_id'] == '4')
                                         $cor = 1;
                                     else
                                         $cor = 0;
                                     ?>
                                     <tr>
-                                        <td><?= $contrato['protocolo'] ?></td>
-                                        <td><?= $contrato['num_processo_pagto'] ?></td>
-                                        <td><?= $contrato['protocolo'] ?></td>
-                                        <td><?= $contrato['protocolo'] ?></td>
-                                        <td><?= $contrato['protocolo'] ?></td>
-                                        <td><?= $contrato['protocolo'] ?></td>
-                                        <td><?= $contrato['protocolo'] ?></td>
+                                        <td><?= $row['protocolo'] ?></td>
+                                        <td><?= $row['num_processo_pagto'] ?></td>
+                                        <td><?= $row['nome'] ?></td>
+                                        <td><?= $row['local'] ?></td>
+                                        <td><?= $row['protocolo'] ?></td>
+                                        <td><?= $row['verba'] ?></td>
+                                        <td><?= $row['status'] ?></td>
                                     </tr>
                                     <?php
                                 }
