@@ -1,18 +1,17 @@
 <?php
 $con = bancoMysqli();
 if (isset($_POST['excluir'])) {
-    $idEV = $_POST['idEV'];
+    $idEV = $_POST['idEVDelete'];
 
-    $sql = "UPDATE emia_vigencias SET publicado = 0 WHERE id = '$idEV'";
-
-    if (mysqli_query($con, $sql)) {
+    $sqlDelete = "UPDATE emia_vigencias SET publicado = 0 WHERE id = '$idEV'";
+    if (mysqli_query($con, $sqlDelete)) {
         $mensagem = mensagem("success", "Vigência excluida com sucesso");
     } else {
         $mensagem = mensagem("danger", "Erro ao excluir a vigência! Tente novamente!");
     }
 }
 
-if(isset($_POST['cadastra'])){
+if (isset($_POST['cadastra'])) {
     $ano = $_POST['ano'];
     $desc = $_POST['desc'];
 
@@ -20,9 +19,9 @@ if(isset($_POST['cadastra'])){
                             (ano, descricao)
                             VALUES
                             ('$ano', '$desc')";
-    if(mysqli_query($con,$sqlInsert)){
+    if (mysqli_query($con, $sqlInsert)) {
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
-    }else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar! Tente novamente.");
     }
 }
@@ -61,20 +60,19 @@ $query = mysqli_query($con, $sql);
                         echo "<td>" . $ev['ano'] . "</td>";
                         echo "<td>" . $ev['descricao'] . "</td>";
                         echo "<td>
-                        <form action='?perfil=emia&p=vigencia&sp=edita' method='post'>
-                        <input type='hidden' name='idEVEdit' id='idEVEdit' value='" . $ev['id'] ."'>
+                        <form action='?perfil=emia&p=vigencia&sp=edita' method='POST'>
+                        <input type='hidden' name='idEVEdit' id='idEVEdit' value='" . $ev['id'] . "'>
                         <button type='submit' name='edit' id='edit'  class='btn btn-block btn-primary'><span class='glyphicon glyphicon-edit'></span></button>
                         </form>
-                        ";
+                        </td>";
                         echo "<td>
-                        <form action='?perfil=emia&p=vigencia&sp=listagem' method='post'>
-                        <input type='hidden' name='idEVDelete' id='idEVDelete' value='" . $ev['id'] ."'>
-                        <button type='submit' name='excluiEV' id='excluiEV'  class='btn btn-block btn-danger'
-                        id='despublica' name='despublica'
-                            data-toggle='modal' data-target='#despublicacao' data-id='". $ev['id'] ."'>
+                        <form action='?perfil=emia&p=vigencia&sp=listagem' method='POST'>
+                        <input type='hidden' name='idEVDelete' id='idEVDelete' value='" . $ev['id'] . "'>
+                        <button type='button' name='excluir' id='excluir' class='btn btn-block btn-danger' 
+                        data-target='#exclusao' data-toggle='modal' data-id='" . $ev['id'] . "'>
                         <span class='glyphicon glyphicon-trash'></span></button>
                         </form>
-                        ";
+                        </td>";
                     }
                     echo "</tbody>";
                     ?>
@@ -92,39 +90,47 @@ $query = mysqli_query($con, $sql);
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
                     <a href="?perfil=emia&p=vigencia&sp=cadastra">
-                        <button type="button" class="btn btn-primary pull-right"> Cadastrar </button>
+                        <button type="button" class="btn btn-primary pull-right"> Cadastrar</button>
                     </a>
                 </div>
             </div>
         </div>
-        <div id="despublicacao" class="modal modal-danger modal fade in" role="dialog">
+        <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <form action="?perfil=emia&p=vigencia&sp=listagem" method="post">
-                            <h4 class="modal-title">Confirmação de Despublicação</h4>
+                        <form action="?perfil=emia&p=vigencia&sp=listagem" method="POST">
+                            <h4 class="modal-title">Confirmação de Exclusão</h4>
                     </div>
                     <div class="modal-body">
-                        <label>Tem certeza que deseja despublicar?</label>
+                        <p>Tem certeza que deseja excluir a vigência?</p>
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" name="idEVDelete" id="idEVDelete" value="<?= $idEV['id']?>">
-                        <input type="hidden" name="despublicar" id="despublicar">
+                        <input type="hidden" name="idEVDelete" id="idEVDelete" value="<?= $ev['id'] ?>">
+                        <input type="hidden" name="excluir" id="excluir">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                         </button>
-                        <input type="submit" class="btn btn-danger btn-outline" name="despublica" value="Despublicar">
+                        <input type="submit" class="btn btn-danger btn-outline" name="exclui" value="Excluir">
                         </form>
                     </div>
                 </div>
-
             </div>
         </div>
+
     </section>
 </div>
 
 <script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $('#exclusao').on('show.bs.modal', function (e) {
+        let id = $(e.relatedTarget).attr('data-id');
+
+        $(this).find('#idEVDelete').attr('value', `${id}`);
+    })
+</script>
 
 <script type="text/javascript">
     $(function () {
