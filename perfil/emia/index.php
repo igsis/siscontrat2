@@ -11,7 +11,7 @@ include "includes/menu.php";
                 <div class="row">
                     <div class="col-md-12 border-right">
                         <div class="description-block">
-                            <span class="description-header">Esse módulo tem a função de ???<br/><br/></span>
+                            <span class="description-header">Esse módulo tem a função de inserir, editar e enviar pedidos de eventos artísticos a serem realizados na instituição.<br/><br/></span>
                         </div>
                     </div>
                 </div>

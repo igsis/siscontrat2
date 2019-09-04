@@ -1,5 +1,3 @@
-<?php
-?>
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">

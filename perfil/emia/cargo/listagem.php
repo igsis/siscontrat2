@@ -1,24 +1,24 @@
 <?php
 $con = bancoMysqli();
 if (isset($_POST['excluir'])) {
-    $idEV = $_POST['idEVDelete'];
+    $idEC = $_POST['idECDelete'];
 
-    $sqlDelete = "UPDATE emia_vigencias SET publicado = 0 WHERE id = '$idEV'";
+    $sqlDelete = "UPDATE emia_cargos SET publicado = 0 WHERE id = '$idEC'";
     if (mysqli_query($con, $sqlDelete)) {
-        $mensagem = mensagem("success", "Vigência excluida com sucesso");
+        $mensagem = mensagem("success", "Cargo excluido com sucesso");
     } else {
-        $mensagem = mensagem("danger", "Erro ao excluir a vigência! Tente novamente!");
+        $mensagem = mensagem("danger", "Erro ao excluir o cargo! Tente novamente!");
     }
 }
 
 if (isset($_POST['cadastra'])) {
-    $ano = $_POST['ano'];
-    $desc = $_POST['desc'];
+    $cargo = $_POST['cargo'];
+    $justificativa = $_POST['justificativa'];
 
-    $sqlInsert = "INSERT INTO emia_vigencias
-                            (ano, descricao)
+    $sqlInsert = "INSERT INTO emia_cargos
+                            (cargo, justificativa)
                             VALUES
-                            ('$ano', '$desc')";
+                            ('$cargo', '$justificativa')";
     if (mysqli_query($con, $sqlInsert)) {
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
     } else {
@@ -26,13 +26,13 @@ if (isset($_POST['cadastra'])) {
     }
 }
 
-$sql = "SELECT * FROM emia_vigencias WHERE publicado = 1 order by id";
+$sql = "SELECT * FROM emia_cargos WHERE publicado = 1";
 $query = mysqli_query($con, $sql);
 ?>
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2>Listagem de Vigências</h2>
+            <h2>Listagem de Cargos</h2>
         </div>
         <div class="box box-primary">
             <div class="row" align="center">
@@ -44,32 +44,32 @@ $query = mysqli_query($con, $sql);
                 <h4 class="box-title">Listagem</h4>
             </div>
             <div class="box-body">
-                <table id="tblEmiaVigencias" class="table table-striped table-bordered">
+                <table id="tblEmiaCargos" class="table table-striped table-bordered">
                     <thead>
                     <tr>
-                        <th>Ano</th>
-                        <th>Descrição</th>
+                        <th>Cargo</th>
+                        <th>Justificativa</th>
                         <th width="5%">Editar</th>
                         <th width="5%">Excluir</th>
                     </tr>
                     </thead>
                     <?php
                     echo "<tbody>";
-                    while ($ev = mysqli_fetch_array($query)) {
+                    while ($ec = mysqli_fetch_array($query)) {
                         echo "<tr>";
-                        echo "<td>" . $ev['ano'] . "</td>";
-                        echo "<td>" . $ev['descricao'] . "</td>";
+                        echo "<td>" . $ec['cargo'] . "</td>";
+                        echo "<td>" . $ec['justificativa'] . "</td>";
                         echo "<td>
-                        <form action='?perfil=emia&p=vigencia&sp=edita' method='POST'>
-                        <input type='hidden' name='idEVEdit' id='idEVEdit' value='" . $ev['id'] . "'>
+                        <form action='?perfil=emia&p=cargo&sp=edita' method='POST'>
+                        <input type='hidden' name='idECEdit' id='idECEdit' value='" . $ec['id'] . "'>
                         <button type='submit' name='edit' id='edit'  class='btn btn-block btn-primary'><span class='glyphicon glyphicon-edit'></span></button>
                         </form>
                         </td>";
                         echo "<td>
-                        <form action='?perfil=emia&p=vigencia&sp=listagem' method='POST'>
-                        <input type='hidden' name='idEVDelete' id='idEVDelete' value='" . $ev['id'] . "'>
+                        <form action='?perfil=emia&p=cargo&sp=listagem' method='POST'>
+                        <input type='hidden' name='idECDelete' id='idECDelete' value='" . $ec['id'] . "'>
                         <button type='button' name='excluir' id='excluir' class='btn btn-block btn-danger' 
-                        data-target='#exclusao' data-toggle='modal' data-id='" . $ev['id'] . "'>
+                        data-target='#exclusao' data-toggle='modal' data-id='" . $ec['id'] . "'>
                         <span class='glyphicon glyphicon-trash'></span></button>
                         </form>
                         </td>";
@@ -78,8 +78,8 @@ $query = mysqli_query($con, $sql);
                     ?>
                     <tfoot>
                     <tr>
-                        <th>Ano</th>
-                        <th>Descrição</th>
+                        <th>Cargo</th>
+                        <th>Justificativa</th>
                         <th>Editar</th>
                         <th>Excluir</th>
                     </tr>
@@ -89,8 +89,8 @@ $query = mysqli_query($con, $sql);
                     <a href="?perfil=emia">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
-                    <a href="?perfil=emia&p=vigencia&sp=cadastra">
-                        <button type="button" class="btn btn-primary pull-right"> Cadastrar uma nova vigência </button>
+                    <a href="?perfil=emia&p=cargo&sp=cadastra">
+                        <button type="button" class="btn btn-primary pull-right"> Cadastrar um novo cargo </button>
                     </a>
                 </div>
             </div>
@@ -100,14 +100,14 @@ $query = mysqli_query($con, $sql);
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <form action="?perfil=emia&p=vigencia&sp=listagem" method="POST">
+                        <form action="?perfil=emia&p=cargo&sp=listagem" method="POST">
                             <h4 class="modal-title">Confirmação de Exclusão</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Tem certeza que deseja excluir a vigência?</p>
+                        <p>Tem certeza que deseja excluir o cargo?</p>
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" name="idEVDelete" id="idEVDelete" value="<?= $ev['id'] ?>">
+                        <input type="hidden" name="idECDelete" id="idECDelete" value="<?= $ec['id'] ?>">
                         <input type="hidden" name="excluir" id="excluir">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                         </button>
@@ -128,13 +128,13 @@ $query = mysqli_query($con, $sql);
     $('#exclusao').on('show.bs.modal', function (e) {
         let id = $(e.relatedTarget).attr('data-id');
 
-        $(this).find('#idEVDelete').attr('value', `${id}`);
+        $(this).find('#idECDelete').attr('value', `${id}`);
     })
 </script>
 
 <script type="text/javascript">
     $(function () {
-        $('#tblEmiaVigencias').DataTable({
+        $('#tblEmiaCargos').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },

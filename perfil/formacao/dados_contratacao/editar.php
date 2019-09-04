@@ -48,16 +48,6 @@ if (isset($_POST['editar'])) {
 if (isset($_POST['edit'])) {
     $idPC = $_POST['idPCEdit'];
     $fc = recuperaDados('formacao_contratacoes', 'id', $idPC);
-    $idPF = $fc['pessoa_fisica_id'];
-    $classificacao_indicativa = $fc['classificacao'];
-    $territorio = $fc['territorio_id'];
-    $coordenadoria = $fc['coordenadoria_id'];
-    $subprefeitura = $fc['subprefeitura_id'];
-    $programa = $fc['programa_id'];
-    $linguagem = $fc['linguagem_id'];
-    $projeto = $fc['projeto_id'];
-    $cargo = $fc['form_cargo_id'];
-    $vigencia = $fc['form_vigencia_id'];
 }
 
 $_SESSION['idPc'] = $idPC;
