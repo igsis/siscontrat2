@@ -19,7 +19,7 @@ if (isset($_POST['editar'])) {
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'];
 
-    $sqlUpdate = "UPDATE formacao_contratacoes SET 
+    $sqlUpdate = "UPDATE formacao_contratacoes SET
                                  pessoa_fisica_id = '$idPF',
                                  ano = '$ano',
                                  chamado = '$chamado',
@@ -239,7 +239,7 @@ $_SESSION['idPc'] = $idPC;
                     <button type="submit" name="editar" id="editar" class="btn btn-primary pull-right">
                         Salvar
                     </button>
-                    <a href="?perfil=formacao&p=pedido_contratacao&sp=editar">
+                    <a href="?perfil=formacao&p=pedido_contratacao&sp=cadastra">
                         <button type="button" class="btn btn-default pull-right">Gerar pedido de contratação</button>
                     </a>
                 </div>

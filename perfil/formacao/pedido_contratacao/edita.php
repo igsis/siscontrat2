@@ -1,4 +1,40 @@
 <?php
+$con = bancoMysqli();
+
+if(isset($_POST['cadastra']) || isset($_POST['edita'])){
+  $idPc = $_POST['idPc'];
+  $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
+  $idPf = $fc['pessoa_fisica_id'];
+  $verba = $_POST['verba'];
+  $numParcelas = $_POST['numParcelas'];
+  $valor = dinheiroDeBr($_POST['valor']);
+  $dataKit = $_POST['dataKit'];
+  $numeroProcesso = $_POST['numeroProcesso'];
+  $forma_pagamento = addslashes($_POST['forma_pagamento']) ?? null;
+  $justificativa = addslashes($_POST['justificativa']) ?? null;
+  $observacao = addslashes($_POST['observacao']) ?? null;
+
+  if(isset($_POST['cadastra'])){
+    $sql = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_fisica_id, numero_processo, verba_id, numero_parcelas, valor_total, forma_pagamento, data_kit_pagamento, justificativa, status_pedido_id, observacao)
+                         VALUES (2, '$idPc', 1, '$idPf', '$numeroProcesso', '$verba', '$numParcelas', '$valor', '$forma_pagamento', '$dataKit', '$justificativa', 2, '$observacao')";
+    if(mysqli_query($con, $sql)){
+      $idPedido = recuperaUltimo('pedidos');
+      $idVigencia = recuperaDados('formacao_vigencias', 'id', $fc['form_vigencia_id'])['id'];
+      $sqlParcela = "SELECT * FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND publicado = 1";
+      $queryParcela = mysqli_query($con, $sqlParcela);
+      $arrayParcela = mysqli_fetch_array($queryParcela);
+      $rowParcela = mysqli_num_rows($queryParcela);
+
+      if($rowParcela > 0){
+        foreach ($arrayParcela as $rowP) {
+          print($rowP);
+        }
+      }
+    } else {
+
+    }
+  }
+}
 
 if (isset($_POST['carregar']))
     $idPc = $_POST['idPc'];
@@ -18,9 +54,22 @@ $programa = recuperaDados('programas', 'id', $fc['programa_id'])['programa'];
 $linguagem = recuperaDados('linguagens', 'id', $fc['linguagem_id'])['linguagem'];
 $projeto = recuperaDados('projetos', 'id', $fc['projeto_id'])['projeto'];
 $cargo = recuperaDados('formacao_cargos', 'id', $fc['form_cargo_id'])['cargo'];
-$vigencia = recuperaDados('formacao_vigencias', 'id', $fc['form_vigencia_id'])['ano'];
+$vigencia = recuperaDados('formacao_vigencias', 'id', $fc['form_vigencia_id']);
+$numParcelas = $vigencia['numero_parcelas'];
 $fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id'])['nome_completo'];
 $suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'];
+
+$valor = 00.0;
+$idVigencia = $vigencia['id'];
+$sql = "SELECT valor FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND publicado = 1";
+$query = mysqli_query($con, $sql);
+$valores = mysqli_fetch_array($query);
+$rows = mysqli_num_rows($query);
+if($rows > 0){
+  for($count = 0; $count < $rows; $count++)
+    $valor += $valores[$count];
+}
+$valor = dinheiroParaBr($valor);
 ?>
 
 <div class="content-wrapper">
@@ -112,7 +161,7 @@ $suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo']
 
                         <div class="form-group col-md-3">
                             <label for="vigencia">Vigência *</label>
-                            <input type="text" name="vigencia" value="<?= $vigencia ?>" readonly class="form-control">
+                            <input type="text" name="vigencia" value="<?= $vigencia['ano'] ?>" readonly class="form-control">
                         </div>
                     </div>
 
@@ -146,10 +195,54 @@ $suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo']
                                 <?php geraOpcao('verbas'); ?>
                             </select>
                         </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="numParcelas">Número de parcelas</label>
+                          <input type="text" name="numParcelas" value="<?= $numParcelas ?>" readonly class="form-control" required>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="valor">Valor</label>
+                          <input type="text" name="valor" onKeyPress="return(moeda(this,'.',',',event))" class="form-control" value="<?= $valor ?>" readonly>
+                        </div>
                     </div>
 
+                    <div class="row">
+                      <div class="form-group col-md-3">
+                        <label for="dataKit">Data kit pagamento</label>
+                        <input type="date" name="dataKit" class="form-control" id="datepicker10"
+                               placeholder="DD/MM/AAAA">
+                      </div>
 
+                      <div class="form-group col-md-3">
+                        <label for="numeroProcesso">Número do Processo *</label>
+                        <input type="number" min="0" name="numeroProcesso" id="numeroProcesso" class="form-control">
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-md-6">
+                          <label for="forma_pagamento">Forma de pagamento *</label>
+                          <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
+                                    rows="8"></textarea>
+                      </div>
+
+                      <div class="form-group col-md-6">
+                          <label for="justificativa">Justificativa *</label>
+                          <textarea id="justificativa" name="justificativa" class="form-control"
+                                    rows="8"></textarea>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-md-12">
+                          <label for="justificativa">Observação *</label>
+                          <textarea id="observacao" name="observacao" class="form-control"
+                                    rows="8"></textarea>
+                    </div>
                 </div>
+
+
                 <div class="box-footer">
                     <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
                         <button type="button" class="btn btn-default">Voltar</button>
