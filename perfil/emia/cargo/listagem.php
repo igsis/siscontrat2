@@ -73,6 +73,7 @@ $query = mysqli_query($con, $sql);
                         <span class='glyphicon glyphicon-trash'></span></button>
                         </form>
                         </td>";
+                        echo "</tr>";
                     }
                     echo "</tbody>";
                     ?>

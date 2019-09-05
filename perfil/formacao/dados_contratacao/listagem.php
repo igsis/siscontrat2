@@ -83,41 +83,7 @@ if(isset($_POST['despublica'])){
         $mensagem = mensagem("danger", "Erro ao despublicar! Tente novamente.");
     }
 }
-$year = "";
-?>
-<div class="content-wrapper">
-    <section class="content">
-        <h2 class="page-header">Lista de Dados de Contratação</h2>
-        <div class="row">
-        <div class="col-md-4">
-            <form method="post" action="?perfil=formacao&p=dados_contratacao&sp=listagem">
-                <label for="anoEsc">Digite o ano de pesquisa: *</label>
-                <div class="input-group">
-                <input name="anoEsc" id="anoEsc" type="number" class="form-control" min="2018">
-                    <div class="input-group-btn">
-                <button name="anoPesq" id="anoPesq" type="submit" class="btn btn-primary">Pesquisar</button>
-                </div>
-                </div>
-            </form>
-        </div>
-        </div>
-        <div class="box">
-            <div class="box-header">
-                <h3 class="box-title">Listagem</h3>
-            </div>
-            <div class="row" align="center">
-                <?php if (isset($mensagem)) {
-                    echo $mensagem;
-                }; ?>
-            </div>
-            <?php
-            if(isset($_POST['anoPesq'])){
-                $year = $_POST['anoEsc'];
-            }
-            if($year == null){
-                $year = 2018;
-            }
-            $sqlDados = "SELECT
+$sqlDados = "SELECT
             c.id AS 'id',
             c.protocolo AS 'protocolo',
             pf.nome AS 'pessoa',
@@ -130,11 +96,22 @@ $year = "";
             INNER JOIN programas AS p ON p.id = c.programa_id
             INNER JOIN linguagens AS l ON l.id = c.linguagem_id
             INNER JOIN formacao_cargos AS fc ON fc.id = c.form_cargo_id
-            WHERE c.publicado = 1 AND c.ano = '$year'";
-            $queryDados = mysqli_query($con,$sqlDados);
-            ?>
+            WHERE c.publicado = 1";
+$queryDados = mysqli_query($con,$sqlDados);
+?>
+<div class="content-wrapper">
+    <section class="content">
+        <h2 class="page-header">Lista de Dados de Contratação</h2>
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Listagem</h3>
+            </div>
+            <div class="row" align="center">
+                <?php if (isset($mensagem)) {
+                    echo $mensagem;
+                }; ?>
+            </div>
             <div class="box-body">
-                <span class="pull-right ">Exibindo resultados do ano: <?=$year?></span>
                     <table id="tblDadosContratacao" class="table table-striped table-responsive">
                         <thead>
                         <tr>
