@@ -26,15 +26,18 @@ $fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id'])['nome_completo'];
 $suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'];
 
 $valor = 00.0;
+
 $idVigencia = $vigencia['id'];
-$sql = "SELECT valor FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND publicado = 1";
+$sql = "SELECT valor FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND publicado = 1 AND valor <> 0.00";
 $query = mysqli_query($con, $sql);
 $valores = mysqli_fetch_array($query);
 $rows = mysqli_num_rows($query);
+
 if ($rows > 0) {
     for ($count = 0; $count < $rows; $count++)
-        $valor += $valores[$count];
+        $valor += $valores['valor'];
 }
+
 $valor = dinheiroParaBr($valor);
 ?>
 
@@ -46,9 +49,11 @@ $valor = dinheiroParaBr($valor);
                 <h4 class="box-title">Dados para Contratação</h4>
             </div>
             <div class="row" align="center">
-                <?php if (isset($mensagem)) {
+                <?php
+                if (isset($mensagem)) {
                     echo $mensagem;
-                }; ?>
+                }
+                ?>
             </div>
             <form method="post" action="?perfil=formacao&p=pedido_contratacao&sp=edita" role="form">
                 <div class="box-body">
@@ -56,13 +61,13 @@ $valor = dinheiroParaBr($valor);
                         <div class="form-group col-md-6">
                             <label for="ano">Ano: *</label>
                             <input type="number" min="2018" id="ano" name="ano" required class="form-control"
-                                   value="<?= $fc['ano'] ?>" readonly>
+                                   value="<?= $fc['ano'] ?>" disabled>
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="chamado">Chamado: *</label>
                             <input type="number" min="0" max="127" id="chamado" name="chamado"
-                                   value="<?= $fc['chamado'] ?>" required class="form-control" readonly>
+                                   value="<?= $fc['chamado'] ?>" required class="form-control" disabled>
                         </div>
 
                     </div>
@@ -71,14 +76,14 @@ $valor = dinheiroParaBr($valor);
                         <div class="from-group col-md-12">
                             <label for="pf">Pessoa Física: *</label>
                             <input type="text" class="form-control" name="pessoa_fisica" id="pessoa_fisica"
-                                   value="<?= $pessoa_fisica ?>" readonly>
+                                   value="<?= $pessoa_fisica ?>" disabled>
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="classificacao">Classificação Indicativa *</label>
-                            <input type="text" name="classificacao" value="<?= $classificacao ?>" readonly
+                            <input type="text" name="classificacao" value="<?= $classificacao ?>" disabled
                                    class="form-control">
                             </select>
                         </div>
@@ -87,47 +92,47 @@ $valor = dinheiroParaBr($valor);
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label for="territorio">Território *</label>
-                            <input type="text" name="territorio" value="<?= $territorio ?>" readonly
+                            <input type="text" name="territorio" value="<?= $territorio ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="coordenadoria">Coordenadoria *</label>
-                            <input type="text" name="coordenadoria" value="<?= $coordenadoria ?>" readonly
+                            <input type="text" name="coordenadoria" value="<?= $coordenadoria ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="subprefeitura">Subprefeitura *</label>
-                            <input type="text" name="subprefeitura" value="<?= $subprefeitura ?>" readonly
+                            <input type="text" name="subprefeitura" value="<?= $subprefeitura ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="programa">Programa *</label>
-                            <input type="text" name="programa" value="<?= $programa ?>" readonly class="form-control">
+                            <input type="text" name="programa" value="<?= $programa ?>" disabled class="form-control">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label for="linguagem">Linguagem *</label>
-                            <input type="text" name="linguagem" value="<?= $linguagem ?>" readonly class="form-control">
+                            <input type="text" name="linguagem" value="<?= $linguagem ?>" disabled class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="projeto">Projeto *</label>
-                            <input type="text" name="projeto" value="<?= $projeto ?>" readonly class="form-control">
+                            <input type="text" name="projeto" value="<?= $projeto ?>" disabled class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="cargo">Cargo *</label>
-                            <input type="text" name="cargo" value="<?= $cargo ?>" readonly class="form-control">
+                            <input type="text" name="cargo" value="<?= $cargo ?>" disabled class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="vigencia">Vigência *</label>
-                            <input type="text" name="vigencia" value="<?= $vigencia['ano'] ?>" readonly
+                            <input type="text" name="vigencia" value="<?= $vigencia['ano'] ?>" disabled
                                    class="form-control">
                         </div>
                     </div>
@@ -136,19 +141,19 @@ $valor = dinheiroParaBr($valor);
                         <div class="form-group col-md-12">
                             <label for="observacao">Observação: </label>
                             <textarea name="observacao" id="observacao" rows="3"
-                                      class="form-control" readonly><?= $fc['observacao'] ?></textarea>
+                                      class="form-control" disabled><?= $fc['observacao'] ?></textarea>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="fiscal">Fiscal *</label>
-                            <input type="text" name="fiscal" value="<?= $fiscal ?>" readonly class="form-control">
+                            <input type="text" name="fiscal" value="<?= $fiscal ?>" disabled class="form-control">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="fiscal">Suplente </label>
-                            <input type="text" name="suplente" value="<?= $suplente ?>" readonly class="form-control">
+                            <input type="text" name="suplente" value="<?= $suplente ?>" disabled class="form-control">
                         </div>
                     </div>
 
@@ -203,9 +208,28 @@ $valor = dinheiroParaBr($valor);
                         </div>
                     </div>
 
+
+                    <div class="row">
+                        <?php
+                        for ($i = 0; $i < 3; $i++) {
+                            ?>
+                            <div class="form-group col-md-4">
+                                <label for="local[]">Local #<?= $i + 1 ?></label>
+                                <select name="local[]" id="local[]" class="form-control">
+                                    <option value="0">Selecione uma opção... </option>
+                                    <?php
+                                    geraOpcao('locais');
+                                    ?>
+                                </select>
+                            </div>
+                            <?php
+                        }
+                        ?>
+                    </div>
+
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="justificativa">Observação *</label>
+                            <label for="justificativa">Observação </label>
                             <textarea id="observacao" name="observacao" class="form-control"
                                       rows="8"></textarea>
                         </div>
@@ -227,3 +251,25 @@ $valor = dinheiroParaBr($valor);
         </div>
     </section>
 </div>
+
+<script>
+    let local = document.getElementsByName("local[]");
+    const idLocal = "Selecione uma opção... ";
+    const nenhumaOpcao = local[0];
+
+    function verificaLocalSubmit(){
+        let count = 0;
+
+        for(let i = 0; i < local.length; i++){
+
+            if (local[i].value == 0)
+                count++;
+        }
+
+        if (count == 3)
+            console.log("TEM PARADA ERRADA AE MERAMO")
+        else
+            console.log("ok")
+    }
+
+</script>
