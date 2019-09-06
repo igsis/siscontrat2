@@ -158,7 +158,7 @@
                         <div class="form-group col-md-6">
                             <label for="fiscal">Suplente </label>
                             <select name="suplente" id="suplente" class="form-control">
-                                <option>Selecione um suplente...</option>
+                                <option value="">Selecione um suplente...</option>
                                 <?php
                                     geraOpcaoUsuario("usuarios", 1, "");
                                 ?>

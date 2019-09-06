@@ -607,13 +607,13 @@ if ($foto == null) {
         </div>
 
         <?php
-        modalUploadArquivoUnico("modal-rg", "?perfil=formacao&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
-        modalUploadArquivoUnico("modal-foto", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "1");
-        modalUploadArquivoUnico("modal-cpf", "?perfil=formacao&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
-        modalUploadArquivoUnico("modal-ccm", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
-        modalUploadArquivoUnico("modal-nit", "?perfil=formacao&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
-        modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
-        modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "1");
+        modalUploadArquivoUnico("modal-rg", "?perfil=emia&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
+        modalUploadArquivoUnico("modal-foto", "?perfil=emia&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "1");
+        modalUploadArquivoUnico("modal-cpf", "?perfil=emia&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
+        modalUploadArquivoUnico("modal-ccm", "?perfil=emia&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
+        modalUploadArquivoUnico("modal-nit", "?perfil=emia&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
+        modalUploadArquivoUnico("modal-facc", "?perfil=emia&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
+        modalUploadArquivoUnico("modal-endereco", "?perfil=emia&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "1");
         ?>
 
     </section>

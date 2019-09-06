@@ -1,7 +1,7 @@
 <?php
 $con = bancoMysqli();
 
-if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
+if (isset($_POST['cadastra'])) {
     $idPF = $_POST['idPF'];
     $ano = $_POST['ano'];
     $status = "1";
@@ -20,8 +20,7 @@ if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
     $suplente = $_POST['suplente'];
     $usuario = $_SESSION['idUser'];
     $data = date("Y-m-d H:i:s", strtotime("now"));
-}
-if (isset($_POST['cadastra'])) {
+
     $sqlInsert = "INSERT INTO formacao_contratacoes (
                                    pessoa_fisica_id, 
                                    ano, 

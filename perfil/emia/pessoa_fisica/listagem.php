@@ -7,7 +7,7 @@ $query = mysqli_query($con, $sql);
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2>Listagem de Pessoas Físicas</h2>
+            <h2>Edição de pessoa física</h2>
         </div>
         <div class="box box-primary">
             <div class="row" align="center">
@@ -61,7 +61,7 @@ $query = mysqli_query($con, $sql);
                     <a href="?perfil=emia">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
-                    <a href="?perfil=formacao&p=pessoa_fisica&sp=pesquisa">
+                    <a href="?perfil=emia&p=pessoa_fisica&sp=pesquisa">
                         <button type="button" class="btn btn-primary pull-right"> Cadastrar uma nova pessoa física</button>
                     </a>
                 </div>
