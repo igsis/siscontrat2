@@ -77,9 +77,9 @@ if(isset($_POST['despublica'])){
     $idDados = $_POST['idDados'];
     $sqlDespublica = "UPDATE formacao_contratacoes SET publicado = 0 WHERE id = '$idDados'";
     if(mysqli_query($con,$sqlDespublica)){
-       $mensagem = mensagem("success", "Despublicado com sucesso!");
+       $mensagem = mensagem("success", "Apagado com sucesso!");
     }else{
-        $mensagem = mensagem("danger", "Erro ao despublicar! Tente novamente.");
+        $mensagem = mensagem("danger", "Erro ao apagar! Tente novamente.");
     }
 }
 $sqlDados = "SELECT

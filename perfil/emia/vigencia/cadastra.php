@@ -7,13 +7,14 @@
             <div class="box-header with-border">
             <h3 class="box-title">Vigência</h3>
         </div>
-            <form method="post" action="?perfil=emia&p=vigencia&sp=listagem" role="form">
+            <form method="post" action="?perfil=emia&p=vigencia&sp=edita" role="form">
                 <div class="box-body">
                 <div class="row">
                     <div class="col-md-4">
                         <label for="ano">Ano: *</label>
                         <input class="form-control" type="number" min="2018" required name="ano" id="ano">
                     </div>
+
                     <div class="col-md-8">
                         <label for="descricao">Descrição: *</label>
                         <input class="form-control" type="text" required name="desc" id="desc">

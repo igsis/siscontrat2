@@ -11,22 +11,7 @@ if (isset($_POST['excluir'])) {
     }
 }
 
-if (isset($_POST['cadastra'])) {
-    $ano = $_POST['ano'];
-    $desc = $_POST['desc'];
-
-    $sqlInsert = "INSERT INTO emia_vigencias
-                            (ano, descricao)
-                            VALUES
-                            ('$ano', '$desc')";
-    if (mysqli_query($con, $sqlInsert)) {
-        $mensagem = mensagem("success", "Cadastrado com sucesso!");
-    } else {
-        $mensagem = mensagem("danger", "Erro ao cadastrar! Tente novamente.");
-    }
-}
-
-$sql = "SELECT * FROM emia_vigencias WHERE publicado = 1 order by id";
+$sql = "SELECT * FROM emia_vigencias WHERE publicado = 1";
 $query = mysqli_query($con, $sql);
 ?>
 <div class="content-wrapper">

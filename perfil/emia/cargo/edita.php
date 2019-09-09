@@ -28,7 +28,7 @@ $_SESSION['idEC'] = $idEC;
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2>Cadastro de Cargo</h2>
+            <h2>EMIA - Cargos</h2>
         </div>
         <div class="box box-primary">
             <div class="row" align="center">
@@ -37,7 +37,7 @@ $_SESSION['idEC'] = $idEC;
                 }; ?>
             </div>
             <div class="box-header with-border">
-                <h3 class="box-title">Cargo</h3>
+                <h3 class="box-title">Edição de cargo</h3>
             </div>
             <form method="post" action="?perfil=emia&p=cargo&sp=edita" role="form">
                 <div class="box-body">

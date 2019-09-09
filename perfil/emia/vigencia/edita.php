@@ -1,14 +1,33 @@
 <?php
 $con = bancoMysqli();
 
+if (isset($_POST['cadastra'])) {
+    $ano = $_POST['ano'];
+    $desc = $_POST['desc'];
+
+    $sqlInsert = "INSERT INTO emia_vigencias
+                            (ano, descricao)
+                            VALUES
+                            ('$ano', '$desc')";
+    if (mysqli_query($con, $sqlInsert)) {
+        $mensagem = mensagem("success", "Cadastrado com sucesso!");
+        $idEV = recuperaUltimo('formacao_vigencias');
+    } else {
+        $mensagem = mensagem("danger", "Erro ao cadastrar! Tente novamente.");
+    }
+    $ev = recuperaDados('emia_vigencias', 'id', $idEV);
+}
+
 if(isset($_POST['editar'])){
     $idEV = $_POST['idEV'];
     $ano = $_POST['ano'];
     $desc = $_POST['desc'];
+    $_SESSION['idEV'] = $idEV;
     $sqlUpdate = "UPDATE emia_vigencias SET
                     ano = '$ano',
                     descricao = '$desc'
                     WHERE id = '$idEV'";
+
     if(mysqli_query($con,$sqlUpdate)){
         $mensagem = mensagem("success", "Gravado com sucesso!");
     }else{
@@ -22,8 +41,6 @@ if (isset($_POST['edit'])) {
     $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 }
 
-
-$_SESSION['idEV'] = $idEV;
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -51,6 +68,7 @@ $_SESSION['idEV'] = $idEV;
                             <input class="form-control" type="text" required name="desc" id="desc" value="<?=$ev['descricao']?>">
                         </div>
                     </div>
+
                 </div>
                 <div class="box-footer">
                     <a href="?perfil=emia&p=vigencia&sp=listagem">
@@ -58,6 +76,9 @@ $_SESSION['idEV'] = $idEV;
                     </a>
                     <input type="hidden" name="idEV" value="<?=$idEV?>" id="idEV">
                     <button name="editar" id="editar" type="submit" class="btn btn-primary pull-right">Salvar</button>
+                    <a href="?perfil=emia&p=parcela&sp=cadastra">
+                        <button type="button" class="btn btn-default pull-right">Cadastrar Parcelas</button>
+                    </a>
             </form>
         </div>
     </section>

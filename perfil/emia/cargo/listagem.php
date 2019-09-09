@@ -32,7 +32,7 @@ $query = mysqli_query($con, $sql);
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2>Listagem de Cargos</h2>
+            <h2>EMIA - Cargos</h2>
         </div>
         <div class="box box-primary">
             <div class="row" align="center">
@@ -41,7 +41,7 @@ $query = mysqli_query($con, $sql);
                 }; ?>
             </div>
             <div class="box-header">
-                <h4 class="box-title">Listagem</h4>
+                <h4 class="box-title">Listagem de cargos</h4>
             </div>
             <div class="box-body">
                 <table id="tblEmiaCargos" class="table table-striped table-bordered">

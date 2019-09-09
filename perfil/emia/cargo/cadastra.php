@@ -1,11 +1,11 @@
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2>Cadastro de Cargos</h2>
+            <h2>EMIA - Cargos</h2>
         </div>
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Cargo</h3>
+                <h3 class="box-title">Cadastro de cargo</h3>
             </div>
             <form method="post" action="?perfil=emia&p=cargo&sp=listagem" role="form">
                 <div class="box-body">

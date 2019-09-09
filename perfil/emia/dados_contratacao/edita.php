@@ -43,7 +43,7 @@ $_SESSION['idEc'] = $idEC;
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2>Cadastro de Dados para Contratação</h2>
+            <h2>EMIA - Dados para contratação</h2>
         </div>
         <div class="box box-primary">
             <div class="row" align="center">
@@ -52,7 +52,7 @@ $_SESSION['idEc'] = $idEC;
                 }; ?>
             </div>
             <div class="box-header">
-                <h4 class="box-title">Dados para Contratação</h4>
+                <h4 class="box-title">Edição de dados para Contratação</h4>
             </div>
             <div class="box-body">
                 <form action="?perfil=emia&p=dados_contratacao&sp=edita" method="POST" role="form">

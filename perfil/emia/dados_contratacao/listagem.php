@@ -48,6 +48,16 @@ if (isset($_POST['cadastrar'])) {
     }
 }
 
+if(isset($_POST['despublica'])){
+    $idDados = $_POST['idDados'];
+    $sqlDespublica = "UPDATE emia_contratacao SET publicado = 0 WHERE id = '$idDados'";
+    if(mysqli_query($con,$sqlDespublica)){
+        $mensagem = mensagem("success", "Apagado com Sucesso!");
+    }else{
+        $mensagem = mensagem("danger", "Erro ao apagar! Tente novamente.");
+    }
+}
+
 $sqlSelect = "SELECT ec.id AS 'id',
 		ec.protocolo AS 'protocolo',
         p.nome AS 'pessoa_fisica',
@@ -55,13 +65,14 @@ $sqlSelect = "SELECT ec.id AS 'id',
         c.cargo AS 'cargo'
         FROM emia_contratacao AS ec
         INNER JOIN pessoa_fisicas AS p ON p.id = ec.pessoa_fisica_id
-        INNER JOIN emia_cargos AS c ON c.id = ec.emia_cargo_id;";
+        INNER JOIN emia_cargos AS c ON c.id = ec.emia_cargo_id
+        WHERE ec.publicado = 1 ";
 $querySelect = mysqli_query($con, $sqlSelect);
 ?>
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2 class="page-title">Listagem de dados para contratação</h2>
+            <h2 class="page-title">EMIA</h2>
         </div>
         <div class="box box-primary">
             <div class="row" align="center">
@@ -70,13 +81,13 @@ $querySelect = mysqli_query($con, $sqlSelect);
                 }; ?>
             </div>
             <div class="box-header">
-                <h4 class="box-title">Listagem</h4>
+                <h4 class="box-title">Listagem de dados para contratação</h4>
             </div>
             <div class="box-body">
                 <table id="tblEmiaContratacoes" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>Protcolo</th>
+                        <th>Protocolo</th>
                         <th>Pessoa</th>
                         <th>Ano</th>
                         <th>Cargo</th>
@@ -112,7 +123,7 @@ $querySelect = mysqli_query($con, $sqlSelect);
                     ?>
                     <tfoot>
                     <tr>
-                        <th>Protcolo</th>
+                        <th>Protocolo</th>
                         <th>Pessoa</th>
                         <th>Ano</th>
                         <th>Cargo</th>

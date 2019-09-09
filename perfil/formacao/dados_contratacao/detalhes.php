@@ -147,7 +147,7 @@ $fc = $con->query($sql)->fetch_assoc();
                     <button type="button" class="btn btn-danger pull-right" id="despublica"
                             data-toggle="modal" data-target="#despublicacao" name="despublica"
                             data-id="<?= $fc['id'] ?>">
-                        Despublicar
+                        Excluir
                     </button>
                 </form>
             </div>
@@ -158,18 +158,18 @@ $fc = $con->query($sql)->fetch_assoc();
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <form action="?perfil=formacao&p=pedido_contratacao&sp=editar" method="post">
-                <h4 class="modal-title">Confirmação de Despublicação</h4>
+                <form action="?perfil=formacao&p=dados_contratacao&sp=listagem" method="post">
+                <h4 class="modal-title">Confirmação de Exclusão</h4>
             </div>
             <div class="modal-body">
-                <label>Tem certeza que deseja despublicar?</label>
+                <label>Tem certeza que deseja excluir?</label>
             </div>
             <div class="modal-footer">
                 <input type="hidden" name="idDados" id="idDados" value="<?= $fc['id']?>">
                 <input type="hidden" name="despublicar" id="despublicar">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                 </button>
-                <input type="submit" class="btn btn-danger btn-outline" name="despublica" value="Despublicar">
+                <input type="submit" class="btn btn-danger btn-outline" name="despublica" value="Excluir">
                 </form>
             </div>
         </div>
