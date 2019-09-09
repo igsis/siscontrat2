@@ -2,9 +2,6 @@
 $con = bancoMysqli();
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
-    $idPc = $_POST['idPc'];
-    $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
-    $idPf = $fc['pessoa_fisica_id'];
     $verba = $_POST['verba'];
     $numParcelas = $_POST['numParcelas'];
     $valor = dinheiroDeBr($_POST['valor']);
@@ -13,8 +10,13 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $forma_pagamento = addslashes($_POST['forma_pagamento']) ?? null;
     $justificativa = addslashes($_POST['justificativa']) ?? null;
     $observacao = addslashes($_POST['observacao']) ?? null;
+    $local = $_POST['local'];
 
     if (isset($_POST['cadastra'])) {
+        $idPc = $_POST['idPc'];
+        $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
+        $idPf = $fc['pessoa_fisica_id'] ?? null;
+
         $sql = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_fisica_id, numero_processo, verba_id, numero_parcelas, valor_total, forma_pagamento, data_kit_pagamento, justificativa, status_pedido_id, observacao)
                          VALUES (2, '$idPc', 1, '$idPf', '$numeroProcesso', '$verba', '$numParcelas', '$valor', '$forma_pagamento', '$dataKit', '$justificativa', 2, '$observacao')";
         if (mysqli_query($con, $sql)) {
@@ -29,6 +31,45 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
             mysqli_query($con, $sqlInsert);
             gravarLog($sqlInsert);
 
+            $sql_delete = "DELETE FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
+            mysqli_query($con, $sql_delete);
+
+            for ($i = 0; $i < count($local); $i++) {
+                $idLocal = $local[$i];
+
+                $sqlLocal = "INSERT INTO formacao_locais (form_pre_pedido_id, local_id) VALUES ('$idPc', '$idLocal')";
+                mysqli_query($con, $sqlLocal);
+                gravarLog($sqlLocal);
+            }
+
+            $mensagem = mensagem("success", "");
+
+        } else {
+            $mensagem = mensagem("danger", "");
+        }
+    } else if (isset($_POST['edita'])) {
+        $idPedido = $_POST['idPedido'];
+
+        $sql = "UPDATE pedidos SET verba_id = '$verba', valor_total = '$valor', data_kit_pagamento = '$dataKit', numero_processo = '$numeroProcesso', forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
+
+        if (mysqli_query($con, $sql)) {
+            gravarLog($sql);
+
+            $pedido = recuperaDados('pedidos', 'id', $idPedido);
+            $idPc = $pedido['origem_id'];
+            $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
+
+            $sql_delete = "DELETE FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
+            mysqli_query($con, $sql_delete);
+
+            for ($i = 0; $i < count($local); $i++) {
+                $idLocal = $local[$i];
+
+                $sqlLocal = "INSERT INTO formacao_locais (form_pre_pedido_id, local_id) VALUES ('$idPc', '$idLocal')";
+                mysqli_query($con, $sqlLocal);
+                gravarLog($sqlLocal);
+            }
+
             $mensagem = mensagem("success", "");
 
         } else {
@@ -38,12 +79,36 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 }
 
 if (isset($_POST['carregar']))
-    $idPc = $_POST['idPc'];
-else
-    $idPc = $_SESSION['idPc'];
+    $idPedido = $_POST['idPedido'];
 
-$_SESSION['idPc'] = $idPc;
-$idPc = $_SESSION['idPc'];
+if (isset($_POST['parcelaEditada'])) {
+    $idPedido = $_SESSION['idPedido'];
+    $parcelas = $_POST['parcela'];
+    $valores = dinheiroDeBr($_POST['valor']);
+    $data_pagamentos = $_POST['data_pagamento'];
+
+    $pedido = recuperaDados('pedidos', 'id', $idPedido);
+
+    $sql = "DELETE FROM parcelas WHERE pedido_id = '$idPedido'";
+    mysqli_query($con, $sql);
+
+    $i = $pedido['numero_parcelas'];
+
+    for ($count = 0; $count < $i; $count++) {
+        $parcela = $parcelas[$count] ?? NULL;
+        $valor = $valores[$count] ?? NULL;
+        $data_pagamento = $data_pagamentos[$count] ?? NULL;
+
+        $sql = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
+
+        mysqli_query($con, $sql);
+    }
+}
+
+
+$_SESSION['idPedido'] = $idPedido;
+$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$idPc = $pedido['origem_id'];
 
 $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
 $pessoa_fisica = recuperaDados('pessoa_fisicas', 'id', $fc['pessoa_fisica_id'])['nome'];
@@ -64,17 +129,14 @@ $valor = 00.0;
 $idVigencia = $vigencia['id'];
 $sql = "SELECT valor FROM parcelas WHERE pedido_id = '$idPedido' AND valor <> 0.00";
 $query = mysqli_query($con, $sql);
-$valores = mysqli_fetch_array($query);
-$rows = mysqli_num_rows($query);
 
-if ($rows > 0) {
-    for ($count = 0; $count < $rows; $count++)
-        $valor += $valores[$count];
-}
+while ($count = mysqli_fetch_array($query))
+    $valor += $count['valor'];
 
 $valor = dinheiroParaBr($valor);
 
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$sqlLocal = "SELECT local_id FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
+$queryLocais = mysqli_query($con, $sqlLocal);
 ?>
 
 <div class="content-wrapper">
@@ -89,7 +151,7 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
                     echo $mensagem;
                 }; ?>
             </div>
-            <form method="post" action="?perfil=formacao&p=dados_contratacao&sp=editar" role="form">
+            <form method="post" action="?perfil=formacao&p=pedido_contratacao&sp=edita" role="form" id="formulario">
                 <div class="box-body">
                     <div class="row">
                         <div class="form-group col-md-6">
@@ -198,7 +260,7 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
                         <div class="form-group col-md-6">
                             <label for="verba">Verba* </label>
                             <select name="verba" id="verba" class="form-control">
-                                <?php geraOpcao('verbas'); ?>
+                                <?php geraOpcao('verbas', $pedido['verba_id']); ?>
                             </select>
                         </div>
 
@@ -227,6 +289,13 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
                             <input type="number" min="0" name="numeroProcesso" id="numeroProcesso" class="form-control"
                                    value="<?= $pedido['numero_processo'] ?>">
                         </div>
+
+                        <div class="form-group col-md-6">
+                            <br>
+                            <a href="?perfil=formacao&p=pedido_contratacao&sp=edita_parcelas">
+                                <button type="button" class="btn btn-info btn-block">Editar parcelas</button>
+                            </a>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -244,6 +313,34 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
                     </div>
 
                     <div class="row">
+                        <?php
+                        $arrayLocal = array();
+                        while ($count = mysqli_fetch_array($queryLocais)) {
+                            array_push($arrayLocal, $count['local_id']);
+                        }
+                        for ($i = 0; $i < 3; $i++) {
+                            ?>
+                            <div class="form-group col-md-4">
+                                <label for="local[]">Local #<?= $i + 1 ?> </label>
+                                <select name="local[]" id="local[]" class="form-control">
+                                    <option value="0">Selecione uma opção...</option>
+                                    <?php
+                                    geraOpcao('locais', $arrayLocal[$i]);
+                                    ?>
+                                </select>
+                            </div>
+                            <?php
+                        }
+                        ?>
+                    </div>
+
+                    <div class="row" id="msgEsconde" style="display: none;">
+                        <div class="col-md-12">
+                            <span style="color: red;"><b>Selecione ao menos um local!</b></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <div class="form-group col-md-12">
                             <label for="justificativa">Observação *</label>
                             <textarea id="observacao" name="observacao" class="form-control"
@@ -253,13 +350,13 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
 
 
                     <div class="box-footer">
-                        <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
+                        <a href="?perfil=formacao&p=pedido_contratacao&sp=listagem">
                             <button type="button" class="btn btn-default">Voltar</button>
                         </a>
 
-                        <input type="hidden" name="idFC" value="<?= $idPC ?>" id="idFC">
+                        <input type="hidden" name="idPedido" value="<?= $pedido['id'] ?>" id="idPedido">
 
-                        <button type="submit" name="editar" id="editar" class="btn btn-primary pull-right">
+                        <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
                             Salvar
                         </button>
                     </div>
@@ -267,3 +364,27 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
         </div>
     </section>
 </div>
+
+<script>
+    let local = document.getElementsByName("local[]");
+    const idLocal = "Selecione uma opção... ";
+    const nenhumaOpcao = local[0];
+    var isMsg = $('#msgEsconde');
+    isMsg.hide();
+
+    $('#formulario').submit(function (event) {
+        let count = 0;
+
+        for (let i = 0; i < local.length; i++) {
+            if (local[i].value == 0)
+                count++;
+        }
+
+        if (count == 3) {
+            event.preventDefault()
+            isMsg.show();
+            nenhumaOpcao.focus()
+        }
+    })
+
+</script>

@@ -30,13 +30,9 @@ $valor = 00.0;
 $idVigencia = $vigencia['id'];
 $sql = "SELECT valor FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND publicado = 1 AND valor <> 0.00";
 $query = mysqli_query($con, $sql);
-$valores = mysqli_fetch_array($query);
-$rows = mysqli_num_rows($query);
 
-if ($rows > 0) {
-    for ($count = 0; $count < $rows; $count++)
-        $valor += $valores['valor'];
-}
+while ($count = mysqli_fetch_array($query))
+    $valor += $count['valor'];
 
 $valor = dinheiroParaBr($valor);
 ?>
@@ -55,7 +51,7 @@ $valor = dinheiroParaBr($valor);
                 }
                 ?>
             </div>
-            <form method="post" action="?perfil=formacao&p=pedido_contratacao&sp=edita" role="form">
+            <form method="post" action="?perfil=formacao&p=pedido_contratacao&sp=edita" role="form" id="formulario">
                 <div class="box-body">
                     <div class="row">
                         <div class="form-group col-md-6">
@@ -216,7 +212,7 @@ $valor = dinheiroParaBr($valor);
                             <div class="form-group col-md-4">
                                 <label for="local[]">Local #<?= $i + 1 ?></label>
                                 <select name="local[]" id="local[]" class="form-control">
-                                    <option value="0">Selecione uma opção... </option>
+                                    <option value="0">Selecione uma opção...</option>
                                     <?php
                                     geraOpcao('locais');
                                     ?>
@@ -225,6 +221,12 @@ $valor = dinheiroParaBr($valor);
                             <?php
                         }
                         ?>
+                    </div>
+
+                    <div class="row" id="msgEsconde" style="display: none;">
+                        <div class="col-md-12">
+                            <span style="color: red;"><b>Selecione ao menos um local!</b></span>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -237,10 +239,6 @@ $valor = dinheiroParaBr($valor);
 
 
                     <div class="box-footer">
-                        <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
-                            <button type="button" class="btn btn-default">Voltar</button>
-                        </a>
-
                         <input type="hidden" name="idPc" value="<?= $idPc ?>" id="idPc">
 
                         <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">
@@ -256,20 +254,22 @@ $valor = dinheiroParaBr($valor);
     let local = document.getElementsByName("local[]");
     const idLocal = "Selecione uma opção... ";
     const nenhumaOpcao = local[0];
+    var isMsg = $('#msgEsconde');
+    isMsg.hide();
 
-    function verificaLocalSubmit(){
+    $('#formulario').submit(function (event) {
         let count = 0;
 
-        for(let i = 0; i < local.length; i++){
-
+        for (let i = 0; i < local.length; i++) {
             if (local[i].value == 0)
                 count++;
         }
 
-        if (count == 3)
-            console.log("TEM PARADA ERRADA AE MERAMO")
-        else
-            console.log("ok")
-    }
+        if (count == 3) {
+            event.preventDefault()
+            isMsg.show();
+            nenhumaOpcao.focus()
+        }
+    })
 
 </script>

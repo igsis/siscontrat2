@@ -1,12 +1,10 @@
 <?php
 $con = bancoMysqli();
 
-$sql = "SELECT p.id, fc.num_processo_pagto, pf.nome, l.local, v.verba, fs.status, fc.form_status_id 
+$sql = "SELECT p.id, p.origem_id,fc.protocolo, fc.ano, p.numero_processo,fc.num_processo_pagto, pf.nome, v.verba, fs.status, fc.form_status_id 
             FROM pedidos p 
             INNER JOIN formacao_contratacoes fc ON fc.id = p.origem_id 
-            INNER JOIN pessoa_fisicas pf ON fc.pessoa_fisica_id = pf.id 
-            INNER JOIN formacao_locais fl on fc.id = fl.form_pre_pedido_id 
-            INNER JOIN locais l on fl.local_id = l.id 
+            INNER JOIN pessoa_fisicas pf ON fc.pessoa_fisica_id = pf.id
             INNER JOIN verbas v on p.verba_id = v.id 
             INNER JOIN formacao_status fs on fc.form_status_id = fs.id
             WHERE fc.form_status_id != 5 AND p.publicado = 1 AND fc.publicado = 1";
@@ -22,8 +20,6 @@ $num_arrow = mysqli_num_rows($query);
 
         <!-- START FORM-->
         <h3 class="box-title">Lista de Pedido de contratação</h3>
-        <a href="?perfil=formacao&p=pedido_contratacao&sp=cadastro" class="text-right btn btn-success"
-           style="float: right">Adicionar pedido</a>
         <div class="row" align="center">
             <?php if (isset($mensagem)) {
                 echo $mensagem;
@@ -40,11 +36,11 @@ $num_arrow = mysqli_num_rows($query);
                         <table id="tblCargo" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>Código de pedido</th>
+                                <th>Protocolo</th>
                                 <th>Processo</th>
                                 <th>Proponente</th>
                                 <th>Local</th>
-                                <th>Periodo</th>
+                                <th>Ano</th>
                                 <th>Verba</th>
                                 <th>Status</th>
                             </tr>
@@ -60,17 +56,40 @@ $num_arrow = mysqli_num_rows($query);
                                 <?php
                             } else {
                                 while ($row = mysqli_fetch_array($query)) {
+                                    $idFc = $row['origem_id'];
+                                    $sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFc'";
+                                    $local = "";
+                                    $queryLocal = mysqli_query($con, $sqlLocal);
+
                                     if ($row['form_status_id'] == '2' || $row['form_status_id'] == '4')
-                                        $cor = 1;
+
+                                        $cor = 'rgba(234, 0, 0, 0.5)';
                                     else
-                                        $cor = 0;
+                                        $cor = 'rgba(0, 214, 21, 0.5)';
                                     ?>
-                                    <tr>
-                                        <td><?= $row['protocolo'] ?></td>
-                                        <td><?= $row['num_processo_pagto'] ?></td>
+                                    <tr style="background: <?= $cor ?>">
+                                        <td>
+                                            <form action="?perfil=formacao&p=pedido_contratacao&sp=edita" method="POST">
+                                                <input type="hidden" name="idPedido" id="idPedido"
+                                                       value="<?= $row['id'] ?>">
+                                                <button type="submit" name="carregar"
+                                                        class="btn btn-primary btn-block"><?= $row['protocolo'] ?></button>
+                                            </form>
+                                        </td>
+
+                                        <td><?= $row['numero_processo'] ?></td>
                                         <td><?= $row['nome'] ?></td>
-                                        <td><?= $row['local'] ?></td>
-                                        <td><?= $row['protocolo'] ?></td>
+                                        <td>
+                                            <?php
+                                            while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
+                                                $local = $local . $linhaLocal['local'] . ' - ';
+                                            }
+
+                                            $local = substr($local, 0, -3);
+                                            echo $local;
+                                            ?>
+                                        </td>
+                                        <td><?= $row['ano'] ?></td>
                                         <td><?= $row['verba'] ?></td>
                                         <td><?= $row['status'] ?></td>
                                     </tr>
@@ -82,11 +101,11 @@ $num_arrow = mysqli_num_rows($query);
 
                             <tfoot>
                             <tr>
-                                <th>Código de pedido</th>
+                                <th>Protocolo</th>
                                 <th>Processo</th>
                                 <th>Proponente</th>
                                 <th>Local</th>
-                                <th>Periodo</th>
+                                <th>Ano</th>
                                 <th>Verba</th>
                                 <th>Status</th>
                             </tr>
