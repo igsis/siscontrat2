@@ -91,7 +91,7 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
                                 </div>
 
                                 <div class="form-group col-md-2">
-                                    <label for="tipo">É jovem monitor?</label> <br>
+                                    <label for="tipo">É estagiário/jovem monitor? *</label> <br>
                                     <label><input type="radio" name="jovem_monitor" id="jovem_monitor" <?= $usuario['jovem_monitor'] == 1 ? 'checked' : NULL ?> value="1"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0" <?= $usuario['jovem_monitor'] == 0 ? 'checked' : NULL ?> value="1"> Não </label>
                                 </div>
