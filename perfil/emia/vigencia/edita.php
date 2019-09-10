@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-
+unset($_SESSION['idEV']);
 if (isset($_POST['cadastra'])) {
     $ano = $_POST['ano'];
     $desc = $_POST['desc'];
@@ -11,14 +11,16 @@ if (isset($_POST['cadastra'])) {
                             ('$ano', '$desc')";
     if (mysqli_query($con, $sqlInsert)) {
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
-        $idEV = recuperaUltimo('formacao_vigencias');
+        $idEV = recuperaUltimo('emia_vigencias');
+        $_SESSION['idEV'] = $idEV;
     } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar! Tente novamente.");
     }
     $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 }
 
-if(isset($_POST['editar'])){
+if (isset($_POST['editar'])) {
+    unset($_SESSION['idEV']);
     $idEV = $_POST['idEV'];
     $ano = $_POST['ano'];
     $desc = $_POST['desc'];
@@ -28,16 +30,18 @@ if(isset($_POST['editar'])){
                     descricao = '$desc'
                     WHERE id = '$idEV'";
 
-    if(mysqli_query($con,$sqlUpdate)){
+    if (mysqli_query($con, $sqlUpdate)) {
         $mensagem = mensagem("success", "Gravado com sucesso!");
-    }else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
     $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 }
 
 if (isset($_POST['edit'])) {
+    unset($_SESSION['idEV']);
     $idEV = $_POST['idEVEdit'];
+    $_SESSION['idEV'] = $idEV;
     $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 }
 
@@ -61,11 +65,13 @@ if (isset($_POST['edit'])) {
                     <div class="row">
                         <div class="col-md-4">
                             <label for="ano">Ano: *</label>
-                            <input class="form-control" type="number" min="2018" required name="ano" id="ano" value="<?=$ev['ano']?>">
+                            <input class="form-control" type="number" min="2018" required name="ano" id="ano"
+                                   value="<?= $ev['ano'] ?>">
                         </div>
                         <div class="col-md-8">
                             <label for="descricao">Descrição: *</label>
-                            <input class="form-control" type="text" required name="desc" id="desc" value="<?=$ev['descricao']?>">
+                            <input class="form-control" type="text" required name="desc" id="desc"
+                                   value="<?= $ev['descricao'] ?>">
                         </div>
                     </div>
 
@@ -74,7 +80,7 @@ if (isset($_POST['edit'])) {
                     <a href="?perfil=emia&p=vigencia&sp=listagem">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
-                    <input type="hidden" name="idEV" value="<?=$idEV?>" id="idEV">
+                    <input type="hidden" name="idEV" value="<?= $idEV ?>" id="idEV">
                     <button name="editar" id="editar" type="submit" class="btn btn-primary pull-right">Salvar</button>
                     <a href="?perfil=emia&p=parcela&sp=cadastra">
                         <button type="button" class="btn btn-default pull-right">Cadastrar Parcelas</button>
@@ -82,5 +88,6 @@ if (isset($_POST['edit'])) {
             </form>
         </div>
     </section>
+</div>
 </div>
 

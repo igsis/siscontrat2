@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 
 $idEV = $_SESSION['idEV'];
-$numParcela = $_POST['numParcela'];
+$numParcela = $_POST['numParcelas'];
 $valor = $_POST['valor'];
 $data_inicio = $_POST['data_inicio'];
 $data_fim = $_POST['data_fim'];
@@ -35,9 +35,11 @@ if (isset($_POST['cadastra'])) {
     } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar! Tente novamente.");
     }
+    $parcelas = recuperaDados('emia_parcelas', 'id', $idParcela);
 }
 
 if (isset($_POST['edita'])) {
+    $idParcela = recuperaUltimo("emia_parcelas");
     $numParcela = $_POST['numParcela'];
     $valor = $_POST['valor'];
     $data_inicio = $_POST['data_inicio'];
@@ -45,10 +47,6 @@ if (isset($_POST['edita'])) {
     $data_pgt = $_POST['data_pgt'];
     $mes = $_POST['mes_ref'];
     $carga = $_POST['carga_horaria'];
-
-    $idVigencia = $_POST['idVigencia'];
-    $sqlCorrige = "DELETE FROM emia_parcelas WHERE emia_vigencia_id = '$idVigencia'";
-    mysqli_query($con, $sqlCorrige);
 
     $sqlUpdateParcela = "UPDATE emia_parcelas SET
                                 numero_parcelas = '$numParcela',
@@ -64,9 +62,52 @@ if (isset($_POST['edita'])) {
     } else {
         $mensagem = mensagem("danger", "Erro ao salvar! Tente novamente.");
     }
+    $parcelas = recuperaDados('emia_parcelas', 'id', $idParcela);
 }
 
 ?>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        validate();
+        $('#datepicker11').change(validate);
+    });
+
+    function validate() {
+        comparaData();
+        if ($('#datepicker11').val().length > 0) {
+        }
+
+    }
+
+    function comparaData() {
+        let botao = $('#cadastra');
+        var isMsgData = $('#msgEscondeData');
+        isMsgData.hide();
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var dataFim = document.querySelector('#datepicker11').value;
+
+        if (dataInicio != "") {
+            var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
+        }
+
+        if (dataFim != "") {
+            var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
+
+            if (dataFim <= dataInicio) {
+                botao.prop('disabled', true);
+                isMsgData.show();
+                $('#cadastra').attr("disabled", true);
+            } else {
+                botao.prop('disabled', false);
+                isMsgData.hide();
+                $('#cadastra').attr("disabled", false);
+            }
+        }
+
+    }
+</script>
+
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
@@ -82,25 +123,33 @@ if (isset($_POST['edita'])) {
                         <div class="col-md-3">
                             <label for="numParcelas">Numero de Parcelas: *</label>
                             <input type="number" min="1" class="form-control" required name="numParcelas"
-                                   id="numParcelas" value="<?= $parcelas[''] ?>">
+                                   id="numParcelas" value="<?= $parcelas['numero_parcelas'] ?>">
                         </div>
+
 
                         <div class="col-md-3">
                             <label for="valor">Valor: *</label>
-                            <input type="number" class="form-control" required name="valor" id="valor"
-                                   value="<?= $parcelas[''] ?>">
+                            <input type="tel" class="form-control" required name="valor" id="valor" onkeypress="return(moeda(this, '.', ',', event))"
+                                   value="<?= $parcelas['valor'] ?>">
                         </div>
 
                         <div class="col-md-3">
                             <label for="data_inicio">Data de Início: *</label>
-                            <input type="date" class="form-control" required name="data_inicio" id=""
-                                   value="<?= $parcelas[''] ?>">
+                            <input type="date" class="form-control" required name="data_inicio" style="max-width: 175px;" onblur="validate()" id="datepicker10"
+                                    value="<?=$parcelas['data_inicio']?>">
                         </div>
 
                         <div class="col-md-3">
                             <label for="data_fim">Data de Encerramento: *</label>
-                            <input type="date" class="form-control" required name="data_fim" id=""
-                                   value="<?= $parcelas[''] ?>">
+                            <input type="date" class="form-control" required name="data_fim" style="max-width: 175px;" onblur="validate()" id="datepicker11"
+                                   value="<?= $parcelas['data_fim'] ?>">
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row" id="msgEscondeData">
+                        <div class="form-group col-md-6 pull-right">
+                            <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
                         </div>
                     </div>
 
@@ -108,19 +157,19 @@ if (isset($_POST['edita'])) {
                         <div class="col-md-4">
                             <label for="data_pgt">Data de Pagamento: *</label>
                             <input type="date" class="form-control" required name="data_pgt" id="data_pgt"
-                                   value="<?= $parcelas[''] ?>">
+                                   value="<?= $parcelas['data_pagamento'] ?>">
                         </div>
 
                         <div class="col-md-4">
                             <label for="mes_ref">Mês de Referência: *</label>
                             <input type="text" class="form-control" required name="mes_ref" id="mes_ref"
-                                   value="<?= $parcelas[''] ?>">
+                                   value="<?= $parcelas['mes_referencia'] ?>">
                         </div>
 
                         <div class="col-md-4">
                             <label for="carga_horaria">Carga Horaria: *</label>
-                            <input type="number" class="form-control" required name="carga_horaria" id="carga_horaria"
-                                   value="<?= $parcelas[''] ?>">
+                            <input type="number" class="form-control"  min="0" required name="carga_horaria" id="carga_horaria"
+                                   value="<?= $parcelas['carga_horaria'] ?>">
                         </div>
                     </div>
                 </div>
