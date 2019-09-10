@@ -63,7 +63,7 @@ if (isset($_POST['cadastra'])) {
     if(mysqli_query($con, $sqlInsert)){
         $mensagem = mensagem("success", "Gravado com sucesso!");
         $idContrat = recuperaUltimo('formacao_contratacoes');
-        $protocolo = geraProtocolo($idContrat);
+        $protocolo = geraProtocolo($idContrat) . '-F';
         $sqlProtcolo = "UPDATE formacao_contratacoes SET
                                         protocolo = '$protocolo' 
                                         WHERE id = '$idContrat'";

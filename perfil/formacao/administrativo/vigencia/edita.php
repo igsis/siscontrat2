@@ -45,7 +45,7 @@ $vigencia = recuperaDados('formacao_vigencias', 'id', $idVigencia);
 
 if (isset($_POST['edita'])) {
     $parcelas = $_POST['parcela'];
-    $valores = $_POST['valor'];
+    $valores = dinheiroDeBr($_POST['valor']);
     $data_inicios = $_POST['data_inicio'];
     $data_fins = $_POST['data_fim'];
     $data_pagamentos = $_POST['data_pagamento'];
@@ -61,7 +61,7 @@ if (isset($_POST['edita'])) {
         $data_pagamento = $data_pagamentos[$count] ?? NULL;
         $carga = $cargas[$count] ?? NULL;
 
-        $sql = "INSERT INTO formacao_parcelas (formacao_vigencia_id, numero_parcelas, valor, data_inicio, data_fim, data_pagamento, carga_horaria) 
+        $sql = "INSERT INTO formacao_parcelas (formacao_vigencia_id, numero_parcelas, valor, data_inicio, data_fim, data_pagamento, carga_horaria)
                                        VALUES ('$idVigencia', '$parcela', '$valor', '$data_inicio', '$data_fim', '$data_pagamento', '$carga')";
 
         mysqli_query($con, $sql);
