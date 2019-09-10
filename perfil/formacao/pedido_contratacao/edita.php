@@ -42,10 +42,10 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
                 gravarLog($sqlLocal);
             }
 
-            $mensagem = mensagem("success", "");
+            $mensagem = mensagem("success", "Pedido de contratação cadastrado com sucesso.");
 
         } else {
-            $mensagem = mensagem("danger", "");
+            $mensagem = mensagem("danger", "Ocorreu um erro ao criar o pedido de contratação. Tente novamente!");
         }
     } else if (isset($_POST['edita'])) {
         $idPedido = $_POST['idPedido'];
@@ -70,10 +70,10 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
                 gravarLog($sqlLocal);
             }
 
-            $mensagem = mensagem("success", "");
+            $mensagem = mensagem("success", "Pedido de contratação salvo com sucesso.");
 
         } else {
-            $mensagem = mensagem("danger", "");
+            $mensagem = mensagem("danger", "Ocorreu um erro ao salvar o pedido de contratação. Tente novamente!");
         }
     }
 }
@@ -286,8 +286,9 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
                         <div class="form-group col-md-3">
                             <label for="numeroProcesso">Número do Processo *</label>
-                            <input type="number" min="0" name="numeroProcesso" id="numeroProcesso" class="form-control"
-                                   value="<?= $pedido['numero_processo'] ?>">
+                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
+                                   value="<?= $pedido['numero_processo'] ?>" data-mask="9999.9999/9999999-9"
+                                   minlength="19">
                         </div>
 
                         <div class="form-group col-md-6">

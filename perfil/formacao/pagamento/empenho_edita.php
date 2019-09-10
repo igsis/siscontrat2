@@ -1,11 +1,9 @@
 <?php
 $con = bancoMysqli();
-$idFormacao = $_POST['idFormacao'];
-$formacao = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
-$pedido = recuperaDados('pedidos', 'id', $formacao['pedido_id']);
+$idPedido = $_POST['idPedido'];
+$pedido = recuperaDados('pedidos', 'id', $idPedido);
 
 if (isset($_POST['cadastra'])) {
-    $idPedido = $pedido['id'];
     $numEmpenho = $_POST['numEmpenho'];
     $data_entrega = $_POST['data_entrega'];
     $data_emissao = $_POST['data_emissao'];
@@ -21,7 +19,7 @@ if (isset($_POST['cadastra'])) {
     }
 }
 
-$pagamentos = recuperaDados('pagamentos', 'pedido_id', $pedido['id']);
+$pagamentos = recuperaDados('pagamentos', 'pedido_id', $idPedido);
 ?>
 <div class="content-wrapper">
     <section class="content">

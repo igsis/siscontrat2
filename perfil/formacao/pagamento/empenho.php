@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$idFormacao = $_POST['idFormacao'];
+$idPedido = $_POST['idPedido'];
 
 ?>
 <div class="content-wrapper">
@@ -35,7 +35,7 @@ $idFormacao = $_POST['idFormacao'];
                             </div>
                         </div>
                         <div class="box-footer">
-                            <input type="hidden" id="idFormacao" name="idFormacao" value="<?= $idFormacao ?>">
+                            <input type="hidden" id="idPedido" name="idPedido" value="<?= $idPedido ?>">
                             <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">
                                 Cadastrar
                             </button>

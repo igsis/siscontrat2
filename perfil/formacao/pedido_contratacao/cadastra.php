@@ -186,7 +186,7 @@ $valor = dinheiroParaBr($valor);
 
                         <div class="form-group col-md-3">
                             <label for="numeroProcesso">Número do Processo *</label>
-                            <input type="number" min="0" name="numeroProcesso" id="numeroProcesso" class="form-control">
+                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control" data-mask="9999.9999/9999999-9" minlength="19">
                         </div>
                     </div>
 
