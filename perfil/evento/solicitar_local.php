@@ -111,15 +111,9 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_ce
                                            placeholder="Ex.: SP" readonly>
                                 </div>
                             </div>
-
                         </div>
-                        <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <a href="?perfil=evento">
-                                <button type="button" class="btn btn-default">Voltar</button>
-                            </a>
-                            <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
                             <button type="submit" name="cadastraLocal" id="cadastraLocal"
                                     class="btn btn-primary pull-right">
                                 Cadastrar

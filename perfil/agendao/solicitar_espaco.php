@@ -36,9 +36,6 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espa
                             </div>
                         </div>
                         <div class="box-footer">
-                            <a href="?perfil=agendao">
-                                <button type="button" class="btn btn-default">Voltar</button>
-                            </a>
                             <button type="submit" name="cadastraEspaco" id="cadastraEspaco" class="btn btn-primary pull-right">
                                 Cadastrar
                             </button>
