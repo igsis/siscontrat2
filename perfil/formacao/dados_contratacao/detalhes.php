@@ -17,8 +17,7 @@ $sql = "SELECT f.id AS 'id',
                f.observacao AS 'observacao',
                fiscal.nome_completo AS 'fiscal',
                suplente.nome_completo AS 'suplente',       
-               f.num_processo_pagto AS 'numpgt',
-               f.publicado AS 'publicado'
+               f.num_processo_pagto AS 'numpgt'
         FROM formacao_contratacoes AS f 
         INNER JOIN classificacao_indicativas AS cla ON f.classificacao = cla.id
         INNER JOIN territorios AS t ON f.territorio_id = t.id
@@ -31,7 +30,7 @@ $sql = "SELECT f.id AS 'id',
         INNER JOIN formacao_vigencias fv ON f.form_vigencia_id = fv.id
         INNER JOIN usuarios AS fiscal ON f.fiscal_id = fiscal.id
         INNER JOIN usuarios AS suplente ON f.suplente_id = suplente.id 
-        WHERE f.id = '$idPC'";
+        WHERE f.id = '$idPC' AND f.publicado = 1";
 $fc = $con->query($sql)->fetch_assoc();
 
 ?>
@@ -128,11 +127,6 @@ $fc = $con->query($sql)->fetch_assoc();
                                         echo $fc['numpgt'];
                                     }
                                     ?>  </td>
-                            </tr>
-
-                            <tr>
-                                <th width="30%">Publicado?</th>
-                                <td><?= $fc['publicado'] ? "Sim" : "Não" ?></td>
                             </tr>
                         </table>
                     </div>

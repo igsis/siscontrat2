@@ -43,6 +43,10 @@ if (isset($_POST['cadastrar'])) {
                                          '$data') ";
     if (mysqli_query($con, $sqlInsert)) {
         $mensagem = mensagem('success', 'Cadastrado com Sucesso!');
+        $idContrat = recuperaUltimo('emia_contratacao');
+        $protocolo = geraProtocolo($idContrat);
+        $sqlProtocolo = "UPDATE emia_contratacao SET protocolo = '$protocolo' WHERE id = '$idContrat'";
+        $queryProtocolo = mysqli_query($con,$sqlProtocolo);
     } else {
         $mensagem = mensagem('danger', 'Erro ao Cadastrar! Tente novamente.');
     }
@@ -52,9 +56,9 @@ if(isset($_POST['despublica'])){
     $idDados = $_POST['idDados'];
     $sqlDespublica = "UPDATE emia_contratacao SET publicado = 0 WHERE id = '$idDados'";
     if(mysqli_query($con,$sqlDespublica)){
-        $mensagem = mensagem("success", "Apagado com Sucesso!");
+        $mensagem = mensagem("success", "Excluido com Sucesso!");
     }else{
-        $mensagem = mensagem("danger", "Erro ao apagar! Tente novamente.");
+        $mensagem = mensagem("danger", "Erro ao excluir! Tente novamente.");
     }
 }
 

@@ -38,7 +38,7 @@ if (isset($_POST['edit'])) {
     $ec = recuperaDados('emia_contratacao', 'id', $idEC);
 }
 
-$_SESSION['idEc'] = $idEC;
+
 ?>
 <div class="content-wrapper">
     <section class="content">

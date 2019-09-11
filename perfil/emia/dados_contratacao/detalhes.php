@@ -13,8 +13,7 @@ $sql = "SELECT c.id,
         c.observacao AS 'obs',
         fiscal.nome_completo AS 'fiscal',
         suplente.nome_completo AS 'suplente',
-        c.num_processo_pagto AS 'num_pgt',
-		c.publicado AS 'publicado'
+        c.num_processo_pagto AS 'num_pgt'
         FROM emia_contratacao as c
         INNER JOIN pessoa_fisicas AS p ON p.id = c.pessoa_fisica_id
         INNER JOIN emia_status as s ON s.id = c.emia_status_id
@@ -40,12 +39,7 @@ $ec = $con->query($sql)->fetch_assoc();
                     <table class="table">
                         <tr>
                             <th width="30%">Protocolo: </th>
-                            <td><?php if($ec['protocolo'] == null){
-                                    echo "Não possui";
-                                }else{
-                                    echo $ec['protocolo'];
-                                }
-                                ?></td>
+                            <td><?=$ec['protocolo']?></td>
                         </tr>
 
                         <tr>
@@ -102,11 +96,6 @@ $ec = $con->query($sql)->fetch_assoc();
                                 }
                                 ?></td>
                         </tr>
-
-                        <tr>
-                            <th width="30%">Publicado? </th>
-                            <td><?=$ec['publicado'] ? "Sim" : "Não" ?></td>
-                        </tr>
                     </table>
                 </div>
             </div>
@@ -119,7 +108,7 @@ $ec = $con->query($sql)->fetch_assoc();
                     <button type="button" class="btn btn-danger pull-right" id="despublica"
                             data-toggle="modal" data-target="#despublicacao" name="despublica"
                             data-id="<?= $ec['id'] ?>">
-                        Despublicar
+                        Excluir
                     </button>
                 </form>
             </div>
@@ -130,17 +119,17 @@ $ec = $con->query($sql)->fetch_assoc();
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <form action="?perfil=emia&p=dados_contratacao&sp=listagem" method="post">
-                    <h4 class="modal-title">Confirmação de Despublicação</h4>
+                    <h4 class="modal-title">Confirmação de Exclusão</h4>
             </div>
             <div class="modal-body">
-                <label>Tem certeza que deseja despublicar?</label>
+                <label>Tem certeza que deseja excluir?</label>
             </div>
             <div class="modal-footer">
                 <input type="hidden" name="idDados" id="idDados" value="<?= $ec['id']?>">
                 <input type="hidden" name="despublicar" id="despublicar">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                 </button>
-                <input type="submit" class="btn btn-danger btn-outline" name="despublica" value="Despublicar">
+                <input type="submit" class="btn btn-danger btn-outline" name="despublica" value="Excluir">
                 </form>
             </div>
         </div>
