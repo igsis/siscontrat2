@@ -99,7 +99,7 @@ if ($pedido['pessoa_tipo_id'] == 2) {
     $link_troca = "?perfil=evento&p=pf_pesquisa";
 }
 
-$idPessoa = $pedido['pessoa_tipo_id'];
+$tipoPessoa = $pedido['pessoa_tipo_id'];
 
 //verificando parcelas
 $sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido'";
