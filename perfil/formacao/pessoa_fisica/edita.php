@@ -6,6 +6,7 @@ $conn = bancoPDO();
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
 $linkResumo = $http . "rlt_formacao_pf.php";
+$link_facc = $http . "rlt_fac_pf.php";
 
 if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
