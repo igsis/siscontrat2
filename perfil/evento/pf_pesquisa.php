@@ -12,7 +12,7 @@ $tipoDocumento = null;
 
 if (isset($_POST['lider'])) {
     $idPedido = $_POST['lider'];
-    $idAtracao = $_POST['idAtracao'];
+    $idAtracao = $_POST['oficina'];
 }
 
 
