@@ -14,7 +14,7 @@ if (isset($_POST['checarAgendao'])) {
     $idEvento = $_POST['idEvento'];
     $data = date("Y-m-d H:i:s", strtotime("now"));
     $sqlView = "UPDATE producao_agendoes SET visualizado = 1 WHERE id = '$idEvento'";
-    $queryView = mysqli_query($con,$sqlView);
+    $queryView = mysqli_query($con, $sqlView);
     if (mysqli_query($con, $sqlView)) {
         $mensagem = mensagem("success", "Agendão marcado como visualizado!");
     }
@@ -69,7 +69,7 @@ $queryAgendaoVisualizado = mysqli_query($con, $sqlAgendaoVisualizado);
                             $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
                             $queryLocal = mysqli_query($con, $sqlLocal);
                             $local = '';
-                            while ($locais = mysqli_fetch_array($queryLocal)){
+                            while ($locais = mysqli_fetch_array($queryLocal)) {
                                 $local = $local . '; ' . $locais['local'];
                             }
                             $local = substr($local, 1);
@@ -77,14 +77,14 @@ $queryAgendaoVisualizado = mysqli_query($con, $sqlAgendaoVisualizado);
                             $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN agendao_ocorrencias AS ao ON ao.espaco_id = e.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
                             $queryEspaco = mysqli_query($con, $sqlEspaco);
                             $espaco = '';
-                            while($espacos = mysqli_fetch_array($queryEspaco)){
+                            while ($espacos = mysqli_fetch_array($queryEspaco)) {
                                 $espaco = $espaco . '; ' . $espacos['espaco'];
                             }
                             $espaco = substr($espaco, 1);
-                                ?>
+                            ?>
                             <tr>
 
-                            <?php
+                                <?php
                                 echo "<td>" . $agendaoVerif['nome'] . "</td>";
                                 echo "<td>" . $local . "</td>";
                                 echo "<td>" . $espaco . "</td>";
@@ -99,27 +99,28 @@ $queryAgendaoVisualizado = mysqli_query($con, $sqlAgendaoVisualizado);
                                         </td>
                                         ";
                                 echo "</tr>";
-                            }
-                            echo "</tbody>";
-                            ?>
-                            <tfoot>
-                            <tr>
-                                <th>Nome do Evento</th>
-                                <th>Locais</th>
-                                <th>Espaços</th>
-                                <th>Periodo</th>
-                                <th>Data do Envio</th>
-                                <th>Visualizar</th>
-                            </tr>
-                            </tfoot>
+                                }
+                                echo "</tbody>";
+                                ?>
+                                <tfoot>
+                                <tr>
+                                    <th>Nome do Evento</th>
+                                    <th>Locais</th>
+                                    <th>Espaços</th>
+                                    <th>Periodo</th>
+                                    <th>Data do Envio</th>
+                                    <th>Visualizar</th>
+                                </tr>
+                                </tfoot>
                         </table>
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 </div>
 
-<<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">
@@ -135,4 +136,4 @@ $queryAgendaoVisualizado = mysqli_query($con, $sqlAgendaoVisualizado);
         });
     });
 </script>
-?>
+

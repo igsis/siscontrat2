@@ -37,7 +37,7 @@ include "includes/menu_interno.php";
                 </div>
             </div>
         </div>
-        <div class="box">
+
             <div class="box-body">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs pull-right">
@@ -122,7 +122,6 @@ include "includes/menu_interno.php";
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
         <div id="vetacao" class="modal modal-danger modal fade in" role="dialog">
             <div class="modal-dialog">

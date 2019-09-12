@@ -35,113 +35,108 @@ include "includes/menu_interno.php";
 
 <div class="content-wrapper">
     <section class="content-header">
-        <div>
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="page-header"> Evento selecionado </h3>
-                </div>
 
+        <div class="box">
+            <div class="box-header">
+                <h3 class="page-header"> Evento selecionado </h3>
             </div>
-            <div class="box">
-                <div class="box-body">
-                    <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs pull-right">
-                            <?php if ($evento['contratacao'] == 1) { ?>
-                                <li><a href="#pedido" data-toggle="tab"> Pedido de Contratação </a></li>
-                            <?php } ?>
-                            <li><a href="#ocorrencia" data-toggle="tab"> Ocorrência </a></li>
-                            <li>
-                                <a href="#atracao" data-toggle="tab">
-                                    <?= $evento['tipo_evento_id' == 1] ? "Atração" : "Filme" ?>
-                                </a>
-                            </li>
-                            <li class="active"><a href="#evento" data-toggle="tab"> Eventos </a></li>
-                            <li class="pull-left header"> Confirmação dos Dados Inseridos</li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="evento">
-                                <div class="box box-primary">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">Dados do Evento</h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <div class="table-responsive">
-                                            <table class="table">
-                                                <?php foreach ($resumoEvento as $campo => $dado) { ?>
-                                                    <tr>
-                                                        <th width="30%"><?= $campo ?>  </th>
-                                                        <?php
-                                                        if ($campo == "Evento Público:") {
-                                                            if ($dado == 0) {
-                                                                $dado = "Não";
-                                                            } else {
-                                                                $dado = "Sim";
-                                                            }
-                                                        }
-                                                        if ($campo == "Fomento:") {
-                                                            if ($dado == 0) {
-                                                                $dado = "Não possui";
-                                                            } else {
-                                                                $fomentoRelacionado = recuperaDados("evento_fomento", "evento_id", $idEvento);
-                                                                $fomento = recuperaDados("fomentos", "id", $fomentoRelacionado['fomento_id']);
-                                                                $dado = $fomento['fomento'];
-                                                            }
-                                                        }
-                                                        if($campo == "Visualizado:"){
-                                                            if($dado == 0){
-                                                                $dado = "Não";
-                                                            }else{
-                                                                $dado = "Sim";
-                                                            }
-                                                        }
-                                                        ?>
-                                                        <td><?= $dado ?></td>
-                                                    </tr>
-                                                <?php } ?>
-                                            </table>
-                                        </div>
-                                    </div>
+
+        </div>
+        <div class="box-body">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs pull-right">
+                    <?php if ($evento['contratacao'] == 1) { ?>
+                        <li><a href="#pedido" data-toggle="tab"> Pedido de Contratação </a></li>
+                    <?php } ?>
+                    <li><a href="#ocorrencia" data-toggle="tab"> Ocorrência </a></li>
+                    <li>
+                        <a href="#atracao" data-toggle="tab">
+                            <?= $evento['tipo_evento_id' == 1] ? "Atração" : "Filme" ?>
+                        </a>
+                    </li>
+                    <li class="active"><a href="#evento" data-toggle="tab"> Eventos </a></li>
+                    <li class="pull-left header"> Confirmação dos Dados Inseridos</li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="evento">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Dados do Evento</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <?php foreach ($resumoEvento as $campo => $dado) { ?>
+                                            <tr>
+                                                <th width="30%"><?= $campo ?>  </th>
+                                                <?php
+                                                if ($campo == "Evento Público:") {
+                                                    if ($dado == 0) {
+                                                        $dado = "Não";
+                                                    } else {
+                                                        $dado = "Sim";
+                                                    }
+                                                }
+                                                if ($campo == "Fomento:") {
+                                                    if ($dado == 0) {
+                                                        $dado = "Não possui";
+                                                    } else {
+                                                        $fomentoRelacionado = recuperaDados("evento_fomento", "evento_id", $idEvento);
+                                                        $fomento = recuperaDados("fomentos", "id", $fomentoRelacionado['fomento_id']);
+                                                        $dado = $fomento['fomento'];
+                                                    }
+                                                }
+                                                if ($campo == "Visualizado:") {
+                                                    if ($dado == 0) {
+                                                        $dado = "Não";
+                                                    } else {
+                                                        $dado = "Sim";
+                                                    }
+                                                }
+                                                ?>
+                                                <td><?= $dado ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="atracao">
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="atracao">
+                        <?php
+                        include "includes/label_atracao_filme.php"
+                        ?>
+                    </div>
+
+                    <div class="tab-pane" id="ocorrencia">
+                        <?php include "includes/label_ocorrencia_producao.php"; ?>
+                    </div>
+
+                    <?php if ($evento['contratacao'] == 1) { ?>
+                        <div class="tab-pane" id="pedido">
+                            <?php include "includes/label_pedido_producao.php"; ?>
+                        </div>
+                    <?php } ?>
+
+                    <div class="box-footer">
+                        <form action="?perfil=producao&p=eventos_verificados_producao" method="post">
+                            <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
+                            <?php
+
+                            if ($view['visualizado'] == 0){
+                            ?>
+                            <button type="submit" name="checarEvento" class="btn btn-success"> Checar
+                                visualização
                                 <?php
-                                    include "includes/label_atracao_filme.php"
+                                }else {
                                 ?>
-                            </div>
-
-                            <div class="tab-pane" id="ocorrencia">
-                                <?php include "includes/label_ocorrencia_producao.php"; ?>
-                            </div>
-
-                            <?php if ($evento['contratacao'] == 1) { ?>
-                                <div class="tab-pane" id="pedido">
-                                    <?php include "includes/label_pedido_producao.php"; ?>
-                                </div>
-                            <?php }?>
-
-                            <div class="box-footer">
-                                <form action="?perfil=producao&p=eventos_verificados_producao" method="post">
-                                    <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
+                                <button type="submit" name="voltar" class="btn btn-success"> Voltar
                                     <?php
-
-                                    if($view['visualizado'] == 0){
-                                        ?>
-                                    <button type="submit" name="checarEvento" class="btn btn-success"> Checar visualização
-                                    <?php
-                                    }else {
-                                        ?>
-                                        <button type="submit" name="voltar" class="btn btn-success"> Voltar
-                                        <?php
                                     }
 
                                     ?>
-                                    </button>
-                                </form>
-                            </div>
-
-                        </div>
-
-
+                                </button>
+                        </form>
                     </div>
                 </div>
             </div>
