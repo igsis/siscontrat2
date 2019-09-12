@@ -17,6 +17,7 @@ if (isset($_POST['salvar'])) {
 
 $formacao = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
 $pedido = recuperaDados('pedidos', 'origem_id', $idFormacao . ' AND origem_tipo_id = 2');
+$pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 $idPedido = $pedido['id'];
 $sql = "SELECT * FROM parcelas where pedido_id = '$idPedido'";
 $query = mysqli_query($con, $sql);
@@ -40,7 +41,7 @@ $local = substr($local, 0, -3);
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Pagamento</h3>
+                        <h3 class="box-title"><?= $pf['nome'] ?> (<?= $pf['cpf'] ?>)</h3>
                         <div class="row" align="center">
                             <?php if(isset($mensagem)){echo $mensagem;};?>
                         </div>
