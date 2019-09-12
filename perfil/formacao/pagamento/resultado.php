@@ -93,7 +93,7 @@ $num_arrow = mysqli_num_rows($query);
                                         </td>
                                         <td>
                                             <form method='POST'
-                                                  action="?perfil=formacao&p=pagamento&sp=cargo&spp=pagto">
+                                                  action="?perfil=formacao&p=pagamento&sp=pagamento">
                                                 <input type="hidden" name='idFormacao' id="idFormacao"
                                                        value="<?= $formacao['id'] ?>">
                                                 <button type="submit" name="carregar" id="carregar"
