@@ -49,6 +49,9 @@ $pasta = "?perfil=formacao&p=";
             <li><a href="<?= $pasta ?>pagamento&sp=index"><i class="fa fa-circle-o"></i>
                     <span>Pagamento</span></a></li>
 
+            <li><a href="<?= $pasta ?>area_impressao&sp=index"><i class="fa fa-circle-o"></i>
+                    <span>Área de Impressão</span></a></li>
+
             <li><a href="#"><i class="fa fa-circle-o"></i>
                     <span>Concluir processo</span></a></li>
             <?php
