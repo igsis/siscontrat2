@@ -97,7 +97,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(12,$l,'Nome:',0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->MultiCell(168,$l,utf8_decode($nome));
+$pdf->MultiCell(168,$l,utf8_decode($pessoa['nome']));
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
@@ -120,7 +120,7 @@ $pdf->SetFont('Arial','', 10);
 if($dataNascimento == "31/12/1969")
     $pdf->Cell(25,$l, " " ,0,1,'L');
 else
-    $pdf->Cell(25,$l,utf8_decode($dataNascimento),0,1,'L');
+    $pdf->Cell(25,$l,utf8_decode(exibirDataBr($pessoa['data_nascimento'])),0,1,'L');
 
 
 $pdf->SetX($x);

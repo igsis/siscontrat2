@@ -177,6 +177,7 @@
             </form>
         </div>
     </section>
+</div>
 
     <?php @include "../perfil/includes/modal_classificacao.php"?>
 

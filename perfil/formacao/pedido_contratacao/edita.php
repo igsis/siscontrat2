@@ -351,15 +351,25 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
 
                     <div class="box-footer">
-                        <a href="?perfil=formacao&p=pedido_contratacao&sp=listagem">
-                            <button type="button" class="btn btn-default">Voltar</button>
-                        </a>
+                        <div class="col-md-5">
+                            <a href="?perfil=formacao&p=pedido_contratacao&sp=listagem">
+                                <button type="button" class="btn btn-default">Voltar</button>
+                            </a>
+                        </div>
 
                         <input type="hidden" name="idPedido" value="<?= $pedido['id'] ?>" id="idPedido">
 
-                        <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
-                            Salvar
-                        </button>
+                        <div class="col-md-1">
+                            <a href="?perfil=formacao&p=pedido_contratacao&sp=area_impressao">
+                                <button type="button" class="btn btn-default">Ir para área de impressão</button>
+                            </a>
+                        </div>
+
+
+                            <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
+                                Salvar
+                            </button>
+
                     </div>
             </form>
         </div>
