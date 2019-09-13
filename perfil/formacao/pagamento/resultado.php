@@ -68,16 +68,17 @@ $num_arrow = mysqli_num_rows($query);
                             } else {
                                 while ($formacao = mysqli_fetch_array($query)) {
                                     $proponente = recuperaDados('pessoa_fisicas', 'id', $formacao['pessoa_fisica_id'])['nome'];
-                                    $idPedido = $formacao['pedido_id'];
+                                    $pedido = recuperaDados('pedidos', 'origem_id', $formacao['id']);
+                                    $idPedido = $pedido['id'];
                                     $sqlPagamento = "SELECT * FROM pagamentos WHERE pedido_id = '$idPedido'";
                                     $pagamento = mysqli_num_rows(mysqli_query($con, $sqlPagamento));
                                     if ($pagamento == 0)
                                         $action = "?perfil=formacao&p=pagamento&sp=empenho";
                                     else
-                                        $action = "?perfil=formacao&p=pagamento&sp=empenho_edita    ";
+                                        $action = "?perfil=formacao&p=pagamento&sp=empenho_edita";
                                     ?>
                                     <tr>
-                                        <td><?= $formacao['num_processo_pagto'] ?></td>
+                                        <td><?= $pedido['numero_processo'] ?></td>
                                         <td><?= $formacao['protocolo'] ?></td>
                                         <td><?= $proponente ?></td>
                                         <td>
