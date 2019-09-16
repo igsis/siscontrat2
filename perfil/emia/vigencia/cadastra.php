@@ -49,82 +49,38 @@
                 <h3 class="box-title">Vigência</h3>
             </div>
 
-        <form method="post" action="?perfil=emia&p=vigencia&sp=edita" role="form">
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-4  form-group">
-                        <label for="ano">Ano: *</label>
-                        <input class="form-control" type="number" min="2018" required name="ano" id="ano">
-                    </div>
+            <form method="post" action="?perfil=emia&p=vigencia&sp=edita" role="form">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-2  form-group">
+                            <label for="ano">Ano: *</label>
+                            <input class="form-control" type="number" min="2018" required name="ano" id="ano">
+                        </div>
 
-                    <div class="col-md-8  form-group">
-                        <label for="descricao">Descrição: *</label>
-                        <input class="form-control" type="text" required name="desc" id="desc">
-                    </div>
 
-                </div>
-                <hr />
+                        <div class="col-md-2 form-group">
+                            <label for="numParcelas">Numero de Parcelas: *</label>
+                            <input type="number" min="1" class="form-control" required name="numParcelas"
+                                   id="numParcelas">
+                        </div>
 
-                <h4 class="form-group">Cadastro de parcela</h4>
 
-                <div class="row">
-                    <div class="col-md-3 form-group">
-                        <label for="numParcelas">Numero de Parcelas: *</label>
-                        <input type="number" min="1" class="form-control" required name="numParcelas" id="numParcelas">
-                    </div>
+                        <div class="col-md-8  form-group">
+                            <label for="descricao">Descrição: *</label>
+                            <input class="form-control" type="text" required name="desc" id="desc">
+                        </div>
 
-                    <div class="col-md-3 form-group">
-                        <label for="valor">Valor: *</label>
-                        <input type="tel" class="form-control" required name="valor" id="valor"
-                               onkeypress="return(moeda(this, '.', ',', event))">
-                    </div>
-
-                    <div class="col-md-3 form-group">
-                        <label for="data_inicio">Data de Início: *</label>
-                        <input type="date" class="form-control" required name="data_inicio" style="max-width: 175px;"
-                               onblur="validate()" id="datepicker10">
-                    </div>
-
-                    <div class="col-md-3 form-group">
-                        <label for="data_fim">Data de Encerramento: *</label>
-                        <input type="date" class="form-control" required name="data_fim" style="max-width: 175px;"
-                               onblur="validate()" id="datepicker11">
-                    </div>
-                </div>
-                <br>
-
-                <div class="row" id="msgEscondeData">
-                    <div class="form-group col-md-6 pull-right">
-                        <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4 form-group">
-                        <label for="data_pgt">Data de Pagamento: *</label>
-                        <input type="date" class="form-control" required name="data_pgt" id="data_pgt">
-                    </div>
 
-                    <div class="col-md-4 form-group">
-                        <label for="mes_ref">Mês de Referência: *</label>
-                        <input type="text" class="form-control" required name="mes_ref" id="mes_ref">
-                    </div>
-
-                    <div class="col-md-4 form-group">
-                        <label for="carga_horaria">Carga Horaria: *</label>
-                        <input type="number" class="form-control" min="0" required name="carga_horaria"
-                               id="carga_horaria">
-                    </div>
-                </div>
-            </div>
-
-            <div class="box-footer">
-                <a href="?perfil=emia&p=vigencia&sp=listagem">
-                    <button type="button" class="btn btn-default">Voltar</button>
-                </a>
-                <button name="cadastra" id="cadastra" type="submit" class="btn btn-primary pull-right">Cadastrar
-                </button>
-        </form>
+                <div class="box-footer">
+                    <a href="?perfil=emia&p=vigencia&sp=listagem">
+                        <button type="button" class="btn btn-default">Voltar</button>
+                    </a>
+                    <button name="cadastra" id="cadastra" type="submit" class="btn btn-primary pull-right">Cadastrar
+                    </button>
+            </form>
         </div>
 </div>
 </section>
