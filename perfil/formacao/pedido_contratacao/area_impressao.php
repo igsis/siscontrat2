@@ -1,11 +1,8 @@
 <?php
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
-$link_pcf = $http . "impressao_pedido_formacao";
-if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
-    $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
-}
-echo $idPf;
+$link_pcf = $http . "impressao_pedido_formacao.php";
+
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -22,7 +19,7 @@ echo $idPf;
                         <nav class="navbar navbar-static-top bg-light-blue-active">
                             <h4 align="center">PEDIDO</h4>
                         </nav>
-                        <a href="<?= $link_pcf . "?id=" . $idPf ?>" target="_blank" type="button">
+                        <a href="<?= $link_pcf ?>" target="_blank" type="button">
                             <h4 align="center">Pedido de Contratação - Formação</h4>
                         </a>
                         <hr />
