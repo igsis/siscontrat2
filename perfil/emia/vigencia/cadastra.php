@@ -1,3 +1,44 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        validate();
+        $('#datepicker11').change(validate);
+    });
+
+    function validate() {
+        comparaData();
+        if ($('#datepicker11').val().length > 0) {
+        }
+
+    }
+
+    function comparaData() {
+        let botao = $('#cadastra');
+        var isMsgData = $('#msgEscondeData');
+        isMsgData.hide();
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var dataFim = document.querySelector('#datepicker11').value;
+
+        if (dataInicio != "") {
+            var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
+        }
+
+        if (dataFim != "") {
+            var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
+
+            if (dataFim <= dataInicio) {
+                botao.prop('disabled', true);
+                isMsgData.show();
+                $('#cadastra').attr("disabled", true);
+            } else {
+                botao.prop('disabled', false);
+                isMsgData.hide();
+                $('#cadastra').attr("disabled", false);
+            }
+        }
+
+    }
+</script>
+
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
@@ -31,6 +72,7 @@
 
                     </div>
                 </div>
+
 
                 <div class="box-footer">
                     <a href="?perfil=emia&p=vigencia&sp=listagem">
