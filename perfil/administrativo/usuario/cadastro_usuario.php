@@ -63,17 +63,6 @@
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="acao">Verbas * <i>(multipla escolha) </i></label>
-                                    <br>
-                                    <?php
-                                        geraCheckBox('verbas', 'verba', 'usuario_verbas', 'col-md-6', 'usuario_id', 'verba_id', $idUsuario);
-                                    ?>
-                                </div>
-                            </div>
-
                         </div>
                         <!-- /.box-body -->
 
