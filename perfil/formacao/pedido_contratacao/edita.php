@@ -44,6 +44,9 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
             $mensagem = mensagem("success", "Pedido de contratação cadastrado com sucesso.");
 
+            $sqlUpdate = "UPDATE formacao_contratacoes SET pedido_id = '$idPedido' WHERE id='$idPc'";
+            mysqli_query($con,$sqlUpdate);
+
         } else {
             $mensagem = mensagem("danger", "Ocorreu um erro ao criar o pedido de contratação. Tente novamente!");
         }
