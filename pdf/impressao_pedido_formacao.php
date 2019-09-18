@@ -38,6 +38,12 @@ $pdf->SetX(160);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
+$pdf->Cell(12,$l,'Sr(a)',0,0,'L');
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(12,$l,'Solicitamos a contratação a seguir:',0,0,'L');
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial','B', 10);
 $pdf->Cell(12,$l,'Nome:',0,0,'L');
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(168,$l,utf8_decode($pf['nome']));
