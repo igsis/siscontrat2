@@ -1,14 +1,18 @@
 <?php
-//include para contratos
+//include para contrato
 if(isset($_GET['p']))
 {
-    $p = $_GET['p'];
+    if(isset($_GET['sp']))
+    {
+        $p = $_GET['p'];
+        $sp = $_GET['sp'];
+        include "contrato/".$p."/".$sp.".php";
+    }
 }
 else
 {
     $p = "index";
+    include "contrato/".$p.".php";
 }
-include "../funcoes/funcoesSiscontrat.php";
-include "../funcoes/funcoesFormacao.php";
-include "m_contratos/".$p.".php";
-?>
+
+include "../perfil/contrato/includes/menu.php";
