@@ -7,7 +7,7 @@ include "includes/menu.php";
     <section class="content">
         <div class="box box-widget widget-user">
             <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="widget-user-header bg-yellow-active">
+            <div class="widget-user-header bg-blue-active">
                 <h3 class="widget-user-username">Módulo de Contratos</h3>
             </div>
             <div class="box-footer">
