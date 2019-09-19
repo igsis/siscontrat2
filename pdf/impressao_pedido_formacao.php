@@ -24,17 +24,21 @@ class PDF extends FPDF{
 $idPedido = $_SESSION['idPedido'];
 $pedido = recuperaDados('pedidos','id',$idPedido);
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idPedido);
-$mensagem = "Solicitamos a contratação a seguir:";
-$mensagemPedido = "Protocolo nº:";
-$mensagemSEI = "Processo SEI nº:";
-$mensagemCarga = "Carga Horária:";
-$valor = "R$1.444,85";
-$setor = "Supervisão de Formação Cultural";
-$teste = null;
-$idFc = $contratacao['origem_id'];
+$idPf = $contratacao['pessoa_fisica_id'];
+$pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
+
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$tel = "";
+$queryTelefone = mysqli_query($con, $sqlTelefone);
+
+$sei = null;
+
+$idFc = $pedido['origem_id'];
 $sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFc'";
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
+
+$carga = $_SESSION['formacao_carga_horaria'];
 
 $pdf = new PDF('P','mm','A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -61,90 +65,106 @@ $pdf->MultiCell(12,$l,'Sr(a)',0,'L',0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
-$pdf->MultiCell(60,$l,utf8_decode($mensagem),0,'L', 0);
+$pdf->MultiCell(60,$l,utf8_decode("Solicitamos a contratação a seguir:"),0,'L', 0);
 
 $pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
-$pdf->Cell(23,$l,utf8_decode($mensagemPedido),0,0,'L');
+$pdf->Cell(23,$l,utf8_decode("Protocolo nº:"),0,0,'L');
 $pdf->SetFont('Arial','', 10);
 $pdf->MultiCell(120,$l,utf8_decode($contratacao['protocolo']),0,'L',0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
-$pdf->Cell(29,$l,utf8_decode($mensagemSEI),0,0,'L');
+$pdf->Cell(29,$l,utf8_decode("Processo SEI nº:"),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->MultiCell(120,$l,utf8_decode($teste),0,'L',0);
+$pdf->MultiCell(120,$l,utf8_decode($sei),0,'L',0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(30,$l,'Setor solicitante:',0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->MultiCell(120,$l,utf8_decode($setor),0,'L',0);
+$pdf->MultiCell(120,$l,utf8_decode("Supervisão de Formação Cultural"),0,'L',0);
 
 $pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
-$pdf->Cell(11,$l,'Nome:',0,0,'L');
+$pdf->Cell(12,$l,'Nome:',0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->MultiCell(40,$l,utf8_decode($teste),0,'L',0);
+$pdf->MultiCell(40,$l,utf8_decode($pessoa['nome']),0,'L',0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(9,$l,utf8_decode('CPF:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->MultiCell(168,$l,utf8_decode($teste),0,'L',0);
+$pdf->MultiCell(168,$l,utf8_decode($pessoa['cpf']),0,'L',0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(11,$l,'Email:',0,0,'L');
 $pdf->SetFont('Arial','',10);
-$pdf->MultiCell(168,$l,utf8_decode($teste), 0, 'L', 0);
+$pdf->MultiCell(168,$l,utf8_decode($pessoa['email']), 0, 'L', 0);
+
+while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
+    $tel = $tel . $linhaTel['telefone'] . ' | ';
+}
+
+$tel = substr($tel, 0, -3);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(16,$l,'Telefone:', '0', '0', 'L');
+$pdf->Cell(21,$l,'Telefone(s):', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168,$l,utf8_decode($teste),0,'L',0);
+$pdf->MultiCell(168,$l,utf8_decode($tel),0,'L',0);
 
 $pdf->Ln(5);
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(8,$l,'Ano:', '0', '0', 'L');
+$pdf->Cell(9,$l,'Ano:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168,$l,utf8_decode($teste),0,'L',0);
+$pdf->MultiCell(168,$l,utf8_decode($contratacao['ano']),0,'L',0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(25,$l,utf8_decode($mensagemCarga), '0', '0', 'L');
+$pdf->Cell(25,$l,utf8_decode("Carga Horária:"), '0', '0','L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168,$l,utf8_decode($teste),0,'L',0);
+$pdf->MultiCell(168,$l,utf8_decode($carga),0,'L',0);
+
+
+while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
+    $local = $local . $linhaLocal['local'] . ' | ';
+}
+
+$local = substr($local, 0, -3);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11,$l,'Local:', '0', '0', 'L');
+$pdf->Cell(16,$l,'Local(s):', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168,$l,utf8_decode($contratacao['local']),0,'L',0);
+$pdf->MultiCell(165,$l,utf8_decode($local),0,'L',0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(11,$l,'Valor:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168,$l,utf8_decode($valor),0,'L',0);
+$pdf->MultiCell(168,$l,utf8_decode("R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " )"),0,'L',0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(38,$l,'Forma de Pagamento:', '0', '0', 'L');
+$pdf->Cell(38,$l,'Forma de Pagamento:', '0', '', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168,$l,utf8_decode($pedido['forma_pagamento']),0,'L',0);
+$pdf->MultiCell(145,$l,utf8_decode($pedido['forma_pagamento']),0,'L',0);
+
+$pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(22,$l,'Justificativa:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168,$l,utf8_decode($pedido['justificativa']),0,'L',0);
+$pdf->MultiCell(160,$l,utf8_decode($pedido['justificativa']),0,'L',0);
 
 $pdf->Output();
 ?>
+

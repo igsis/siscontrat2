@@ -163,8 +163,8 @@ if(isset($_POST['editar'])){
 
                             <div class="form-group col-md-2">
                                 <label for="carga[]">Carga horária: </label>
-                                <input type="time" name="carga[]" class="form-control" id="carga[]"
-                                       value="<?= $parcelas['carga_horaria'] ?? NULL ?>"  placeholder="hh:mm">
+                                <input type="number" name="carga[]" class="form-control" id="carga[]"
+                                       value="<?= $parcelas['carga_horaria'] ?? NULL ?>"  min="1">
                             </div>
 
                         <div class="form-group col-md-2">

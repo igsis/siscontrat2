@@ -138,6 +138,15 @@ while ($count = mysqli_fetch_array($query))
 
 $valor = dinheiroParaBr($valor);
 
+$carga = null;
+$sqlCarga = "SELECT carga_horaria FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia'";
+$queryCarga = mysqli_query($con,$sqlCarga);
+
+while ($countt = mysqli_fetch_array($queryCarga))
+    $carga += $countt['carga_horaria'];
+
+$_SESSION['formacao_carga_horaria'] = $carga;
+
 $sqlLocal = "SELECT local_id FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
 $queryLocais = mysqli_query($con, $sqlLocal);
 ?>

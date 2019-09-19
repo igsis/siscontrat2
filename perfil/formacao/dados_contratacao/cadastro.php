@@ -16,7 +16,7 @@
 
                         <div class="form-group col-md-6">
                             <label for="chamado">Chamado: *</label>
-                            <input type="number" min="0" max="127" id="chamado" name="chamado" max="127" required class="form-control">
+                            <input type="number" min="1" max="127" id="chamado" name="chamado" max="127" required class="form-control">
                         </div>
                     </div>
 

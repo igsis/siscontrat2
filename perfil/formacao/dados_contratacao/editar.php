@@ -237,6 +237,7 @@ $_SESSION['idPc'] = $idPC;
         </div>
 
     </section>
+</div>
 
     <?php @include "../perfil/includes/modal_classificacao.php"?>
 

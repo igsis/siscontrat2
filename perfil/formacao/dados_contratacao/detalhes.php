@@ -121,9 +121,9 @@ $fc = $con->query($sql)->fetch_assoc();
 
                             <tr>
                                 <th width="30%">Número do Processo de Pagamento:</th>
-                                <td><?php if($fc['numpgt'] == NULL){
+                                <td><?php if ($fc['numpgt'] == NULL) {
                                         echo "Não Cadastrado";
-                                    }else{
+                                    } else {
                                         echo $fc['numpgt'];
                                     }
                                     ?>  </td>
@@ -134,9 +134,9 @@ $fc = $con->query($sql)->fetch_assoc();
             </div>
             <div class="box-footer">
                 <form action="?perfil=formacao&p=dados_contratacao&sp=listagem" method="post">
-                <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
-                    <button type="button" class="btn btn-default">Voltar</button>
-                </a>
+                    <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
+                        <button type="button" class="btn btn-default">Voltar</button>
+                    </a>
                     <input type="hidden" name="idDados" id="idDados" value="<?= $fc['id'] ?>">
                     <button type="button" class="btn btn-danger pull-right" id="despublica"
                             data-toggle="modal" data-target="#despublicacao" name="despublica"
@@ -146,28 +146,27 @@ $fc = $con->query($sql)->fetch_assoc();
                 </form>
             </div>
         </div>
-</div>
-<div id="despublicacao" class="modal modal-danger modal fade in" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <form action="?perfil=formacao&p=dados_contratacao&sp=listagem" method="post">
-                <h4 class="modal-title">Confirmação de Exclusão</h4>
-            </div>
-            <div class="modal-body">
-                <label>Tem certeza que deseja excluir?</label>
-            </div>
-            <div class="modal-footer">
-                <input type="hidden" name="idDados" id="idDados" value="<?= $fc['id']?>">
-                <input type="hidden" name="despublicar" id="despublicar">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
-                </button>
-                <input type="submit" class="btn btn-danger btn-outline" name="despublica" value="Excluir">
-                </form>
+        <div id="despublicacao" class="modal modal-danger modal fade in" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <form action="?perfil=formacao&p=dados_contratacao&sp=listagem" method="post">
+                            <h4 class="modal-title">Confirmação de Exclusão</h4>
+                    </div>
+                    <div class="modal-body">
+                        <label>Tem certeza que deseja excluir?</label>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="idDados" id="idDados" value="<?= $fc['id'] ?>">
+                        <input type="hidden" name="despublicar" id="despublicar">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                        </button>
+                        <input type="submit" class="btn btn-danger btn-outline" name="despublica" value="Excluir">
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-</section>
+    </section>
 </div>
