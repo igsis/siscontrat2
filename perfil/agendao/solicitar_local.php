@@ -107,10 +107,6 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_ce
                             </div>
                         </div>
                         <div class="box-footer">
-                            <a href="?perfil=agendao">
-                                <button type="button" class="btn btn-default">Voltar</button>
-                            </a>
-                            <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
                             <button type="submit" name="cadastraLocal" id="cadastraLocal"
                                     class="btn btn-primary pull-right">
                                 Cadastrar

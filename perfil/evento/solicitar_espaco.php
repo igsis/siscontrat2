@@ -48,9 +48,6 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espa
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <a href="?perfil=evento">
-                                <button type="button" class="btn btn-default">Voltar</button>
-                            </a>
                             <button type="submit" name="cadastraEspaco" id="cadastraEspaco" class="btn btn-primary pull-right">
                                 Cadastrar
                             </button>

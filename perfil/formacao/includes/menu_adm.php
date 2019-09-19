@@ -12,7 +12,7 @@ $pasta = "?perfil=formacao&p=administrativo&sp=";
             <li><a href="<?= $pasta ?>coordenadoria&spp=index"><i class="fa fa-circle-o"></i>
                     <span>Coordenadoria</span></a></li>
 
-            <li><a href="<?= $pasta ?>programa&spp=index>"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>programa&spp=index"><i class="fa fa-circle-o"></i>
                     <span>Programa</span></a></li>
 
             <li><a href="<?= $pasta ?>linguagem&spp=index"><i class="fa fa-circle-o"></i>

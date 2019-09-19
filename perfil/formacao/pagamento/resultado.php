@@ -7,22 +7,22 @@ $proponente = '';
 $row = 0;
 $where = '';
 
-if(isset($_POST['protocolo']) && $_POST['protocolo'] != null){
+if (isset($_POST['protocolo']) && $_POST['protocolo'] != null) {
     $protocolo = $_POST['protocolo'];
     $protocolo = " AND fc.protocolo = '$protocolo' ";
 }
 
-if(isset($_POST['numProcesso']) && $_POST['numProcesso'] != null){
+if (isset($_POST['numProcesso']) && $_POST['numProcesso'] != null) {
     $numProcesso = $_POST['numProcesso'];
     $numProcesso = " AND fc.num_processo_pagto = '$numProcesso' ";
 }
 
-if(isset($_POST['proponente']) && $_POST['proponente'] != null){
+if (isset($_POST['proponente']) && $_POST['proponente'] != null) {
     $proponente = $_POST['proponente'];
     $proponente = " AND fc.pessoa_fisica_id = '$proponente' ";
 }
 
-$sql = "SELECT fc.id, fc.protocolo, fc.pessoa_fisica_id, fc.num_processo_pagto FROM formacao_contratacoes fc INNER JOIN pedidos p on fc.pedido_id = p.id WHERE fc.publicado = 1 AND p.status_pedido_id = '19' $proponente $numProcesso $protocolo";
+$sql = "SELECT fc.id, p.id as pedido_id, fc.protocolo, fc.pessoa_fisica_id, fc.num_processo_pagto FROM formacao_contratacoes fc INNER JOIN pedidos p on fc.id = p.origem_id WHERE fc.publicado = 1 AND p.status_pedido_id = '19' $proponente $numProcesso $protocolo";
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
 ?>
@@ -68,21 +68,24 @@ $num_arrow = mysqli_num_rows($query);
                             } else {
                                 while ($formacao = mysqli_fetch_array($query)) {
                                     $proponente = recuperaDados('pessoa_fisicas', 'id', $formacao['pessoa_fisica_id'])['nome'];
-                                    $pagamento = recuperaDados('pagamentos', 'id', $formacao['pedido_id']);
-                                    if ($pagamento['nota_empenho'] != null)
-                                        $action = "?perfil=formacao&p=pagamento&sp=cargo&spp=empenho";
+                                    $pedido = recuperaDados('pedidos', 'origem_id', $formacao['id']);
+                                    $idPedido = $pedido['id'];
+                                    $sqlPagamento = "SELECT * FROM pagamentos WHERE pedido_id = '$idPedido'";
+                                    $pagamento = mysqli_num_rows(mysqli_query($con, $sqlPagamento));
+                                    if ($pagamento == 0)
+                                        $action = "?perfil=formacao&p=pagamento&sp=empenho";
                                     else
-                                        $action = "?perfil=formacao&p=pagamento&sp=cargo&spp=empenho_edita";
+                                        $action = "?perfil=formacao&p=pagamento&sp=empenho_edita";
                                     ?>
                                     <tr>
-                                        <td><?= $formacao['num_processo_pagto'] ?></td>
+                                        <td><?= $pedido['numero_processo'] ?></td>
                                         <td><?= $formacao['protocolo'] ?></td>
                                         <td><?= $proponente ?></td>
                                         <td>
                                             <form action="<?= $action ?>"
                                                   method="POST">
-                                                <input type="hidden" name="idFormacao" id="idFormacao"
-                                                       value="<?= $formacao['id'] ?>">
+                                                <input type="hidden" name="idPedido" id="idPedido"
+                                                       value="<?= $formacao['pedido_id'] ?>">
                                                 <button type="submit" name="carregar" id="carregar"
                                                         class="btn btn-primary btn-block">
                                                     <b>N.E</b>
@@ -90,7 +93,8 @@ $num_arrow = mysqli_num_rows($query);
                                             </form>
                                         </td>
                                         <td>
-                                            <form method='POST' action="?perfil=formacao&p=pagamento&sp=cargo&spp=pagto">
+                                            <form method='POST'
+                                                  action="?perfil=formacao&p=pagamento&sp=pagamento">
                                                 <input type="hidden" name='idFormacao' id="idFormacao"
                                                        value="<?= $formacao['id'] ?>">
                                                 <button type="submit" name="carregar" id="carregar"

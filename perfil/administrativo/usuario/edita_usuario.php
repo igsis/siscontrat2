@@ -1,7 +1,7 @@
 <?php
 $con = bancoMysqli();
 
-if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
+if (isset($_POST['cadastra']) || (isset($_POST['edita']))) {
     $nome = addslashes($_POST['nome']);
     $jovemMonitor = $_POST['jovem_monitor'];
     $rgRf = $_POST['rgrf_usuario'];
@@ -10,14 +10,14 @@ if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
     $usuario = addslashes($_POST['usuario']);
     $perfil = addslashes($_POST['perfil']);
 
-    if($jovemMonitor == 0){
+    if ($jovemMonitor == 0) {
         // fazer um in_array() depois que ficar definido os modulos que terá acesso a eventos
         $fiscal = 1;
-    }else{
+    } else {
         $fiscal = 0;
     }
 
-    if(isset($_POST['cadastra'])){
+    if (isset($_POST['cadastra'])) {
         $sql = "INSERT INTO usuarios (nome_completo, jovem_monitor, rf_rg, usuario, email, telefone, perfil_id, fiscal)
         VALUES ('$nome', '$jovemMonitor','$rgRf', '$usuario', '$email', '$telefone', '$perfil', '$fiscal')";
 
@@ -25,35 +25,27 @@ if(isset($_POST['cadastra']) || (isset($_POST['edita']))){
             gravarLog($sql);
             $mensagem = mensagem("success", "Usuário cadastrado com sucesso!");
             $idUsuario = recuperaUltimo('usuarios');
-
-            if(isset($_POST['verba'])){
-                atualizaDadosRelacionamento('usuario_verbas', $idUsuario, $_POST['verba'], 'usuario_id', 'verba_id');
-            }
         } else {
             $mensagem = mensagem("danger", "Erro no cadastro de usuário! Tente novamente.");
         }
     }
 
-    if(isset($_POST['edita'])){
+    if (isset($_POST['edita'])) {
         $idUsuario = $_POST['idUsuario'];
 
         $sql = "UPDATE usuarios SET nome_completo = '$nome', jovem_monitor = '$jovemMonitor', rf_rg = '$rgRf', usuario = '$usuario', email = '$email',
         telefone = '$telefone', perfil_id = '$perfil', fiscal = '$fiscal' WHERE id = '$idUsuario'";
 
-        if(mysqli_query($con, $sql)){
+        if (mysqli_query($con, $sql)) {
             gravarLog($sql);
             $mensagem = mensagem("success", "Usuário editado com sucesso!");
-
-            if(isset($_POST['verba'])){
-                atualizaDadosRelacionamento('usuario_verbas', $idUsuario, $_POST['verba'], 'usuario_id', 'verba_id');
-            }
-        }else{
+        } else {
             $mensagem = mensagem("danger", "Erro ao salvar o usuário! Tente novamente.");
         }
     }
 }
 
-if(isset($_POST['carregar'])){
+if (isset($_POST['carregar'])) {
     $idUsuario = $_POST['idUsuario'];
 }
 
@@ -77,7 +69,9 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
                     </div>
 
                     <div class="row" align="center">
-                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
                     </div>
 
                     <!-- /.box-header -->
@@ -87,34 +81,43 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="nome">Nome Completo *</label>
-                                    <input type="text" id="nome" name="nome" class="form-control" required value="<?= $usuario['nome_completo'] ?>">
+                                    <input type="text" id="nome" name="nome" class="form-control" required
+                                           value="<?= $usuario['nome_completo'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-2">
-                                    <label for="tipo">É jovem monitor?</label> <br>
-                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" <?= $usuario['jovem_monitor'] == 1 ? 'checked' : NULL ?> value="1"> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0" <?= $usuario['jovem_monitor'] == 0 ? 'checked' : NULL ?> value="1"> Não </label>
+                                    <label for="tipo">É estagiário/jovem monitor? *</label> <br>
+                                    <label><input type="radio" name="jovem_monitor"
+                                                  id="jovem_monitor" <?= $usuario['jovem_monitor'] == 1 ? 'checked' : NULL ?>
+                                                  value="1"> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor"
+                                                  value="0" <?= $usuario['jovem_monitor'] == 0 ? 'checked' : NULL ?>
+                                                  value="1"> Não </label>
                                 </div>
 
                                 <div class="form-group col-md-2">
                                     <label for="rf_usuario">RF/RG</label>
-                                    <input type="text" id="rgrf_usuario" name="rgrf_usuario" class="form-control" value="<?= $usuario['rf_rg'] ?>">
+                                    <input type="text" id="rgrf_usuario" name="rgrf_usuario" class="form-control"
+                                           value="<?= $usuario['rf_rg'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="rf_usuario">Usuário *</label>
-                                    <input type="text" id="usuario" name="usuario" class="form-control" maxlength="7" required readonly value="<?= $usuario['usuario'] ?>">
+                                    <input type="text" id="usuario" name="usuario" class="form-control" maxlength="7"
+                                           required readonly value="<?= $usuario['usuario'] ?>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="email">E-mail *</label>
-                                    <input type="email" id="email" name="email" class="form-control" maxlength="100" required value="<?= $usuario['email'] ?>">
+                                    <input type="email" id="email" name="email" class="form-control" maxlength="100"
+                                           required value="<?= $usuario['email'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="tel_usuario">Telefone *</label>
-                                    <input data-mask="(00) 0000-00000" type="text" id="tel_usuario" name="tel_usuario" class="form-control" required value="<?= $usuario['telefone'] ?>">
+                                    <input data-mask="(00) 0000-00000" type="text" id="tel_usuario" name="tel_usuario"
+                                           class="form-control" required value="<?= $usuario['telefone'] ?>">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="perfil">Perfil </label> <br>
@@ -126,16 +129,6 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="acao">Verbas * <i>(multipla escolha) </i></label>
-                                    <br>
-                                    <?php
-                                    geraCheckBox('verbas', 'verba', 'usuario_verbas', 'col-md-6', 'usuario_id', 'verba_id', $idUsuario);
-                                    ?>
-                                </div>
-                            </div>
                         </div>
                         <!-- /.box-body -->
 
@@ -144,7 +137,8 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
                                 <button type="button" class="btn btn-default">Voltar</button>
                             </a>
                             <input type="hidden" name="idUsuario" id="idUsuario" value="<?= $idUsuario ?>">
-                            <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">Salvar</button>
+                            <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">Salvar
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -161,11 +155,15 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
 
 <script>
     function habilitaCampo(id) {
-        if(document.getElementById(id).disabled==true){document.getElementById(id).disabled=false}
+        if (document.getElementById(id).disabled == true) {
+            document.getElementById(id).disabled = false
+        }
     }
 
-    function desabilitarCampo(id){
-        if(document.getElementById(id).disabled==false){document.getElementById(id).disabled=true}
+    function desabilitarCampo(id) {
+        if (document.getElementById(id).disabled == false) {
+            document.getElementById(id).disabled = true
+        }
     }
 
     /* function habilitarRadio (valor) {
@@ -221,30 +219,30 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
 
         var jovemMonitor = document.getElementsByName("jovem_monitor");
 
-        for (let i = 0; i < jovemMonitor.length; i++){
-            if(jovemMonitor[i].checked){
+        for (let i = 0; i < jovemMonitor.length; i++) {
+            if (jovemMonitor[i].checked) {
                 var escolhido = jovemMonitor[i].value;
 
                 var mascara = '000.000.0';
-                if(escolhido == 1){
+                if (escolhido == 1) {
                     $('#rgrf_usuario').val('');
                     $('#rgrf_usuario').focus();
                     $('#rgrf_usuario').unmask(mascara);
-                    $('#rgrf_usuario').keypress(function(event) {
+                    $('#rgrf_usuario').keypress(function (event) {
                         geraUsuarioRg();
                     });
-                    $('#rgrf_usuario').blur(function(event) {
+                    $('#rgrf_usuario').blur(function (event) {
                         geraUsuarioRg();
                     });
 
-                } else if(escolhido == 0){
+                } else if (escolhido == 0) {
                     $('#rgrf_usuario').val('');
                     $('#rgrf_usuario').focus();
                     $('#rgrf_usuario').mask(mascara);
-                    $('#rgrf_usuario').keypress(function(event) {
+                    $('#rgrf_usuario').keypress(function (event) {
                         geraUsuarioRf();
                     });
-                    $('#rgrf_usuario').blur(function(event) {
+                    $('#rgrf_usuario').blur(function (event) {
                         geraUsuarioRf();
                     });
                 }

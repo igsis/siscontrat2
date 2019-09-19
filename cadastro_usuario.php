@@ -42,9 +42,6 @@ if (isset($_POST['cadastra'])) {
             if (mysqli_query($con, $sql)) {
                 $usuarioNovo = recuperaUltimo('usuarios');
 
-                if(isset($_POST['verba'])){
-                    atualizaDadosRelacionamento('usuario_verbas', $usuarioNovo, $_POST['verba'], 'usuario_id', 'verba_id');
-                }
                 $mensagem = mensagem("success", "Usuário cadastrado com sucesso! Você está sendo redirecionado para a tela de login.");
                 echo "<script type=\"text/javascript\">
 						  window.setTimeout(\"location.href='index.php';\", 4000);
@@ -116,7 +113,7 @@ if (isset($_POST['cadastra'])) {
                                 </div>
 
                                 <div class="form-group col-md-2">
-                                    <label for="tipo">É jovem monitor?* </label> <br>
+                                    <label for="tipo">É estagiário/jovem monitor? * </label> <br>
                                     <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="1"> Sim
                                     </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0"> Não
@@ -152,15 +149,6 @@ if (isset($_POST['cadastra'])) {
                                     <label for="perfil">Código* </label> <br>
                                     <input type="text" required name="perfil" id="perfil" class="form-control"
                                            maxlength="9" minlength="9">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="acao">Verbas * <i>(multipla escolha) </i></label>
-                                    <br>
-                                    <?php
-                                        geraCheckBox('verbas', 'verba', 'usuario_verbas', 'col-md-6', 'usuario_id', 'verba_id', null);
-                                    ?>
                                 </div>
                             </div>
                         </div>

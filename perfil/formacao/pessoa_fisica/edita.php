@@ -5,17 +5,12 @@ $conn = bancoPDO();
 
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
+$linkResumo = $http . "rlt_formacao_pf.php";
 $link_facc = $http . "rlt_fac_pf.php";
-$tipoPessoa = 1;
-
 
 if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
 }
-
-$voltar = "<form action='?perfil=formacao' method='post'>
-                        <button type='submit' class='btn btn-default'>Voltar</button>
-                    </form>";
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $nome = addslashes($_POST['nome']);
@@ -168,6 +163,22 @@ if (isset($_POST['edita'])) {
             }
         }
 
+        //edita banco
+        if ($banco != NULL) {
+            $banco_existe = verificaExiste("pf_bancos", "pessoa_fisica_id", $idPf, 0);
+            if ($banco_existe['numero'] > 0) {
+                $sqlBanco = "UPDATE pf_bancos SET banco_id = '$banco', agencia = '$agencia', conta = '$conta' WHERE pessoa_fisica_id = '$idPf'";
+                if (!mysqli_query($con, $sqlBanco)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlBanco;
+                }
+            } else {
+                $sqlBanco = "INSERT INTO pf_bancos (pessoa_fisica_id, banco_id, agencia, conta) VALUES ('$idPf', '$banco', '$agencia', '$conta')";
+                if (!mysqli_query($con, $sqlBanco)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlBanco;
+                }
+            }
+        }
+
         //edita observação
         if ($observacao != NULL) {
             $obs_existe = verificaExiste("pf_observacoes", "pessoa_fisica_id", $idPf, 0);
@@ -199,6 +210,7 @@ if (isset($_POST["enviar"])) {
     $tipoPessoa = $_POST['tipoPessoa'];
 
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+
     $query_arquivos = mysqli_query($con, $sql_arquivos);
 
     while ($arq = mysqli_fetch_array($query_arquivos)) {
@@ -217,6 +229,9 @@ if (isset($_POST["enviar"])) {
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
                 $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                if ($y == 59) {
+                    $allowedExts = array(".png", ".PNG", ".JPG", ".jpg"); //Extensões permitidas
+                }
                 $ext = strtolower(substr($nome_arquivo, -4));
 
                 if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
@@ -259,6 +274,7 @@ if (isset($_POST['apagar'])) {
     }
 }
 
+$_SESSION['idPf'] = $idPf;
 
 $sqlTelefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
@@ -267,7 +283,16 @@ $pf = recuperaDados("pessoa_fisicas", "id", $idPf);
 $endereco = recuperaDados("pf_enderecos", "pessoa_fisica_id", $idPf);
 $nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
 $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
+$banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
+$foto = "SELECT arquivo FROM arquivos WHERE lista_documento_id = 59 AND publicado = 1 AND origem_id = '$idPf'";
+$foto = $con->query($foto)->fetch_assoc()['arquivo'];
+if ($foto == null) {
+    $foto = "avatar_default.png";
+    $fotoImg = "../visual/images/$foto";
+} else {
+    $fotoImg = "../uploadsdocs/$foto";
+}
 ?>
 
 <script language="JavaScript">
@@ -292,7 +317,11 @@ $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
                         <?= $mensagem ?? NULL; ?>
                     </div>
                     <div class="box-header">
-                        <h3 class="box-title">Pessoa física</h3>
+
+                        <h3 class="box-title col-md-6">Pessoa física</h3>
+                        <img src="<?= $fotoImg ?>" alt="<?= $foto ?>" class="img-circle img-responsive col-md-6"
+                             style="width: 9%; height: 12%">
+
                     </div>
                     <div class="box-body">
                         <form action="?perfil=formacao&p=pessoa_fisica&sp=edita" method="post">
@@ -378,6 +407,12 @@ $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
                                 <div class="form-group col-md-2">
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <?php
+                                    anexosNaPagina(59, $idPf, "modal-foto", "Foto 3x4");
+                                    ?>
                                 </div>
                             </div>
                             <div class="row">
@@ -499,6 +534,30 @@ $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
                                               class="form-control"><?= $observacao['observacao'] ?></textarea>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="banco">Banco</label>
+                                    <select name="banco" id="banco" class="form-control" required>
+                                        <?php
+                                        geraOpcao('bancos', $banco['banco_id']);
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="agencia">Agência</label>
+                                    <input type="text" id="agencia" name="agencia" class="form-control"
+                                           value="<?= $banco['agencia'] ?>" required>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="conta">Conta</label>
+                                    <input type="text" id="conta" name="conta" class="form-control"
+                                           value="<?= $banco['conta'] ?>" required>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <?php
@@ -525,38 +584,44 @@ $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
                                     ?>
                                 </div>
                             </div>
+
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
-                                <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
 
+                                <div class="row">
+                                    <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
+
+                                    <a href="?perfil=formacao">
+                                        <button type="button" class="btn btn-default pull-left">Voltar</button>
+                                    </a>
+
+                                    <a href="<?= $linkResumo ?>" target="_blank">
+                                        <button type="button" name="pdf" id="pdf" class="btn btn-primary center-block"
+                                                style="align-items: center;">Imprimir resumo
+                                        </button>
+                                    </a>
+                                </div>
                         </form>
-                        <?= $voltar ?>
                     </div>
                 </div>
-                <!-- /.box-body -->
             </div>
-            <!-- /.box -->
         </div>
-        <!-- /.col -->
+
+        <?php
+        modalUploadArquivoUnico("modal-rg", "?perfil=formacao&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
+        modalUploadArquivoUnico("modal-foto", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "1");
+        modalUploadArquivoUnico("modal-cpf", "?perfil=formacao&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
+        modalUploadArquivoUnico("modal-ccm", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
+        modalUploadArquivoUnico("modal-nit", "?perfil=formacao&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
+        modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
+        modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "1");
+        ?>
+
+    </section>
 </div>
 
-<?php
-modalUploadArquivoUnico("modal-rg", "?perfil=formacao&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
-modalUploadArquivoUnico("modal-cpf", "?perfil=formacao&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
-modalUploadArquivoUnico("modal-ccm", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
-modalUploadArquivoUnico("modal-nit", "?perfil=formacao&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
-modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
-modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "1");
-?>
-
-</section>
-<!-- /.content -->
-</div>
-
-<!--.modal-->
 <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
     <div class="modal-dialog">
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -578,7 +643,6 @@ modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=e
         </div>
     </div>
 </div>
-<!--  Fim Modal de Upload de arquivo  -->
 
 <script type="text/javascript">
     $('#exclusao').on('show.bs.modal', function (e) {
@@ -587,6 +651,5 @@ modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=e
 
         $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
         $(this).find('#idArquivo').attr('value', `${id}`);
-
     })
 </script>

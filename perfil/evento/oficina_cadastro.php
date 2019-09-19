@@ -7,16 +7,6 @@ $sqlDias = "SELECT * FROM execucao_dias";
 $queryDias = mysqli_query($con, $sqlDias);
 ?>
 
-<script language="JavaScript">
-
-    function barraData(n) {
-        if (n.value.length == 2)
-            c.value += '/';
-        if (n.value.length == 5)
-            c.value += '/';
-    }
-</script>
-
 <script type="text/javascript">
     $(document).ready(function () {
         validate();
@@ -26,40 +16,8 @@ $queryDias = mysqli_query($con, $sqlDias);
     function validate() {
         comparaData();
         if ($('#datepicker11').val().length > 0) {
-
-        } else {
-
-
-            var data = document.querySelector('input[name="data_inicio"]').value;
-            data = new Date(data);
-            dayName = new Array("0", "1", "2", "3", "4", "5", "6", "0");
-            let dia = dayName[data.getDay() + 1];
-
-            if (dia == 0) {
-                $("#diasemana07").prop("disabled", false);
-                $("#diasemana07").prop("checked", true);
-            } else if (dia == 1) {
-                $("#diasemana01").prop("disabled", false);
-                $("#diasemana01").prop("checked", true);
-            } else if (dia == 2) {
-                $("#diasemana02").prop("disabled", false);
-                $("#diasemana02").prop("checked", true);
-            } else if (dia == 3) {
-                $("#diasemana03").prop("disabled", false);
-                $("#diasemana03").prop("checked", true);
-            } else if (dia == 4) {
-                $("#diasemana04").prop("disabled", false);
-                $("#diasemana04").prop("checked", true);
-            } else if (dia == 5) {
-                $("#diasemana05").prop("disabled", false);
-                $("#diasemana05").prop("checked", true);
-            } else if (dia == 6) {
-                $("#diasemana06").prop("disabled", false);
-                $("#diasemana06").prop("checked", true);
-            }
         }
 
-        validaDiaSemana();
     }
 
     function comparaData() {
@@ -87,9 +45,6 @@ $queryDias = mysqli_query($con, $sqlDias);
             }
         }
 
-        if (dataFim == "") {
-            $('#cadastra').attr("disabled", false);
-        }
     }
 </script>
 
@@ -159,7 +114,7 @@ $queryDias = mysqli_query($con, $sqlDias);
                                     <select name="idDia1" id="dia1" class="form-control">
                                         <option>Selecione o Dia</option>
                                         <?php
-                                        geraOpcao('execucao_dias')
+                                            geraOpcao('execucao_dias')
                                         ?>
                                     </select>
                                 </div>
@@ -170,7 +125,7 @@ $queryDias = mysqli_query($con, $sqlDias);
                                     <select name="idDia2" id="dia2" class="form-control">
                                         <option>Selecione o Dia</option>
                                         <?php
-                                        geraOpcao('execucao_dias')
+                                             geraOpcao('execucao_dias')
                                         ?>
 
                                     </select>
@@ -200,38 +155,6 @@ $queryDias = mysqli_query($con, $sqlDias);
         </div>
     </section>
 </div>
-
-<script>
-    function validaDiaSemana() {
-        var dataInicio = document.querySelector('#datepicker10').value;
-        var isMsg = $('#msgEsconde');
-        isMsg.hide();
-        if (dataInicio != "") {
-            var i = 0;
-            var counter = 0;
-            var diaSemana = $('.semana');
-
-            for (; i < diaSemana.length; i++) {
-                if (diaSemana[i].checked) {
-                    counter++;
-                }
-            }
-
-            if (counter == 0) {
-                $('#cadastra').attr("disabled", true);
-                isMsg.show();
-                return false;
-            }
-
-            $('#cadastra').attr("disabled", false);
-            isMsg.hide();
-            return true;
-        }
-    }
-
-    var diaSemana = $('.semana');
-    diaSemana.change(validaDiaSemana);
-</script>
 
 <script>
     let dia1 = $('#dia1');

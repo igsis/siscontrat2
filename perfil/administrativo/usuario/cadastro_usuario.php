@@ -27,7 +27,7 @@
                                 </div>
 
                                 <div class="form-group col-md-2">
-                                    <label for="tipo">É jovem monitor?</label> <br>
+                                    <label for="tipo">É estagiário/jovem monitor? *</label> <br>
                                     <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="1"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0"> Não </label>
                                 </div>
@@ -63,17 +63,6 @@
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="acao">Verbas * <i>(multipla escolha) </i></label>
-                                    <br>
-                                    <?php
-                                        geraCheckBox('verbas', 'verba', 'usuario_verbas', 'col-md-6', 'usuario_id', 'verba_id', $idUsuario);
-                                    ?>
-                                </div>
-                            </div>
-
                         </div>
                         <!-- /.box-body -->
 

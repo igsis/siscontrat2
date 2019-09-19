@@ -1,12 +1,12 @@
-com -> comunica��o
+﻿com -> comunicação
 con -> contratos
 conl -> contratos lite
 eve -> eventos
-for -> forma��o
-ocp -> ocupa��o | Evento interno / Agendão
-pro -> produ��o
+for -> formação
+ocp -> ocupação | Evento interno / Agendão
+pro -> produção
 coo -> coordenadoria
-jur -> jur�dico
+jur -> jurídico
 pag -> pagamentos
 pes -> pesquisa
 adm -> administrador

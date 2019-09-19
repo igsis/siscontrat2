@@ -102,44 +102,12 @@ include "includes/menu_interno.php";
     function validate() {
         comparaData();
         if ($('#datepicker11').val().length > 0) {
-
-        } else {
-
-
-            var data = document.querySelector('input[name="data_inicio"]').value;
-            data = new Date(data);
-            dayName = new Array("0", "1", "2", "3", "4", "5", "6", "0");
-            let dia = dayName[data.getDay() + 1];
-
-            if (dia == 0) {
-                $("#diasemana07").prop("disabled", false);
-                $("#diasemana07").prop("checked", true);
-            } else if (dia == 1) {
-                $("#diasemana01").prop("disabled", false);
-                $("#diasemana01").prop("checked", true);
-            } else if (dia == 2) {
-                $("#diasemana02").prop("disabled", false);
-                $("#diasemana02").prop("checked", true);
-            } else if (dia == 3) {
-                $("#diasemana03").prop("disabled", false);
-                $("#diasemana03").prop("checked", true);
-            } else if (dia == 4) {
-                $("#diasemana04").prop("disabled", false);
-                $("#diasemana04").prop("checked", true);
-            } else if (dia == 5) {
-                $("#diasemana05").prop("disabled", false);
-                $("#diasemana05").prop("checked", true);
-            } else if (dia == 6) {
-                $("#diasemana06").prop("disabled", false);
-                $("#diasemana06").prop("checked", true);
-            }
         }
 
-        validaDiaSemana();
     }
 
     function comparaData() {
-        let botao = $('#edita');
+        let botao = $('#cadastra');
         var isMsgData = $('#msgEscondeData');
         isMsgData.hide();
         var dataInicio = document.querySelector('#datepicker10').value;
@@ -155,17 +123,14 @@ include "includes/menu_interno.php";
             if (dataFim <= dataInicio) {
                 botao.prop('disabled', true);
                 isMsgData.show();
-                $('#edita').attr("disabled", true);
+                $('#cadastra').attr("disabled", true);
             } else {
                 botao.prop('disabled', false);
                 isMsgData.hide();
-                $('#edita').attr("disabled", false);
+                $('#cadastra').attr("disabled", false);
             }
         }
 
-        if (dataFim == "") {
-            $('#edita').attr("disabled", false);
-        }
     }
 </script>
 
@@ -241,20 +206,14 @@ include "includes/menu_interno.php";
                                     <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
                                 </div>
                             </div>
-                            <?php
-                            $d1 = recuperaDados('execucao_dias', 'id', $execucaodia1);
-                            $d2 = recuperaDados('execucao_dias', 'id', $execucaodia2);
-                            ?>
-
 
                             <div class="row">
                                 <div class="form-group col-md-6">
 
                                     <label>Selecione o primeiro dia de execução:</label>
                                     <select name="idDia1" id="dia1" class="form-control">
-                                        <option value="<?= $d1['id'] ?>"><?= $d1['dia'] ?></option>
                                         <?php
-                                        geraOpcao('execucao_dias', $execucaodia1)
+                                            geraOpcao('execucao_dias', $oficina['execucao_dia1_id'])
                                         ?>
                                     </select>
                                 </div>
@@ -262,9 +221,8 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label>Selecione o segundo dia de execução:</label>
                                     <select name="idDia2" id="dia2" class="form-control">
-                                        <option value="<?= $d2['id'] ?>"><?= $d2['dia'] ?></option>
                                         <?php
-                                        geraOpcao('execucao_dias', $execucaodia2)
+                                            geraOpcao('execucao_dias', $oficina['execucao_dia2_id'])
                                         ?>
                                     </select>
                                 </div>
@@ -292,38 +250,6 @@ include "includes/menu_interno.php";
         </div>
     </section>
 </div>
-
-<script>
-    function validaDiaSemana() {
-        var dataInicio = document.querySelector('#datepicker10').value;
-        var isMsg = $('#msgEsconde');
-        isMsg.hide();
-        if (dataInicio != "") {
-            var i = 0;
-            var counter = 0;
-            var diaSemana = $('.semana');
-
-            for (; i < diaSemana.length; i++) {
-                if (diaSemana[i].checked) {
-                    counter++;
-                }
-            }
-
-            if (counter == 0) {
-                $('#edita').attr("disabled", true);
-                isMsg.show();
-                return false;
-            }
-
-            $('#edita').attr("disabled", false);
-            isMsg.hide();
-            return true;
-        }
-    }
-
-    var diaSemana = $('.semana');
-    diaSemana.change(validaDiaSemana);
-</script>
 
 <script>
     let dia1 = $('#dia1');

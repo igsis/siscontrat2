@@ -12,7 +12,7 @@ $tipoDocumento = null;
 
 if (isset($_POST['lider'])) {
     $idPedido = $_POST['lider'];
-    $idAtracao = $_POST['idAtracao'];
+    $idAtracao = $_POST['oficina'];
 }
 
 
@@ -159,7 +159,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=evento&p=pf_pesquisa" method="post">
+                        <form action="?perfil=evento&p=pf_pesquisa" method="post" id="formulario">
                             <label for="tipoDocumento">Tipo de documento: </label>
                             <label class="radio-inline">
                                 <input type="radio" name="tipoDocumento" value="1" checked>CPF
@@ -172,15 +172,15 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                 <div class="input-group">
                                     <label for="cpf" id="textoDocumento">CPF *</label>
                                     <input type="text" class="form-control" minlength=14 name="procurar"
-                                           value="<?= $procurar ?>" id="cpf" data-mask="000.000.000-00">
+                                           value="<?= $procurar ?>" id="cpf" data-mask="000.000.000-00" minlength="14">
                                     <input type="text" class="form-control" name="passaporte" id="passaporte"
                                            value="<?= $procurar ?>" maxlength="10">
 
                                     <span class="input-group-btn">
                                         <p>&nbsp;</p>
                                         <p>&nbsp;</p>
-                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?? NULL?>">
-                                        <input type="hidden" name="idAtracao" value="<?= $idAtracao ?? NULL?>">
+                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?? NULL ?>">
+                                        <input type="hidden" name="idAtracao" value="<?= $idAtracao ?? NULL ?>">
                                         <button class="btn btn-default" type="submit"><i
                                                     class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
@@ -229,12 +229,36 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
 </div>
 
 <script>
-
     let tipos = document.querySelectorAll("input[type='radio'][name='tipoDocumento']");
     let passaporte = document.querySelector("input[name='passaporte']");
     let procurar = document.querySelector("input[name='procurar']");
     let trocaDoc = document.querySelector("#trocaDoc");
 
+    for (const tipo of tipos) {
+        tipo.addEventListener('change', tp => {
+
+            const nulo = null;
+
+            passaporte.value = nulo
+            procurar.value = nulo
+
+            if (tp.target.value == 1) {
+                passaporte.style.display = 'none'
+                procurar.disabled = false
+                passaporte.disabled = true
+                procurar.style.display = 'block'
+                procurar.value = ''
+                $('#textoDocumento').text('CPF *')
+            } else {
+                passaporte.style.display = 'block'
+                passaporte.disabled = false
+                passaporte.value = ''
+                procurar.disabled = true
+                procurar.style.display = 'none'
+                $('#textoDocumento').text('Passaporte *')
+            }
+        })
+    }
 
     if (`<?=$tipoDocumento?>` == 2) {
         trocaDoc.innerHTML = 'Passaporte'
@@ -243,57 +267,29 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
         passaporte.disabled = false
         procurar.disabled = true
         procurar.style.display = 'none'
-
     } else {
         passaporte.style.display = 'none'
         passaporte.disabled = true
     }
 
-
-    for (const tipo of tipos) {
-        tipo.addEventListener('change', e => {
-
-            const nulo = null;
-
-            passaporte.value = nulo
-            procurar.value = nulo
-
-            if (e.target.value == 1) {
-                passaporte.style.display = 'none'
-                procurar.disabled = false
-                passaporte.disabled = true
-                procurar.style.display = 'block'
-                procurar.value = ''
-                $('#textoDocumento').text('CPF *')
-
-            } else {
-                passaporte.style.display = 'block'
-                passaporte.disabled = false
-                passaporte.value = ''
-                procurar.disabled = true
-                procurar.style.display = 'none'
-                $('#textoDocumento').text('Passaporte *')
-
-
-            }
-        })
-    }
-
+    /**
+     * @return {boolean}
+     */
     function TestaCPF(cpf) {
         var Soma;
         var Resto;
         var strCPF = cpf;
         Soma = 0;
 
-        if (strCPF == "11111111111" ||
-            strCPF == "22222222222" ||
-            strCPF == "33333333333" ||
-            strCPF == "44444444444" ||
-            strCPF == "55555555555" ||
-            strCPF == "66666666666" ||
-            strCPF == "77777777777" ||
-            strCPF == "88888888888" ||
-            strCPF == "99999999999")
+        if (strCPF === "11111111111" ||
+            strCPF === "22222222222" ||
+            strCPF === "33333333333" ||
+            strCPF === "44444444444" ||
+            strCPF === "55555555555" ||
+            strCPF === "66666666666" ||
+            strCPF === "77777777777" ||
+            strCPF === "88888888888" ||
+            strCPF === "99999999999")
             return false;
 
         for (i = 1; i <= 9; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
@@ -312,7 +308,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
     }
 
     function validacao() {
-        var divCPF = document.querySelector('#divCPF');
         var strCPF = document.querySelector('#cpf').value;
 
         if (strCPF != null) {
@@ -321,18 +316,31 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
 
             var validado = TestaCPF(strCPF);
 
-            if (!validado) {
-                alert("CPF inválido!");
+            if (!validado)
                 $("#adicionar").attr("disabled", true);
-            } else {
+            else
                 $("#adicionar").attr("disabled", false);
-            }
+
         }
     }
 
-    $(document).ready(function () {
-        if ((document.querySelector("#cpf").value != "") && (document.querySelector("#passaporte") == "")) {
-            validacao();
+
+    $('#formulario').submit(function (event) {
+        var strCPF = document.querySelector('#cpf').value;
+
+        if (strCPF !== '' && `<?=$tipoDocumento?>` != 2) {
+            console.log(`<?=$tipoDocumento?>`)
+            // tira os pontos do valor, ficando apenas os numeros
+            strCPF = strCPF.replace(/[^0-9]/g, '');
+
+            var validado = TestaCPF(strCPF);
+
+            if (!validado) {
+                event.preventDefault()
+                alert("CPF inválido")
+            }
         }
-    });
+    })
+
+
 </script>

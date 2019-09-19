@@ -16,7 +16,12 @@
                                     <input type="number" min="2018" id="ano" name="ano" required class="form-control">
                                 </div>
 
-                                <div class="form-group col-md-10">
+                                <div class="form-group col-md-2">
+                                    <label for="parcelas">Qtd. Parcelas *</label>
+                                    <input type="number" min="1" id="num_parcela" name="num_parcela" required class="form-control">
+                                </div>
+
+                                <div class="form-group col-md-8">
                                     <label for="descricao">Descrição *</label>
                                     <input type="text" id="descricao" name="descricao" class="form-control" required>
                                 </div>
