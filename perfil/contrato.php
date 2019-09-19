@@ -2,12 +2,14 @@
 //include para contrato
 if(isset($_GET['p']))
 {
+    $p = $_GET['p'];
     if(isset($_GET['sp']))
     {
-        $p = $_GET['p'];
         $sp = $_GET['sp'];
         include "contrato/".$p."/".$sp.".php";
     }
+
+    include "contrato/" .$p. ".php";
 }
 else
 {
@@ -15,4 +17,4 @@ else
     include "contrato/".$p.".php";
 }
 
-include "../perfil/contrato/includes/menu.php";
+include "contrato/includes/menu.php";

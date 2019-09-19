@@ -133,7 +133,7 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
  
                             <div class="row" id="msgEscondeData">
                                 <div class="form-group col-md-offset-6 col-md-6">
-                                    <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
+                                    <span style="color: red;"><b>Data de encerramento deve ser maior que a data inicial</b></span>
                                 </div>
                             </div>
                             

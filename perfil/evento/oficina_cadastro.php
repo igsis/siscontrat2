@@ -51,7 +51,7 @@ $queryDias = mysqli_query($con, $sqlDias);
 <div class="content-wrapper">
     <section class="content">
 
-        <h2 class="page-header">Cadastro de Evento</h2>
+        <h2 class="page-header">Cadastro de Especificidade</h2>
 
         <div class="row">
             <div class="col-md-12">
@@ -103,7 +103,7 @@ $queryDias = mysqli_query($con, $sqlDias);
 
                             <div class="row" id="msgEscondeData">
                                 <div class="form-group col-md-6">
-                                    <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
+                                    <span style="color: red;"><b>Data de encerramento deve ser maior que a data inicial</b></span>
                                 </div>
                             </div>
 

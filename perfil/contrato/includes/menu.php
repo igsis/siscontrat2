@@ -1,5 +1,5 @@
 <?php
-$pasta = "?perfil=contratos&p=";
+$pasta = "?perfil=contrato&p=";
 ?>
 <aside class="main-sidebar">
     <section class="sidebar">
@@ -20,7 +20,7 @@ $pasta = "?perfil=contratos&p=";
                 </ul>
             </li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>pesquisa_contratos"><i class="fa fa-circle-o"></i>
                     <span>Filtrar Contratos</span></a>
             </li>
 

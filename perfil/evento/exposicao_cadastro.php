@@ -14,7 +14,7 @@ if (isset($_POST['carregar'])) {
 <div class="content-wrapper">
     <section class="content">
 
-        <h2 class="page-header">Cadastro de Evento</h2>
+        <h2 class="page-header">Cadastro de Especificidade</h2>
 
         <div class="row">
             <div class="col-md-12">

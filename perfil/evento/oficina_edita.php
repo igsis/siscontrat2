@@ -137,7 +137,7 @@ include "includes/menu_interno.php";
 <div class="content-wrapper">
     <section class="content">
 
-        <h2 class="page-header">Cadastro de Evento</h2>
+        <h2 class="page-header">Edição de Especificidade</h2>
 
         <div class="row">
             <div class="col-md-12">
@@ -203,7 +203,7 @@ include "includes/menu_interno.php";
 
                             <div class="row" id="msgEscondeData">
                                 <div class="form-group col-md-6">
-                                    <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
+                                    <span style="color: red;"><b>Data de encerramento deve ser maior que a data inicial</b></span>
                                 </div>
                             </div>
 

@@ -82,7 +82,7 @@ include "includes/menu_interno.php";
 <div class="content-wrapper">
     <section class="content">
 
-        <h2 class="page-header">Cadastro de Evento</h2>
+        <h2 class="page-header">Edição de Especificidade</h2>
 
         <div class="row">
             <div class="col-md-12">
