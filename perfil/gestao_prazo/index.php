@@ -3,16 +3,10 @@ include "includes/menu.php";
 $con = bancoMysqli();
 
 $sql = "SELECT
-               e.id AS 'id',
-               e.protocolo AS 'protocolo', 
-               e.nome_evento AS 'nome_evento',
-               l.local AS 'local',
-               e.suplente_id,
-               e.fiscal_id
+               e.id AS 'id'
                FROM eventos AS e
                INNER JOIN pedidos AS p ON p.origem_id = e.id 
                INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
-               INNER JOIN locais AS l ON l.id = o.local_id
                WHERE evento_status_id = 2 AND e.publicado = 1 AND p.status_pedido_id = 1";
 $query = mysqli_query($con,$sql);
 $numEventos = mysqli_num_rows($query);

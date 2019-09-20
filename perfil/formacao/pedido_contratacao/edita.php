@@ -110,10 +110,13 @@ if (isset($_POST['parcelaEditada'])) {
 
 
 $_SESSION['idPedido'] = $idPedido;
+
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPc = $pedido['origem_id'];
 
 $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
+$_SESSION['idFC'] = $fc['id'];
+
 $pessoa_fisica = recuperaDados('pessoa_fisicas', 'id', $fc['pessoa_fisica_id'])['nome'];
 $classificacao = recuperaDados('classificacao_indicativas', 'id', $fc['classificacao'])['classificacao_indicativa'];
 $territorio = recuperaDados('territorios', 'id', $fc['territorio_id'])['territorio'];
@@ -128,9 +131,11 @@ $numParcelas = $vigencia['numero_parcelas'];
 $fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id'])['nome_completo'];
 $suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'];
 
+$_SESSION['idPF'] = $idPf;
+
 $valor = 00.0;
 $idVigencia = $vigencia['id'];
-$sql = "SELECT valor FROM parcelas WHERE pedido_id = '$idPedido' AND valor <> 0.00";
+$sql = "SELECT valor FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND valor <> 0.00";
 $query = mysqli_query($con, $sql);
 
 while ($count = mysqli_fetch_array($query))

@@ -1,10 +1,9 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-$conn = bancoPDO();
+
 $sql = "SELECT
                e.id AS 'id',
-               e.protocolo AS 'protocolo', 
                e.nome_evento AS 'nome_evento',
                l.local AS 'local',
                e.fiscal_id
@@ -12,7 +11,7 @@ $sql = "SELECT
                INNER JOIN pedidos AS p ON p.origem_id = e.id 
                INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
                INNER JOIN locais AS l ON l.id = o.local_id
-               WHERE evento_status_id = 2 AND e.publicado = 1 AND p.status_pedido_id = 1";
+               WHERE e.evento_status_id = 2 AND e.publicado = 1 AND p.status_pedido_id = 1";
 
 if (isset($_POST['aprovar'])) {
     $idEvento = $_POST['idEvento'];
@@ -92,7 +91,6 @@ $query = mysqli_query($con, $sql);
                         <table id="tblGestao" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>Protocolo</th>
                                 <th>Nome do Evento</th>
                                 <th>Locais</th>
                                 <th>Período</th>
@@ -107,7 +105,6 @@ $query = mysqli_query($con, $sql);
                                 $fiscal = recuperaDados('usuarios', 'id', $eventos['fiscal_id']);
                                 $operador = recuperaDados('contratos', 'pedido_id', $eventos['id']);
                                 echo "<tr>";
-                                echo "<td>" . $eventos['protocolo'] . "</td>";
                                 echo "<td>" . $eventos['nome_evento'] . "</td>";
                                 echo "<td>" . $eventos['local'] . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($eventos['id'], 'ocorrencias') . "</td>";
@@ -121,14 +118,13 @@ $query = mysqli_query($con, $sql);
                                                 <form method='POST' action='?perfil=gestao_prazo&p=detalhes_gestao' role='form'>
                                                 <input type='hidden' name='idEvento' value='" . $eventos['id'] . "'>
                                                 <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span> </button>
-                                                
+                                                </form>
                                         </td>";
                             }
                             echo "</tbody>"
                             ?>
                             <tfoot>
                             <tr>
-                                <th>Protocolo</th>
                                 <th>Nome do Evento</th>
                                 <th>Locais</th>
                                 <th>Período</th>

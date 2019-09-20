@@ -53,7 +53,7 @@
                             <select class="form-control" name="territorio" id="territorio" required>
                                 <option value="">Selecione o território...</option>
                                 <?php
-                                    geraOpcao("territorios");
+                                geraOpcaoPublicado("territorios");
                                 ?>
                             </select>
                         </div>
@@ -63,7 +63,7 @@
                             <select class="form-control" name="coordenadoria" id="coordenadoria" required>
                                 <option value="">Selecione a coordenadoria...</option>
                                 <?php
-                                    geraOpcao("coordenadorias");
+                                geraOpcaoPublicado("coordenadorias");
                                 ?>
                             </select>
                         </div>
@@ -73,7 +73,7 @@
                             <select class="form-control" name="subprefeitura" id="subprefeitura" required>
                                 <option value="">Selecione a subprefeitura...</option>
                                 <?php
-                                    geraOpcao("subprefeituras");
+                                geraOpcaoPublicado("subprefeituras");
                                 ?>
                             </select>
                         </div>
@@ -83,7 +83,7 @@
                             <select class="form-control" name="programa" id="programa" required>
                                 <option value="">Selecione o programa...</option>
                                 <?php
-                                geraOpcao("programas");
+                                geraOpcaoPublicado("programas");
                                 ?>
                             </select>
                         </div>
@@ -95,7 +95,7 @@
                             <select class="form-control" name="linguagem" id="linguagem" required>
                                 <option value="">Selecione a linguagem...</option>
                                 <?php
-                                    geraOpcao("linguagens");
+                                geraOpcaoPublicado("linguagens");
                                 ?>
                             </select>
                         </div>
@@ -105,7 +105,7 @@
                             <select class="form-control" name="projeto" id="projeto" required>
                                 <option value="">Selecione o projeto...</option>
                                 <?php
-                                    geraOpcao("projetos");
+                                geraOpcaoPublicado("projetos");
                                 ?>
                             </select>
                         </div>
@@ -115,7 +115,7 @@
                             <select class="form-control" name="cargo" id="cargo" required>
                                 <option value="">Selecione o cargo...</option>
                                 <?php
-                                geraOpcao("formacao_cargos");
+                                geraOpcaoPublicado("formacao_cargos");
                                 ?>
                             </select>
                         </div>
@@ -125,7 +125,7 @@
                             <select class="form-control" name="vigencia" id="vigencia" required>
                                 <option value="">Selecione a vigência...</option>
                                 <?php
-                                geraOpcao("formacao_vigencias");
+                                geraOpcaoPublicado("formacao_vigencias");
                                 ?>
                             </select>
                         </div>

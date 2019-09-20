@@ -22,9 +22,10 @@ class PDF extends FPDF{
 }
 
 $idPedido = $_SESSION['idPedido'];
+$idPf = $_SESSION['idPF'];
+$idFC = $_SESSION['idFC'];
 $pedido = recuperaDados('pedidos','id',$idPedido);
-$contratacao = recuperaDados('formacao_contratacoes', 'id', $idPedido);
-$idPf = $contratacao['pessoa_fisica_id'];
+$contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
 $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
