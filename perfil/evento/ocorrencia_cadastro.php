@@ -39,7 +39,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
     });
 
     function validate() {
-        comparaData();
         if ($('#datepicker11').val().length > 0) {
             mudaData(false);
         } else {
@@ -74,6 +73,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
             }
         }
 
+        comparaData();
         validaDiaSemana();
     }
 
@@ -90,17 +90,19 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         if (dataFim != "") {
             var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
 
+            if (dataFim == "") {
+                $('#cadastra').attr("disabled", false);
+            }
+
             if (dataFim <= dataInicio) {
                 isMsgData.show();
                 $('#cadastra').attr("disabled", true);
+                mudaData(true);
             } else {
                 isMsgData.hide();
                 $('#cadastra').attr("disabled", false);
+                mudaData(false);
             }
-        }
-
-        if (dataFim == "") {
-            $('#cadastra').attr("disabled", false);
         }
     }
 </script>
