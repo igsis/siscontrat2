@@ -16,6 +16,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
         $idPc = $_POST['idPc'];
         $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
         $idPf = $fc['pessoa_fisica_id'] ?? null;
+        $_SESSION['idPF'] = $idPf;
 
         $sql = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_fisica_id, numero_processo, verba_id, numero_parcelas, valor_total, forma_pagamento, data_kit_pagamento, justificativa, status_pedido_id, observacao)
                          VALUES (2, '$idPc', 1, '$idPf', '$numeroProcesso', '$verba', '$numParcelas', '$valor', '$forma_pagamento', '$dataKit', '$justificativa', 2, '$observacao')";
@@ -131,10 +132,9 @@ $numParcelas = $vigencia['numero_parcelas'];
 $fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id'])['nome_completo'];
 $suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'];
 
-$_SESSION['idPF'] = $idPf;
-
 $valor = 00.0;
 $idVigencia = $vigencia['id'];
+//certificar que é permitido fazer o select desta tabela
 $sql = "SELECT valor FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND valor <> 0.00";
 $query = mysqli_query($con, $sql);
 

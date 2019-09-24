@@ -86,5 +86,6 @@ $link_pcf = $http . "impressao_pedido_formacao.php";
                 </a>
             </div>
         </div>
+
     </section>
 </div>

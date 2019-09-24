@@ -14,7 +14,8 @@ class PDF extends FPDF{
         // Move to the right
 
         // Logo
-        $this->Image('../pdf/logo_smc.jpg',30, 10);
+        $this->Cell(80);
+        $this->Image('../pdf/logo_smc.jpg',170, 10);
 
         // Line break
         $this->Ln(20);
@@ -22,9 +23,9 @@ class PDF extends FPDF{
 }
 
 $idPedido = $_SESSION['idPedido'];
-$idPf = $_SESSION['idPF'];
 $idFC = $_SESSION['idFC'];
 $pedido = recuperaDados('pedidos','id',$idPedido);
+$idPf = $pedido['pessoa_fisica_id'];
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
@@ -47,7 +48,7 @@ $pdf->AddPage();
 
 
 $x=20;
-$l=8; //DEFINE A ALTURA DA LINHA
+$l=7; //DEFINE A ALTURA DA LINHA
 
 $pdf->SetXY( $x , 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
@@ -57,7 +58,6 @@ $pdf->Cell(180,15,utf8_decode("PEDIDO DE CONTRATAÇÃO DE PESSOA FÍSICA"),0,1,'
 
 $pdf->Ln(5);
 
-$pdf->SetX(160);
 
 
 $pdf->SetX($x);
@@ -154,9 +154,9 @@ $pdf->MultiCell(168,$l,utf8_decode("R$ " . dinheiroParaBr($pedido['valor_total']
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(38,$l,'Forma de Pagamento:', '0', '', 'L');
+$pdf->Cell(38,$l,'Forma de Pagamento:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(145,$l,utf8_decode($pedido['forma_pagamento']),0,'L',0);
+$pdf->MultiCell(122,$l,utf8_decode($pedido['forma_pagamento']));
 
 $pdf->Ln(5);
 
@@ -164,7 +164,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(22,$l,'Justificativa:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(160,$l,utf8_decode($pedido['justificativa']),0,'L',0);
+$pdf->MultiCell(155,$l,utf8_decode($pedido['justificativa']));
 
 $pdf->Output();
 ?>
