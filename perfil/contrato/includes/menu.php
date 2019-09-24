@@ -20,7 +20,7 @@ $pasta = "?perfil=contrato&p=";
                 </ul>
             </li>
 
-            <li><a href="<?= $pasta ?>pesquisa_contratos"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>filtrar_contratos&sp=pesquisa_contratos"><i class="fa fa-circle-o"></i>
                     <span>Filtrar Contratos</span></a>
             </li>
 
