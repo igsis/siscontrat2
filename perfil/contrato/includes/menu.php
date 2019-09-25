@@ -13,7 +13,7 @@ $pasta = "?perfil=contrato&p=";
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Pessoa Física</a></li>
+                    <li><a href="<?=$pasta?>pf&sp=pesquisa"><i class="fa fa-circle-o"></i> Pessoa Física</a></li>
 
                     <li><a href="#"><i class="fa fa-circle-o"></i>Pessoa Jurídica</a></li>
 
@@ -33,7 +33,7 @@ $pasta = "?perfil=contrato&p=";
             </li>
 
             <li><a href="#"><i class="fa fa-circle-o"></i>
-                    <span>Filtro Período/Operador</span</a>
+                    <span>Filtro Período/Operador</span></a>
             </li>
             <?php
             include "../perfil/includes/menu_mais.php";

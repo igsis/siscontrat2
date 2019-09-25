@@ -35,7 +35,7 @@ if (isset($_POST['adicionar'])) {
                         <h3 class="box-title">Pessoa física</h3>
                     </div>
                     <div class="box-body">
-                        <form action="?perfil=emia&p=pessoa_fisica&sp=edita" method="post">
+                        <form action="?perfil=contrato&p=pf&sp=edita" method="post">
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: *</label>
@@ -114,7 +114,7 @@ if (isset($_POST['adicionar'])) {
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" min="1" class="form-control" placeholder="Ex.: 10"
+                                    <input type="number" name="numero" class="form-control" min="1" placeholder="Ex.: 10"
                                            required>
                                 </div>
                                 <div class="form-group col-md-3">

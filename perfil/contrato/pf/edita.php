@@ -5,7 +5,7 @@ $conn = bancoPDO();
 
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
-$linkResumo = $http . "rlt_emia_pf.php";
+$linkResumo = $http . "rlt_contrato_pf.php";
 $link_facc = $http . "rlt_fac_pf.php";
 
 if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
@@ -324,7 +324,7 @@ if ($foto == null) {
 
                     </div>
                     <div class="box-body">
-                        <form action="?perfil=emia&p=pessoa_fisica&sp=edita" method="post">
+                        <form action="?perfil=contrato&p=pf&sp=edita" method="post">
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label for="nome">Nome: *</label>
@@ -591,7 +591,7 @@ if ($foto == null) {
                                 <div class="row">
                                     <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
 
-                                    <a href="?perfil=emia">
+                                    <a href="?perfil=contrato">
                                         <button type="button" class="btn btn-default pull-left">Voltar</button>
                                     </a>
 
@@ -608,13 +608,13 @@ if ($foto == null) {
         </div>
 
         <?php
-        modalUploadArquivoUnico("modal-rg", "?perfil=emia&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
-        modalUploadArquivoUnico("modal-foto", "?perfil=emia&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "1");
-        modalUploadArquivoUnico("modal-cpf", "?perfil=emia&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
-        modalUploadArquivoUnico("modal-ccm", "?perfil=emia&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
-        modalUploadArquivoUnico("modal-nit", "?perfil=emia&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
-        modalUploadArquivoUnico("modal-facc", "?perfil=emia&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
-        modalUploadArquivoUnico("modal-endereco", "?perfil=emia&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "1");
+        modalUploadArquivoUnico("modal-rg", "?perfil=contrato&p=pf&sp=edita", "RG", "rg", $idPf, "1");
+        modalUploadArquivoUnico("modal-foto", "?perfil=contrato&p=pf&sp=edita", "Foto 3x4", "foto", $idPf, "1");
+        modalUploadArquivoUnico("modal-cpf", "?perfil=contrato&p=pf&sp=edita", "CPF", "cpf", $idPf, "1");
+        modalUploadArquivoUnico("modal-ccm", "?perfil=contrato&p=pf&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
+        modalUploadArquivoUnico("modal-nit", "?perfil=contrato&p=pf&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
+        modalUploadArquivoUnico("modal-facc", "?perfil=contrato&p=pf&sp=edita", "FACC", "faq", $idPf, "1");
+        modalUploadArquivoUnico("modal-endereco", "?perfil=contrato&p=pf&sp=edita", "Comprovante de endereço", "residencia", $idPf, "1");
         ?>
 
     </section>
@@ -631,7 +631,7 @@ if ($foto == null) {
                 <p>Tem certeza que deseja excluir este arquivo?</p>
             </div>
             <div class="modal-footer">
-                <form action="?perfil=emia&p=pessoa_fisica&sp=edita" method="post">
+                <form action="?perfil=contrato&p=pf&sp=edita" method="post">
                     <input type="hidden" name="idArquivo" id="idArquivo" value="">
                     <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
                     <input type="hidden" name="apagar" id="apagar">
