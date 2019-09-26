@@ -1,6 +1,4 @@
 <?php
-
-include "includes/menu_interno.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
 
@@ -15,7 +13,6 @@ if (isset($_POST['tipoRepresentante']) && isset($_POST['idPj'])) {
     $_SESSION['idPj'] = $_POST['idPj'];
     $idPj = $_SESSION['idPj'];
 
-    //echo $tipoRepresentante;
 }
 
 if (isset($_POST['pesquisa'])) {
@@ -51,7 +48,7 @@ if (isset($_POST['pesquisa'])) {
                     </script>";
             }
         }
-        $mensagem = "<form method='post' action='?perfil=evento&p=representante_edita'>
+        $mensagem = "<form method='post' action='?perfil=contrato&p=pj&sp=representante_edita'>
                         <tr>
                             <td>" . $representante['nome'] . "</td>
                             <td>" . $representante['cpf'] . "</td>
@@ -69,7 +66,7 @@ if (isset($_POST['pesquisa'])) {
                     </form>";
 
     } else {
-        $mensagem = "<form action='?perfil=evento&p=representante_cadastro' method='post'>
+        $mensagem = "<form action='?perfil=contrato&p=pj&sp=representante_cadastro' method='post'>
                         <tr>
                             <td>Representante não cadastrado</td>
                             <td>
@@ -105,7 +102,7 @@ if (isset($_POST['pesquisa'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=evento&p=representante_busca" method="post">
+                        <form action="?perfil=contrato&p=pj&sp=representante_busca" method="post">
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
@@ -116,7 +113,7 @@ if (isset($_POST['pesquisa'])) {
                                         <input type="hidden" name="idPj" value="<?= $idPj ?>">
                                         <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
                                         <button class="btn btn-default" name="pesquisa" type="submit"><i
-                                                    class="glyphicon glyphicon-search"></i> Procurar</button>
+                                                class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
                                 </div>
                             </div>
@@ -142,7 +139,7 @@ if (isset($_POST['pesquisa'])) {
                             </table>
                         </div>
                         <div class="box-footer">
-                            <form action="?perfil=evento&p=pj_edita" method="post">
+                            <form action="?perfil=contrato&p=pj&sp=edita" method="post">
                                 <button type="submit" id="idPj" name="idPj" value="<?= $idPj ?>"
                                         class="btn btn-default">Voltar
                                 </button>

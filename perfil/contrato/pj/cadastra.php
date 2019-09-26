@@ -1,12 +1,3 @@
-<?php
-include "includes/menu_interno.php";
-$con = bancoMysqli();
-$idEvento = $_SESSION['idEvento'];
-
-$sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'";
-$atracao = mysqli_query($con, $sql);
-?>
-
 <script>
     $(document).ready(function () {
         $("#cep").mask('00000-000', {reverse: true});
@@ -25,7 +16,7 @@ $atracao = mysqli_query($con, $sql);
                         <h3 class="box-title">Informações Pessoa Jurídica</h3>
                     </div>
 
-                    <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
+                    <form method="POST" action="?perfil=contrato&p=pj&sp=edita" role="form">
                         <div class="box-body">
 
                             <div class="row">
@@ -89,7 +80,7 @@ $atracao = mysqli_query($con, $sql);
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" min="1" class="form-control" placeholder="Ex.: 10"
+                                    <input type="number" name="numero" class="form-control" min="1" placeholder="Ex.: 10"
                                            required>
                                 </div>
                                 <div class="form-group col-md-3">

@@ -1,5 +1,4 @@
 <?php
-include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idPj = $_POST['idPj'];
 $tipoPessoa = 2; // arquivos necessarios para pessoa juridica
@@ -75,8 +74,6 @@ if(isset($_POST['apagar']))
     }
 }
 
-// $campo = recuperaPessoa($_REQUEST['idPessoa'],$_REQUEST['tipoPessoa']);
-
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -151,7 +148,7 @@ if(isset($_POST['apagar']))
                                     <div class="col-md-10 col-md-offset-1">
                                         <br />
                                         <div class="center">
-                                            <form method="POST" action="?perfil=evento&p=pj_demais_anexos" enctype="multipart/form-data">
+                                            <form method="POST" action="?perfil=contrato&p=pj&sp=demais_anexos" enctype="multipart/form-data">
                                                 <table class="table text-center table-striped">
                                                     <tbody>
                                                     <tr>
@@ -211,7 +208,7 @@ if(isset($_POST['apagar']))
                                                     <p>Tem certeza que deseja excluir este arquivo?</p>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <form action="?perfil=evento&p=pj_demais_anexos" method="post">
+                                                    <form action="?perfil=contrato&p=pj&sp=demais_anexos" method="post">
                                                         <input type="hidden" name="idArquivo" id="idArquivo" value="">
                                                         <input type="hidden" name="tipoPessoa" id="tipoPessoa" value="">
                                                         <input type="hidden" name="idPj" id="idPj" value="<?=$idPj?>">
@@ -229,7 +226,7 @@ if(isset($_POST['apagar']))
                             </div>
                         </div>
                         <div class="box-footer">
-                            <form action="?perfil=evento&p=pj_edita" method="post">
+                            <form action="?perfil=contrato&p=pj&sp=edita" method="post">
                                 <input type="hidden" value="<?= $idPj ?>" name="idPj">
                                 <button type="submit" name="voltar" class="btn btn-default pull-left">Voltar</button>
                             </form>
