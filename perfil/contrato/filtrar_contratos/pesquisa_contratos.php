@@ -1,11 +1,11 @@
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Pagamentos</h2>
+        <h2 class="page-header">Busca</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Busca de pagamentos</h3>
+                        <h3 class="box-title">Busca de contratos</h3>
                     </div>
                     <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=resultado"
                           role="form">

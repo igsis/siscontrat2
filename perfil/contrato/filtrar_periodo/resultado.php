@@ -2,37 +2,14 @@
 $con = bancoMysqli();
 
 if (isset($_POST['busca'])) {
-    $protocolo = $_POST['protocolo'] ?? NULL;
-    $num_processo = $_POST['num_processo'] ?? NULL;
-    $nomeEvento = $_POST['evento'] ?? NULL;
-    $projeto = $_POST['projeto'] ?? NULL;
-    $usuario = $_POST['usuario'] ?? NULL;
-    $status = $_POST['status'] ?? NULL;
+    $data_inicio = $_POST['data_inicio'] ?? NULL;
+    $data_fim = $_POST['data_fim'] ?? NULL;
+    $operador = $_POST['operador'] ?? NULL;
 
-    $sqlProcesso = '';
-    $sqlNomeEvento = '';
-    $sqlProtocolo = '';
-    $sqlProjeto = '';
-    $sqlStatus = '';
-    $sqlUsuario = '';
+    $sqlOperador = '';
 
-    if ($protocolo != null)
-        $sqlProtocolo = " AND e.protocolo = '$protocolo'";
-
-    if ($num_processo != null)
-        $sqlProcesso = " AND p.numero_processo = '$num_processo'";
-
-    if ($nomeEvento != null)
-        $sqlNomeEvento = " AND e.nome_evento = '$nomeEvento'";
-
-    if ($projeto != null && $projeto != 0)
-        $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
-
-    if ($status != null && $status != 0)
-        $sqlStatus = " AND e.evento_status_id = '$status'";
-
-    if ($usuario != null && $usuario != 0)
-        $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
+    if ($operador != null && $operador != 0)
+        $sqlOperador = " AND usuario_id = '$operador'";
 
     $sql = "SELECT e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
     p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, 
@@ -40,11 +17,14 @@ if (isset($_POST['busca'])) {
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN evento_status es on e.evento_status_id = es.id
+    INNER JOIN ocorrencias o on e.id = o.origem_ocorrencia_id
     WHERE e.publicado = 1 
     AND p.publicado = 1 
-    AND p.origem_tipo_id = 1 
-    $sqlProjeto $sqlUsuario $sqlStatus 
-    $sqlProtocolo $sqlNomeEvento $sqlProcesso";
+    AND p.origem_tipo_id = 1
+    AND o.data_inicio >= '$data_inicio'
+    AND o.data_fim <= '$data_fim'
+    $sqlOperador
+    group by e.id";
 
     $query = mysqli_query($con, $sql);
     $num_rows = mysqli_num_rows($query);
@@ -128,7 +108,7 @@ if (isset($_POST['busca'])) {
                         </table>
                     </div>
                     <div class="box-footer">
-                        <a href="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos">
+                        <a href="?perfil=contrato&p=filtrar_periodo&sp=pesquisa_contratos">
                             <button type="button" class="btn btn-default">Voltar</button>
                         </a>
                     </div>

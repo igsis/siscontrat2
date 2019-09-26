@@ -32,7 +32,7 @@ $pasta = "?perfil=contrato&p=";
                     <span>Eventos sem Reenvio</span></a>
             </li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>filtrar_periodo&sp=pesquisa_contratos"><i class="fa fa-circle-o"></i>
                     <span>Filtro Período/Operador</span></a>
             </li>
             <?php
