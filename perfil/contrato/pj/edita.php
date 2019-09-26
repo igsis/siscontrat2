@@ -213,6 +213,11 @@ if (isset($_POST['apagar'])) {
     }
 }
 
+if(isset($_POST['carregar'])){
+    $idPj = $_POST['idPessoaJuridica'];
+    $pj = recuperaDados("pessoa_juridicas", "id", $idPj);
+}
+
 
 $sqlTelefones = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
@@ -512,8 +517,8 @@ if (isset($pj['representante_legal2_id'])) {
                                 <button type="submit" name="edita" value="<?= $pj['id'] ?>"
                                         class="btn btn-info pull-right">Gravar
                                 </button>
-                                <a href="#">
-                                    <button class="btn btn-default">Voltar</button>
+                                <a href="?perfil=contrato">
+                                    <button type="button" class="btn btn-default">Voltar</button>
                                 </a>
                     </form>
                 </div>

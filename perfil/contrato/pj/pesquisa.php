@@ -125,6 +125,11 @@ if (isset($_POST['procurar'])){
 
                     </div>
                     <!-- /.box-body -->
+                    <div class="box-footer">
+                        <a href="?perfil=contrato&p=pj&sp=listagem">
+                            <button type="button" class="btn btn-default pull-right">Ir para a listagem</button>
+                        </a>
+                    </div>
                 </div>
                 <!-- /.box -->
             </div>
