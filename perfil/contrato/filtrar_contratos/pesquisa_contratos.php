@@ -22,7 +22,7 @@
                                 </div>
 
                                 <div class="col-md-4 form-group">
-                                    <label for="num_processo">Nome do evento</label>
+                                    <label for="evento">Nome do evento</label>
                                     <input type="text" class="form-control" name="evento" id="evento">
                                 </div>
                             </div>
@@ -40,7 +40,12 @@
 
                                 <div class="col-md-4 form-group">
                                     <label for="usuario">Fiscal, suplente ou usuário que cadastrou o evento</label>
-                                    <input type="text" name="usuario" id="usuario" class="form-control">
+                                    <select name="usuario" id="usuario" class="form-control">
+                                        <option value="0">Selecione uma opção... </option>
+                                        <?php
+                                            geraOpcao('usuarios');
+                                        ?>
+                                    </select>
                                 </div>
                                 
                                 <div class="col-md-4 form-group">
