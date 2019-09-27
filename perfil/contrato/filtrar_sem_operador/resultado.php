@@ -34,9 +34,18 @@ if (isset($_POST['busca'])) {
     if ($usuario != null && $usuario != 0)
         $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
 
-    $sql = "SELECT e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
-    p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, 
-    p.valor_total, e.evento_status_id, e.usuario_id, es.status
+    $sql = "SELECT e.id,
+                   p.id as 'pedido_id',
+                   e.protocolo,
+                   p.numero_processo, 
+                   p.pessoa_tipo_id,
+                   p.pessoa_fisica_id, 
+                   p.pessoa_juridica_id, 
+                   e.nome_evento,
+                   p.valor_total, 
+                   e.evento_status_id, 
+                   e.usuario_id, 
+                   es.status
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN evento_status es on e.evento_status_id = es.id
@@ -45,10 +54,8 @@ if (isset($_POST['busca'])) {
     AND p.origem_tipo_id = 1 
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso";
-    echo $sql;
 
     $query = mysqli_query($con, $sql);
-    $num_rows = mysqli_num_rows($query);
 }
 
 ?>
@@ -76,40 +83,54 @@ if (isset($_POST['busca'])) {
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
-                                <th>Número de processo</th>
                                 <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
+                                <th>Local/Instituição</th>
+                                <th width="14%">Período</th>
                                 <th>Status</th>
-                                <th>Operador</th>
                             </tr>
                             </thead>
 
                             <tbody>
                             <?php
-                            if ($num_rows == 0) {
-                                ?>
-                                <tr>
-                                    <th colspan="7"><p align="center">Não foram encontrados registros</p></th>
-                                </tr>
-                                <?php
-                            } else {
-                                while ($evento = mysqli_fetch_array($query)) {
-                                    if ($evento['pessoa_tipo_id'] == 1)
-                                        $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome_artistico'];
-                                    else if ($evento['pessoa_fisica_id'] == 2)
-                                        $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
-
-                                    ?>
-                                    <td><a href="#"><?= $evento['protocolo'] ?></a></td>
-                                    <td><?= $evento['numero_processo'] ?></td>
-                                    <td><?= $pessoa ?></td>
-                                    <td><?= $evento['nome_evento'] ?></td>
-                                    <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                    <td><?= $evento['status'] ?></td>
-                                    <td><?= recuperaDados('usuarios', 'id', $evento['usuario_id'])['nome_completo'] ?></td>
-                                    <?php
+                            while ($evento = mysqli_fetch_array($query)) {
+                                if ($evento['pessoa_tipo_id'] == 1)
+                                    $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome_artistico'];
+                                else if ($evento['pessoa_fisica_id'] == 2)
+                                    $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
+                                $idEvento = $evento['id'];
+                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento'";
+                                $queryLocal = mysqli_query($con, $sqlLocal);
+                                $local = '';
+                                while ($locais = mysqli_fetch_array($queryLocal)) {
+                                    $local = $local . '; ' . $locais['local'];
                                 }
+                                $local = substr($local, 1);
+                                ?>
+                                <?php
+                                if ($evento['protocolo'] != NULL) {
+                                    ?>
+                                    <td>
+                                        <form action="#" role="form" method="POST">
+                                            <input type="hidden" id="idPedido" name="idPedido"
+                                                   value="<?= $evento['pedido_id'] ?>">
+                                            <button type="submit"
+                                                    class="btn btn-primary"><?= $evento['protocolo'] ?></button>
+                                        </form>
+                                    </td>
+                                    <?php
+                                }else{?>
+                                   <td> </td>
+                                <?php }
+                                ?>
+                                <td><?= $pessoa ?></td>
+                                <td><?= $evento['nome_evento'] ?></td>
+                                <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
+                                <td><?= $local ?></td>
+                                <td> <?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?> </td>
+                                <td><?= $evento['status'] ?></td>
+                                <?php
                             }
                             ?>
                             </tbody>
@@ -117,19 +138,18 @@ if (isset($_POST['busca'])) {
                             <tfoot>
                             <tr>
                                 <th>Protocolo</th>
-                                <th>Número de processo</th>
                                 <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
+                                <th>Local/Instituição</th>
+                                <th width="14%">Período</th>
                                 <th>Status</th>
-                                <th>Operador</th>
-                            </tr>
                             </tr>
                             </tfoot>
                         </table>
                     </div>
                     <div class="box-footer">
-                        <a href="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos">
+                        <a href="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos">
                             <button type="button" class="btn btn-default">Voltar</button>
                         </a>
                     </div>

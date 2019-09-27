@@ -1,13 +1,13 @@
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Busca</h2>
+        <h2 class="page-header">Contratos</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Busca de contratos</h3>
+                        <h3 class="box-title">Busca sem operador</h3>
                     </div>
-                    <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=resultado"
+                    <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=resultado"
                           role="form">
                         <div class="box-body">
                             <div class="row">
@@ -33,7 +33,7 @@
                                     <select name="projeto" id="projeto" class="form-control">
                                         <option value="0">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao('projeto_especiais');
+                                        geraOpcao('projeto_especiais');
                                         ?>
                                     </select>
                                 </div>
@@ -43,17 +43,17 @@
                                     <select name="usuario" id="usuario" class="form-control">
                                         <option value="0">Selecione uma opção... </option>
                                         <?php
-                                            geraOpcao('usuarios');
+                                        geraOpcao('usuarios');
                                         ?>
                                     </select>
                                 </div>
-                                
+
                                 <div class="col-md-4 form-group">
                                     <label for="status">Evento status</label>
                                     <select name="status" id="status" class="form-control">
                                         <option value="0">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao('evento_status');
+                                        geraOpcao('evento_status');
                                         ?>
                                     </select>
                                 </div>

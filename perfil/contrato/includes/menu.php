@@ -13,9 +13,9 @@ $pasta = "?perfil=contrato&p=";
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="<?=$pasta?>pf&sp=pesquisa"><i class="fa fa-circle-o"></i> Pessoa Física</a></li>
+                    <li><a href="<?= $pasta ?>pf&sp=pesquisa"><i class="fa fa-circle-o"></i> Pessoa Física</a></li>
 
-                    <li><a href="<?=$pasta?>pj&sp=pesquisa"><i class="fa fa-circle-o"></i>Pessoa Jurídica</a></li>
+                    <li><a href="<?= $pasta ?>pj&sp=pesquisa"><i class="fa fa-circle-o"></i>Pessoa Jurídica</a></li>
 
                 </ul>
             </li>
@@ -24,7 +24,7 @@ $pasta = "?perfil=contrato&p=";
                     <span>Filtrar Contratos</span></a>
             </li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>filtrar_sem_operador&sp=pesquisa_contratos"><i class="fa fa-circle-o"></i>
                     <span>Filtro sem Operador</span></a>
             </li>
 
