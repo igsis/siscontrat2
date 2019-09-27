@@ -228,8 +228,9 @@ if (isset($_POST["enviar"])) {
                 $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
-                $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-                if ($y == 59) {
+                if ($y != 59) {
+                    $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                }else{
                     $allowedExts = array(".png", ".PNG", ".JPG", ".jpg"); //Extensões permitidas
                 }
                 $ext = strtolower(substr($nome_arquivo, -4));
@@ -317,11 +318,14 @@ if ($foto == null) {
                         <?= $mensagem ?? NULL; ?>
                     </div>
                     <div class="box-header">
-
-                        <h3 class="box-title col-md-6">Pessoa física</h3>
-                        <img src="<?= $fotoImg ?>" alt="<?= $foto ?>" class="img-circle img-responsive col-md-6"
-                             style="width: 9%; height: 12%">
-
+                        <div class="row">
+                            <h3 class="box-title col-sm-12 col-md-6">Pessoa física</h3>
+                        </div>
+                        <div class="row" style="margin-top: 20px">
+                            <div class="col-xs-6 col-md-6 col-md-offset-5 col-xs-offset-5">
+                                <img src="<?= $fotoImg ?>" alt="<?= $foto ?>" class="img-circle img-responsive" style="max-width: 10rem;">
+                            </div>
+                        </div>
                     </div>
                     <div class="box-body">
                         <form action="?perfil=formacao&p=pessoa_fisica&sp=edita" method="post">
