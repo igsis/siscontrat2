@@ -45,7 +45,6 @@ if (isset($_POST['busca'])) {
     AND p.origem_tipo_id = 1 
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso";
-    echo $sql;
 
     $query = mysqli_query($con, $sql);
     $num_rows = mysqli_num_rows($query);
