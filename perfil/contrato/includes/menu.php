@@ -28,7 +28,7 @@ $pasta = "?perfil=contrato&p=";
                     <span>Filtro sem Operador</span></a>
             </li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>evento_sem_reenvio"><i class="fa fa-circle-o"></i>
                     <span>Eventos sem Reenvio</span></a>
             </li>
 
