@@ -81,7 +81,7 @@ $link_pcf = $http . "impressao_pedido_formacao.php";
                 </div>
             </div>
             <div class="box-footer">
-                <a href="#">
+                <a href="?perfil=formacao&p=pedido_contratacao&sp=listagem">
                     <button type="button" class="btn btn-default">Voltar</button>
                 </a>
             </div>

@@ -228,11 +228,11 @@ if (isset($_POST["enviar"])) {
                 $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
-                if ($y != 59) {
-                    $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                if ($y == 59) {
+                    $allowedExts = array(".png", ".PNG", ".JPG", ".jpg"); //Extensões permitidas
                 }
                 else{
-                    $allowedExts = array(".png", ".PNG", ".JPG", ".jpg"); //Extensões permitidas
+                    $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
                 }
                 $ext = strtolower(substr($nome_arquivo, -4));
 
@@ -308,7 +308,7 @@ if ($foto == null) {
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Main content -->
+
     <section class="content">
         <!-- START FORM-->
         <h2 class="page-header">Edição de pessoa física</h2>
@@ -614,7 +614,7 @@ if ($foto == null) {
 
         <?php
         modalUploadArquivoUnico("modal-rg", "?perfil=emia&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
-        modalUploadArquivoUnico("modal-foto", "?perfil=emia&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "1");
+        modalUploadFoto("modal-foto", "?perfil=emia&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "1");
         modalUploadArquivoUnico("modal-cpf", "?perfil=emia&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
         modalUploadArquivoUnico("modal-ccm", "?perfil=emia&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
         modalUploadArquivoUnico("modal-nit", "?perfil=emia&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
