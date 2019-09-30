@@ -1,11 +1,21 @@
 <?php
 $pasta = "?perfil=contrato&p=";
+$idUsuarioDoMenu = $_SESSION['idUser'];
+$nivelUsuario = recuperaDados('usuario_contratos', 'usuario_id', $idUsuarioDoMenu)['nivel_acesso'];
 ?>
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu" data-widget="tree">
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">CONTRATOS</li>
+            <?php
+                if($nivelUsuario == 1){ ?>
+                    <li><a href="<?=$pasta?>admin&sp=nivel_usuario">
+                        <i class="fa fa-circle-o"></i><span>Administrativo</span>
+                    </a></li>
+            <?php
+                }
+            ?>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-circle-o"></i>
