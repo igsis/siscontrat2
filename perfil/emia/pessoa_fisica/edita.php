@@ -614,7 +614,7 @@ if ($foto == null) {
 
         <?php
         modalUploadArquivoUnico("modal-rg", "?perfil=emia&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
-        modalUploadFoto("modal-foto", "?perfil=emia&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "1");
+        modalUploadArquivoUnico("modal-foto", "?perfil=emia&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "1");
         modalUploadArquivoUnico("modal-cpf", "?perfil=emia&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
         modalUploadArquivoUnico("modal-ccm", "?perfil=emia&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
         modalUploadArquivoUnico("modal-nit", "?perfil=emia&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
