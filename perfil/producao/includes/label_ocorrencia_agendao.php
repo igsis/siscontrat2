@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Conteúdo da label "#ocorrencia" do arquivo "visualizacao_agendao.php"
+ * Conteúdo da label "#ocorrencia" do arquivo "producao/agendao/verificados.php"
  */
 
 ?>

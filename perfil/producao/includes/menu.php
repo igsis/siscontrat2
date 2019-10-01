@@ -6,13 +6,36 @@ $pasta = "?perfil=producao&p=";
         <ul class="sidebar-menu" data-widget="tree">
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">PRODUÇÃO</li>
-            <li><a href="<?= $pasta ?>eventos_novos_producao#"><i class="fa fa-circle-o"></i><span> Novos</span></a></li>
-            <li><a href="<?= $pasta ?>eventos_verificados_producao#"><i class="fa fa-circle-o"></i><span> Visualizados</span></a></li>
-            <li><a href=""><i class="fa fa-circle-o"></i><span>Exportar</span></a></li>
-            <li class="header">AGENDÃO</li>
-            <li><a href="<?=$pasta?>agendoes_novos_producao"><i class="fa fa-circle-o"></i><span> Novos</span></a></li>
-            <li><a href="<?=$pasta?>agendoes_visualizados_producao"><i class="fa fa-circle-o"></i><span> Visualizados</span></a></li>
-            <li><a href=""><i class="fa fa-circle-o"></i><span>Exportar</span></a></li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-circle-o"></i>
+                    <span>Eventos</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="<?= $pasta ?>eventos&sp=novos"><i class="fa fa-circle-o"></i> Novos
+                        </a></li>
+                    <li><a href="<?= $pasta ?>eventos&sp=verificados"><i class="fa fa-circle-o"></i> Verificados </a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Exportar
+                        </a></li>
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-circle-o"></i>
+                    <span>Agendões</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="<?= $pasta ?>agendoes&sp=novos"><i class="fa fa-circle-o"></i> Novos
+                        </a></li>
+                    <li><a href="<?= $pasta ?>agendoes&sp=verificados"><i class="fa fa-circle-o"></i> Verificados </a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Exportar
+                        </a></li>
+                </ul>
+            </li>
             <?php
             include "../perfil/includes/menu_mais.php";
             ?>

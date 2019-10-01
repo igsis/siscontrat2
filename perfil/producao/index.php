@@ -1,5 +1,4 @@
 <?php
-include "../perfil/producao/includes/menu.php";
 $con = bancoMysqli();
 
 $sqlEventos = "SELECT

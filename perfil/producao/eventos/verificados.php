@@ -1,12 +1,21 @@
 <?php
-include "includes/menu_interno.php";
 
 unset($_SESSION['idEvento']);
-unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
+unset($_SESSION['idPj']);
+
 $idUser = $_SESSION['idUser'];
+
 $con = bancoMysqli();
-$conn = bancoPDO();
+
+if (isset($_POST['checarEvento'])) {
+    $idEvento = $_POST['idEvento'];
+    $sqlView = "UPDATE producao_eventos SET visualizado = 1 WHERE id = '$idEvento'";
+    $queryView = mysqli_query($con, $sqlView);
+    if (mysqli_query($con, $sqlView)) {
+        $mensagem = mensagem("success", "Evento marcado como visualizado!");
+    }
+}
 
 $sqlEvento = "SELECT
                     eve.id AS 'id',
@@ -21,15 +30,15 @@ $sqlEvento = "SELECT
             INNER JOIN usuarios as u on u.id = eve.usuario_id
             INNER JOIN pedidos AS ped ON ped.origem_id = eve.id
             INNER JOIN producao_eventos AS en ON en.evento_id = eve.id 
-WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND en.visualizado = 0";
+WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND en.visualizado = 1";
 
 $queryEvento = mysqli_query($con, $sqlEvento);
-
 ?>
 
+<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Eventos Novos</h2>
+        <h2 class="page-header">Eventos Verificados</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -45,7 +54,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                     </div>
 
                     <div class="box-body">
-                        <table id="tblEventosNovosProducao" class="table table-bordered table-striped">
+                        <table id="tblEventosVerificados" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
@@ -60,12 +69,12 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                             </thead>
                             <?php
                             echo "<tbody>";
-                            while ($eventoNovo = mysqli_fetch_array($queryEvento)) {
-                            $idEvento = $eventoNovo['id'];
+                            while ($eventoVerf = mysqli_fetch_array($queryEvento)) {
+                            $idEvento = $eventoVerf['id'];
                             $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento'";
                             $queryLocal = mysqli_query($con, $sqlLocal);
                             $local = '';
-                            while ($locais = mysqli_fetch_array($queryLocal)){
+                            while ($locais = mysqli_fetch_array($queryLocal)) {
                                 $local = $local . '; ' . $locais['local'];
                             }
                             $local = substr($local, 1);
@@ -73,23 +82,25 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                             $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN ocorrencias AS o ON o.espaco_id = e.id WHERE o.origem_ocorrencia_id = '$idEvento'";
                             $queryEspaco = mysqli_query($con, $sqlEspaco);
                             $espaco = '';
-                            while($espacos = mysqli_fetch_array($queryEspaco)){
+                            while ($espacos = mysqli_fetch_array($queryEspaco)) {
                                 $espaco = $espaco . '; ' . $espacos['espaco'];
                             }
                             $espaco = substr($espaco, 1);
-                                ?>
+                            ?>
+
                             <tr>
                                 <?php
-                                echo "<td>" . $eventoNovo['protocolo'] . "</td>";
-                                echo "<td>" . $eventoNovo['nome_evento'] . "</td>";
+
+                                echo "<td>" . $eventoVerf['protocolo'] . "</td>";
+                                echo "<td>" . $eventoVerf['nome_evento'] . "</td>";
                                 echo "<td>" . $local . "</td>";
                                 echo "<td>" . $espaco . "</td>";
-                                echo "<td>" . retornaPeriodoNovo($eventoNovo['id'], 'ocorrencias') . "</td>";
-                                echo "<td>" . $eventoNovo['data_envio'] ."</td>";
-                                echo "<td>" . $eventoNovo['usuario'] . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($eventoVerf['id'], 'ocorrencias') . "</td>";
+                                echo "<td>" . $eventoVerf['data_envio'] . "</td>";
+                                echo "<td>" . $eventoVerf['usuario'] . "</td>";
                                 echo "<td>                               
-                            <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_evento' role='form'>
-                            <input type='hidden' name='idEvento' value='" . $eventoNovo['id'] . "'>
+                            <form method='POST' action='?perfil=producao&p=eventos&sp=visualizacao' role='form'>
+                            <input type='hidden' name='idEvento' value='" . $eventoVerf['id'] . "'>
                             <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'> </span></button>
                             </form>
                             </td>";
@@ -112,6 +123,11 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                                 </tfoot>
                         </table>
                     </div>
+                    <div class="box-footer">
+                        <a href="?perfil=producao">
+                            <button type="button" class="btn btn-default">Voltar</button>
+                        </a>
+                    </div>
                 </div>
             </div>
     </section>
@@ -122,7 +138,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
 
 <script type="text/javascript">
     $(function () {
-        $('#tblEventosNovosProducao').DataTable({
+        $('#tblEventosVerificados').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },

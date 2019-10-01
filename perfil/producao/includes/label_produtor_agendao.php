@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Conteúdo da label "#produtor" do arquivo "visualizacao_agendao.php"
+ * Conteúdo da label "#produtor" do arquivo "producao/agendao/verificados.php"
  */
 
 $idEvento = $_SESSION['idEvento'];

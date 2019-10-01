@@ -30,7 +30,7 @@ $sqlEvento = "SELECT
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $view = recuperaDados('producao_eventos', 'id', $idEvento);
-include "includes/menu_interno.php";
+
 ?>
 
 <div class="content-wrapper">
@@ -104,22 +104,22 @@ include "includes/menu_interno.php";
                     </div>
                     <div class="tab-pane" id="atracao">
                         <?php
-                        include "includes/label_atracao_filme.php"
+                        include "../perfil/producao/includes/label_atracao_filme.php"
                         ?>
                     </div>
 
                     <div class="tab-pane" id="ocorrencia">
-                        <?php include "includes/label_ocorrencia_producao.php"; ?>
+                        <?php include "../perfil/producao/includes/label_ocorrencia_producao.php"; ?>
                     </div>
 
                     <?php if ($evento['contratacao'] == 1) { ?>
                         <div class="tab-pane" id="pedido">
-                            <?php include "includes/label_pedido_producao.php"; ?>
+                            <?php include "../perfil/producao/includes/label_pedido_producao.php"; ?>
                         </div>
                     <?php } ?>
 
                     <div class="box-footer">
-                        <form action="?perfil=producao&p=eventos_verificados_producao" method="post">
+                        <form action="?perfil=producao&p=eventos&sp=verificados" method="post">
                             <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                             <?php
 
