@@ -121,7 +121,7 @@ $ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias as ocorrencias
                                     $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
                                     $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
                                     ?>
-                                    <p><b>Data:</b> <?= exibirDataBr($ocorrencia['data_inicio']) ?> - <?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Data única" ?></p>
+                                    <p><b>Data:</b> <?= exibirDataBr($ocorrencia['data_inicio']) ?> - <?= $ocorrencia['data_fim'] == "0000-00-00" ? "Data única" : exibirDataBr($ocorrencia['data_fim']) ?></p>
                                     <p><b>Horário:</b> <?= date("H:i", strtotime($ocorrencia['horario_inicio'])) ?> às <?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?></p>
                                     <p><b>Acessibilidade</b>
                                         <?php

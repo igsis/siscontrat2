@@ -89,7 +89,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="data_fim">Data de Encerramento: </label>
+                            <label for="data_fim">Data de Encerramento: (apenas se for temporada)</label>
                             <input type="date" class="form-control" name="data_fim" onblur="validate()" id="datepicker11">
                         </div>
                     </div>
@@ -99,8 +99,6 @@
                             <span style="color: red;"><b>Data de encerramento deve ser maior que a data inicial</b></span>
                         </div>
                     </div>
-
-                </form>
             </div>
             <div class="box-footer">
                 <button name="pesquisa" id="pesquisa" type="submit" class="btn btn-primary pull-right">Pesquisar</button>
@@ -108,6 +106,7 @@
                     <button type="button" class="btn btn-default">Voltar</button>
                 </a>
             </div>
+            </form>
         </div>
     </section>
 </div>
