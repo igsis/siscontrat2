@@ -17,7 +17,7 @@ $pasta = "?perfil=producao&p=";
                         </a></li>
                     <li><a href="<?= $pasta ?>eventos&sp=verificados"><i class="fa fa-circle-o"></i> Verificados </a>
                     </li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Exportar
+                    <li><a href="<?= $pasta ?>eventos&sp=pesquisa"><i class="fa fa-circle-o"></i> Exportar
                         </a></li>
                 </ul>
             </li>
