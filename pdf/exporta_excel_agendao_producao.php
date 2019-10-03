@@ -97,7 +97,7 @@ $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue("J" . $proxLinha)
     ->setCellValue("K" . $proxLinha)
     ->setCellValue("L" . $proxLinha)
-    ->setCellValue("M" . $proxLinha, "Eventos Agendão")
+    ->setCellValue("M" . $proxLinha, "")
     ->setCellValue("N" . $proxLinha)
     ->setCellValue("O" . $proxLinha)
     ->setCellValue("P" . $proxLinha)
@@ -123,12 +123,12 @@ $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue('A' . $proxCabecalho, 'Instituição/Coordenadoria')
     ->setCellValue("B" . $proxCabecalho, "Local do Evento")
     ->setCellValue("C" . $proxCabecalho, "Endereço Completo")
-    ->setCellValue("D" . $proxCabecalho, "SubPrefeitura")
+    ->setCellValue("D" . $proxCabecalho, "Subpefeitura")
     ->setCellValue("E" . $proxCabecalho, "Nome do Evento")
     ->setCellValue("F" . $proxCabecalho, "Artistas")
-    ->setCellValue("G" . $proxCabecalho, "Data Início")
-    ->setCellValue("H" . $proxCabecalho, "Data Fim")
-    ->setCellValue("I" . $proxCabecalho, "Horário de início")
+    ->setCellValue("G" . $proxCabecalho, "Data de Início")
+    ->setCellValue("H" . $proxCabecalho, "Data de Encerramento")
+    ->setCellValue("I" . $proxCabecalho, "Horário de Início")
     ->setCellValue("J" . $proxCabecalho, "Nº de Apresentações")
     ->setCellValue("K" . $proxCabecalho, "Período")
     ->setCellValue("L" . $proxCabecalho, "Linguagem / Expressão Artística Principal")
@@ -136,14 +136,14 @@ $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue("N" . $proxCabecalho, "Espaço Público?")
     ->setCellValue("O" . $proxCabecalho, "Entrada")
     ->setCellValue("P" . $proxCabecalho, "Valor do Ingresso (no caso de cobrança)")
-    ->setCellValue("Q" . $proxCabecalho, "Classificação indicativa")
+    ->setCellValue("Q" . $proxCabecalho, "Classificação Indicativa")
     ->setCellValue("R" . $proxCabecalho, "Link de Divulgação")
     ->setCellValue("S" . $proxCabecalho, "Sinopse")
     ->setCellValue("T" . $proxCabecalho, "Calendário Macro")
     ->setCellValue("U" . $proxCabecalho, "Caso Seja Fomento / Programa da smc Qual o Fomento ou Programa?")
     ->setCellValue("V" . $proxCabecalho, "Produtor do Evento")
-    ->setCellValue("W" . $proxCabecalho, "E-mail de contato")
-    ->setCellValue("X" . $proxCabecalho, "Telefone de contato");
+    ->setCellValue("W" . $proxCabecalho, "E-mail de Contato")
+    ->setCellValue("X" . $proxCabecalho, "Telefone de Contato");
 
 // Definimos o estilo da fonte
 $objPHPExcel->getActiveSheet()->getStyle('A' . $proxCabecalho . ':X' . $proxCabecalho)->getFont()->setBold(true);
@@ -332,7 +332,7 @@ $objPHPExcel->setActiveSheetIndex(0);
 ob_end_clean();
 ob_start();
 
-$nome_arquivo = date("YmdHis") . "_eventos_pesquisa.xls";
+$nome_arquivo = date("YmdHis") . "_agendao_pesquisa.xls";
 
 
 // Cabeçalho do arquivo para ele baixar(Excel2007)

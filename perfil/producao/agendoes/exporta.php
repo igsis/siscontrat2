@@ -45,15 +45,15 @@ if(isset($_POST['pesquisa'])){
                 <h3 class="box-title">Resumo da pesquisa</h3>
             </div>
             <div class="box-body">
-                <table id="tblResultado" class="table table-bordered table-striped table-responsive">
+                <table id="tblResultadoAgendao" class="table table-bordered table-striped table-responsive">
                     <thead>
                     <tr>
                         <th>Nome do Evento</th>
                         <th>Local do Evento</th>
-                        <th>Classificação indicativa</th>
-                        <th>SubPrefeitura</th>
-                        <th>Valor do ingresso</th>
-                        <th>Nº de atividades</th>
+                        <th>Classificação Indicativa</th>
+                        <th>Subprefeitura</th>
+                        <th>Valor do Ingresso</th>
+                        <th>Nº de Atividades</th>
                         <th>Artistas</th>
                     </tr>
                     </thead>
@@ -80,10 +80,10 @@ if(isset($_POST['pesquisa'])){
                     <tr>
                         <th>Nome do Evento</th>
                         <th>Local do Evento</th>
-                        <th>Classificação indicativa</th>
-                        <th>SubPrefeitura</th>
-                        <th>Valor do ingresso</th>
-                        <th>Nº de atividades</th>
+                        <th>Classificação Indicativa</th>
+                        <th>Subprefeitura</th>
+                        <th>Valor do Ingresso</th>
+                        <th>Nº de Atividades</th>
                         <th>Artistas</th>
                     </tr>
                     </tfoot>
@@ -106,7 +106,7 @@ if(isset($_POST['pesquisa'])){
 
 <script type="text/javascript">
     $(function () {
-        $('#tblResultado').DataTable({
+        $('#tblResultadoAgendao').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },
