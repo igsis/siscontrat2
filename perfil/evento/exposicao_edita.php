@@ -98,22 +98,22 @@ include "includes/menu_interno.php";
                     <form method="POST" action="?perfil=evento&p=exposicao_edita" role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="contratados">Quantidade de contratados</label><br/>
-                                    <label><input class="form-control" type="number" name="contratados" id="contratados"
-                                                  value="<?= $exposicao['numero_contratados'] ?>"></label>
+                                    <input class="form-control" type="number" name="contratados" id="contratados"
+                                                  value="<?= $exposicao['numero_contratados'] ?>">
                                 </div>
-                                <div class="form-group col-md-4">
+                                
+                                <div class="form-group col-md-6">
                                     <label for="tipo_exposicao">Tipo de Exposição</label> <br>
-                                    <label><select class="form-control" id="tipo_exposicao" name="tipo_exposicao">
+                                    <select class="form-control" id="tipo_exposicao" name="tipo_exposicao">
                                             <option value="0">Selecione</option>
                                             <?php geraOpcao('tipo_exposicao', $exposicao['tipo_exposicao_id']) ?>
-                                        </select>
-                                    </label>
+                                    </select>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label for="painel">Confecção de painéis</label> <br>
                                     <label><input type="radio" name="painel"
                                                   value="1" <?= $exposicao['painel'] == 1 ? 'checked' : NULL ?>> Sim
@@ -122,7 +122,7 @@ include "includes/menu_interno.php";
                                                   value="0" <?= $exposicao['painel'] == 0 ? 'checked' : NULL ?>> Não
                                     </label>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label for="legenda">Confecção de legendas</label> <br>
                                     <label><input type="radio" name="legenda"
                                                   value="1" <?= $exposicao['legendas'] == 1 ? 'checked' : NULL ?>> Sim
@@ -131,7 +131,7 @@ include "includes/menu_interno.php";
                                                   value="0" <?= $exposicao['legendas'] == 0 ? 'checked' : NULL ?>> Não
                                     </label>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label for="identidade">Criação de Identidade Visual</label> <br>
                                     <label><input type="radio" name="identidade"
                                                   value="1" <?= $exposicao['identidade'] == 1 ? 'checked' : NULL ?>> Sim
@@ -140,10 +140,8 @@ include "includes/menu_interno.php";
                                                   value="0" <?= $exposicao['identidade'] == 0 ? 'checked' : NULL ?>> Não
                                     </label>
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="form-group col-md-4">
+                                
+                                <div class="form-group col-md-3">
                                     <label for="suporte">Suporte extra (exposição)</label> <br>
                                     <label><input type="radio" name="suporte"
                                                   value="1" <?= $exposicao['suporte'] == 1 ? 'checked' : NULL ?>> Sim
@@ -152,24 +150,24 @@ include "includes/menu_interno.php";
                                                   value="0" <?= $exposicao['suporte'] == 0 ? 'checked' : NULL ?>> Não
                                     </label>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group col-md-3">
-                                        <label for="documentacao">Pedido de documentação</label> <br>
-                                        <label><input type="radio" name="documentacao" id="fotografia"
-                                                      value="2" <?= $exposicao['documentacao'] == 2 ? 'checked' : NULL ?>>
-                                            Fotografia </label>
-                                        <label><input type="radio" name="documentacao" id="audio"
-                                                      value="1" <?= $exposicao['documentacao'] == 1 ? 'checked' : NULL ?>>
-                                            Áudio </label>
-                                        <label><input type="radio" name="documentacao" id="video"
-                                                      value="0" <?= $exposicao['documentacao'] == 0 ? 'checked' : NULL ?>>
-                                            Vídeo </label>
-                                    </div>
-                                </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <center><label for="acervo">Acervo </label><br></center>
+
+                            <div class="row">    
+                                <div class="form-group col-md-6">
+                                    <label for="documentacao">Pedido de documentação</label> <br>
+                                    <label><input type="radio" name="documentacao" id="fotografia"
+                                                  value="2" <?= $exposicao['documentacao'] == 2 ? 'checked' : NULL ?>>
+                                        Fotografia </label>
+                                    <label><input type="radio" name="documentacao" id="audio"
+                                                  value="1" <?= $exposicao['documentacao'] == 1 ? 'checked' : NULL ?>>
+                                        Áudio </label>
+                                    <label><input type="radio" name="documentacao" id="video"
+                                                  value="0" <?= $exposicao['documentacao'] == 0 ? 'checked' : NULL ?>>
+                                        Vídeo </label>
+                                </div>
+                                
+                                <div class="form-group col-md-6">
+                                    <label for="acervo">Acervo </label><br>
                                     <select class="form-control" id="acervo" name="acervo">
                                         <option value="1" <?= $exposicao['acervo'] == 1 ? 'selected' : NULL ?> >A
                                             exposição NÃO possui peças que fazem parte da coleção da instituição.
