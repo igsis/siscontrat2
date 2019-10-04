@@ -34,6 +34,7 @@ $pasta = "?perfil=evento&p=";
                 } else { //filme
                     echo "<li><a href=\"".$pasta."evento_cinema_lista\"><i class=\"fa fa-circle-o text-lime\"></i> <span>Filme</span></a></li>";
                 }
+                
                 ?>
                 <li><a href="<?=$pasta?>arqs_com_prod"><i class="fa fa-circle-o text-teal"></i> <span>Anexos Comunicação/Produção</span></a></li>
                 <?php
