@@ -10,66 +10,23 @@ require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 session_start();
 
-$idEvento = $_SESSION['idEventoProd'];
+$idPedido = $_SESSION['idFCExport'];
 
-$sql = "SELECT
-                E.id AS 'evento_id',
-                E.tipo_evento_id AS 'tipo_evento',
-                E.nome_evento AS 'nome',
-                E.espaco_publico AS 'espaco_publico',
-                A.quantidade_apresentacao AS 'apresentacoes',
-                PE.projeto_especial AS 'projeto_especial',
-                TE.tipo_evento AS 'categoria',
-                O.id AS 'idOcorrencia',
-                O.horario_inicio AS 'hora_inicio',
-                O.data_inicio AS 'data_inicio',
-                O.data_fim AS 'data_fim',
-                O.horario_fim AS 'hora_fim',
-                O.valor_ingresso AS 'valor_ingresso',
-                O.segunda AS 'segunda',
-                O.terca AS 'terca',
-                O.quarta AS 'quarta',
-                O.quinta AS 'quinta',
-                O.sexta AS 'sexta',
-                O.sabado AS 'sabado',
-                O.domingo AS 'domingo',
-                L.local AS 'nome_local',
-                L.logradouro AS 'logradouro',
-                L.numero AS 'numero',
-                L.complemento AS 'complemento',
-                L.bairro AS 'bairro',
-                L.cidade AS 'cidade',
-                L.uf AS 'estado',
-                L.cep AS 'cep',
-                E.sinopse AS 'artistas',
-                CI.classificacao_indicativa AS 'classificacao',
-                A.links AS 'divulgacao',
-                E.sinopse AS 'sinopse',
-                E.fomento AS 'fomento',
-                P.nome AS 'produtor_nome',
-                P.email AS 'produtor_email',
-                P.telefone1 AS 'produtor_fone',
-                U.nome_completo AS 'nomeCompleto',
-                PE.projeto_especial,
-                SUB_PRE.subprefeitura AS 'subprefeitura',
-                DIA_PERI.periodo AS 'periodo',
-                retirada.retirada_ingresso AS 'retirada',
-                I.sigla AS 'instiSigla'
-                FROM eventos AS E
-                LEFT JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id  
-                LEFT JOIN ocorrencias AS O ON O.origem_ocorrencia_id = E.id          
-                LEFT JOIN usuarios AS U ON E.usuario_id = U.id
-                LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
-                LEFT JOIN instituicoes AS I ON I.id = O.instituicao_id
-                LEFT JOIN locais AS L ON O.local_id = L.id
-                LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
-                LEFT JOIN periodos AS DIA_PERI ON O.periodo_id = DIA_PERI.id
-                LEFT JOIN retirada_ingressos AS retirada ON O.retirada_ingresso_id = retirada.id
-                LEFT JOIN atracoes AS A ON A.evento_id = E.id 
-                LEFT JOIN classificacao_indicativas AS CI ON A.classificacao_indicativa_id = CI.id
-                LEFT JOIN produtores AS P ON A.produtor_id = P.id
-                WHERE E.id = '$idEvento' AND E.evento_status_id = 3 AND E.publicado = 1 AND O.publicado = 1
-                ORDER BY O.data_inicio";
+$sql = "SELECT    fc.id,
+                  fc.pessoa_fisica_id AS 'idp', 
+	               pf.nome AS 'nome',
+	               p.programa AS 'programa',
+                   c.cargo AS 'funcao',
+                   l.linguagem AS 'linguagem',
+                   pf.email AS 'email',
+                   st.status AS 'status'
+            FROM formacao_contratacoes AS fc
+            INNER JOIN pessoa_fisicas AS pf ON pf.id = fc.pessoa_fisica_id
+            INNER JOIN programas AS p ON p.id = fc.programa_id
+	        INNER JOIN formacao_cargos AS c ON c.id = fc.form_cargo_id
+            INNER JOIN linguagens AS l ON l.id = fc.linguagem_id
+            INNER JOIN formacao_status AS st ON st.id = fc.form_status_id 
+            WHERE fc.id = '$idPedido' AND fc.publicado = 1";
 
 $query = mysqli_query($con, $sql);
 
@@ -94,7 +51,7 @@ $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue("B" . $proxLinha)
     ->setCellValue("C" . $proxLinha)
     ->setCellValue("D" . $proxLinha)
-    ->setCellValue("E" . $proxLinha , "Pedido de Contratação")
+    ->setCellValue("E" . $proxLinha, "Pedido de Contratação")
     ->setCellValue("F" . $proxLinha)
     ->setCellValue("G" . $proxLinha)
     ->setCellValue("H" . $proxLinha)
@@ -167,16 +124,20 @@ while ($linha = mysqli_fetch_array($query)) {
     $h = "H" . $cont;
     $i = "I" . $cont;
 
+    $idp = $linha['idp'];
+    $sqltel = "SELECT telefone FROM pf_telefones WHERE pessoa_fisica_id = '$idp' AND publicado = 1";
+    $tel = $con->query($sqltel)->fetch_all();
+
     $objPHPExcel->setActiveSheetIndex(0)
-        ->setCellValue($a, $linha['instiSigla'])
-        ->setCellValue($b, $linha['nome_local'])
-        ->setCellValue($c, $linha['cep'])
-        ->setCellValue($d, $linha['subprefeitura'])
-        ->setCellValue($e, $linha['nome'])
-        ->setCellValue($f, $linha['artistas'])
-        ->setCellValue($g, exibirDataBr($linha['data_inicio']))
-        ->setCellValue($h, $linha['data_fim'])
-        ->setCellValue($i, exibirHora($linha['hora_inicio']));
+        ->setCellValue($a, $linha['nome'])
+        ->setCellValue($b, $linha['programa'])
+        ->setCellValue($c, $linha['funcao'])
+        ->setCellValue($d, $linha['linguagem'])
+        ->setCellValue($e, $linha['email'])
+        ->setCellValue($f, $tel[0] [0])
+        ->setCellValue($g, $tel[1] [0])
+        ->setCellValue($h, $tel[2] [0])
+        ->setCellValue($i, $linha['status']);
 
     $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $i)->getAlignment()->setWrapText(true);
     $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $i)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
@@ -184,7 +145,7 @@ while ($linha = mysqli_fetch_array($query)) {
 
     $objPHPExcel->getActiveSheet()->getRowDimension($cont)->setRowHeight(20);
 
-   $count++;
+    $count++;
 
 }
 
@@ -198,13 +159,13 @@ for ($col = 'A'; $col !== 'I'; $col++) {
         ->setAutoSize(true);
 }
 
-$objPHPExcel->getActiveSheet()->getColumnDimension('X')->setWidth(25);
+$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(25);
 
 $objPHPExcel->setActiveSheetIndex(0);
 ob_end_clean();
 ob_start();
 
-$nome_arquivo = date("YmdHis") . "_eventos_pesquisa.xls";
+$nome_arquivo = date("YmdHis") . "_pedidos_formacao.xls";
 
 
 // Cabeçalho do arquivo para ele baixar(Excel2007)

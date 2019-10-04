@@ -1,7 +1,7 @@
 <?php
 $con = bancoMysqli();
 
-if(isset($_POST['pesquisa'])){
+if (isset($_POST['pesquisa'])) {
 
     $ano = $_POST['ano'];
 
@@ -71,10 +71,10 @@ if(isset($_POST['pesquisa'])){
                 </table>
             </div>
             <div class="box-footer">
-                <a href="?perfil=producao&p=agendoes&sp=pesquisa">
+                <a href="?perfil=formacao&p=pedido_contratacao&sp=pesquisa">
                     <button type="button" class="btn btn-default">Voltar para a pesquisa</button>
                 </a>
-                <a href="../pdf/exporta_excel_agendao_producao.php">
+                <a href="../pdf/exportar_excel_pedido_formacao.php">
                     <button type="button" class="btn btn-success pull-right">Exportar para Excel</button>
                 </a>
             </div>
