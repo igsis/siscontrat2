@@ -44,6 +44,7 @@ $pasta = "?perfil=evento&p=";
                 }
                 echo "<li><a href=\"".$pasta."finalizar\"><i class=\"fa fa-circle-o text-light-blue\"></i> <span>Finalizar</span></a></li>";
             }
+            
             ?>
             <li><a href="?perfil=evento"><i class="fa fa-reply"></i> <span>Voltar</span></a></li>
             <?php
