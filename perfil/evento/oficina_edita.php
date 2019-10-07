@@ -161,42 +161,42 @@ include "includes/menu_interno.php";
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="modalidade">Modalidade:</label>
-                                    <input type="text" id="modalidade" name="modalidade" class="form-control"
+                                    <label for="modalidade">Modalidade: *</label>
+                                    <input type="text" id="modalidade" name="modalidade" class="form-control" required
                                            value="<?= $modalidade['modalidade'] ?>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="desc_modalidade">Descrição da Modalidade:</label><br/>
-                                    <textarea name="desc_modalidade" id="desc_modalidade" class="form-control"
+                                    <label for="desc_modalidade">Descrição da Modalidade: *</label><br/>
+                                    <textarea name="desc_modalidade" id="desc_modalidade" class="form-control" required
                                               rows="3"><?= $modalidade['descricao'] ?></textarea>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label for="valor_hora">Valor hora/aula: </label><br>
-                                    <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora"
+                                    <label for="valor_hora">Valor hora/aula: *</label><br>
+                                    <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora" required
                                            onkeypress="return(moeda(this, '.', ',', event))"
                                            value="<?= dinheiroParaBr($oficina['valor_hora']) ?>">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="carga_horaria">Carga Horária (em horas): </label><br>
-                                    <input class="form-control" style="max-width: 175px;" type="number"
+                                    <label for="carga_horaria">Carga Horária (em horas): *</label><br>
+                                    <input class="form-control" style="max-width: 175px;" type="number" required
                                            name="carga_horaria" min="0" value="<?= $oficina['carga_horaria'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-3">
-                                    <label for="data_inicio">Início de inscrição: </label> <br/>
+                                    <label for="data_inicio">Início de inscrição: *</label> <br/>
                                     <input class="form-control semana" style="max-width: 175px;" type="date"
-                                           name="data_inicio"
+                                           name="data_inicio" required
                                            value="<?= $oficina['data_inicio'] ?>"
                                            onkeyup="barraData(this);" onblur="validate()" id="datepicker10">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="data_fim">Encerramento de inscrição: </label> <br>
+                                    <label for="data_fim">Encerramento de inscrição: *</label> <br>
                                     <input class="form-control semana" style="max-width: 175px;" type="date"
-                                           name="data_fim"
+                                           name="data_fim" required
                                            value="<?= $oficina['data_fim'] ?>" onblur="validate()" id="datepicker11">
                                 </div>
                             </div>
@@ -210,8 +210,8 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <div class="form-group col-md-6">
 
-                                    <label>Selecione o primeiro dia de execução:</label>
-                                    <select name="idDia1" id="dia1" class="form-control">
+                                    <label>Selecione o primeiro dia de execução: *</label>
+                                    <select required name="idDia1" id="dia1" class="form-control">
                                         <?php
                                             geraOpcaoParcelas('execucao_dias', $oficina['execucao_dia1_id'])
                                         ?>
@@ -219,8 +219,8 @@ include "includes/menu_interno.php";
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                    <label>Selecione o segundo dia de execução:</label>
-                                    <select name="idDia2" id="dia2" class="form-control">
+                                    <label>Selecione o segundo dia de execução: *</label>
+                                    <select required name="idDia2" id="dia2" class="form-control">
                                         <?php
                                             geraOpcaoParcelas('execucao_dias', $oficina['execucao_dia2_id'])
                                         ?>

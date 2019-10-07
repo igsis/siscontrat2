@@ -63,40 +63,40 @@ $queryDias = mysqli_query($con, $sqlDias);
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="modalidade">Modalidade:</label>
-                                    <input type="text" id="modalidade" name="modalidade" class="form-control">
+                                    <label for="modalidade">Modalidade: *</label>
+                                    <input type="text" id="modalidade" name="modalidade" required class="form-control">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="desc_modalidade">Descrição da Modalidade:</label><br/>
-                                    <textarea name="desc_modalidade" id="desc_modalidade" class="form-control"
+                                    <label for="desc_modalidade">Descrição da Modalidade: *</label><br/>
+                                    <textarea name="desc_modalidade" id="desc_modalidade" required class="form-control"
                                               rows="3"></textarea>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label for="valor_hora">Valor hora/aula: </label><br>
-                                    <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora"
+                                    <label for="valor_hora">Valor hora/aula: *</label><br>
+                                    <input class="form-control" style="max-width: 175px;" type="tel" required name="valor_hora"
                                            onkeypress="return(moeda(this, '.', ',', event))">
                                 </div>
 
                                 <div class="form-group col-md-3">
-                                    <label for="carga_horaria">Carga Horária (em horas): </label><br>
-                                    <input class="form-control" style="max-width: 175px;" type="number"
+                                    <label for="carga_horaria">Carga Horária (em horas): *</label><br>
+                                    <input class="form-control" style="max-width: 175px;" type="number" required
                                            name="carga_horaria" min="0">
                                 </div>
 
                                 <div class="form-group col-md-3">
-                                    <label for="data_inicio">Início de inscrição: </label> <br/>
+                                    <label for="data_inicio">Início de inscrição: *</label> <br/>
                                     <input class="form-control semana" style="max-width: 175px;" type="date"
-                                           name="data_inicio"
+                                           name="data_inicio" required
                                            onkeyup="barraData(this);" onblur="validate()" id="datepicker10">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="data_fim">Encerramento de inscrição: </label> <br>
+                                    <label for="data_fim">Encerramento de inscrição: *</label> <br>
                                     <input class="form-control semana" style="max-width: 175px;" type="date"
-                                           name="data_fim"
+                                           name="data_fim" required
                                            onblur="validate()" id="datepicker11">
                                 </div>
                             </div>
@@ -110,8 +110,8 @@ $queryDias = mysqli_query($con, $sqlDias);
                             <div class="row">
                                 <div class="form-group col-md-6">
 
-                                    <label>Selecione o primeiro dia de execução:</label>
-                                    <select name="idDia1" id="dia1" class="form-control">
+                                    <label>Selecione o primeiro dia de execução: *</label>
+                                    <select name="idDia1" id="dia1" class="form-control" required>
                                         <option>Selecione o dia...</option>
                                         <?php
                                             geraOpcaoParcelas('execucao_dias')
@@ -121,8 +121,8 @@ $queryDias = mysqli_query($con, $sqlDias);
 
                                 <div class="form-group col-md-6">
 
-                                    <label>Selecione o segundo dia de execução:</label>
-                                    <select name="idDia2" id="dia2" class="form-control">
+                                    <label>Selecione o segundo dia de execução: *</label>
+                                    <select name="idDia2" id="dia2" class="form-control" required>
                                         <option>Selecione o dia...</option>
                                         <?php
                                              geraOpcaoParcelas('execucao_dias')
