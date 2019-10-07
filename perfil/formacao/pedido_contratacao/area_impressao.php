@@ -2,6 +2,8 @@
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
 $link_pcf = $http . "impressao_pedido_formacao.php";
+
+$link_vocacional = $http . "rlt_proposta_formacao.php";
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -32,7 +34,7 @@ $link_pcf = $http . "impressao_pedido_formacao.php";
                         </nav>
                     </div>
                         <div class="col-md-6">
-                            <a href="#">
+                            <a href="<?= $link_vocacional ?>" target="_blank" type="button">
                                 <h4 align="center">Vocacional</h4>
                             </a>
                             <hr />

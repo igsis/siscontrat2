@@ -429,7 +429,7 @@ if ($foto == null) {
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
                                     <input type="number" name="numero" class="form-control"
-                                           placeholder="Digite o número" required value="<?= $endereco['numero'] ?>">
+                                           placeholder="Digite o número" min="0" required value="<?= $endereco['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="complemento">Complemento: </label>
