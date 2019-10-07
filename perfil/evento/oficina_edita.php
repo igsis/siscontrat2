@@ -183,7 +183,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-3">
                                     <label for="carga_horaria">Carga Horária (em horas): </label><br>
                                     <input class="form-control" style="max-width: 175px;" type="number"
-                                           name="carga_horaria" value="<?= $oficina['carga_horaria'] ?>">
+                                           name="carga_horaria" min="0" value="<?= $oficina['carga_horaria'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -213,7 +213,7 @@ include "includes/menu_interno.php";
                                     <label>Selecione o primeiro dia de execução:</label>
                                     <select name="idDia1" id="dia1" class="form-control">
                                         <?php
-                                            geraOpcao('execucao_dias', $oficina['execucao_dia1_id'])
+                                            geraOpcaoParcelas('execucao_dias', $oficina['execucao_dia1_id'])
                                         ?>
                                     </select>
                                 </div>
@@ -222,7 +222,7 @@ include "includes/menu_interno.php";
                                     <label>Selecione o segundo dia de execução:</label>
                                     <select name="idDia2" id="dia2" class="form-control">
                                         <?php
-                                            geraOpcao('execucao_dias', $oficina['execucao_dia2_id'])
+                                            geraOpcaoParcelas('execucao_dias', $oficina['execucao_dia2_id'])
                                         ?>
                                     </select>
                                 </div>
@@ -259,7 +259,7 @@ include "includes/menu_interno.php";
     isMsgDia.hide();
 
     function igual() {
-        if (dia1.val() == "Selecione o Dia" || dia2.val() == "Selecione o Dia") {
+        if (dia1.val() == "Selecione o dia..." || dia2.val() == "Selecione o dia...") {
             botao.prop('disabled', true);
         } else {
             botao.prop('disabled', false);

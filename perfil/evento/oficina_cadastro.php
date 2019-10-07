@@ -84,7 +84,7 @@ $queryDias = mysqli_query($con, $sqlDias);
                                 <div class="form-group col-md-3">
                                     <label for="carga_horaria">Carga Horária (em horas): </label><br>
                                     <input class="form-control" style="max-width: 175px;" type="number"
-                                           name="carga_horaria">
+                                           name="carga_horaria" min="0">
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -112,9 +112,9 @@ $queryDias = mysqli_query($con, $sqlDias);
 
                                     <label>Selecione o primeiro dia de execução:</label>
                                     <select name="idDia1" id="dia1" class="form-control">
-                                        <option>Selecione o Dia</option>
+                                        <option>Selecione o dia...</option>
                                         <?php
-                                            geraOpcao('execucao_dias')
+                                            geraOpcaoParcelas('execucao_dias')
                                         ?>
                                     </select>
                                 </div>
@@ -123,9 +123,9 @@ $queryDias = mysqli_query($con, $sqlDias);
 
                                     <label>Selecione o segundo dia de execução:</label>
                                     <select name="idDia2" id="dia2" class="form-control">
-                                        <option>Selecione o Dia</option>
+                                        <option>Selecione o dia...</option>
                                         <?php
-                                             geraOpcao('execucao_dias')
+                                             geraOpcaoParcelas('execucao_dias')
                                         ?>
 
                                     </select>
@@ -163,7 +163,7 @@ $queryDias = mysqli_query($con, $sqlDias);
     var isMsgDia = $('#msgEscondeDias');
     isMsgDia.hide();
     function igual() {
-        if (dia1.val() == "Selecione o Dia" || dia2.val() == "Selecione o Dia") {
+        if (dia1.val() == "Selecione o dia..." || dia2.val() == "Selecione o dia...") {
             botao.prop('disabled', true)
         } else {
             botao.prop('disabled', false);

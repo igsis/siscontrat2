@@ -68,9 +68,8 @@ if(isset($_POST['editar'])){
         $mes_ref = $mes_refs[$count] ?? NULL;
         $carga = $cargas[$count] ?? NULL;
 
-        $sql = "INSERT INTO emia_parcelas (emia_vigencia_id, numero_parcelas, valor, data_inicio, data_fim, data_pagamento, mes_referencia, carga_horaria)
+        $sql = "INSERT INTO emia_parcelas (emia_vigencia_id, numero_parcelas, valor, data_inicio, data_fim, data_pagamento, mes_referencia_id, carga_horaria)
                                        VALUES ('$idEV', '$parcela', '$valor', '$data_inicio', '$data_fim', '$data_pagamento', '$mes_ref', '$carga')";
-
 
         mysqli_query($con, $sql);
     }
@@ -169,9 +168,11 @@ if(isset($_POST['editar'])){
 
                         <div class="form-group col-md-2">
                             <label for="mes_ref[]">Mês Referencia: *</label>
-                            <input type="text" name="mes_ref[]" class="form-control" id="mes_ref[]"
-                                   value="<?= $parcela['mes_referencia'] ?? NULL ?>" pattern="[A-Za-z]{4,}"
-                                   title="Utilize somente letras">
+                            <select name="mes_ref[]" id="mes_ref[]" class="form-control">
+                                <?php
+                                    geraOpcaoParcelas("emia_meses", $parcelas['mes_referencia_id']);
+                                ?>
+                            </select>
                         </div>
 
                         </div>
