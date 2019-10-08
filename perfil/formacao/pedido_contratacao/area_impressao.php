@@ -40,7 +40,7 @@ $link_vocacional = $http . "rlt_proposta_formacao.php";
                             <hr />
                         </div>
                         <div class="col-md-6">
-                            <a href="#">
+                            <a href="<?= $link_vocacional ?>" target="_blank" type="button">
                                 <h4 align="center">PIÁ</h4>
                             </a>
                             <hr />
