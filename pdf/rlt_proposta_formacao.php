@@ -43,6 +43,8 @@ $sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.lo
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
 
+$ano = date('Y');
+
 $carga = $_SESSION['formacao_carga_horaria'];
 
 $Observacao = "Todas as atividades dos programas da Supervisão de Formação são inteiramente gratuitas e é terminantemente proibido cobrar por elas sob pena de multa e rescisão de contrato.";
@@ -154,7 +156,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(18, $l, utf8_decode("Endereço:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(160, $l, utf8_decode( $endereco['logradouro'] . ", " . $endereco['numero'] . " / - " .$endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf']), 0, 'L', 0);
+$pdf->MultiCell(160, $l, utf8_decode($endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " .$endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf']), 0, 'L', 0);
 
 while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
     $tel = $tel . $linhaTel['telefone'] . ' | ';
@@ -187,7 +189,27 @@ $pdf->Cell(160,10,'PROPOSTA',0,0,'C');
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(10,10,utf8_decode($contratacao['protocolo']),0,1,'R');
 
-$pdf->Ln(5);
+$idLinguagem = $contratacao['linguagem_id'];
+$linguagem = recuperaDados('linguagens', 'id', $idLinguagem);
+
+$idPrograma = $contratacao['programa_id'];
+$programa = recuperaDados('programas', 'id', $idPrograma);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(18,$l,"Programa:",0,0,'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(20,$l, utf8_decode($programa['programa']), 0,0,'L');
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(21,$l,"Linguagem:", 0,0,'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(20,$l, utf8_decode($linguagem['linguagem']), 0,0,'L');
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(11,$l,"Edital:", 0,0,'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(20,$l, utf8_decode($programa['edital']), 0,0,'L');
+
+$pdf->Ln(6);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -264,7 +286,7 @@ $pdf->MultiCell(0, 4, utf8_decode($penal),0, 'J', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(180,$l,utf8_decode("Data: _________ / _________ / " . $contratacao['ano']) . ".",0,0,'L');
+$pdf->Cell(180,$l,utf8_decode("Data: _________ / _________ / " . $ano) . ".",0,0,'L');
 
 $pdf->SetXY($x,262);
 $pdf->SetFont('Arial','', 10);
@@ -317,6 +339,15 @@ $pdf->MultiCell(40, $l, utf8_decode($linguagem['linguagem']), 0, 'L', 0);
 
 $pdf->Ln(5);
 
+$pdf->SetX($x);
+$pdf->SetFont('Arial', '', 10);
+$pdf->MultiCell(160, $l, utf8_decode("O prestador de serviços acima citado é contratado nos termos do Edital " . $programa['edital']
+                                                . ", no ano de " . $ano
+                                                . ", com carga horária total de até: " . $carga
+                                                . " hora(s), na forma abaixo descrita:"), 0, 'L', 0);
+
+$pdf->Ln(5);
+
 $idVigencia = $contratacao['form_vigencia_id'];
 
 $sqlParcelas = "SELECT * FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' ORDER BY data_inicio ASC";
@@ -331,13 +362,13 @@ while($parcela = mysqli_fetch_array($query))
 
         $pdf->SetX($x);
         $pdf->SetFont('Arial','', 10);
-        $pdf->MultiCell(180,$l,utf8_decode("De $inicio a $fim - até $horas horas"));
+        $pdf->MultiCell(180,$l,utf8_decode("De $inicio a $fim - até $horas hora(s)"));
     }
 }
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(180,$l,utf8_decode("São Paulo, ______ de ____________________ de ".$contratacao['ano']).".",0,0,'L');
+$pdf->Cell(180,$l,utf8_decode("São Paulo, ______ de ____________________ de ".$ano).".",0,0,'L');
 
 $pdf->SetXY($x,262);
 $pdf->SetFont('Arial','', 10);

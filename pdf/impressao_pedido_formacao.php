@@ -110,12 +110,6 @@ $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(168, $l, utf8_decode($pessoa['cpf']), 0, 'L', 0);
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($pessoa['email']), 0, 'L', 0);
-
 while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
     $tel = $tel . $linhaTel['telefone'] . ' | ';
 }
@@ -128,7 +122,34 @@ $pdf->Cell(21, $l, 'Telefone(s):', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(168, $l, utf8_decode($tel), 0, 'L', 0);
 
-$pdf->Ln(5);
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->MultiCell(168, $l, utf8_decode($pessoa['email']), 0, 'L', 0);
+
+$idLinguagem = $contratacao['linguagem_id'];
+$linguagem = recuperaDados('linguagens', 'id', $idLinguagem);
+
+$idPrograma = $contratacao['programa_id'];
+$programa = recuperaDados('programas', 'id', $idPrograma);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(18,$l,"Programa:",0,0,'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(20,$l, utf8_decode($programa['programa']), 0,0,'L');
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(21,$l,"Linguagem:", 0,0,'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(20,$l, utf8_decode($linguagem['linguagem']), 0,0,'L');
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(11,$l,"Edital:", 0,0,'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(20,$l, utf8_decode($programa['edital']), 0,0,'L');
+
+
+$pdf->Ln(7);
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(9, $l, 'Ano:', '0', '0', 'L');
@@ -173,6 +194,12 @@ $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(22, $l, 'Justificativa:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(155, $l, utf8_decode($pedido['justificativa']));
+
+$pdf->Ln(5);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', '', 10);
+$pdf->MultiCell(155, $l, utf8_decode("Nos termos do art. 6º do decreto 54.873/2014, fica designado como fiscal desta contratação artística a servidora Natalia Silva Cunha, RF 842.773.9 e, como substituto, Ilton T. Hanashiro Yogi, RF 800.116.2. Diante do exposto, solicitamos autorização para prosseguimento do presente."));
 
 $pdf->Output();
 ?>
