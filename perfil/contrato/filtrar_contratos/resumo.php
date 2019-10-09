@@ -37,11 +37,26 @@ if (isset($_POST['salvar'])) {
         mysqli_query($con, $sql);
     }
 
+    //pedidos
     $formaPagamento = $_POST['formaPagamento'];
     $verba = $_POST['verba'];
     $processoMae = $_POST['processoMae'];
+    $processo = $_POST['processo'];
 
+    //eventos
+    $fiscal = $_POST['fiscal'];
+    $suplente = $_POST['suplente'] ?? null;
 
+    $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', verba_id = '$verba' WHERE id = '$idPedido'";
+
+    
+    if(mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)){
+        gravarLog($sqlEvento);
+        gravarLog($sqlPedido);
+    }else{
+
+    }
 }
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
