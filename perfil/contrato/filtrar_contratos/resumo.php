@@ -1,6 +1,22 @@
 <?php
 $con = bancoMysqli();
-$idEvento = $_POST['idEvento'];
+
+if(isset($_POST['selecionar'])){
+    $idPedido = $_POST['idPedido'];
+    $pedido = recuperaDados('pedidos', 'id', $idPedido);
+    $idEvento = $pedido['origem_id'];
+    $idPf = $_POST['idPf'];
+
+    $sql = "UPDATE pedidos SET pessoa_fisica_id = '$idPf' WHERE id = '$idPedido'";
+    echo $sql;
+    if(mysqli_query($con, $sql))
+        $mensagem = mensagem("success", "Troca efetuada com sucesso!");
+    else
+        $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
+
+}else{
+    $idEvento = $_POST['idEvento'];
+}
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $pedido = recuperaDados('pedidos', 'origem_id', $idEvento . " AND origem_tipo_id = 1");
