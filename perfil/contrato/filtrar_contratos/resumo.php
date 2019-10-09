@@ -54,8 +54,9 @@ if (isset($_POST['salvar'])) {
     if(mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)){
         gravarLog($sqlEvento);
         gravarLog($sqlPedido);
+        $mensagem = mensagem("success", "Atualizações salvas com sucesso!");
     }else{
-
+        $mensagem = mensagem("danger", "Erro ao salvar alterações! Tente novamente.");
     }
 }
 
@@ -80,6 +81,11 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">Contrato do evento: <?= $evento['nome_evento'] ?></h3>
+                    </div>
+                    <div class="row" align="center">
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
                     </div>
                     <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=resumo"
                           role="form">
