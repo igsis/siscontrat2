@@ -34,7 +34,7 @@ if (isset($_POST['busca'])) {
     if ($usuario != null && $usuario != 0)
         $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
 
-    $sql = "SELECT e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
+    $sql = "SELECT e.id, e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
     p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, 
     p.valor_total, e.evento_status_id, e.usuario_id, es.status
     FROM eventos e 
@@ -42,6 +42,8 @@ if (isset($_POST['busca'])) {
     INNER JOIN evento_status es on e.evento_status_id = es.id
     WHERE e.publicado = 1 
     AND p.publicado = 1 
+    AND p.origem_tipo_id = 1
+    AND p.status_pedido_id != 1
     AND p.origem_tipo_id = 1 
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso";
@@ -100,13 +102,20 @@ if (isset($_POST['busca'])) {
                                         $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
 
                                     ?>
-                                    <td><a href="#"><?= $evento['protocolo'] ?></a></td>
-                                    <td><?= $evento['numero_processo'] ?></td>
-                                    <td><?= $pessoa ?></td>
-                                    <td><?= $evento['nome_evento'] ?></td>
-                                    <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                    <td><?= $evento['status'] ?></td>
-                                    <td><?= recuperaDados('usuarios', 'id', $evento['usuario_id'])['nome_completo'] ?></td>
+                                    <tr>
+                                        <td>
+                                            <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=resumo">
+                                                <input type="hidden" name="idEvento" id="idEvento" value="<?=$evento['id']?>">
+                                                <button type="submit" class="btn btn-link"><?= $evento['protocolo'] ?></button>
+                                            </form>
+                                        </td>
+                                        <td><?= $evento['numero_processo'] ?></td>
+                                        <td><?= $pessoa ?></td>
+                                        <td><?= $evento['nome_evento'] ?></td>
+                                        <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
+                                        <td><?= $evento['status'] ?></td>
+                                        <td><?= recuperaDados('usuarios', 'id', $evento['usuario_id'])['nome_completo'] ?></td>
+                                    </tr>
                                     <?php
                                 }
                             }

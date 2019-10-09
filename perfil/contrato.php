@@ -1,4 +1,5 @@
 <?php
+include "contrato/includes/menu.php";
 //include para contrato
 if (isset($_GET['p'])) {
     $p = $_GET['p'];
@@ -12,8 +13,6 @@ if (isset($_GET['p'])) {
     $p = "index";
     include "contrato/" . $p . ".php";
 }
-
-include "contrato/includes/menu.php";
 
 function modalUploadArquivoUnico($idModal, $pagina, $nomeArquivo, $sigla, $idPessoa, $tipoPessoa)
 {
