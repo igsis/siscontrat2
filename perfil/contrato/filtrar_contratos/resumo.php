@@ -8,7 +8,7 @@ if(isset($_POST['selecionar'])){
     $idPf = $_POST['idPf'];
 
     $sql = "UPDATE pedidos SET pessoa_fisica_id = '$idPf' WHERE id = '$idPedido'";
-    echo $sql;
+    
     if(mysqli_query($con, $sql))
         $mensagem = mensagem("success", "Troca efetuada com sucesso!");
     else
