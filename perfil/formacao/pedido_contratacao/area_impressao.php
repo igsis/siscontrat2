@@ -1,6 +1,7 @@
 <?php
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
+
 $link_pcf = $http . "impressao_pedido_formacao.php";
 
 $link_vocacional = $http . "rlt_proposta_formacao.php";

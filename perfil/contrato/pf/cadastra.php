@@ -4,7 +4,6 @@ $con = bancoMysqli();
 if (isset($_POST['adicionar'])) {
     $documento = $_POST['documentacao'];
     $tipoDocumento = $_POST['tipoDocumento'];
-
     $botoesFooter = "<button type='submit' name='cadastra' class='btn btn-info pull-right'>Salvar</button>";
 
 }

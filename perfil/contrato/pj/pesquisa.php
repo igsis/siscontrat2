@@ -48,6 +48,7 @@ if (isset($_POST['procurar'])){
                       <td>
                         <form method='post' action='?perfil=contrato&p=pj&sp=cadastra'>
                             <input type='hidden' name='cnpj' value='$procurar'>
+                            <input type='hidden' name='idPJ' value='$idPJ'>
                             <button class=\"btn btn-primary\" name='adicionar' type='submit' id='adicionar'>
                                 <i class=\"glyphicon glyphicon-plus\">        
                                 </i>Adicionar

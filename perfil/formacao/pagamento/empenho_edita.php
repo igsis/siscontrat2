@@ -20,6 +20,10 @@ if (isset($_POST['cadastra'])) {
 }
 
 $pagamentos = recuperaDados('pagamentos', 'pedido_id', $idPedido);
+
+$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
+$http = $server . "/pdf/";
+$link = $http . "rlt_ne_formacao.php";
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -63,6 +67,9 @@ $pagamentos = recuperaDados('pagamentos', 'pedido_id', $idPedido);
                         <div class="box-footer">
                             <a href="?perfil=formacao&p=pagamento&sp=index">
                                 <button type="button" class="btn btn-default">Voltar</button>
+                            </a>
+                            <a href="<?=$link?>" target="_blank" type="button">
+                                <button type="button" class="btn btn-success pull-right">Gerar Recibo</button>
                             </a>
                         </div>
                     </form>
