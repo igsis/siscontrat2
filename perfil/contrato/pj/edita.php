@@ -214,7 +214,7 @@ if (isset($_POST['apagar'])) {
 }
 
 if(isset($_POST['carregar'])){
-    $idPj = $_POST['idPessoaJuridica'];
+    $idPj = $_POST['idPj'];
     $pj = recuperaDados("pessoa_juridicas", "id", $idPj);
 }
 
