@@ -98,7 +98,7 @@ if (isset($_POST['busca'])) {
                                 while ($evento = mysqli_fetch_array($query)) {
                                     if ($evento['pessoa_tipo_id'] == 1)
                                         $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome_artistico'];
-                                    else if ($evento['pessoa_fisica_id'] == 2)
+                                    else if ($evento['pessoa_tipo_id'] == 2)
                                         $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
 
                                     ?>

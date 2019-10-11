@@ -1,20 +1,20 @@
 <?php
 $con = bancoMysqli();
 
-if(isset($_POST['selecionar'])){
+if (isset($_POST['selecionar'])) {
     $idPedido = $_POST['idPedido'];
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
     $idEvento = $pedido['origem_id'];
     $idPf = $_POST['idPf'];
 
     $sql = "UPDATE pedidos SET pessoa_fisica_id = '$idPf' WHERE id = '$idPedido'";
-    
-    if(mysqli_query($con, $sql))
+
+    if (mysqli_query($con, $sql))
         $mensagem = mensagem("success", "Troca efetuada com sucesso!");
     else
         $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
 
-}else{
+} else {
     $idEvento = $_POST['idEvento'];
 }
 
@@ -66,12 +66,12 @@ if (isset($_POST['salvar'])) {
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
     $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', verba_id = '$verba' WHERE id = '$idPedido'";
 
-    
-    if(mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)){
+
+    if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
         gravarLog($sqlEvento);
         gravarLog($sqlPedido);
         $mensagem = mensagem("success", "Atualizações salvas com sucesso!");
-    }else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao salvar alterações! Tente novamente.");
     }
 }
@@ -260,10 +260,70 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                     </tbody>
                 </table>
                 <?php
-                }
+                } else if ($pedido['pessoa_tipo_id'] == 2) {
+                $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
+                                            LEFT JOIN lideres l on a.id = l.atracao_id
+                                            left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
+                                            WHERE evento_id = '$idEvento'";
+                $query_atracao = mysqli_query($con, $sql_atracao);
                 ?>
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Líderes</h3>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Atração</th>
+                                <th>Proponente</th>
+                                <th width="5%">Ação</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            while ($atracao = mysqli_fetch_array($query_atracao)) {
+                                ?>
+                                <tr>
+                                    <td><?= $atracao['nome_atracao'] ?></td>
+                                    <?php
+                                    if ($atracao['pessoa_fisica_id'] > 0) {
+                                        ?>
+                                        <td><?= $atracao['nome'] ?></td>
+                                        <td>
+                                            <form method="POST" action="#" role="form">
+                                                <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
+                                                <input type='hidden' name='lider' value='<?= $idPedido ?>'>
+                                                <button type="submit" name='carregar' class="btn btn-primary"><i
+                                                            class='fa fa-refresh'></i></button>
+                                            </form>
+                                        </td>
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <td></td>
+                                        <td>
+                                            <form method="POST" action="#" role="form">
+                                                <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
+                                                <input type='hidden' name='lider' value='<?= $idPedido ?>'>
+                                                <button type="submit" name='pesquisar' class="btn btn-primary
+                                                "><i class='fa fa-plus'></i></button>
+                                            </form>
+                                        </td>
+                                        <?php
+                                    }
+                                    ?>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                </div>
             </div>
-        </div>
-</div>
-</section>
+    </section>
 </div>
