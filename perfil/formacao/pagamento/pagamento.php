@@ -32,6 +32,15 @@ while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
 }
 
 $local = substr($local, 0, -3);
+
+$idPf = $pf['id'];
+
+$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
+$http = $server . "/pdf/";
+
+$link_facc = $http . "rlt_fac_pf.php";
+
+$link_atestado = $http . "rlt_atestado_servico_formacao.php";
 ?>
 
 <div class="content-wrapper">
@@ -81,6 +90,9 @@ $local = substr($local, 0, -3);
                             <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right">
                                 Salvar
                             </button>
+                            <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button">
+                                <button type="button" class="btn btn-primary">Gerar FACC</button>
+                            </a>
                         </div>
                     </form>
 
@@ -90,6 +102,7 @@ $local = substr($local, 0, -3);
                             <th>Parcela</th>
                             <th>Valor</th>
                             <th>Pagamento</th>
+                            <th style="text-align:center">Gerar</th>
                         </tr>
                         </thead>
 
@@ -108,6 +121,27 @@ $local = substr($local, 0, -3);
                                     <td><?= $parcela['numero_parcelas'] ?></td>
                                     <td><?= dinheiroParaBr($parcela['valor']) ?></td>
                                     <td><?= exibirDataBr($parcela['data_pagamento']) ?></td>
+                                    <th style="text-align:center">
+                                       <a href="#">
+                                           <button type="button" class="btn btn-primary">Pagamento</button>
+                                       </a>
+
+                                        <a href="#">
+                                            <button type="button" class="btn btn-primary">Recibo</button>
+                                        </a>
+
+                                        <a href="<?= $link_atestado ?>" target="_blank" type="button">
+                                            <button type="button" class="btn btn-primary">Atestado Serviço</button>
+                                        </a>
+
+                                        <a href="#">
+                                            <button type="button" class="btn btn-primary">Relatório Horas</button>
+                                        </a>
+
+                                        <a href="#">
+                                            <button type="button" class="btn btn-primary">Contabilidade</button>
+                                        </a>
+                                    </th>
                                 </tr>
                                 <?php
                             }
@@ -120,6 +154,7 @@ $local = substr($local, 0, -3);
                             <th>Parcela</th>
                             <th>Valor</th>
                             <th>Pagamento</th>
+                            <th style="text-align:center">Gerar</th>
                         </tr>
                         </tfoot>
                     </table>
