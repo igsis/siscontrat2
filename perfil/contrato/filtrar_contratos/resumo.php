@@ -224,106 +224,144 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
 
         <?php
         if ($pedido['pessoa_tipo_id'] == 1) {
-        ?>
-        <div class="box box-danger">
-            <div class="box-header with-border">
-                <h3 class="box-title">Proponente</h3>
+            ?>
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Proponente</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Proponente</th>
+                            <th width="5%">Editar</th>
+                            <th width="5%">Trocar</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><?= $proponente['nome'] ?></td>
+                            <td>
+                                <form action="#" method="POST">
+                                    <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
+                                    <button type="submit" class="btn btn-primary btn-block"><span
+                                                class="glyphicon glyphicon-pencil"></span></button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf"
+                                      method="POST">
+                                    <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
+                                    <button type="submit" class="btn btn-info btn-block"><span
+                                                class="glyphicon glyphicon-random"></span></button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="box-body">
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Proponente</th>
-                        <th width="5%">Editar</th>
-                        <th width="5%">Trocar</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td><?= $proponente['nome'] ?></td>
-                        <td>
-                            <form action="#" method="POST">
-                                <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
-                                <button type="submit" class="btn btn-primary btn-block"><span
-                                            class="glyphicon glyphicon-pencil"></span></button>
-                            </form>
-                        </td>
-                        <td>
-                            <form action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf"
-                                  method="POST">
-                                <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
-                                <button type="submit" class="btn btn-info btn-block"><span
-                                            class="glyphicon glyphicon-random"></span></button>
-                            </form>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <?php
-                } else if ($pedido['pessoa_tipo_id'] == 2) {
-                $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
+            <?php
+        } else if ($pedido['pessoa_tipo_id'] == 2) {
+            $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
                                             WHERE evento_id = '$idEvento'";
-                $query_atracao = mysqli_query($con, $sql_atracao);
-                ?>
-                <div class="box box-danger">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Líderes</h3>
-                    </div>
-                    <div class="box-body">
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th>Atração</th>
-                                <th>Proponente</th>
-                                <th width="5%">Ação</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-                            while ($atracao = mysqli_fetch_array($query_atracao)) {
-                                ?>
-                                <tr>
-                                    <td><?= $atracao['nome_atracao'] ?></td>
-                                    <?php
-                                    if ($atracao['pessoa_fisica_id'] > 0) {
-                                        ?>
-                                        <td><?= $atracao['nome'] ?></td>
-                                        <td>
-                                            <form method="POST" action="#" role="form">
-                                                <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
-                                                <input type='hidden' name='lider' value='<?= $idPedido ?>'>
-                                                <button type="submit" name='carregar' class="btn btn-primary"><i
-                                                            class='fa fa-refresh'></i></button>
-                                            </form>
-                                        </td>
-                                        <?php
-                                    } else {
-                                        ?>
-                                        <td></td>
-                                        <td>
-                                            <form method="POST" action="#" role="form">
-                                                <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
-                                                <input type='hidden' name='lider' value='<?= $idPedido ?>'>
-                                                <button type="submit" name='pesquisar' class="btn btn-primary
-                                                "><i class='fa fa-plus'></i></button>
-                                            </form>
-                                        </td>
-                                        <?php
-                                    }
-                                    ?>
-                                </tr>
-                                <?php
-                            }
-                            ?>
-                            </tbody>
-                        </table>
-                        <?php
-                        }
-                        ?>
-                    </div>
+            $query_atracao = mysqli_query($con, $sql_atracao);
+            ?>
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Proponente</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Proponente</th>
+                            <th width="5%">Editar</th>
+                            <th width="5%">Trocar</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><?= $proponente['razao_social'] ?></td>
+                            <td>
+                                <form action="#" method="POST">
+                                    <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
+                                    <button type="submit" class="btn btn-primary btn-block"><span
+                                                class="glyphicon glyphicon-pencil"></span></button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf"
+                                      method="POST">
+                                    <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
+                                    <button type="submit" class="btn btn-info btn-block"><span
+                                                class="glyphicon glyphicon-random"></span></button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Líderes</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Atração</th>
+                            <th>Proponente</th>
+                            <th width="5%">Ação</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        while ($atracao = mysqli_fetch_array($query_atracao)) {
+                            ?>
+                            <tr>
+                                <td><?= $atracao['nome_atracao'] ?></td>
+                                <?php
+                                if ($atracao['pessoa_fisica_id'] > 0) {
+                                    ?>
+                                    <td><?= $atracao['nome'] ?></td>
+                                    <td>
+                                        <form method="POST" action="#" role="form">
+                                            <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
+                                            <input type='hidden' name='lider' value='<?= $idPedido ?>'>
+                                            <button type="submit" name='carregar' class="btn btn-primary"><i
+                                                        class='fa fa-refresh'></i></button>
+                                        </form>
+                                    </td>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <td></td>
+                                    <td>
+                                        <form method="POST" action="#" role="form">
+                                            <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
+                                            <input type='hidden' name='lider' value='<?= $idPedido ?>'>
+                                            <button type="submit" name='pesquisar' class="btn btn-primary
+                                                "><i class='fa fa-plus'></i></button>
+                                        </form>
+                                    </td>
+                                    <?php
+                                }
+                                ?>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
     </section>
 </div>
