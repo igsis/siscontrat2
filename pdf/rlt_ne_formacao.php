@@ -20,7 +20,7 @@ $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $empenho = recuperaDados('pagamentos', 'pedido_id', $idPedido);
 
-$data = date('Y-d-m');
+$data = date("Y-m-d", strtotime("now"));
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -53,7 +53,7 @@ $pdf->MultiCell(120, $l, utf8_decode($empenho['nota_empenho']), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(22, $l, utf8_decode("Emitida em:"), 0, 0, 'L');
+$pdf->Cell(23, $l, utf8_decode("Emitida em:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 11);
 $pdf->MultiCell(120, $l, utf8_decode(exibirDataBr($empenho['emissao_nota_empenho'])), 0, 'L', 0);
 

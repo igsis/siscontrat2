@@ -45,7 +45,14 @@ $queryLocal = mysqli_query($con, $sqlLocal);
 
 $ano = date('Y');
 
-$carga = $_SESSION['formacao_carga_horaria'];
+$idVigencia = $contratacao['form_vigencia_id'];
+
+$carga = null;
+$sqlCarga = "SELECT carga_horaria FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia'";
+$queryCarga = mysqli_query($con,$sqlCarga);
+
+while ($countt = mysqli_fetch_array($queryCarga))
+    $carga += $countt['carga_horaria'];
 
 $Observacao = "Todas as atividades dos programas da Supervisão de Formação são inteiramente gratuitas e é terminantemente proibido cobrar por elas sob pena de multa e rescisão de contrato.";
 $penal = "DAS OBRIGAÇÕES

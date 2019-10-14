@@ -49,7 +49,14 @@ $sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.lo
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
 
-$carga = $_SESSION['formacao_carga_horaria'];
+$idVigencia = $contratacao['form_vigencia_id'];
+
+$carga = null;
+$sqlCarga = "SELECT carga_horaria FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia'";
+$queryCarga = mysqli_query($con,$sqlCarga);
+
+while ($countt = mysqli_fetch_array($queryCarga))
+    $carga += $countt['carga_horaria'];
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();

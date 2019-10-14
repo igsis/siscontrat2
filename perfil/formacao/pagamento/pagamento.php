@@ -41,6 +41,8 @@ $http = $server . "/pdf/";
 $link_facc = $http . "rlt_fac_pf.php";
 
 $link_atestado = $http . "rlt_atestado_servico_formacao.php";
+
+$link_pagamento = $http . "rlt_pagamento_form.php";
 ?>
 
 <div class="content-wrapper">
@@ -52,7 +54,9 @@ $link_atestado = $http . "rlt_atestado_servico_formacao.php";
                     <div class="box-header with-border">
                         <h3 class="box-title"><?= $pf['nome'] ?> (<?= $pf['cpf'] ?>)</h3>
                         <div class="row" align="center">
-                            <?php if(isset($mensagem)){echo $mensagem;};?>
+                            <?php if (isset($mensagem)) {
+                                echo $mensagem;
+                            }; ?>
                         </div>
                     </div>
                     <form method="POST" action="?perfil=formacao&p=pagamento&sp=pagamento"
@@ -81,7 +85,9 @@ $link_atestado = $http . "rlt_atestado_servico_formacao.php";
                                 <div class="form-group col-md-8 col-md-offset-2">
                                     <label for="num_processo_pagto">Número processo de pagamento</label>
                                     <input class="form-control" type="text" name="num_processo_pagto"
-                                           id="num_processo_pagto" required value="<?= $formacao['num_processo_pagto'] ?>" data-mask="9999.9999/9999999-9">
+                                           id="num_processo_pagto" required
+                                           value="<?= $formacao['num_processo_pagto'] ?>"
+                                           data-mask="9999.9999/9999999-9">
                                 </div>
                             </div>
                         </div>
@@ -102,7 +108,11 @@ $link_atestado = $http . "rlt_atestado_servico_formacao.php";
                             <th>Parcela</th>
                             <th>Valor</th>
                             <th>Pagamento</th>
+                            <th></th>
+                            <th></th>
                             <th style="text-align:center">Gerar</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                         </thead>
 
@@ -121,27 +131,42 @@ $link_atestado = $http . "rlt_atestado_servico_formacao.php";
                                     <td><?= $parcela['numero_parcelas'] ?></td>
                                     <td><?= dinheiroParaBr($parcela['valor']) ?></td>
                                     <td><?= exibirDataBr($parcela['data_pagamento']) ?></td>
+
                                     <th style="text-align:center">
-                                       <a href="#">
-                                           <button type="button" class="btn btn-primary">Pagamento</button>
-                                       </a>
-
-                                        <a href="#">
-                                            <button type="button" class="btn btn-primary">Recibo</button>
-                                        </a>
-
-                                        <a href="<?= $link_atestado ?>" target="_blank" type="button">
-                                            <button type="button" class="btn btn-primary">Atestado Serviço</button>
-                                        </a>
-
-                                        <a href="#">
-                                            <button type="button" class="btn btn-primary">Relatório Horas</button>
-                                        </a>
-
-                                        <a href="#">
-                                            <button type="button" class="btn btn-primary">Contabilidade</button>
-                                        </a>
+                                        <form action="<?=$link_pagamento?>" method="post" target="_blank">
+                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <button type="submit" class="btn btn-primary">Pagamento</button>
+                                        </form>
                                     </th>
+
+                                    <th style="text-align:center">
+                                        <form action="#" method="post" target="_blank">
+                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <button type="submit" class="btn btn-primary">Recibo</button>
+                                        </form>
+                                    </th>
+
+                                    <th style="text-align:center">
+                                        <form action="<?= $link_atestado ?>" method="post" target="_blank">
+                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <button type="submit" class="btn btn-primary">Atestado Serviço</button>
+                                        </form>
+                                    </th>
+
+                                    <th style="text-align:center">
+                                        <form action="#" method="post" target="_blank">
+                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <button type="submit" class="btn btn-primary">Relatório Horas</button>
+                                        </form>
+                                    </th>
+
+                                    <th style="text-align:center">
+                                        <form action="#" method="post" target="_blank">
+                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <button type="submit" class="btn btn-primary">Contabilidade</button>
+                                        </form>
+                                    </th>
+
                                 </tr>
                                 <?php
                             }
@@ -154,7 +179,11 @@ $link_atestado = $http . "rlt_atestado_servico_formacao.php";
                             <th>Parcela</th>
                             <th>Valor</th>
                             <th>Pagamento</th>
+                            <th></th>
+                            <th></th>
                             <th style="text-align:center">Gerar</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                         </tfoot>
                     </table>

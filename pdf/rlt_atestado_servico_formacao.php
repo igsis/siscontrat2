@@ -20,6 +20,7 @@ class PDF extends FPDF
     }
 }
 
+$idParcela = $_POST['idParcela'];
 $idPedido = $_SESSION['idPedido'];
 $idFC = $_SESSION['idFC'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -29,10 +30,6 @@ $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
 $fiscal = recuperaDados('usuarios', 'id', $contratacao['fiscal_id']);
 $suplente = recuperaDados('usuarios', 'id', $contratacao['suplente_id']);
-
-$datafim = "";
-$datainicio = "";
-
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -52,7 +49,7 @@ $pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->MultiCell(200, $l, utf8_decode("Informamos que os serviços prestados por:" . $pessoa['nome']), 0, 'L', 0);
+$pdf->MultiCell(200, $l, utf8_decode("Informamos que os serviços prestados por: " . $pessoa['nome']), 0, 'L', 0);
 
 $pdf->Ln(5);
 
@@ -127,11 +124,23 @@ $pdf->MultiCell(40,$l,utf8_decode($suplente['rf_rg']),0,'L',0);
 
 $pdf->Ln(9);
 
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Atesto que os serviços prestados discriminados no documento: link SEI, foram executados a contento nos termos previstos no instrumento contratual (ou documento equivalente) no(s) dia(s): ". $datafim .", dentro do prazo previsto."),0,'L',0);
+$idVigencia = $contratacao['form_vigencia_id'];
+
+$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela'";
+$query = mysqli_query($con,$sqlParcelas);
+while($parcela = mysqli_fetch_array($query))
+{
+    if($parcela['valor'] > 0)
+    {
+        $datapgt = exibirDataBr($parcela['data_pagamento']);
+    }
+}
 
 $pdf->SetX($x);
-$pdf->MultiCell(120,$l,utf8_decode("O prazo contratual é do dia " . $datainicio ." a " . $datafim),0,'L',0);
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(34, $l, utf8_decode("Data de Pagamento:"), 0, 0, 'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->MultiCell(180,$l,utf8_decode($datapgt),0,'L',0);
 
 $pdf->Ln(5);
 
