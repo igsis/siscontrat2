@@ -42,7 +42,7 @@ $link_facc = $http . "rlt_fac_pf.php";
 
 $link_atestado = $http . "rlt_atestado_servico_formacao.php";
 
-$link_pagamento = $http . "rlt_pagamento_form.php";
+$link_pagamento = $http . "rlt_pagamento_formacao.php";
 ?>
 
 <div class="content-wrapper">
