@@ -13,7 +13,6 @@ class PDF extends FPDF{
 }
 
 $idParcela = $_POST['idParcela'];
-
 $idPedido = $_SESSION['idPedido'];
 $idFC = $_SESSION['idFC'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -22,9 +21,7 @@ $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $empenho = recuperaDados('pagamentos', 'pedido_id', $idPedido);
 
-
-
-$data = date('Y-d-m');
+$ano = date('Y',strtotime("now"));
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -186,7 +183,13 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
 $pdf->MultiCell(180,$l,utf8_decode("São Paulo, _______ de ________________________ de ".$ano."."));
 
-//falta rodapé especifico
+$pdf->SetXY($x,262);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(100,$l,utf8_decode($pessoa['nome']),'T',1,'L');
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(100,$l,"RG: ".$pessoa['rg'],0,0,'L');
 
 $pdf->Output();
 ?>
