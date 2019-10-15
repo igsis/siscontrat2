@@ -1,6 +1,7 @@
 <?php
 $con = bancoMysqli();
-$idPedido = $_POST['idPedido'];
+$idEvento = $_SESSION['idEvento'];
+$idPedido = recuperaDados('pedidos', 'origem_id', $idEvento . ' publicado = 1')['id'];
 
 $idAtracao = null;
 $exibir = ' ';

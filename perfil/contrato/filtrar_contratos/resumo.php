@@ -7,7 +7,7 @@ if (isset($_POST['selecionar'])) {
     $idEvento = $pedido['origem_id'];
     $idPf = $_POST['idPf'];
 
-    $sql = "UPDATE pedidos SET pessoa_fisica_id = '$idPf' WHERE id = '$idPedido'";
+    $sql = "UPDATE pedidos SET pessoa_fisica_id = '$idPf', pessoa_tipo_id = 1, pessoa_juridica_id = null WHERE id = '$idPedido'";
 
     if (mysqli_query($con, $sql))
         $mensagem = mensagem("success", "Troca efetuada com sucesso!");
@@ -17,6 +17,8 @@ if (isset($_POST['selecionar'])) {
 } else {
     $idEvento = $_POST['idEvento'];
 }
+
+$_SESSION['idEvento'] = $idEvento;
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $pedido = recuperaDados('pedidos', 'origem_id', $idEvento . " AND origem_tipo_id = 1");
@@ -106,31 +108,32 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                     <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=resumo"
                           role="form">
                         <div class="box-body">
-                            <div class="row">
-                                <?php
-                                if ($nivelUsuario == 1) {
-                                ?>
-                                <div class="col-md-6 from-group">
-                                    <label for="operador">Operador</label>
-                                    <select name="operador" id="operador" class="form-control">
-                                        <?php
-                                        $sqlWhere = "usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id";
-                                        geraOpcao($sqlWhere, $contrato['usuario_contrato_id']);
-                                        ?>
-                                    </select>
-                                </div>
 
-                                <div class="col-md-6 form-group">
-                                    <label for="status">Status Contrato</label>
-                                    <select name="status" id="status" class="form-control">
-                                        <?php
-                                        geraOpcao('pedido_status', $pedido['status_pedido_id']);
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <hr>
                             <?php
+                            if ($nivelUsuario == 1) {
+                                ?>
+                                <div class="row">
+                                    <div class="col-md-6 from-group">
+                                        <label for="operador">Operador</label>
+                                        <select name="operador" id="operador" class="form-control">
+                                            <?php
+                                            $sqlWhere = "usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id";
+                                            geraOpcao($sqlWhere, $contrato['usuario_contrato_id']);
+                                            ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6 form-group">
+                                        <label for="status">Status Contrato</label>
+                                        <select name="status" id="status" class="form-control">
+                                            <?php
+                                            geraOpcao('pedido_status', $pedido['status_pedido_id']);
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr>
+                                <?php
                             }
                             ?>
 
@@ -242,14 +245,14 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                         <tr>
                             <td><?= $proponente['nome'] ?></td>
                             <td>
-                                <form action="#" method="POST">
-                                    <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
+                                <form action="?perfil=contrato&p=filtrar_contratos&sp=edita_pf" method="POST">
+                                    <input type="hidden" name="idPf" id="idPf" value="<?= $idPedido ?>">
                                     <button type="submit" class="btn btn-primary btn-block"><span
                                                 class="glyphicon glyphicon-pencil"></span></button>
                                 </form>
                             </td>
                             <td>
-                                <form action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf"
+                                <form action="?perfil=contrato&p=filtrar_contratos&sp=tipo_pessoa"
                                       method="POST">
                                     <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
                                     <button type="submit" class="btn btn-info btn-block"><span
@@ -293,7 +296,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 </form>
                             </td>
                             <td>
-                                <form action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf"
+                                <form action="?perfil=contrato&p=filtrar_contratos&sp=tipo_pessoa"
                                       method="POST">
                                     <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
                                     <button type="submit" class="btn btn-info btn-block"><span
@@ -330,7 +333,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     ?>
                                     <td><?= $atracao['nome'] ?></td>
                                     <td>
-                                        <form method="POST" action="#" role="form">
+                                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf" role="form">
                                             <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
                                             <input type='hidden' name='lider' value='<?= $idPedido ?>'>
                                             <button type="submit" name='carregar' class="btn btn-primary"><i

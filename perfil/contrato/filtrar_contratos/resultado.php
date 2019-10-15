@@ -1,5 +1,6 @@
 <?php
 $con = bancoMysqli();
+unset($_SESSION['idEvento']);
 
 if (isset($_POST['busca'])) {
     $protocolo = $_POST['protocolo'] ?? NULL;
