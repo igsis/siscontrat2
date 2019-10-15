@@ -19,7 +19,6 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
-$empenho = recuperaDados('pagamentos', 'pedido_id', $idPedido);
 
 $ano = date('Y',strtotime("now"));
 
