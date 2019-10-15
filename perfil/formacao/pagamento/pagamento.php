@@ -43,9 +43,12 @@ $http = $server . "/pdf/";
 
 $link_facc = $http . "rlt_fac_pf.php";
 
+$link_pagamento = $http . "rlt_pagamento_formacao.php";
+
+$link_recibo = $http . "rlt_recibo_formacao.php";
+
 $link_atestado = $http . "rlt_atestado_servico_formacao.php";
 
-$link_pagamento = $http . "rlt_pagamento_formacao.php";
 ?>
 
 <div class="content-wrapper">
@@ -143,7 +146,7 @@ $link_pagamento = $http . "rlt_pagamento_formacao.php";
                                     </th>
 
                                     <th style="text-align:center">
-                                        <form action="#" method="post" target="_blank">
+                                        <form action="<?=$link_recibo?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
                                             <button type="submit" class="btn btn-primary">Recibo</button>
                                         </form>
