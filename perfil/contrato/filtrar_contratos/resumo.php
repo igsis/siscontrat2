@@ -148,11 +148,18 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                         <input type="text" name="nome_atracao[]" id="nome_atracao"
                                                value="<?= $atracao['nome_atracao'] ?>"
                                                class="form-control" required>
+
+                                        <br>
+
+                                        <label for="valor">Valor: </label>
+                                        <input type="text" disabled
+                                               value="<?= dinheiroParaBr($atracao['valor_individual']) ?>"
+                                               class="form-control">
                                     </div>
 
                                     <div class="form-group col-md-6">
                                         <label for="integrantes[]">Integrantes* </label>
-                                        <textarea name="integrantes[]" id="integrantes" required rows="8"
+                                        <textarea name="integrantes[]" id="integrantes" required rows="5"
                                                   class="form-control"><?= $atracao['integrantes'] ?></textarea>
                                     </div>
                                 </div>
@@ -333,7 +340,8 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     ?>
                                     <td><?= $atracao['nome'] ?></td>
                                     <td>
-                                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf" role="form">
+                                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf"
+                                              role="form">
                                             <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
                                             <input type='hidden' name='lider' value='<?= $idPedido ?>'>
                                             <button type="submit" name='carregar' class="btn btn-primary"><i
