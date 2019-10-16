@@ -1,9 +1,3 @@
-<?php
-$con = bancoMysqli();
-
-
-?>
-
 <div class="content-wrapper">
     <section class="content">
         <h2 class="page-header">Trocar Proponente</h2>

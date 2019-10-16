@@ -14,6 +14,19 @@ if (isset($_POST['selecionar'])) {
     else
         $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
 
+} else if (isset($_POST['selecionarPj'])) {
+    $idPj = $_POST['idPj'];
+    $idPedido = $_POST['idPedido'];
+    $pedido = recuperaDados('pedidos', 'id', $idPedido);
+    $idEvento = $pedido['origem_id'];
+
+    $sql = "UPDATE pedidos SET pessoa_juridica_id = '$idPj', pessoa_juridica_id = 2, pessoa_fisica_id = null WHERE id ='$idPedido'";
+
+    if (mysqli_query($con, $sql))
+        $mensagem = mensagem("success", "Troca efetuada com sucesso!");
+    else
+        $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
+
 } else {
     $idEvento = $_POST['idEvento'];
 }
