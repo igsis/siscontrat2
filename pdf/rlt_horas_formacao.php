@@ -33,6 +33,8 @@ class PDF extends FPDF
             $this->Ln();
             $this->SetX(20);
         }
+
+        //last line
         $this->SetX(20);
         $this->Cell(120,6,"TOTAL HORAS",1,0,'L');
         $this->Cell(35,6," ",1,0,'L');

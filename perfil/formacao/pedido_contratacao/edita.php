@@ -32,9 +32,6 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
             mysqli_query($con, $sqlInsert);
             gravarLog($sqlInsert);
 
-            $sqlUpdateNumProcesso = "UPDATE formacao_contratacoes SET num_processo_pagto = '$numeroProcesso' WHERE id = '$idPc'";
-            $queryUpdate = mysqli_query($con, $sqlUpdateNumProcesso);
-
             $sql_delete = "DELETE FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
             mysqli_query($con, $sql_delete);
 
