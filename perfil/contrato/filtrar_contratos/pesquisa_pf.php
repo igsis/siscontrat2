@@ -66,7 +66,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=contrato&p=filtrar_contratos&sp=pf_cadastro'>
+                        <form method='post' action='?perfil=contrato&p=filtrar_contratos&sp=cadastra_pf'>
                             <input type='hidden' name='idAtracao' value='$idAtracao'>
                             <input type='hidden' name='idPedido' value='$idPedido'>
                             <input type='hidden' name='documentacao' value='$procurar'>
@@ -111,7 +111,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=contrato&p=filtrar_contratos&sp=pf_cadastro'>
+                        <form method='post' action='?perfil=contrato&p=filtrar_contratos&sp=cadastra_pf'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             <button class=\"btn btn-primary\" name='adicionar' type='submit'>
