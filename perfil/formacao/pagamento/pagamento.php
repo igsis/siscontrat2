@@ -49,6 +49,7 @@ $link_recibo = $http . "rlt_recibo_formacao.php";
 
 $link_atestado = $http . "rlt_atestado_servico_formacao.php";
 
+$link_horas = $http . "rlt_horas_formacao.php";
 ?>
 
 <div class="content-wrapper">
@@ -139,14 +140,14 @@ $link_atestado = $http . "rlt_atestado_servico_formacao.php";
                                     <td><?= exibirDataBr($parcela['data_pagamento']) ?></td>
 
                                     <th style="text-align:center">
-                                        <form action="<?=$link_pagamento?>" method="post" target="_blank">
+                                        <form action="<?= $link_pagamento ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
                                             <button type="submit" class="btn btn-primary">Pagamento</button>
                                         </form>
                                     </th>
 
                                     <th style="text-align:center">
-                                        <form action="<?=$link_recibo?>" method="post" target="_blank">
+                                        <form action="<?= $link_recibo ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
                                             <button type="submit" class="btn btn-primary">Recibo</button>
                                         </form>
@@ -160,7 +161,7 @@ $link_atestado = $http . "rlt_atestado_servico_formacao.php";
                                     </th>
 
                                     <th style="text-align:center">
-                                        <form action="#" method="post" target="_blank">
+                                        <form action="<?= $link_horas ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
                                             <button type="submit" class="btn btn-primary">Relatório Horas</button>
                                         </form>

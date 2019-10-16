@@ -115,7 +115,6 @@ $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(23,$l,"Linguagem:", 0,0,'L');
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(20,$l, utf8_decode($linguagem['linguagem']), 0,0,'L');
-$pdf->SetFont('Arial', 'B', 11);
 
 $pdf->Output();
 ?>
