@@ -13,19 +13,6 @@ if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
 }
 
-if (isset($_POST['editProponente'])) {
-    $idPedido = $_SESSION['idPedido'];
-    $voltar = "<form action='?perfil=contrato&p=filtrar_contratos&sp=resumo' method='post'>
-                    <input type='hidden' name='idProponente' value='$idPf'>
-                    <input type='hidden' name='tipoPessoa' value='$tipoPessoa'>
-                        <button type='submit' name='idPedido' id='idPedido' value='$idPedido' class='btn btn-default'>Voltar</button>
-                    </form>";
-} else {
-    $voltar = "<form action='?perfil=evento&p=pf_pesquisa' method='post'>
-                        <button type='submit' class='btn btn-default'>Voltar</button>
-                    </form>";
-}
-
 
 if (isset($_POST['cadastraLider'])) {
     $idPedido = $_POST['idPedido'];
@@ -694,9 +681,11 @@ $atracao = mysqli_query($con, $sql);
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Salvar</button>
-
+                                <a href="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos">
+                                    <button type='button' class='btn btn-default'>Voltar</button>
+                                <a>
                         </form>
-                        <?= $voltar ?>
+
                     </div>
                 </div>
                 <!-- /.box-body -->

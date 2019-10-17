@@ -91,13 +91,18 @@ if (isset($_POST['salvar'])) {
     }
 }
 
+
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $pedido = recuperaDados('pedidos', 'origem_id', $idEvento . " AND origem_tipo_id = 1");
 
-if ($pedido['pessoa_tipo_id'] == 1)
+if ($pedido['pessoa_tipo_id'] == 1) {
     $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
-else
+    $idPf = $pedido['pessoa_fisica_id'];
+    } else{
     $proponente = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
+    $idPj = $pedido['pessoa_juridica_id'];
+    }
+
 
 $contrato = recuperaDados('contratos', 'pedido_id', $pedido['id']);
 $sqlAtracao = "SELECT * FROM atracoes where evento_id = '$idEvento' AND publicado = 1";
@@ -266,7 +271,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <td><?= $proponente['nome'] ?></td>
                             <td>
                                 <form action="?perfil=contrato&p=filtrar_contratos&sp=edita_pf" method="POST">
-                                    <input type="hidden" name="idPf" id="idPf" value="<?= $idPedido ?>">
+                                    <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
                                     <button type="submit" class="btn btn-primary btn-block"><span
                                                 class="glyphicon glyphicon-pencil"></span></button>
                                 </form>
@@ -309,9 +314,10 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                         <tr>
                             <td><?= $proponente['razao_social'] ?></td>
                             <td>
-                                <form action="#" method="POST">
+                                <form action="?perfil=contrato&p=filtrar_contratos&sp=edita_pj" method="POST">
                                     <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
-                                    <button type="submit" class="btn btn-primary btn-block"><span
+                                    <input type="hidden" name="idPj" id="idPj" value="<?= $idPj ?>">
+                                    <button type="submit" name="load" id="load" class="btn btn-primary btn-block"><span
                                                 class="glyphicon glyphicon-pencil"></span></button>
                                 </form>
                             </td>
