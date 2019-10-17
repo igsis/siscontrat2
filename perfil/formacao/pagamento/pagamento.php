@@ -130,7 +130,7 @@ $link_contabilidade = $http . "rlt_contabilidade_formacao.php";
                         if ($num_arrow == 0) {
                             ?>
                             <tr>
-                                <th colspan="5"><p align="center">Não foram encontrados registros</p></th>
+                                <th colspan="8"><p align="center">Não foram encontrados registros</p></th>
                             </tr>
                             <?php
                         } else {
