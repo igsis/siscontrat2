@@ -86,6 +86,7 @@ $num_arrow = mysqli_num_rows($query);
                                                   method="POST">
                                                 <input type="hidden" name="idPedido" id="idPedido"
                                                        value="<?= $formacao['pedido_id'] ?>">
+                                                <input type="hidden" name="idFC" id="idFC" value="<?=$formacao['id']?>">
                                                 <button type="submit" name="carregar" id="carregar"
                                                         class="btn btn-primary btn-block">
                                                     <b>N.E</b>
