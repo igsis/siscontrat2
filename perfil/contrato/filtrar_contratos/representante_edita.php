@@ -169,7 +169,7 @@ if (isset($_POST['apagar'])) {
 }
 
 $representantes = recuperaDados("representante_legais", "id", $idRepresentante);
-include "includes/menu_interno.php";
+
 ?>
 <script>
     $(document).ready(function () {

@@ -220,7 +220,7 @@ if (isset($_POST['apagar'])) {
     }
 }
 
-if(isset($_POST['load'])){
+if (isset($_POST['load'])) {
     $idPj = $_POST['idPj'];
 }
 
@@ -418,7 +418,8 @@ if (isset($pj['representante_legal2_id'])) {
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control" min="1" placeholder="Ex.: 10"
+                                    <input type="number" name="numero" class="form-control" min="1"
+                                           placeholder="Ex.: 10"
                                            required value="<?= $end['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
@@ -539,7 +540,8 @@ if (isset($pj['representante_legal2_id'])) {
             <div class="box-body">
                 <div class="row">
                     <div class="form-group col-md-3">
-                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=demais_anexos_pj" role="form">
+                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=demais_anexos_pj"
+                              role="form">
                             <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                     class="btn btn-info btn-block">Demais Anexos
                             </button>
@@ -550,7 +552,8 @@ if (isset($pj['representante_legal2_id'])) {
                     if ($pj['representante_legal1_id'] == null && $pj['representante_legal2_id'] == null) {
                         ?>
                         <div class="form-group col-md-3">
-                            <form method="POST" action="?perfil=contrato&p=representante_busca" role="form">
+                            <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=representante_busca"
+                                  role="form">
                                 <input type="hidden" name="tipoRepresentante" value="1">
                                 <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                         class="btn btn-info btn-block">Representante 01
@@ -558,7 +561,8 @@ if (isset($pj['representante_legal2_id'])) {
                             </form>
                         </div>
                         <div class="form-group col-md-3">
-                            <form method="POST" action="?perfil=contrato&p=representante_busca" role="form">
+                            <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=representante_busca"
+                                  role="form">
                                 <input type="hidden" name="tipoRepresentante" value="2">
                                 <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                         class="btn btn-info btn-block">Representante 02
@@ -597,7 +601,8 @@ if (isset($pj['representante_legal2_id'])) {
                             </button>
                         </div>
                         <div class="form-group col-md-3">
-                            <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                            <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=representante_busca"
+                                  role="form">
                                 <input type="hidden" name="tipoRepresentante" value="2">
                                 <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                         class="btn btn-info btn-block">
@@ -618,13 +623,13 @@ if (isset($pj['representante_legal2_id'])) {
                         if (($pedidos['pessoa_tipo_id'] == 2) && ($pedidos['pessoa_juridica_id'] == $idPj)) {
 
                             ?>
-                            <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                            <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=resumo" role="form">
                                 <input type="hidden" name="pessoa_tipo_id" value="2">
                                 <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
-                                <input type="hidden" name="idProponente" value="<?= $pj['id'] ?>">
+                                <input type="hidden" name="idPj" value="<?= $pj['id'] ?>">
                                 <input type="hidden" name="tipoPessoa" value="2">
-                                <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id']?>">
-                                <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
+                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                <button type="submit" name="selecionarPj" class="btn btn-info btn-block">Ir ao pedido de
                                     contratação
                                 </button>
                             </form>
@@ -638,7 +643,6 @@ if (isset($pj['representante_legal2_id'])) {
                                 <input type="hidden" name="idPj" value="<?= $pj['id'] ?>">
                                 <input type="hidden" name="tipoPessoa" value="2">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
                                 <button type="submit" name="selecionarPj" class="btn btn-info btn-block">Ir ao pedido de
                                     contratação
                                 </button>
@@ -671,7 +675,8 @@ modalUploadArquivoUnico("modal-facc", "?perfil=contrato&p=filtrar_contratos&sp=e
             </div>
             <div class="modal-body">
                 <p align='center'><strong>Arquivo somente em PDF e até 05 MB.</strong></p>
-                <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=edita_pj" enctype="multipart/form-data">
+                <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=edita_pj"
+                      enctype="multipart/form-data">
                     <br/>
                     <div align='center'>
                         <?php
@@ -722,7 +727,8 @@ modalUploadArquivoUnico("modal-facc", "?perfil=contrato&p=filtrar_contratos&sp=e
                 </div>
                 <div class="col-md-12">
                     <div class="form-group col-md-6"><label><br></label>
-                        <form method="POST" action="?perfil=contrato&p=representante_edita" role="form">
+                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=representante_edita"
+                              role="form">
                             <input type='hidden' name='idPj' id='idPj' value='<?= $idPj ?>'>
                             <input type='hidden' name='idRepresentante' id='idRepresentante' value=''>
                             <input type='hidden' name='tipoRepresentante' id='tipoRepresentante' value=''>
@@ -732,7 +738,8 @@ modalUploadArquivoUnico("modal-facc", "?perfil=contrato&p=filtrar_contratos&sp=e
                         </form>
                     </div>
                     <div class="form-group col-md-6"><label><br></label>
-                        <form method="POST" action="?perfil=contrato&p=representante_busca" role="form">
+                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=representante_busca"
+                              role="form">
                             <input type='hidden' name='idPj' id='idPj' value='<?= $idPj ?>'>
                             <input type='hidden' name='tipoRepresentanteTroca' id='tipoRepresentanteTroca' value=''>
                             <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de

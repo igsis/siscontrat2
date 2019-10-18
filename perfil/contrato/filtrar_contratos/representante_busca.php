@@ -1,6 +1,5 @@
 <?php
 
-include "includes/menu_interno.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
 
@@ -67,7 +66,7 @@ if (isset($_POST['pesquisa'])) {
                     </form>";
 
     } else {
-        $mensagem = "<form action='?perfil=contratos&p=filtrar_contratos&sp=representante_cadastro' method='post'>
+        $mensagem = "<form action='?perfil=contrato&p=filtrar_contratos&sp=representante_cadastra' method='post'>
                         <tr>
                             <td>Representante não cadastrado</td>
                             <td>
@@ -103,7 +102,7 @@ if (isset($_POST['pesquisa'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=evento&p=representante_busca" method="post">
+                        <form action="?perfil=contrato&p=filtrar_contratos&sp=representante_busca" method="post">
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
@@ -140,7 +139,7 @@ if (isset($_POST['pesquisa'])) {
                             </table>
                         </div>
                         <div class="box-footer">
-                            <form action="?perfil=evento&p=pj_edita" method="post">
+                            <form action="?perfil=contrato&p=filtrar_contratos&sp=edita_pj" method="post">
                                 <button type="submit" id="idPj" name="idPj" value="<?= $idPj ?>"
                                         class="btn btn-default">Voltar
                                 </button>

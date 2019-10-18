@@ -20,6 +20,7 @@ if (isset($_POST['selecionar'])) {
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
     $idEvento = $pedido['origem_id'];
 
+
     $sql = "UPDATE pedidos SET pessoa_juridica_id = '$idPj', pessoa_tipo_id = 2, pessoa_fisica_id = null WHERE id ='$idPedido'";
 
     if (mysqli_query($con, $sql))
