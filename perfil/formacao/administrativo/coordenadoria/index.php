@@ -137,7 +137,7 @@ $num_arrow = mysqli_num_rows($query);
     $('#exclusao').on('show.bs.modal', function (e) {
         let id = $(e.relatedTarget).attr('data-id');
 
-        $(this).find('#coordenadoria').attr('value', `${id}`);
+        $(this).find('#idCoordenadoria').attr('value', `${id}`);
     })
 </script>
 
