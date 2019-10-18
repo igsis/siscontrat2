@@ -54,7 +54,6 @@ if (isset($_POST['busca'])) {
     AND p.origem_tipo_id = 1 
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso";
-
     $query = mysqli_query($con, $sql);
 }
 
@@ -97,7 +96,7 @@ if (isset($_POST['busca'])) {
                             while ($evento = mysqli_fetch_array($query)) {
                                 if ($evento['pessoa_tipo_id'] == 1)
                                     $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome_artistico'];
-                                else if ($evento['pessoa_fisica_id'] == 2)
+                                else if ($evento['pessoa_tipo_id'] == 2)
                                     $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
                                 $idEvento = $evento['id'];
                                 $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento'";
@@ -108,7 +107,9 @@ if (isset($_POST['busca'])) {
                                 }
                                 $local = substr($local, 1);
                                 ?>
+                                <tr>
                                 <?php
+
                                 if ($evento['protocolo'] != NULL) {
                                     ?>
                                     <td>
@@ -130,6 +131,7 @@ if (isset($_POST['busca'])) {
                                 <td><?= $local ?></td>
                                 <td> <?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?> </td>
                                 <td><?= $evento['status'] ?></td>
+                                </tr>
                                 <?php
                             }
                             ?>
