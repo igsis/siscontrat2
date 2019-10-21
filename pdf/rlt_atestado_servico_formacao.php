@@ -43,7 +43,7 @@ $pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 12);
-$pdf->Cell(170,5,'ATESTADO DE CONFIRMAÇÃO DE SERVIÇOS',0,1,'C');
+$pdf->Cell(170,5,utf8_decode("ATESTADO DE CONFIRMAÇÃO DE SERVIÇOS"),0,1,'C');
 
 $pdf->Ln(5);
 

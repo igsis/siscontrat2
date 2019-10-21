@@ -50,6 +50,7 @@ if (isset($_POST['busca'])) {
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN evento_status es on e.evento_status_id = es.id
     WHERE e.publicado = 1 
+    AND e.evento_status_id != 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1 
     $sqlProjeto $sqlUsuario $sqlStatus 
