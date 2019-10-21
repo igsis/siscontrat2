@@ -4,20 +4,22 @@ $con = bancoMysqli();
 if (isset($_POST['pesquisa'])) {
 
     $ano = $_POST['ano'];
-
-    $sql = "SELECT fc.id,
-	               pf.nome,
+    $_SESSION['ano'] = $ano;
+    $sql = "SELECT pc.id,
+		           pc.origem_id,
+                   pf.nome, 
 	               p.programa,
                    c.cargo,
                    l.linguagem,
                    st.status
-            FROM formacao_contratacoes AS fc
+            FROM pedidos AS pc
+            INNER JOIN formacao_contratacoes fc ON fc.id = pc.origem_id
             INNER JOIN pessoa_fisicas AS pf ON pf.id = fc.pessoa_fisica_id
             INNER JOIN programas AS p ON p.id = fc.programa_id
 	        INNER JOIN formacao_cargos AS c ON c.id = fc.form_cargo_id
             INNER JOIN linguagens AS l ON l.id = fc.linguagem_id
             INNER JOIN formacao_status AS st ON st.id = fc.form_status_id 
-            WHERE fc.ano = '$ano' AND fc.publicado = 1";
+            WHERE fc.ano = '$ano' AND pc.publicado = 1";
 
     $query = mysqli_query($con, $sql);
 }
@@ -44,15 +46,14 @@ if (isset($_POST['pesquisa'])) {
                     </thead>
                     <tbody>
                     <?php
-                    while ($fc = mysqli_fetch_array($query)) {
-                        $_SESSION['idFCExport'] = $fc['id'];
+                    while ($pc = mysqli_fetch_array($query)) {
                         ?>
                         <tr>
-                            <td><?= $fc['nome'] ?></td>
-                            <td><?= $fc['programa'] ?></td>
-                            <td><?= $fc['cargo'] ?></td>
-                            <td><?= $fc['linguagem'] ?></td>
-                            <td><?= $fc['status'] ?></td>
+                            <td><?= $pc['nome'] ?></td>
+                            <td><?= $pc['programa'] ?></td>
+                            <td><?= $pc['cargo'] ?></td>
+                            <td><?= $pc['linguagem'] ?></td>
+                            <td><?= $pc['status'] ?></td>
                         </tr>
                         <?php
                     }

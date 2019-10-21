@@ -10,29 +10,30 @@ require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 session_start();
 
-$idPedido = $_SESSION['idFCExport'];
+$ano = $_SESSION['ano'];
 
-$sql = "SELECT    fc.id,
+$sql = "SELECT    pc.id,
+                  pc.origem_id,
                   fc.pessoa_fisica_id AS 'idp', 
-	               pf.nome AS 'nome',
-	               p.programa AS 'programa',
-                   c.cargo AS 'funcao',
-                   l.linguagem AS 'linguagem',
-                   pf.email AS 'email',
-                   st.status AS 'status'
-            FROM formacao_contratacoes AS fc
+	              pf.nome AS 'nome',
+	              p.programa AS 'programa',
+                  c.cargo AS 'funcao',
+                  l.linguagem AS 'linguagem',
+                  pf.email AS 'email',
+                  st.status AS 'status'
+            FROM pedidos AS pc
+            INNER JOIN formacao_contratacoes fc ON fc.id = pc.origem_id
             INNER JOIN pessoa_fisicas AS pf ON pf.id = fc.pessoa_fisica_id
             INNER JOIN programas AS p ON p.id = fc.programa_id
 	        INNER JOIN formacao_cargos AS c ON c.id = fc.form_cargo_id
             INNER JOIN linguagens AS l ON l.id = fc.linguagem_id
             INNER JOIN formacao_status AS st ON st.id = fc.form_status_id 
-            WHERE fc.id = '$idPedido' AND fc.publicado = 1";
+            WHERE fc.ano = '$ano' AND pc.publicado = 1";
 
 $query = mysqli_query($con, $sql);
 
 // Instanciamos a classe
 $objPHPExcel = new PHPExcel();
-
 
 // Podemos renomear o nome das planilha atual, lembrando que um único arquivo pode ter várias planilhas
 $objPHPExcel->getProperties()->setCreator("Sistema SisContrat");
@@ -43,48 +44,19 @@ $objPHPExcel->getProperties()->setDescription("Gerado automaticamente a partir d
 $objPHPExcel->getProperties()->setKeywords("office 2007 openxml php");
 $objPHPExcel->getProperties()->setCategory("Inscritos");
 
-//Eventos Comum
-$proxLinha = 1;
-
 $objPHPExcel->setActiveSheetIndex(0)
-    ->setCellValue("A" . $proxLinha)
-    ->setCellValue("B" . $proxLinha)
-    ->setCellValue("C" . $proxLinha)
-    ->setCellValue("D" . $proxLinha)
-    ->setCellValue("E" . $proxLinha, "Pedido de Contratação")
-    ->setCellValue("F" . $proxLinha)
-    ->setCellValue("G" . $proxLinha)
-    ->setCellValue("H" . $proxLinha)
-    ->setCellValue("I" . $proxLinha);
+    ->setCellValue("A1")
+    ->setCellValue("B1")
+    ->setCellValue("C1")
+    ->setCellValue("D1")
+    ->setCellValue("E1", "PEDIDO DE CONTRATACAO")
+    ->setCellValue("F1")
+    ->setCellValue("G1")
+    ->setCellValue("H1")
+    ->setCellValue("I1");
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $proxLinha . ':I' . $proxLinha)->getFont()->setBold(true);
-$objPHPExcel->getActiveSheet()->getStyle('A' . $proxLinha . ':I' . $proxLinha)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-$objPHPExcel->getActiveSheet()->getRowDimension($proxLinha)->setRowHeight(40);
-$objPHPExcel->getActiveSheet()->getStyle('A' . $proxLinha . ':I' . $proxLinha)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
-
-$proxCabecalho = $proxLinha + 1;
-
-// Criamos as colunas
-$objPHPExcel->setActiveSheetIndex(0)
-    ->setCellValue('A' . $proxCabecalho, 'Nome Completo')
-    ->setCellValue("B" . $proxCabecalho, "Programa")
-    ->setCellValue("C" . $proxCabecalho, "Função")
-    ->setCellValue("D" . $proxCabecalho, "Linguagem")
-    ->setCellValue("E" . $proxCabecalho, "E-mail")
-    ->setCellValue("F" . $proxCabecalho, "Telefone 1")
-    ->setCellValue("G" . $proxCabecalho, "Telefone 2")
-    ->setCellValue("H" . $proxCabecalho, "Telefone 3")
-    ->setCellValue("I" . $proxCabecalho, "Estado do Pedido");
-
-// Definimos o estilo da fonte
-$objPHPExcel->getActiveSheet()->getStyle('A' . $proxCabecalho . ':I' . $proxCabecalho)->getFont()->setBold(true);
-$objPHPExcel->getActiveSheet()->getStyle('A' . $proxCabecalho . ':I' . $proxCabecalho)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-$objPHPExcel->getActiveSheet()->getRowDimension($proxCabecalho)->setRowHeight(40);
-$objPHPExcel->getActiveSheet()->getStyle('A' . $proxCabecalho . ':I' . $proxCabecalho)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
-//Colorir a primeira linha
-$objPHPExcel->getActiveSheet()->getStyle('A' . $proxLinha . ':I' . $proxLinha)->applyFromArray
+//Colorir o header
+$objPHPExcel->getActiveSheet()->getStyle("A1:I1")->applyFromArray
 (
     array
     (
@@ -97,8 +69,24 @@ $objPHPExcel->getActiveSheet()->getStyle('A' . $proxLinha . ':I' . $proxLinha)->
 );
 
 
+// Criamos as colunas
+
+$objPHPExcel->setActiveSheetIndex(0)
+    ->setCellValue("A2", "Nome Completo")
+    ->setCellValue("B2", "Programa")
+    ->setCellValue("C2", "Função")
+    ->setCellValue("D2", "Linguagem")
+    ->setCellValue("E2", "E-mail")
+    ->setCellValue("F2", "Telefone 1")
+    ->setCellValue("G2", "Telefone 2")
+    ->setCellValue("H2", "Telefone 3")
+    ->setCellValue("I2", "Estado do Pedido");
+
+// Definimos o estilo da fonte
+$objPHPExcel->getActiveSheet()->getStyle('A2:I2')->getFont()->setBold(true);
+
 //Colorir a primeira linha
-$objPHPExcel->getActiveSheet()->getStyle('A' . $proxCabecalho . ':I' . $proxCabecalho)->applyFromArray
+$objPHPExcel->getActiveSheet()->getStyle('A2:I2')->applyFromArray
 (
     array
     (
@@ -109,8 +97,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A' . $proxCabecalho . ':I' . $proxCabe
         ),
     )
 );
-$count = 0;
-$cont = $proxCabecalho + 1;
+
+
+$cont = 3;
+
 while ($linha = mysqli_fetch_array($query)) {
 
 
@@ -139,14 +129,7 @@ while ($linha = mysqli_fetch_array($query)) {
         ->setCellValue($h, $tel[2] [0])
         ->setCellValue($i, $linha['status']);
 
-    $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $i)->getAlignment()->setWrapText(true);
-    $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $i)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-    $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-
-    $objPHPExcel->getActiveSheet()->getRowDimension($cont)->setRowHeight(20);
-
-    $count++;
-
+    $cont++;
 }
 
 
@@ -165,7 +148,7 @@ $objPHPExcel->setActiveSheetIndex(0);
 ob_end_clean();
 ob_start();
 
-$nome_arquivo = date("YmdHis") . "_pedidos_formacao.xls";
+$nome_arquivo = "pedidos_formacao_" . date("Y") . ".xls";
 
 
 // Cabeçalho do arquivo para ele baixar(Excel2007)

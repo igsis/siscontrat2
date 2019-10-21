@@ -10,10 +10,9 @@
                     <div class="row">
 
                         <div class="col-md-12">
-                            <label for="ano">Ano: </label>
+                            <label for="ano">Ano: *</label>
                             <input type="number" required min="2018" class="form-control" name="ano" id="ano">
                         </div>
-
 
                     </div>
                     <br>

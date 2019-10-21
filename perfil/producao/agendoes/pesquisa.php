@@ -51,7 +51,7 @@
                     <div class="row">
 
                         <div class="col-md-12">
-                            <label for="usuario">Inserido pelo usuario: </label>
+                            <label for="usuario">Inserido pelo usuario: *</label>
                             <input type="text" required class="form-control" name="usuario" id="usuario">
                         </div>
 
@@ -61,7 +61,7 @@
                     <div class="row">
 
                         <div class="col-md-6">
-                            <label for="projeto">Projeto Especial: </label>
+                            <label for="projeto">Projeto Especial: *</label>
                             <select class="form-control" required name="projeto" id="projeto">
                                 <option value="">Selecione um projeto...</option>
                                 <?php
@@ -71,7 +71,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="local">Local: </label>
+                            <label for="local">Local: *</label>
                             <select class="form-control" required name="local" id="local">
                                 <option value="">Selecione um local...</option>
                                 <?php
@@ -84,12 +84,12 @@
                     <div class="row">
 
                         <div class="col-md-6">
-                            <label for="data_inicio">Data de Início: </label>
+                            <label for="data_inicio">Data de Início: *</label>
                             <input type="date" required class="form-control" name="data_inicio" onblur="validate()" id="datepicker10">
                         </div>
 
                         <div class="col-md-6">
-                            <label for="data_fim">Data de Encerramento: (apenas se for temporada)</label>
+                            <label for="data_fim">Data de Encerramento: (apenas se for temporada) </label>
                             <input type="date" class="form-control" name="data_fim" onblur="validate()" id="datepicker11">
                         </div>
                     </div>
