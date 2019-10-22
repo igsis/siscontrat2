@@ -1,10 +1,11 @@
 <?php
 $con = bancoMysqli();
 $idPedido = $_POST['idPedido'];
-$idFC = $_POST['idFC'];
+$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$idFC = $pedido['origem_id'];
 $_SESSION['idFC'] = $idFC;
 $_SESSION['idPedido'] = $idPedido;
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+
 
 if (isset($_POST['cadastra'])) {
     $numEmpenho = $_POST['numEmpenho'];
