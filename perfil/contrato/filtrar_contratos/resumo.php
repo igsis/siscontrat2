@@ -28,6 +28,34 @@ if (isset($_POST['selecionar'])) {
     else
         $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
 
+} else if(isset($_POST['cadastraLider'])){
+    $idPf = $_POST['idPf'];
+    $idAtracao = $_SESSION['idAtracao'];
+    $idPedido = $_SESSION['idPedido'];
+    $pedido = recuperaDados('pedidos', 'id', $idPedido);
+    $idEvento = $pedido['origem_id'];
+    unset($_SESSION['idAtracao']);
+    unset($_SESSION['idPedido']);
+
+    $sql = "SELECT * FROM lideres WHERE atracao_id = '$idAtracao' AND pedido_id = '$idPedido'";
+    $query = mysqli_query($con, $sql);
+
+    $num = mysqli_num_rows($query);
+
+    if($num > 0)
+        $sql = "UPDATE lideres SET pessoa_fisica_id = '$idPf' WHERE atracao_id = '$idAtracao' AND pedido_id = '$idPedido'"; #update
+    else
+        $sql = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido', '$idAtracao', '$idPf')"; #insert
+
+    if(mysqli_query($con, $sql)){
+        #foi
+        $mensagem = mensagem("success", "Troca realizada com sucesso!");
+
+        gravarLog($sql);
+    }else{
+        $mensagem = mensagem("danger", "Erro ao efetuar a troca!");
+    }
+
 } else {
     $idEvento = $_POST['idEvento'];
 }
@@ -373,7 +401,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     ?>
                                     <td></td>
                                     <td>
-                                        <form method="POST" action="#" role="form">
+                                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf" role="form">
                                             <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
                                             <input type='hidden' name='lider' value='<?= $idPedido ?>'>
                                             <button type="submit" name='pesquisar' class="btn btn-primary
