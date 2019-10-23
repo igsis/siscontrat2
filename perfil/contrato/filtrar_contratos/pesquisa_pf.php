@@ -52,6 +52,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                      <form action='?perfil=contrato&p=filtrar_contratos&sp=resumo' method='post'>
                                         <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
                                         <input type='hidden' name='idPedido' value='$idPedido'>
+                                        <input type='hidden' name='liderOn' value='0'>
                                         $botaoSelecionar                                        
                                      </form>
                                </td>";

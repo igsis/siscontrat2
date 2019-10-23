@@ -4,16 +4,18 @@ $con = bancoMysqli();
 if (isset($_POST['selecionar'])) {
     $idPedido = $_POST['idPedido'];
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
+    $idPedido = $_POST['idPedido'];
+    $pedido = recuperaDados('pedidos', 'id', $idPedido);
     $idEvento = $pedido['origem_id'];
     $idPf = $_POST['idPf'];
+    if ($_POST['liderOn'] != 1) {
+        $sql = "UPDATE pedidos SET pessoa_fisica_id = '$idPf', pessoa_tipo_id = 1, pessoa_juridica_id = null WHERE id = '$idPedido'";
 
-    $sql = "UPDATE pedidos SET pessoa_fisica_id = '$idPf', pessoa_tipo_id = 1, pessoa_juridica_id = null WHERE id = '$idPedido'";
-
-    if (mysqli_query($con, $sql))
-        $mensagem = mensagem("success", "Troca efetuada com sucesso!");
-    else
-        $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
-
+        if (mysqli_query($con, $sql))
+            $mensagem = mensagem("success", "Troca efetuada com sucesso!");
+        else
+            $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
+    }
 } else if (isset($_POST['selecionarPj'])) {
     $idPj = $_POST['idPj'];
     $idPedido = $_POST['idPedido'];
@@ -28,7 +30,7 @@ if (isset($_POST['selecionar'])) {
     else
         $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
 
-} else if(isset($_POST['cadastraLider'])){
+} else if (isset($_POST['cadastraLider'])) {
     $idPf = $_POST['idPf'];
     $idAtracao = $_SESSION['idAtracao'];
     $idPedido = $_SESSION['idPedido'];
@@ -42,17 +44,17 @@ if (isset($_POST['selecionar'])) {
 
     $num = mysqli_num_rows($query);
 
-    if($num > 0)
+    if ($num > 0)
         $sql = "UPDATE lideres SET pessoa_fisica_id = '$idPf' WHERE atracao_id = '$idAtracao' AND pedido_id = '$idPedido'"; #update
     else
         $sql = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido', '$idAtracao', '$idPf')"; #insert
 
-    if(mysqli_query($con, $sql)){
+    if (mysqli_query($con, $sql)) {
         #foi
         $mensagem = mensagem("success", "Troca realizada com sucesso!");
 
         gravarLog($sql);
-    }else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao efetuar a troca!");
     }
 
@@ -127,10 +129,10 @@ $pedido = recuperaDados('pedidos', 'origem_id', $idEvento . " AND origem_tipo_id
 if ($pedido['pessoa_tipo_id'] == 1) {
     $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
     $idPf = $pedido['pessoa_fisica_id'];
-    } else{
+} else {
     $proponente = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
     $idPj = $pedido['pessoa_juridica_id'];
-    }
+}
 
 
 $contrato = recuperaDados('contratos', 'pedido_id', $pedido['id']);
@@ -388,7 +390,8 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     ?>
                                     <td><?= $atracao['nome'] ?></td>
                                     <td>
-                                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_lider"
+                                        <form method="POST"
+                                              action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_lider"
                                               role="form">
                                             <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
                                             <input type='hidden' name='lider' value='<?= $idPedido ?>'>
@@ -401,7 +404,9 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     ?>
                                     <td></td>
                                     <td>
-                                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_lider" role="form">
+                                        <form method="POST"
+                                              action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_lider"
+                                              role="form">
                                             <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
                                             <input type='hidden' name='lider' value='<?= $idPedido ?>'>
                                             <button type="submit" name='pesquisar' class="btn btn-primary

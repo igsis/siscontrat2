@@ -8,26 +8,24 @@ $resultado = "<td></td>";
 $procurar = NULL;
 $tipoDocumento = null;
 
-$idPedido = $_POST['lider'];
-$idAtracao = $_POST['oficina'];
+if (isset($_POST['lider'])) {
+    $idPedido = $_POST['lider'];
+    $idAtracao = $_POST['oficina'];
 
-$_SESSION['idPedido'] = $idPedido;
-$_SESSION['idAtracao'] = $idAtracao;
+    $_SESSION['idPedido'] = $idPedido;
+    $_SESSION['idAtracao'] = $idAtracao;
+}
 
 if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
-    if (isset($_POST['idPedido']) && $_POST['idPedido'] != null) {
-        $botaoSelecionar = "<input type='submit' name='cadastraLider' class='btn btn-primary' value='Selecionar'>";
-        $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
+    $idAtracao = $_SESSION['idAtracao'];
+    $idPedido = $_SESSION['idPedido'];
+
+    $botaoSelecionar = "<input type='submit' name='cadastraLider' class='btn btn-primary' value='Selecionar'>";
+    $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
-    } else {
-        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
-        $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
-                                <i class='glyphicon glyphicon-plus'>        
-                                </i>Adicionar
-                            </button>";
-    }
+
 
     $procurar = $_POST['procurar'] ?? $_POST['passaporte'];
     $tipoDocumento = $_POST['tipoDocumento'] ?? false;

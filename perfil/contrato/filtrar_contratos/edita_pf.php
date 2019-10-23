@@ -7,12 +7,11 @@ $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pas
 $http = $server . "/pdf/";
 $link_facc = $http . "rlt_fac_pf.php";
 $tipoPessoa = 1;
-
+$liderOn = 0;
 
 if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
 }
-
 
 if (isset($_POST['cadastraLider'])) {
     $idPedido = $_POST['idPedido'];
@@ -29,7 +28,6 @@ if (isset($_POST['cadastraLider'])) {
         }
     }
 }
-
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider'])) {
     $nome = addslashes($_POST['nome']);
@@ -58,6 +56,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastr
     $conta = $_POST['conta'] ?? NULL;
     $data = date("y-m-d h:i:s");
 }
+
 if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
     $mensagem = "";
     $sql = "INSERT INTO siscontrat.`pessoa_fisicas` (nome, nome_artistico, rg, passaporte, cpf, ccm, data_nascimento, nacionalidade_id, email, ultima_atualizacao) VALUES('$nome','$nomeArtistico','$rg','$passaporte','$cpf','$ccm','$dtNascimento','$nacionalidade','$email','$data')";
@@ -104,6 +103,7 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
         }
 
         if (isset($_POST['cadastraComLider'])) {
+            $liderOn = 1;
             $idPedido = $_POST['idPedido'];
             $idAtracao = $_POST['idAtracao'];
 
@@ -722,6 +722,7 @@ $atracao = mysqli_query($con, $sql);
                             <input type="hidden" name="tipoPessoa" value="1">
                             <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                             <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
+                            <input type="hidden" name="liderOn" value="<?= $liderOn ?>">
                             <button type="submit" name="selecionar" class="btn btn-info btn-block">Ir ao pedido de
                                 contratação
                             </button>
