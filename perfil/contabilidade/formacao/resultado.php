@@ -32,7 +32,6 @@ $sql = "SELECT
                INNER JOIN pessoa_fisicas AS pf ON fc.pessoa_fisica_id = pf.id
                INNER JOIN pedido_status AS st ON p.status_pedido_id = st.id
                WHERE p.origem_tipo_id = 2 AND p.publicado = 1 $status $numProcesso $protocolo";
-$query = mysqli_query($con,$sql);
 ?>
 
 <div class="content-wrapper">
@@ -47,41 +46,45 @@ $query = mysqli_query($con,$sql);
             <div class="box-body">
                 <table id="tblFormacao" class="table table-striped table-bordered">
                     <thead>
-                        <tr>
-                            <th>Processo</th>
-                            <th>Protocolo</th>
-                            <th>Proponente</th>
-                            <th>Status</th>
-                        </tr>
+                    <tr>
+                        <th>Processo</th>
+                        <th>Protocolo</th>
+                        <th>Proponente</th>
+                        <th>Status</th>
+                    </tr>
                     </thead>
 
                     <tbody>
                     <?php
-                    while ($pedido = mysqli_fetch_array($query)) {
-                        ?>
-                        <tr>
-                            <td>
-                                <form action="?perfil=contabilidade&p=formacao&sp=detalhes" role="form" method="POST">
-                                    <input type="hidden" name="idPedido" id="idPedido" value="<?=$pedido['id']?>">
-                                    <button type="submit" class="btn btn-primary"><?= $pedido['numero_processo'] ?></button>
-                                </form>
-                            </td>
-                            <td><?= $pedido['protocolo'] ?></td>
-                            <td><?= $pedido['nome'] ?></td>
-                            <td><?= $pedido['status'] ?></td>
-                        </tr>
-                        <?php
+                    if ($query = mysqli_query($con, $sql)) {
+                        while ($pedido = mysqli_fetch_array($query)) {
+                            ?>
+                            <tr>
+                                <td>
+                                    <form action="?perfil=contabilidade&p=formacao&sp=detalhes" role="form"
+                                          method="POST">
+                                        <input type="hidden" name="idPedido" id="idPedido" value="<?= $pedido['id'] ?>">
+                                        <button type="submit"
+                                                class="btn btn-primary"><?= $pedido['numero_processo'] ?></button>
+                                    </form>
+                                </td>
+                                <td><?= $pedido['protocolo'] ?></td>
+                                <td><?= $pedido['nome'] ?></td>
+                                <td><?= $pedido['status'] ?></td>
+                            </tr>
+                            <?php
+                        }
                     }
                     ?>
                     </tbody>
 
                     <tfoot>
-                        <tr>
-                            <th>Processo</th>
-                            <th>Protocolo</th>
-                            <th>Proponente</th>
-                            <th>Status</th>
-                        </tr>
+                    <tr>
+                        <th>Processo</th>
+                        <th>Protocolo</th>
+                        <th>Proponente</th>
+                        <th>Status</th>
+                    </tr>
                     </tfoot>
                 </table>
             </div>

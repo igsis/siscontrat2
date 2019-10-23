@@ -413,10 +413,10 @@ function geraOpcaoLocais ($tabela, $select = '')
 	{
 		//retorna o tipo de evento
 		$con = bancoMysqli();
-		$sql = "SELECT * FROM tipo_evento WHERE id = '$id'";
+		$sql = "SELECT * FROM tipo_eventos WHERE id = '$id'";
 		$query = mysqli_query($con,$sql);
 		$x = mysqli_fetch_array($query);
-		return $x['tipoEvento'];
+		return $x['tipo_evento'];
 	}
 
 	function retornaObjeto($idPedido){
