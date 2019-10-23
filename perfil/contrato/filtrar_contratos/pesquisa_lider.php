@@ -3,25 +3,31 @@ $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
 $idPedido = recuperaDados('pedidos', 'origem_id', $idEvento . ' publicado = 1')['id'];
 
-$idAtracao = null;
 $exibir = ' ';
 $resultado = "<td></td>";
 $procurar = NULL;
 $tipoDocumento = null;
 
-if (isset($_POST['lider'])) {
-    $idPedido = $_POST['lider'];
-    $idAtracao = $_POST['oficina'];
-}
+$idPedido = $_POST['lider'];
+$idAtracao = $_POST['oficina'];
+
+$_SESSION['idPedido'] = $idPedido;
+$_SESSION['idAtracao'] = $idAtracao;
 
 if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
-    $idAtracao = $_POST['idAtracao'] ?? NULL;
-
-    $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
-    $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
+    if (isset($_POST['idPedido']) && $_POST['idPedido'] != null) {
+        $botaoSelecionar = "<input type='submit' name='cadastraLider' class='btn btn-primary' value='Selecionar'>";
+        $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
+    } else {
+        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
+        $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
+                                <i class='glyphicon glyphicon-plus'>        
+                                </i>Adicionar
+                            </button>";
+    }
 
     $procurar = $_POST['procurar'] ?? $_POST['passaporte'];
     $tipoDocumento = $_POST['tipoDocumento'] ?? false;
@@ -147,7 +153,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf" method="post"
+                        <form action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_lider" method="post"
                               id="formulario">
                             <label for="tipoDocumento">Tipo de documento: </label>
                             <label class="radio-inline">
@@ -330,6 +336,4 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
             }
         }
     })
-
-
 </script>

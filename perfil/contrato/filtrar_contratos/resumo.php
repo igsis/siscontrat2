@@ -388,7 +388,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     ?>
                                     <td><?= $atracao['nome'] ?></td>
                                     <td>
-                                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf"
+                                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_lider"
                                               role="form">
                                             <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
                                             <input type='hidden' name='lider' value='<?= $idPedido ?>'>
@@ -401,7 +401,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     ?>
                                     <td></td>
                                     <td>
-                                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_pf" role="form">
+                                        <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_lider" role="form">
                                             <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
                                             <input type='hidden' name='lider' value='<?= $idPedido ?>'>
                                             <button type="submit" name='pesquisar' class="btn btn-primary
