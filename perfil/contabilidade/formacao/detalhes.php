@@ -1,6 +1,10 @@
 <?php
 $idPedido = $_POST['idPedido'];
 
+$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/";
+$http = $server . "/pdf/";
+$link = $http . "exporta_word_contabilidade_formacao.php";
+
 $con = bancoMysqli();
 $sql = "SELECT  p.id,
                 p.origem_id,
@@ -135,7 +139,7 @@ $linguagem = recuperaDados('linguagens', 'id', $fc['linguagem_id'])['linguagem']
                 </div>
             </div>
             <div class="box-footer">
-                <form action="#" role="form" target="_blank" method="POST">
+                <form action="<?= $link ?>" role="form" target="_blank" method="POST">
                     <a href="?perfil=contabilidade&p=formacao&sp=pesquisa">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>

@@ -20,8 +20,7 @@ $idLocal = $ocorrencia['local_id'];
 $sqlLocal = "SELECT local FROM locais WHERE id = '$idLocal'";
 $idEvento = $ocorrencia['origem_ocorrencia_id'];
 $locais = $con->query($sqlLocal)->fetch_array();
-$sqlEnvio = "SELECT data_envio FROM  evento_envios WHERE evento_id = '$idEvento'";
-$dia = $con->query($sqlEnvio)->fetch_array();
+
 
 $nome = $pessoa['nome'];
 $cpf = $pessoa['cpf'];
