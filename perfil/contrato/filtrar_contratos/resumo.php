@@ -159,7 +159,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                         <div class="box-body">
 
                             <?php
-                            if ($nivelUsuario == 1) {
+                            if ($nivelUsuario == 1 || $nivelUsuario == 2) {
                                 ?>
                                 <div class="row">
                                     <div class="col-md-6 from-group">
