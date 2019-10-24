@@ -1,6 +1,11 @@
 <?php
 $idPedido = $_POST['idPedido'];
 
+$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/";
+$http = $server . "/pdf/";
+$linkpf = $http . "exporta_word_contabilidade_pf.php";
+$linkpj = $http . "exporta_word_contabilidade_pj.php";
+
 $con = bancoMysqli();
 $sql = "SELECT  e.id AS 'idEvento',
                 e.nome_evento,
@@ -60,9 +65,11 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                         if ($pedido['pessoa_tipo_id'] == 1) {
                             $tipo = "Física";
                             $pessoa = recuperaDados("pessoa_fisicas", 'id', $pedido['pessoa_fisica_id'])['nome'];
+                            $link = $linkpf;
                         } else if ($pedido['pessoa_tipo_id'] == 2) {
                             $tipo = "Jurídica";
                             $pessoa = recuperaDados("pessoa_juridicas", 'id', $pedido['pessoa_juridica_id'])['razao_social'];
+                            $link = $linkpj;
                         }
                         ?>
 
@@ -112,7 +119,7 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                                     <th width='30%'>Carga Horária:</th>
                                     <td>" . $carga['carga_horaria'] . "</td>
                                   </tr>";
-                        } else if ($checa['oficina'] == 0){
+                        } else if ($checa['oficina'] == 0) {
                             echo "<tr>
                                     <th width='30%'>Não se aplica.</th>
                                     </tr>";
@@ -142,9 +149,9 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                         </tr>
 
                         <?php
-                            $idEvento = $pedido['idEvento'];
-                            $sqlEnvio = "SELECT data_envio FROM  evento_envios WHERE evento_id = '$idEvento'";
-                            $dia = $con->query($sqlEnvio)->fetch_array();
+                        $idEvento = $pedido['idEvento'];
+                        $sqlEnvio = "SELECT data_envio FROM  evento_envios WHERE evento_id = '$idEvento'";
+                        $dia = $con->query($sqlEnvio)->fetch_array();
                         ?>
 
                         <tr>
@@ -156,7 +163,7 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                 </div>
             </div>
             <div class="box-footer">
-                <form action="#" role="form" target="_blank" method="POST">
+                <form action="<?= $link ?>" role="form" target="_blank" method="POST">
                     <a href="?perfil=contabilidade&p=eventos&sp=pesquisa">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
