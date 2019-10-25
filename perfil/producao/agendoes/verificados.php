@@ -1,5 +1,4 @@
 <?php
-include "includes/menu_interno.php";
 
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPf']);
@@ -8,125 +7,119 @@ unset($_SESSION['idPj']);
 $idUser = $_SESSION['idUser'];
 
 $con = bancoMysqli();
-$conn = bancoPDO();
 
-if (isset($_POST['checarEvento'])) {
+if (isset($_POST['checarAgendao'])) {
     $idEvento = $_POST['idEvento'];
-    $sqlView = "UPDATE producao_eventos SET visualizado = 1 WHERE id = '$idEvento'";
+    $data = date("Y-m-d H:i:s", strtotime("now"));
+    $sqlView = "UPDATE producao_agendoes SET visualizado = 1 WHERE id = '$idEvento'";
     $queryView = mysqli_query($con, $sqlView);
     if (mysqli_query($con, $sqlView)) {
-        $mensagem = mensagem("success", "Evento marcado como visualizado!");
+        $mensagem = mensagem("success", "Agendão marcado como visualizado!");
     }
 }
 
-$sqlEvento = "SELECT
-                    eve.id AS 'id',
-                    eve.protocolo AS 'protocolo',
-                    eve.nome_evento AS 'nome_evento',
-                    env.data_envio AS 'data_envio',
-                    u.nome_completo as 'usuario',
-                    en.visualizado AS 'visualizado'
-            FROM eventos AS eve
-            INNER JOIN ocorrencias as o on o.id = eve.id
-            INNER JOIN evento_envios as env on env.evento_id = eve.id
-            INNER JOIN usuarios as u on u.id = eve.usuario_id
-            INNER JOIN pedidos AS ped ON ped.origem_id = eve.id
-            INNER JOIN producao_eventos AS en ON en.evento_id = eve.id 
-WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND en.visualizado = 1";
+$sqlAgendaoVerificados = "SELECT
+	    a.id AS 'id',
+		a.nome_evento AS 'nome',
+        a.data_envio AS 'data_envio',
+        env.visualizado AS 'visualizado'
+		from agendoes AS a
+        INNER JOIN agendao_ocorrencias AS ao ON ao.id = a.id
+        INNER JOIN producao_agendoes AS env ON env.agendao_id = a.id
+        WHERE a.publicado = 1 AND env.visualizado = 1 AND evento_status_id = 3";
+$queryAgendaoVerificados = mysqli_query($con, $sqlAgendaoVerificados);
 
-$queryEvento = mysqli_query($con, $sqlEvento);
 ?>
 
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Eventos Visualizados</h2>
+        <h2 class="page-header"> Agendões Verificados </h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">Listagem</h3>
                     </div>
-
                     <div class="row" align="center">
                         <?php
                         if (isset($mensagem)) {
                             echo $mensagem;
-                        } ?>
+                        }
+                        ?>
                     </div>
 
                     <div class="box-body">
-                        <table id="tblEventosVisualizadosProducao" class="table table-bordered table-striped">
+                        <table id="tblAgendoesVerificados" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>Protocolo</th>
-                                <th>Nome</th>
+                                <th>Nome do Evento</th>
                                 <th>Locais</th>
                                 <th>Espaços</th>
                                 <th>Periodo</th>
                                 <th>Data do Envio</th>
-                                <th>Usuário</th>
                                 <th>Visualizar</th>
                             </tr>
                             </thead>
                             <?php
                             echo "<tbody>";
-                            while ($eventoVerf = mysqli_fetch_array($queryEvento)) {
-                            $idEvento = $eventoVerf['id'];
-                            $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento'";
+                            while ($agendaoVerif = mysqli_fetch_array($queryAgendaoVerificados)) {
+                            $idAgendao = $agendaoVerif['id'];
+                            $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
                             $queryLocal = mysqli_query($con, $sqlLocal);
                             $local = '';
-                            while ($locais = mysqli_fetch_array($queryLocal)){
+                            while ($locais = mysqli_fetch_array($queryLocal)) {
                                 $local = $local . '; ' . $locais['local'];
                             }
                             $local = substr($local, 1);
 
-                            $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN ocorrencias AS o ON o.espaco_id = e.id WHERE o.origem_ocorrencia_id = '$idEvento'";
+                            $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN agendao_ocorrencias AS ao ON ao.espaco_id = e.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
                             $queryEspaco = mysqli_query($con, $sqlEspaco);
                             $espaco = '';
-                            while($espacos = mysqli_fetch_array($queryEspaco)){
+                            while ($espacos = mysqli_fetch_array($queryEspaco)) {
                                 $espaco = $espaco . '; ' . $espacos['espaco'];
                             }
                             $espaco = substr($espaco, 1);
                             ?>
-
                             <tr>
-                                <?php
 
-                                echo "<td>" . $eventoVerf['protocolo'] . "</td>";
-                                echo "<td>" . $eventoVerf['nome_evento'] . "</td>";
+                                <?php
+                                echo "<td>" . $agendaoVerif['nome'] . "</td>";
                                 echo "<td>" . $local . "</td>";
                                 echo "<td>" . $espaco . "</td>";
-                                echo "<td>" . retornaPeriodoNovo($eventoVerf['id'], 'ocorrencias') . "</td>";
-                                echo "<td>" . $eventoVerf['data_envio'] . "</td>";
-                                echo "<td>" . $eventoVerf['usuario'] . "</td>";
-                                echo "<td>                               
-                            <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_evento' role='form'>
-                            <input type='hidden' name='idEvento' value='" . $eventoVerf['id'] . "'>
-                            <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'> </span></button>
-                            </form>
-                            </td>";
-
+                                echo "<td>" . retornaPeriodoNovo($agendaoVerif['id'], 'agendao_ocorrencias') . "</td>";
+                                echo "<td>" . $agendaoVerif['data_envio'] . "</td>";
+                                echo "<td>
+                                        <form method='POST' action='?perfil=producao&p=agendoes&sp=visualizacao' role='form'>
+                                        <input type='hidden' name='idEvento' value='" . $agendaoVerif['id'] . "'>
+                                        <button type='submit' name='carregaAgendao' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span>
+                                        </button>
+                                        </form> 
+                                        </td>
+                                        ";
                                 echo "</tr>";
                                 }
                                 echo "</tbody>";
                                 ?>
                                 <tfoot>
                                 <tr>
-                                    <th>Protocolo</th>
                                     <th>Nome do Evento</th>
                                     <th>Locais</th>
                                     <th>Espaços</th>
                                     <th>Periodo</th>
                                     <th>Data do Envio</th>
-                                    <th>Usuário</th>
                                     <th>Visualizar</th>
                                 </tr>
                                 </tfoot>
                         </table>
                     </div>
+                    <div class="box-footer">
+                        <a href="?perfil=producao">
+                            <button type="button" class="btn btn-default">Voltar</button>
+                        </a>
+                    </div>
                 </div>
             </div>
+        </div>
     </section>
 </div>
 
@@ -135,7 +128,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
 
 <script type="text/javascript">
     $(function () {
-        $('#tblEventosVisualizadosProducao').DataTable({
+        $('#tblAgendoesVerificados').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },
@@ -146,3 +139,4 @@ $queryEvento = mysqli_query($con, $sqlEvento);
         });
     });
 </script>
+

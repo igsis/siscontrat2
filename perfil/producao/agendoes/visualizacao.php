@@ -1,5 +1,4 @@
 <?php
-include "includes/menu_interno.php";
 
 $con = bancoMysqli();
 
@@ -148,14 +147,14 @@ $view = recuperaDados('producao_agendoes', 'id', $idEvento);
                         </div>
                     </div>
                     <div class="tab-pane" id="produtor">
-                        <?php include "includes/label_produtor_agendao.php" ?>
+                        <?php include "../perfil/producao/includes/label_produtor_agendao.php" ?>
                     </div>
                     <div class="tab-pane" id="ocorrencia">
-                        <?php include "includes/label_ocorrencia_agendao.php"; ?>
+                        <?php include "../perfil/producao/includes/label_ocorrencia_agendao.php"; ?>
                     </div>
                 </div>
                 <div class="box-footer">
-                    <form action="?perfil=producao&p=agendoes_visualizados_producao" method="post">
+                    <form action="?perfil=producao&p=agendoes&sp=verificados" method="post">
                         <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                         <?php
 

@@ -114,7 +114,7 @@ if (isset($_POST['adicionar'])) {
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control" placeholder="Ex.: 10"
+                                    <input type="number" name="numero" min="1" class="form-control" placeholder="Ex.: 10"
                                            required>
                                 </div>
                                 <div class="form-group col-md-3">

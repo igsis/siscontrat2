@@ -35,7 +35,6 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
     });
 
     function validate() {
-        comparaData();
         if ($('#datepicker11').val().length > 0) {
             mudaData(false);
         } else {
@@ -70,6 +69,7 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
             }
         }
 
+        comparaData();
         validaDiaSemana();
     }
 
@@ -89,9 +89,11 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
             if (dataFim <= dataInicio) {
                 isMsgData.show();
                 $('#cadastra').attr("disabled", true);
+                mudaData(true);
             } else {
                 isMsgData.hide();
                 $('#cadastra').attr("disabled", false);
+                mudaData(false);
             }
         }
 
@@ -133,7 +135,7 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
  
                             <div class="row" id="msgEscondeData">
                                 <div class="form-group col-md-offset-6 col-md-6">
-                                    <span style="color: red;"><b>Data de encerramento menor que a data inicial!</b></span>
+                                    <span style="color: red;"><b>Data de encerramento deve ser maior que a data inicial</b></span>
                                 </div>
                             </div>
                             

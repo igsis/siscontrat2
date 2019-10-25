@@ -28,7 +28,6 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
                                 $sql = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
                                 $parcela = mysqli_fetch_array(mysqli_query($con, $sql));
                                 ?>
-
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="parcela[]">Parcela:</label>

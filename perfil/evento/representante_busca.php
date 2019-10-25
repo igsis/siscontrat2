@@ -27,7 +27,7 @@ if (isset($_POST['pesquisa'])) {
 
     if ($representante != null && count($representante) > 0) {
         $idRepresentante = $representante['id'];
-        echo "teste " . $idRepresentante;
+        //echo "teste " . $idRepresentante;
 
         $sqlPj = "SELECT representante_legal1_id, representante_legal2_id FROM pessoa_juridicas WHERE id = '$idPj' AND (representante_legal1_id = '$idRepresentante' 
                                                   OR representante_legal2_id = '$idRepresentante')";

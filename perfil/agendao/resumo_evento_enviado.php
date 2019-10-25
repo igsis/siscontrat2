@@ -31,7 +31,11 @@ $agendao = $con->query($sqlEvento)->fetch_array();
 $idProdutor = $agendao['produtor_id'];
 $produtor = $con->query("SELECT * FROM produtores WHERE id = '$idProdutor'")->fetch_array();
 
-$ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias ocorrencias INNER JOIN retirada_ingressos ri on ocorrencias.retirada_ingresso_id = ri.id INNER JOIN subprefeituras s on ocorrencias.subprefeitura_id = s.id INNER JOIN periodos p on ocorrencias.periodo_id = p.id WHERE origem_ocorrencia_id = '$idEvento'  AND tipo_ocorrencia_id = 3 AND publicado = '1'");
+$ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias as ocorrencias 
+                            INNER JOIN retirada_ingressos ri on ocorrencias.retirada_ingresso_id = ri.id 
+                            INNER JOIN subprefeituras s on ocorrencias.subprefeitura_id = s.id 
+                            INNER JOIN periodos p on ocorrencias.periodo_id = p.id 
+                            WHERE ocorrencias.origem_ocorrencia_id = '$idEvento'  AND ocorrencias.tipo_ocorrencia_id = 3 AND ocorrencias.publicado = 1");
 ?>
 
 <div class="content-wrapper">
@@ -117,7 +121,7 @@ $ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias ocorrencias INNER 
                                     $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
                                     $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
                                     ?>
-                                    <p><b>Data:</b> <?= exibirDataBr($ocorrencia['data_inicio']) ?> - <?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Data única" ?></p>
+                                    <p><b>Data:</b> <?= exibirDataBr($ocorrencia['data_inicio']) ?> - <?= $ocorrencia['data_fim'] == "0000-00-00" ? "Data única" : exibirDataBr($ocorrencia['data_fim']) ?></p>
                                     <p><b>Horário:</b> <?= date("H:i", strtotime($ocorrencia['horario_inicio'])) ?> às <?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?></p>
                                     <p><b>Acessibilidade</b>
                                         <?php

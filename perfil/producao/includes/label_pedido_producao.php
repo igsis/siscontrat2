@@ -1,6 +1,6 @@
 <?php
 /**
- * Conteúdo da label "#pedido" do arquivo "vizualizacao_evento.php"
+ * Conteúdo da label "#pedido" do arquivo "producao/evento/verificados.php"
  */
 
 $pedido = $con->query("SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'")->fetch_assoc();

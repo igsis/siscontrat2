@@ -22,7 +22,7 @@ if (isset($_POST['proponente']) && $_POST['proponente'] != null) {
     $proponente = " AND fc.pessoa_fisica_id = '$proponente' ";
 }
 
-$sql = "SELECT fc.id, p.id as pedido_id, fc.protocolo, fc.pessoa_fisica_id, fc.num_processo_pagto FROM formacao_contratacoes fc INNER JOIN pedidos p on fc.id = p.origem_id WHERE fc.publicado = 1 AND p.status_pedido_id = '19' $proponente $numProcesso $protocolo";
+$sql = "SELECT fc.id, p.id as pedido_id, fc.protocolo, fc.pessoa_fisica_id, fc.num_processo_pagto FROM formacao_contratacoes fc INNER JOIN pedidos p on fc.id = p.origem_id WHERE p.origem_tipo_id = 2 AND fc.publicado = 1 $proponente $numProcesso $protocolo";
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
 ?>
@@ -68,8 +68,8 @@ $num_arrow = mysqli_num_rows($query);
                             } else {
                                 while ($formacao = mysqli_fetch_array($query)) {
                                     $proponente = recuperaDados('pessoa_fisicas', 'id', $formacao['pessoa_fisica_id'])['nome'];
-                                    $pedido = recuperaDados('pedidos', 'origem_id', $formacao['id']);
-                                    $idPedido = $pedido['id'];
+                                    $pedido = recuperaDados('pedidos', 'origem_id', $formacao['pedido_id']);
+                                    $idPedido = $formacao['pedido_id'];
                                     $sqlPagamento = "SELECT * FROM pagamentos WHERE pedido_id = '$idPedido'";
                                     $pagamento = mysqli_num_rows(mysqli_query($con, $sqlPagamento));
                                     if ($pagamento == 0)
@@ -85,7 +85,8 @@ $num_arrow = mysqli_num_rows($query);
                                             <form action="<?= $action ?>"
                                                   method="POST">
                                                 <input type="hidden" name="idPedido" id="idPedido"
-                                                       value="<?= $formacao['pedido_id'] ?>">
+                                                       value="<?= $idPedido ?>">
+                                                <input type="hidden" name="idFC" id="idFC" value="<?=$formacao['id']?>">
                                                 <button type="submit" name="carregar" id="carregar"
                                                         class="btn btn-primary btn-block">
                                                     <b>N.E</b>

@@ -15,7 +15,7 @@ if(isset($_POST['idAtracao'])){
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Cadastro de Evento</h2>
+        <h2 class="page-header">Cadastro de Produtor</h2>
 
         <div class="row">
             <div class="col-md-12">

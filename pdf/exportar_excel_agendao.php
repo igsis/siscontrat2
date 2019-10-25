@@ -28,37 +28,35 @@ $objPHPExcel->getProperties()->setCategory("Inscritos");
 
 
 $objPHPExcel->setActiveSheetIndex(0)
-    ->setCellValue("A1" )
-    ->setCellValue("B1" )
-    ->setCellValue("C1" )
-    ->setCellValue("D1" )
+    ->setCellValue("A1")
+    ->setCellValue("B1")
+    ->setCellValue("C1")
+    ->setCellValue("D1")
     ->setCellValue("E1")
     ->setCellValue("F1")
     ->setCellValue("G1")
     ->setCellValue("H1")
     ->setCellValue("I1")
     ->setCellValue("J1")
-    ->setCellValue("K1" )
-    ->setCellValue("L1" )
+    ->setCellValue("K1")
+    ->setCellValue("L1")
     ->setCellValue("M1", "Eventos Comum")
-    ->setCellValue("N1" )
-    ->setCellValue("O1" )
-    ->setCellValue("P1" )
+    ->setCellValue("N1")
+    ->setCellValue("O1")
+    ->setCellValue("P1")
     ->setCellValue("Q1")
-    ->setCellValue("R1" )
-    ->setCellValue("S1" )
-    ->setCellValue("T1" )
-    ->setCellValue("U1" )
-    ->setCellValue("V1" )
-    ->setCellValue("W1" )
-    ->setCellValue("X1" );
+    ->setCellValue("R1")
+    ->setCellValue("S1")
+    ->setCellValue("T1")
+    ->setCellValue("U1")
+    ->setCellValue("V1")
+    ->setCellValue("W1")
+    ->setCellValue("X1");
 
 $objPHPExcel->getActiveSheet()->getStyle('A1:X1')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->getStyle('A1:X1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 $objPHPExcel->getActiveSheet()->getRowDimension(1)->setRowHeight(40);
 $objPHPExcel->getActiveSheet()->getStyle('A1:X1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
-
 
 
 // Criamos as colunas
@@ -69,14 +67,14 @@ $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue("D2", "SubPrefeitura")
     ->setCellValue("E2", "Nome do Evento")
     ->setCellValue("F2", "Artistas")
-    ->setCellValue("G2", "Data Início")
-    ->setCellValue("H2", "Data Fim")
+    ->setCellValue("G2", "Data de Início")
+    ->setCellValue("H2", "Data de Encerramento")
     ->setCellValue("I2", "Horário de início")
     ->setCellValue("J2", "Nº de Apresentações")
     ->setCellValue("K2", "Período")
     ->setCellValue("L2", "Linguagem / Expressão Artística Principal")
     ->setCellValue("M2", "Público / Representatividade Social Principal")
-    ->setCellValue("N2", "Espaço Público?" )
+    ->setCellValue("N2", "Espaço Público?")
     ->setCellValue("O2", "Entrada")
     ->setCellValue("P2", "Valor do Ingresso (no caso de cobrança)")
     ->setCellValue("Q2", "Classificação indicativa")
@@ -122,8 +120,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A2:X2')->applyFromArray
 );
 
 $cont = 3;
-while($linha = mysqli_fetch_array($query))
-{
+while ($linha = mysqli_fetch_array($query)) {
 
     if ($linha['tipo_evento'] == 2) {
         $filme_evento = recuperaDados("filme_eventos", "evento_id", $linha['evento_id']);
@@ -146,7 +143,6 @@ while($linha = mysqli_fetch_array($query))
     $linha['domingo'] == 1 ? $dias .= "Domingo. " : '';
 
     if ($dias != "") {
-        //echo "dias diferente de vazio " . $respectiva . $dias;
         $totalDias .= substr($dias, 0, -2);
     } else {
         $totalDias .= "Dias não especificados.";
@@ -193,30 +189,30 @@ while($linha = mysqli_fetch_array($query))
         $fomento = $con->query($sqlFomento)->fetch_assoc();
     }
 
-    $a = "A".$cont;
-    $b = "B".$cont;
-    $c = "C".$cont;
-    $d = "D".$cont;
-    $e = "E".$cont;
-    $f = "F".$cont;
-    $g = "G".$cont;
-    $h = "H".$cont;
-    $i = "I".$cont;
-    $j = "J".$cont;
-    $k = "K".$cont;
-    $l = "L".$cont;
-    $m = "M".$cont;
-    $n = "N".$cont;
-    $o = "O".$cont;
-    $p = "P".$cont;
-    $q = "Q".$cont;
-    $r = "R".$cont;
-    $s = "S".$cont;
-    $t = "T".$cont;
-    $u = "U".$cont;
-    $v = "V".$cont;
-    $w = "W".$cont;
-    $x = "X".$cont;
+    $a = "A" . $cont;
+    $b = "B" . $cont;
+    $c = "C" . $cont;
+    $d = "D" . $cont;
+    $e = "E" . $cont;
+    $f = "F" . $cont;
+    $g = "G" . $cont;
+    $h = "H" . $cont;
+    $i = "I" . $cont;
+    $j = "J" . $cont;
+    $k = "K" . $cont;
+    $l = "L" . $cont;
+    $m = "M" . $cont;
+    $n = "N" . $cont;
+    $o = "O" . $cont;
+    $p = "P" . $cont;
+    $q = "Q" . $cont;
+    $r = "R" . $cont;
+    $s = "S" . $cont;
+    $t = "T" . $cont;
+    $u = "U" . $cont;
+    $v = "V" . $cont;
+    $w = "W" . $cont;
+    $x = "X" . $cont;
 
     $enderecoCompleto = [
         $linha['logradouro'],
@@ -227,7 +223,7 @@ while($linha = mysqli_fetch_array($query))
     $objPHPExcel->setActiveSheetIndex(0)
         ->setCellValue($a, $linha['instiSigla'])
         ->setCellValue($b, $linha['nome_local'])
-        ->setCellValue($c, implode(", ", $enderecoCompleto)." - CEP: ".$linha['cep'])
+        ->setCellValue($c, implode(", ", $enderecoCompleto) . " - CEP: " . $linha['cep'])
         ->setCellValue($d, $linha['subprefeitura'])
         ->setCellValue($e, $linha['nome'])
         ->setCellValue($f, $linha['artistas'])
@@ -267,36 +263,35 @@ $proxLinha = $cont + 1;
 
 
 $objPHPExcel->setActiveSheetIndex(0)
-    ->setCellValue("A".$proxLinha)
-    ->setCellValue("B".$proxLinha)
-    ->setCellValue("C".$proxLinha)
-    ->setCellValue("D".$proxLinha)
-    ->setCellValue("E".$proxLinha)
-    ->setCellValue("F".$proxLinha)
-    ->setCellValue("G".$proxLinha)
-    ->setCellValue("H".$proxLinha)
-    ->setCellValue("I".$proxLinha)
-    ->setCellValue("J".$proxLinha)
-    ->setCellValue("K".$proxLinha)
-    ->setCellValue("L".$proxLinha)
-    ->setCellValue("M".$proxLinha, "Eventos Agendão")
-    ->setCellValue("N".$proxLinha)
-    ->setCellValue("O".$proxLinha)
-    ->setCellValue("P".$proxLinha)
-    ->setCellValue("Q".$proxLinha)
-    ->setCellValue("R".$proxLinha)
-    ->setCellValue("S".$proxLinha)
-    ->setCellValue("T".$proxLinha)
-    ->setCellValue("U".$proxLinha)
-    ->setCellValue("V".$proxLinha)
-    ->setCellValue("W".$proxLinha)
-    ->setCellValue("X".$proxLinha);
+    ->setCellValue("A" . $proxLinha)
+    ->setCellValue("B" . $proxLinha)
+    ->setCellValue("C" . $proxLinha)
+    ->setCellValue("D" . $proxLinha)
+    ->setCellValue("E" . $proxLinha)
+    ->setCellValue("F" . $proxLinha)
+    ->setCellValue("G" . $proxLinha)
+    ->setCellValue("H" . $proxLinha)
+    ->setCellValue("I" . $proxLinha)
+    ->setCellValue("J" . $proxLinha)
+    ->setCellValue("K" . $proxLinha)
+    ->setCellValue("L" . $proxLinha)
+    ->setCellValue("M" . $proxLinha, "Eventos Agendão")
+    ->setCellValue("N" . $proxLinha)
+    ->setCellValue("O" . $proxLinha)
+    ->setCellValue("P" . $proxLinha)
+    ->setCellValue("Q" . $proxLinha)
+    ->setCellValue("R" . $proxLinha)
+    ->setCellValue("S" . $proxLinha)
+    ->setCellValue("T" . $proxLinha)
+    ->setCellValue("U" . $proxLinha)
+    ->setCellValue("V" . $proxLinha)
+    ->setCellValue("W" . $proxLinha)
+    ->setCellValue("X" . $proxLinha);
 
 $objPHPExcel->getActiveSheet()->getStyle('A' . $proxLinha . ':X' . $proxLinha)->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->getStyle('A' . $proxLinha . ':X' . $proxLinha)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 $objPHPExcel->getActiveSheet()->getRowDimension($proxLinha)->setRowHeight(40);
 $objPHPExcel->getActiveSheet()->getStyle('A' . $proxLinha . ':X' . $proxLinha)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
 
 
 $proxCabecalho = $proxLinha + 1;
@@ -316,7 +311,7 @@ $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue("K" . $proxCabecalho, "Período")
     ->setCellValue("L" . $proxCabecalho, "Linguagem / Expressão Artística Principal")
     ->setCellValue("M" . $proxCabecalho, "Público / Representatividade Social Principal")
-    ->setCellValue("N" . $proxCabecalho, "Espaço Público?" )
+    ->setCellValue("N" . $proxCabecalho, "Espaço Público?")
     ->setCellValue("O" . $proxCabecalho, "Entrada")
     ->setCellValue("P" . $proxCabecalho, "Valor do Ingresso (no caso de cobrança)")
     ->setCellValue("Q" . $proxCabecalho, "Classificação indicativa")
@@ -362,8 +357,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A' . $proxCabecalho . ':X' . $proxCabe
 );
 
 $cont = $proxCabecalho + 1;
-while($linha = mysqli_fetch_array($queryAgendao))
-{
+while ($linha = mysqli_fetch_array($queryAgendao)) {
 
     if ($linha['tipo_evento'] == 2) {
         $filme_evento = recuperaDados("filme_eventos", "evento_id", $linha['evento_id']);
@@ -433,30 +427,30 @@ while($linha = mysqli_fetch_array($queryAgendao))
         $fomento = $con->query($sqlFomento)->fetch_assoc();
     }
 
-    $a = "A".$cont;
-    $b = "B".$cont;
-    $c = "C".$cont;
-    $d = "D".$cont;
-    $e = "E".$cont;
-    $f = "F".$cont;
-    $g = "G".$cont;
-    $h = "H".$cont;
-    $i = "I".$cont;
-    $j = "J".$cont;
-    $k = "K".$cont;
-    $l = "L".$cont;
-    $m = "M".$cont;
-    $n = "N".$cont;
-    $o = "O".$cont;
-    $p = "P".$cont;
-    $q = "Q".$cont;
-    $r = "R".$cont;
-    $s = "S".$cont;
-    $t = "T".$cont;
-    $u = "U".$cont;
-    $v = "V".$cont;
-    $w = "W".$cont;
-    $x = "X".$cont;
+    $a = "A" . $cont;
+    $b = "B" . $cont;
+    $c = "C" . $cont;
+    $d = "D" . $cont;
+    $e = "E" . $cont;
+    $f = "F" . $cont;
+    $g = "G" . $cont;
+    $h = "H" . $cont;
+    $i = "I" . $cont;
+    $j = "J" . $cont;
+    $k = "K" . $cont;
+    $l = "L" . $cont;
+    $m = "M" . $cont;
+    $n = "N" . $cont;
+    $o = "O" . $cont;
+    $p = "P" . $cont;
+    $q = "Q" . $cont;
+    $r = "R" . $cont;
+    $s = "S" . $cont;
+    $t = "T" . $cont;
+    $u = "U" . $cont;
+    $v = "V" . $cont;
+    $w = "W" . $cont;
+    $x = "X" . $cont;
 
     $enderecoCompleto = [
         $linha['logradouro'],
@@ -467,7 +461,7 @@ while($linha = mysqli_fetch_array($queryAgendao))
     $objPHPExcel->setActiveSheetIndex(0)
         ->setCellValue($a, $linha['instiSigla'])
         ->setCellValue($b, $linha['nome_local'])
-        ->setCellValue($c, implode(", ", $enderecoCompleto)." - CEP: ".$linha['cep'])
+        ->setCellValue($c, implode(", ", $enderecoCompleto) . " - CEP: " . $linha['cep'])
         ->setCellValue($d, $linha['subprefeitura'])
         ->setCellValue($e, $linha['nome'])
         ->setCellValue($f, $linha['artistas'])
@@ -501,17 +495,10 @@ while($linha = mysqli_fetch_array($queryAgendao))
 }
 
 
-
-
-
-
-
-
-
 // Renomeia a guia
 $objPHPExcel->getActiveSheet()->setTitle('Inscritos');
 
-for ($col = 'A'; $col !== 'X'; $col++){
+for ($col = 'A'; $col !== 'X'; $col++) {
     $objPHPExcel->getActiveSheet()
         ->getColumnDimension($col)
         ->setAutoSize(true);
@@ -527,7 +514,7 @@ $nome_arquivo = date("YmdHis") . "_eventos_pesquisa.xls";
 // Cabeçalho do arquivo para ele baixar(Excel2007)
 header('Content-Type: text/html; charset=ISO-8859-1');
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="'.$nome_arquivo.'"');
+header('Content-Disposition: attachment;filename="' . $nome_arquivo . '"');
 header('Cache-Control: max-age=0');
 // Se for o IE9, isso talvez seja necessário
 header('Cache-Control: max-age=1');

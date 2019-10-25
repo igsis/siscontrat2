@@ -1,12 +1,10 @@
 <?php
-include "includes/menu_interno.php";
 
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
 
 $con = bancoMysqli();
-$conn = bancoPDO();
 
 $sqlAgendaoNovo = "SELECT
 	    a.id AS 'id',
@@ -38,7 +36,7 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
                     </div>
 
                     <div class="box-body">
-                        <table id="tblAgendoesNovosProducoes" class="table table-bordered table-striped">
+                        <table id="tblAgendoesNovos" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>Nome do Evento</th>
@@ -52,22 +50,22 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
                             <?php
                             echo "<tbody>";
                             while ($agendaoNovo = mysqli_fetch_array($queryAgendaoNovo)) {
-                                $idAgendao = $agendaoNovo['id'];
-                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
-                                $queryLocal = mysqli_query($con, $sqlLocal);
-                                $local = '';
-                                while ($locais = mysqli_fetch_array($queryLocal)){
-                                    $local = $local . '; ' . $locais['local'];
-                                }
-                                $local = substr($local, 1);
+                            $idAgendao = $agendaoNovo['id'];
+                            $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
+                            $queryLocal = mysqli_query($con, $sqlLocal);
+                            $local = '';
+                            while ($locais = mysqli_fetch_array($queryLocal)) {
+                                $local = $local . '; ' . $locais['local'];
+                            }
+                            $local = substr($local, 1);
 
-                                $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN agendao_ocorrencias AS ao ON ao.espaco_id = e.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
-                                $queryEspaco = mysqli_query($con, $sqlEspaco);
-                                $espaco = '';
-                                while($espacos = mysqli_fetch_array($queryEspaco)){
-                                    $espaco = $espaco . '; ' . $espacos['espaco'];
-                                }
-                                $espaco = substr($espaco, 1);
+                            $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN agendao_ocorrencias AS ao ON ao.espaco_id = e.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
+                            $queryEspaco = mysqli_query($con, $sqlEspaco);
+                            $espaco = '';
+                            while ($espacos = mysqli_fetch_array($queryEspaco)) {
+                                $espaco = $espaco . '; ' . $espacos['espaco'];
+                            }
+                            $espaco = substr($espaco, 1);
                             ?>
                             <tr>
 
@@ -78,7 +76,7 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
                                 echo "<td>" . retornaPeriodoNovo($agendaoNovo['id'], 'agendao_ocorrencias') . "</td>";
                                 echo "<td>" . $agendaoNovo['data_envio'] . "</td>";
                                 echo "<td>
-                                        <form method='POST' action='?perfil=producao&p=modulos&p=visualizacao_agendao' role='form'>
+                                        <form method='POST' action='?perfil=producao&p=agendoes&sp=visualizacao' role='form'>
                                         <input type='hidden' name='idEvento' value='" . $agendaoNovo['id'] . "'>
                                         <button type='submit' name='carregaAgendao' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span>
                                         </button>
@@ -101,6 +99,11 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
                                 </tfoot>
                         </table>
                     </div>
+                    <div class="box-footer">
+                        <a href="?perfil=producao">
+                            <button type="button" class="btn btn-default">Voltar</button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,7 +116,7 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
 
 <script type="text/javascript">
     $(function () {
-        $('#tblAgendoesNovosProducoes').DataTable({
+        $('#tblAgendoesNovos').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },

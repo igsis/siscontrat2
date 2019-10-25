@@ -515,7 +515,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control"
+                                    <input type="number" name="numero" class="form-control" min="1"
                                            placeholder="Digite o número" required value="<?= $endereco['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">

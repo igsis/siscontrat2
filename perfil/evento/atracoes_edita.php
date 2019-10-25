@@ -74,7 +74,7 @@ include "includes/menu_interno.php";
     <!-- Main content -->
     <section class="content">
         <!-- START FORM-->
-        <h2 class="page-header">Cadastro de Evento</h2>
+        <h2 class="page-header">Edição de Atração</h2>
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
@@ -195,7 +195,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="quantidade_apresentacao">Quantidade de Apresentação *</label>
                                     <input type="number" class="form-control" id="quantidade_apresentacao"
-                                           name="quantidade_apresentacao" maxlength="2" required
+                                           name="quantidade_apresentacao" maxlength="2" required min="0"
                                            value="<?= $atracao['quantidade_apresentacao'] ?>">
                                 </div>
                                 <div class="form-group col-md-6">

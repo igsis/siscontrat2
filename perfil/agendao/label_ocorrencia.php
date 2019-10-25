@@ -46,7 +46,7 @@
                                             <label>Data de Início:</label> <?= exibirDataBr($ocorrencia['data_inicio']) ?>
                                         </div>
                                         <div class="form-group col-md-3">
-                                            <label>Data de Encerramento:</label> <?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada" ?>
+                                            <label>Data de Encerramento:</label> <?= $ocorrencia['data_fim'] == "0000-00-00" ? "Não é Temporada"  : exibirDataBr($ocorrencia['data_fim']) ?>
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label>Hora de Início:</label> <?= date("H:i", strtotime($ocorrencia['horario_inicio'])) ?>

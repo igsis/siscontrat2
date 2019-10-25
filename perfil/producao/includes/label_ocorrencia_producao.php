@@ -1,6 +1,6 @@
 <?php
 /**
- * Conteúdo da label "#ocorrencia" do arquivo "vizualizacao_evento.php"
+ * Conteúdo da label "#ocorrencia" do arquivo "producao/evento/verificados.php"
  */
 
 ?>
@@ -36,71 +36,73 @@
                                             $espaco = recuperaDados("espacos", "id", $ocorrencia['espaco_id']);
                                             ?>
                                             <tr>
-                <th class="text center bg-primary" colspan="2"> Ocorrências
-                    #<?= $i ?>  </th>
-            </tr>
-            <tr>
-                <th width="30%"> Data de Início:</th>
-                <td><?= exibirDataBr($ocorrencia['data_inicio']) ?></td>
-            </tr>
-            <tr>
-                <th width="30%"> Data de Encerramento:</th>
-                <td><?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada" ?></td>
-            </tr>
-            <tr>
-                <th width="30%"> Hora de Início:</th>
-                <td><?= date("H:i", strtotime($ocorrencia['horario_inicio'])) ?></td>
-            </tr>
-            <tr>
-                <th width="30%"> Hora de Encerramento:</th>
-                <td><?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?></td>
-            </tr>
-            <tr>
-                <th width="30%"> Retirada de Ingressos:</th>
-                <td><?= $retiradaIngresso['retirada_ingresso'] ?></td>
-            </tr>
-            <tr>
-                <th width="30%"> Valor do Ingresso:</th>
-                <td><?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
-            </tr>
-            <tr>
-                <th width="30%"> Instituição:</th>
-                <td><?= $instituicao['nome'] ?></td>
-            </tr>
-            <tr>
-                <th width="30%"> Local:</th>
-                <td><?= $local['local'] ?></td>
-            </tr>
-            <?php if ($ocorrencia['espaco_id'] != 0) { ?>
-            <tr>
-                <th width="30%"> Espaço:</th>
-                <td><?= $espaco['espaco'] ?></td>
-            </tr>
-            <?php } ?>
-            <tr>
-                <th width="30%"> Observação:</th>
-                <td><?= $ocorrencia['observacao'] ?></td>
-            </tr>
-            <?php
+                                                <th class="text center bg-primary" colspan="2"> Ocorrências
+                                                    #<?= $i ?>  </th>
+                                            </tr>
+                                            <tr>
+                                                <th width="30%"> Data de Início:</th>
+                                                <td><?= exibirDataBr($ocorrencia['data_inicio']) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th width="30%"> Data de Encerramento:</th>
+                                                <td><?= $ocorrencia['data_fim'] == "0000-00-00" ? "Não é Temporada" : exibirDataBr($ocorrencia['data_fim']) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th width="30%"> Hora de Início:</th>
+                                                <td><?= date("H:i", strtotime($ocorrencia['horario_inicio'])) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th width="30%"> Hora de Encerramento:</th>
+                                                <td><?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th width="30%"> Retirada de Ingressos:</th>
+                                                <td><?= $retiradaIngresso['retirada_ingresso'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th width="30%"> Valor do Ingresso:</th>
+                                                <td><?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th width="30%"> Instituição:</th>
+                                                <td><?= $instituicao['nome'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th width="30%"> Local:</th>
+                                                <td><?= $local['local'] ?></td>
+                                            </tr>
+                                            <?php if ($ocorrencia['espaco_id'] != 0) { ?>
+                                                <tr>
+                                                    <th width="30%"> Espaço:</th>
+                                                    <td><?= $espaco['espaco'] ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <tr>
+                                                <th width="30%"> Observação:</th>
+                                                <td><?= $ocorrencia['observacao'] ?></td>
+                                            </tr>
+                                            <?php
                                             $i++;
                                         }
                                     } else { ?>
-            <tr>
-                <th class="text-center bg-danger"> Não há ocorrências inseridas</th>
-            </tr>
+                                        <tr>
+                                            <th class="text-center bg-danger"> Não há ocorrências inseridas</th>
+                                        </tr>
 
+                                    <?php } ?>
+                                </table>
+                            </div>
+
+                            <div class="row" align="center">
+                                <?php if (isset($mensagem)) {
+                                    echo $mensagem;
+                                }; ?>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             <?php } ?>
-            </table>
-        </div>
-
-        <div class="row" align="center">
-            <?php if (isset($mensagem)) {echo $mensagem;}; ?>
-        </div>
-
-    </div>
-</div>
-    </div>
-<?php } ?>
         </div>
     </div>
 </div>

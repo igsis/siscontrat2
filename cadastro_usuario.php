@@ -142,8 +142,8 @@ if (isset($_POST['cadastra'])) {
 
                                 <div class="form-group col-md-4">
                                     <label for="tel_usuario">Telefone* </label>
-                                    <input type="text" data-mask="(00) 00000-0000" id="tel_usuario" name="tel_usuario"
-                                           class="form-control" required>
+                                    <input type="text" id="tel_usuario" name="tel_usuario"
+                                           class="form-control" required onkeyup="mascara( this, mtel );">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="perfil">Código* </label> <br>
@@ -178,7 +178,7 @@ if (isset($_POST['cadastra'])) {
 <!-- iCheck -->
 <script src="visual/plugins/iCheck/icheck.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
-
+<script src="visual/dist/js/scripts.js"></script>
 <script>
 
     function geraUsuarioRf() {

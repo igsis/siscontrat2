@@ -134,7 +134,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Evento</h2>
+        <h2 class="page-header">Formação</h2>
 
         <div class="row">
             <div class="col-md-12">

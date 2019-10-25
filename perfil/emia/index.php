@@ -4,7 +4,7 @@ include "includes/menu.php";
 <div class="content-wrapper">
     <section class="content">
         <div class="box box-widget widget-user">
-            <div class="widget-user-header bg-navy-active">
+            <div class="widget-user-header bg-fuchsia-active">
                 <h3 class="widget-user-username">Módulo de EMIA</h3>
             </div>
             <div class="box-footer">

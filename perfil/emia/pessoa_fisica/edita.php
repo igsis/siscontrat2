@@ -228,9 +228,11 @@ if (isset($_POST["enviar"])) {
                 $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
-                $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
                 if ($y == 59) {
                     $allowedExts = array(".png", ".PNG", ".JPG", ".jpg"); //Extensões permitidas
+                }
+                else{
+                    $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
                 }
                 $ext = strtolower(substr($nome_arquivo, -4));
 
@@ -306,7 +308,7 @@ if ($foto == null) {
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Main content -->
+
     <section class="content">
         <!-- START FORM-->
         <h2 class="page-header">Edição de pessoa física</h2>
@@ -317,11 +319,14 @@ if ($foto == null) {
                         <?= $mensagem ?? NULL; ?>
                     </div>
                     <div class="box-header">
-
-                        <h3 class="box-title col-md-6">Pessoa física</h3>
-                        <img src="<?= $fotoImg ?>" alt="<?= $foto ?>" class="img-circle img-responsive col-md-6"
-                             style="width: 9%; height: 12%">
-
+                        <div class="row">
+                            <h3 class="box-title col-sm-12 col-md-6">Pessoa física</h3>
+                        </div>
+                        <div class="row" style="margin-top: 20px">
+                            <div class="col-xs-6 col-md-6 col-md-offset-5 col-xs-offset-5">
+                                <img src="<?= $fotoImg ?>" alt="<?= $foto ?>" class="img-circle img-responsive" style="max-width: 10rem;">
+                            </div>
+                        </div>
                     </div>
                     <div class="box-body">
                         <form action="?perfil=emia&p=pessoa_fisica&sp=edita" method="post">
@@ -425,7 +430,7 @@ if ($foto == null) {
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
                                     <input type="number" name="numero" class="form-control"
-                                           placeholder="Digite o número" required value="<?= $endereco['numero'] ?>">
+                                           placeholder="Digite o número" min="1" required value="<?= $endereco['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="complemento">Complemento: </label>

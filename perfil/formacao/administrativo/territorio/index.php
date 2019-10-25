@@ -91,7 +91,7 @@ $num_arrow = mysqli_num_rows($query);
 
                             <tfoot>
                             <tr>
-                                <th>Projeto</th>
+                                <th>Território</th>
                                 <th width="5%">Visualizar</th>
                                 <th width="5%">Excluir</th>
                             </tr>

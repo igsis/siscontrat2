@@ -309,6 +309,7 @@ function geraOpcao($tabela, $select = '')
 	{
 		//gera os options de um select
 		$sql = "SELECT * FROM $tabela ORDER BY 2";
+		echo $sql;
 		$con = bancoMysqli();
 		$query = mysqli_query($con,$sql);
 		while($option = mysqli_fetch_row($query))
@@ -412,10 +413,10 @@ function geraOpcaoLocais ($tabela, $select = '')
 	{
 		//retorna o tipo de evento
 		$con = bancoMysqli();
-		$sql = "SELECT * FROM tipo_evento WHERE id = '$id'";
+		$sql = "SELECT * FROM tipo_eventos WHERE id = '$id'";
 		$query = mysqli_query($con,$sql);
 		$x = mysqli_fetch_array($query);
-		return $x['tipoEvento'];
+		return $x['tipo_evento'];
 	}
 
 	function retornaObjeto($idPedido){

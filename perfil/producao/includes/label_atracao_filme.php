@@ -1,6 +1,6 @@
 <?php
 /**
- * Conteúdo da label "#atracao" do arquivo "visualizacao_producao.php"
+ * Conteúdo da label "#atracao" do arquivo "producao/eventos/verificados.php"
  */
 $atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'")
 ?>
