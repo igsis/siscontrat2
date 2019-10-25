@@ -1,4 +1,6 @@
 <?php
+$con = bancoMysqli();
+
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
 
@@ -16,7 +18,11 @@ $link_reserva_pia = $http . "impressao_reserva_pia.php";
 
 $idPedido = $_SESSION['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
+$sqlTesta = "SELECT * FROM pedidos WHERE origem_tipo_id = 2";
+$queryTesta = mysqli_query($con, $sqlTesta);
+$row = mysqli_num_rows($queryTesta);
 $idPf = $pedido['pessoa_fisica_id'];
+
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -42,13 +48,20 @@ $idPf = $pedido['pessoa_fisica_id'];
                                 <hr/>
                             </a>
                         </div>
-
-                        <div class="col-md-6">
-                            <a href="#" target="_blank" type="button">
+                        <?php
+                        if ($row == 0) { ?>
+                            <div class="col-md-6">
                                 <h4 align="center">Pedido de Contratação - Formação</h4>
-                            </a>
-                            <hr/>
-                        </div>
+                                <hr/>
+                            </div>
+                        <?php } else { ?>
+                            <div class="col-md-6">
+                                <a href="<?= $link_pcf ?>" target="_blank" type="button">
+                                    <h4 align="center">Pedido de Contratação - Formação</h4>
+                                </a>
+                                <hr/>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
 

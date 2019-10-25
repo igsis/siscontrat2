@@ -16,7 +16,6 @@ if (isset($_POST['salvar'])) {
 }
 
 
-$_SESSION['idFC'] = $idFormacao;
 $formacao = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
 $pedido = recuperaDados('pedidos', 'origem_id', $idFormacao . ' AND origem_tipo_id = 2');
 $pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);

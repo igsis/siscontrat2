@@ -34,8 +34,9 @@ class PDF extends FPDF
 }
 
 $idPedido = $_SESSION['idPedido'];
-$idFC = $_SESSION['idFC'];
+
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
+$idFC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
