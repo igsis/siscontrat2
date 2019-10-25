@@ -134,6 +134,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     $idPj = $pedido['pessoa_juridica_id'];
 }
 
+$_SESSION['idPedido'] = $idPedido;
 
 $contrato = recuperaDados('contratos', 'pedido_id', $pedido['id']);
 $sqlAtracao = "SELECT * FROM atracoes where evento_id = '$idEvento' AND publicado = 1";
@@ -275,6 +276,9 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right">
                                 Salvar
                             </button>
+                            <a href="?perfil=contrato&p=filtrar_contratos&sp=area_impressao">
+                                <button type="button"  class="btn btn-default">Ir para área de impressão</button>
+                            </a>
                         </div>
                     </form>
                 </div>
