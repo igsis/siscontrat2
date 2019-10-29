@@ -21,7 +21,8 @@ unset($_SESSION['idPedido']);
 
                                 <div class="col-md-4 form-group">
                                     <label for="num_processo">Número de processo</label>
-                                    <input type="text" class="form-control" name="num_processo" id="num_processo" data-mask="9999.9999/9999999-9" minlength="19">
+                                    <input type="text" class="form-control" name="num_processo" id="num_processo"
+                                           data-mask="9999.9999/9999999-9" minlength="19">
                                 </div>
 
                                 <div class="col-md-4 form-group">
@@ -34,9 +35,9 @@ unset($_SESSION['idPedido']);
                                 <div class="col-md-4 form-group">
                                     <label for="projeto">Projeto especial</label>
                                     <select name="projeto" id="projeto" class="form-control">
-                                        <option value="0">Selecione uma opção...</option>
+                                        <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao('projeto_especiais');
+                                        geraOpcao('projeto_especiais');
                                         ?>
                                     </select>
                                 </div>
@@ -44,19 +45,18 @@ unset($_SESSION['idPedido']);
                                 <div class="col-md-4 form-group">
                                     <label for="usuario">Fiscal, suplente ou usuário que cadastrou o evento</label>
                                     <select name="usuario" id="usuario" class="form-control">
-                                        <option value="0">Selecione uma opção... </option>
+                                        <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao('usuarios');
+                                        geraOpcao('usuarios');
                                         ?>
                                     </select>
                                 </div>
-                                
                                 <div class="col-md-4 form-group">
                                     <label for="status">Evento status</label>
                                     <select name="status" id="status" class="form-control">
-                                        <option value="0">Selecione uma opção...</option>
+                                        <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao('evento_status');
+                                        geraOpcao('locais');
                                         ?>
                                     </select>
                                 </div>

@@ -99,7 +99,7 @@ $sql = "SELECT e.nome_evento,
                                         </form>
                                     </td>
                                     <?php
-                                } else {
+                                }else {
                                     echo "<td>Não Possuí</td>";
                                 }
                                 ?>
