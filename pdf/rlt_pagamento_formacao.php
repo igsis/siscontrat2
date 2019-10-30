@@ -89,8 +89,7 @@ $pdf->Cell(65, $l, utf8_decode($linguagem['linguagem']), 0, 0, 'L');
 
 $pdf->Ln(7);
 
-$idFc = $pedido['origem_id'];
-$sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFc'";
+$sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFC'";
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
 

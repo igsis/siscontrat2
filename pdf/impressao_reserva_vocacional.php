@@ -40,8 +40,6 @@ $idPf = $pedido['pessoa_fisica_id'];
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
-$idFc = $pedido['origem_id'];
-
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
 $pdf->AddPage();

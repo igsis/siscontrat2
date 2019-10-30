@@ -36,9 +36,9 @@ class PDF extends FPDF
 $idPedido = $_SESSION['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
-$idFC = $pedido['origem_id'];
+$idEvento = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
-$contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
+$evento = recuperaDados('eventos', 'id', $idEvento);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
 $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
@@ -46,18 +46,28 @@ $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
 
-$sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFC'";
+$sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
 
-$idVigencia = $contratacao['form_vigencia_id'];
+$idAtracao = $_SESSION['idAtracao'];
 
-$carga = null;
-$sqlCarga = "SELECT carga_horaria FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia'";
-$queryCarga = mysqli_query($con,$sqlCarga);
+$sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
+$carga = $con->query($sqlCarga)->fetch_array();
 
-while ($countt = mysqli_fetch_array($queryCarga))
-    $carga += $countt['carga_horaria'];
+$sqlInstituicao = "SELECT i.nome FROM instituicoes AS i INNER JOIN ocorrencias AS o ON i.id = o.instituicao_id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
+$instituicao = $con->query($sqlInstituicao)->fetch_array();
+
+$objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
+
+$fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
+$suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
+
+$nome_fiscal = $fiscal['nome_completo'];
+$rfFiscal = $fiscal['rf_rg'];
+
+$nome_suplente = $suplente['nome_completo'];
+$rfSuplente = $suplente['rf_rg'];
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -88,9 +98,9 @@ $pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(23, $l, utf8_decode("Protocolo nº:"), 0, 0, 'L');
+$pdf->Cell(24, $l, utf8_decode("Protocolo nº:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($contratacao['protocolo']), 0, 'L', 0);
+$pdf->MultiCell(120, $l, utf8_decode($evento['protocolo']), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -102,7 +112,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(30, $l, 'Setor solicitante:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode("Supervisão de Formação Cultural"), 0, 'L', 0);
+$pdf->MultiCell(120, $l, utf8_decode($instituicao['nome']), 0, 'L', 0);
 
 $pdf->Ln(5);
 
@@ -132,43 +142,29 @@ $pdf->MultiCell(168, $l, utf8_decode($tel), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
+$pdf->Cell(12, $l, 'Email:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(168, $l, utf8_decode($pessoa['email']), 0, 'L', 0);
 
-$idLinguagem = $contratacao['linguagem_id'];
-$linguagem = recuperaDados('linguagens', 'id', $idLinguagem);
-
-$idPrograma = $contratacao['programa_id'];
-$programa = recuperaDados('programas', 'id', $idPrograma);
-
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(18,$l,"Programa:",0,0,'L');
+$pdf->Cell(13, $l, "Objeto:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(20,$l, utf8_decode($programa['programa']), 0,0,'L');
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(21,$l,"Linguagem:", 0,0,'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(20,$l, utf8_decode($linguagem['linguagem']), 0,0,'L');
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11,$l,"Edital:", 0,0,'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(20,$l, utf8_decode($programa['edital']), 0,0,'L');
+$pdf->Cell(20, $l, utf8_decode($objeto), 0, 0, 'L');
 
 
 $pdf->Ln(7);
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, 'Ano:', '0', '0', 'L');
+$pdf->Cell(15, $l, utf8_decode('Período:'), '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($contratacao['ano']), 0, 'L', 0);
+$pdf->MultiCell(168, $l, utf8_decode(retornaPeriodoNovo($idEvento,'ocorrencias')), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(25, $l, utf8_decode("Carga Horária:"), '0', '0', 'L');
+$pdf->Cell(26, $l, utf8_decode("Carga Horária:"), '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($carga), 0, 'L', 0);
+$pdf->MultiCell(168, $l, utf8_decode($carga['carga_horaria'] ?? "Não Possuí" ), 0, 'L', 0);
 
 
 while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
@@ -207,7 +203,8 @@ $pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(155, $l, utf8_decode("Nos termos do art. 6º do decreto 54.873/2014, fica designado como fiscal desta contratação artística a servidora Natalia Silva Cunha, RF 842.773.9 e, como substituto, Ilton T. Hanashiro Yogi, RF 800.116.2. Diante do exposto, solicitamos autorização para prosseguimento do presente."));
+$pdf->MultiCell(155, $l, utf8_decode("Nos termos do art. 6º do decreto 54.873/2014, fica designado como fiscal desta contratação artística o(a) servidor(a) "."$nome_fiscal".", RF "."$rfFiscal"." e, como substituto, "."$nome_suplente".", RF "."$rfSuplente".". Diante do exposto, solicitamos autorização para prosseguimento do presente."));
 
 $pdf->Output();
 ?>
+

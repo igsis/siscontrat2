@@ -11,6 +11,7 @@ $sql = "SELECT  e.id AS 'idEvento',
                 e.nome_evento,
                 e.tipo_evento_id,
                 p.id,
+                i.nome,
                 p.origem_id,
                 e.protocolo,
 		        p.numero_processo,
@@ -30,6 +31,7 @@ $sql = "SELECT  e.id AS 'idEvento',
         INNER JOIN pessoa_fisicas AS pf ON pf.id = p.pessoa_fisica_id
         INNER JOIN ocorrencias AS o ON e.id = o.origem_ocorrencia_id
         INNER JOIN locais AS l ON l.id = o.local_id
+        INNER JOIN instituicoes AS i ON o.instituicao_id = i.id
         WHERE p.id = '$idPedido' AND p.publicado = 1 AND e.publicado = 1";
 $pedido = $con->query($sql)->fetch_assoc();
 
@@ -61,13 +63,16 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                             <td><?= $pedido['numero_processo'] ?></td>
                         </tr>
 
+                        <tr>
+                            <th width="30%">Setor:</th>
+                            <td><?= $pedido['nome'] ?></td>
+                        </tr>
+
                         <?php
                         if ($pedido['pessoa_tipo_id'] == 1) {
-                            $tipo = "Física";
                             $pessoa = recuperaDados("pessoa_fisicas", 'id', $pedido['pessoa_fisica_id'])['nome'];
                             $link = $linkpf;
                         } else if ($pedido['pessoa_tipo_id'] == 2) {
-                            $tipo = "Jurídica";
                             $pessoa = recuperaDados("pessoa_juridicas", 'id', $pedido['pessoa_juridica_id'])['razao_social'];
                             $link = $linkpj;
                         }
@@ -126,7 +131,6 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                         }
 
                         ?>
-
 
                         <tr>
                             <th width="30%">Justificativa:</th>

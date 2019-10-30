@@ -6,6 +6,10 @@ $http = $server . "/pdf/";
 
 $link_pcf = $http . "impressao_pedido_formacao.php";
 
+$linkpf = $http . "impressao_pedido_pf.php";
+
+$linkpj = $http . "impressao_pedido_pj.php";
+
 $link_vocacional = $http . "rlt_proposta_formacao.php";
 
 $link_facc = $http . "rlt_fac_pf.php";
@@ -17,11 +21,19 @@ $link_reserva_sme = $http . "impressao_reserva_sme.php";
 $link_reserva_pia = $http . "impressao_reserva_pia.php";
 
 $idPedido = $_SESSION['idPedido'];
+
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
-$sqlTesta = "SELECT * FROM pedidos WHERE origem_tipo_id = 2";
+$idEvento = $_SESSION['idEvento'];
+$sqlTesta = "SELECT * FROM pedidos WHERE origem_tipo_id = 2 AND origem_id = $idEvento";
 $queryTesta = mysqli_query($con, $sqlTesta);
 $row = mysqli_num_rows($queryTesta);
 $idPf = $pedido['pessoa_fisica_id'];
+
+if ($pedido['pessoa_tipo_id'] == 1) {
+    $link_pc = $linkpf;
+} else if ($pedido['pessoa_tipo_id'] == 2) {
+    $link_pc = $linkpj;
+}
 
 ?>
 <div class="content-wrapper">
@@ -40,24 +52,32 @@ $idPf = $pedido['pessoa_fisica_id'];
                             <h4 align="center">PEDIDO</h4>
                         </nav>
                     </div>
-
                     <div class="row">
-                        <div class="col-md-6">
-                            <a href="#" target="_blank" type="button">
-                                <h4 align="center">Pedido de Contratação</h4>
-                                <hr/>
-                            </a>
-                        </div>
                         <?php
                         if ($row == 0) { ?>
-                            <div class="col-md-6">
-                                <h4 align="center">Pedido de Contratação - Formação</h4>
+                            <div class="col-md-12">
+                                <a href="<?= $link_pc ?>" target="_blank">
+                                    <button type="button" class="btn btn-outline-info center-block">
+                                        Pedido de Contratação
+                                    </button>
+                                </a>
                                 <hr/>
                             </div>
                         <?php } else { ?>
                             <div class="col-md-6">
-                                <a href="<?= $link_pcf ?>" target="_blank" type="button">
-                                    <h4 align="center">Pedido de Contratação - Formação</h4>
+                                <a href="<?= $link_pc ?>" target="_blank">
+                                    <button type="button" class="btn btn-outline-info center-block">
+                                        Pedido de Contratação
+                                    </button>
+                                </a>
+                                <hr/>
+                            </div>
+
+                            <div class="col-md-6">
+                                <a href="<?= $link_pcf ?>" target="_blank">
+                                    <button type="button" class="btn btn-outline-info center-block">
+                                        Pedido de Contratação - Formação
+                                    </button>
                                 </a>
                                 <hr/>
                             </div>
@@ -73,40 +93,54 @@ $idPf = $pedido['pessoa_fisica_id'];
                     </div>
 
                     <div class="col-md-6">
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Vocacional</h4>
+                        <a href="<?= $link_vocacional ?>" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Vocacional
+                            </button>
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Editais</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Editais
+                            </button>
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Contratações gerais - Com cachê</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Contratações gerais - Com cachê
+                            </button>
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Proposta Oficinas / Convênio MINC</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Proposta Oficinas / Convênio MINC
+                            </button>
                         </a>
                         <hr/>
                     </div>
 
                     <div class="col-md-6">
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">PIÁ</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                PIÁ
+                            </button>
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">EMIA</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                EMIA
+                            </button>
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Contratações gerais - Reversão de Bilheteria</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Contratações gerais - Reversão de Bilheteria
+                            </button>
                         </a>
                         <hr/>
                     </div>
@@ -120,25 +154,33 @@ $idPf = $pedido['pessoa_fisica_id'];
                     </div>
 
                     <div class="col-md-6">
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Direitos Conexos</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Direitos Conexos
+                            </button>
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Convênio 500</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Convênio 500
+                            </button>
                         </a>
                         <hr/>
                     </div>
 
                     <div class="col-md-6">
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Exclusividade</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Exclusividade
+                            </button>
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Condicionamento</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Condicionamento
+                            </button>
                         </a>
                         <hr/>
                     </div>
@@ -152,20 +194,19 @@ $idPf = $pedido['pessoa_fisica_id'];
                     </div>
 
                     <div class="col-md-6">
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">FACC</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">NORMAS INTERNAS - Teatros Municipais</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                FACC
+                            </button>
                         </a>
                         <hr/>
                     </div>
 
                     <div class="col-md-6">
                         <a href="#" type="button" target="_blank">
-                            <h4 align="center">Parecer da Comissão</h4>
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Parecer da Comissão
+                            </button>
                         </a>
                         <hr/>
                     </div>
@@ -173,93 +214,133 @@ $idPf = $pedido['pessoa_fisica_id'];
 
                 <div class="row">
                     <div class="col-md-12">
-                        <nav class="navbar navbar-static-top bg-light-blue-active">
-                            <h4 align="center">PEDIDO DE RESERVA</h4>
-                        </nav>
-                    </div>
-
-                    <div class="col-md-6">
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">FORMAÇÃO - Vocacional</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">VOCACIONAL/PIÁ - SME</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Reserva CSMB</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Reserva CCSP</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Oficina</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Reserva Gabinete</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Reserva DPH</h4>
-                        </a>
-                        <hr/>
-                    </div>
-
-                    <div class="col-md-6">
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">FORMAÇÃO - PIÁ</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Reserva Centros Culturais</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Reserva Casas de Cultura</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Reserva BMA</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Reserva Oficinas CSMB e BMA</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Reserva Global</h4>
-                        </a>
-                        <hr/>
-
-                        <a href="#" target="_blank" type="button">
-                            <h4 align="center">Reserva DPH - Jornada do Patrimônio</h4>
+                        <a href="#" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                NORMAS INTERNAS - Teatros Municipais
+                            </button>
                         </a>
                         <hr/>
                     </div>
                 </div>
             </div>
-            <div class="box-footer">
-                <a href="?perfil=formacao&p=pedido_contratacao&sp=listagem">
-                    <button type="button" class="btn btn-default">Voltar</button>
-                </a>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <nav class="navbar navbar-static-top bg-light-blue-active">
+                        <h4 align="center">PEDIDO DE RESERVA</h4>
+                    </nav>
+                </div>
+
+                <div class="col-md-6">
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            FORMAÇÃO - Vocacional
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            VOCACIONAL/PIÁ - SME
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            Reserva CSMB
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            Reserva CCSP
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            Oficina
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            Reserva Gabinete
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            Reserva DPH
+                        </button>
+                    </a>
+                    <hr/>
+                </div>
+
+                <div class="col-md-6">
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            FORMAÇÃO - PIÁ
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            Reserva Centros Culturais
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            Reserva Casas de Cultura
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            Reserva BMA
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            Reserva Oficinas CSMB e BMA
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            Reserva Global
+                        </button>
+                    </a>
+                    <hr/>
+
+                    <a href="#" target="_blank">
+                        <button type="button" class="btn btn-outline-info center-block">
+                            Reserva DPH - Jornada do Patrimônio
+                        </button>
+                    </a>
+                    <hr/>
+                </div>
             </div>
         </div>
+        <div class="box-footer">
+            <a href="?perfil=formacao&p=pedido_contratacao&sp=listagem">
+                <button type="button" class="btn btn-default">Voltar</button>
+            </a>
+        </div>
+</div>
 
-    </section>
+</section>
 </div>
 

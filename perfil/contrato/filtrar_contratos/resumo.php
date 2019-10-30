@@ -139,6 +139,7 @@ $_SESSION['idPedido'] = $idPedido;
 $contrato = recuperaDados('contratos', 'pedido_id', $pedido['id']);
 $sqlAtracao = "SELECT * FROM atracoes where evento_id = '$idEvento' AND publicado = 1";
 $queryAtracao = mysqli_query($con, $sqlAtracao);
+
 ?>
 
 <div class="content-wrapper">
@@ -189,6 +190,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
 
                             <?php
                             while ($atracao = mysqli_fetch_array($queryAtracao)) {
+                                $_SESSION['idAtracao'] = $atracao['id'];
                                 ?>
                                 <div class="row">
                                     <input type="hidden" name="idAtracao[]" value="<?= $atracao['id'] ?>">
