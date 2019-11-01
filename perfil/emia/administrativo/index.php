@@ -8,7 +8,7 @@
                 <div class="row">
                     <div class="col-md-12 border-right">
                         <div class="description-block">
-                            <span class="description-header">Aqui você acessa a parte administrativa do módulo Formação.<br/><br/></span>
+                            <span class="description-header">Aqui você acessa a parte administrativa do módulo EMIA.<br/><br/></span>
                         </div>
                     </div>
                 </div>

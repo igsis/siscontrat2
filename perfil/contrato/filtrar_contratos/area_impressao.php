@@ -133,7 +133,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </div>
 
                     <div class="col-md-6">
-                        <a href="#" target="_blank">
+                        <a href="<?= $link_vocacional ?>" target="_blank">
                             <button type="button" class="btn btn-outline-info center-block">
                                 PIÁ
                             </button>

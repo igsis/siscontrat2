@@ -1,10 +1,17 @@
 <?php
+//include para contratos
 include "../perfil/emia/includes/menu.php";
 
 if (isset($_GET['p'])) {
     if (isset($_GET['sp'])) {
         $p = $_GET['p'];
         $sp = $_GET['sp'];
+
+
+        if ($p == 'administrativo') {
+
+            include "../perfil/emia/includes/menu_adm.php";
+        }
 
         if (isset($_GET['spp'])) {
             $spp = $_GET['spp'];

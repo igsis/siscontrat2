@@ -91,7 +91,7 @@ if(isset($_POST['editar'])){
             <div class="box-header with-border">
                 <h2 class="box-title">Edição de Vigência</h2>
             </div>
-            <form method="post" action="?perfil=emia&p=vigencia&sp=edita" role="form">
+            <form method="post" action="?perfil=emia&p=administrativo&sp=vigencia&spp=edita" role="form">
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-2">
@@ -183,7 +183,7 @@ if(isset($_POST['editar'])){
 
                 </div>
                 <div class="box-footer">
-                    <a href="?perfil=emia&p=vigencia&sp=listagem">
+                    <a href="?perfil=emia&p=administrativo&sp=vigencia&spp=listagem">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
                     <input type="hidden" name="idEV" value="<?= $ev['id'] ?>" id="idEV">
