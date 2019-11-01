@@ -26,6 +26,8 @@ $link_reserva_sme = $http . "impressao_reserva_sme.php";
 
 $link_reserva_pia = $http . "impressao_reserva_pia.php";
 
+$link_proposta_convenio = $http . "rlt_proposta_oficina_convenio.php";
+
 $idPedido = $_SESSION['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -122,7 +124,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank">
+                        <a href="<?= $link_proposta_convenio ?>" target="_blank">
                             <button type="button" class="btn btn-outline-info center-block">
                                 Proposta Oficinas / Convênio MINC
                             </button>
