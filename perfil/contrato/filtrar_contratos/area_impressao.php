@@ -16,6 +16,8 @@ $linkpf_edital = $http . "exporta_proposta_edital_pf_word.php";
 
 $linkpj_edital = $http . "exporta_proposta_edital_pj_word.php";
 
+$link_proposta_padrao = $http . "rlt_proposta_padrao.php";
+
 $link_facc = $http . "rlt_fac_pf.php";
 
 $link_reserva_vocacional = $http . "impressao_reserva_vocacional.php";
@@ -113,7 +115,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank">
+                        <a href="<?= $link_proposta_padrao ?>" target="_blank">
                             <button type="button" class="btn btn-outline-info center-block">
                                 Contratações gerais - Com cachê
                             </button>

@@ -19,8 +19,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 $idLocal = $ocorrencia['local_id'];
 $sqlLocal = "SELECT local FROM locais WHERE id = '$idLocal'";
-$idEvento = $ocorrencia['origem_ocorrencia_id'];
 $locais = $con->query($sqlLocal)->fetch_array();
+$idEvento = $ocorrencia['origem_ocorrencia_id'];
 
 $idNacionalidade = $pessoa['nacionalidade_id'];
 $sqlNacionalidade = "SELECT nacionalidade FROM nacionalidades WHERE id = '$idNacionalidade'";
@@ -129,7 +129,7 @@ echo
 
     echo "<p><strong>Tipo:</strong> ".retornaTipo($evento['id'])."</p>";
     echo "<p><strong>Data/Período:</strong> ".$periodo."</p>";
-    echo "<p><strong>Horário:</strong> ".$ocorrencia['horario_inicio']. ' - ' . $ocorrencia['horario_fim']. "</p>";
+    echo "<p><strong>Horário:</strong> ".exibirHora($ocorrencia['horario_inicio']) . ' - ' . exibirHora($ocorrencia['horario_fim']) . "</p>";
     echo "<p><strong>Local:</strong> ".$locais['local']."</p>";
     echo "<p>&nbsp;</p>";
 
