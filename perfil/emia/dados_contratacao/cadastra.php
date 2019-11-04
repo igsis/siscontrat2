@@ -80,6 +80,7 @@
                             <textarea name="observacao" id="observacao"  rows="3" type="text" class="form-control"> </textarea>
                         </div>
                     </div>
+                    <br>
 
                     <div class="row">
                         <div class="col-md-6">

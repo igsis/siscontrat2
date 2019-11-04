@@ -17,13 +17,12 @@ $sqlEvento = "SELECT
                 eve.espaco_publico AS 'Evento Público:',
                 eve.fomento AS 'Fomento:',
                 env.visualizado AS 'Visualizado:'
-                
                 FROM eventos AS eve
                 INNER JOIN tipo_eventos AS te ON eve.tipo_evento_id = te.id
                 INNER JOIN relacao_juridicas AS rj ON eve.relacao_juridica_id = rj.id
                 INNER JOIN projeto_especiais AS pe ON eve.projeto_especial_id = pe.id
                 INNER JOIN usuarios AS fiscal ON eve.fiscal_id = fiscal.id
-                INNER JOIN usuarios AS suplente ON eve.suplente_id = suplente_id
+                INNER JOIN usuarios AS suplente ON eve.suplente_id = suplente.id
                 INNER JOIN producao_eventos AS env ON env.evento_id = eve.id 
                 WHERE eve.id = '$idEvento'";
 
