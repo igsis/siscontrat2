@@ -1,7 +1,5 @@
 <?php
 $con = bancoMysqli();
-
-
 $protocolo = '';
 $numprocesso = '';
 $objetoevento = '';
@@ -60,7 +58,6 @@ $sql = "SELECT p.numero_processo,
                 $tipoEvento $instituicao $statusPedido";
 
 ?>
-
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">

@@ -10,10 +10,10 @@ $pasta = "?perfil=juridico&p=";
             <li><a href="<?= $pasta ?>filtrar_evento&sp=pesquisa_evento">
                     <i class="fa fa-circle-o"></i><span>Buscar por Evento</span>
                 </a></li>
-            <li><a href="<?= $pasta ?>filtrar_contratos&sp=pesquisa_contratos"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>filtrar_formacao&sp=pesquisa_formacao"><i class="fa fa-circle-o"></i>
                     <span>Buscar Formação</span></a>
             </li>
-            <li><a href="<?= $pasta ?>filtrar_sem_operador&sp=pesquisa_contratos"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>filtrar_relatorio&sp=pesquisa_contratos"><i class="fa fa-circle-o"></i>
                     <span>Relatório por periodo</span></a>
             </li>
             <?php
