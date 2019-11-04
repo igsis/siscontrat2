@@ -6,11 +6,17 @@ $http = $server . "/pdf/";
 
 $link_pcf = $http . "impressao_pedido_formacao.php";
 
-$linkpf = $http . "impressao_pedido_pf.php";
+$linkpf_pc = $http . "impressao_pedido_pf.php";
 
-$linkpj = $http . "impressao_pedido_pj.php";
+$linkpj_pc = $http . "impressao_pedido_pj.php";
 
 $link_vocacional = $http . "rlt_proposta_formacao.php";
+
+$linkpf_edital = $http . "exporta_proposta_edital_pf_word.php";
+
+$linkpj_edital = $http . "exporta_proposta_edital_pj_word.php";
+
+$link_proposta_padrao = $http . "rlt_proposta_padrao.php";
 
 $link_facc = $http . "rlt_fac_pf.php";
 
@@ -19,6 +25,8 @@ $link_reserva_vocacional = $http . "impressao_reserva_vocacional.php";
 $link_reserva_sme = $http . "impressao_reserva_sme.php";
 
 $link_reserva_pia = $http . "impressao_reserva_pia.php";
+
+$link_proposta_convenio = $http . "rlt_proposta_oficina_convenio.php";
 
 $idPedido = $_SESSION['idPedido'];
 
@@ -30,9 +38,11 @@ $row = mysqli_num_rows($queryTesta);
 $idPf = $pedido['pessoa_fisica_id'];
 
 if ($pedido['pessoa_tipo_id'] == 1) {
-    $link_pc = $linkpf;
+    $link_pc = $linkpf_pc;
+    $link_edital = $linkpf_edital;
 } else if ($pedido['pessoa_tipo_id'] == 2) {
-    $link_pc = $linkpj;
+    $link_pc = $linkpj_pc;
+    $link_edital = $linkpj_edital;
 }
 
 ?>
@@ -100,21 +110,21 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank">
+                        <a href="<?= $link_edital ?>" target="_blank">
                             <button type="button" class="btn btn-outline-info center-block">
                                 Editais
                             </button>
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank">
+                        <a href="<?= $link_proposta_padrao ?>" target="_blank">
                             <button type="button" class="btn btn-outline-info center-block">
                                 Contratações gerais - Com cachê
                             </button>
                         </a>
                         <hr/>
 
-                        <a href="#" target="_blank">
+                        <a href="<?= $link_proposta_convenio ?>" target="_blank">
                             <button type="button" class="btn btn-outline-info center-block">
                                 Proposta Oficinas / Convênio MINC
                             </button>
@@ -123,7 +133,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </div>
 
                     <div class="col-md-6">
-                        <a href="#" target="_blank">
+                        <a href="<?= $link_vocacional ?>" target="_blank">
                             <button type="button" class="btn btn-outline-info center-block">
                                 PIÁ
                             </button>

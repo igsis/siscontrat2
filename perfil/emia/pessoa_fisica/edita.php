@@ -31,7 +31,6 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $email = $_POST['email'];
     $telefones = $_POST['telefone'];
     $nit = $_POST['nit'] ?? NULL;
-    $incricoes = $_POST['inscricaoPissInss'] ?? NULL;
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $banco = $_POST['banco'] ?? NULL;
     $agencia = $_POST['agencia'] ?? NULL;

@@ -35,6 +35,7 @@ if(isset($_POST['editar'])){
 
 if (isset($_POST['edit'])) {
     $idEC = $_POST['idECEdit'];
+    $_SESSION['idEC'] = $idEC;
     $ec = recuperaDados('emia_contratacao', 'id', $idEC);
 }
 
@@ -121,6 +122,7 @@ if (isset($_POST['edit'])) {
                             <textarea name="observacao" id="observacao"  rows="3" type="text" class="form-control"><?=$ec['observacao']?></textarea>
                         </div>
                     </div>
+                    <br>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -150,6 +152,9 @@ if (isset($_POST['edit'])) {
                 </a>
                 <input type="hidden" name="idEC" value="<?=$idEC?>" id="idEC">
                 <button type="submit" class="btn btn-primary pull-right" name="editar" id="editar">Salvar</button>
+                <a href="?perfil=emia&p=pedido_contratacao&sp=cadastra">
+                    <button type="button" class="btn btn-default pull-right">Gerar pedido de contratação</button>
+                </a>
             </div>
             </form>
         </div>

@@ -7,7 +7,7 @@
             <div class="box-header with-border">
                 <h3 class="box-title">Cadastro de cargo</h3>
             </div>
-            <form method="post" action="?perfil=emia&p=cargo&sp=listagem" role="form">
+            <form method="post" action="?perfil=emia&p=administrativo&sp=cargo&spp=listagem" role="form">
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-4">
@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    <a href="?perfil=emia&p=cargo&sp=listagem">
+                    <a href="?perfil=emia&p=administrativo&sp=cargo&spp=listagem">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
                     <button name="cadastra" id="cadastra" type="submit" class="btn btn-primary pull-right">Cadastrar </button>

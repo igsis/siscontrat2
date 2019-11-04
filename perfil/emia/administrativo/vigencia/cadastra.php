@@ -8,7 +8,7 @@
                 <h3 class="box-title">Vigência</h3>
             </div>
 
-            <form method="post" action="?perfil=emia&p=vigencia&sp=edita" role="form">
+            <form method="post" action="?perfil=emia&p=administrativo&sp=vigencia&spp=edita" role="form">
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-2  form-group">
@@ -34,7 +34,7 @@
 
 
                 <div class="box-footer">
-                    <a href="?perfil=emia&p=vigencia&sp=listagem">
+                    <a href="?perfil=emia&p=administrativo&sp=vigencia&spp=listagem">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
                     <button name="cadastra" id="cadastra" type="submit" class="btn btn-primary pull-right">Cadastrar
