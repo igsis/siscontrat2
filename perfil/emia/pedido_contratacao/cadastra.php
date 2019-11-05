@@ -13,6 +13,7 @@ $sql = "SELECT pf.nome,
                ec.cronograma,
                ec.observacao,
                v.numero_parcelas,
+               ec.pessoa_fisica_id,
                f.nome_completo AS 'fiscal',
                s.nome_completo AS 'suplente'
 		FROM emia_contratacao AS ec
@@ -49,9 +50,8 @@ $valor = dinheiroParaBr($valor);
                     <div class="row">
                         <div class="col-md-6">
                             <label for="pf">Pessoa Física: *</label>
-                            <select name="pf" id="pf" class="form-control" required disabled>
-                                <option><?= $ec['nome'] ?></option>
-                            </select>
+                            <input type="hidden" name="pf" id="pf" value="<?=$ec['pessoa_fisica_id']?>">
+                            <input type="text" value="<?=$ec['nome']?>"disabled class="form-control">
                         </div>
 
                         <div class="col-md-6">
@@ -149,13 +149,13 @@ $valor = dinheiroParaBr($valor);
                             <div class="form-group col-md-3">
                                 <label for="dataKit">Data kit pagamento:</label>
                                 <input type="date" name="dataKit" class="form-control" id="datepicker10"
-                                       placeholder="DD/MM/AAAA">
+                                       placeholder="DD/MM/AAAA" required>
                             </div>
 
                             <div class="form-group col-md-3">
                                 <label for="numeroProcesso">Número do Processo: *</label>
                                 <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
-                                       data-mask="9999.9999/9999999-9" minlength="19">
+                                       data-mask="9999.9999/9999999-9" minlength="19" required>
                             </div>
                         </div>
 
