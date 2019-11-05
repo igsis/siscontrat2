@@ -90,10 +90,8 @@ $sql = "SELECT p.numero_processo,
                                     <td>
                                         <form action="?perfil&=juridico&p=eventos&sp=pesquisa_evento" role="form"
                                               method="POST">
-                                            <input type="hidden" name="idPedido" id="idPedido"
-                                                   value="<?= $evento['id'] ?>">
-                                            <button type="submit"
-                                                    class="btn-btn-primary"><?= $evento['numprocesso'] ?></button>
+                                            <input type="hidden" name="idPedido" id="idPedido"  value="<?= $evento['id'] ?>">
+                                            <button type="submit"  class="btn-btn-primary"><?= $evento['numprocesso'] ?></button>
                                         </form>
                                     </td>
                                     <?php
@@ -116,8 +114,7 @@ $sql = "SELECT p.numero_processo,
                                 <?php
                                 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
                                 ?>
-                                <td><?=
-                                    $objeto ?></td>
+                                <td><?=  $objeto ?></td>
                             </tr>
                             <?php
                         }

@@ -18,7 +18,8 @@ if (isset($_POST['statuspedido']) && $_POST['statuspedido'] != null) {
 }
 $sql = "SELECT numero_processo,
         status_pedido_id,
-        origem_id
+        origem_id,
+        pessoa_fisica_id
         
         
         FROM pedidos WHERE publicado = 1 ";
@@ -45,8 +46,9 @@ $sql = "SELECT numero_processo,
                     </thead>
                     <tbody>
 
-                    </tbody>
 
+
+                    </tbody>
                 </table>
             </div>
             <div class="box-footer">
@@ -57,8 +59,6 @@ $sql = "SELECT numero_processo,
         </div>
     </section>
 </div>
-
-
 <script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 

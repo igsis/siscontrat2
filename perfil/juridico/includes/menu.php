@@ -13,7 +13,7 @@ $pasta = "?perfil=juridico&p=";
             <li><a href="<?= $pasta ?>filtrar_formacao&sp=pesquisa_formacao"><i class="fa fa-circle-o"></i>
                     <span>Buscar Formação</span></a>
             </li>
-            <li><a href="<?= $pasta ?>filtrar_relatorio&sp=pesquisa_contratos"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>relatorio_periodo&sp=relatorio_periodo"><i class="fa fa-circle-o"></i>
                     <span>Relatório por periodo</span></a>
             </li>
             <?php
