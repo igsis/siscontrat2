@@ -2,7 +2,6 @@
 $con = bancoMysqli();
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
-$idFC = $pedido['origem_id'];
 $_SESSION['idPedido'] = $idPedido;
 
 

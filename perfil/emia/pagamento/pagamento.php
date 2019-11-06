@@ -1,0 +1,170 @@
+<?php
+$con = bancoMysqli();
+$idPedido = $_POST['idPedido'];
+
+$pedido = recuperaDados('pedidos', 'origem_id', $idPedido);
+$ec = recuperaDados('emia_contratacao', 'id', $pedido['origem_id']);
+$pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
+
+$_SESSION['idPedido'] = $idPedido;
+
+$sql = "SELECT * FROM parcelas where pedido_id = '$idPedido'";
+$query = mysqli_query($con, $sql);
+
+$idLocal = $ec['local_id'];
+$sqlLocal = "SELECT local FROM locais WHERE id = $idLocal";
+$local = $con->query($sqlLocal)->fetch_array();
+
+$idPf = $pf['id'];
+
+$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
+$http = $server . "/pdf/";
+
+$link_facc = $http . "rlt_fac_pf.php";
+
+$link_pagamento = $http . "rlt_pagamento_formacao.php";
+
+$link_recibo = $http . "rlt_recibo_formacao.php";
+
+$link_atestado = $http . "rlt_atestado_servico_formacao.php";
+
+$link_horas = $http . "rlt_horas_formacao.php";
+
+$link_contabilidade = $http . "rlt_contabilidade_formacao.php";
+?>
+
+<div class="content-wrapper">
+    <section class="content">
+        <h2 class="page-header">Pedido de pagamento da EMIA</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <form method="POST" action="?perfil=formacao&p=pagamento&sp=pagamento"
+                          role="form">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="protocolo">Protocolo</label>
+                                    <input type="text" name="protocolo" class="form-control" value="<?= $ec['protocolo'] ?>"
+                                           disabled>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="numProcesso">Número do processo</label>
+                                    <input type="text" name="numProcesso" class="form-control" value="<?= $pedido['numero_processo'] ?>"
+                                           disabled>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="local">Local</label>
+                                    <input type="text" name="local" class="form-control" value="<?= $local['local'] ?>" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button">
+                                <button type="button" class="btn btn-primary center-block">Gerar FACC</button>
+                            </a>
+                        </div>
+                    </form>
+
+                    <table id="tblParcela" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>Parcela</th>
+                            <th>Valor</th>
+                            <th>Pagamento</th>
+                            <th></th>
+                            <th></th>
+                            <th style="text-align:center">Gerar</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <?php
+                            while ($parcela = mysqli_fetch_array($query)) {
+                                ?>
+                                <tr>
+                                    <td><?= $parcela['numero_parcelas'] ?></td>
+                                    <td><?= dinheiroParaBr($parcela['valor']) ?></td>
+                                    <td><?= exibirDataBr($parcela['data_pagamento']) ?></td>
+
+                                    <th style="text-align:center">
+                                        <form action="<?= $link_pagamento ?>" method="post" target="_blank">
+                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <button type="submit" class="btn btn-primary">Pagamento</button>
+                                        </form>
+                                    </th>
+
+                                    <th style="text-align:center">
+                                        <form action="<?= $link_recibo ?>" method="post" target="_blank">
+                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <button type="submit" class="btn btn-primary">Recibo</button>
+                                        </form>
+                                    </th>
+
+                                    <th style="text-align:center">
+                                        <form action="<?= $link_atestado ?>" method="post" target="_blank">
+                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <button type="submit" class="btn btn-primary">Atestado Serviço</button>
+                                        </form>
+                                    </th>
+
+                                    <th style="text-align:center">
+                                        <form action="<?= $link_horas ?>" method="post" target="_blank">
+                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <button type="submit" class="btn btn-primary">FFI</button>
+                                        </form>
+                                    </th>
+
+                                    <th style="text-align:center">
+                                        <form action="<?= $link_contabilidade ?>" method="post" target="_blank">
+                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <button type="submit" class="btn btn-primary">Contabilidade</button>
+                                        </form>
+                                    </th>
+
+                                </tr>
+                                <?php
+                        }
+                        ?>
+                        </tbody>
+
+                        <tfoot>
+                        <tr>
+                            <th>Parcela</th>
+                            <th>Valor</th>
+                            <th>Pagamento</th>
+                            <th></th>
+                            <th></th>
+                            <th style="text-align:center">Gerar</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#tblParcela').DataTable({
+            "language": {
+                "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
+            },
+            "responsive": true,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+        });
+    });
+</script>

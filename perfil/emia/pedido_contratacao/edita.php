@@ -43,7 +43,6 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
                    '$obs')";
         if (mysqli_query($con, $sql)) {
             $idPedido = recuperaUltimo('pedidos');
-            $_SESSION['idEC'] = $idPedido;
             gravarLog($sql);
             $sqlInsert = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) 
                     SELECT p.id, ep.numero_parcelas, ep.valor, ep.data_pagamento 
@@ -76,8 +75,9 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     }
 }
 
-if (isset($_POST['carregar']))
+if (isset($_POST['carregar'])){
     $idPedido = $_POST['idEc'];
+}
 
 if (isset($_POST['parcelaEditada'])) {
     $idPedido = $_SESSION['idEC'];
@@ -112,8 +112,6 @@ if (isset($_POST['parcelaEditada'])) {
     $sql = "UPDATE pedidos SET valor_total = '$baldeValor' WHERE id = '$idPedido'";
     mysqli_query($con, $sql);
 }
-
-$idPedido  = $_SESSION['idEC'];
 
 $sql = "SELECT pf.nome,
 		       ec.ano,

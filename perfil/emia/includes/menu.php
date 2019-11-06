@@ -34,6 +34,9 @@ $pasta = "?perfil=emia&p=";
             <li><a href="<?= $pasta ?>pedido_contratacao&sp=listagem"><i class="fa fa-circle-o"></i>
                     <span>Pedido de Contratação</span></a></li>
 
+            <li><a href="<?= $pasta ?>pagamento&sp=pesquisa"><i class="fa fa-circle-o"></i>
+                    <span>Pagamento</span></a></li>
+
                 <?php
             include "../perfil/includes/menu_mais.php";
             ?>
