@@ -178,4 +178,4 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
         </div>
     </section>
 </div>
-
+20191106.00001-E

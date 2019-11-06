@@ -58,10 +58,10 @@ $sql = "SELECT p.numero_processo,
                                 if(isset($formacao['numero_processo'])){
                                     ?>
                                     <td>
-                                        <form action="?perfil&=juridico&p=filtrar_formacao&sp=pesquisa_formacao" role="form"
+                                        <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"
                                               method="POST">
                                             <input type="hidden" name="idpedido" id="idpedido" value="<?=$formacao['id']?>">
-                                            <button type="submit" class="btn btn-primary"><?= $formacao['numero_processo']?></button>
+                                           <button type="submit" class="btn btn-primary"><?= $formacao['numero_processo']?></button>
                                         </form>
                                     </td>
                                     <?php
