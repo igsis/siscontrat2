@@ -6,7 +6,7 @@ $statuspedido = "";
 
 if (isset($_POST['codigopedido']) && $_POST['codigopedido'] != null) {
     $codigopedido = $_POST['codigopedido'];
-    $codigopedido = " AND origem_id='$codigopedido'";
+    $codigopedido = " AND protocolo='$codigopedido'";
 }
 if (isset($_POST['numprocesso']) && $_POST['numprocesso'] != null) {
     $numprocesso = $_POST['numprocesso'];
@@ -14,15 +14,19 @@ if (isset($_POST['numprocesso']) && $_POST['numprocesso'] != null) {
 }
 if (isset($_POST['statuspedido']) && $_POST['statuspedido'] != null) {
     $statuspedido = $_POST['statuspedido'];
-    $statuspedido = "AND status_pedido_id=$statuspedido'";
+    $statuspedido = "AND formacao_status =$statuspedido'";
 }
-$sql = "SELECT numero_processo,
-        status_pedido_id,
-        origem_id,
-        pessoa_fisica_id
-        
-        
-        FROM pedidos WHERE publicado = 1 ";
+$sql = "SELECT p.numero_processo,
+            fc.protocolo, 
+            pf.nome, 
+            fs.status,
+            p.id
+
+        FROM pedidos as p INNER JOIN formacao_status fs on p.id = fs.id 
+        INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
+        INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
+        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 $numprocesso $codigopedido $statuspedido";
+
 
 ?>
 <div class="content-wrapper">
@@ -39,15 +43,41 @@ $sql = "SELECT numero_processo,
                     <thead>
                     <tr>
                         <th>Processo</th>
-                        <th>Codigo do pedido</th>
+                        <th>Protocolo</th>
                         <th>Proponente</th>
                         <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
+                    <?php
+                    if($query = mysqli_query($con,$sql)){
+                        while ($formacao = mysqli_fetch_array($query)){
+                            ?>
+                            <tr>
+                                <?php
+                                if(isset($formacao['numero_processo'])){
+                                    ?>
+                                    <td>
+                                        <form action="?perfil&=juridico&p=filtrar_formacao&sp=pesquisa_formacao" role="form"
+                                              method="POST">
+                                            <input type="hidden" name="idpedido" id="idpedido" value="<?=$formacao['id']?>">
+                                            <button type="submit" class="btn btn-primary"><?= $formacao['numero_processo']?></button>
+                                        </form>
+                                    </td>
+                                    <?php
+                                } else {
+                                    echo "<td> Não possui </td>";
+                                }
+                                ?>
+                                <td><?=$formacao['protocolo']?></td>
+                                <td><?=$formacao['nome']?></td>
+                                <td><?=$formacao['status']?></td>
 
-
-
+                            </tr>
+                            <?php
+                        }
+                    }
+                    ?>
                     </tbody>
                 </table>
             </div>

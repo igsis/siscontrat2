@@ -54,7 +54,7 @@ $sql = "SELECT p.numero_processo,
             INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
             INNER JOIN tipo_eventos te on e.tipo_evento_id = te.id
             
-            where p.origem_id = 1 and p.publicado = 1 and e.publicado = 1 $protocolo $numprocesso $objetoevento
+            where p.origem_tipo_id = 1 and p.publicado = 1 and e.publicado = 1 $protocolo $numprocesso $objetoevento
                 $tipoEvento $instituicao $statusPedido";
 
 ?>
