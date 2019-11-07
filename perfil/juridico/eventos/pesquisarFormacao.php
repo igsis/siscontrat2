@@ -22,7 +22,8 @@ $sql = "SELECT p.numero_processo,
             fc.protocolo, 
             pf.nome, 
             fs.status,
-            p.id
+            fc.id
+            
 
         FROM pedidos as p INNER JOIN formacao_status fs on p.id = fs.id 
         INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
