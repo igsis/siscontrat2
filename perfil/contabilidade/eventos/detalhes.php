@@ -13,6 +13,7 @@ $sql = "SELECT  e.id AS 'idEvento',
                 p.id,
                 i.nome,
                 p.origem_id,
+                
                 e.protocolo,
 		        p.numero_processo,
                 p.pessoa_tipo_id,
@@ -178,4 +179,4 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
         </div>
     </section>
 </div>
-20191106.00001-E
+

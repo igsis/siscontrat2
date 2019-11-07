@@ -16,6 +16,8 @@ if (isset($_POST['statuspedido']) && $_POST['statuspedido'] != null) {
     $statuspedido = $_POST['statuspedido'];
     $statuspedido = "AND formacao_status =$statuspedido'";
 }
+
+
 $sql = "SELECT p.numero_processo,
             fc.protocolo, 
             pf.nome, 
@@ -58,10 +60,10 @@ $sql = "SELECT p.numero_processo,
                                 if(isset($formacao['numero_processo'])){
                                     ?>
                                     <td>
-                                        <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"
-                                              method="POST">
-                                            <input type="hidden" name="idpedido" id="idpedido" value="<?=$formacao['id']?>">
-                                           <button type="submit" class="btn btn-primary"><?= $formacao['numero_processo']?></button>
+                                        <form action="?perfil=juridico&p=tipo_modelo&sp=resultado" role="form"  method="POST">
+                                            <input type="hidden" name="idFormacao" id="idFormacao"
+                                                   value="<?= $formacao['id'] ?>">
+                                            <button type="submit" class="btn btn-primary"><?= $formacao['numero_processo'] ?></button>
                                         </form>
                                     </td>
                                     <?php
