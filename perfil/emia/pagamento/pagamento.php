@@ -22,15 +22,15 @@ $http = $server . "/pdf/";
 
 $link_facc = $http . "rlt_fac_pf.php";
 
-$link_pagamento = $http . "rlt_pagamento_formacao.php";
+$link_pagamento = $http . "rlt_pagamento_emia.php";
 
-$link_recibo = $http . "rlt_recibo_formacao.php";
+$link_recibo = $http . "rlt_recibo_emia.php";
 
-$link_atestado = $http . "rlt_atestado_servico_formacao.php";
+$link_atestado = $http . "rlt_atestado_servico_emia.php";
 
-$link_horas = $http . "rlt_horas_formacao.php";
+$link_horas = $http . "rlt_horas_emia.php";
 
-$link_contabilidade = $http . "rlt_contabilidade_formacao.php";
+$link_contabilidade = $http . "rlt_contabilidade_emia.php";
 ?>
 
 <div class="content-wrapper">
