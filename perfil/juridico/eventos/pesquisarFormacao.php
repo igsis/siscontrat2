@@ -55,15 +55,14 @@ $sql = "SELECT p.numero_processo,
                     <?php
                     if($query = mysqli_query($con,$sql)){
                         while ($formacao = mysqli_fetch_array($query)){
+                            $_SESSION['formacaoId'] = $formacao['id'];
                             ?>
                             <tr>
                                 <?php
                                 if(isset($formacao['numero_processo'])){
                                     ?>
                                     <td>
-                                        <form action="?perfil=juridico&p=tipo_modelo&sp=resultado" role="form"  method="POST">
-                                            <input type="hidden" name="idFormacao" id="idFormacao"
-                                                   value="<?= $formacao['id'] ?>">
+                                        <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"  method="POST">
                                             <button type="submit" class="btn btn-primary"><?= $formacao['numero_processo'] ?></button>
                                         </form>
                                     </td>
