@@ -102,7 +102,7 @@ $formacao = $con->query($sql)->fetch_array();
                     </a>
                 </div>
                 <div class="pull-right">
-                    <a href="?perfil=juridico&p=eventos&sp=detalhe">
+                    <a href="?perfil=juridico&p=eventos&sp=detalheFormacao">
                         <button type="button" class="btn btn-default">Detalhe do pedido</button>
                     </a>
                 </div>
