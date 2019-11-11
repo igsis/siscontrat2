@@ -3,7 +3,7 @@ $con = bancoMysqli();
 
 $protocolo = '';
 $numProcesso = '';
-$proponente = '';
+$status = '';
 $where = '';
 
 if (isset($_POST['protocolo']) && $_POST['protocolo'] != null) {
@@ -16,9 +16,9 @@ if (isset($_POST['numProcesso']) && $_POST['numProcesso'] != null) {
     $numProcesso = " AND p.numero_processo = '$numProcesso' ";
 }
 
-if (isset($_POST['proponente']) && $_POST['proponente'] != null) {
-    $proponente = $_POST['proponente'];
-    $proponente = " AND ec.pessoa_fisica_id = '$proponente' ";
+if (isset($_POST['status']) && $_POST['status'] != null) {
+    $status = $_POST['status'];
+    $status = " AND p.status_pedido_id = '$status' ";
 }
 
 $sql = "SELECT p.id, 
@@ -29,8 +29,8 @@ $sql = "SELECT p.id,
         FROM pedidos AS p 
         INNER JOIN emia_contratacao AS ec ON ec.id = p.origem_id
         INNER JOIN pessoa_fisicas AS pf ON p.pessoa_fisica_id = pf.id
-        INNER JOIN emia_status AS s ON ec.emia_status_id = s.id
-        WHERE p.origem_tipo_id = 3 AND ec.publicado = 1 AND p.publicado = 1 $proponente $numProcesso $protocolo";
+        INNER JOIN pedido_status AS s ON p.status_pedido_id = s.id
+        WHERE p.origem_tipo_id = 3 AND ec.publicado = 1 AND p.publicado = 1 $status $numProcesso $protocolo";
 ?>
 
 <div class="content-wrapper">
@@ -67,7 +67,7 @@ $sql = "SELECT p.id,
                                         <td>
                                             <form action="?perfil=emia&p=conclusao&sp=finaliza" method="post" role="form">
                                                 <input type="hidden" name="idPedido" id="idPedido" value="<?= $ec['id'] ?>">
-                                                <button type="submit" class="btn btn-primary center-block"><?= $ec['numero_processo'] ?></button>
+                                                <button type="submit" name="carrega" id="carrega" class="btn btn-primary center-block"><?= $ec['numero_processo'] ?></button>
                                             </form>
                                         </td>
                                         <td><?= $ec['protocolo'] ?></td>
