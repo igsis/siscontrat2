@@ -14,7 +14,7 @@ $sql = "SELECT p.id,
         INNER JOIN pessoa_fisicas AS pf ON pf.id = p.pessoa_fisica_id
         INNER JOIN locais AS l ON ec.local_id = l.id
         INNER JOIN verbas AS v ON p.verba_id = v.id
-        INNER JOIN emia_status AS s on ec.emia_status_id = s.id
+        INNER JOIN pedido_status AS s ON p.status_pedido_id = s.id
         WHERE p.publicado = 1  AND p.origem_tipo_id = 3";
 $query = mysqli_query($con, $sql);
 ?>

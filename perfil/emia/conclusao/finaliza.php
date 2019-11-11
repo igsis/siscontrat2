@@ -1,7 +1,19 @@
 <?php
 $con = bancoMysqli();
 
-$idPedido = $_POST['idPedido'];
+if(isset($_POST['atualizar'])){
+    $idPedido = $_POST['idPedido'];
+    $sql = "UPDATE pedidos SET status_pedido_id = 21 WHERE id = $idPedido";
+    if(mysqli_query($con,$sql)){
+        $mensagem = mensagem('success', 'Pedido concluído com sucesso!');
+    }else{
+        $mensagem = mensagem('danger','Erro ao concluir processo! Tente novamente.');
+    }
+}
+
+if(isset($_POST['carrega'])){
+    $idPedido = $_POST['idPedido'];
+}
 
 $sql = "SELECT p.id, 
                ec.protocolo,
@@ -12,7 +24,7 @@ $sql = "SELECT p.id,
         FROM pedidos AS p 
         INNER JOIN emia_contratacao AS ec ON ec.id = p.origem_id
         INNER JOIN pessoa_fisicas AS pf ON p.pessoa_fisica_id = pf.id
-        INNER JOIN emia_status AS s ON ec.emia_status_id = s.id
+        INNER JOIN pedido_status AS s ON p.status_pedido_id = s.id
         INNER JOIN locais AS l ON ec.local_id = l.id
         WHERE p.origem_tipo_id = 3 AND ec.publicado = 1 AND p.publicado = 1 AND p.id = '$idPedido'";
 
@@ -26,6 +38,11 @@ $pedido = $con->query($sql)->fetch_array();
            Resumo do Pedido
         </h2>
         <div class="box">
+            <div class="row" align="center">
+                <?php if (isset($mensagem)) {
+                    echo $mensagem;
+                }; ?>
+            </div>
             <div class="box-header">
                 <div class="box-title">
                     Dados

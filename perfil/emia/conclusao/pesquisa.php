@@ -24,11 +24,11 @@
 
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="proponente">Status do Pedido:</label>
-                                    <select name="proponente" id="proponente" class="form-control">
+                                    <label for="status">Status do Pedido:</label>
+                                    <select name="status" id="status" class="form-control">
                                         <option value="">Selecione uma opção</option>
                                         <?php
-                                            geraOpcao('emia_status');
+                                            geraOpcao('pedido_status');
                                         ?>
                                     </select>
                                 </div>
