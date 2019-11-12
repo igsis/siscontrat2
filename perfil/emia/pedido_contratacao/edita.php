@@ -47,7 +47,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
             $sqlInsert = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) 
                     SELECT p.id, ep.numero_parcelas, ep.valor, ep.data_pagamento 
                     FROM emia_parcelas ep 
-                    INNER JOIN emia_contratacao ec ON ec.emia_vigencia_id = ep.id 
+                    INNER JOIN emia_contratacao ec ON ec.emia_vigencia_id = ep.emia_vigencia_id 
                     INNER JOIN pedidos p ON p.origem_id = ec.id 
                     WHERE p.origem_tipo_id = 3 AND p.id = '$idPedido'";
             mysqli_query($con, $sqlInsert);
@@ -75,12 +75,14 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     }
 }
 
-if (isset($_POST['carregar'])){
+if (isset($_POST['carregar'])) {
     $idPedido = $_POST['idEc'];
+    unset($_SESSION['idPedido']);
+    $_SESSION['idPedido'] = $idPedido;
 }
 
 if (isset($_POST['parcelaEditada'])) {
-    $idPedido = $_SESSION['idEC'];
+    $idPedido = $_SESSION['idPedido'];
     $parcelas = $_POST['parcela'];
     $valores = dinheiroDeBr($_POST['valor']);
     $data_pagamentos = $_POST['data_pagamento'];
@@ -102,9 +104,9 @@ if (isset($_POST['parcelaEditada'])) {
 
         $sql = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
 
-        if(mysqli_query($con, $sql)){
+        if (mysqli_query($con, $sql)) {
             $mensagem = mensagem('success', 'Parcelas Atualizadas!');
-        }else{
+        } else {
             $mensagem = mensagem('danger', 'Erro ao atualizar as parcelas! Tente Novamente.');
         }
     }
@@ -153,6 +155,10 @@ for ($i = 1; $i < $aux + 1; $i++) {
     $valor += $parcela['valor'];
 }
 $valor = dinheiroParaBr($valor);
+
+$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
+$http = $server . "/pdf/";
+$link_proposta = $http . "rlt_proposta_emia.php";
 ?>
 
 <div class="content-wrapper">
@@ -172,8 +178,8 @@ $valor = dinheiroParaBr($valor);
                     <div class="row">
                         <div class="col-md-6">
                             <label for="pf">Pessoa Física: *</label>
-                            <input type="hidden" name="pf" id="pf" value="<?=$ec['pessoa_fisica_id']?>">
-                            <input type="text" value="<?=$ec['nome']?>"disabled class="form-control">
+                            <input type="hidden" name="pf" id="pf" value="<?= $ec['pessoa_fisica_id'] ?>">
+                            <input type="text" value="<?= $ec['nome'] ?>" disabled class="form-control">
                         </div>
 
                         <div class="col-md-6">
@@ -320,14 +326,11 @@ $valor = dinheiroParaBr($valor);
 
                     <input type="hidden" name="idEc" value="<?= $idPedido ?>" id="idEc">
 
-                    <?php
-                    /*
                     <div class="col-md-1">
-                        <a href="?perfil=emia&p=pedido_contratacao&sp=area_impressao">
-                            <button type="button" class="btn btn-default">Ir para área de impressão</button>
+                        <a href="<?= $link_proposta ?>" target="_blank">
+                            <button type="button" class="btn btn-primary center-block">Gerar Proposta</button>
                         </a>
-                    </div>*/
-                    ?>
+                    </div>
 
                     <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
                         Salvar

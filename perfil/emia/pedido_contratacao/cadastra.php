@@ -2,7 +2,7 @@
 
 $con = bancoMysqli();
 
-$idEc = $_SESSION['idEC'];
+$idEc = $_SESSION['idPedido'];
 
 $sql = "SELECT pf.nome,
 		       ec.ano,

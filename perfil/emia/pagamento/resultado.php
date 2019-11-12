@@ -62,7 +62,7 @@ $sql = "SELECT p.id,
                             <?php
                             if ($query = mysqli_query($con, $sql)) {
                                 while ($ec = mysqli_fetch_array($query)) {
-                                    $_SESSION['idEC'] = $ec['id'];
+                                    $_SESSION['idEidPedidoC'] = $ec['id'];
                                     ?>
                                     <tr>
                                         <td>

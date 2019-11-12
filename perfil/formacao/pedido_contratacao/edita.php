@@ -26,7 +26,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
             $sqlInsert = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) 
                     SELECT p.id, fp.numero_parcelas, fp.valor, fp.data_pagamento 
                     FROM formacao_parcelas fp 
-                    INNER JOIN formacao_contratacoes fc ON fc.form_vigencia_id = fp.id 
+                    INNER JOIN formacao_contratacoes fc ON fc.form_vigencia_id = fp.formacao_vigencia_id 
                     INNER JOIN pedidos p ON p.origem_id = fc.id 
                     WHERE p.origem_tipo_id = 2 AND p.id = '$idPedido'";
             mysqli_query($con, $sqlInsert);

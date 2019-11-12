@@ -35,7 +35,7 @@ if(isset($_POST['editar'])){
 
 if (isset($_POST['edit'])) {
     $idEC = $_POST['idECEdit'];
-    $_SESSION['idEC'] = $idEC;
+    $_SESSION['idPedido'] = $idEC;
     $ec = recuperaDados('emia_contratacao', 'id', $idEC);
 }
 
