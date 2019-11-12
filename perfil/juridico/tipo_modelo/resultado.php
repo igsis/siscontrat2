@@ -21,15 +21,12 @@ $sql = "SELECT
     fc.protocolo,
     pf.nome,
     p.valor_total,
-    fp.data_inicio,
-    fp.data_fim,
     p.forma_pagamento
     
     FROM pedidos as p
     INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id
-    
     INNER JOIN pessoa_fisicas pf on fc.pessoa_fisica_id = pf.id
-    INNER JOIN formacao_parcelas fp on fc.id = fp.id
+    
     WHERE fc.publicado = 1 AND p.origem_tipo_id AND p.origem_id = $idFormacao";
 $formacao = $con->query($sql)->fetch_array();
 ?>
@@ -41,7 +38,7 @@ $formacao = $con->query($sql)->fetch_array();
         </div>
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Detalhes do pedido selecionado</h3>
+                <h3 class="box-title">Detalhes do evento selecionado</h3>
             </div>
             <div class="box-body">
                 <table class="table">
@@ -71,12 +68,18 @@ $formacao = $con->query($sql)->fetch_array();
                         <td><?= $local['local'] ?></td>
                     </tr>
                     <tr>
-                        <th width="30%">Contratado:</th>
+                        <th width="30%">Valor:</th>
                         <td><?= $formacao['valor_total'] ?></td>
                     </tr>
+                    <?php
+                    $sqlPeriodo = "SELECT data_inicio, data_fim
+                    FROM ocorrencias 
+                    WHERE publicado = 1";
+                    $periodo = $con->query($sqlPeriodo)->fetch_array();
+                    ?>
                     <tr>
                         <th width="30%">Período:</th>
-                        <td>De <?= $formacao['data_inicio'] ?> a <?= $formacao['data_fim'] ?></td>
+                        <td>De <?=$periodo['data_inicio']?> a <?=$periodo['data_fim']?></td>
                     </tr>
                     <tr>
                         <th width="30%">Forma de pagamento:</th>
@@ -102,8 +105,8 @@ $formacao = $con->query($sql)->fetch_array();
                     </a>
                 </div>
                 <div class="pull-right">
-                    <a href="?perfil=juridico&p=eventos&sp=detalheFormacao">
-                        <button type="button" class="btn btn-default">Detalhe do pedido</button>
+                    <a href="?perfil=juridico&p=tipo_modelo&sp=detalhes_evento">
+                        <button type="button" class="btn btn-default">Detalhes do evento</button>
                     </a>
                 </div>
             </div>

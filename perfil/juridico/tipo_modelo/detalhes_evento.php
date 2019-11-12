@@ -18,6 +18,7 @@ if (isset($_POST['mdlOficina'])) {
 
 $sql = "SELECT 
     p.numero_processo,
+    p.justificativa,
     fc.protocolo,
     pf.nome,
     p.valor_total,
@@ -42,8 +43,11 @@ $sql = "SELECT
     o.observacao,
     loc.local,
     o.horario_inicio,
-    ri.retirada_ingresso
-    
+    ri.retirada_ingresso,
+    pt.pessoa,
+    p2.nota_empenho,
+    p2.emissao_nota_empenho,
+    p2.entrega_nota_empenho
     
     FROM pedidos as p
     INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id
@@ -61,8 +65,10 @@ $sql = "SELECT
     INNER JOIN ocorrencias o on a.id = o.atracao_id
     INNER JOIN retirada_ingressos ri on o.retirada_ingresso_id = ri.id
     INNER JOIN locais loc on o.local_id = loc.id
+    INNER JOIN pessoa_tipos pt on p.pessoa_tipo_id = pt.id
+    INNER JOIN pagamentos p2 on p.id = p2.pedido_id
     WHERE fc.publicado = 1 AND p.origem_tipo_id AND p.origem_id = $idFormacao";
-$formacao = $con->query($sql)->fetch_array();
+$evento = $con->query($sql)->fetch_array();
 ?>
 
 <div class="content-wrapper">
@@ -72,53 +78,65 @@ $formacao = $con->query($sql)->fetch_array();
         </div>
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><?= $formacao['nome_evento'] ?></h3>
+                <h1 class="box-title"><?= $evento['nome_evento'] ?></h1>
             </div>
             <div class="box-body">
                 <table class="table">
                     <tr>
                         <th width="30%">ID do evento:</th>
-                        <td><?= $formacao['id'] ?></td>
+                        <td><?= $evento['id'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Evento enviado em:</th>
-                        <td><?= $formacao['data_envio'] ?></td>
+                        <td><?= $evento['data_envio'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Tipo de evento:</th>
-                        <td><?= $formacao['tipo_evento'] ?></td>
+                        <td><?= $evento['tipo_evento'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Projeto especial:</th>
-                        <td><?= $formacao['projeto_especial'] ?></td>
+                        <td><?= $evento['projeto_especial'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Relação jurídica:</th>
-                        <td>FALTA INSERIR</td>
+                        <td><?= $evento['relacao_juridica'] ?></td>
+                    </tr>
+                    <tr>
+                        <th><br/></th>
+                        <td></td>
                     </tr>
                     <tr>
                         <th width="30%">Usuário que cadastrou o evento:</th>
-                        <td><?= $formacao['nome'] ?></td>
+                        <td><?= $evento['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $formacao['telefone'] ?></td>
+                        <td><?= $evento['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $formacao['email'] ?></td>
+                        <td><?= $evento['email'] ?></td>
+                    </tr>
+                    <tr>
+                        <th><br/></th>
+                        <td></td>
                     </tr>
                     <tr>
                         <th width="30%">Reponsável pelo evento:</th>
-                        <td><?= $formacao['nome'] ?></td>
+                        <td><?= $evento['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $formacao['telefone'] ?></td>
+                        <td><?= $evento['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $formacao['email'] ?></td>
+                        <td><?= $evento['email'] ?></td>
+                    </tr>
+                    <tr>
+                        <th><br/></th>
+                        <td></td>
                     </tr>
                     <tr>
                         <?php
@@ -126,7 +144,6 @@ $formacao = $con->query($sql)->fetch_array();
                         FROM usuarios where id = $idFormacao";
                         $mdl = $con->query($sqlSuplente)->fetch_assoc();
                         ?>
-
                         <th width="30%">Suplente:</th>
                         <td><?= $mdl['nome_completo'] ?></td>
                     </tr>
@@ -139,35 +156,43 @@ $formacao = $con->query($sql)->fetch_array();
                         <td><?= $mdl['email'] ?></td>
                     </tr>
                     <tr>
+                        <th><br/></th>
+                        <td></td>
+                    </tr>
+                    <tr>
                         <th width="30%">Ficha técnica:</th>
-                        <td><?= $formacao['ficha_tecnica'] ?></td>
+                        <td><?= $evento['ficha_tecnica'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Faixa ou indicação etária:</th>
-                        <td><?= $formacao['classificacao_indicativa'] ?></td>
+                        <td><?= $evento['classificacao_indicativa'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Linguagem / Expressão artística:</th>
-                        <td><?= $formacao['linguagem'] ?></td>
+                        <td><?= $evento['linguagem'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Público / Representatividade social:</th>
-                        <td><?= $formacao['publico'] ?></td>
+                        <td><?= $evento['publico'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Sinopse:</th>
-                        <td><?= $formacao['sinopse'] ?></td>
+                        <td><?= $evento['sinopse'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Release</th>
-                        <td><?= $formacao['release_comunicacao'] ?></td>
+                        <td><?= $evento['release_comunicacao'] ?></td>
+                    </tr>
+                    <tr>
+                        <th><br/></th>
+                        <td></td>
                     </tr>
                 </table>
                 <h1>Especificidades</h1>
                 <h3>Ocorrências</h3>
-                De <?= $formacao['data_inicio'] ?> a <?= $formacao['data_fim'] ?>
+                De <?= $evento['data_inicio'] ?> a <?= $evento['data_fim'] ?>
                 <br>
-                <?= $formacao['local'] ?>
+                <?= $evento['local'] ?>
                 <br>
                 <br>
                 <table class="table">
@@ -176,25 +201,113 @@ $formacao = $con->query($sql)->fetch_array();
                     </tr>
                     <tr>
                         <th width="30%">Data</th>
-                        <td>De <?= $formacao['data_inicio'] ?> a <?= $formacao['data_fim'] ?></td>
+                        <td>De <?= $evento['data_inicio'] ?> a <?= $evento['data_fim'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Horário</th>
-                        <td><?= $formacao['horario_inicio'] ?></td>
+                        <td><?= $evento['horario_inicio'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
-                        <td><?= $formacao['local'] ?></td>
+                        <td><?= $evento['local'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Retirada de ingressos:</th>
-                        <td><?= $formacao['retirada_ingresso'] ?></td>
+                        <td><?= $evento['retirada_ingresso'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Observações:</th>
-                        <td><?= $formacao['observacao'] ?></td>
+                        <td><?= $evento['observacao'] ?></td>
                     </tr>
-
+                    <?php
+                    $sqlProdutor = "SELECT pro.nome,pro.telefone1,pro.email
+                        FROM produtores as pro
+                        inner join eventos e on e.id = pro.id ";
+                    $mdl = $con->query($sqlProdutor)->fetch_assoc();
+                    ?>
+                    <tr>
+                        <th width="30%">Produtor responsavel:</th>
+                        <td><?= $mdl['nome'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Email:</th>
+                        <td><?= $mdl['email'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Telefone:</th>
+                        <td><?= $mdl['telefone1'] ?></td>
+                    </tr>
+                </table>
+                <h1>Arquivos Comunicação/Produção anexos</h1>
+                <h3>Pedidos de contratação</h3>
+                <table class="table">
+                    <?php
+                    $sqlContratacao = "SELECT i.nome FROM 
+                    ocorrencias as o 
+                    INNER JOIN instituicoes i on o.instituicao_id = i.id";
+                    $contratacao = $con->query($sqlContratacao)->fetch_assoc();
+                    ?>
+                    <tr>
+                        <th width="30%">Protocolo:</th>
+                        <td><?= $evento['protocolo'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Número do processo:</th>
+                        <td><?= $evento['numero_processo'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Setor</th>
+                        <td><?= $contratacao['nome'] ?></td>
+                    </tr>
+                    <tr>
+                        <?php
+                        $sqlTipo = "SELECT pro.nome,pro.telefone1,pro.email
+                        FROM produtores as pro
+                        inner join eventos e on e.id = pro.id ";
+                        $mdl = $con->query($sqlProdutor)->fetch_assoc();
+                        ?>
+                        <th width="30%">Tipo de pessoa</th>
+                        <td><?= $evento['pessoa'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Proponente</th>
+                        <td><?= $evento['nome'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Objeto</th>
+                        <td><?= $evento['nome_evento'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Local</th>
+                        <td><?= $evento['local'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Valor</th>
+                        <td><?= $evento['valor_total'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Forma de Pagamento</th>
+                        <td><?= $evento['forma_pagamento'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Data</th>
+                        <td>De <?= $evento['data_inicio'] ?> a <?= $evento['data_fim'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Parecer</th>
+                    </tr>
+                    <tr>
+                        <th width="30%">Data de Emissão da N.E:</th>
+                        <td><?= $evento['emissao_nota_empenho'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Data de Entrega da N.E</th>
+                        <td><?= $evento['entrega_nota_empenho'] ?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Dotação Orçamentária:</th>
+                        <td><?= $evento['justificativa'] ?></td>
+                    </tr>
                 </table>
                 <br/>
                 <div class="pull-left">

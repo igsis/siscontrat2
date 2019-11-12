@@ -7,7 +7,7 @@
                     <div class="box-header with-border">
                         <h3> Dados Eventos</h3>
                     </div>
-                    <form action="?perfil=juridico&p=eventos&sp=pesquisar" method="POST" ROLE="form">
+                    <form action="?perfil=juridico&p=filtrar_evento&sp=pesquisar" method="POST" ROLE="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-4 form-group">

@@ -38,7 +38,6 @@ if (isset($_POST['statusPedido']) && $_POST['statusPedido']) {
 }
 
 $sql = "SELECT p.numero_processo,
-               p.id,
                e.protocolo,
                pf.nome,
                te.tipo_evento,
@@ -48,7 +47,7 @@ $sql = "SELECT p.numero_processo,
                e.tipo_evento_id,
                e.nome_evento
                
-            
+
             FROM pedidos as p
             INNER JOIN eventos AS e ON e.id = p.origem_id
             INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
@@ -88,10 +87,8 @@ $sql = "SELECT p.numero_processo,
                                 if (isset($evento['numero_processo'])) {
                                     ?>
                                     <td>
-                                        <form action="?perfil&=juridico&p=eventos&sp=pesquisa_evento" role="form"
-                                              method="POST">
-                                            <input type="hidden" name="idPedido" id="idPedido"  value="<?= $evento['id'] ?>">
-                                            <button type="submit"  class="btn-btn-primary"><?= $evento['numprocesso'] ?></button>
+                                        <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"  method="POST">
+                                            <button type="submit" class="btn btn-primary"><?= $evento['numero_processo'] ?></button>
                                         </form>
                                     </td>
                                     <?php
