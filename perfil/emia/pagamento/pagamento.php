@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 $idPedido = $_POST['idPedido'];
 
-$pedido = recuperaDados('pedidos', 'origem_id', $idPedido);
+$pedido = recuperaDados('pedidos', 'id', $idPedido);
 $ec = recuperaDados('emia_contratacao', 'id', $pedido['origem_id']);
 $pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 

@@ -16,6 +16,8 @@ $linkpf_edital = $http . "exporta_proposta_edital_pf_word.php";
 
 $linkpj_edital = $http . "exporta_proposta_edital_pj_word.php";
 
+$link_emia = $http . "rlt_proposta_emia.php";
+
 $link_proposta_padrao = $http . "rlt_proposta_padrao.php";
 
 $link_facc = $http . "rlt_fac_pf.php";
@@ -31,10 +33,7 @@ $link_proposta_convenio = $http . "rlt_proposta_oficina_convenio.php";
 $idPedido = $_SESSION['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
-$idEvento = $_SESSION['idEvento'];
-$sqlTesta = "SELECT * FROM pedidos WHERE origem_tipo_id = 2 AND origem_id = $idEvento";
-$queryTesta = mysqli_query($con, $sqlTesta);
-$row = mysqli_num_rows($queryTesta);
+
 $idPf = $pedido['pessoa_fisica_id'];
 
 if ($pedido['pessoa_tipo_id'] == 1) {
@@ -64,16 +63,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </div>
                     <div class="row">
                         <?php
-                        if ($row == 0) { ?>
-                            <div class="col-md-12">
-                                <a href="<?= $link_pc ?>" target="_blank">
-                                    <button type="button" class="btn btn-outline-info center-block">
-                                        Pedido de Contratação
-                                    </button>
-                                </a>
-                                <hr/>
-                            </div>
-                        <?php } else { ?>
+                        if ($pedido['origem_tipo_id'] == 2) { ?>
                             <div class="col-md-6">
                                 <a href="<?= $link_pc ?>" target="_blank">
                                     <button type="button" class="btn btn-outline-info center-block">
@@ -87,6 +77,15 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                                 <a href="<?= $link_pcf ?>" target="_blank">
                                     <button type="button" class="btn btn-outline-info center-block">
                                         Pedido de Contratação - Formação
+                                    </button>
+                                </a>
+                                <hr/>
+                            </div>
+                        <?php } else { ?>
+                            <div class="col-md-12">
+                                <a href="<?= $link_pc ?>" target="_blank">
+                                    <button type="button" class="btn btn-outline-info center-block">
+                                        Pedido de Contratação
                                     </button>
                                 </a>
                                 <hr/>
@@ -139,13 +138,16 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </button>
                         </a>
                         <hr/>
-
-                        <a href="#" target="_blank">
-                            <button type="button" class="btn btn-outline-info center-block">
-                                EMIA
-                            </button>
-                        </a>
-                        <hr/>
+                        <?php
+                        if ($pedido['origem_tipo_id'] == 3) {
+                            ?>
+                            <a href="<?= $link_emia ?>" target="_blank">
+                                <button type="button" class="btn btn-outline-info center-block">
+                                    EMIA
+                                </button>
+                            </a>
+                            <hr/>
+                        <?php } ?>
 
                         <a href="#" target="_blank">
                             <button type="button" class="btn btn-outline-info center-block">
