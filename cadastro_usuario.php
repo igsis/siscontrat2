@@ -145,10 +145,13 @@ if (isset($_POST['cadastra'])) {
                                     <input type="text" id="tel_usuario" name="tel_usuario"
                                            class="form-control" required onkeyup="mascara( this, mtel );">
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-2">
                                     <label for="perfil">Código* </label> <br>
                                     <input type="text" required name="perfil" id="perfil" class="form-control"
                                            maxlength="9" minlength="9">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Senha inicial:</label> <br>siscontrat2019
                                 </div>
                             </div>
                         </div>

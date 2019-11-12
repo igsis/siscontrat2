@@ -39,7 +39,7 @@ $_SESSION['idEC'] = $idEC;
             <div class="box-header with-border">
                 <h3 class="box-title">Edição de cargo</h3>
             </div>
-            <form method="post" action="?perfil=emia&p=cargo&sp=edita" role="form">
+            <form method="post" action="?perfil=emia&p=administrativo&sp=cargo&spp=edita" role="form">
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-4">
@@ -53,7 +53,7 @@ $_SESSION['idEC'] = $idEC;
                     </div>
                 </div>
                 <div class="box-footer">
-                    <a href="?perfil=emia&p=cargo&sp=listagem">
+                    <a href="?perfil=emia&p=administrativo&sp=cargo&spp=listagem">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
                     <input type="hidden" name="idEC" value="<?=$idEC?>" id="idEC">

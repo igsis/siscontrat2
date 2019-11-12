@@ -134,10 +134,12 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     $idPj = $pedido['pessoa_juridica_id'];
 }
 
+$_SESSION['idPedido'] = $idPedido;
 
 $contrato = recuperaDados('contratos', 'pedido_id', $pedido['id']);
 $sqlAtracao = "SELECT * FROM atracoes where evento_id = '$idEvento' AND publicado = 1";
 $queryAtracao = mysqli_query($con, $sqlAtracao);
+
 ?>
 
 <div class="content-wrapper">
@@ -159,7 +161,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                         <div class="box-body">
 
                             <?php
-                            if ($nivelUsuario == 1) {
+                            if ($nivelUsuario == 1 || $nivelUsuario == 2) {
                                 ?>
                                 <div class="row">
                                     <div class="col-md-6 from-group">
@@ -188,6 +190,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
 
                             <?php
                             while ($atracao = mysqli_fetch_array($queryAtracao)) {
+                                $_SESSION['idAtracao'] = $atracao['id'];
                                 ?>
                                 <div class="row">
                                     <input type="hidden" name="idAtracao[]" value="<?= $atracao['id'] ?>">
@@ -275,6 +278,9 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right">
                                 Salvar
                             </button>
+                            <a href="?perfil=contrato&p=filtrar_contratos&sp=area_impressao">
+                                <button type="button"  class="btn btn-default">Ir para área de impressão</button>
+                            </a>
                         </div>
                     </form>
                 </div>

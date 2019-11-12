@@ -55,7 +55,7 @@ $sql = "SELECT e.nome_evento,
                INNER JOIN eventos AS e ON e.id = p.origem_id
                INNER JOIN pessoa_fisicas AS pf ON p.pessoa_fisica_id = pf.id
                INNER JOIN pedido_status AS st ON p.status_pedido_id = st.id
-               WHERE p.origem_tipo_id = 2 AND p.publicado = 1 AND e.publicado = 1 $status $numProcesso $protocolo";
+               WHERE p.origem_tipo_id = 1 AND p.publicado = 1 AND e.publicado = 1 $status $numProcesso $protocolo";
 ?>
 
 <div class="content-wrapper">
@@ -86,14 +86,23 @@ $sql = "SELECT e.nome_evento,
                         while ($pedido = mysqli_fetch_array($query)) {
                             ?>
                             <tr>
-                                <td>
-                                    <form action="?perfil=contabilidade&p=eventos&sp=detalhes" role="form"
-                                          method="POST">
-                                        <input type="hidden" name="idPedido" id="idPedido" value="<?= $pedido['id'] ?>">
-                                        <button type="submit"
-                                                class="btn btn-primary"><?= $pedido['numero_processo'] ?></button>
-                                    </form>
-                                </td>
+                                <?php
+                                if (isset($pedido['numero_processo'])) {
+                                    ?>
+                                    <td>
+                                        <form action="?perfil=contabilidade&p=eventos&sp=detalhes" role="form"
+                                              method="POST">
+                                            <input type="hidden" name="idPedido" id="idPedido"
+                                                   value="<?= $pedido['id'] ?>">
+                                            <button type="submit"
+                                                    class="btn btn-primary"><?= $pedido['numero_processo'] ?></button>
+                                        </form>
+                                    </td>
+                                    <?php
+                                }else {
+                                    echo "<td>Não Possuí</td>";
+                                }
+                                ?>
                                 <td><?= $pedido['protocolo'] ?></td>
                                 <?php
                                 if ($pedido['pessoa_tipo_id'] == 1) {

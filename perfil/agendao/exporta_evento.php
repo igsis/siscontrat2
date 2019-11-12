@@ -260,7 +260,7 @@ if (isset($_POST['filtrar'])) {
                                    onchange="btnfiltrar()" autocomplete="off">
                         </div>
                         <div class="col-md-3">
-                            <label>Data encerramento</label>
+                            <label>Data encerramento *</label>
                             <input type="text" name="final" class="form-control datepicker" id="final"
                                    autocomplete="off">
                             <br>
@@ -274,7 +274,6 @@ if (isset($_POST['filtrar'])) {
             </form>
         </div>
     </section>
-
 
 <?php
 if ($consulta == 1) {

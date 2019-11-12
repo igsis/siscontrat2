@@ -33,8 +33,10 @@ $idPf = $pedido['pessoa_fisica_id'];
                         <nav class="navbar navbar-static-top bg-light-blue-active">
                             <h4 align="center">PEDIDO</h4>
                         </nav>
-                        <a href="<?= $link_pcf ?>" target="_blank" type="button">
-                            <h4 align="center">Pedido de Contratação - Formação</h4>
+                        <a href="<?= $link_pcf ?>" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Pedido de Contratação - Formação
+                            </button>
                         </a>
                         <hr/>
                     </div>
@@ -47,14 +49,18 @@ $idPf = $pedido['pessoa_fisica_id'];
                         </nav>
                     </div>
                     <div class="col-md-6">
-                        <a href="<?= $link_vocacional ?>" target="_blank" type="button">
-                            <h4 align="center">Vocacional</h4>
+                        <a href="<?= $link_vocacional ?>" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                Vocacional
+                            </button>
                         </a>
                         <hr/>
                     </div>
                     <div class="col-md-6">
-                        <a href="<?= $link_vocacional ?>" target="_blank" type="button">
-                            <h4 align="center">PIÁ</h4>
+                        <a href="<?= $link_vocacional ?>" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                PIÁ
+                            </button>
                         </a>
                         <hr/>
                     </div>
@@ -65,8 +71,10 @@ $idPf = $pedido['pessoa_fisica_id'];
                         <nav class="navbar navbar-static-top bg-light-blue-active">
                             <h4 align="center">OUTROS</h4>
                         </nav>
-                        <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button">
-                            <h4 align="center">FACC</h4>
+                        <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                FACC
+                            </button>
                         </a>
                         <hr/>
                     </div>
@@ -80,20 +88,26 @@ $idPf = $pedido['pessoa_fisica_id'];
                     </div>
 
                     <div class="col-md-6">
-                        <a href="<?= $link_reserva_vocacional ?>" target="_blank" type="button">
-                            <h4 align="center">FORMAÇÃO - Vocacional</h4>
+                        <a href="<?= $link_reserva_vocacional ?>" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                FORMAÇÃO - Vocacional
+                            </button>
                         </a>
                         <hr/>
-                        <a href="<?= $link_reserva_sme ?>" target="_blank" type="button">
-                            <h4 align="center">VOCACIONAL/PIÁ - SME</h4>
+                        <a href="<?= $link_reserva_sme ?>" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                VOCACIONAL/PIÁ - SME
+                            </button>
                         </a>
                     </div>
 
                     <div class="col-md-6">
-                        <a href="<?= $link_reserva_pia ?>" target="_blank" type="button">
-                            <h4 align="center">FORMAÇÃO - PIÁ</h4>
-                            <hr/>
+                        <a href="<?= $link_reserva_pia ?>" target="_blank">
+                            <button type="button" class="btn btn-outline-info center-block">
+                                FORMAÇÃO - PIÁ
+                            </button>
                         </a>
+                        <hr/>
                     </div>
                 </div>
             </div>

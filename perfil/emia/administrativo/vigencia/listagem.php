@@ -45,13 +45,13 @@ $query = mysqli_query($con, $sql);
                         echo "<td>" . $ev['ano'] . "</td>";
                         echo "<td>" . $ev['descricao'] . "</td>";
                         echo "<td>
-                        <form action='?perfil=emia&p=vigencia&sp=edita' method='POST'>
+                        <form action='?perfil=emia&p=administrativo&sp=vigencia&spp=edita' method='POST'>
                         <input type='hidden' name='idEVEdit' id='idEVEdit' value='" . $ev['id'] . "'>
                         <button type='submit' name='edit' id='edit'  class='btn btn-block btn-primary'><span class='glyphicon glyphicon-edit'></span></button>
                         </form>
                         </td>";
                         echo "<td>
-                        <form action='?perfil=emia&p=vigencia&sp=listagem' method='POST'>
+                        <form action='?perfil=emia&p=administrativo&sp=vigencia&spp=listagem' method='POST'>
                         <input type='hidden' name='idEVDelete' id='idEVDelete' value='" . $ev['id'] . "'>
                         <button type='button' name='excluir' id='excluir' class='btn btn-block btn-danger' 
                         data-target='#exclusao' data-toggle='modal' data-id='" . $ev['id'] . "'>
@@ -72,10 +72,10 @@ $query = mysqli_query($con, $sql);
                     </tfoot>
                 </table>
                 <div class="box-footer">
-                    <a href="?perfil=emia">
+                    <a href="?perfil=emia&p=administrativo&sp=index">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
-                    <a href="?perfil=emia&p=vigencia&sp=cadastra">
+                    <a href="?perfil=emia&p=administrativo&sp=vigencia&spp=cadastra">
                         <button type="button" class="btn btn-primary pull-right"> Cadastrar uma nova vigência </button>
                     </a>
                 </div>
@@ -86,7 +86,7 @@ $query = mysqli_query($con, $sql);
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <form action="?perfil=emia&p=vigencia&sp=listagem" method="POST">
+                        <form action="?perfil=emia&p=administrativo&sp=vigencia&spp=listagem" method="POST">
                             <h4 class="modal-title">Confirmação de Exclusão</h4>
                     </div>
                     <div class="modal-body">

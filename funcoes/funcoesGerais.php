@@ -796,7 +796,7 @@ function recuperaDadosPublicado($tabela, $campo, $variavelCampo)
 function verificaArquivosExistentesEvento($idEvento,$idDocumento)
 {
 	$con = bancoMysqli();
-	$verificacaoArquivo = "SELECT arquivo FROM upload_arquivo WHERE idPessoa = '$idEvento' AND idUploadListaDocumento = '$idDocumento' AND publicado = '1'";
+	$verificacaoArquivo = "SELECT arquivo FROM upload_arquivo WHERE idPessoa = '$idEvento' AND idUploadFDocumento = '$idDocumento' AND publicado = '1'";
 	$envio = mysqli_query($con, $verificacaoArquivo);
 
 	if (mysqli_num_rows($envio) > 0) {
@@ -913,6 +913,7 @@ function listaArquivoCamposMultiplos($idPessoa,$tipoPessoa,$idCampo,$pagina,$pf)
 			$sql = "SELECT *
 				FROM upload_lista_documento as list
 				INNER JOIN upload_arquivo as arq ON arq.idUploadListaDocumento = list.id
+				WHERE arq.idPessoa = '$idPessoa'
 				WHERE arq.idPessoa = '$idPessoa'
 				AND arq.idTipoPessoa = '$tipoPessoa'
 				$arq1 $arq2 $arq3 $arq4

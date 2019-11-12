@@ -7,7 +7,7 @@ $sql = "SELECT p.id, p.origem_id,fc.protocolo, fc.ano, p.numero_processo,fc.num_
             INNER JOIN pessoa_fisicas pf ON fc.pessoa_fisica_id = pf.id
             INNER JOIN verbas v on p.verba_id = v.id 
             INNER JOIN formacao_status fs on fc.form_status_id = fs.id
-            WHERE fc.form_status_id != 5 AND p.publicado = 1 AND fc.publicado = 1";
+            WHERE fc.form_status_id != 5 AND p.publicado = 1 AND fc.publicado = 1 AND p.origem_tipo_id = 2";
 
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);

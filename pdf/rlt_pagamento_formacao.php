@@ -14,8 +14,8 @@ class PDF extends FPDF{
 
 $idParcela = $_POST['idParcela'];
 $idPedido = $_SESSION['idPedido'];
-$idFC = $_SESSION['idFC'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
+$idFC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
@@ -89,8 +89,7 @@ $pdf->Cell(65, $l, utf8_decode($linguagem['linguagem']), 0, 0, 'L');
 
 $pdf->Ln(7);
 
-$idFc = $pedido['origem_id'];
-$sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFc'";
+$sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFC'";
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
 
@@ -107,7 +106,7 @@ $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(120, $l, utf8_decode($local), 0, 'L', 0);
 
 $pdf->SetX($x);
-$pdf->MultiCell(200,$l,utf8_decode("PAGAMENTO LIBERÁVEL A PARTIR DE ". $datapgt ." MEDIANTE CONFIRMAÇÃO DA UNIDADE PROPONENTE."),0,'L',0);
+$pdf->MultiCell(200,$l,utf8_decode("PAGAMENTO LIBERÁVEL A PARTIR DE ". exibirDataBr($datapgt) ." MEDIANTE CONFIRMAÇÃO DA UNIDADE PROPONENTE."),0,'L',0);
 
 $pdf->Ln(5);
 

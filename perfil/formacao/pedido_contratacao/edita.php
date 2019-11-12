@@ -122,7 +122,6 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPc = $pedido['origem_id'];
 
 $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
-$_SESSION['idFC'] = $fc['id'];
 
 $pessoa_fisica = recuperaDados('pessoa_fisicas', 'id', $fc['pessoa_fisica_id'])['nome'];
 $classificacao = recuperaDados('classificacao_indicativas', 'id', $fc['classificacao'])['classificacao_indicativa'];
