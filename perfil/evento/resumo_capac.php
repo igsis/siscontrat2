@@ -10,7 +10,7 @@ $evento = mysqli_fetch_array($query_evento);
 $sql_publico = "SELECT * FROM evento_publico INNER JOIN publicos p on evento_publico.publico_id = p.id WHERE evento_id = '$id'";
 $query_publico = mysqli_query($bdc,$sql_publico);
 
-$sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$id'";
+$sql_atracao = "SELECT * FROM atracoes AS at INNER JOIN classificacao_indicativas AS cl ON at.classificacao_indicativa_id = cl.id WHERE evento_id = '$id'";
 $query_atracao = mysqli_query($bdc,$sql_atracao);
 ?>
 <div class="content-wrapper">
@@ -65,10 +65,14 @@ $query_atracao = mysqli_query($bdc,$sql_atracao);
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12"><b>Ações (Expressões Artístico-culturais):</b>
-                                        <?php/*
-                                        foreach ($atracao->acoes as $acao){
-                                            echo $acao->acao."; ";
-                                        }*/
+                                        <?php
+                                        $idAtracao = $atracao['id'];
+                                        $sql_acao = "SELECT * FROM acoes AS ac INNER JOIN acao_atracao aa on ac.id = aa.acao_id WHERE atracao_id = '$idAtracao'";
+                                        $query_acao = mysqli_query($bdc,$sql_acao);
+
+                                        while ($acao = mysqli_fetch_array($query_acao)){
+                                            echo $acao['acao']."; ";
+                                        }
                                         ?>
                                     </div>
                                 </div>
@@ -87,17 +91,28 @@ $query_atracao = mysqli_query($bdc,$sql_atracao);
                                 <div class="row">
                                     <div class="col-md-12"><b>Links:</b>  <?= $atracao['links'] ?></div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-6"><b>Quantidade de Apresentação:</b>  <?= $atracao['quantidade_apresentacao'] ?></div>
+                                    <div class="col-md-6"><b>Valor:</b> R$ <?= dinheiroParaBr($atracao['valor_individual']) ?></div>
+                                </div>
+                                <div class="row">
+                                    <?php
+                                    $idProdutor = $atracao['produtor_id'];
+                                    $sql_produtor = "SELECT * FROM produtores WHERE id = '$idProdutor'";
+                                    $query_produtor = mysqli_query($bdc,$sql_produtor);
+                                    $produtor = mysqli_fetch_array($query_produtor);
+                                    ?>
+                                    <div class="col-md-5"><b>Produtor:</b>  <?= $produtor['nome'] ?></div>
+                                    <div class="col-md-3"><b>Telefone:</b>  <?= $produtor['telefone1'] ?> / <?= $produtor['telefone2'] ?? NULL ?></div>
+                                    <div class="col-md-4"><b>E-mail:</b>  <?= $atracao->produtor->email ?? $erro ?></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4"><b>Observação:</b>  <?= $atracao->produtor->observacao ?? NULL ?></div>
+                                </div>
+                                <br>
                             <?php
                             }
                             foreach ($atracaoObj->listaAtracoes($idEvento) as $atracao): ?>
-
-
-
-
-                                <div class="row">
-                                    <div class="col-md-6"><b>Quantidade de Apresentação:</b>  <?= $atracao->quantidade_apresentacao ?></div>
-                                    <div class="col-md-6"><b>Valor:</b> R$ <?= $eventoObj->dinheiroParaBr($atracao->valor_individual) ?></div>
-                                </div>
 
                                 <div class="row">
                                     <div class="col-md-5"><b>Produtor:</b>  <?= $atracao->produtor->nome ?? $erro ?></div>
