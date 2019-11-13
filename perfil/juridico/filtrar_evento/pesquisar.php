@@ -45,7 +45,8 @@ $sql = "SELECT p.numero_processo,
                p.pessoa_fisica_id,
                p.pessoa_juridica_id,
                e.tipo_evento_id,
-               e.nome_evento
+               e.nome_evento,
+               e.id
                
 
             FROM pedidos as p
@@ -81,6 +82,7 @@ $sql = "SELECT p.numero_processo,
                     <?php
                     if ($query = mysqli_query($con, $sql)) {
                         while ($evento = mysqli_fetch_array($query)) {
+                            $_SESSION['eventoId'] = $evento['id'];
                             ?>
                             <tr>
                                 <?php

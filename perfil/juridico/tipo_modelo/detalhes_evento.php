@@ -1,7 +1,7 @@
 <?php
 
-$idFormacao = $_SESSION['formacaoId'];
 $con = bancoMysqli();
+$idEvento = $_SESSION['eventoId'];
 
 if (isset($_POST['mdlPadrao'])) {
     $modelo = $_POST['idPadrao'];
@@ -19,56 +19,60 @@ if (isset($_POST['mdlOficina'])) {
 $sql = "SELECT 
     p.numero_processo,
     p.justificativa,
-    fc.protocolo,
-    pf.nome,
-    p.valor_total,
     p.forma_pagamento,
-    fc.data_envio,
-    e.tipo_evento_id,
+    p.observacao,
+    p.valor_total,
+    u.nome_completo,
+    u.telefone,
+    u.email,
+    p.origem_tipo_id,
+    p.origem_id,
+    e.protocolo,
     e.id,
-    e.nome_evento,
     e.sinopse,
+    e.nome_evento,
+    p.observacao,
+    pe.data,
     te.tipo_evento,
-    pe.projeto_especial,
+    proe.projeto_especial,
     rj.relacao_juridica,
-    pf.email,
-    pft.telefone,
+    pf.nome,
     a.ficha_tecnica,
-    ci.classificacao_indicativa,
-    li.linguagem,
-    pub.publico,
     a.release_comunicacao,
-    o.data_inicio,
-    o.data_fim,
-    o.observacao,
-    loc.local,
-    o.horario_inicio,
+    ci.classificacao_indicativa,
+    oc.data_inicio,
+    oc.data_fim,
+    oc.horario_inicio,
+    oc.data_fim,
+    i.nome,
+    i.sigla,
     ri.retirada_ingresso,
     pt.pessoa,
-    p2.nota_empenho,
-    p2.emissao_nota_empenho,
-    p2.entrega_nota_empenho
+    pa.entrega_nota_empenho,
+    pa.nota_empenho,
+    pa.emissao_nota_empenho
+    
+    
     
     FROM pedidos as p
-    INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id
-    INNER JOIN pessoa_fisicas pf on fc.pessoa_fisica_id = pf.id
-    INNER JOIN eventos e on fc.usuario_id = e.usuario_id
-    INNER JOIN tipo_eventos te on te.id = e.tipo_evento_id
-    INNER JOIN projeto_especiais pe on e.projeto_especial_id = pe.id
-    INNER JOIN relacao_juridicas rj on rj.id = e.relacao_juridica_id
+    INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
+    INNER JOIN eventos e on e.id = p.origem_id
+    INNER JOIN producao_eventos pe on e.id = pe.evento_id
+    INNER JOIN tipo_eventos te on e.tipo_evento_id = te.id
+    INNER JOIN projeto_especiais proe on e.projeto_especial_id = proe.id
+    INNER JOIN relacao_juridicas rj on e.relacao_juridica_id = rj.id
     INNER JOIN usuarios u on e.usuario_id = u.id
-    INNER JOIN pf_telefones pft on pf.id = pft.pessoa_fisica_id
-    INNER JOIN atracoes a on a.evento_id = e.id
+    INNER JOIN atracoes a on e.id = a.evento_id
+    INNER JOIN ocorrencias oc on a.id = oc.atracao_id
     INNER JOIN classificacao_indicativas ci on a.classificacao_indicativa_id = ci.id
-    INNER JOIN linguagens li on fc.linguagem_id = li.id
-    INNER JOIN publicos pub on e.tipo_evento_id = pub.id
-    INNER JOIN ocorrencias o on a.id = o.atracao_id
-    INNER JOIN retirada_ingressos ri on o.retirada_ingresso_id = ri.id
-    INNER JOIN locais loc on o.local_id = loc.id
+    INNER JOIN instituicoes i on oc.instituicao_id = i.id
+    INNER JOIN retirada_ingressos ri on oc.retirada_ingresso_id = ri.id
     INNER JOIN pessoa_tipos pt on p.pessoa_tipo_id = pt.id
-    INNER JOIN pagamentos p2 on p.id = p2.pedido_id
-    WHERE fc.publicado = 1 AND p.origem_tipo_id AND p.origem_id = $idFormacao";
+    INNER JOIN pagamentos pa on p.id = pa.pedido_id
+    
+    WHERE p.publicado = 1 AND p.origem_tipo_id AND p.origem_id = $idEvento";
 $evento = $con->query($sql)->fetch_array();
+echo $sql
 ?>
 
 <div class="content-wrapper">
@@ -88,7 +92,7 @@ $evento = $con->query($sql)->fetch_array();
                     </tr>
                     <tr>
                         <th width="30%">Evento enviado em:</th>
-                        <td><?= $evento['data_envio'] ?></td>
+                        <td><?= $evento['data'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Tipo de evento:</th>
@@ -108,7 +112,7 @@ $evento = $con->query($sql)->fetch_array();
                     </tr>
                     <tr>
                         <th width="30%">Usuário que cadastrou o evento:</th>
-                        <td><?= $evento['nome'] ?></td>
+                        <td><?= $evento['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
@@ -124,7 +128,7 @@ $evento = $con->query($sql)->fetch_array();
                     </tr>
                     <tr>
                         <th width="30%">Reponsável pelo evento:</th>
-                        <td><?= $evento['nome'] ?></td>
+                        <td><?= $evento['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
@@ -141,7 +145,7 @@ $evento = $con->query($sql)->fetch_array();
                     <tr>
                         <?php
                         $sqlSuplente = "SELECT * 
-                        FROM usuarios where id = $idFormacao";
+                        FROM usuarios where id = $idEvento";
                         $mdl = $con->query($sqlSuplente)->fetch_assoc();
                         ?>
                         <th width="30%">Suplente:</th>
@@ -168,12 +172,22 @@ $evento = $con->query($sql)->fetch_array();
                         <td><?= $evento['classificacao_indicativa'] ?></td>
                     </tr>
                     <tr>
+                        <?php
+                        $sqlLinguagem = "SELECT * 
+                        FROM linguagens where id = $idEvento";
+                        $lingua = $con->query($sqlLinguagem)->fetch_assoc();
+                        ?>
                         <th width="30%">Linguagem / Expressão artística:</th>
-                        <td><?= $evento['linguagem'] ?></td>
+                        <td><?= $lingua['linguagem'] ?></td>
                     </tr>
                     <tr>
+                        <?php
+                        $sqlPublico = "SELECT * 
+                        FROM publicos where id = $idEvento";
+                        $pub = $con->query($sqlPublico)->fetch_assoc();
+                        ?>
                         <th width="30%">Público / Representatividade social:</th>
-                        <td><?= $evento['publico'] ?></td>
+                        <td><?= $pub['publico'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Sinopse:</th>
@@ -191,8 +205,15 @@ $evento = $con->query($sql)->fetch_array();
                 <h1>Especificidades</h1>
                 <h3>Ocorrências</h3>
                 De <?= $evento['data_inicio'] ?> a <?= $evento['data_fim'] ?>
+                <?php
+                $sqlLocal = "SELECT 
+                    l.local
+                    from locais l 
+                    INNER JOIN ocorrencias o on l.id = o.local_id";
+                $local = $con->query($sqlLocal)->fetch_assoc();
+                ?>
                 <br>
-                <?= $evento['local'] ?>
+                <?= $local['local'] ?>
                 <br>
                 <br>
                 <table class="table">
@@ -201,7 +222,7 @@ $evento = $con->query($sql)->fetch_array();
                     </tr>
                     <tr>
                         <th width="30%">Data</th>
-                        <td>De <?= $evento['data_inicio'] ?> a <?= $evento['data_fim'] ?></td>
+                        <td><?= retornaPeriodoNovo($idEvento,'ocorrencias' )?></td>
                     </tr>
                     <tr>
                         <th width="30%">Horário</th>
@@ -209,7 +230,7 @@ $evento = $con->query($sql)->fetch_array();
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
-                        <td><?= $evento['local'] ?></td>
+                        <td><?= $evento['nome'] ?> (<?= $evento['sigla'] ?>)</td>
                     </tr>
                     <tr>
                         <th width="30%">Retirada de ingressos:</th>
@@ -219,13 +240,16 @@ $evento = $con->query($sql)->fetch_array();
                         <th width="30%">Observações:</th>
                         <td><?= $evento['observacao'] ?></td>
                     </tr>
-                    <?php
-                    $sqlProdutor = "SELECT pro.nome,pro.telefone1,pro.email
-                        FROM produtores as pro
-                        inner join eventos e on e.id = pro.id ";
-                    $mdl = $con->query($sqlProdutor)->fetch_assoc();
-                    ?>
                     <tr>
+                        <?php
+                        $sqlProdutor = "SELECT 
+                        pro.nome,
+                        pro.telefone1,
+                        pro.email
+                        FROM produtores as pro
+                        INNER JOIN eventos e on e.id = pro.id ";
+                        $mdl = $con->query($sqlProdutor)->fetch_assoc();
+                        ?>
                         <th width="30%">Produtor responsavel:</th>
                         <td><?= $mdl['nome'] ?></td>
                     </tr>
@@ -241,15 +265,9 @@ $evento = $con->query($sql)->fetch_array();
                 <h1>Arquivos Comunicação/Produção anexos</h1>
                 <h3>Pedidos de contratação</h3>
                 <table class="table">
-                    <?php
-                    $sqlContratacao = "SELECT i.nome FROM 
-                    ocorrencias as o 
-                    INNER JOIN instituicoes i on o.instituicao_id = i.id";
-                    $contratacao = $con->query($sqlContratacao)->fetch_assoc();
-                    ?>
                     <tr>
                         <th width="30%">Protocolo:</th>
-                        <td><?= $evento['protocolo'] ?></td>
+                        <td><?= $evento['id'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Número do processo:</th>
@@ -257,13 +275,13 @@ $evento = $con->query($sql)->fetch_array();
                     </tr>
                     <tr>
                         <th width="30%">Setor</th>
-                        <td><?= $contratacao['nome'] ?></td>
+                        <td><?= $evento['nome'] ?></td>
                     </tr>
                     <tr>
                         <?php
                         $sqlTipo = "SELECT pro.nome,pro.telefone1,pro.email
                         FROM produtores as pro
-                        inner join eventos e on e.id = pro.id ";
+                        inner join eventos e on e.id = pro.$idEvento ";
                         $mdl = $con->query($sqlProdutor)->fetch_assoc();
                         ?>
                         <th width="30%">Tipo de pessoa</th>
@@ -279,7 +297,7 @@ $evento = $con->query($sql)->fetch_array();
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
-                        <td><?= $evento['local'] ?></td>
+                        <td><?= $evento['nome'] ?> (<?= $evento['sigla'] ?>)</td>
                     </tr>
                     <tr>
                         <th width="30%">Valor</th>
@@ -291,10 +309,7 @@ $evento = $con->query($sql)->fetch_array();
                     </tr>
                     <tr>
                         <th width="30%">Data</th>
-                        <td>De <?= $evento['data_inicio'] ?> a <?= $evento['data_fim'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Parecer</th>
+                        <td><?= retornaPeriodoNovo($idEvento,'ocorrencias' )?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data de Emissão da N.E:</th>
@@ -306,7 +321,15 @@ $evento = $con->query($sql)->fetch_array();
                     </tr>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
-                        <td><?= $evento['justificativa'] ?></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Observação:</th>
+                        <td><?= $evento['observacao']?></td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Último status:</th>
+                        <td></td>
                     </tr>
                 </table>
                 <br/>

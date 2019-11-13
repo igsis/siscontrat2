@@ -1,7 +1,6 @@
 <?php
-
-$idFormacao = $_SESSION['formacaoId'];
 $con = bancoMysqli();
+$idEvento = $_SESSION['eventoId'];
 
 if (isset($_POST['mdlPadrao'])) {
     $modelo = $_POST['idPadrao'];
@@ -18,19 +17,23 @@ if (isset($_POST['mdlOficina'])) {
 
 $sql = "SELECT 
     p.numero_processo,
-    fc.protocolo,
-    pf.nome,
+    p.forma_pagamento,
     p.valor_total,
-    p.forma_pagamento
+    pf.nome,
+    p.origem_tipo_id,
+    p.origem_id,
+    e.protocolo
+    
+    
     
     FROM pedidos as p
-    INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id
-    INNER JOIN pessoa_fisicas pf on fc.pessoa_fisica_id = pf.id
+    INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
+    INNER JOIN eventos e on e.id = p.origem_id
     
-    WHERE fc.publicado = 1 AND p.origem_tipo_id AND p.origem_id = $idFormacao";
-$formacao = $con->query($sql)->fetch_array();
+    WHERE p.publicado = 1 AND p.origem_tipo_id AND p.origem_id = $idEvento";
+$evento = $con->query($sql)->fetch_array();
+echo $sql
 ?>
-
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
@@ -44,32 +47,30 @@ $formacao = $con->query($sql)->fetch_array();
                 <table class="table">
                     <tr>
                         <th width="30%">Protocolo:</th>
-                        <td><?= $formacao['protocolo'] ?></td>
+                        <td><?= $evento['protocolo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Número do Processo:</th>
-                        <td><?= $formacao['numero_processo'] ?></td>
+                        <td><?= $evento['numero_processo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Contratado:</th>
-                        <td><?= $formacao['nome'] ?></td>
+                        <td><?= $evento['nome'] ?></td>
                     </tr>
                     <?php
                     $sqlLocal = "SELECT 
                     l.local
-                    FROM formacao_locais as fl
-                    INNER JOIN locais l on fl.local_id = l.id
-                    WHERE l.publicado = 1 ";
+                    from locais l 
+                    INNER JOIN ocorrencias o on l.id = o.local_id";
                     $local = $con->query($sqlLocal)->fetch_assoc();
                     ?>
-
                     <tr>
                         <th width="30%">Local:</th>
-                        <td><?= $local['local'] ?></td>
+                        <td><?= $local['local']?></td>
                     </tr>
                     <tr>
                         <th width="30%">Valor:</th>
-                        <td><?= $formacao['valor_total'] ?></td>
+                        <td><?= $evento['valor_total'] ?></td>
                     </tr>
                     <?php
                     $sqlPeriodo = "SELECT data_inicio, data_fim
@@ -79,11 +80,11 @@ $formacao = $con->query($sql)->fetch_array();
                     ?>
                     <tr>
                         <th width="30%">Período:</th>
-                        <td>De <?=$periodo['data_inicio']?> a <?=$periodo['data_fim']?></td>
+                        <td>De <?= $periodo['data_inicio'] ?> a <?= $periodo['data_fim'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Forma de pagamento:</th>
-                        <td><?= $formacao['forma_pagamento'] ?></td>
+                        <td><?= $evento['forma_pagamento'] ?></td>
                     </tr>
                     <tr>
                         <?php
@@ -119,7 +120,7 @@ $formacao = $con->query($sql)->fetch_array();
 
 <script type="text/javascript">
     $(function () {
-        $('#tblFormacao').DataTable({
+        $('#tblEvento').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },
