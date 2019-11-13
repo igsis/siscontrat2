@@ -82,6 +82,7 @@ $sql = "SELECT p.numero_processo,
                     <?php
                     if ($query = mysqli_query($con, $sql)) {
                         while ($evento = mysqli_fetch_array($query)) {
+
                             ?>
                             <tr>
                                 <?php
