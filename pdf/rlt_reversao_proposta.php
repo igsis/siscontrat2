@@ -175,7 +175,7 @@ $pdf->Cell(10,10,'(B)',0,0,'L');
 $pdf->SetFont('Arial','B', 12);
 $pdf->Cell(160,10,'PROPOSTA',0,0,'C');
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(10,10,utf8_decode($evento['protocolo']),0,1,'R');
+$pdf->Cell(10,10,utf8_decode($evento['protocolo'] . " - " . $pedido['numero_processo']),0,1,'R');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -240,7 +240,7 @@ $pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 8);
-$pdf->MultiCell(155, $l, utf8_decode($Observacao),0, 'J', 0);
+$pdf->MultiCell(155, 4, utf8_decode($Observacao),0, 'J', 0);
 
 $pdf->AddPage('','');
 
@@ -252,7 +252,7 @@ $pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 8);
-$pdf->MultiCell(155, $l, utf8_decode($penalidades['texto']),0, 'J', 0);
+$pdf->MultiCell(155, 4, utf8_decode($penalidades['texto']),0, 'J', 0);
 
 $pdf->Ln(5);
 
@@ -298,7 +298,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(180,$l,"Data: _________ / _________ / "."$ano".".",0,0,'L');
 
-$pdf->SetXY($x,262);
+$pdf->SetXY($x,235);
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(100,4,utf8_decode($pessoa['nome']),'T',1,'L');
 
@@ -309,6 +309,26 @@ $pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
+
+$pdf->Ln(7);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial','', 9);
+$pdf->MultiCell(180,5,utf8_decode('Autorizo a execução do serviço.'));
+
+$pdf->Ln(4);
+
+$pdf->SetXY($x,262);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(100,4,utf8_decode('Carla Mingolla'),'T',1,'L');
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(100,4,"Chefe de Gabinete",0,1,'L');
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(100,4,"Secretaria Municipal de Cultura",0,0,'L');
 
 $pdf->AddPage('','');
 
@@ -338,7 +358,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(15, $l,utf8_decode('Horário:'),0,0,'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode(exibirHora($ocorrencia['horario_inicio']) . " - " . exibirHora($ocorrencia['horario_fim'])), 0, 'L', 0);
+$pdf->MultiCell(75, $l, utf8_decode(exibirHora($ocorrencia['horario_inicio']) . " - " . exibirHora($ocorrencia['horario_fim'])), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -360,5 +380,6 @@ $pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
 
 $pdf->Output();
 ?>
+
 
 

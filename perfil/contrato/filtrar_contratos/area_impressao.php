@@ -30,6 +30,10 @@ $link_reserva_pia = $http . "impressao_reserva_pia.php";
 
 $link_proposta_convenio = $http . "rlt_proposta_oficina_convenio.php";
 
+$link_reversao = $http . "rlt_reversao_proposta.php";
+
+$link_direitos = $http . "rlt_direitos_conexos.php";
+
 $idPedido = $_SESSION['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -64,16 +68,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     <div class="row">
                         <?php
                         if ($pedido['origem_tipo_id'] == 2) { ?>
-                            <div class="col-md-6">
-                                <a href="<?= $link_pc ?>" target="_blank">
-                                    <button type="button" class="btn btn-outline-info center-block">
-                                        Pedido de Contratação
-                                    </button>
-                                </a>
-                                <hr/>
-                            </div>
-
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <a href="<?= $link_pcf ?>" target="_blank">
                                     <button type="button" class="btn btn-outline-info center-block">
                                         Pedido de Contratação - Formação
@@ -149,7 +144,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             <hr/>
                         <?php } ?>
 
-                        <a href="#" target="_blank">
+                        <a href="<?= $link_reversao ?>" target="_blank">
                             <button type="button" class="btn btn-outline-info center-block">
                                 Contratações gerais - Reversão de Bilheteria
                             </button>
@@ -166,7 +161,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </div>
 
                     <div class="col-md-6">
-                        <a href="#" target="_blank">
+                        <a href="<?= $link_direitos ?>" target="_blank">
                             <button type="button" class="btn btn-outline-info center-block">
                                 Direitos Conexos
                             </button>
