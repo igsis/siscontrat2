@@ -1,6 +1,6 @@
 <?php
 include "includes/menu_principal.php";
-$id = 1;
+$id = $_POST['idCapac'];
 
 $bdc = bancoCapac();
 
@@ -277,8 +277,8 @@ $pedido = mysqli_fetch_array($query_pedido);
                         </div>
                         <div class="row">
                             <div class="col-md-offset-3 col-md-6">
-                                <form class="form-horizontal" method="POST" action="" role="form">
-                                    <input type="hidden" name="_method" value="envioEvento">
+                                <form class="form-horizontal" method="POST" action="?perfil=evento&p=importar_capac" role="form">
+                                    <input type="hidden" name="idCapac" value="<?= $id ?>">
                                     <button type="submit" class="btn btn-success btn-block float-right" >Importar</button>
                                 </form>
                             </div>
