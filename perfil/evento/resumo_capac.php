@@ -1,4 +1,5 @@
 <?php
+include "includes/menu_principal.php";
 $id = 1;
 
 $bdc = bancoCapac();
@@ -59,8 +60,7 @@ $pedido = mysqli_fetch_array($query_pedido);
                             <br>
                             <!-- ************** Atrações ************** -->
                             <hr>
-                            <h4><b>Atrações</b></h4>
-                            <hr/>
+                            <h3><b>Atrações</b></h3>
                             <?php
                             while ($atracao = mysqli_fetch_array($query_atracao)){
                                 ?>
@@ -126,9 +126,9 @@ $pedido = mysqli_fetch_array($query_pedido);
                                         <div class="col-md-6"><b>Nome Artístico:</b> <?= $lider['nome_artistico'] ?></div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-2"><b>RG:</b> <?= $lider['rg'] ?></div>
-                                        <div class="col-md-2"><b>CPF:</b> <?= $lider['cpf'] ?></div>
-                                        <div class="col-md-4"><b>E-mail:</b> <?= $lider['email'] ?></div>
+                                        <div class="col-md-3"><b>RG:</b> <?= $lider['rg'] ?></div>
+                                        <div class="col-md-3"><b>CPF:</b> <?= $lider['cpf'] ?></div>
+                                        <div class="col-md-6"><b>E-mail:</b> <?= $lider['email'] ?></div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -145,8 +145,7 @@ $pedido = mysqli_fetch_array($query_pedido);
                             ?>
                             <!-- ************** Proponente ************** -->
                             <hr>
-                            <h5><b>Proponente</b></h5>
-                            <hr/>
+                            <h3><b>Proponente</b></h3>
                             <?php
                             if ($pedido['pessoa_tipo_id'] == 1){
                                 $sql_pf = "SELECT * FROM pessoa_fisicas AS pf
@@ -221,6 +220,9 @@ $pedido = mysqli_fetch_array($query_pedido);
                                 $sql_rep1 = "SELECT * FROM representante_legais WHERE id = '$idRep1'";
                                 $query_rep1 = mysqli_query($bdc,$sql_rep1);
                                 $rep1 = mysqli_fetch_array($query_rep1);
+
+                                $sql_tel = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$id'";
+                                $query_tel = mysqli_query($bdc,$sql_tel);
                                 ?>
                                 <div class="row">
                                     <div class="col-md-7"><b>Razão Social:</b> <?= $pj['razao_social'] ?></div>
@@ -229,7 +231,12 @@ $pedido = mysqli_fetch_array($query_pedido);
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6"><b>E-mail:</b> <?= $pj['email'] ?></div>
-                                    <div class="col-md-6"><b>Telefones:</b> <?= implode(" | ", $pj['telefones']); ?>
+                                    <div class="col-md-6"><b>Telefones:</b>
+                                        <?php
+                                        while ($telefones = mysqli_fetch_array($query_tel)){
+                                            echo $telefones['telefone']." | ";
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -245,9 +252,9 @@ $pedido = mysqli_fetch_array($query_pedido);
                                 <br/>
                                 <h5><b>Representante Legal</b></h5>
                                 <div class="row">
-                                    <div class="col-md-7"><b>Nome:</b> <?= $rep1['nome'] ?></div>
+                                    <div class="col-md-6"><b>Nome:</b> <?= $rep1['nome'] ?></div>
                                     <div class="col-md-3"><b>RG:</b> <?= $rep1['rg'] ?></div>
-                                    <div class="col-md-2"><b>CFP:</b> <?= $rep1['cpf'] ?></div>
+                                    <div class="col-md-3"><b>CFP:</b> <?= $rep1['cpf'] ?></div>
                                 </div>
                                 <br>
                                 <?php
@@ -258,15 +265,23 @@ $pedido = mysqli_fetch_array($query_pedido);
                                     $rep2 = mysqli_fetch_array($query_rep2);
                                     ?>
                                     <div class="row">
-                                        <div class="col-md-7"><b>Nome:</b> <?= $rep1['nome'] ?></div>
-                                        <div class="col-md-3"><b>RG:</b> <?= $rep1['rg'] ?></div>
-                                        <div class="col-md-2"><b>CFP:</b> <?= $rep1['cpf'] ?></div>
+                                        <div class="col-md-6"><b>Nome:</b> <?= $rep2['nome'] ?></div>
+                                        <div class="col-md-3"><b>RG:</b> <?= $rep2['rg'] ?></div>
+                                        <div class="col-md-3"><b>CFP:</b> <?= $rep2['cpf'] ?></div>
                                     </div>
                                     <br>
                                     <?php
                                 }
                             }
                             ?>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-6">
+                                <form class="form-horizontal" method="POST" action="" role="form">
+                                    <input type="hidden" name="_method" value="envioEvento">
+                                    <button type="submit" class="btn btn-success btn-block float-right" >Importar</button>
+                                </form>
+                            </div>
                         </div>
 
                     </div>
