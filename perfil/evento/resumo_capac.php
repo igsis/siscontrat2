@@ -1,6 +1,7 @@
 <?php
 include "includes/menu_principal.php";
-$id = $_POST['idCapac'];
+//$id = $_POST['idCapac'];
+$id = 1;
 
 $bdc = bancoCapac();
 
@@ -274,6 +275,78 @@ $pedido = mysqli_fetch_array($query_pedido);
                                 }
                             }
                             ?>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div class="table-responsive list_info"><br>
+                                    <?php
+                                    //lista arquivos de determinado pedido
+                                    $sql = "SELECT * FROM arquivos as arq
+                                    INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id
+                                    WHERE arq.origem_id = '$id' 
+                                    AND arq.publicado = '1' ORDER BY arq.lista_documento_id, arq.id";
+                                    $query = mysqli_query($bdc, $sql);
+                                    $linhas = mysqli_num_rows($query);
+
+                                    if ($linhas > 0) {
+                                        echo "
+                                    <table class='table text-center table-striped table-bordered table-condensed'>
+                                        <thead>
+                                            <tr class='bg-info text-bold'>
+                                                <td>Tipo de documento</td>
+                                                <td>Nome do documento</td>
+                                                <td>Data de envio</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>";
+                                        while ($arquivo = mysqli_fetch_array($query)) {
+                                            echo "<tr>";
+                                            echo "<td>".$arquivo['documento']."</td>";
+                                            echo "<td class='list_description'><a href='../uploadsdocs/" . $arquivo['arquivo'] . "' target='_blank'>" . mb_strimwidth($arquivo['arquivo'], 15, 50, "...") . "</a></td>";
+                                            echo "<td class='list_description'>(" . exibirDataBr($arquivo['data']) . ")</td>";
+                                            echo "</tr>";
+                                        }
+                                        echo "
+                                        </tbody>
+                                        </table>";
+                                    } else {
+                                        echo "<p>Não há listas disponíveis no momento.<p/><br/>";
+                                    }
+
+                                    ?>
+                                </div>
+                                <hr/>
+                            </div>
+                            <!--.modal-->
+                            <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
+                                <div class="modal-dialog">
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;
+                                            </button>
+                                            <h4 class="modal-title">Confirmação de Exclusão</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Tem certeza que deseja excluir este arquivo?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="?perfil=evento&p=arqs_com_prod"
+                                                  method="post">
+                                                <input type="hidden" name="idArquivo" id="idArquivo"
+                                                       value="">
+                                                <input type="hidden" name="apagar" id="apagar">
+                                                <button type="button" class="btn btn-default pull-left"
+                                                        data-dismiss="modal">Cancelar
+                                                </button>
+                                                <input class="btn btn-danger btn-outline" type="submit"
+                                                       name="excluir" value="Apagar">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  Fim Modal de Upload de arquivo  -->
                         </div>
                         <div class="row">
                             <div class="col-md-offset-3 col-md-6">
