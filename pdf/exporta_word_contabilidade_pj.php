@@ -56,7 +56,7 @@ $dataAtual = date("d/m/Y");
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=". $pedido['numero_processo']. " em $dataAtual.doc");
 echo "<html>";
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1252\">";
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">";
 echo "<body>";
 
 echo "<p><b>CONTRATANTE:</b> "."Secretaria Municipal de Cultura"."</p>";

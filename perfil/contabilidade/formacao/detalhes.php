@@ -6,6 +6,7 @@ $http = $server . "/pdf/";
 $link = $http . "exporta_word_contabilidade_formacao.php";
 
 $con = bancoMysqli();
+
 $sql = "SELECT  p.id,
                 p.origem_id,
                 fc.protocolo,
