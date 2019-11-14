@@ -61,7 +61,7 @@ $sql = "SELECT
                             ?>
                             <tr>
                                 <td>
-                                    <form ction="?perfil=juridico&p=eventos&sp=pesquisar" role="form"
+                                    <form action="?perfil=contabilidade&p=formacao&sp=detalhes" role="form"
                                           method="POST">
                                         <input type="hidden" name="idPedido" id="idPedido" value="<?= $pedido['id'] ?>">
                                         <button type="submit"
