@@ -291,7 +291,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(22, $idPj, "modal-cnpj", "CNPJ");
+                                    anexosNaPagina(25, $idPj, "modal-cnpj", "CNPJ");
                                     ?>
                                 </div>
 
@@ -304,7 +304,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 <div class="form-group col-md-4">
                                     <?php
                                     if ($end['uf'] == "SP") {
-                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (43) AND origem_id = '$idPj' AND publicado = 1";
+                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (38) AND origem_id = '$idPj' AND publicado = 1";
                                         $queryExistentes = mysqli_query($con, $sqlExistentes);
                                         $cpom = 0;
                                     } else {
