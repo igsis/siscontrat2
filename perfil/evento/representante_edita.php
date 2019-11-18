@@ -25,8 +25,8 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['carrega
 
 if ($tipoRepresentante == 1) {
     $representante = "representante_legal1_id";
-    $RG = "20";
-    $CPF = "21";
+    $RG = "23";
+    $CPF = "24";
     $siglaRG = "rg_rl1";
     $siglaCPF = "cpf_rl1";
     $nomeRg = "RG do Representante Legal 1";
@@ -34,8 +34,8 @@ if ($tipoRepresentante == 1) {
 
 } else if ($tipoRepresentante == 2) {
     $representante = "representante_legal2_id";
-    $RG = "103";
-    $CPF = "104";
+    $RG = "85";
+    $CPF = "86";
     $siglaRG = "rg_rl2";
     $siglaCPF = "cpf_rl2";
     $nomeRg = "RG do Representante Legal 2";
