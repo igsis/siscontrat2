@@ -514,7 +514,7 @@ if (isset($pj['representante_legal2_id'])) {
                                     </div>
                                     <div class="form-group col-md-4" style="display: <?= $facc ?>">
                                         <?php
-                                        anexosNaPagina(89, $idPj, "modal-facc", "FACC");
+                                        anexosNaPagina(71, $idPj, "modal-facc", "FACC");
                                         ?>
                                     </div>
                                     <?php
