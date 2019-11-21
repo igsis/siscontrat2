@@ -138,7 +138,11 @@ include "includes/menu_interno.php";
                             <select name="motivo" class="form-control">
                                 <option>Selecione o Motivo</option>
                                 <?php
-                                geraOpcao('chamado_tipos');
+                                $sql = "SELECT * FROM chamado_tipos WHERE id <> 4";
+                                $query = mysqli_query($con,$sql);
+                                while($chamado = mysqli_fetch_array($query)){ ?>
+                                    <option value="<?=$chamado['id']?>"><?=$chamado['tipo']?></option>
+                                <?php }
                                 ?>
                             </select>
                             <label for="justificativa">Justificativa:</label>
