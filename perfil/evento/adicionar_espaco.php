@@ -9,7 +9,7 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espa
     <section class="content">
 
         <!-- START FORM-->
-        <h2 class="page-header">Solicitar adição de Espaço</h2>
+        <h2 class="page-header">Adição de Espaço</h2>
 
         <div class="row">
             <div class="col-md-12">

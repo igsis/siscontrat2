@@ -383,9 +383,6 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
                                 <div class="form-group col-md-4">
                                     <label for="local">Local *</label>
-                                    <button type="button" data-toggle='modal' data-target='#modaLocal' class="btn-success pull-right">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
                                     <select class="form-control" id="local" name="local">
                                         <!-- Populando pelo js -->
                                     </select>
@@ -393,9 +390,6 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
                                 <div class="form-group col-md-4">
                                     <label for="espaco">Espaço</label>
-                                    <button type="button" data-toggle="modal" data-target="#modalEspaco" class="btn-success pull-right">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
                                     <select class="form-control" id="espaco" name="espaco">
                                         <!-- Populando pelo js -->
                                     </select>
