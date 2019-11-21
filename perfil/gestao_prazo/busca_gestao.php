@@ -8,10 +8,10 @@ $sql = "SELECT
                l.local AS 'local',
                e.fiscal_id
                FROM eventos AS e
-               INNER JOIN pedidos AS p ON p.origem_id = e.id 
                INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
                INNER JOIN locais AS l ON l.id = o.local_id
-               WHERE e.evento_status_id = 2 AND e.publicado = 1 AND p.status_pedido_id = 1";
+               WHERE e.evento_status_id = 2 AND e.publicado = 1";
+
 
 if (isset($_POST['aprovar'])) {
     $idEvento = $_POST['idEvento'];
@@ -123,16 +123,6 @@ $query = mysqli_query($con, $sql);
                             }
                             echo "</tbody>"
                             ?>
-                            <tfoot>
-                            <tr>
-                                <th>Nome do Evento</th>
-                                <th>Locais</th>
-                                <th>Período</th>
-                                <th>Fiscal</th>
-                                <th>Operador</th>
-                                <th>Visualizar</th>
-                            </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>

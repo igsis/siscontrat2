@@ -477,7 +477,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-4">
                                     <?php
                                     if (!empty($pf['cpf'])){
-                                    anexosNaPagina(1, $idPf, "modal-rg", "RG");
+                                        anexosNaPagina(1, $idPf, "modal-rg", "RG");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
