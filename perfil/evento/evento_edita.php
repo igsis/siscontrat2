@@ -137,6 +137,18 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-info">
+                        <?php
+                        if ($evento['evento_status_id'] == 5) {
+                            $sqlChamado = "SELECT * FROM chamados WHERE evento_id = $idEvento";
+                            $chamado = $con->query($sqlChamado)->fetch_array();
+                            $aviso = mensagem('danger','Motivo do evento vetado: '. $chamado['justificativa']);
+                            ?>
+                            <div class="row" align="center">
+                                <?php if (isset($aviso)) {
+                                    echo $aviso;
+                                }; ?>
+                            </div>
+                        <?php } ?>
                     <div class="box-header with-border">
                         <h3 class="box-title">Informações Gerais</h3>
                     </div>
@@ -283,7 +295,8 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
 
                         <div class="box-footer">
                             <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                            <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Gravar</button>
+                            <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Gravar
+                            </button>
                         </div>
                     </form>
                 </div>
