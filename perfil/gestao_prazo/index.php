@@ -5,9 +5,8 @@ $con = bancoMysqli();
 $sql = "SELECT
                e.id AS 'id'
                FROM eventos AS e
-               INNER JOIN pedidos AS p ON p.origem_id = e.id 
                INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
-               WHERE evento_status_id = 2 AND e.publicado = 1 AND p.status_pedido_id = 1";
+               WHERE evento_status_id = 2 AND e.publicado = 1";
 $query = mysqli_query($con,$sql);
 $numEventos = mysqli_num_rows($query);
 ?>
