@@ -152,7 +152,7 @@ if (isset($_POST['apagar'])) {
                                                             05MB.</h4>
                                                     </tr>
                                                     <?php
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (2, 3, 4, 25, 31, 51, 60, 62) AND tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
                                                     $query_arquivos = mysqli_query($con, $sql_arquivos);
                                                     while ($arq = mysqli_fetch_array($query_arquivos)) {
                                                         $idDoc = $arq['id'];
