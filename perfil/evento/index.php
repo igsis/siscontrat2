@@ -83,7 +83,7 @@ $idUsuario = $_SESSION['idUser'];
 
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_status_id >= 3 AND (suplente_id = '$idUsuario' OR fiscal_id = '$idUsuario' OR usuario_id = '$idUsuario') ORDER BY id DESC LIMIT 0,20";
+$sql = "SELECT * FROM eventos e INNER JOIN pedidos p ON p.origem_id = e.id WHERE e.publicado = 1 AND p.publicado = 1 AND e.evento_status_id >= 3 AND p.origem_tipo_id = 1 AND p.status_pedido_id = 2 AND (e.suplente_id = '$idUsuario' OR e.fiscal_id = '$idUsuario' OR e.usuario_id = '$idUsuario') ORDER BY e.id DESC LIMIT 0,20";
 
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);

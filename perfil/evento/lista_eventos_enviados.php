@@ -9,11 +9,13 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos WHERE publicado = 1 AND evento_status_id >= 3 AND contratacao = 0 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+$sql = "SELECT * FROM eventos 
+        WHERE publicado = 1 AND evento_status_id >= 3 AND contratacao = 0  
+        AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+
 $query = mysqli_query($con, $sql);
 
 $num_atracoes = 0;
-
 ?>
 
 <!-- Content Wrapper. Contains page content -->
