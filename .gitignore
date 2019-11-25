@@ -1,3 +1,4 @@
 /.idea
+/funcoes/funcoesConecta.php
 /uploadsdocs/*
 !/uploadsdocs/.gitkeep
