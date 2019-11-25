@@ -17,7 +17,7 @@ if (isset($_POST['excluir'])) {
 }
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status FROM eventos AS ev
+$sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status, ev.usuario_id FROM eventos AS ev
         INNER JOIN tipo_eventos AS te on ev.tipo_evento_id = te.id
         INNER JOIN evento_status es on ev.evento_status_id = es.id
         WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id = 1 OR evento_status_id = 5";
@@ -67,8 +67,11 @@ $query = mysqli_query($con, $sql);
                                 if ($evento['status'] == "Cancelado") {
                                     $idEvento = $evento['idEvento'];
                                     $nomeEvento = $evento['nome_evento'];
-                                    $sqlChamado = "SELECT c.justificativa, u.nome_completo, c.data FROM chamados AS c INNER JOIN usuarios AS u ON c.usuario_id = u.id WHERE evento_id = $idEvento";
+                                    $sqlChamado = "SELECT c.justificativa, c.data FROM chamados AS c WHERE evento_id = $idEvento";
                                     $chamado = $con->query($sqlChamado)->fetch_array();
+                                    $idUser = $evento['usuario_id'];
+                                    $sqlOperado = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
+                                    $operador = $con->query($sqlOperado)->fetch_array();
                                     ?>
                                     <td>
                                         <button type="button" class="btn-link" id="exibirMotivo"
@@ -164,7 +167,7 @@ $query = mysqli_query($con, $sql);
                             </thead>
                             <tbody>
                                 <td><?=$chamado['justificativa']?></td>
-                                <td><?=$chamado['nome_completo']?></td>
+                                <td><?=$operador['nome_completo']?></td>
                                 <td><?=exibirDataBr($chamado['data'])?></td>
                             </tbody>
                         </table>
