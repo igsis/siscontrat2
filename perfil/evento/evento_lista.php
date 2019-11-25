@@ -8,7 +8,7 @@ unset($_SESSION['idPf']);
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-if(isset($_POST['excluir'])){
+if (isset($_POST['excluir'])) {
     $evento = $_POST['idEvent'];
     $stmt = $conn->prepare("UPDATE eventos SET publicado = 0 WHERE id = :id");
     $stmt->execute(['id' => $evento]);
@@ -64,7 +64,21 @@ $query = mysqli_query($con, $sql);
                                 echo "<tr>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
                                 echo "<td>" . $evento['tipo_evento'] . "</td>";
-                                echo "<td>" . $evento['status'] . "</td>";
+                                if ($evento['status'] == "Cancelado") {
+                                    $idEvento = $evento['idEvento'];
+                                    $nomeEvento = $evento['nome_evento'];
+                                    $sqlChamado = "SELECT c.justificativa, u.nome_completo, c.data FROM chamados AS c INNER JOIN usuarios AS u ON c.usuario_id = u.id WHERE evento_id = $idEvento";
+                                    $chamado = $con->query($sqlChamado)->fetch_array();
+                                    ?>
+                                    <td>
+                                        <button type="button" class="btn-link" id="exibirMotivo"
+                                                data-toggle="modal" data-target="#exibicao" name="exibirMotivo">
+                                            <p class="text-danger"><?= $evento['status'] ?></p>
+                                        </button>
+                                    </td>
+                                <?php } else {
+                                    echo "<td>" . $evento['status'] . "</td>";
+                                }
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
@@ -78,7 +92,8 @@ $query = mysqli_query($con, $sql);
                                         <button type="button" class="btn btn-block btn-danger" id="excluiEvento"
                                                 data-toggle="modal" data-target="#exclusao" name="excluiEvento"
                                                 data-name="<?= $evento['nome_evento'] ?>"
-                                                data-id="<?= $evento['idEvento'] ?>"><span class="glyphicon glyphicon-trash"></span></button>
+                                                data-id="<?= $evento['idEvento'] ?>"><span
+                                                    class="glyphicon glyphicon-trash"></span></button>
                                     </form>
                                 </td>
                                 <?php
@@ -130,6 +145,34 @@ $query = mysqli_query($con, $sql);
             </div>
         </div>
 
+        <div id="exibicao" class="modal modal fade in" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Motivo do Cancelamento</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Nome do Evento:</strong> <?=$nomeEvento?></p>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Motivo</th>
+                                <th width="20%">Operador de Contratos</th>
+                                <th width="15%">Data</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <td><?=$chamado['justificativa']?></td>
+                                <td><?=$chamado['nome_completo']?></td>
+                                <td><?=exibirDataBr($chamado['data'])?></td>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </section>
     <!-- /.content -->
 </div>
@@ -145,13 +188,13 @@ $query = mysqli_query($con, $sql);
             },
             "responsive": true,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
 </script>
 <script type="text/javascript">
-    $('#exclusao').on('show.bs.modal', function (e){
+    $('#exclusao').on('show.bs.modal', function (e) {
         let evento = $(e.relatedTarget).attr('data-name');
         let id = $(e.relatedTarget).attr('data-id');
 
