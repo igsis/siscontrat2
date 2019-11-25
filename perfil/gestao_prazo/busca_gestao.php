@@ -2,17 +2,6 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
-$sql = "SELECT
-               e.id AS 'id',
-               e.nome_evento AS 'nome_evento',
-               l.local AS 'local',
-               e.fiscal_id
-               FROM eventos AS e
-               INNER JOIN pedidos AS p ON p.origem_id = e.id 
-               INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
-               INNER JOIN locais AS l ON l.id = o.local_id
-               WHERE e.evento_status_id = 2 AND e.publicado = 1 AND p.status_pedido_id = 1";
-
 if (isset($_POST['aprovar'])) {
     $idEvento = $_POST['idEvento'];
     $evento = recuperaDados('eventos', 'id', $idEvento);
@@ -41,9 +30,9 @@ if (isset($_POST['aprovar'])) {
 
 if (isset($_POST['vetar'])) {
     $idEvento = $_POST['idEvento'];
-    $sqlVeta = "UPDATE pedidos SET status_pedido_id = 3 WHERE origem_id = '$idEvento'";
+    $sqlVeta = "UPDATE eventos SET evento_status_id = 5 WHERE id = '$idEvento'";
     if (mysqli_query($con, $sqlVeta)) {
-        $sqlVeta = "UPDATE eventos SET evento_status_id = 5 WHERE id = '$idEvento'";
+        $sqlVeta = "UPDATE pedidos SET status_pedido_id = 3 WHERE origem_id = '$idEvento'";
         $queryVeta = mysqli_query($con, $sqlVeta);
         $motivo = $_POST['motivo'];
         $justificativa = $_POST['justificativa'];
@@ -68,6 +57,15 @@ if (isset($_POST['vetar'])) {
     }
 }
 
+$sql = "SELECT
+               e.id AS 'id',
+               e.nome_evento AS 'nome_evento',
+               l.local AS 'local',
+               e.fiscal_id
+               FROM eventos AS e
+               INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
+               INNER JOIN locais AS l ON l.id = o.local_id
+               WHERE e.evento_status_id = 2 AND e.publicado = 1";
 $query = mysqli_query($con, $sql);
 ?>
 
@@ -123,16 +121,6 @@ $query = mysqli_query($con, $sql);
                             }
                             echo "</tbody>"
                             ?>
-                            <tfoot>
-                            <tr>
-                                <th>Nome do Evento</th>
-                                <th>Locais</th>
-                                <th>Período</th>
-                                <th>Fiscal</th>
-                                <th>Operador</th>
-                                <th>Visualizar</th>
-                            </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>

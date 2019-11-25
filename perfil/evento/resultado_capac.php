@@ -23,7 +23,7 @@ if($publico != null){
 $sql = "SELECT e.id, e.nome_evento, e.data_cadastro, p.publico FROM capac_new.eventos e 
     INNER JOIN capac_new.evento_publico ep ON ep.evento_id = e.id
     INNER JOIN capac_new.publicos p ON p.id = ep.publico_id
-    WHERE e.publicado = 1 $sqlIdCapac $sqlNomeEvento $sqlPublico";
+    WHERE e.publicado = 2 AND  $sqlIdCapac $sqlNomeEvento $sqlPublico";
 
 $query = mysqli_query($con, $sql);
 $numRows = mysqli_num_rows($query);
@@ -63,7 +63,7 @@ $numRows = mysqli_num_rows($query);
                                 <td><?= $evento['publico'] ?></td>
                                 <td>
 
-                                    <form action=?perfil=evento&p=resumo_capac" method="POST">
+                                    <form action="?perfil=evento&p=resumo_capac" method="POST">
                                         <input type="hidden" id="idCapac" name="idCapac" value="<?= $evento['id'] ?>">
                                         <button type="submit" name="buscar" id="buscar" class="btn btn-block btn-info">
                                             <span class="glyphicon glyphicon-folder-open"></span>

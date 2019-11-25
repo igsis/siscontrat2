@@ -1,7 +1,7 @@
 <?php
 $con = bancoMysqli();
 
-$idPedido = $_SESSION['idEC'];
+$idPedido = $_SESSION['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 ?>

@@ -5,7 +5,7 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_ce
 ?>
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Solicitar adição de Local</h2>
+        <h2 class="page-header">Adição de Local</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">

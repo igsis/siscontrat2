@@ -82,13 +82,14 @@ $sql = "SELECT p.numero_processo,
                     <?php
                     if ($query = mysqli_query($con, $sql)) {
                         while ($evento = mysqli_fetch_array($query)) {
+
                             ?>
                             <tr>
                                 <?php
                                 if (isset($evento['numero_processo'])) {
                                     ?>
                                     <td>
-                                        <form action="?perfil&=juridico&p=eventos&sp=pesquisa_evento" role="form"
+                                        <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"
                                               method="POST">
                                             <input type="hidden" name="idPedido" id="idPedido"  value="<?= $evento['id'] ?>">
                                             <button type="submit"  class="btn-btn-primary"><?= $evento['numprocesso'] ?></button>

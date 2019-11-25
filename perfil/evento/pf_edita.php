@@ -477,17 +477,17 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-4">
                                     <?php
                                     if (!empty($pf['cpf'])){
-                                    anexosNaPagina(2, $idPf, "modal-rg", "RG");
+                                        anexosNaPagina(1, $idPf, "modal-rg", "RG");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(3, $idPf, "modal-cpf", "CPF");
+                                    anexosNaPagina(2, $idPf, "modal-cpf", "CPF");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(31, $idPf, "modal-ccm", "FDC - CCM");
+                                    anexosNaPagina(30, $idPf, "modal-ccm", "FDC - CCM");
                                     }
                                     ?>
                                 </div>
@@ -544,7 +544,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(4, $idPf, "modal-endereco", "Comprovante de endereço");
+                                    anexosNaPagina(3, $idPf, "modal-endereco", "Comprovante de endereço");
                                     ?>
                                 </div>
                             </div>
@@ -615,7 +615,7 @@ include "includes/menu_interno.php";
                                     </div>
                                     <div class="form-group col-md-3">
                                         <?php
-                                        anexosNaPagina(60, $idPf, "modal-drt", "DTR");
+                                        anexosNaPagina(47, $idPf, "modal-drt", "DTR");
                                         ?>
                                     </div>
                                     <?php
@@ -628,7 +628,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-3">
                                     <?php
-                                    anexosNaPagina(25, $idPf, "modal-nit", "NIT");
+                                    anexosNaPagina(27, $idPf, "modal-nit", "NIT");
                                     ?>
                                 </div>
                             </div>
@@ -688,7 +688,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(51, $idPf, "modal-facc", "FACC");
+                                    anexosNaPagina(42, $idPf, "modal-facc", "FACC");
                                     ?>
                                 </div>
                             </div>

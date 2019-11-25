@@ -34,9 +34,9 @@ function bancoPDO()
 function bancoCapac()
 {
     $servidor = 'localhost';
-    $usuario = 'capac';
-    $senha = 'capac!@#';
-    $banco = 'capac';
+    $usuario = 'root';
+    $senha = '';
+    $banco = 'capac_new';
     $con = mysqli_connect($servidor,$usuario,$senha,$banco);
     mysqli_set_charset($con,"utf8");
     return $con;

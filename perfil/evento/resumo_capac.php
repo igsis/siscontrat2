@@ -1,4 +1,6 @@
 <?php
+include "includes/menu_principal.php";
+//$id = $_POST['idCapac'];
 $id = 1;
 
 $bdc = bancoCapac();
@@ -10,8 +12,12 @@ $evento = mysqli_fetch_array($query_evento);
 $sql_publico = "SELECT * FROM evento_publico INNER JOIN publicos p on evento_publico.publico_id = p.id WHERE evento_id = '$id'";
 $query_publico = mysqli_query($bdc,$sql_publico);
 
-$sql_atracao = "SELECT * FROM atracoes AS at INNER JOIN classificacao_indicativas AS cl ON at.classificacao_indicativa_id = cl.id WHERE evento_id = '$id'";
+$sql_atracao = "SELECT * FROM atracoes AS at INNER JOIN classificacao_indicativas AS cl ON at.classificacao_indicativa_id = cl.id WHERE evento_id = '$id' AND publicado = 1";
 $query_atracao = mysqli_query($bdc,$sql_atracao);
+
+$sql_pedido = "SELECT * FROM pedidos WHERE origem_id = '$id' AND origem_tipo_id = 1 AND publicado = 1";
+$query_pedido = mysqli_query($bdc,$sql_pedido);
+$pedido = mysqli_fetch_array($query_pedido);
 ?>
 <div class="content-wrapper">
     <div class="content">
@@ -21,7 +27,7 @@ $query_atracao = mysqli_query($bdc,$sql_atracao);
                 <div class="col-12">
                     <div class="card card-primary card-outline">
                         <div class="card-header">
-                            <h5 class="m-0">Dados do Evento</h5>
+                            <h3 class="m-0"><b>Dados do Evento</b></h3>
                         </div>
                         <div class="card-body">
 
@@ -55,8 +61,7 @@ $query_atracao = mysqli_query($bdc,$sql_atracao);
                             <br>
                             <!-- ************** Atrações ************** -->
                             <hr>
-                            <h5><b>Atrações</b></h5>
-                            <hr/>
+                            <h3><b>Atrações</b></h3>
                             <?php
                             while ($atracao = mysqli_fetch_array($query_atracao)){
                                 ?>
@@ -104,68 +109,61 @@ $query_atracao = mysqli_query($bdc,$sql_atracao);
                                     ?>
                                     <div class="col-md-5"><b>Produtor:</b>  <?= $produtor['nome'] ?></div>
                                     <div class="col-md-3"><b>Telefone:</b>  <?= $produtor['telefone1'] ?> / <?= $produtor['telefone2'] ?? NULL ?></div>
-                                    <div class="col-md-4"><b>E-mail:</b>  <?= $atracao->produtor->email ?? $erro ?></div>
+                                    <div class="col-md-4"><b>E-mail:</b>  <?= $produtor['email'] ?></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4"><b>Observação:</b>  <?= $atracao->produtor->observacao ?? NULL ?></div>
                                 </div>
                                 <br>
                             <?php
-                            }
-                            foreach ($atracaoObj->listaAtracoes($idEvento) as $atracao): ?>
-
-                                <div class="row">
-                                    <div class="col-md-5"><b>Produtor:</b>  <?= $atracao->produtor->nome ?? $erro ?></div>
-                                    <div class="col-md-3"><b>Telefone:</b>  <?= $atracao->produtor->telefone1 ?? $erro ?> / <?= $atracao->produtor->telefone2 ?? NULL ?></div>
-                                    <div class="col-md-4"><b>E-mail:</b>  <?= $atracao->produtor->email ?? $erro ?></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4"><b>Observação:</b>  <?= $atracao->produtor->observacao ?? NULL ?></div>
-                                </div>
-                                <br>
-
-                                <?php if ($pedido->pessoa_tipo_id == 2): ?>
-                                    <h5><b>Líder do grupo ou artista solo</b></h5>
-                                    <?php
-                                    require_once "./controllers/LiderController.php";
-                                    $liderObj = new LiderController();
-                                    $lider = $liderObj->getLider($atracao->id);
+                                if ($pedido['pessoa_tipo_id'] == 2){
+                                    $sql_lider = "SELECT * FROM lideres AS li INNER JOIN pessoa_fisicas AS pf ON li.pessoa_fisica_id = pf.id LEFT JOIN drts ON pf.id = drts.pessoa_fisica_id WHERE atracao_id = '$idAtracao'";
+                                    $query_lider = mysqli_query($bdc,$sql_lider);
+                                    $lider = mysqli_fetch_array($query_lider);
                                     ?>
+                                    <h5><b>Líder do grupo ou artista solo</b></h5>
                                     <div class="row">
                                         <div class="col-md-6"><b> Nome:</b> <?= $lider['nome'] ?></div>
                                         <div class="col-md-6"><b>Nome Artístico:</b> <?= $lider['nome_artistico'] ?></div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-2"><b>RG:</b> <?= $lider['rg'] ?></div>
-                                        <div class="col-md-2"><b>CPF:</b> <?= $lider['cpf'] ?></div>
-                                        <div class="col-md-4"><b>E-mail:</b> <?= $lider['email'] ?></div>
+                                        <div class="col-md-3"><b>RG:</b> <?= $lider['rg'] ?></div>
+                                        <div class="col-md-3"><b>CPF:</b> <?= $lider['cpf'] ?></div>
+                                        <div class="col-md-6"><b>E-mail:</b> <?= $lider['email'] ?></div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <b>Telefones:</b>
                                             <?= isset($lider['telefones']) ? implode(" | ", $lider['telefones']) : "" ?>
                                         </div>
-                                        <?php if($cenica > 0): ?>
-                                            <div class="col-md-6"><b>DRT:</b> <?= $lider['drt'] ?? $erro ?></div>
-                                        <?php endif ?>
+                                        <div class="col-md-6"><b>DRT:</b> <?= $lider['drt'] ?></div>
                                     </div>
                                     <br>
                                     <br>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-
+                            <?php
+                                }
+                            }
+                            ?>
                             <!-- ************** Proponente ************** -->
                             <hr>
-                            <h5><b>Proponente</b></h5>
-                            <hr/>
+                            <h3><b>Proponente</b></h3>
                             <?php
-                            $idEncrypt = $pedidoObj->encryption($pedido->proponente->id);
-                            if ($pedido->pessoa_tipo_id == 1) {
-                                /* ************** Pessoa Física ************** */
-                                require_once "./controllers/PessoaFisicaController.php";
-                                $pfObj = new PessoaFisicaController();
-                                $pf = $pfObj->recuperaPessoaFisica($idEncrypt);
-                                ?>
+                            if ($pedido['pessoa_tipo_id'] == 1){
+                                $sql_pf = "SELECT * FROM pessoa_fisicas AS pf
+                                    LEFT JOIN pf_enderecos pe on pf.id = pe.pessoa_fisica_id
+                                    LEFT JOIN pf_bancos pb on pf.id = pb.pessoa_fisica_id
+                                    LEFT JOIN drts d on pf.id = d.pessoa_fisica_id
+                                    LEFT JOIN nits n on pf.id = n.pessoa_fisica_id
+                                    LEFT JOIN nacionalidades n2 on pf.nacionalidade_id = n2.id
+                                    LEFT JOIN bancos b on pb.banco_id = b.id
+                                    LEFT JOIN pf_detalhes pd on pf.id = pd.pessoa_fisica_id
+                                    LEFT JOIN etnias e on pd.etnia_id = e.id
+                                    LEFT JOIN regiaos r on pd.regiao_id = r.id
+                                    LEFT JOIN grau_instrucoes gi on pd.grau_instrucao_id = gi.id
+                                    WHERE pf.id = '$id'";
+                                $query_pf = mysqli_query($bdc,$sql_pf);
+                                $pf = mysqli_fetch_array($query_pf);
+                            ?>
                                 <div class="row">
                                     <div class="col-md-6"><b> Nome:</b> <?= $pf['nome'] ?></div>
                                     <div class="col-md-6"><b>Nome Artístico:</b> <?= $pf['nome_artistico'] ?></div>
@@ -197,31 +195,35 @@ $query_atracao = mysqli_query($bdc,$sql_atracao);
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6"><b>NIT:</b> <?= $pf['nit'] ?></div>
-                                    <?php if($cenica > 0): ?>
-                                        <div class="col-md-6"><b>DRT:</b> <?= $pf['drt'] ?></div>
-                                    <?php endif ?>
-
+                                    <div class="col-md-6"><b>DRT:</b> <?= $pf['drt'] ?></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <b>Endereço:</b> <?= $pf['logradouro'] . ", " . $pf['numero'] . " " . $pf['complemento'] . " " . $pf['bairro'] . " - " . $pf['cidade'] . "-" . $pf['uf'] . " CEP: " . $pf['cep'] ?>
                                     </div>
                                 </div>
-                                <?php
-                                if ($_SESSION['modulo_c']!=2){
-                                    ?>
-                                    <div class="row">
-                                        <div class="col-md-4"><b>Banco:</b> <?= $pf['banco'] ?></div>
-                                        <div class="col-md-4"><b>Agência:</b> <?= $pf['agencia'] ?></div>
-                                        <div class="col-md-4"><b>Conta:</b> <?= $pf['conta'] ?></div>
-                                    </div>
-                                    <?php
-                                }
-                            } else {
-                                /* ************** Pessoa Juíridica ************** */
-                                require_once "./controllers/PessoaJuridicaController.php";
-                                $pjObj = new PessoaJuridicaController();
-                                $pj = $pjObj->recuperaPessoaJuridica($idEncrypt);
+                                <div class="row">
+                                    <div class="col-md-4"><b>Banco:</b> <?= $pf['banco'] ?></div>
+                                    <div class="col-md-4"><b>Agência:</b> <?= $pf['agencia'] ?></div>
+                                    <div class="col-md-4"><b>Conta:</b> <?= $pf['conta'] ?></div>
+                                </div>
+                            <?php
+                            }
+                            else{
+                                $sql_pj = "SELECT * FROM pessoa_juridicas AS pj
+                                    LEFT JOIN pj_enderecos pe on pj.id = pe.pessoa_juridica_id
+                                    LEFT JOIN pj_bancos pb on pj.id = pb.pessoa_juridica_id
+                                    LEFT JOIN bancos bc on pb.banco_id = bc.id
+                                    WHERE pj.id = '$id'";
+                                $query_pj = mysqli_query($bdc,$sql_pj);
+                                $pj = mysqli_fetch_array($query_pj);
+                                $idRep1 = $pj['representante_legal1_id'];
+                                $sql_rep1 = "SELECT * FROM representante_legais WHERE id = '$idRep1'";
+                                $query_rep1 = mysqli_query($bdc,$sql_rep1);
+                                $rep1 = mysqli_fetch_array($query_rep1);
+
+                                $sql_tel = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$id'";
+                                $query_tel = mysqli_query($bdc,$sql_tel);
                                 ?>
                                 <div class="row">
                                     <div class="col-md-7"><b>Razão Social:</b> <?= $pj['razao_social'] ?></div>
@@ -230,7 +232,12 @@ $query_atracao = mysqli_query($bdc,$sql_atracao);
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6"><b>E-mail:</b> <?= $pj['email'] ?></div>
-                                    <div class="col-md-6"><b>Telefones:</b> <?= implode(" | ", $pj['telefones']); ?>
+                                    <div class="col-md-6"><b>Telefones:</b>
+                                        <?php
+                                        while ($telefones = mysqli_fetch_array($query_tel)){
+                                            echo $telefones['telefone']." | ";
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -243,44 +250,111 @@ $query_atracao = mysqli_query($bdc,$sql_atracao);
                                     <div class="col-md-4"><b>Agência:</b> <?= $pj['agencia'] ?></div>
                                     <div class="col-md-4"><b>Conta:</b> <?= $pj['conta'] ?></div>
                                 </div>
-                                <!-- ************** Representante Legal 1 ************** -->
-                                <?php
-                                require_once "./controllers/RepresentanteController.php";
-                                $repObj = new RepresentanteController();
-                                $idRep1 = $repObj->encryption($pj['representante_legal1_id']);
-                                $rep1 = $repObj->recuperaRepresentante($idRep1)->fetch();
-                                ?>
                                 <br/>
                                 <h5><b>Representante Legal</b></h5>
                                 <div class="row">
-                                    <div class="col-md-7"><b>Nome:</b> <?= $rep1['nome'] ?></div>
+                                    <div class="col-md-6"><b>Nome:</b> <?= $rep1['nome'] ?></div>
                                     <div class="col-md-3"><b>RG:</b> <?= $rep1['rg'] ?></div>
-                                    <div class="col-md-2"><b>CFP:</b> <?= $rep1['cpf'] ?></div>
+                                    <div class="col-md-3"><b>CFP:</b> <?= $rep1['cpf'] ?></div>
                                 </div>
-                                <!-- ************** Representante Legal 2 ************** -->
+                                <br>
                                 <?php
-                                if(!empty($pj['representante_legal2_id'])){
-                                    $idRep2 = $repObj->encryption($pj['representante_legal2_id']);
-                                    $rep2 = $repObj->recuperaRepresentante($idRep2)->fetch();
+                                if ($pj['representante_legal2_id']){
+                                    $idRep2 = $pj['representante_legal2_id'];
+                                    $sql_rep2 = "SELECT * FROM representante_legais WHERE id = '$idRep2'";
+                                    $query_rep2 = mysqli_query($bdc,$sql_rep2);
+                                    $rep2 = mysqli_fetch_array($query_rep2);
                                     ?>
                                     <div class="row">
-                                        <div class="col-md-7"><b>Nome:</b> <?= $rep2['nome'] ?></div>
+                                        <div class="col-md-6"><b>Nome:</b> <?= $rep2['nome'] ?></div>
                                         <div class="col-md-3"><b>RG:</b> <?= $rep2['rg'] ?></div>
-                                        <div class="col-md-2"><b>CPF:</b> <?= $rep2['cpf'] ?></div>
+                                        <div class="col-md-3"><b>CFP:</b> <?= $rep2['cpf'] ?></div>
                                     </div>
+                                    <br>
                                     <?php
                                 }
                             }
                             ?>
                         </div>
-                        <div class="card-footer">
-                            <form class="form-horizontal formulario-ajax" method="POST" action="<?=SERVERURL?>ajax/eventoAjax.php" role="form" data-form="update">
-                                <input type="hidden" name="_method" value="envioEvento">
-                                <input type="hidden" name="modulo" value="<?=$modulo?>">
-                                <input type="hidden" name="id" value="<?=$idEvento?>">
-                                <button type="submit" class="btn btn-success btn-block float-right" id="cadastra">Enviar</button>
-                                <div class="resposta-ajax"></div>
-                            </form>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div class="table-responsive list_info"><br>
+                                    <?php
+                                    //lista arquivos de determinado pedido
+                                    $sql = "SELECT * FROM arquivos as arq
+                                    INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id
+                                    WHERE arq.origem_id = '$id' 
+                                    AND arq.publicado = '1' ORDER BY arq.lista_documento_id, arq.id";
+                                    $query = mysqli_query($bdc, $sql);
+                                    $linhas = mysqli_num_rows($query);
+
+                                    if ($linhas > 0) {
+                                        echo "
+                                    <table class='table text-center table-striped table-bordered table-condensed'>
+                                        <thead>
+                                            <tr class='bg-info text-bold'>
+                                                <td>Tipo de documento</td>
+                                                <td>Nome do documento</td>
+                                                <td>Data de envio</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>";
+                                        while ($arquivo = mysqli_fetch_array($query)) {
+                                            echo "<tr>";
+                                            echo "<td>".$arquivo['documento']."</td>";
+                                            echo "<td class='list_description'><a href='../uploadsdocs/" . $arquivo['arquivo'] . "' target='_blank'>" . mb_strimwidth($arquivo['arquivo'], 15, 50, "...") . "</a></td>";
+                                            echo "<td class='list_description'>(" . exibirDataBr($arquivo['data']) . ")</td>";
+                                            echo "</tr>";
+                                        }
+                                        echo "
+                                        </tbody>
+                                        </table>";
+                                    } else {
+                                        echo "<p>Não há listas disponíveis no momento.<p/><br/>";
+                                    }
+
+                                    ?>
+                                </div>
+                                <hr/>
+                            </div>
+                            <!--.modal-->
+                            <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
+                                <div class="modal-dialog">
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;
+                                            </button>
+                                            <h4 class="modal-title">Confirmação de Exclusão</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Tem certeza que deseja excluir este arquivo?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="?perfil=evento&p=arqs_com_prod"
+                                                  method="post">
+                                                <input type="hidden" name="idArquivo" id="idArquivo"
+                                                       value="">
+                                                <input type="hidden" name="apagar" id="apagar">
+                                                <button type="button" class="btn btn-default pull-left"
+                                                        data-dismiss="modal">Cancelar
+                                                </button>
+                                                <input class="btn btn-danger btn-outline" type="submit"
+                                                       name="excluir" value="Apagar">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  Fim Modal de Upload de arquivo  -->
+                        </div>
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-6">
+                                <form class="form-horizontal" method="POST" action="?perfil=evento&p=importar_capac" role="form">
+                                    <input type="hidden" name="idCapac" value="<?= $id ?>">
+                                    <button type="submit" class="btn btn-success btn-block float-right" >Importar</button>
+                                </form>
+                            </div>
                         </div>
 
                     </div>

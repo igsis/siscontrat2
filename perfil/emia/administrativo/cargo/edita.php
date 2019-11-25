@@ -23,7 +23,7 @@ if(isset($_POST['edit'])){
 }
 
 
-$_SESSION['idEC'] = $idEC;
+$_SESSION['idPedido'] = $idEC;
 ?>
 <div class="content-wrapper">
     <section class="content">

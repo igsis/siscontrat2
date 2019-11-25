@@ -19,33 +19,42 @@ if ($pedidos != null) {
     while ($atracao = mysqli_fetch_array($atracoes)) {
         $tipoPessoa = $pedidos['pessoa_tipo_id'];
 
-        if ($pedidos['pessoa_tipo_id'] == 1) {
+        if ($tipoPessoa == 1) {
             $idPessoa = $pedidos['pessoa_fisica_id'];
             $pf = recuperaDados("pessoa_fisicas", "id", $idPessoa);
 
-            $sqlArqs = "SELECT * FROM arquivos WHERE lista_documento_id = 2 OR lista_documento_id = 3";
+            $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo 
+                            FROM lista_documentos ld
+                            LEFT JOIN (SELECT * FROM arquivos 
+                                        WHERE publicado = 1 AND origem_id = '$idPessoa') a ON ld.id = a.lista_documento_id
+                            WHERE ld.tipo_documento_id = '$tipoPessoa' AND ld.publicado = 1";
             $queryArqs = mysqli_query($con, $sqlArqs);
-            if (mysqli_num_rows($queryArqs) < 2 AND mysqli_num_rows($queryArqs) != 0) {
-                $arqs = mysqli_fetch_array($queryArqs);
-                $idDoc = $arqs['lista_documento_id'];
-                if ($idDoc == 2) {
-                    //  array_push($erros,"Produtor não cadastrado na atração <b>".$atracao['nome_atracao']."</b>");
-                    array_push($errosArqs, "Cópia do CPF não anexada na pessoa física <b>" . $pf['nome'] . "</b>");
-                } elseif ($idDoc == 3) {
-                    array_push($errosArqs, "Cópia do RG não anexada na pessoa física <b>" . $pf['nome'] . "</b>");
-                }
 
-            } elseif (mysqli_num_rows($queryArqs) == 0) {
-                array_push($errosArqs, "Cópias de RG e CPF não anexadas na pessoa fisica");
+            while ($arquivo = mysqli_fetch_array($queryArqs)) {
+                if ($arquivo['arquivo'] == NULL) {
+                    array_push($errosArqs, $arquivo['documento'] . " não enviado");
+                }
             }
 
         } else {
             $idPessoa = $pedidos['pessoa_juridica_id'];
             $pj = recuperaDados("pessoa_juridicas", "id", $idPessoa);
-            $sqlArqs = "SELECT * FROM arquivos WHERE lista_documento_id = 22";
+            $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo 
+                            FROM lista_documentos ld
+                            LEFT JOIN (SELECT * FROM arquivos 
+                                        WHERE publicado = 1 AND origem_id = '$idPessoa') a ON ld.id = a.lista_documento_id
+                            WHERE ld.tipo_documento_id = '$tipoPessoa' AND ld.publicado = 1";
             $queryArqs = mysqli_query($con, $sqlArqs);
-            if (mysqli_num_rows($queryArqs) == 0) {
-                array_push($errosArqs, "Copia de CNPJ nao anexada na pessoa juridica <b>" . $pj['razao_social'] . "</b>");
+            while ($arquivo = mysqli_fetch_array($queryArqs)) {
+
+                if ($pj['representante_legal1_id'] == NULL && ($arquivo['id'] == 23 || $arquivo['id'] == 24))
+                    continue;
+
+                if ($pj['representante_legal2_id'] == null && ($arquivo['id'] == 85 || $arquivo['id'] == 86))
+                    continue;
+
+                if ($arquivo['arquivo'] == NULL)
+                    array_push($errosArqs, $arquivo['documento'] . " não enviado");
             }
         }
     }
