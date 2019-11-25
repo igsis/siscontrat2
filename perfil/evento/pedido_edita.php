@@ -277,12 +277,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             id="editarParcelas" class="btn btn-primary">
                                         Editar Parcelas
                                     </button>
-                                    <div id="data_kit_pagamento" style="<?= $displayKit ?>">
-                                        <label for="data_kit_pagamento">Data Kit Pagamento</label>
-                                        <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
-                                               class="form-control"
-                                               value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
-                                    </div>
                                 </div>
                             </div>
                             <?php
@@ -305,13 +299,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                     id="editarParcelas" class="btn btn-primary">
                                 Editar Parcelas
                             </button>
-                            <div class="form-group col-md-2" id="data_kit_pagamento"
-                                 style="margin-left: -10px; <?= $displayKit ?>">
-                                <label for="data_kit_pagamento">Data Kit Pagamento</label>
-                                <input type="date" id="data_kit_pagamento" name="data_kit_pagamento"
-                                       class="form-control"
-                                       value="<?= $pedido['data_kit_pagamento'] ?? NULL ?>">
-                            </div>
                         </div>
                         <?php
                         }
