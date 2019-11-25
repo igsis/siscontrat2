@@ -33,7 +33,8 @@ if ($pedido != null) {
 switch ($pedido['pessoa_tipo_id']) {
     case 1:
         $tipo = "Pessoa Física";
-        $sqlTelefones = "SELECT telefone FROM pf_telefones WHERE pessoa_fisica_id = '" . $pedido['pessoa_fisica_id'] . "' AND publicado = '1'";
+        $idPf = $pedido['pessoa_fisica_id'];
+        $sqlTelefones = "SELECT telefone FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = '1'";
         $telefones = $con->query($sqlTelefones)->fetch_all();
         $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
         $nacionalidade = recuperaDados('nacionalidades', 'id', $proponente['nacionalidade_id'])['nacionalidade'];
@@ -45,14 +46,14 @@ switch ($pedido['pessoa_tipo_id']) {
             'Nome Artístico' => $proponente['nome_artistico'],
             'Nacionalidade' => $nacionalidade,
             'RG' => $proponente['rg'] ?? "Não Cadastrado",
-            'Passaporte' => $proponente['passaporte'] ? : "Não Cadastrado",
+            'Passaporte' => $proponente['passaporte'] ?? "Não Cadastrado",
             'CPF' => $proponente['cpf'],
             'CCM' => $proponente['ccm'],
             'Data de Nascimento' => exibirDataBr($proponente['data_nascimento']),
             'E-Mail' => $proponente['email'],
-            'Telefone #1' => $telefones[0][0] ? : "Não Cadastrado",
-            'Telefone #2' => $telefones[1][0] ? : "Não Cadastrado",
-            'Telefone #3' => $telefones[2][0] ? : "Não Cadastrado",
+            'Telefone #1' => $telefones[0][0] ?? "Não Cadastrado",
+            'Telefone #2' => $telefones[1][0] ?? "Não Cadastrado",
+            'Telefone #3' => $telefones[2][0] ?? "Não Cadastrado"
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
@@ -218,14 +219,12 @@ $parcelado = false;
                         <div class="box-body">
                             <div class="table-responsive">
                                 <table class="table">
-                                    <?php foreach ($dadosRepresentante2
-
-                                                   as $campo => $dado) ?>
+                                    <?php foreach ($dadosRepresentante2 as $campo => $dado) { ?>
                                     <tr>
                                         <th width="40%"><?= $campo ?>:</th>
                                         <td><?= $dado ?></td>
                                     </tr>
-                                    <?php ?>
+                                    <?php } ?>
                                 </table>
                             </div>
                         </div>
