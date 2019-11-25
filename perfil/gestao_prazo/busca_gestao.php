@@ -60,6 +60,7 @@ if (isset($_POST['vetar'])) {
 $sql = "SELECT
                e.id AS 'id',
                e.nome_evento AS 'nome_evento',
+               e.usuario_id,
                l.local AS 'local',
                e.fiscal_id
                FROM eventos AS e
@@ -101,17 +102,15 @@ $query = mysqli_query($con, $sql);
                             echo "<tbody>";
                             while ($eventos = mysqli_fetch_array($query)) {
                                 $fiscal = recuperaDados('usuarios', 'id', $eventos['fiscal_id']);
-                                $operador = recuperaDados('contratos', 'pedido_id', $eventos['id']);
+                                $idUser = $eventos['usuario_id'];
+                                $sqlOperado = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
+                                $operador = $con->query($sqlOperado)->fetch_array();
                                 echo "<tr>";
                                 echo "<td>" . $eventos['nome_evento'] . "</td>";
                                 echo "<td>" . $eventos['local'] . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($eventos['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $fiscal['nome_completo'] . "</td>";
-                                if($operador['usuario_contrato_id'] == 0){
-                                    echo "<td>" . " " . "</td>";
-                                }else{
-                                    echo "<td>" . $operador['usuario_contrato_id'] . "</td>";
-                                }
+                                echo "<td>" . $operador['nome_completo'] . "</td>";
                                 echo "<td>
                                                 <form method='POST' action='?perfil=gestao_prazo&p=detalhes_gestao' role='form'>
                                                 <input type='hidden' name='idEvento' value='" . $eventos['id'] . "'>
