@@ -541,51 +541,7 @@ $atracao = mysqli_query($con, $sql);
                                            placeholder="Digite o E-mail" required value="<?= $pf['email'] ?>">
                                 </div>
                                 <div class="form-group col-md-2">
-                                    <label for="telefone">Telefone #1 * </label>
-                                    <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
-                                           class="form-control"
-                                           id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
-                                           value="<?= $arrayTelefones[0]['telefone']; ?>">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="celular">Telefone #2 </label>
-                                    <?php
-                                    if (isset($arrayTelefones[1])) {
-                                        ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
-                                               value="<?= $arrayTelefones[1]['telefone']; ?>">
-                                        <?php
-                                    } else {
-                                        ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone1" name="telefone1">
-                                        <?php
-                                    }
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="recado">Telefone #3</label>
-                                    <?php if (isset($arrayTelefones[2])) {
-                                        ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
-                                               value="<?= $arrayTelefones[2]['telefone']; ?>">
 
-                                        <?php
-                                    } else {
-                                        ?>
-
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone2" name="telefone2">
-
-                                        <?php
-                                    }
-                                    ?>
                                 </div>
                             </div>
 
