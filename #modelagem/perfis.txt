@@ -10,7 +10,7 @@ jur -> jurídico
 pag -> pagamentos
 pes -> pesquisa
 adm -> administrador
-
+gdp -> gestão de prazo
 
 
 
@@ -33,3 +33,4 @@ JUR					awptxn9dg
 PAG					fnh4urr4f
 PES					6brnyb4d7
 ADM					didiego30
+CON | EVE | GDP | PAG			5f126hf4j
