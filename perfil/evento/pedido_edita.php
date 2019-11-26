@@ -479,7 +479,8 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                         <?php
                         $sqlEquipamento = "SELECT DISTINCT oco.local_id as 'local_id', local.local as 'local' 
                             FROM ocorrencias oco
-                            INNER JOIN locais local ON local.id = oco.local_id WHERE oco.origem_ocorrencia_id = '$idEvento'";
+                            INNER JOIN locais local ON local.id = oco.local_id 
+                            WHERE oco.origem_ocorrencia_id = '$idEvento' AND local.publicado = 1 AND oco.publicado = 1";
 
                         $queryEquipamento = mysqli_query($con, $sqlEquipamento);
                         $numRowsEquipamento = mysqli_num_rows($queryEquipamento);

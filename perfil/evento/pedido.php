@@ -111,7 +111,7 @@ $num = mysqli_num_rows($query);
                                     }
                                     $nome_atracao = substr($nome_atracao, 0, -3);
                                     echo "<td>" . $nome_atracao ."</td>";
-                                    
+
                                     echo "<td>                                    
                                         <input type='hidden' name='idPedido' value='".$pedido['id']."'>
                                         <input type='hidden' name='tipoPessoa' value='".$pedido['pessoa_tipo_id']."'>
