@@ -103,7 +103,7 @@ $num = mysqli_num_rows($query);
                                         $idProponente = $pf['id'];
                                     }
 
-                                    $sql_atracao = "SELECT id, nome_atracao FROM atracoes WHERE evento_id = '$idEvento'";
+                                    $sql_atracao = "SELECT id, nome_atracao FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
                                     $query_atracao = mysqli_query($con,$sql_atracao);
                                     $nome_atracao = "";
                                     while ($arr = mysqli_fetch_array($query_atracao)) {
