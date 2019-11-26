@@ -82,10 +82,9 @@ if (isset($_POST['cadastra'])) {
 
         $mensagem .= mensagem("success", "Cadastrado com sucesso!");
         $idPj = recuperaUltimo("pessoa_juridicas");
-        //gravarLog($sql);
+        gravarLog($sql);
     } else {
         $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
-        //gravarLog($sql);
     }
 }
 

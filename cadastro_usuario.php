@@ -20,24 +20,34 @@ if (isset($_POST['cadastra'])) {
 
     if (mysqli_num_rows($query_perfil) > 0) {
         $perfilSelecioado = mysqli_fetch_assoc($query_perfil);
-        $perfil = $perfilSelecioado['id'];
+        $idPerfil = $perfilSelecioado['id'];
         $acertou = 1;
     } else {
         $acertou = 0;
     }
 
     if ($acertou) {
+        $sqlModulosEventos = "SELECT DISTINCT p.token FROM modulo_perfis mp 
+                              INNER JOIN modulos m on mp.modulo_id = m.id 
+                              INNER JOIN perfis p on mp.perfil_id = p.id
+                              WHERE p.publicado = 1 AND m.id = 2";
+
+        $queryModulosEventos = mysqli_query($con, $sqlModulosEventos);
+        $modulosEventos = mysqli_fetch_array($queryModulosEventos);
+
+        $fiscal = 0;
 
         if ($jovemMonitor == 0) {
-            // fazer um in_array() depois que ficar definido os modulos que terá acesso a eventos
-            $fiscal = 1;
-        } else {
-            $fiscal = 0;
+            while ($token = mysqli_fetch_array($queryModulosEventos)) {
+                if ($token['token'] == $perfil)
+                    $fiscal = 1;
+
+            }
         }
 
         if (isset($_POST['cadastra'])) {
             $sql = "INSERT INTO usuarios (nome_completo, jovem_monitor, rf_rg, usuario, email, telefone, perfil_id, fiscal)
-        VALUES ('$nome', '$jovemMonitor','$rgRf', '$usuario', '$email', '$telefone', '$perfil', '$fiscal')";
+        VALUES ('$nome', '$jovemMonitor','$rgRf', '$usuario', '$email', '$telefone', '$idPerfil', '$fiscal')";
 
             if (mysqli_query($con, $sql)) {
                 $usuarioNovo = recuperaUltimo('usuarios');

@@ -37,10 +37,10 @@ if (isset($_POST['busca'])) {
 
     $sql = "SELECT e.id, e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
     p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, 
-    p.valor_total, e.evento_status_id, e.usuario_id, es.status
+    p.valor_total, e.evento_status_id, e.usuario_id, ps.status
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
-    INNER JOIN evento_status es on e.evento_status_id = es.id
+    INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1
@@ -97,6 +97,9 @@ if (isset($_POST['busca'])) {
                                 <?php
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
+                                    $idUser = $evento['usuario_id'];
+                                    $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
+                                    $operador = $con->query($sqlOperador)->fetch_array();
                                     if ($evento['pessoa_tipo_id'] == 1)
                                         $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome_artistico'];
                                     else if ($evento['pessoa_tipo_id'] == 2)
@@ -115,7 +118,7 @@ if (isset($_POST['busca'])) {
                                         <td><?= $evento['nome_evento'] ?></td>
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= $evento['status'] ?></td>
-                                        <td><?= recuperaDados('usuarios', 'id', $evento['usuario_id'])['nome_completo'] ?></td>
+                                        <td><?= $operador['nome_completo'] ?></td>
                                     </tr>
                                     <?php
                                 }
