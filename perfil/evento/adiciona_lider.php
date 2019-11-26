@@ -2,8 +2,11 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
+if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
+    $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
+}
 
-
+$pf = recuperaDados()
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
