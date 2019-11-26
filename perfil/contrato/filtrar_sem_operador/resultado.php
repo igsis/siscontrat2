@@ -17,7 +17,7 @@ if (isset($_POST['busca'])) {
     $sqlUsuario = '';
 
     if ($protocolo != null)
-        $sqlProtocolo = " AND e.protocolo = '$protocolo'";
+        $sqlProtocolo = " AND e.protocolo like '%$protocolo%'";
 
     if ($num_processo != null)
         $sqlProcesso = " AND p.numero_processo = '$num_processo'";
