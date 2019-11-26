@@ -57,16 +57,14 @@ if (isset($_POST['vetar'])) {
     }
 }
 
-$sql = "SELECT
-               e.id AS 'id',
-               e.nome_evento AS 'nome_evento',
-               e.usuario_id,
-               l.local AS 'local',
-               e.fiscal_id
-               FROM eventos AS e
-               INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
-               INNER JOIN locais AS l ON l.id = o.local_id
-               WHERE e.evento_status_id = 2 AND e.publicado = 1";
+$sql = "SELECT e.id, 
+        e.nome_evento,
+		fiscal.nome_completo AS 'fiscal',
+        e.usuario_id
+        FROM eventos as e
+        INNER JOIN usuarios AS fiscal ON e.fiscal_id = fiscal.id
+        WHERE e.evento_status_id = 2 AND e.publicado = 1";
+
 $query = mysqli_query($con, $sql);
 ?>
 
@@ -101,15 +99,26 @@ $query = mysqli_query($con, $sql);
                             <?php
                             echo "<tbody>";
                             while ($eventos = mysqli_fetch_array($query)) {
-                                $fiscal = recuperaDados('usuarios', 'id', $eventos['fiscal_id']);
                                 $idUser = $eventos['usuario_id'];
+                                $idEvento = $eventos['id'];
+
+                                //locais
+                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
+                                $queryLocal = mysqli_query($con, $sqlLocal);
+                                $local = '';
+                                while ($locais = mysqli_fetch_array($queryLocal)) {
+                                    $local = $local . '; ' . $locais['local'];
+                                }
+                                $local = substr($local, 1);
+
+                                //operador
                                 $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
                                 $operador = $con->query($sqlOperador)->fetch_array();
                                 echo "<tr>";
                                 echo "<td>" . $eventos['nome_evento'] . "</td>";
-                                echo "<td>" . $eventos['local'] . "</td>";
+                                echo "<td>" . $local . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($eventos['id'], 'ocorrencias') . "</td>";
-                                echo "<td>" . $fiscal['nome_completo'] . "</td>";
+                                echo "<td>" . $eventos['fiscal'] . "</td>";
                                 echo "<td>" . $operador['nome_completo'] . "</td>";
                                 echo "<td>
                                                 <form method='POST' action='?perfil=gestao_prazo&p=detalhes_gestao' role='form'>

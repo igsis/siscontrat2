@@ -22,24 +22,23 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['carrega
     $tipoRepresentante = $_POST['tipoRepresentante'];
 }
 
-
 if ($tipoRepresentante == 1) {
     $representante = "representante_legal1_id";
     $RG = "23";
     $CPF = "24";
-    $siglaRG = "rg_rl1";
-    $siglaCPF = "cpf_rl1";
-    $nomeRg = "RG do Representante Legal 1";
-    $nomeCpf = "CPF do Representante Legal 1";
+    $siglaRG = "rg_rl";
+    $siglaCPF = "cpf_rl";
+    $nomeRg = "RG/RNE/PASSAPORTE Representante Legal #1";
+    $nomeCpf = "CPF Representante Legal #1";
 
 } else if ($tipoRepresentante == 2) {
     $representante = "representante_legal2_id";
     $RG = "85";
     $CPF = "86";
-    $siglaRG = "rg_rl2";
-    $siglaCPF = "cpf_rl2";
-    $nomeRg = "RG do Representante Legal 2";
-    $nomeCpf = "CPF do Representante Legal 2";
+    $siglaRG = "rg_rl";
+    $siglaCPF = "cpf_rl";
+    $nomeRg = "RG Representante Legal #2";
+    $nomeCpf = "CPF Representante Legal #2";
 }
 
 if (isset($_POST['cadastra'])) {
@@ -240,8 +239,8 @@ include "includes/menu_interno.php";
             </div>
         </div>
         <?php
-        modalUploadArquivoUnico("modal-$siglaRG", "?perfil=evento&p=representante_edita", $nomeRg, $siglaRG, $idRepresentante, $tipoRepresentante, $idPj);
-        modalUploadArquivoUnico("modal-$siglaCPF", "?perfil=evento&p=representante_edita", $nomeCpf, $siglaCPF, $idRepresentante, $tipoRepresentante);
+        modalUploadArquivoUnico("modal-$siglaRG", "?perfil=evento&p=representante_edita", $nomeRg, $siglaRG, $tipoRepresentante, $idPj, "2");
+        modalUploadArquivoUnico("modal-$siglaCPF", "?perfil=evento&p=representante_edita", $nomeCpf, $siglaCPF, $idPj, "2");
         ?>
 
     </section>

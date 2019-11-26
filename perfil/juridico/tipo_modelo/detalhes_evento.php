@@ -209,7 +209,7 @@ echo $sql
                 $sqlLocal = "SELECT 
                     l.local
                     from locais l 
-                    INNER JOIN ocorrencias o on l.id = o.local_id";
+                    INNER JOIN ocorrencias o on l.id = o.local_id AND o.publicado = 1";
                 $local = $con->query($sqlLocal)->fetch_assoc();
                 ?>
                 <br>

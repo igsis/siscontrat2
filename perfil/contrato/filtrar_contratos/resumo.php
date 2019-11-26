@@ -104,13 +104,14 @@ if (isset($_POST['salvar'])) {
     $verba = $_POST['verba'];
     $processoMae = $_POST['processoMae'];
     $processo = $_POST['processo'];
+    $justificativa = $_POST['justificativa'];
 
     //eventos
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'] ?? null;
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', verba_id = '$verba' WHERE id = '$idPedido'";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido'";
 
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
@@ -221,13 +222,21 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             ?>
 
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="formaPagamento">Forma de pagamento</label>
-                                    <input type="text" name="formaPagamento" id="formaPagamento"
-                                           value="<?= $pedido['forma_pagamento'] ?>" class="form-control">
+                                    <textarea name="formaPagamento" id="formaPagamento" rows="5" required
+                                              class="form-control"><?= $pedido['forma_pagamento'] ?> </textarea>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="justificativa">Justificativa</label>
+                                    <textarea name="justificativa" id="justificativa" rows="5" required
+                                              class="form-control"><?= $pedido['justificativa'] ?> </textarea>
                                 </div>
 
-                                <div class="form-group col-md-4">
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-6">
                                     <label for="verba">Verba </label>
                                     <select name="verba" id="verba" class="form-control">
                                         <?php
@@ -236,7 +245,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     </select>
                                 </div>
 
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="processoMae">Número de processo mãe</label>
                                     <input type="text" class="form-control" name="processoMae" id="processoMae"
                                            data-mask="9999.9999/9999999-9" minlength="19"
@@ -279,7 +288,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 Salvar
                             </button>
                             <a href="?perfil=contrato&p=filtrar_contratos&sp=area_impressao">
-                                <button type="button"  class="btn btn-default">Ir para área de impressão</button>
+                                <button type="button" class="btn btn-default">Ir para área de impressão</button>
                             </a>
                         </div>
                     </form>

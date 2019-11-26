@@ -2,11 +2,7 @@
 include "includes/menu.php";
 $con = bancoMysqli();
 
-$sql = "SELECT
-               e.id AS 'id'
-               FROM eventos AS e
-               INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
-               WHERE evento_status_id = 2 AND e.publicado = 1";
+$sql = "SELECT * FROM eventos WHERE evento_status_id = 2 AND publicado = 1";
 $query = mysqli_query($con,$sql);
 $numEventos = mysqli_num_rows($query);
 ?>
