@@ -89,10 +89,6 @@ $num = mysqli_num_rows($query);
                                 <?php
                                 echo "<body>";
                                 while ($pedido = mysqli_fetch_array($query)) {
-                                    $atracao = recuperaDados("atracoes","evento_id", $idEvento);
-                                    $atracao_id = $atracao['id'];
-                                    $sql_atracao = "SELECT nome_atracao FROM atracoes WHERE id = '$atracao_id'";
-                                    $query_atracao = mysqli_query($con,$sql_atracao);
                                     echo "<tr>";
                                     if($pedido['pessoa_tipo_id'] == 2){
                                         $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
@@ -106,12 +102,16 @@ $num = mysqli_num_rows($query);
                                         echo "<input type='hidden' name='idPessoa' value='".$pf['id']."'>";
                                         $idProponente = $pf['id'];
                                     }
-                                    echo "<td>";
-                                    while ($arr = mysqli_fetch_array($query_atracao)){
-                                        $nome = $arr['nome_atracao'];
-                                        echo $nome."<br/>";
+
+                                    $sql_atracao = "SELECT id, nome_atracao FROM atracoes WHERE evento_id = '$idEvento'";
+                                    $query_atracao = mysqli_query($con,$sql_atracao);
+                                    $nome_atracao = "";
+                                    while ($arr = mysqli_fetch_array($query_atracao)) {
+                                        $nome_atracao = $nome_atracao . $arr['nome_atracao'] . " | ";
                                     }
-                                    echo "</td>";
+                                    $nome_atracao = substr($nome_atracao, 0, -3);
+                                    echo "<td>" . $nome_atracao ."</td>";
+                                    
                                     echo "<td>                                    
                                         <input type='hidden' name='idPedido' value='".$pedido['id']."'>
                                         <input type='hidden' name='tipoPessoa' value='".$pedido['pessoa_tipo_id']."'>
