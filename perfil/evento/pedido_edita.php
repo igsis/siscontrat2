@@ -367,7 +367,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                 $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
-                                            WHERE evento_id = '" . $_SESSION['idEvento'] . "'";
+                                            WHERE a.publicado = 1 AND a.evento_id = '" . $_SESSION['idEvento'] . "'";
                 $query_atracao = mysqli_query($con, $sql_atracao);
                 ?>
                 <div class="box box-info">
