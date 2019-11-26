@@ -103,8 +103,8 @@ $query = mysqli_query($con, $sql);
                             while ($eventos = mysqli_fetch_array($query)) {
                                 $fiscal = recuperaDados('usuarios', 'id', $eventos['fiscal_id']);
                                 $idUser = $eventos['usuario_id'];
-                                $sqlOperado = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
-                                $operador = $con->query($sqlOperado)->fetch_array();
+                                $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
+                                $operador = $con->query($sqlOperador)->fetch_array();
                                 echo "<tr>";
                                 echo "<td>" . $eventos['nome_evento'] . "</td>";
                                 echo "<td>" . $eventos['local'] . "</td>";

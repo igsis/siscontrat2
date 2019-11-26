@@ -98,8 +98,8 @@ if (isset($_POST['busca'])) {
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
                                     $idUser = $evento['usuario_id'];
-                                    $sqlOperado = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
-                                    $operador = $con->query($sqlOperado)->fetch_array();
+                                    $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
+                                    $operador = $con->query($sqlOperador)->fetch_array();
                                     if ($evento['pessoa_tipo_id'] == 1)
                                         $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome_artistico'];
                                     else if ($evento['pessoa_tipo_id'] == 2)

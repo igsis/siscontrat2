@@ -70,8 +70,8 @@ $query = mysqli_query($con, $sql);
                                     $sqlChamado = "SELECT c.justificativa, c.data FROM chamados AS c WHERE evento_id = $idEvento";
                                     $chamado = $con->query($sqlChamado)->fetch_array();
                                     $idUser = $evento['usuario_id'];
-                                    $sqlOperado = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
-                                    $operador = $con->query($sqlOperado)->fetch_array();
+                                    $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
+                                    $operador = $con->query($sqlOperador)->fetch_array();
                                     ?>
                                     <td>
                                         <button type="button" class="btn-link" id="exibirMotivo"
