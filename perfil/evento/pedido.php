@@ -79,7 +79,6 @@ $num = mysqli_num_rows($query);
                             <table class="table table-condensed">
                                 <thead>
                                 <tr>
-                                    <th>Pedido</th>
                                     <th>Proponente</th>
                                     <th>Atração</th>
                                     <th width="15%">Anexos</th>
@@ -90,8 +89,11 @@ $num = mysqli_num_rows($query);
                                 <?php
                                 echo "<body>";
                                 while ($pedido = mysqli_fetch_array($query)) {
+                                    $atracao = recuperaDados("atracoes","evento_id", $idEvento);
+                                    $atracao_id = $atracao['id'];
+                                    $sql_atracao = "SELECT nome_atracao FROM atracoes WHERE id = '$atracao_id'";
+                                    $query_atracao = mysqli_query($con,$sql_atracao);
                                     echo "<tr>";
-                                    echo "<td>" . $pedido['id'] . "</td>";
                                     if($pedido['pessoa_tipo_id'] == 2){
                                         $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
                                         echo "<td>".$pj['razao_social']."</td>";
@@ -105,22 +107,10 @@ $num = mysqli_num_rows($query);
                                         $idProponente = $pf['id'];
                                     }
                                     echo "<td>";
-                                    $idAtracao = $pedido['origem_id'];
-                                    $atracao_evento = recuperaDados("atracoes","id",$idAtracao);
-                                    $atracao_id = $atracao_evento['id'];
-                                    $sql_atracao = "SELECT nome_atracao FROM atracoes WHERE id = '$atracao_id'";
-                                    $query_atracao = mysqli_query($con,$sql_atracao);
-                                    //$arr_atracao = mysqli_fetch_array($query_atracao);
                                     while ($arr = mysqli_fetch_array($query_atracao)){
                                         $nome = $arr['nome_atracao'];
                                         echo $nome."<br/>";
                                     }
-                                    //var_dump( $arr_atracao);
-                                    /*foreach ($arr_atracao as $idAtracao) {
-                                        $atracao = recuperaDados("atracoes", "id",$idAtracao);
-                                        $nome = $atracao['nome_atracao'];
-                                        echo $nome."<br>";
-                                    }*/
                                     echo "</td>";
                                     echo "<td>                                    
                                         <input type='hidden' name='idPedido' value='".$pedido['id']."'>
