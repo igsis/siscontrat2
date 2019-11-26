@@ -69,7 +69,7 @@ $pdf->MultiCell(140,$l,utf8_decode("Pedido de Pagamento de R$ ". $valorParcela .
 
 $pdf->Ln(7);
 
-$sqlLocal = "SELECT local FROM locais l INNER JOIN emia_contratacao ec on ec.local_id = l.id WHERE ec.id = '$idEC'";
+$sqlLocal = "SELECT local FROM locais l INNER JOIN emia_contratacao ec on ec.local_id = l.id WHERE ec.id = '$idEC' AND ec.publicado = 1";
 $local = $con->query($sqlLocal)->fetch_array();
 
 $pdf->SetX($x);

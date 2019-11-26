@@ -103,7 +103,7 @@ $query = mysqli_query($con, $sql);
                                 $idEvento = $eventos['id'];
 
                                 //locais
-                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento'";
+                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
                                 $queryLocal = mysqli_query($con, $sqlLocal);
                                 $local = '';
                                 while ($locais = mysqli_fetch_array($queryLocal)) {
