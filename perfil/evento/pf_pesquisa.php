@@ -60,7 +60,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         $resultado .= "<td>" . $pessoa['cpf'] . "</td>";
                         $resultado .= "<td>" . $pessoa['email'] . "</td>";
                         $resultado .= "<td>
-                                     <form action='?perfil=evento&p=adiciona_lider' method='post'>
+                                     <form action='?perfil=evento&p=pf_edita' method='post'>
                                         <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
                                         <input type='hidden' name='idAtracao' value='$idAtracao'>
                                         <input type='hidden' name='idPedido' value='$idPedido'>
