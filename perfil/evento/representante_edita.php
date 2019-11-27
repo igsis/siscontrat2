@@ -239,8 +239,8 @@ include "includes/menu_interno.php";
             </div>
         </div>
         <?php
-        modalUploadArquivoUnico("modal-$siglaRG", "?perfil=evento&p=representante_edita", $nomeRg, $siglaRG, $idPj, "2");
-        modalUploadArquivoUnico("modal-$siglaCPF", "?perfil=evento&p=representante_edita", $nomeCpf, $siglaCPF, $idPj, "2");
+        modalUploadArquivoUnico("modal-$siglaRG", "?perfil=evento&p=representante_edita", $nomeRg, $siglaRG, $idPj, $tipoRepresentante);
+        modalUploadArquivoUnico("modal-$siglaCPF", "?perfil=evento&p=representante_edita", $nomeCpf, $siglaCPF, $idPj, $tipoRepresentante);
         ?>
 
     </section>
