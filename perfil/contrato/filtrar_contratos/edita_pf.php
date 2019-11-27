@@ -125,7 +125,7 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
     }
 }
 
-if (isset($_POST['edita'])) {
+if (isset($_POST['telefone[1]'])) {
     $mensagem = "";
     $idPf = $_POST['idPf'];
     $sql = "UPDATE siscontrat.`pessoa_fisicas` SET 

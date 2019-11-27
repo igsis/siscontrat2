@@ -53,7 +53,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         $resultado .= "<td>" . $pessoa['email'] . "</td>";
                         $resultado .= "<td>
                                      <form action='#' method='post'> 
-                                        <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
+                                        <input type='hidden' name='idLider' value='" . $pessoa['id'] . "'>
                                         <input type='hidden' name='idAtracao' value='$idAtracao'>
                                         $botaoSelecionar                                        
                                      </form>
@@ -108,7 +108,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='...'>Sem Resultado</span>
                         </td>
                         <td>
-                        <form method='post' action=''>
+                        <form method='post' action='?perfil=evento&p=adiciona_lider'>
                         <input type='hidden' name='documentacao' value='$procurar'>
                         <input type='submit' name='tipoDumentacao' value='$tipoDocumento'>
                         <button class='btn btn-primary'  name='adicionar' type='submit'>
