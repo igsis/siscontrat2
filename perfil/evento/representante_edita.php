@@ -35,8 +35,8 @@ if ($tipoRepresentante == 1) {
     $representante = "representante_legal2_id";
     $RG = "85";
     $CPF = "86";
-    $siglaRG = "rg_rl";
-    $siglaCPF = "cpf_rl";
+    $siglaRG = "rg_rl2";
+    $siglaCPF = "cpf_rl2";
     $nomeRg = "RG Representante Legal #2";
     $nomeCpf = "CPF Representante Legal #2";
 }
@@ -114,7 +114,6 @@ if (isset($_POST["enviar"])) {
         $x = $arq['sigla'];
         $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
         $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
-
         if ($f_size > 5242880) {
             $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
 
@@ -130,7 +129,8 @@ if (isset($_POST["enviar"])) {
                 if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
                 {
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPj', '$y', '$new_name', '$hoje', '1'); ";
+                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) 
+                        VALUES ('$idPj', '$y', '$new_name', '$hoje', '1')";
 
                         if (mysqli_query($con, $sql_insere_arquivo)) {
                             $mensagem = mensagem("success", "Arquivo recebido com sucesso");
@@ -138,6 +138,7 @@ if (isset($_POST["enviar"])) {
                                 swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
                             </script>";
                             gravarLog($sql_insere_arquivo);
+
                         } else {
                             $mensagem = mensagem("danger", "Erro ao gravar no banco");
                         }

@@ -81,10 +81,6 @@ if (isset($_POST['edita'])) {
 
 $pedido = recuperaDados("pedidos", "id", $idPedido);
 
-/*if ($pedido['origem_tipo_id'] == 1) {
-    $eventos = recuperaDados("")
-}*/
-
 if ($pedido['pessoa_tipo_id'] == 2) {
     $pj = recuperaDados("pessoa_juridicas", "id", $pedido['pessoa_juridica_id']);
     $proponente = $pj['razao_social'];
