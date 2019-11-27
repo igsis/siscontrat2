@@ -51,7 +51,7 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
                             echo "<tbody>";
                             while ($agendaoNovo = mysqli_fetch_array($queryAgendaoNovo)) {
                             $idAgendao = $agendaoNovo['id'];
-                            $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
+                            $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = '$idAgendao' AND ao.publicado = 1";
                             $queryLocal = mysqli_query($con, $sqlLocal);
                             $local = '';
                             while ($locais = mysqli_fetch_array($queryLocal)) {

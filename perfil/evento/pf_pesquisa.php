@@ -45,7 +45,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                          WHERE cpf = '$procurar'";
 
             if ($result = mysqli_query($con, $queryCPF)) {
-
                 $resultCPF = mysqli_num_rows($result);
 
                 if ($resultCPF > 0) {

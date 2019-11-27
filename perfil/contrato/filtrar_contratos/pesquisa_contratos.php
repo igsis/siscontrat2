@@ -52,11 +52,11 @@ unset($_SESSION['idPedido']);
                                     </select>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label for="status">Evento status</label>
+                                    <label for="status">Pedido status</label>
                                     <select name="status" id="status" class="form-control">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao('locais');
+                                        geraOpcao('pedido_status');
                                         ?>
                                     </select>
                                 </div>

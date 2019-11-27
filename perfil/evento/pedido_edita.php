@@ -81,10 +81,6 @@ if (isset($_POST['edita'])) {
 
 $pedido = recuperaDados("pedidos", "id", $idPedido);
 
-/*if ($pedido['origem_tipo_id'] == 1) {
-    $eventos = recuperaDados("")
-}*/
-
 if ($pedido['pessoa_tipo_id'] == 2) {
     $pj = recuperaDados("pessoa_juridicas", "id", $pedido['pessoa_juridica_id']);
     $proponente = $pj['razao_social'];
@@ -367,7 +363,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                 $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
-                                            WHERE evento_id = '" . $_SESSION['idEvento'] . "'";
+                                            WHERE a.publicado = 1 AND a.evento_id = '" . $_SESSION['idEvento'] . "'";
                 $query_atracao = mysqli_query($con, $sql_atracao);
                 ?>
                 <div class="box box-info">
@@ -479,7 +475,8 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                         <?php
                         $sqlEquipamento = "SELECT DISTINCT oco.local_id as 'local_id', local.local as 'local' 
                             FROM ocorrencias oco
-                            INNER JOIN locais local ON local.id = oco.local_id WHERE oco.origem_ocorrencia_id = '$idEvento'";
+                            INNER JOIN locais local ON local.id = oco.local_id 
+                            WHERE oco.origem_ocorrencia_id = '$idEvento' AND local.publicado = 1 AND oco.publicado = 1";
 
                         $queryEquipamento = mysqli_query($con, $sqlEquipamento);
                         $numRowsEquipamento = mysqli_num_rows($queryEquipamento);

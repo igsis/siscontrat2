@@ -22,24 +22,23 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['carrega
     $tipoRepresentante = $_POST['tipoRepresentante'];
 }
 
-
 if ($tipoRepresentante == 1) {
     $representante = "representante_legal1_id";
-    $RG = "20";
-    $CPF = "21";
-    $siglaRG = "rg_rl1";
-    $siglaCPF = "cpf_rl1";
-    $nomeRg = "RG do Representante Legal 1";
-    $nomeCpf = "CPF do Representante Legal 1";
+    $RG = "23";
+    $CPF = "24";
+    $siglaRG = "rg_rl";
+    $siglaCPF = "cpf_rl";
+    $nomeRg = "RG/RNE/PASSAPORTE Representante Legal #1";
+    $nomeCpf = "CPF Representante Legal #1";
 
 } else if ($tipoRepresentante == 2) {
     $representante = "representante_legal2_id";
-    $RG = "103";
-    $CPF = "104";
+    $RG = "85";
+    $CPF = "86";
     $siglaRG = "rg_rl2";
     $siglaCPF = "cpf_rl2";
-    $nomeRg = "RG do Representante Legal 2";
-    $nomeCpf = "CPF do Representante Legal 2";
+    $nomeRg = "RG Representante Legal #2";
+    $nomeCpf = "CPF Representante Legal #2";
 }
 
 if (isset($_POST['cadastra'])) {
@@ -131,15 +130,16 @@ if (isset($_POST["enviar"])) {
                 if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
                 {
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPj', '$y', '$new_name', '$hoje', '1'); ";
-                        $query = mysqli_query($con, $sql_insere_arquivo);
+                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) 
+                        VALUES ('$idPj', '$y', '$new_name', '$hoje', '1')";
 
-                        if ($query) {
+                        if (mysqli_query($con, $sql_insere_arquivo)) {
                             $mensagem = mensagem("success", "Arquivo recebido com sucesso");
                             echo "<script>
                                 swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
                             </script>";
                             gravarLog($sql_insere_arquivo);
+
                         } else {
                             $mensagem = mensagem("danger", "Erro ao gravar no banco");
                         }
@@ -240,8 +240,8 @@ $representantes = recuperaDados("representante_legais", "id", $idRepresentante);
         </div>
 </div>
 <?php
-modalUploadArquivoUnico("modal-$siglaRG", "?perfil=contrato&p=filtrar_contratos&sp=representante_edita", $nomeRg, $siglaRG, $idRepresentante, $tipoRepresentante, $idPj);
-modalUploadArquivoUnico("modal-$siglaCPF", "?perfil=contrato&p=filtrar_contratos&sp=representante_edita", $nomeCpf, $siglaCPF, $idRepresentante, $tipoRepresentante);
+modalUploadArquivoUnico("modal-$siglaRG", "?perfil=contrato&p=filtrar_contratos&sp=representante_edita", $nomeRg, $siglaRG, $idPj, $tipoRepresentante);
+modalUploadArquivoUnico("modal-$siglaCPF", "?perfil=contrato&p=filtrar_contratos&sp=representante_edita", $nomeCpf, $siglaCPF, $idPj, $tipoRepresentante);
 ?>
 
 </section>
