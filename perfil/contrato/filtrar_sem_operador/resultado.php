@@ -45,10 +45,10 @@ if (isset($_POST['busca'])) {
                    p.valor_total, 
                    e.evento_status_id, 
                    e.usuario_id, 
-                   es.status
+                   ps.status
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
-    INNER JOIN evento_status es on e.evento_status_id = es.id
+    INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
     WHERE e.publicado = 1 
     AND e.evento_status_id != 1 
     AND p.publicado = 1 

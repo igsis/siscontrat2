@@ -86,13 +86,11 @@ if ($pedido['pessoa_tipo_id'] == 2) {
     $proponente = $pj['razao_social'];
     $idProponente = $pj['id'];
     $link_edita = "?perfil=evento&p=pj_edita";
-    $link_troca = "?perfil=evento&p=pj_pesquisa";
 } else {
     $pf = recuperaDados("pessoa_fisicas", "id", $pedido['pessoa_fisica_id']);
     $proponente = $pf['nome'];
     $idProponente = $pf['id'];
     $link_edita = "?perfil=evento&p=pf_edita";
-    $link_troca = "?perfil=evento&p=pf_pesquisa";
 }
 
 $tipoPessoa = $pedido['pessoa_tipo_id'];
@@ -348,8 +346,9 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                 </form>
                             </div>
                             <div class="form-group col-md-2"><label><br></label>
-                                <form method="POST" action="<?= $link_troca ?>" role="form">
-                                    <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
+                                <form method="POST" action="?perfil=evento&p=troca_proponente" role="form">
+                                    <input type="hidden" name="idProponente" value="<?=$idProponente?>">
+                                    <button type="submit" name="trocaProponente" class="btn btn-primary btn-block">Trocar de
                                         Proponente
                                     </button>
                                 </form>

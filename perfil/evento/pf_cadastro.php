@@ -12,7 +12,12 @@ if (isset($_POST['adicionar']) || isset($_POST['adicionarLider'])) {
         $botoesFooter = "<input type='hidden' name='idPedido' value='$idPedido'>
                             <input type='hidden' name='idAtracao' value='$idAtracao'>
                             <button type='submit' name='cadastraComLider' class='btn btn-info pull-right'>Salvar</button>";
-    } else {
+
+    } else if(isset($_POST['adicionaPf'])) {
+        $idPedido = $_POST['idPedido'];
+        $botoesFooter = "<input type='hidden' name='idPedido' value='$idPedido'>
+                            <button type='submit' name='atualizaPf' class='btn btn-info pull-right'>Salvar</button>";
+    }else{
         $botoesFooter = "<button type='submit' name='cadastra' class='btn btn-info pull-right'>Salvar</button>";
     }
 }
