@@ -44,7 +44,7 @@ if (isset($_POST['cadastraLider'])) {
 }
 
 
-if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider'])) {
+if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
     $nome = addslashes($_POST['nome']);
     $nomeArtistico = addslashes($_POST['nomeArtistico']);
     $rg = $_POST['rg'] ?? NULL;
@@ -70,7 +70,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastr
     $conta = $_POST['conta'] ?? NULL;
     $data = date("y-m-d h:i:s");
 }
-if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
+if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
     $mensagem = "";
     $sql = "INSERT INTO siscontrat.`pessoa_fisicas` (nome, nome_artistico, rg, passaporte, cpf, ccm, data_nascimento, nacionalidade_id, email, ultima_atualizacao) VALUES('$nome','$nomeArtistico','$rg','$passaporte','$cpf','$ccm','$dtNascimento','$nacionalidade','$email','$data')";
     if (mysqli_query($con, $sql)) {
@@ -128,6 +128,10 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
                     echo "<script>swal('Líder selecionado com sucesso!', '', 'success') </script>";
                 }
             }
+        }
+
+        if(isset($_POST['atualizaPf'])){
+            $idPedido = $_POST['idPedido'];
         }
 
         $mensagem .= mensagem("success", "Cadastrado com sucesso!");

@@ -49,7 +49,7 @@
                                 </div>
 
                                 <div class="col-md-4 form-group">
-                                    <label for="status">Pedido status</label>
+                                    <label for="status">Status do pedido</label>
                                     <select name="status" id="status" class="form-control">
                                         <option value="0">Selecione uma opção...</option>
                                         <?php

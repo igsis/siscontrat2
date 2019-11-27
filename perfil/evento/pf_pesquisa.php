@@ -15,10 +15,14 @@ if (isset($_POST['lider'])) {
     $idAtracao = $_POST['oficina'];
 }
 
+if (isset($_POST['troca_pf'])) {
+    $idPf = $_POST['idPf'];
+}
 
 if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
     $idPedido = $_POST['idPedido'] ?? NULL;
     $idAtracao = $_POST['idAtracao'] ?? NULL;
+    $idPf = $_POST['idPf'] ?? NULL;
 
     if ($idPedido != null) {
         $botaoSelecionar = "<input type='submit' name='cadastraLider' class='btn btn-primary' value='Selecionar'>";
@@ -26,12 +30,24 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
-    } else {
+        $actionEdita = "?perfil=evento&p=pf_edita";
+        $actionCadastra = "?perfil=evento&p=pf_cadastro";
+    } else if($idPf != NULL) {
+        $botaoSelecionar = "<input type='submit' name='trocaPf' class='btn btn-primary' value='Selecionar como novo proponente'>";
+        $botaoAdd = "<button class='btn btn-primary' name='adicionaPf' type='submit'>
+                                <i class='glyphicon glyphicon-plus'>        
+                                </i>Adicionar
+                            </button>";
+        $actionEdita = "?perfil=evento&p=pedido_edita";
+        $actionCadastra = "?perfil=evento&p=pf_cadastro";
+    }else{
         $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
         $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
+        $actionEdita = "?perfil=evento&p=pf_edita";
+        $actionCadastra = "?perfil=evento&p=pf_cadastro";
     }
 
     $procurar = $_POST['procurar'] ?? $_POST['passaporte'];
@@ -59,7 +75,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         $resultado .= "<td>" . $pessoa['cpf'] . "</td>";
                         $resultado .= "<td>" . $pessoa['email'] . "</td>";
                         $resultado .= "<td>
-                                     <form action='?perfil=evento&p=pf_edita' method='post'>
+                                     <form action='$actionEdita' method='post'>
                                         <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
                                         <input type='hidden' name='idAtracao' value='$idAtracao'>
                                         <input type='hidden' name='idPedido' value='$idPedido'>
@@ -76,7 +92,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=evento&p=pf_cadastro'>
+                        <form method='post' action='$actionCadastra'>
                             <input type='hidden' name='idAtracao' value='$idAtracao'>
                             <input type='hidden' name='idPedido' value='$idPedido'>
                             <input type='hidden' name='documentacao' value='$procurar'>
@@ -108,7 +124,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             $resultado .= "<td>" . $pessoa['passaporte'] . "</td>";
                             $resultado .= "<td>" . $pessoa['email'] . "</td>";
                             $resultado .= "<td>
-                                     <form action='?perfil=evento&p=pf_edita' method='post'>
+                                     <form action='$actionEdita' method='post'>
                                         <input type='hidden' name='idPessoa' value='" . $pessoa['id'] . "'>
                                         <input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>
                                      </form>
@@ -121,7 +137,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=evento&p=pf_cadastro'>
+                        <form method='post' action='$actionCadastra'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             <button class=\"btn btn-primary\" name='adicionar' type='submit'>
@@ -180,6 +196,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                         <p>&nbsp;</p>
                                         <input type="hidden" name="idPedido" value="<?= $idPedido ?? NULL ?>">
                                         <input type="hidden" name="idAtracao" value="<?= $idAtracao ?? NULL ?>">
+                                        <input type="hidden" name="idPf" value="<?= $idPf ?? NULL ?>">
                                         <button class="btn btn-default" type="submit"><i
                                                     class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
