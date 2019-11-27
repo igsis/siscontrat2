@@ -2,10 +2,9 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
-if (isset($_POST['cadastrar'])){
-    $nome = addslashes($_POST['nome']);
-    $email = $_POST['email'];
-    $drt = $_POST['drt'];
+if (isset($_POST['adicionar'])){
+    $documento = $_POST['documentacao'];
+    $tipoDocumento = $_POST['tipoDumentacao'];
 }
 
 ?>
@@ -27,39 +26,42 @@ if (isset($_POST['cadastrar'])){
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form method="POST" action="?perfil=evento&p=adiciona_lider" role="form">
+                    <form method="POST" action="?perfil=evento&p=lider_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="nome">Nome: *</label>
-                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value='' placeholder='Digite o nome'required>
+                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120'
+                                       placeholder='Digite o nome'required>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="email">Nome Artístico:</label>
-                                    <input type='text' class='form-control' id='nomeArtistico' name='nomeArtistico' maxlength='15'  value='' required>
+                                    <input type='text' class='form-control' id='nomeArtistico'
+                                           name='nomeArtistico' maxlength='120' required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="email">E-mail</label>
-                                    <input type='email' class='form-control' id='email' name='email' maxlength='15' placeholder='Digite o e-mail' value='' required>
+                                    <input type='email' class='form-control' id='email' name='email'
+                                           maxlength='120' placeholder='Digite o e-mail' required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="email">Telefone: 1#</label>
                                     <input type="text" id="telefone" name="telefone[0]" onkeyup="mascara( this, mtel );"
-                                           class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                           class="form-control" placeholder="Digite o telefone" required maxlength="11">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="email">Telefone: 2#</label>
                                     <input type="text" id="telefone" name="telefone[1]" onkeyup="mascara( this, mtel );"
-                                           class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                           class="form-control" placeholder="Digite o telefone" required maxlength="11">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="email">Telefone: 3#</label>
                                     <input type="text" id="telefone" name="telefone[2]" onkeyup="mascara( this, mtel );"
-                                           class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                           class="form-control" placeholder="Digite o telefone" required maxlength="11">
 
                                 </div>
                                 <div class="form-group col-md-3">

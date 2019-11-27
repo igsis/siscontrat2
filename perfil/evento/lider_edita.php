@@ -1,38 +1,69 @@
 <?php
-include "includes/menu_interno.php";
 $con = bancoMysqli();
+$conn = bancoPDO();
+
 if(isset($_POST['idLider'])){
     $idLider = $_POST['idLider'];
 }
-if(isset($_POST['cadastra'])){
+
+
+if(isset($_POST['cadastrar'])){
     $nome = addslashes($_POST['nome']);
-    $nomeArtistico = $_post['nomeArtistico'];
+    $nomeArtistico = $_POST['nomeArtistico'];
     $email = $_POST['email'];
     $telefones = $_POST['telefone'];
     $drt = $_POST['drt'];
 }
-if(isset($_POST['cadastra'])){
+
+
+
+if(isset($_POST['cadastrar'])){
     $mensagem ="";
-    $sqlInsert = "INSERT INTO pessoa_fisica` (nome,nome_artistico,email) VALUES('$nome','$nomeArtistico','$email')";
+    $sqlInsert = "INSERT INTO pessoa_fisicas (nome, nome_artistico, email) VALUES ('$nome','$nomeArtistico','$email')"; // esta inserindo no banco
+
+    echo $sqlInsert;
     if(mysqli_query($con,$sqlInsert)) {
         $idLider = recuperaUltimo("pessoa_fisicas");
         //cadastra o telefone
-        foreach ($telefones as $telefone) {
+        foreach ($telefones AS $telefone) {
             if (!empty($telefone)) {
-                $sqlTelelefone = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone, publicado) VALUES ('$idLider','$telefone',1)";
+                $sqlTelefone = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone, publicado) VALUES ('$idLider','$telefone',1)";
                 mysqli_query($con, $sqlTelefone);
+                echo $sqlTelefone;
             }
         }
         if ($drt != NULL) {
-            $sqlDRT = "INSERT INTO siscontrat.`drts` (pessoa_fisica_id, drt, publicado)  VALUES ('$idLider','$drt',1)";
+            $sqlDRT = "INSERT INTO drts (pessoa_fisica_id, drt, publicado)  VALUES ('$idLider','$drt',1)";
             if (!mysqli_query($con, $sqlDRT)) {
                 $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlDRT;
             }
         }
-
+        $mensagem .= mensagem("success", "Cadastrado com sucesso!");
+    } else {
+        $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
 }
+
+
+$lider = recuperaDados("pessoa_fisicas", "id",$idLider);
+$drt = recuperaDados("drts", "pessoa_fisica_id", $idLider);
+echo $drt;
+
+$sqlTelefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idLider'";
+$arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
+include "includes/menu_interno.php";
 ?>
+
+<script language="JavaScript">
+    function barraData(n) {
+        if (n.value.length == 2)
+            c.value += '/';
+        if (n.value.length == 5)
+            c.value += '/';
+    }
+</script>
+
+
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
@@ -58,32 +89,39 @@ if(isset($_POST['cadastra'])){
 
                             <div class="form-group">
                                 <label for="nome">Nome: *</label>
-                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value='' required>
+                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value="<? $lider['nome'] ?>" required>
                             </div>
                             <div class="form-group">
                                 <label for="nome">Nome Artístico: *</label>
-                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value='' required>
+                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value="<? $lider['nome_artistico'] ?>" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">E-mail</label>
-                                <input type='email' class='form-control' id='email' name='email' maxlength='60' placeholder='Digite o e-mail' value='' required>
+                                <input type='email' class='form-control' id='email' name='email' maxlength='60' placeholder='Digite o e-mail' value=<? $lider['email'] ?> required>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="telefone1">Telefone #1</label>
-                                    <input type="text" class="form-control" id='telefone1' name='telefone1' maxlength='15' onkeyup="mascara( this, mtel );" placeholder='Digite o Telefone principal' required value=''>
+                                    <input type="text" class="form-control"
+                                           id='telefone' name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
+                                           value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone2">Telefone #2</label>
-                                    <input type="text" class="form-control" id='telefone2' name='telefone2' onkeyup="mascara( this, mtel );" maxlength="15" placeholder='Digite o Telefone secundário' value=''>
+                                    <input type="text" class="form-control"
+                                           id='telefone1' name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
+                                           value="<?= $arrayTelefones[1]['telefone']; ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone1">Telefone #3</label>
-                                    <input type="text" class="form-control" id='telefone3' name='telefone3' maxlength='15' onkeyup="mascara( this, mtel );" placeholder='Digite o terceiro Telefone' required value=''>
+                                    <input type="text" class="form-control"
+                                           id='telefone2' name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
+                                           value="<?= $arrayTelefones[2]['telefone']; ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="drt">DRT: <i>(Somente para artes cênicas)</i></label>
-                                    <input type="text" class="form-control" id='drt' name='drt' onkeyup="mascara( this, mtel );" maxlength="15"value=''>
+                                    <input type="text" class="form-control" id='drt' name='drt' onkeyup="mascara( this, mtel );"
+                                           maxlength="15"value=<? $drt['drts'] ?>>
                                 </div>
                             </div>
                         </div>
