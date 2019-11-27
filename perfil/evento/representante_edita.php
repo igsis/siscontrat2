@@ -131,9 +131,8 @@ if (isset($_POST["enviar"])) {
                 {
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
                         $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPj', '$y', '$new_name', '$hoje', '1'); ";
-                        $query = mysqli_query($con, $sql_insere_arquivo);
 
-                        if ($query) {
+                        if (mysqli_query($con, $sql_insere_arquivo)) {
                             $mensagem = mensagem("success", "Arquivo recebido com sucesso");
                             echo "<script>
                                 swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
