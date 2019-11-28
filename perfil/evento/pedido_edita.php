@@ -15,6 +15,20 @@ if (isset($_POST['carregar'])) {
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
+if(isset($_POST['trocaPf'])){
+    $_SESSION['idPedido'] = $_POST['idPedido'];
+    $idPedido = $_SESSION['idPedido'];
+    $idPessoa = $_POST['idPf'];
+    $trocaPf = $con->query("UPDATE pedidos SET pessoa_fisica_id = $idPessoa WHERE id = $idPedido AND origem_tipo_id = 1");
+    if($trocaPf){
+        $deletaPj = $con->query("UPDATE pedidos SET pessoa_juridica_id = null WHERE id = $idPedido AND origem_tipo_id = 1");
+        $mensagem = mensagem('success', 'Proponente trocado com sucesso!');
+    }else{
+        $mensagem = mensagem('danger', 'Erro ao trocar proponente! Tente novamente.');
+    }
+    $pedido = recuperaDados("pedidos", "id", $idPedido);
+}
+
 if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
     unset($_POST['cadastra']);
     $_POST['carregar'] = 1;
@@ -347,6 +361,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                             </div>
                             <div class="form-group col-md-2"><label><br></label>
                                 <form method="POST" action="?perfil=evento&p=troca_proponente" role="form">
+                                    <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <input type="hidden" name="idProponente" value="<?=$idProponente?>">
                                     <button type="submit" name="trocaProponente" class="btn btn-primary btn-block">Trocar de
                                         Proponente

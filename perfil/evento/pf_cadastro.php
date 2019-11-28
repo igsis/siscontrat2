@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 
-if (isset($_POST['adicionar']) || isset($_POST['adicionarLider'])) {
+if (isset($_POST['adicionar']) || isset($_POST['adicionarLider']) || isset($_POST['adicionaPf'])) {
     $documento = $_POST['documentacao'];
     $tipoDocumento = $_POST['tipoDocumento'];
 
