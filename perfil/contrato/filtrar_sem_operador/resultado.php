@@ -17,13 +17,13 @@ if (isset($_POST['busca'])) {
     $sqlUsuario = '';
 
     if ($protocolo != null)
-        $sqlProtocolo = " AND e.protocolo like '%$protocolo%'";
+        $sqlProtocolo = " AND e.protocolo LIKE '%$protocolo%'";
 
     if ($num_processo != null)
-        $sqlProcesso = " AND p.numero_processo = '$num_processo'";
+        $sqlProcesso = " AND p.numero_processo LIKE '%$num_processo%'";
 
     if ($nomeEvento != null)
-        $sqlNomeEvento = " AND e.nome_evento = '$nomeEvento'";
+        $sqlNomeEvento = " AND e.nome_evento LIKE '%$nomeEvento%'";
 
     if ($projeto != null && $projeto != 0)
         $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";

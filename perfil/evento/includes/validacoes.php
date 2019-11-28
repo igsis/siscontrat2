@@ -14,7 +14,7 @@ $pedidos = $con->query($sqlPedidos)->fetch_assoc();
 $atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'");
 
 $errosArqs = [];
-
+$erros = [];
 if ($pedidos != null) {
     while ($atracao = mysqli_fetch_array($atracoes)) {
         $tipoPessoa = $pedidos['pessoa_tipo_id'];
@@ -56,6 +56,15 @@ if ($pedidos != null) {
                 if ($arquivo['arquivo'] == NULL)
                     array_push($errosArqs, $arquivo['documento'] . " não enviado");
             }
+
+            $idPedidoLider = $pedidos['id'];
+            $idAtracao = $atracao['id'];
+            $sqlLider = "SELECT pessoa_fisica_id FROM lideres WHERE pedido_id = '$idPedidoLider' AND atracao_id = '$idAtracao'";
+            $queryLider = mysqli_query($con, $sqlLider);
+
+            if (mysqli_num_rows($queryLider) == 0)
+                array_push($erros, "Líder não cadastrado na atração: <b>" . $atracao['nome_atracao'] . '</b>');
+
         }
     }
 } else {
@@ -96,8 +105,6 @@ function in_array_key($needle, $haystack)
     }
     return $return;
 }
-
-$erros = [];
 
 if ($evento['tipo_evento_id'] == 1) {
     if ($numAtracoes == 0) {
