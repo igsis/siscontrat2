@@ -3,6 +3,7 @@ $con = bancoMysqli();
 include "includes/menu_interno.php";
 
 $idAtracao = null;
+$idLider = null;
 $exibir = ' ';
 $resultado = "<td></td>";
 $procurar = NULL;
@@ -34,27 +35,22 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
             $sqlCPF = "SELECT id,nome,cpf,email
             FROM pessoa_fisicas
             where cpf = '$procurar'";
-
             $query_cpf = mysqli_query($con,$sqlCPF);
-
-
             if ($array_cpf = mysqli_fetch_array($query_cpf)){ // executa o valor o array da querry.
-                var_dump($array_cpf);
                 $num_cpf = mysqli_num_rows($query_cpf);
                 if ($num_cpf > 0) {
                     $exibir = true;
                     $resultado = "";
 
-                    foreach ($query_cpf as $pessoa) {
+                    foreach ($query_cpf as $lider) {
 
                         $resultado .= "<tr>";
-                        $resultado .= "<td>" . $pessoa['nome'] . "</td>";
-                        $resultado .= "<td>" . $pessoa['cpf'] . "</td>";
-                        $resultado .= "<td>" . $pessoa['email'] . "</td>";
+                        $resultado .= "<td>" . $lider['nome'] . "</td>";
+                        $resultado .= "<td>" . $lider['cpf'] . "</td>";
+                        $resultado .= "<td>" . $lider['email'] . "</td>";
                         $resultado .= "<td>
                                      <form action='?perfil=evento&p=lider_edita' method='post'> 
-                                        <input type='hidden' name='idLider' value='" . $pessoa['id'] . "'>
-                                        <input type='hidden' name='idAtracao' value='$idAtracao'>
+                                        <input type='hidden' name='idLider' value='" . $lider['id'] . "'>
                                         $botaoSelecionar                                        
                                      </form>
                                </td>";
@@ -67,7 +63,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                       </td>
                       <td>
                         <form method='post' action='?perfil=evento&p=adiciona_lider'>
-                            <input type='hidden' name='idAtracao' value='$idAtracao'>
+                            <input type='hidden' name='$idLider' value='$idLider'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             $botaoAdd
@@ -88,15 +84,14 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                     if ($num_passaporte > 0 ){
                         $exibir = true;
                         $resultado = "";
-
                         foreach ($query_passaporte as $pessoa){
                             $resultado .= "<tr>";
-                            $resultado .= "<td>". $pessoa['nome'] . "</td>";
-                            $resultado .= "<td>". $pessoa['passaporte'] . "</td>";
-                            $resultado .= "<td>". $pessoa['email'] . "</td>";
+                            $resultado .= "<td>". $lider['nome'] . "</td>";
+                            $resultado .= "<td>". $lider['passaporte'] . "</td>";
+                            $resultado .= "<td>". $lider['email'] . "</td>";
                             $resultado .= "<td>
                                         <form action='?perfil=evento&p=lider_edita' method='post'>
-                                        <input type='hidden' name='idLider' value='" . $pessoa['id'] . "'>
+                                        <input type='text' name='idLider' value='" . $lider['id'] . "'>
                                         <input type='submit' class='btn btn-primary' name='selecionar' value='selecionar'>
                                         </form>
                                         </td>";
@@ -158,7 +153,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                     <span class="input-group-btn">
                                         <p>&nbsp;</p>
                                         <p>&nbsp;</p>
-                                        <input type="hidden" name="idAtracao" value="<?= $idAtracao ?? NULL ?>">
+                                        <input type="hidden" name="idLider" value="<?= $idLider ?? NULL ?>">
                                         <button class="btn btn-default" type="submit"><i
                                                     class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>

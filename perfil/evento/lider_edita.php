@@ -22,12 +22,10 @@ if (isset($_POST['editar'])) {
                    nome = '$nome',
                    nome_artistico = '$nomeArtistico',
                    email = '$email'
-                   WHERE id = '$idLider'";
-    echo $sqlUpdate;
+                   WHERE id = $idLider";
 
 
     if (mysqli_query($con, $sqlUpdate)) {
-        $idLider = recuperaUltimo("pessoa_fisicas");
         // edita o telefone
         if (isset($_POST['telefone2'])) {
             $telefone2 = $_POST['telefone2'];
@@ -35,33 +33,35 @@ if (isset($_POST['editar'])) {
             $queryTelefone2 = mysqli_query($con, $sqlTelefone2);
             gravarLog($sqlTelefone2); // > 		//grava na tabela log os inserts e updates
         }
+
         if (isset($_POST['telefone3'])) {
-            $telefone3 = $_POST['telefonr3'];
+            $telefone3 = $_POST['telefone3'];
             $sqlTelefone3 = "INSERT INTO pf_telefones (pessoa_fisica_id,telefone) VALUES ('$idLider','$telefone3')";
             $queryTelefone3 = mysqli_query($con, $sqlTelefone3);
             gravarLog($sqlTelefone3); // > 		//grava na tabela log os inserts e updates
         }
+
         foreach ($telefones AS $idTelefone => $telefone) {
-            if (!srtlen($telefone)) { // -> Determina o tamanho de uma string.
-                $sqlDeleteTel = "DELETE FROM pf_telefones WHERE id ='$idTelefone'";
-                $queryDelete = mysqli_query($con, $sqlDeleteTel);
+            if (!strlen($telefone)) { // -> Determina o tamanho de uma string.
+                $sqlDeleteTel = "DELETE FROM pf_telefones WHERE id = $idTelefone";
+                mysqli_query($con, $sqlDeleteTel);
                 gravarLog($sqlDeleteTel);
             }
             if ($telefone != '') {
-                $sqlTelefone = "UPDATE pf_telefones SET telefone = '$telefone' WHERE id = '$idTelefone'";
-                $queryTelefone = mysqli_query($con, $sqlTelefone);
+                $sqlTelefone = "UPDATE pf_telefones SET telefone = '$telefone' WHERE id = $idTelefone";
+                mysqli_query($con, $sqlTelefone);
                 gravarLog($sqlTelefone);
             }
             if ($drt != NULL) {
                 $drt_existe = verificaExiste("drts", "pessoa_fisica_id", $idLider, 0);
                 if ($drt_existe ['numero'] > 0) {
-                    $sqldrt = "UPDATE drts SET drt = '$drt' WHERE pessoa_fisica_id = '$idLider'"; // -> Caso for maior que 0 ele ele retorna erro .
-                    if (mysqli_query($con, $sqldrt)) {
+                    $sqldrt = "UPDATE drts SET drt = '$drt' WHERE pessoa_fisica_id = $idLider"; // -> Caso for maior que 0 ele ele retorna erro .
+                    if (!mysqli_query($con, $sqldrt)) {
                         $mensagem .= mensagem("danger", "Erro ao gravar! Tente Novamente. ! ") . $sqldrt;
                     }
                 } else {
                     $sqldrt = "INSERT INTO drts (pessoa_fisica_id, drt , publicado) VALUES ('$idLider', '$drt', 1)";
-                    if (mysqli_query($con, $sqldrt)) {
+                    if (!mysqli_query($con, $sqldrt)) {
                         $mensagem .= mensagem("danger", "Erro ao gravar! Insira um lider para poder finalizar ") . $sqldrt;
                     }
                 }
@@ -69,7 +69,7 @@ if (isset($_POST['editar'])) {
         }
         $mensagem .= mensagem("success", "Atualizado com sucesso!");
     } else {
-        $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
+        //$mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
 }
 
@@ -159,22 +159,50 @@ include "includes/menu_interno.php";
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label for="telefone1">Telefone #1</label>
+                                    <label for="celular">Telefone #1</label>
                                     <input type="text" class="form-control"
                                            id='telefone' name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
-                                           value="<?= $arrayTelefones[0]['telefone']; ?>">
+                                           required maxlength="11" value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
-                                <div class="form-group col-md-3">
-                                    <label for="telefone2">Telefone #2</label>
-                                    <input type="text" class="form-control"
-                                           id='telefone1' name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
-                                           value="<?= $arrayTelefones[1]['telefone']; ?>">
+                                <div class="form-group col-md-2">
+                                    <label for="telefone">Telefone #2 </label>
+                                    <?php
+                                    if (isset($arrayTelefones[1])) {
+                                        ?>
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
+                                               id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
+                                               value="<?= $arrayTelefones[1]['telefone']; ?>">
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
+                                               id="telefone1" name="telefone1">
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
-                                <div class="form-group col-md-3">
-                                    <label for="telefone1">Telefone #3</label>
-                                    <input type="text" class="form-control"
-                                           id='telefone2' name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
-                                           value="<?= $arrayTelefones[2]['telefone']; ?>">
+                                <div class="form-group col-md-2">
+                                    <label for="telefone2">Telefone #3</label>
+                                    <?php if (isset($arrayTelefones[2])) {
+                                        ?>
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
+                                               id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
+                                               value="<?= $arrayTelefones[2]['telefone']; ?>">
+
+                                        <?php
+                                    } else {
+                                        ?>
+
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control"
+                                               id="telefone2" name="telefone2">
+
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-3">
