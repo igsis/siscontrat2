@@ -14,6 +14,8 @@ if (isset($_POST['cadastrar']) || isset($_POST['editar'])) {
     $telefones = $_POST['telefone'];
     $drt = $_POST['drt'];
     $data = date("y-m-d h:i:s");
+    $passaporte = $_POST['passaporte'];
+    $cpf = $_POST['cpf'];
 }
 
 if (isset($_POST['editar'])) {
@@ -21,12 +23,22 @@ if (isset($_POST['editar'])) {
     $sqlUpdate = "UPDATE pessoa_fisicas SET
                    nome = '$nome',
                    nome_artistico = '$nomeArtistico',
-                   email = '$email'
+                   email = '$email',
+                   passaporte = '$passaporte',
+                   cpf = '$cpf'
                    WHERE id = $idLider";
+    echo $sqlUpdate;
 
 
-    if (mysqli_query($con, $sqlUpdate)) {
-        // edita o telefone
+    if (mysqli_query($con, $sqlUpdate)) { // --> Query dos UPDATES
+        if (isset($_POST['cpf'])) {
+            $cpf = $_POST['cpf'];
+            $sqlCpf = "UPDATE pessoa_fisicas SET cpf = '$cpf' WHERE id = $idLider";
+        }
+        if (isset($_POST['passaporte'])) {
+            $passaporte = $_POST['passaporte'];
+            $sqlPassaporte = "UPDATE pessoa_fisicas SET passaporte = '$passaporte' WHERE id = $idLider";
+        }
         if (isset($_POST['telefone2'])) {
             $telefone2 = $_POST['telefone2'];
             $sqlTelefone2 = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone)VALUES ('$idLider','$telefone2')";
@@ -67,6 +79,7 @@ if (isset($_POST['editar'])) {
                 }
             }
         }
+
         $mensagem .= mensagem("success", "Atualizado com sucesso!");
     } else {
         //$mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
@@ -76,7 +89,8 @@ if (isset($_POST['editar'])) {
 
 if (isset($_POST['cadastrar'])) {
     $mensagem = "";
-    $sqlInsert = "INSERT INTO pessoa_fisicas (nome, nome_artistico, email , ultima_atualizacao) VALUES ('$nome','$nomeArtistico','$email','$data')"; // esta inserindo no banco
+    $sqlInsert = "INSERT INTO pessoa_fisicas (nome, nome_artistico, email , ultima_atualizacao, passaporte, cpf) VALUES ('$nome','$nomeArtistico','$email','$data','$passaporte','$cpf')";
+    // esta inserindo no banco
     if (mysqli_query($con, $sqlInsert)) {
         $idLider = recuperaUltimo("pessoa_fisicas");
         //cadastra o telefone
@@ -123,6 +137,11 @@ include "includes/menu_interno.php";
         <!-- START FORM-->
         <h2 class="page-header">Edição de Líder</h2>
         <div class="row">
+            <div class="box-header">
+                <a href="?perfil=evento&p=pesquisa_lider">
+                    <button type="submit" name="trocaArtista" class="btn btn-info pull-left">TROCAR O ARTISTA</button>
+                </a>
+            </div>
             <div class="col-md-12">
                 <div class="row" align="center">
                     <?= $mensagem ?? NULL; ?>
@@ -140,22 +159,39 @@ include "includes/menu_interno.php";
                     <!-- form start -->
                     <form method="POST" action="?perfil=evento&p=lider_edita" role="form">
                         <div class="box-body">
-                            <input type='hidden' name='idLider' value="">
-
-                            <div class="form-group">
-                                <label for="nome">Nome: *</label>
-                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120'
-                                       value="<?= $lider['nome'] ?>" required>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="nome">Nome: *</label>
+                                    <input type='text' class='form-control' id='nome' name='nome' maxlength='120'
+                                           value="<?= $lider['nome'] ?>" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="nome">Nome Artístico: *</label>
+                                    <input type='text' class='form-control' id='nomeArtistico' name='nomeArtistico'
+                                           maxlength='120'
+                                           value="<?= $lider['nome_artistico'] ?>" required>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="nome">Nome Artístico: *</label>
-                                <input type='text' class='form-control' id='nomeArtistico' name='nomeArtistico' maxlength='120'
-                                       value="<?= $lider['nome_artistico'] ?>" required>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="email">E-mail</label>
+                                    <input type='text' class='form-control' id='email' name='email' maxlength='60'
+                                           value=<?= $lider['email'] ?> required>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="passaporte">Passaporte</label>
+                                        <input type='text' class='form-control' id='passaporte' name='passaporte'
+                                               value="<?= $lider['passaporte'] ?>" required maxlength="8" required>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="email">E-mail</label>
-                                <input type='email' class='form-control' id='email' name='email' maxlength='60'
-                                       placeholder='Digite o e-mail' value=<?= $lider['email'] ?> required>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="cpf">CPF</label>
+                                    <input type='text' class='form-control' id='cpf' name='cpf'
+                                           required maxlength="8" value=<?= $lider['cpf'] ?> required>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
@@ -208,19 +244,21 @@ include "includes/menu_interno.php";
                                     <div class="form-group col-md-3">
                                         <label for="drt">DRT: <i>(Somente para artes cênicas)</i></label>
                                         <input type="text" class="form-control" id='drt' name='drt'
-                                               onkeyup="mascara( this, mtel );"
                                                maxlength="15" value="<?= $drt['drt'] ?>" required>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="box-footer">
-                            <a href="?perfil=evento&p=atracoes_lista">
-                                <button type="button" class="btn btn-default">Voltar</button>
-                            </a>
-                            <input type="hidden" name="idLider" value="<?= $idLider ?>">
-                            <button type="submit" name="editar" class="btn btn-info pull-right">Alterar</button>
-                        </div>
+                            <form method="post" action="?perfil=evento&p=pedido_edita" role="form">
+                                <input type="hidden" name="idLider" value="<?= $idLider ?>">
+                                <button type="submit" name="editar" class="btn btn-info pull-right">Salvar</button>
+                                <button type="submit" name="carregar" class="btn btn-info pull-left">Ir para pedido de
+                                    contratação
+                                </button>
+                            </form>
+                            <div>
+                            </div>
                     </form>
                 </div>
                 <!-- /.box -->

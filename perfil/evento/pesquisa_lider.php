@@ -3,41 +3,68 @@ $con = bancoMysqli();
 include "includes/menu_interno.php";
 
 $idAtracao = null;
-$idLider = null;
+$idPedido = null;
 $exibir = ' ';
 $resultado = "<td></td>";
 $procurar = NULL;
 $tipoDocumento = null;
 
+
+if (isset($_POST['lider'])) {
+    $idPedido = $_POST['lider'];
+    $idAtracao = $_POST['oficina'];
+}
+
+if (isset($_POST['troca_lider'])) {
+    $idLider = $_POST['idLider'];
+}
+
+
 if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
+    $idAtracao = $_POST['idPedido'] ?? NULL;
     $idAtracao = $_POST['idAtracao'] ?? NULL;
+    $idLider = $_POST['idLider'] ?? false;
 
-
-    $procurar = $_POST['procurar'] ?? $_POST['passaporte'];
-    $tipoDocumento = $_POST['tipoDocumento'] ?? false;
-
-    if ($idAtracao != null) {
+    if ($idPedido != null) {
         $botaoSelecionar = "<input type='submit' name='cadastraLider' class='btn btn-primary' value='Selecionar'>";
         $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
-    } else {
-        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
-        $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
+        $edita = "?perfil=evento&p=lider_edita";
+        $cadastra = "?perfil=evento&p=adiciona_lider";
+    } else if ($idLider != NULL) {
+        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar um novo lider'>";
+        $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
+        $edita = "?perfil=evento&p=lider_edita";
+        $cadastra = "?perfil=evento&p=adiciona_lider";
+    } else {
+        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar um novo lider'>";
+        $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
+                                <i class='glyphicon glyphicon-plus'>        
+                                </i>Adicionar
+                            </button>";
+        $edita = "?perfil=evento&p=lider_edita";
+        $cadastra = "?perfil=evento&p=adiciona_lider";
     }
+
+    $procurar = $_POST['procurar'] ?? $_POST['passaporte'];
+    $tipoDocumento = $_POST['tipoDocumento'] ?? false;
 
     if ($procurar != NULL) {
         if ($tipoDocumento == 1) {
+
             $sqlCPF = "SELECT id,nome,cpf,email
             FROM pessoa_fisicas
-            where cpf = '$procurar'";
-            $query_cpf = mysqli_query($con,$sqlCPF);
-            if ($array_cpf = mysqli_fetch_array($query_cpf)){ // executa o valor o array da querry.
-                $num_cpf = mysqli_num_rows($query_cpf);
+            WHERE cpf = '$procurar'";
+
+            $query_cpf = mysqli_query($con, $sqlCPF);
+
+            if ($array_cpf = mysqli_fetch_array($query_cpf)) { // executa o valor o array da querry.
+                $num_cpf = mysqli_num_rows($array_cpf);
                 if ($num_cpf > 0) {
                     $exibir = true;
                     $resultado = "";
@@ -49,8 +76,10 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         $resultado .= "<td>" . $lider['cpf'] . "</td>";
                         $resultado .= "<td>" . $lider['email'] . "</td>";
                         $resultado .= "<td>
-                                     <form action='?perfil=evento&p=lider_edita' method='post'> 
+                                     <form action='$edita' method='post'> 
                                         <input type='hidden' name='idLider' value='" . $lider['id'] . "'>
+                                        <input type='hidden' name='idAtracao' value='$idAtracao'>
+                                        <input type='hidden' name='idPedido' value='$idPedido'>
                                         $botaoSelecionar                                        
                                      </form>
                                </td>";
@@ -62,7 +91,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=evento&p=adiciona_lider'>
+                        <form method='post' action='$cadastra'>
                             <input type='hidden' name='$idLider' value='$idLider'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
@@ -72,23 +101,23 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                 }
             }
         } else {
-            if ($tipoDocumento == 2 ){
-                $sqlPassaporte = "SELECT * id,nome,cpf,email 
+            if ($tipoDocumento == 2) {
+                $sqlPassaporte = "SELECT id,nome,cpf,email 
                 FROM pessoa_fisicas 
                 where passaporte = '$procurar'";
+                echo $sqlPassaporte;
+                $queryPassaporte = mysqli_query($con, $sqlPassaporte);
 
-                $query_passaporte = mysqli_query($con,$sqlPassaporte);
-
-                if($array_passaporte = mysqli_fetch_array($query_passaporte)){
-                    $num_passaporte = mysqli_num_rows($query_passaporte);
-                    if ($num_passaporte > 0 ){
+                if ($array_passaporte = mysqli_fetch_array($queryPassaporte)) {
+                    $num_passaporte = mysqli_num_rows($array_passaporte);
+                    if ($num_passaporte > 0) {
                         $exibir = true;
                         $resultado = "";
-                        foreach ($query_passaporte as $pessoa){
+                        foreach ($array_passaporte as $pessoa) {
                             $resultado .= "<tr>";
-                            $resultado .= "<td>". $lider['nome'] . "</td>";
-                            $resultado .= "<td>". $lider['passaporte'] . "</td>";
-                            $resultado .= "<td>". $lider['email'] . "</td>";
+                            $resultado .= "<td>" . $lider['nome'] . "</td>";
+                            $resultado .= "<td>" . $lider['passaporte'] . "</td>";
+                            $resultado .= "<td>" . $lider['email'] . "</td>";
                             $resultado .= "<td>
                                         <form action='?perfil=evento&p=lider_edita' method='post'>
                                         <input type='text' name='idLider' value='" . $lider['id'] . "'>
@@ -112,7 +141,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         </button>
                         </form>
                         </td>";
-                        
+
                     }
                 }
             }
@@ -154,6 +183,8 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                         <p>&nbsp;</p>
                                         <p>&nbsp;</p>
                                         <input type="hidden" name="idLider" value="<?= $idLider ?? NULL ?>">
+                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?? NULL ?>">
+                                        <input type="hidden" name="idAtracao" value="<?= $idAtracao ?? NULL ?>">
                                         <button class="btn btn-default" type="submit"><i
                                                     class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
@@ -176,123 +207,123 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                 </tbody>
                             </table>
                         </div>
-                        <script>
-                            let tipos = document.querySelectorAll("input[type='radio'][name='tipoDocumento']");
-                            let passaporte = document.querySelector("input[name='passaporte']");
-                            let procurar = document.querySelector("input[name='procurar']");
-                            let trocaDoc = document.querySelector("#trocaDoc");
-                            for (const tipo of tipos) {
-                                tipo.addEventListener('change', tp => {
-
-                                    const nulo = null;
-
-                                    passaporte.value = nulo
-                                    procurar.value = nulo
-
-                                    if (tp.target.value == 1) {
-                                        passaporte.style.display = 'none'
-                                        procurar.disabled = false
-                                        passaporte.disabled = true
-                                        procurar.style.display = 'block'
-                                        procurar.value = ''
-                                        $('#textoDocumento').text('CPF *')
-                                    } else {
-                                        passaporte.style.display = 'block'
-                                        passaporte.disabled = false
-                                        passaporte.value = ''
-                                        procurar.disabled = true
-                                        procurar.style.display = 'none'
-                                        $('#textoDocumento').text('Passaporte *')
-                                    }
-                                })
-                            }
-
-                            if (`<?=$tipoDocumento?>` == 2) {
-                                trocaDoc.innerHTML = 'Passaporte'
-                                tipos[1].checked = true
-                                passaporte.style.display = 'block'
-                                passaporte.disabled = false
-                                procurar.disabled = true
-                                procurar.style.display = 'none'
-                            } else {
-                                passaporte.style.display = 'none'
-                                passaporte.disabled = true
-                            }
-
-                            /**
-                             * @return {boolean}
-                             */
-                            function TestaCPF(cpf) {
-                                var Soma;
-                                var Resto;
-                                var strCPF = cpf;
-                                Soma = 0;
-
-                                if (strCPF === "11111111111" ||
-                                    strCPF === "22222222222" ||
-                                    strCPF === "33333333333" ||
-                                    strCPF === "44444444444" ||
-                                    strCPF === "55555555555" ||
-                                    strCPF === "66666666666" ||
-                                    strCPF === "77777777777" ||
-                                    strCPF === "88888888888" ||
-                                    strCPF === "99999999999")
-                                    return false;
-
-                                for (i = 1; i <= 9; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
-                                Resto = (Soma * 10) % 11;
-
-                                if ((Resto == 10) || (Resto == 11)) Resto = 0;
-                                if (Resto != parseInt(strCPF.substring(9, 10))) return false;
-
-                                Soma = 0;
-                                for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
-                                Resto = (Soma * 10) % 11;
-
-                                if ((Resto == 10) || (Resto == 11)) Resto = 0;
-                                if (Resto != parseInt(strCPF.substring(10, 11))) return false;
-                                return true;
-                            }
-
-                            function validacao() {
-                                var strCPF = document.querySelector('#cpf').value;
-
-                                if (strCPF != null) {
-                                    // tira os pontos do valor, ficando apenas os numeros
-                                    strCPF = strCPF.replace(/[^0-9]/g, '');
-
-                                    var validado = TestaCPF(strCPF);
-
-                                    if (!validado)
-                                        $("#adicionar").attr("disabled", true);
-                                    else
-                                        $("#adicionar").attr("disabled", false);
-
-                                }
-                            }
-
-
-                            $('#formulario').submit(function (event) {
-                                var strCPF = document.querySelector('#cpf').value;
-
-                                if (strCPF !== '' && `<?=$tipoDocumento?>` != 2) {
-                                    console.log(`<?=$tipoDocumento?>`)
-                                    // tira os pontos do valor, ficando apenas os numeros
-                                    strCPF = strCPF.replace(/[^0-9]/g, '');
-
-                                    var validado = TestaCPF(strCPF);
-
-                                    if (!validado) {
-                                        event.preventDefault()
-                                        alert("CPF inválido")
-                                    }
-                                }
-                            })
-
-
-                        </script>
                     </div>
                 </div>
             </div>
     </section>
 </div>
+<script>
+    let tipos = document.querySelectorAll("input[type='radio'][name='tipoDocumento']");
+    let passaporte = document.querySelector("input[name='passaporte']");
+    let procurar = document.querySelector("input[name='procurar']");
+    let trocaDoc = document.querySelector("#trocaDoc");
+    for (const tipo of tipos) {
+        tipo.addEventListener('change', tp => {
+
+            const nulo = null;
+
+            passaporte.value = nulo
+            procurar.value = nulo
+
+            if (tp.target.value == 1) {
+                passaporte.style.display = 'none'
+                procurar.disabled = false
+                passaporte.disabled = true
+                procurar.style.display = 'block'
+                procurar.value = ''
+                $('#textoDocumento').text('CPF *')
+            } else {
+                passaporte.style.display = 'block'
+                passaporte.disabled = false
+                passaporte.value = ''
+                procurar.disabled = true
+                procurar.style.display = 'none'
+                $('#textoDocumento').text('Passaporte *')
+            }
+        })
+    }
+
+    if (`<?=$tipoDocumento?>` == 2) {
+        trocaDoc.innerHTML = 'Passaporte'
+        tipos[1].checked = true
+        passaporte.style.display = 'block'
+        passaporte.disabled = false
+        procurar.disabled = true
+        procurar.style.display = 'none'
+    } else {
+        passaporte.style.display = 'none'
+        passaporte.disabled = true
+    }
+
+    /**
+     * @return {boolean}
+     */
+    function TestaCPF(cpf) {
+        var Soma;
+        var Resto;
+        var strCPF = cpf;
+        Soma = 0;
+
+        if (strCPF === "11111111111" ||
+            strCPF === "22222222222" ||
+            strCPF === "33333333333" ||
+            strCPF === "44444444444" ||
+            strCPF === "55555555555" ||
+            strCPF === "66666666666" ||
+            strCPF === "77777777777" ||
+            strCPF === "88888888888" ||
+            strCPF === "99999999999")
+            return false;
+
+        for (i = 1; i <= 9; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+        Resto = (Soma * 10) % 11;
+
+        if ((Resto == 10) || (Resto == 11)) Resto = 0;
+        if (Resto != parseInt(strCPF.substring(9, 10))) return false;
+
+        Soma = 0;
+        for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+        Resto = (Soma * 10) % 11;
+
+        if ((Resto == 10) || (Resto == 11)) Resto = 0;
+        if (Resto != parseInt(strCPF.substring(10, 11))) return false;
+        return true;
+    }
+
+    function validacao() {
+        var strCPF = document.querySelector('#cpf').value;
+
+        if (strCPF != null) {
+            // tira os pontos do valor, ficando apenas os numeros
+            strCPF = strCPF.replace(/[^0-9]/g, '');
+
+            var validado = TestaCPF(strCPF);
+
+            if (!validado)
+                $("#adicionar").attr("disabled", true);
+            else
+                $("#adicionar").attr("disabled", false);
+
+        }
+    }
+
+
+    $('#formulario').submit(function (event) {
+        var strCPF = document.querySelector('#cpf').value;
+
+        if (strCPF !== '' && `<?=$tipoDocumento?>` != 2) {
+            console.log(`<?=$tipoDocumento?>`)
+            // tira os pontos do valor, ficando apenas os numeros
+            strCPF = strCPF.replace(/[^0-9]/g, '');
+
+            var validado = TestaCPF(strCPF);
+
+            if (!validado) {
+                event.preventDefault()
+                alert("CPF inválido")
+            }
+        }
+    })
+
+
+</script>
