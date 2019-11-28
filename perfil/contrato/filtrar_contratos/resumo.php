@@ -4,8 +4,6 @@ $con = bancoMysqli();
 if (isset($_POST['selecionar'])) {
     $idPedido = $_POST['idPedido'];
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
-    $idPedido = $_POST['idPedido'];
-    $pedido = recuperaDados('pedidos', 'id', $idPedido);
     $idEvento = $pedido['origem_id'];
     $idPf = $_POST['idPf'];
     if ($_POST['liderOn'] != 1) {
@@ -65,7 +63,9 @@ if (isset($_POST['selecionar'])) {
 $_SESSION['idEvento'] = $idEvento;
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$pedido = recuperaDados('pedidos', 'origem_id', $idEvento . " AND origem_tipo_id = 1");
+$sql = "SELECT * FROM pedidos where origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
+$query = mysqli_query($con, $sql);
+$pedido = mysqli_fetch_array($query);
 
 $idPedido = $pedido['id'];
 if (isset($_POST['salvar'])) {
@@ -125,7 +125,9 @@ if (isset($_POST['salvar'])) {
 
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$pedido = recuperaDados('pedidos', 'origem_id', $idEvento . " AND origem_tipo_id = 1");
+$sql = "SELECT * FROM pedidos where origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
+$query = mysqli_query($con, $sql);
+$pedido = mysqli_fetch_array($query);
 
 if ($pedido['pessoa_tipo_id'] == 1) {
     $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
