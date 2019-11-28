@@ -18,7 +18,7 @@ $pasta = "?perfil=formacao&p=";
                 <ul class="treeview-menu">
                     <li><a href="<?= $pasta ?>pessoa_fisica&sp=pesquisa"><i class="fa fa-circle-o"></i> Cadastrar</a>
                     </li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Importar do CAPAC</a></li>
+                    <li><a href="<?= $pasta ?>pessoa_fisica&sp=pesquisa_capac"><i class="fa fa-circle-o"></i> Importar do CAPAC</a></li>
                     <li><a href="<?= $pasta ?>pessoa_fisica&sp=lista"><i class="fa fa-circle-o"></i> Listar</a></li>
                 </ul>
             </li>
