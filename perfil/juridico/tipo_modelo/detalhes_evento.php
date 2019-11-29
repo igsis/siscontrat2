@@ -68,12 +68,10 @@ $local = recuperaDados('locais','id',$idEvento);
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $evento['telefone'] ?></td>
                         <td><?= $usuarios['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $evento['email'] ?></td>
                         <td><?= $usuarios['email'] ?></td>
                     </tr>
                     <tr>
