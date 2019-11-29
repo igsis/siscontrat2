@@ -10,7 +10,6 @@ $procurar = NULL;
 $tipoDocumento = null;
 
 
-
 if (isset($_POST['pesquisar'])) {
     $idPedido = $_POST['lider'];
     $idAtracao = $_POST['oficina'];
@@ -26,16 +25,16 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
     $idAtracao = $_POST['idAtracao'] ?? NULL;
     $idLider = $_POST['idLider'] ?? false;
 
-    if ($idPedido != null) {
-        $botaoSelecionar = "<input type='submit' name='cadastraLider' class='btn btn-primary' value='Selecionar'>";
-        $botaoAdd = "<button class='btn btn-primary' name='adicionaPf' type='submit'>
+    if ($idPedido != null && $idLider != null) {
+        $botaoSelecionar = "<input type='submit' name='trocaLider' class='btn btn-primary' value='Selecionar como novo líder'>";
+        $botaoAdd = "<button class='btn btn-primary' name='adicionaLider' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
         $edita = "?perfil=evento&p=lider_edita";
         $cadastra = "?perfil=evento&p=adiciona_lider";
     } else if ($idLider != NULL) {
-        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
+        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='cadastraLider' value='Selecionar'>";
         $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
@@ -62,7 +61,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
             FROM pessoa_fisicas
             WHERE cpf = '$procurar'";
 
-            if ($querycpf = mysqli_query($con,$sqlCPF)) { // executa o valor o array da querry.
+            if ($querycpf = mysqli_query($con, $sqlCPF)) { // executa o valor o array da querry.
                 $num_cpf = mysqli_num_rows($querycpf);
 
                 if ($num_cpf > 0) {
@@ -78,14 +77,13 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         $resultado .= "<td>
                                      <form action='$edita' method='post'> 
                                         <input type='hidden' name='idLider' value='" . $lider['id'] . "'>
-                                        <input type='hidden' name='idAtracao' value='$idAtracao'>
                                         <input type='hidden' name='idPedido' value='$idPedido'>
+                                        <input type='hidden' name='idAtracao' value='$idAtracao'>
                                         $botaoSelecionar                                        
                                      </form>
                                </td>";
                         $resultado .= "</tr>";
                     }
-
 
 
                 } else {
@@ -95,8 +93,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                       </td>
                       <td>
                         <form method='post' action='$cadastra'>
-                        <input type='hidden' name='idAtracao' value='$idAtracao'>
-                            <input type='hidden' name='idLider' value='$idLider'>
+                            <input type='hidden' name='idPedido' value='$idLider'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             $botaoAdd
@@ -113,7 +110,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                 where passaporte = '$procurar'";
 
 
-                if ($result = mysqli_query($con,$sqlPassaporte)) {
+                if ($result = mysqli_query($con, $sqlPassaporte)) {
                     $num_passaporte = mysqli_num_rows($result);
                     if ($num_passaporte > 0) {
                         $exibir = true;
@@ -124,8 +121,9 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             $resultado .= "<td>" . $lider['passaporte'] . "</td>";
                             $resultado .= "<td>" . $lider['email'] . "</td>";
                             $resultado .= "<td>
-                                        <form action='?perfil=evento&p=lider_edita' method='post'>
+                                        <form action='$edita' method='post'>
                                         <input type='hidden' name='idLider' value='" . $lider['id'] . "'>
+                                        <input type='hiden' name='idPedido' value='$idPedido'>
                                         <input type='submit' class='btn btn-primary' name='selecionar' value='selecionar'>
                                         </form>
                                         </td>";
@@ -140,10 +138,8 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <form method='post' action='$cadastra'>
                         <input type='hidden' name='documentacao' value='$procurar'>
                         <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
-                         <button class='btn btn-primary'  name='adicionar' type='submit'>
-                                <i class=\"glyphicon glyphicon-plus\">     
-                                </i>Adicionar
-                            </button>
+                        <input type='hidden' name='idPedido' value='$idPedido'>
+                        $botaoAdd
                         </form>
                        </td>";
 
@@ -173,7 +169,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                 <input type="radio" name="tipoDocumento" value="1" checked>CPF
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" name="tipoDocumento" value="2" >Passaporte
+                                <input type="radio" name="tipoDocumento" value="2">Passaporte
                             </label>
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>

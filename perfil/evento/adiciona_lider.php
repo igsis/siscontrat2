@@ -2,13 +2,16 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
-if (isset($_POST['adicionar'])){
+if (isset($_POST['adicionar']) || $_POST['adicionaLider'] || $_POST['adicionarLider']){
     $documento = $_POST['documentacao'];
     $tipoDocumento = $_POST['tipoDocumento'];
-    $idAtracao = $_POST['idOficina'];
     $idPedido = $_POST['idPedido'];
 }
+if (isset($_POST['lider']) || $_POST['idPedido']) {
+$idAtracao = $_POST['oficina'];
+$idPedido = $_POST['idPedido'];
 
+}
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -93,8 +96,7 @@ if (isset($_POST['adicionar'])){
                         <div class="box-footer">
                             <button type="submit" name="cadastrar" class="btn btn-info pull-right">Cadastrar</button>
                             <input type="hidden" name="tipoDocumento" value="<?= $tipoDocumento ?>">
-                            <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
-                            <input type="hidden" name="idPedido" value="<?= $idAtracao ?>">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         </div>
                     </form>
                 </div>

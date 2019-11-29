@@ -8,6 +8,7 @@ if (isset($_POST['idLider'])) {
 }
 
 if (isset($_POST['cadastrar']) || isset($_POST['editar'])) {
+    $idPedido = $_SESSION['idPedido'];
     $nome = addslashes($_POST['nome']);
     $nomeArtistico = $_POST['nomeArtistico'];
     $email = $_POST['email'];
@@ -17,7 +18,6 @@ if (isset($_POST['cadastrar']) || isset($_POST['editar'])) {
     $passaporte = $_POST['passaporte'] ?? NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $tipoDocumento = $_POST['tipoDocumento'];
-    $idPedido = $_POST['idPedido'];
     $idAtracao = $_POST['idAtracao'];
 }
 
@@ -257,24 +257,22 @@ include "includes/menu_interno.php";
                                     <div class="form-group col-md-3">
                                         <label for="drt">DRT: <i>(Somente para artes cênicas)</i></label>
                                         <input type="text" class="form-control" id='drt' name='drt'
-                                               maxlength="15" value="<?= $drt['drt'] ?>" required>
+                                               maxlength="15" value="<?= $drt['drt'] ?>">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="box-footer">
-                            <form method="post" action="?perfil=evento&p=pedido_edita" role="form">
-                                <input type="hidden" name="idLider" value="<?= $idLider ?>">
-                                <input type="hidden" name="idPedido" value="<? $idPedido ?>">
-                                <input type="hidden" name="idAtracao" value="<? $idAtracao ?>">
-                                <button type="submit" name="editar" class="btn btn-info pull-right">Salvar</button>
-                                <button type="submit" name="carregar" class="btn btn-info pull-left">Ir para pedido de
-                                    contratação
-                                </button>
-                            </form>
-                            <div>
-                            </div>
+                            <button type="submit" name="editar" class="btn btn-info pull-right">Salvar</button>
+                        </div>
                     </form>
+                        <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                            <input type="hidden" name="idLider" value="<? $idLider ?>">
+                            <input type="hidden" name="idPedido" value="<? $idPedido ?>">
+                            <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
+                                contratação
+                            </button>
+                        </form>
                 </div>
                 <!-- /.box -->
             </div>
