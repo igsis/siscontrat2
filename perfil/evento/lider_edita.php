@@ -2,10 +2,10 @@
 $con = bancoMysqli();
 $conn = bancoPDO();
 
+
 if (isset($_POST['idLider'])) {
     $idLider = $_POST['idLider'];
 }
-
 
 if (isset($_POST['cadastrar']) || isset($_POST['editar'])) {
     $nome = addslashes($_POST['nome']);
@@ -14,11 +14,15 @@ if (isset($_POST['cadastrar']) || isset($_POST['editar'])) {
     $telefones = $_POST['telefone'];
     $drt = $_POST['drt'];
     $data = date("y-m-d h:i:s");
-    $passaporte = $_POST['passaporte'];
-    $cpf = $_POST['cpf'];
+    $passaporte = $_POST['passaporte'] ?? NULL;
+    $cpf = $_POST['cpf'] ?? NULL;
+    $tipoDocumento = $_POST['tipoDocumento'];
+    $idPedido = $_POST['idPedido'];
+    $idAtracao = $_POST['idAtracao'];
 }
 
 if (isset($_POST['editar'])) {
+    $idLider = $_POST['idLider'];
     $mensagem = "";
     $sqlUpdate = "UPDATE pessoa_fisicas SET
                    nome = '$nome',
@@ -27,7 +31,6 @@ if (isset($_POST['editar'])) {
                    passaporte = '$passaporte',
                    cpf = '$cpf'
                    WHERE id = $idLider";
-    echo $sqlUpdate;
 
 
     if (mysqli_query($con, $sqlUpdate)) { // --> Query dos UPDATES
@@ -90,10 +93,16 @@ if (isset($_POST['editar'])) {
 if (isset($_POST['cadastrar'])) {
     $mensagem = "";
     $sqlInsert = "INSERT INTO pessoa_fisicas (nome, nome_artistico, email , ultima_atualizacao, passaporte, cpf) VALUES ('$nome','$nomeArtistico','$email','$data','$passaporte','$cpf')";
-    // esta inserindo no banco
+    $sqlDeleteLider = "DELETE FROM lideres WHERE atracao_id = '$idAtracao'";
+
     if (mysqli_query($con, $sqlInsert)) {
         $idLider = recuperaUltimo("pessoa_fisicas");
-        //cadastra o telefone
+
+        if (mysqli_query($con, $sqlDeleteLider)) {
+            $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
+                                VALUES ('$idPedido', '$idAtracao', '$idLider')";
+            mysqli_query($con, $sqLider);
+        }
         foreach ($telefones AS $telefone) {
             if (!empty($telefone)) {
                 $sqlTelefone = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone, publicado) VALUES ('$idLider','$telefone',1)";
@@ -173,24 +182,28 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="email">E-mail</label>
-                                    <input type='text' class='form-control' id='email' name='email' maxlength='60'
-                                           value=<?= $lider['email'] ?> required>
-                                </div>
-                                <div class="row">
+                                <?php
+                                if ($tipoDocumento == 1) {
+                                    ?>
                                     <div class="form-group col-md-6">
-                                        <label for="passaporte">Passaporte</label>
-                                        <input type='text' class='form-control' id='passaporte' name='passaporte'
-                                               value="<?= $lider['passaporte'] ?>" required maxlength="8" required>
+                                        <label for="cpf">CPF</label>
+                                        <input type='text' class='form-control' id='cpf' name='cpf' maxlength='60'
+                                               value=<?= $lider['cpf'] ?> readonly>
                                     </div>
-                                </div>
+                                <?php } else if ($tipoDocumento == 2) { ?>
+                                    <div class="form-group col-md-6">
+                                        <label for="passaporte"> Passaporte</label>
+                                        <input type='text' class='form-control' id='passaporte' name='passaporte'
+                                               value="<?= $lider['passaporte'] ?>" required maxlength="8" readonly>
+                                    </div>
+                                <?php }
+                                ?>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="cpf">CPF</label>
-                                    <input type='text' class='form-control' id='cpf' name='cpf'
-                                           required maxlength="8" value=<?= $lider['cpf'] ?> required>
+                                    <label for="email">Email</label>
+                                    <input type='text' class='form-control' id='email' name='email'
+                                           required maxlength="8" value="<?= $lider['email'] ?>" required>
                                 </div>
                             </div>
                             <div class="row">
@@ -252,6 +265,8 @@ include "includes/menu_interno.php";
                         <div class="box-footer">
                             <form method="post" action="?perfil=evento&p=pedido_edita" role="form">
                                 <input type="hidden" name="idLider" value="<?= $idLider ?>">
+                                <input type="hidden" name="idPedido" value="<? $idPedido ?>">
+                                <input type="hidden" name="idAtracao" value="<? $idAtracao ?>">
                                 <button type="submit" name="editar" class="btn btn-info pull-right">Salvar</button>
                                 <button type="submit" name="carregar" class="btn btn-info pull-left">Ir para pedido de
                                     contratação

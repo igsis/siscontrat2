@@ -12,6 +12,7 @@ if (isset($_POST['idProponente'])) {
 if (isset($_POST['carregar'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
     $idPedido = $_SESSION['idPedido'];
+    $idAtracao = $_POST['idAtracao'] ?? NULL;
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
@@ -424,7 +425,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                         </td>";
                                 } else {
                                     echo "<td>
-                                            <form method=\"POST\" action=\"?perfil=evento&p=pf_pesquisa\" role=\"form\">
+                                            <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
                                             <input type='hidden' name='oficina' value='" . $atracao['id'] . "'>
                                             <input type='hidden' name='lider' value='$idPedido'>
                                             <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-plus'></i> Adicionar</button>

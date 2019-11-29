@@ -10,7 +10,8 @@ $procurar = NULL;
 $tipoDocumento = null;
 
 
-if (isset($_POST['lider'])) {
+
+if (isset($_POST['pesquisar'])) {
     $idPedido = $_POST['lider'];
     $idAtracao = $_POST['oficina'];
 }
@@ -21,20 +22,20 @@ if (isset($_POST['troca_lider'])) {
 
 
 if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
-    $idAtracao = $_POST['idPedido'] ?? NULL;
+    $idPedido = $_POST['idPedido'] ?? NULL;
     $idAtracao = $_POST['idAtracao'] ?? NULL;
     $idLider = $_POST['idLider'] ?? false;
 
     if ($idPedido != null) {
         $botaoSelecionar = "<input type='submit' name='cadastraLider' class='btn btn-primary' value='Selecionar'>";
-        $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
+        $botaoAdd = "<button class='btn btn-primary' name='adicionaPf' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
         $edita = "?perfil=evento&p=lider_edita";
         $cadastra = "?perfil=evento&p=adiciona_lider";
     } else if ($idLider != NULL) {
-        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar um novo lider'>";
+        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
         $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
@@ -42,8 +43,8 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
         $edita = "?perfil=evento&p=lider_edita";
         $cadastra = "?perfil=evento&p=adiciona_lider";
     } else {
-        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar um novo lider'>";
-        $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
+        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
+        $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
@@ -61,15 +62,14 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
             FROM pessoa_fisicas
             WHERE cpf = '$procurar'";
 
-            $query_cpf = mysqli_query($con, $sqlCPF);
+            if ($querycpf = mysqli_query($con,$sqlCPF)) { // executa o valor o array da querry.
+                $num_cpf = mysqli_num_rows($querycpf);
 
-            if ($array_cpf = mysqli_fetch_array($query_cpf)) { // executa o valor o array da querry.
-                $num_cpf = mysqli_num_rows($array_cpf);
                 if ($num_cpf > 0) {
                     $exibir = true;
                     $resultado = "";
 
-                    foreach ($query_cpf as $lider) {
+                    foreach ($querycpf as $lider) {
 
                         $resultado .= "<tr>";
                         $resultado .= "<td>" . $lider['nome'] . "</td>";
@@ -85,6 +85,9 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                </td>";
                         $resultado .= "</tr>";
                     }
+
+
+
                 } else {
                     $exibir = false;
                     $resultado = "<td colspan='4'>
@@ -92,7 +95,8 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                       </td>
                       <td>
                         <form method='post' action='$cadastra'>
-                            <input type='hidden' name='$idLider' value='$idLider'>
+                        <input type='hidden' name='idAtracao' value='$idAtracao'>
+                            <input type='hidden' name='idLider' value='$idLider'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             $botaoAdd
@@ -102,25 +106,26 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
             }
         } else {
             if ($tipoDocumento == 2) {
-                $sqlPassaporte = "SELECT id,nome,cpf,email 
+
+
+                $sqlPassaporte = "SELECT id,nome,cpf,email,passaporte 
                 FROM pessoa_fisicas 
                 where passaporte = '$procurar'";
-                echo $sqlPassaporte;
-                $queryPassaporte = mysqli_query($con, $sqlPassaporte);
 
-                if ($array_passaporte = mysqli_fetch_array($queryPassaporte)) {
-                    $num_passaporte = mysqli_num_rows($array_passaporte);
+
+                if ($result = mysqli_query($con,$sqlPassaporte)) {
+                    $num_passaporte = mysqli_num_rows($result);
                     if ($num_passaporte > 0) {
                         $exibir = true;
                         $resultado = "";
-                        foreach ($array_passaporte as $pessoa) {
+                        foreach ($result as $lider) {
                             $resultado .= "<tr>";
                             $resultado .= "<td>" . $lider['nome'] . "</td>";
                             $resultado .= "<td>" . $lider['passaporte'] . "</td>";
                             $resultado .= "<td>" . $lider['email'] . "</td>";
                             $resultado .= "<td>
                                         <form action='?perfil=evento&p=lider_edita' method='post'>
-                                        <input type='text' name='idLider' value='" . $lider['id'] . "'>
+                                        <input type='hidden' name='idLider' value='" . $lider['id'] . "'>
                                         <input type='submit' class='btn btn-primary' name='selecionar' value='selecionar'>
                                         </form>
                                         </td>";
@@ -132,15 +137,15 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='...'>Sem Resultado</span>
                         </td>
                         <td>
-                        <form method='post' action='?perfil=evento&p=adiciona_lider'>
+                        <form method='post' action='$cadastra'>
                         <input type='hidden' name='documentacao' value='$procurar'>
-                        <input type='submit' name='tipoDumentacao' value='$tipoDocumento'>
-                        <button class='btn btn-primary'  name='adicionar' type='submit'>
-                        <i class=\"glyphicon glyphicon-plus\">     
-                        </i>Adicionar
-                        </button>
+                        <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
+                         <button class='btn btn-primary'  name='adicionar' type='submit'>
+                                <i class=\"glyphicon glyphicon-plus\">     
+                                </i>Adicionar
+                            </button>
                         </form>
-                        </td>";
+                       </td>";
 
                     }
                 }
@@ -168,16 +173,16 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                 <input type="radio" name="tipoDocumento" value="1" checked>CPF
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" name="tipoDocumento" value="2">Passaporte
+                                <input type="radio" name="tipoDocumento" value="2" >Passaporte
                             </label>
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
                                     <label for="cpf" id="textoDocumento">CPF *</label>
                                     <input type="text" class="form-control" minlength=14 name="procurar"
-                                           value="<? $procurar ?>" id="cpf" data-mask="000.000.000-00" minlength="14">
+                                           value="<?= $procurar ?>" id="cpf" data-mask="000.000.000-00" minlength="14">
                                     <input type="text" class="form-control" name="passaporte" id="passaporte"
-                                           value="<? $procurar ?>" maxlength="10">
+                                           value="<?= $procurar ?>" maxlength="10">
 
                                     <span class="input-group-btn">
                                         <p>&nbsp;</p>
@@ -203,14 +208,31 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                 </tr>
                                 </thead>
                                 <tbody>
-
+                                <?php
+                                if ($exibir) {
+                                    echo $resultado;
+                                } elseif (!$exibir) {
+                                    echo $resultado;
+                                } else {
+                                    echo $resultado;
+                                }
+                                ?>
                                 </tbody>
                             </table>
                         </div>
+
+
                     </div>
+                    <!-- /.box-body -->
                 </div>
+                <!-- /.box -->
             </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        <!-- END ACCORDION & CAROUSEL-->
     </section>
+    <!-- /.content -->
 </div>
 <script>
     let tipos = document.querySelectorAll("input[type='radio'][name='tipoDocumento']");
