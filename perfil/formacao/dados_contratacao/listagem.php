@@ -20,6 +20,7 @@ if (isset($_POST['cadastra'])) {
     $suplente = $_POST['suplente'];
     $usuario = $_SESSION['idUser'];
     $data = date("Y-m-d H:i:s", strtotime("now"));
+    $regiao = $_POST['regiao'];
 
     $sqlInsert = "INSERT INTO formacao_contratacoes (
                                    pessoa_fisica_id, 
@@ -39,7 +40,8 @@ if (isset($_POST['cadastra'])) {
                                    fiscal_id, 
                                    suplente_id,  
                                    usuario_id, 
-                                   data_envio 
+                                   data_envio,
+                                   regiao_preferencia_id
                                    )
                                    VALUES(
                                           '$idPF',
@@ -59,7 +61,8 @@ if (isset($_POST['cadastra'])) {
                                           '$fiscal',
                                           '$suplente',
                                           '$usuario',
-                                          '$data')";
+                                          '$data',
+                                          '$regiao')";
     if(mysqli_query($con, $sqlInsert)){
         $mensagem = mensagem("success", "Gravado com sucesso!");
         $idContrat = recuperaUltimo('formacao_contratacoes');

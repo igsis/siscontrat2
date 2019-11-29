@@ -69,9 +69,15 @@ $query = mysqli_query($con, $sql);
                                     $nomeEvento = $evento['nome_evento'];
                                     $sqlChamado = "SELECT c.justificativa, c.data FROM chamados AS c WHERE evento_id = $idEvento";
                                     $chamado = $con->query($sqlChamado)->fetch_array();
-                                    $idUser = $evento['usuario_id'];
-                                    $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
-                                    $operador = $con->query($sqlOperador)->fetch_array();
+
+                                    //operador
+                                    $testa = $con->query("SELECT operador_id FROM pedidos WHERE origem_id = $idEvento")->fetch_array();
+                                    $idUsuario = $eventos['operador_id'];
+                                    if ($idUsuario != 0) {
+                                        $operadorAux = "AND usuario_id = $idUsuario";
+                                        $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUsuario AND uc.nivel_acesso = 2 $operadorAux";
+                                        $operador = $con->query($sqlOperador)->fetch_array();
+                                    }
                                     ?>
                                     <td>
                                         <button type="button" class="btn-link" id="exibirMotivo"
@@ -167,7 +173,14 @@ $query = mysqli_query($con, $sql);
                             </thead>
                             <tbody>
                                 <td><?=$chamado['justificativa']?></td>
-                                <td><?=$operador['nome_completo']?></td>
+                                <?php
+                                    if(isset($operador['nome_completo'])){
+                                        echo "<td>" . $operador['nome_completo']. "</td>";
+                                    }else{
+                                        echo "<td> </td>";
+                                    }
+                                ?>
+
                                 <td><?=exibirDataBr($chamado['data'])?></td>
                             </tbody>
                         </table>
