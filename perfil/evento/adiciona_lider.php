@@ -2,15 +2,11 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
-if (isset($_POST['adicionar']) || $_POST['adicionaLider'] || $_POST['adicionarLider']){
+if (isset($_POST['adicionar']) || $_POST['adicionaLider'] || $_POST['adicionarLider']) {
     $documento = $_POST['documentacao'];
     $tipoDocumento = $_POST['tipoDocumento'];
     $idPedido = $_POST['idPedido'];
-}
-if (isset($_POST['lider']) || $_POST['idPedido']) {
-$idAtracao = $_POST['oficina'];
-$idPedido = $_POST['idPedido'];
-
+    $idAtracao = $_POST['idAtracao'];
 }
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -67,36 +63,37 @@ $idPedido = $_POST['idPedido'];
                                     <?php
                                 }
                                 ?>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="telefone">Telefone: 1#</label>
-                                    <input type="text" id="telefone" name="telefone[0]" onkeyup="mascara( this, mtel );"
-                                           class="form-control" placeholder="Digite o telefone" required maxlength="11">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="telefone">Telefone: 2#</label>
-                                    <input type="text" id="telefone" name="telefone[1]" onkeyup="mascara( this, mtel );"
-                                           class="form-control" placeholder="Digite o telefone" required maxlength="11">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="telefone">Telefone: 3#</label>
-                                    <input type="text" id="telefone" name="telefone[2]" onkeyup="mascara( this, mtel );"
-                                           class="form-control" placeholder="Digite o telefone" required maxlength="11">
-
-                                </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label for="drt">DRT: <i>(Somente para artes cênicas)</i></label>
                                     <input type="text" name="drt" class="form-control" maxlength="15"
                                            placeholder="Digite o DRT">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="telefone">Telefone: 1#*</label>
+                                    <input type="text" id="telefone" name="telefone[0]" onkeyup="mascara( this, mtel );"
+                                           class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="telefone">Telefone: 2#</label>
+                                    <input type="text" id="telefone" name="telefone[1]" onkeyup="mascara( this, mtel );"
+                                           class="form-control" placeholder="Digite o telefone" maxlength="15">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="telefone">Telefone: 3#</label>
+                                    <input type="text" id="telefone" name="telefone[2]" onkeyup="mascara( this, mtel );"
+                                           class="form-control" placeholder="Digite o telefone" maxlength="15">
+
                                 </div>
 
                             </div>
                         </div>
                         <div class="box-footer">
-                            <button type="submit" name="cadastrar" class="btn btn-info pull-right">Cadastrar</button>
                             <input type="hidden" name="tipoDocumento" value="<?= $tipoDocumento ?>">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
+                            <button type="submit" name="cadastrar" class="btn btn-info pull-right">Cadastrar</button>
                         </div>
                     </form>
                 </div>

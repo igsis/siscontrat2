@@ -14,6 +14,7 @@ if (isset($_POST['editar'])) {
     $linguagem = $_POST['linguagem'];
     $projeto = $_POST['projeto'];
     $cargo = $_POST['cargo'];
+    $regiao = $_POST['regiao'];
     $vigencia = $_POST['vigencia'];
     $observacao = $_POST['observacao'];
     $fiscal = $_POST['fiscal'];
@@ -34,7 +35,8 @@ if (isset($_POST['editar'])) {
                                  form_vigencia_id = '$vigencia',
                                  observacao = '$observacao',
                                  fiscal_id = '$fiscal',
-                                 suplente_id = '$suplente'
+                                 suplente_id = '$suplente',
+                                 regiao_preferencia_id = '$regiao'
                                 WHERE id = '$idPC'";
 
     if (mysqli_query($con, $sqlUpdate)) {
@@ -188,6 +190,17 @@ $_SESSION['idPc'] = $idPC;
                     <div class="row">
                         <div class="form-group col-md-4" id="msgEscondeAno">
                             <span style="color: red;"><b>Ano escolhido é maior que a vigência!</b></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="regiao">Região Preferencial: *</label>
+                            <select class="form-control" name="regiao" id="regiao" required>
+                                <?php
+                                geraOpcao('regiao_preferencias', $fc['regiao_preferencia_id'])
+                                ?>
+                            </select>
                         </div>
                     </div>
 

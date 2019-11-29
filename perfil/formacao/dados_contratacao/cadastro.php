@@ -139,6 +139,18 @@
 
                     <div class="row">
                         <div class="form-group col-md-12">
+                        <label for="regiao">Região Preferencial: *</label>
+                        <select class="form-control" name="regiao" id="regiao" required>
+                            <option value="">Selecione uma região...</option>
+                                <?php
+                                    geraOpcao('regiao_preferencias')
+                                ?>
+                        </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
                             <label for="observacao">Observação: </label>
                             <textarea name="observacao" id="observacao" rows="3" class="form-control"> </textarea>
                         </div>

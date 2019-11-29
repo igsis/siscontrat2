@@ -23,7 +23,6 @@ if (isset($_POST['cadastrar']) || isset($_POST['editar'])) {
 
 if (isset($_POST['editar'])) {
     $idLider = $_POST['idLider'];
-    $mensagem = "";
     $sqlUpdate = "UPDATE pessoa_fisicas SET
                    nome = '$nome',
                    nome_artistico = '$nomeArtistico',
@@ -82,7 +81,6 @@ if (isset($_POST['editar'])) {
                 }
             }
         }
-
         $mensagem .= mensagem("success", "Atualizado com sucesso!");
     } else {
         //$mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
@@ -97,12 +95,10 @@ if (isset($_POST['cadastrar'])) {
 
     if (mysqli_query($con, $sqlInsert)) {
         $idLider = recuperaUltimo("pessoa_fisicas");
-
-        if (mysqli_query($con, $sqlDeleteLider)) {
-            $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
+        $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
                                 VALUES ('$idPedido', '$idAtracao', '$idLider')";
-            mysqli_query($con, $sqLider);
-        }
+        mysqli_query($con, $sqLider);
+
         foreach ($telefones AS $telefone) {
             if (!empty($telefone)) {
                 $sqlTelefone = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone, publicado) VALUES ('$idLider','$telefone',1)";
@@ -121,6 +117,12 @@ if (isset($_POST['cadastrar'])) {
     }
 }
 
+if (isset($_POST['selecionar'])) {
+    $idLider = $_POST['idLider'];
+    $idPedido = $_POST['idPedido'];
+    $idAtracao = $_POST['idAtracao'];
+    $tipoDocumento = $_POST['tipoDocumento'];
+}
 
 $lider = recuperaDados("pessoa_fisicas", "id", $idLider);
 $drt = recuperaDados("drts", "pessoa_fisica_id", $idLider);
@@ -198,8 +200,6 @@ include "includes/menu_interno.php";
                                     </div>
                                 <?php }
                                 ?>
-                            </div>
-                            <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="email">Email</label>
                                     <input type='text' class='form-control' id='email' name='email'
@@ -213,7 +213,7 @@ include "includes/menu_interno.php";
                                            id='telefone' name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            required maxlength="11" value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-3">
                                     <label for="telefone">Telefone #2 </label>
                                     <?php
                                     if (isset($arrayTelefones[1])) {
@@ -232,7 +232,7 @@ include "includes/menu_interno.php";
                                     }
                                     ?>
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-3">
                                     <label for="telefone2">Telefone #3</label>
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
@@ -264,23 +264,23 @@ include "includes/menu_interno.php";
                         </div>
                         <div class="box-footer">
                             <button type="submit" name="editar" class="btn btn-info pull-right">Salvar</button>
-                        </div>
                     </form>
-                        <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                            <input type="hidden" name="idLider" value="<? $idLider ?>">
-                            <input type="hidden" name="idPedido" value="<? $idPedido ?>">
-                            <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
-                                contratação
-                            </button>
-                        </form>
+                    <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                        <input type="hidden" name="idLider" value="<?= $idLider ?>">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" name="adicionaLider" class="btn btn-info pull-left">Ir ao pedido de
+                            contratação
+                        </button>
+                    </form>
                 </div>
-                <!-- /.box -->
             </div>
-            <!-- /.col -->
+            <!-- /.box -->
         </div>
-        <!-- /.row -->
-        <!-- END ACCORDION & CAROUSEL-->
+        <!-- /.col -->
+</div>
+<!-- /.row -->
+<!-- END ACCORDION & CAROUSEL-->
 
-    </section>
-    <!-- /.content -->
+</section>
+<!-- /.content -->
 </div>
