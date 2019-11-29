@@ -4,6 +4,9 @@ include "includes/menu.php";
 
 $con = bancoMysqli();
 
+$sql = "SELECT e.id, e.protocolo, e.nome_evento,  er.data_envio, e.usuario_id
+        FROM eventos e INNER JOIN evento_envios ee ON e.id = ee.evento_id INNER JOIN evento_reaberturas er on e.id = er.eventos_id
+        WHERE er.data_envio > ee.data_envio and e.publicado = 1";
 
 ?>
 
