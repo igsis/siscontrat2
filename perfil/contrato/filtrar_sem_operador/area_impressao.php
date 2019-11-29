@@ -360,11 +360,12 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </div>
                 </div>
                 <div class="box-footer">
-                    <a href="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos">
-                        <button type="button" class="btn btn-default">Voltar</button>
+                    <a href="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos">
+                    <button type="button" class="btn btn-default">Voltar</button>
                     </a>
                 </div>
             </div>
     </section>
 </div>
+
 

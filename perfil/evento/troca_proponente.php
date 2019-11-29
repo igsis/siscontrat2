@@ -6,7 +6,6 @@ if(isset($_POST['trocaProponente'])){
     $idPedido = $_POST['idPedido'];
 }
 
-
 ?>
 
 <div class="content-wrapper">

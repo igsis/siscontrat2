@@ -9,7 +9,7 @@ if (isset($_POST['idProponente'])) {
     $idPedido = $_POST['idPedido'] ?? null;
 }
 
-if (isset($_POST['carregar'])) {
+if (isset($_POST['adicionaLider'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
     $idPedido = $_SESSION['idPedido'];
     $idAtracao = $_POST['idAtracao'] ?? NULL;
@@ -417,10 +417,10 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                 if ($atracao['pessoa_fisica_id'] > 0) {
                                     echo "<td>" . $atracao['nome'] . "</td>";
                                     echo "<td>
-                                            <form method=\"POST\" action=\"?perfil=evento&p=pf_pesquisa\" role=\"form\">
+                                            <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
                                             <input type='hidden' name='oficina' value='" . $atracao['id'] . "'>
                                             <input type='hidden' name='lider' value='$idPedido'>
-                                            <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class='fa fa-refresh'></i> Trocar</button>
+                                            <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-refresh'></i> Trocar</button>
                                             </form>
                                         </td>";
                                 } else {
