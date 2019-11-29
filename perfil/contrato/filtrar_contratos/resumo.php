@@ -105,13 +105,14 @@ if (isset($_POST['salvar'])) {
     $processoMae = $_POST['processoMae'];
     $processo = $_POST['processo'];
     $justificativa = $_POST['justificativa'];
+    $operador = $_POST['operador'];
 
     //eventos
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'] ?? null;
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido'";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', operador_id = '$operador' WHERE id = '$idPedido'";
 
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
@@ -170,9 +171,9 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     <div class="col-md-6 from-group">
                                         <label for="operador">Operador</label>
                                         <select name="operador" id="operador" class="form-control">
+                                            <option value="">Selecione um operador</option>
                                             <?php
-                                            $sqlWhere = "usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id";
-                                            geraOpcao($sqlWhere, $contrato['usuario_contrato_id']);
+                                                geraOpcao('usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id', $pedido['operador_id']);
                                             ?>
                                         </select>
                                     </div>
