@@ -456,9 +456,19 @@ include "includes/menu_interno.php";
                             </div>
                             <div class="row">
                                 <?php
-                                if (empty($pf['cpf'])) {
+                                if (empty($pf['cpf'])) {?>
+                                    <div class="form-group col-md-12">
+                                        <label for="passaporte">Passaporte:</label>
+                                        <input type="text" class="form-control" name="passaporte" maxlength="70"
+                                               value="<?= $pf['passaporte'] ?>" disabled>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                    <?php
                                     anexosNaPagina(62, $idPf, "modal-passaporte", "Passaporte");
-                                } else {
+                                    ?>
+                                    </div>
+                                <?php } else {
                                     ?>
                                     <div class="form-group col-md-2">
                                         <label for="rg">RG: *</label>

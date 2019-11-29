@@ -6,6 +6,7 @@ if(isset($_POST['trocaProponente'])){
     $idPedido = $_POST['idPedido'];
 }
 
+
 ?>
 
 <div class="content-wrapper">
@@ -29,8 +30,9 @@ if(isset($_POST['trocaProponente'])){
                                 </form>
                             </div>
                             <div class="form-group col-md-3">
-                                <form method="POST" action="?perfil=contrato&p=pj_pesquisa" role="form">
-                                    <input type="hidden" name="idPj" value="<?=$idPessoa?>">
+                                <form method="POST" action="?perfil=evento&p=pj_pesquisa" role="form">
+                                    <input type="hidden" name="idProponente" value="<?=$idPessoa?>">
+                                    <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" name="troca_pj" class="btn btn-block btn-primary btn-lg">Pessoa Jurídica</button>
                                 </form>
                             </div>

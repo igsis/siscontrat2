@@ -18,10 +18,24 @@ if (isset($_POST['carregar'])) {
 if(isset($_POST['trocaPf'])){
     $_SESSION['idPedido'] = $_POST['idPedido'];
     $idPedido = $_SESSION['idPedido'];
-    $idPessoa = $_POST['idPf'];
+    $idPessoa = $_POST['idPf'] ?? $_POST['idPessoa'];
     $trocaPf = $con->query("UPDATE pedidos SET pessoa_fisica_id = $idPessoa WHERE id = $idPedido AND origem_tipo_id = 1");
     if($trocaPf){
-        $deletaPj = $con->query("UPDATE pedidos SET pessoa_juridica_id = null WHERE id = $idPedido AND origem_tipo_id = 1");
+        $deletaPj = $con->query("UPDATE pedidos SET pessoa_juridica_id = null, pessoa_tipo_id = 1 WHERE id = $idPedido AND origem_tipo_id = 1");
+        $mensagem = mensagem('success', 'Proponente trocado com sucesso!');
+    }else{
+        $mensagem = mensagem('danger', 'Erro ao trocar proponente! Tente novamente.');
+    }
+    $pedido = recuperaDados("pedidos", "id", $idPedido);
+}
+
+if(isset($_POST['trocaPj'])){
+    $_SESSION['idPedido'] = $_POST['idPedido'];
+    $idPedido = $_SESSION['idPedido'];
+    $idPessoa = $_POST['idPj'] ?? $_POST['idPessoa'];
+    $trocaPj = $con->query("UPDATE pedidos SET pessoa_juridica_id = $idPessoa WHERE id = $idPedido AND origem_tipo_id = 1");
+    if($trocaPj){
+        $deletaPf = $con->query("UPDATE pedidos SET pessoa_fisica_id = null, pessoa_tipo_id = 2 WHERE id = $idPedido AND origem_tipo_id = 1");
         $mensagem = mensagem('success', 'Proponente trocado com sucesso!');
     }else{
         $mensagem = mensagem('danger', 'Erro ao trocar proponente! Tente novamente.');

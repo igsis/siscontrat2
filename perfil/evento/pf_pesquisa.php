@@ -128,7 +128,8 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             $resultado .= "<td>
                                      <form action='$actionEdita' method='post'>
                                         <input type='hidden' name='idPessoa' value='" . $pessoa['id'] . "'>
-                                        <input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>
+                                        <input type='hidden' name='idPedido' value='$idPedido'>
+                                        $botaoSelecionar
                                      </form>
                                </td>";
                             $resultado .= "</tr>";
@@ -142,9 +143,8 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <form method='post' action='$actionCadastra'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
-                            <button class=\"btn btn-primary\" name='adicionar' type='submit'>
-                                <i class=\"glyphicon glyphicon-plus\">        
-                                </i>Adicionar
+                            <input type='hidden' name='idPedido' value='$idPedido'>
+                            $botaoAdd
                             </button>
                         </form>
                       </td>";

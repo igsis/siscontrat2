@@ -1,10 +1,23 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
+
+if (isset($_POST['adicionar']) || isset($_POST['adicionaPj'])) {
+    if (isset($_POST['adicionaPj'])) {
+        $idPedido = $_POST['idPedido'];
+        $botoesFooter = "<input type='hidden' name='idPedido' value='$idPedido'>
+                            <button type='submit' name='atualizaPj' class='btn btn-info pull-right'>Salvar</button>";
+    } else {
+        $botoesFooter = "<button type='submit' name='cadastra' class='btn btn-info pull-right'>Salvar</button>";
+    }
+}
+
 $idEvento = $_SESSION['idEvento'];
 
 $sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'";
 $atracao = mysqli_query($con, $sql);
+
+
 ?>
 
 <script>
@@ -89,7 +102,8 @@ $atracao = mysqli_query($con, $sql);
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" min="1" class="form-control" placeholder="Ex.: 10"
+                                    <input type="number" name="numero" min="1" class="form-control"
+                                           placeholder="Ex.: 10"
                                            required>
                                 </div>
                                 <div class="form-group col-md-3">
@@ -150,9 +164,7 @@ $atracao = mysqli_query($con, $sql);
                             </div>
 
                             <div class="box-footer">
-                                <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
-                                    Cadastrar
-                                </button>
+                                <?= $botoesFooter ?>
                             </div>
                     </form>
                 </div>

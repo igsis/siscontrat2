@@ -27,7 +27,7 @@ if (isset($_POST['editProponente'])) {
                     </form>";
 }
 
-if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
+if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['atualizaPj'])) {
     $razao_social = addslashes($_POST['razao_social']);
     $cnpj = $_POST['cnpj'];
     $ccm = $_POST['ccm'] ?? NULL;
@@ -47,7 +47,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $ultima_atualizacao = date('Y-m-d H:i:s');
 }
 
-if (isset($_POST['cadastra'])) {
+if (isset($_POST['cadastra']) || isset($_POST['atualizaPj'])) {
     $mensagem = "";
     $sql = "INSERT INTO pessoa_juridicas (razao_social, cnpj, ccm, email, ultima_atualizacao) VALUES ('$razao_social', '$cnpj', '$ccm', '$email', '$ultima_atualizacao')";
     if (mysqli_query($con, $sql)) {
@@ -83,6 +83,23 @@ if (isset($_POST['cadastra'])) {
         $mensagem .= mensagem("success", "Cadastrado com sucesso!");
         $idPj = recuperaUltimo("pessoa_juridicas");
         gravarLog($sql);
+
+        if (isset($_POST['atualizaPj'])) {
+            $idPedido = $_POST['idPedido'];
+            $sqlTestaTroca = "SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 1";
+            $queryTestaTroca = mysqli_query($con, $sqlTestaTroca);
+            $row = mysqli_num_rows($queryTestaTroca);
+            if ($row != 0) {
+                $trocaPj = "<div class='form-group col-md-3 pull-right'>
+                            <form method='POST' action='?perfil=evento&p=pedido_edita' role='form'>
+                                <input type='hidden' name='idPedido' value='$idPedido'>
+                                <input type='hidden' name='idPj' value='$idPj'>
+                                <button type='submit' name='trocaPj' class='btn btn-info btn-block'> Ir ao pedido de contratação </button>
+                            </form>
+                        </div>";
+            }
+        }
+
     } else {
         $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
@@ -425,7 +442,8 @@ if (isset($pj['representante_legal2_id'])) {
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control" min="1" placeholder="Ex.: 10"
+                                    <input type="number" name="numero" class="form-control" min="1"
+                                           placeholder="Ex.: 10"
                                            required value="<?= $end['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
@@ -612,44 +630,48 @@ if (isset($pj['representante_legal2_id'])) {
                         </div>
                         <?php
                     }
+                    if (isset($trocaPj)) {
+                        echo $trocaPj;
+                    } else { ?>
+
+                        <div class="form-group col-md-3">
+                            <?php
+                            $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1";
+                            $queryPedidos = mysqli_query($con, $sqlPedidos);
+                            $pedidos = mysqli_fetch_array($queryPedidos);
+
+                            if (($pedidos['pessoa_tipo_id'] == 2) && ($pedidos['pessoa_juridica_id'] == $idPj)) {
+
+                                ?>
+                                <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                                    <input type="hidden" name="pessoa_tipo_id" value="2">
+                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
+                                    <input type="hidden" name="idProponente" value="<?= $pj['id'] ?>">
+                                    <input type="hidden" name="tipoPessoa" value="2">
+                                    <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
+                                    <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
+                                        contratação
+                                    </button>
+                                </form>
+
+                                <?php
+                            } else {
+                                ?>
+                                <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                                    <input type="hidden" name="pessoa_tipo_id" value="2">
+                                    <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
+                                    <input type="hidden" name="valor" value="<?= $atracao['valor_individual'] ?>">
+                                    <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
+                                    <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
+                                        contratação
+                                    </button>
+                                </form>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    <?php }
                     ?>
-
-                    <div class="form-group col-md-3">
-                        <?php
-                        $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1";
-                        $queryPedidos = mysqli_query($con, $sqlPedidos);
-                        $pedidos = mysqli_fetch_array($queryPedidos);
-
-                        if (($pedidos['pessoa_tipo_id'] == 2) && ($pedidos['pessoa_juridica_id'] == $idPj)) {
-
-                            ?>
-                            <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                <input type="hidden" name="pessoa_tipo_id" value="2">
-                                <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
-                                <input type="hidden" name="idProponente" value="<?= $pj['id'] ?>">
-                                <input type="hidden" name="tipoPessoa" value="2">
-                                <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id']?>">
-                                <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
-                                    contratação
-                                </button>
-                            </form>
-
-                            <?php
-                        } else {
-                            ?>
-                            <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                <input type="hidden" name="pessoa_tipo_id" value="2">
-                                <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
-                                <input type="hidden" name="valor" value="<?= $atracao['valor_individual'] ?>">
-                                <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id']?>">
-                                <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
-                                    contratação
-                                </button>
-                            </form>
-                            <?php
-                        }
-                        ?>
-                    </div>
                 </div>
             </div>
             <!-- /. box-body -->
