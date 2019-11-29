@@ -3,17 +3,8 @@
 $con = bancoMysqli();
 $idEvento = $_SESSION['eventoId'];
 
-if (isset($_POST['mdlPadrao'])) {
-    $modelo = $_POST['idPadrao'];
-}
-if (isset($_POST['mdlVoca'])) {
-    $modelo = $_POST['idVoca'];
-}
-if (isset($_POST['mdlPia'])) {
-    $modelo = $_POST['idPia'];
-}
-if (isset($_POST['mdlOficina'])) {
-    $modelo = $_POST['idOficina'];
+if(isset($_POST['detalheEvento'])){
+    $detalheEvento = $_POST['detalheEvento'];
 }
 
 $sql = "SELECT 
@@ -21,58 +12,19 @@ $sql = "SELECT
     p.justificativa,
     p.forma_pagamento,
     p.observacao,
-    p.valor_total,
-    u.nome_completo,
-    u.telefone,
-    u.email,
-    p.origem_tipo_id,
-    p.origem_id,
-    e.protocolo,
-    e.id,
-    e.sinopse,
-    e.nome_evento,
-    p.observacao,
-    pe.data,
-    te.tipo_evento,
-    proe.projeto_especial,
-    rj.relacao_juridica,
-    pf.nome,
-    a.ficha_tecnica,
-    a.release_comunicacao,
-    ci.classificacao_indicativa,
-    oc.data_inicio,
-    oc.data_fim,
-    oc.horario_inicio,
-    oc.data_fim,
-    i.nome,
-    i.sigla,
-    ri.retirada_ingresso,
-    pt.pessoa,
-    pa.entrega_nota_empenho,
-    pa.nota_empenho,
-    pa.emissao_nota_empenho
-    
-    
-    
+    p.valor_total 
     FROM pedidos as p
-    INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
-    INNER JOIN eventos e on e.id = p.origem_id
-    INNER JOIN producao_eventos pe on e.id = pe.evento_id
-    INNER JOIN tipo_eventos te on e.tipo_evento_id = te.id
-    INNER JOIN projeto_especiais proe on e.projeto_especial_id = proe.id
-    INNER JOIN relacao_juridicas rj on e.relacao_juridica_id = rj.id
-    INNER JOIN usuarios u on e.usuario_id = u.id
-    INNER JOIN atracoes a on e.id = a.evento_id
-    INNER JOIN ocorrencias oc on a.id = oc.atracao_id
-    INNER JOIN classificacao_indicativas ci on a.classificacao_indicativa_id = ci.id
-    INNER JOIN instituicoes i on oc.instituicao_id = i.id
-    INNER JOIN retirada_ingressos ri on oc.retirada_ingresso_id = ri.id
-    INNER JOIN pessoa_tipos pt on p.pessoa_tipo_id = pt.id
-    INNER JOIN pagamentos pa on p.id = pa.pedido_id
-    
-    WHERE p.publicado = 1 AND p.origem_tipo_id AND p.origem_id = $idEvento";
-$evento = $con->query($sql)->fetch_array();
-echo $sql
+    WHERE p.publicado = 1";
+
+// dados //
+$sql = $con->query($sql)->fetch_array();
+$evento = recuperaDados('eventos', 'id', $idEvento);
+$producao_evento = recuperaDados('producao_eventos','id', $idEvento);
+$tipo_evento = recuperaDados('tipo_eventos','id',$idEvento);
+$projeto_especiais = recuperaDados('projeto_especiais','id',$idEvento);
+$relacao_juridica = recuperaDados('relacao_juridicas','id',$idEvento);
+$usuarios = recuperaDados('usuarios','id',$idEvento);
+$local = recuperaDados('locais','id',$idEvento);
 ?>
 
 <div class="content-wrapper">
@@ -92,19 +44,19 @@ echo $sql
                     </tr>
                     <tr>
                         <th width="30%">Evento enviado em:</th>
-                        <td><?= $evento['data'] ?></td>
+                        <td><?= $producao_evento['data'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Tipo de evento:</th>
-                        <td><?= $evento['tipo_evento'] ?></td>
+                        <td><?= $tipo_evento['tipo_evento'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Projeto especial:</th>
-                        <td><?= $evento['projeto_especial'] ?></td>
+                        <td><?= $projeto_especiais['projeto_especial'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Relação jurídica:</th>
-                        <td><?= $evento['relacao_juridica'] ?></td>
+                        <td><?= $relacao_juridica['relacao_juridica'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -112,15 +64,17 @@ echo $sql
                     </tr>
                     <tr>
                         <th width="30%">Usuário que cadastrou o evento:</th>
-                        <td><?= $evento['nome_completo'] ?></td>
+                        <td><?= $usuarios['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
                         <td><?= $evento['telefone'] ?></td>
+                        <td><?= $usuarios['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
                         <td><?= $evento['email'] ?></td>
+                        <td><?= $usuarios['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -205,13 +159,6 @@ echo $sql
                 <h1>Especificidades</h1>
                 <h3>Ocorrências</h3>
                 De <?= $evento['data_inicio'] ?> a <?= $evento['data_fim'] ?>
-                <?php
-                $sqlLocal = "SELECT 
-                    l.local
-                    from locais l 
-                    INNER JOIN ocorrencias o on l.id = o.local_id AND o.publicado = 1";
-                $local = $con->query($sqlLocal)->fetch_assoc();
-                ?>
                 <br>
                 <?= $local['local'] ?>
                 <br>
@@ -230,7 +177,7 @@ echo $sql
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
-                        <td><?= $evento['nome'] ?> (<?= $evento['sigla'] ?>)</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th width="30%">Retirada de ingressos:</th>
@@ -301,11 +248,11 @@ echo $sql
                     </tr>
                     <tr>
                         <th width="30%">Valor</th>
-                        <td><?= $evento['valor_total'] ?></td>
+                        <td><?= $sql['valor_total'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Forma de Pagamento</th>
-                        <td><?= $evento['forma_pagamento'] ?></td>
+                        <td><?= $sql['forma_pagamento'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data</th>
