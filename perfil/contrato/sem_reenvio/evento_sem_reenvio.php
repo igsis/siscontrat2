@@ -1,12 +1,12 @@
 <?php
-
-include "includes/menu.php";
-
 $con = bancoMysqli();
 
-$sql = "SELECT e.id, e.protocolo, e.nome_evento,  er.data_reabertura, e.usuario_id, er.usuario_reabertura_id
-        FROM eventos e INNER JOIN evento_envios ee ON e.id = ee.evento_id INNER JOIN evento_reaberturas er on e.id = er.eventos_id
-        WHERE er.data_reabertura > ee.data_envio and e.publicado = 1";
+$sql = "SELECT e.id, e.protocolo, e.nome_evento,  er.data_reabertura, e.usuario_id, er.usuario_reabertura_id, p.pessoa_tipo_id, p.pessoa_juridica_id, p.pessoa_fisica_id, p.valor_total, p.operador_id
+        FROM eventos e 
+        INNER JOIN evento_envios ee ON e.id = ee.evento_id 
+        INNER JOIN evento_reaberturas er on e.id = er.eventos_id
+        INNER JOIN pedidos p ON p.origem_id = e.id
+        WHERE er.data_reabertura > ee.data_envio and e.publicado = 1 AND p.origem_tipo_id = 1";
 
 $query = mysqli_query($con, $sql);
 $rows = mysqli_num_rows($query);
@@ -19,15 +19,14 @@ $rows = mysqli_num_rows($query);
 
         <!-- START FORM-->
         <h3 class="box-title">Lista </h3>
-        <div class="row" align="center">
+        <div class="row">
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <!--                        <h3 class="box-title">Listagem</h3-->
+                        <h3 class="box-title">Listagem</h3>
                     </div>
-                    <!-- /.box-header -->
                     <div class="box-body">
                         <table id="tblResultado" class="table table-bordered table-striped">
                             <thead>
@@ -36,11 +35,8 @@ $rows = mysqli_num_rows($query);
                                 <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
-                                <th>Local</th>
-                                <th>Período</th>
                                 <th>Data reabertura</th>
                                 <th>Reaberto por</th>
-                                <th>StatusPrazo (Dias)</th>
                                 <th>Operador</th>
                             </tr>
                             </thead>
@@ -55,33 +51,37 @@ $rows = mysqli_num_rows($query);
                                 <?php
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
+                                    $baldeProponente = '';
+                                    if ($evento['pessoa_tipo_id'] == 1) {
+                                        $pf = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id']);
+                                        $baldeProponente = $pf['nome'];
+                                    } else {
+                                        $pj = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id']);
+                                        $baldeProponente = $pj['razao_social'];
+                                    }
                                     ?>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td><?= $evento['protocolo'] ?></td>
+                                        <td><?= $baldeProponente ?></td>
+                                        <td><?= $evento['nome_evento'] ?></td>
+                                        <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
+                                        <td><?= exibirDataBr($evento['data_reabertura']) ?></td>
+                                        <td><?= recuperaDados('usuarios', 'id', $evento['usuario_reabertura_id'])['nome_completo']; ?></td>
+                                        <td><?= $recuperaDados('usuarios', 'id', $evento['operador_id'])['nome_completo']; ?></td>
                                     </tr>
                                     <?php
                                 }
-
                             }
                             ?>
-
                             </tbody>
-
                             <tfoot>
                             <tr>
-                                <th>Protocolo</th>
+                            <th>Protocolo</th>
                                 <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
-                                <th>Local</th>
-                                <th>Período</th>
                                 <th>Data reabertura</th>
                                 <th>Reaberto por</th>
-                                <th>StatusPrazo (Dias)</th>
                                 <th>Operador</th>
                             </tr>
                             </tfoot>
