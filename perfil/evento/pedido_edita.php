@@ -805,10 +805,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
 <script type="text/javascript">
 
     $(function () {
-        $('#numero_parcelas').change(function () {
-
-        });
-
         $('#numero_parcelas').on('change', ocultarBotao);
 
         $('#abrirParcelas').on('click', abrirModal);
@@ -818,15 +814,17 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         $('#salvarModalOficina').on('click', salvarModal);
 
         $('#editarModal').on('click', editarModal);
+
+
     });
 
-    $('#modalParcelas').on('hide.bs.modal', function () {
-        location.reload(true);
-    });
-
-    $('#modalOficina').on('hide.bs.modal', function () {
-        location.reload(true);
-    });
+    // $('#modalParcelas').on('hide.bs.modal', function () {
+    //     location.reload(true);
+    // });
+    //
+    // $('#modalOficina').on('hide.bs.modal', function () {
+    //     location.reload(true);
+    // });
 
 
     function somar() {
@@ -916,18 +914,20 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
 
     var ocultarBotao = function () {
 
-
         let valorPedido = "<?=$pedido['valor_total']?>";
 
         var optionSelect = document.querySelector("#numero_parcelas").value;
         var editarParcelas = document.querySelector('#editarParcelas');
         var dataKit = document.querySelector("#data_kit_pagamento");
+        var formPagamento = document.querySelector('#forma_pagamento')
 
-        console.log (valorPedido);
 
         console.log ($('#valor_total').val());
 
-        if (valorPedido != '0.00') {
+        if ($('#valor_total').val() > '0.00') {
+            if ($('#num_parcela').val() != 13){
+            }else{
+            }
             if (optionSelect == "1" || optionSelect == 0) {
                 dataKit.required = true;
                 editarParcelas.style.display = "none";
@@ -935,13 +935,11 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             } else {
                 $("#data_kit_pagamento").attr("required", false);
                 editarParcelas.style.display = "block";
-                // dataKit.style.display = "none";
-
+                dataKit.style.display = "none";
             }
         } else {
             $("#numero_parcelas").attr('title', 'Grave o valor do pedido para poder editar as parcelas!');
             dataKit.style.display = 'none';
-
         }
     }
 
