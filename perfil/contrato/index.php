@@ -14,7 +14,13 @@ include "includes/menu.php";
                 <div class="row">
                     <div class="col-md-12 border-right">
                         <div class="description-block">
-                            <span class="description-header">Todos as descrições das pessoas são sobre a humanidade do atendimento, a pessoa pega no pulso, examina, olha com carinho. Então eu acho que vai ter outra coisa, que os médicos cubanos trouxeram pro brasil, um alto grau de humanidade.<br/><br/></span>
+                            <span class="description-header">
+                                Esse módulo tem a função de gerenciar a produção de contratos artísticos da instituição, 
+                                como propostas, declarações, pedidos de reserva de empenho entre outros documentos 
+                                necessários para a contratação do artista.
+                                <br/>
+                                <br/>
+                            </span>
                         </div>
                         <!-- /.description-block -->
                     </div>

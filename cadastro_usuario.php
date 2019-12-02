@@ -50,12 +50,22 @@ if (isset($_POST['cadastra'])) {
         VALUES ('$nome', '$jovemMonitor','$rgRf', '$usuario', '$email', '$telefone', '$idPerfil', '$fiscal')";
 
             if (mysqli_query($con, $sql)) {
-                $usuarioNovo = recuperaUltimo('usuarios');
+                $usuarioNovo = recuperaDados('usuarios', 'id', $con->insert_id);
 
                 $mensagem = mensagem("success", "Usuário cadastrado com sucesso! Você está sendo redirecionado para a tela de login.");
-                echo "<script type=\"text/javascript\">
-						  window.setTimeout(\"location.href='index.php';\", 4000);
-					  </script>";
+                $alert = "<script>
+                        Swal.fire({
+                          title: 'Usuário Cadastrado',
+                         html: '<b>Usuário:</b> {$usuarioNovo['usuario']} <br> <b>Senha Inicial:</b> siscontrat2019',
+                          type: 'success',
+                          allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showCancelButton: false,
+                          confirmButtonText: 'Confirmar'
+                        }).then(function() {
+                          window.location.href = 'index.php';
+                        });
+                    </script>";
 
             } else {
                 $mensagem = mensagem("danger", "Erro no cadastro de usuário! Tente novamente.");
@@ -83,6 +93,9 @@ if (isset($_POST['cadastra'])) {
     <link rel="stylesheet" href="visual/dist/css/AdminLTE.min.css">
     <!-- iCheck -->
     <link rel="stylesheet" href="visual/plugins/iCheck/square/blue.css">
+    <!-- Sweet Alert 2 -->
+    <script src="visual/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="visual/plugins/sweetalert2/sweetalert2.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -124,7 +137,7 @@ if (isset($_POST['cadastra'])) {
 
                                 <div class="form-group col-md-2">
                                     <label for="tipo">É estagiário/jovem monitor? * </label> <br>
-                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="1"> Sim
+                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="1" required> Sim
                                     </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0"> Não
                                     </label>
@@ -133,7 +146,7 @@ if (isset($_POST['cadastra'])) {
                                 <div class="form-group col-md-2">
                                     <label for="rf_usuario">RF/RG* </label>
                                     <input type="text" id="rgrf_usuario" name="rgrf_usuario" class="form-control"
-                                           disabled>
+                                           disabled required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="rf_usuario">Usuário* </label>
@@ -153,12 +166,12 @@ if (isset($_POST['cadastra'])) {
                                 <div class="form-group col-md-4">
                                     <label for="tel_usuario">Telefone* </label>
                                     <input type="text" id="tel_usuario" name="tel_usuario"
-                                           class="form-control" required onkeyup="mascara( this, mtel );">
+                                           class="form-control" onkeyup="mascara( this, mtel );" required>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="perfil">Código* </label> <br>
-                                    <input type="text" required name="perfil" id="perfil" class="form-control"
-                                           maxlength="9" minlength="9">
+                                    <input type="text" name="perfil" id="perfil" class="form-control"
+                                           maxlength="9" minlength="9" required >
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Senha inicial:</label> <br>siscontrat2019
@@ -168,6 +181,9 @@ if (isset($_POST['cadastra'])) {
                         <!-- /.box-body -->
 
                         <div class="box-footer">
+                            <a href="index.php" class="btn btn-default pull-left">
+                                Voltar a tela de Login
+                            </a>
                             <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">
                                 Cadastrar
                             </button>
@@ -299,5 +315,6 @@ if (isset($_POST['cadastra'])) {
         });
     });
 </script>
+<?php echo isset($alert) ? $alert : "" ?>
 </body>
 </html>
