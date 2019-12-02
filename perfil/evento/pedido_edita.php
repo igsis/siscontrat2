@@ -805,6 +805,10 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
 <script type="text/javascript">
 
     $(function () {
+        $('#numero_parcelas').change(function () {
+
+        });
+
         $('#numero_parcelas').on('change', ocultarBotao);
 
         $('#abrirParcelas').on('click', abrirModal);
@@ -912,6 +916,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
 
     var ocultarBotao = function () {
 
+
         let valorPedido = "<?=$pedido['valor_total']?>";
 
         var optionSelect = document.querySelector("#numero_parcelas").value;
@@ -931,10 +936,12 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                 $("#data_kit_pagamento").attr("required", false);
                 editarParcelas.style.display = "block";
                 // dataKit.style.display = "none";
+
             }
         } else {
             $("#numero_parcelas").attr('title', 'Grave o valor do pedido para poder editar as parcelas!');
             dataKit.style.display = 'none';
+
         }
     }
 
