@@ -514,13 +514,12 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
 
                                         <ul class="list-inline pull-right">
                                             <li>
-                                                <a class="btn btn-default prev-step"><span
-                                                            aria-hidden="true">&larr;</span>
-                                                    Voltar</a>
+                                                <a class="btn btn-default prev-step"><span aria-hidden="true">&larr;</span>
+                                                    Voltar
+                                                </a>
                                             </li>
                                             <li>
-                                                <a class="btn btn-primary next-step">Próxima etapa <span
-                                                            aria-hidden="true">&rarr;</span></a>
+                                                <a class="btn btn-primary next-step">Próxima etapa <span aria-hidden="true">&rarr;</span></a>
                                             </li>
                                         </ul>
                                     </div>
@@ -630,7 +629,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             </div>
             <!-- /.col -->
         </div>
-</div>
+
 <!-- /.row -->
 <!-- END ACCORDION & CAROUSEL-->
 </section>
