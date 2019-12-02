@@ -61,7 +61,12 @@ $rows = mysqli_num_rows($query);
                                     }
                                     ?>
                                     <tr>
-                                        <td><?= $evento['protocolo'] ?></td>
+                                        <td>
+                                            <form action="#" method="POST">
+                                                <input type="hide" name="idEvento" id="idEvento" value="<?= $evento['id'] ?>">
+                                                <button type="button" class="btn btn-link"><?= $evento['protocolo'] ?></button>
+                                            </form>
+                                        </td>
                                         <td><?= $baldeProponente ?></td>
                                         <td><?= $evento['nome_evento'] ?></td>
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
