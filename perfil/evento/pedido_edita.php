@@ -3,6 +3,226 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
 
+if (isset($_POST['idProponente'])) {
+    $idProponente = $_POST['idProponente'];
+    $tipoPessoa = $_POST['tipoPessoa'];
+    $idPedido = $_POST['idPedido'] ?? null;
+}
+
+if (isset($_POST['adicionaLider'])) {
+    $_SESSION['idPedido'] = $_POST['idPedido'];
+    $idPedido = $_SESSION['idPedido'];
+    $idAtracao = $_POST['idAtracao'] ?? NULL;
+    $pedido = recuperaDados("pedidos", "id", $idPedido);
+}
+
+if (isset($_POST['trocaPf'])) {
+    $_SESSION['idPedido'] = $_POST['idPedido'];
+    $idPedido = $_SESSION['idPedido'];
+    $idPessoa = $_POST['idPf'] ?? $_POST['idPessoa'];
+    $trocaPf = $con->query("UPDATE pedidos SET pessoa_fisica_id = $idPessoa WHERE id = $idPedido AND origem_tipo_id = 1");
+    if ($trocaPf) {
+        $deletaPj = $con->query("UPDATE pedidos SET pessoa_juridica_id = null, pessoa_tipo_id = 1 WHERE id = $idPedido AND origem_tipo_id = 1");
+        $mensagem = mensagem('success', 'Proponente trocado com sucesso!');
+    } else {
+        $mensagem = mensagem('danger', 'Erro ao trocar proponente! Tente novamente.');
+    }
+    $pedido = recuperaDados("pedidos", "id", $idPedido);
+}
+
+if (isset($_POST['trocaPj'])) {
+    $_SESSION['idPedido'] = $_POST['idPedido'];
+    $idPedido = $_SESSION['idPedido'];
+    $idPessoa = $_POST['idPj'] ?? $_POST['idPessoa'];
+    $trocaPj = $con->query("UPDATE pedidos SET pessoa_juridica_id = $idPessoa WHERE id = $idPedido AND origem_tipo_id = 1");
+    if ($trocaPj) {
+        $deletaPf = $con->query("UPDATE pedidos SET pessoa_fisica_id = null, pessoa_tipo_id = 2 WHERE id = $idPedido AND origem_tipo_id = 1");
+        $mensagem = mensagem('success', 'Proponente trocado com sucesso!');
+    } else {
+        $mensagem = mensagem('danger', 'Erro ao trocar proponente! Tente novamente.');
+    }
+    $pedido = recuperaDados("pedidos", "id", $idPedido);
+}
+
+if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
+    unset($_POST['cadastra']);
+    $_POST['carregar'] = 1;
+    $idPedido = $_SESSION['idPedido'];
+} else {
+    if (isset($_POST['cadastra'])) {
+        $tipoPessoa = $_POST['pessoa_tipo_id'];
+        $idPessoa = $_POST['pessoa_id'];
+        $valorTotal = $_POST['valor'];
+        $tipoEvento = $_POST['tipoEvento'];
+
+        if ($tipoPessoa == 1) {
+            $campo = "pessoa_fisica_id";
+        } else {
+            $campo = "pessoa_juridica_id";
+        }
+        $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES ($tipoEvento, $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
+        if (mysqli_query($con, $sqlFirst)) {
+            $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+            $idPedido = $_SESSION['idPedido'];
+            $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+            $queryContratado = mysqli_query($con, $sqlContratado);
+        } else {
+            echo $sqlFirst;
+        }
+    }
+
+}
+
+if (isset($_POST['edita'])) {
+    $verba_id = $_POST['verba_id'];
+    $valor_total = dinheiroDeBr($_POST['valor_total']);
+    $forma_pagamento = addslashes($_POST['forma_pagamento']);
+    $justificativa = addslashes($_POST['justificativa']);
+    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
+    $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? '0000-00-00';
+
+    if ($tipoPessoa == 1) {
+        $campo = "pessoa_fisica_id";
+    } else {
+        $campo = "pessoa_juridica_id";
+    }
+
+    if (isset($_POST['edita'])) {
+        $idPedido = $_SESSION['idPedido'];
+        $numero_parcelas = $_POST['numero_parcelas'] ?? $pedido['numero_parcelas'];
+        if ($numero_parcelas != 1) {
+            $data_kit_pagamento = "0000-00-00";
+        }
+
+        $sql_edita = "UPDATE pedidos SET verba_id = '$verba_id', valor_total = '$valor_total', numero_parcelas = '$numero_parcelas', data_kit_pagamento = '$data_kit_pagamento', forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
+
+        if (mysqli_query($con, $sql_edita)) {
+            $mensagem = mensagem("success", "Gravado com sucesso.");
+            gravarLog($sql_edita);
+
+        } else {
+            $mensagem = mensagem("danger", "Erro ao gravar: " . die(mysqli_error($con)));
+        }
+    }
+}
+
+$pedido = recuperaDados("pedidos", "id", $idPedido);
+
+if ($pedido['pessoa_tipo_id'] == 2) {
+    $pj = recuperaDados("pessoa_juridicas", "id", $pedido['pessoa_juridica_id']);
+    $proponente = $pj['razao_social'];
+    $idProponente = $pj['id'];
+    $link_edita = "?perfil=evento&p=pj_edita";
+} else {
+    $pf = recuperaDados("pessoa_fisicas", "id", $pedido['pessoa_fisica_id']);
+    $proponente = $pf['nome'];
+    $idProponente = $pf['id'];
+    $link_edita = "?perfil=evento&p=pf_edita";
+}
+
+$tipoPessoa = $pedido['pessoa_tipo_id'];
+
+//verificando parcelas
+$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido'";
+$query = mysqli_query($con, $sqlParcelas);
+$numRows = mysqli_num_rows($query);
+
+if ($numRows > 0) {
+    $somaParcelas = 0;
+    while ($parcela = mysqli_fetch_array($query)) {
+        $arrayValores[] = dinheiroParaBr($parcela['valor']);
+        $arrayDatas[] = $parcela['data_pagamento'];
+        $idsParcela [] = $parcela['id'];
+
+        $somaParcelas += $parcela['valor'];
+    }
+
+    $StringValores = implode("|", $arrayValores);
+    $StringDatas = implode("|", $arrayDatas);
+
+    foreach ($idsParcela as $idParcela) {
+        $sqlComplemento = "SELECT * FROM parcela_complementos WHERE parcela_id = '$idParcela'";
+        $queryComplemento = mysqli_query($con, $sqlComplemento);
+        $nComplemento = mysqli_num_rows($queryComplemento);
+
+        if ($nComplemento > 0) {
+            while ($complemento = mysqli_fetch_array($queryComplemento)) {
+                $arrayInicio [] = $complemento['data_inicio'];
+                $arrayFim [] = $complemento['data_fim'];
+                $CargaHoraria [] = $complemento['carga_horaria'];
+            }
+            $StringInicio = implode("|", $arrayInicio);
+            $StringFim = implode("|", $arrayFim);
+            $StringCarga = implode("|", $CargaHoraria);
+        }
+    }
+}
+
+$displayEditar = "display: none";
+$displayKit = "display: block";
+
+if (isset($pedido['numero_parcelas'])) {
+    if ($pedido['numero_parcelas'] != 1) {
+        $displayEditar = "display: block";
+        $displayKit = "display: none";
+    } else {
+        $displayEditar = "display: none";
+        $displayKit = "display: block";
+    }
+}
+
+if (isset($_POST['gravarValorEquipamento'])) {
+    $valoresEquipamentos = $_POST['valorEquipamento'];
+    $equipamentos = $_POST['equipamentos'];
+    $idPedido = $_SESSION['idPedido'];
+
+    $sql_delete = "DELETE FROM valor_equipamentos WHERE pedido_id = '$idPedido'";
+    mysqli_query($con, $sql_delete);
+
+    for ($i = 0; $i < count($valoresEquipamentos); $i++) {
+        $valor = dinheiroDeBr($valoresEquipamentos[$i]);
+        $idLocal = $equipamentos[$i];
+
+        $sql_insert_valor = "INSERT INTO valor_equipamentos (local_id, pedido_id, valor) 
+                             VALUES ('$idLocal', '$idPedido', '$valor')";
+
+        mysqli_query($con, $sql_insert_valor);
+    }
+}
+
+$sqlOficina = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+$queryOficina = mysqli_query($con, $sqlOficina);
+//$atracoes = mysqli_fetch_array($queryAtracao);
+
+while ($atracoes = mysqli_fetch_array($queryOficina)) {
+    $valores [] = $atracoes['valor_individual'];
+    if ($atracoes['oficina'] == 1) {
+        $oficina = 1;
+    }
+}
+
+if (isset($valores) && $valores > 0) {
+    $valorTotal = 0;
+    foreach ($valores as $valor) {
+        $valorTotal += $valor;
+    }
+} else {
+    $valorTotal = 0;
+}
+
+if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
+    if ($valorTotal > $pedido['valor_total'] || $valorTotal < $pedido['valor_total']) {
+        $sqlUpdate = "UPDATE pedidos SET valor_total = '$valorTotal' WHERE id = $idPedido";
+        if (mysqli_query($con, $sqlUpdate)) {
+            $mensagem = mensagem("warning", "O valor da sua atração foi alterado e com isso o valor total do seu pedido também mudou, verifique se o mesmo está correto e altere novamente na atração caso necessário.");
+            $pedido = recuperaDados('pedidos', 'id', $idPedido);
+        } else {
+            echo $sqlUpdate;
+        }
+    }
+}
 
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -67,54 +287,108 @@ $idEvento = $_SESSION['idEvento'];
                                                 <label for="verba_id">Verba *</label>
                                                 <select name="verba_id" id="verba_id" class="form-control">
                                                     <option value="">Selecione...</option>
-                                                    <option value="">Opção</option>
-                                                    <option value="">Opção</option>
-                                                    <option value="">Opção</option>
-                                                    <option value="">Opção</option>
-                                                    <option value="">Opção</option>
+                                                    <?php
+                                                    geraOpcao("verbas", $pedido['verba_id'])
+                                                    ?>
+
                                                 </select>
                                             </div>
+                                            <?php
+                                            if ($pedido['origem_tipo_id'] != 2) {
+                                                $readonly = 'readonly';
+                                            } else {
+                                                $readonly = '';
+                                            }
+                                            ?>
                                             <div class="form-group col-md-4">
                                                 <label for="verba_id">Valor Total</label>
-                                                <input type="text" id="valor_total" name="valor_total" class="form-control"
-                                                       value="">
+                                                <input type="text" onkeypress="return(moeda(this, '.', ',', event))"
+                                                       id="valor_total" name="valor_total" class="form-control"
+                                                       value="<?= dinheiroParaBr($pedido['valor_total']) ?>" <?= $readonly ?>>
                                             </div>
                                         </div>
+                                        <?php
+                                        if (isset($oficina)) {
+                                            ?>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="numero_parcelas">Número de Parcelas *</label>
+                                                    <select class="form-control" id="numero_parcelas"
+                                                            name="numero_parcelas"
+                                                            required>
+                                                        <option value="">Selecione...</option>
+                                                        <?php
+
+                                                        if ($pedido['numero_parcelas'] == 3) {
+                                                            $option = 4;
+                                                        } elseif ($pedido['numero_parcelas'] == 4) {
+                                                            $option = 3;
+                                                        } else {
+                                                            $option = $pedido['numero_parcelas'];
+                                                        }
+
+                                                        geraOpcaoParcelas("oficina_opcoes", $option);
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <button type="button" id="editarParcelas" class="btn btn-primary"
+                                                        style="display: block; margin-top: 2.2%;">
+                                                    Editar Parcelas
+                                                </button>
+                                            </div>
+                                            <?php
+
+                                        } else {
+                                            ?>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="numero_parcelas">Número de Parcelas *</label>
+                                                    <select class="form-control" id="numero_parcelas"
+                                                            name="numero_parcelas"
+                                                            required>
+                                                        <option value="">Selecione...</option>
+                                                        <?php
+
+                                                        if ($pedido['numero_parcelas'] == 3) {
+                                                            $option = 4;
+                                                        } elseif ($pedido['numero_parcelas'] == 4) {
+                                                            $option = 3;
+                                                        } else {
+                                                            $option = $pedido['numero_parcelas'];
+                                                        }
+
+                                                        geraOpcaoParcelas("oficina_opcoes", $option);
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <!-- Button trigger modal -->
+                                                <button type="button" id="editarParcelas" class="btn btn-primary"
+                                                        style="display: block; margin-top: 2.2%;">
+                                                    Editar Parcelas
+                                                </button>
+                                            </div>
+                                            <?php
+                                        }
+                                        ?>
                                         <div class="row">
                                             <div class="form-group col-md-6">
-                                                <label for="numero_parcelas">Número de Parcelas *</label>
-                                                <select class="form-control" id="numero_parcelas" name="numero_parcelas"
-                                                        required>
-                                                    <option value="">Selecione...</option>
-                                                    <option value="">Opção</option>
-                                                    <option value="">Opção</option>
-                                                    <option value="">Opção</option>
-                                                    <option value="">Opção</option>
-                                                    <option value="">Opção</option>
-                                                </select>
-                                            </div>
-                                            <button type="button" id="editarParcelas" class="btn btn-primary"
-                                                    style="display: block; margin-top: 2.2%;">
-                                                Editar Parcelas
-                                            </button>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <label for="forma_pagamento">Forma de pagamento *</label><br />
-                                                <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
-                                                          rows="8" readonly></textarea>
+                                                <label for="forma_pagamento">Forma de pagamento *</label><br/>
+                                                <textarea id="forma_pagamento" name="forma_pagamento"
+                                                          class="form-control"
+                                                          rows="8"><?= $pedido['forma_pagamento'] ?></textarea>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <label for="justificativa">Justificativa *</label><br />
+                                                <label for="justificativa">Justificativa *</label><br/>
                                                 <textarea id="justificativa" name="justificativa" class="form-control"
-                                                          rows="8"></textarea>
+                                                          rows="8"><?= $pedido['justificativa'] ?></textarea>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <label for="observacao">Observação</label>
-                                                <input type="text" id="observacao" name="observacao" class="form-control"
-                                                       maxlength="255" value="">
+                                                <input type="text" id="observacao" name="observacao"
+                                                       class="form-control"
+                                                       maxlength="255" value="<?= $pedido['observacao'] ?>">
                                             </div>
                                         </div>
                                         <input type="hidden" name="idPedido" value="">
@@ -136,28 +410,40 @@ $idEvento = $_SESSION['idEvento'];
                                                         <div class="jumbotrom">
                                                             <label for="proponente">Proponente</label>
                                                             <input type="text" id="proponente" name="proponente"
-                                                                   class="form-control" disabled value="">
+                                                                   class="form-control" disabled
+                                                                   value="<?= $proponente ?>">
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-2"><label><br></label>
-                                                        <input type="hidden" name="idProponente" value="">
-                                                        <button type="submit" name="editProponente"
-                                                                class="btn btn-success btn-block">
-                                                            Editar Proponente
-                                                        </button>
+                                                        <form method="POST" action="<?= $link_edita ?>" role="form">
+                                                            <input type="hidden" name="idProponente"
+                                                                   value="<?= $idProponente ?>">
+                                                            <button type="submit" name="editProponente"
+                                                                    class="btn btn-primary btn-block">
+                                                                Editar Proponente
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                     <div class="form-group col-md-2"><label><br></label>
-                                                        <button type="submit" name="trocar"
-                                                                class="btn btn-info btn-block">Trocar de
-                                                            Proponente
-                                                        </button>
+                                                        <form method="POST" action="?perfil=evento&p=troca_proponente"
+                                                              role="form">
+                                                            <input type="hidden" name="idPedido"
+                                                                   value="<?= $idPedido ?>">
+                                                            <input type="hidden" name="idProponente"
+                                                                   value="<?= $idProponente ?>">
+                                                            <button type="submit" name="trocaProponente"
+                                                                    class="btn btn-primary btn-block">Trocar de
+                                                                Proponente
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <ul class="list-inline pull-right">
                                             <li>
-                                                <a class="btn btn-default prev-step"><span aria-hidden="true">&larr;</span>
+                                                <a class="btn btn-default prev-step"><span
+                                                            aria-hidden="true">&larr;</span>
                                                     Voltar</a>
                                             </li>
                                             <li>
@@ -166,6 +452,16 @@ $idEvento = $_SESSION['idEvento'];
                                             </li>
                                         </ul>
                                     </div>
+
+                                    <?php
+                                    //if($pedido['pessoa_tipo_id'] == 2){
+                                    $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
+                                            LEFT JOIN lideres l on a.id = l.atracao_id
+                                            left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
+                                            WHERE a.publicado = 1 AND a.evento_id = '" . $_SESSION['idEvento'] . "'";
+                                    $query_atracao = mysqli_query($con, $sql_atracao);
+                                    ?>
+
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
                                         <h3 class="hs">3. Líder</h3>
                                         <div class="row">
@@ -178,26 +474,42 @@ $idEvento = $_SESSION['idEvento'];
                                                         <th width="10%">Ação</th>
                                                     </tr>
                                                     </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td>Teste</td>
-                                                        <td>Teste</td>
-                                                        <td>Teste</td>
-                                                    </tr>
-                                                    </tbody>
-                                                    <tfoot>
-                                                    <tr>
-                                                        <th>Atração</th>
-                                                        <th>Proponente</th>
-                                                        <th width="10%">Ação</th>
-                                                    </tr>
-                                                    </tfoot>
+                                                    <?php
+                                                    echo "<tbody>";
+                                                    while ($atracao = mysqli_fetch_array($query_atracao)) {
+                                                        //analisaArray($atracao);
+                                                        echo "<tr>";
+                                                        echo "<td>" . $atracao['nome_atracao'] . "</td>";
+                                                        if ($atracao['pessoa_fisica_id'] > 0) {
+                                                            echo "<td>" . $atracao['nome'] . "</td>";
+                                                            echo "<td>
+                                            <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
+                                            <input type='hidden' name='oficina' value='" . $atracao['id'] . "'>
+                                            <input type='hidden' name='lider' value='$idPedido'>
+                                            <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-refresh'></i> Trocar</button>
+                                            </form>
+                                        </td>";
+                                                        } else {
+                                                            echo "<td>
+                                            <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
+                                            <input type='hidden' name='oficina' value='" . $atracao['id'] . "'>
+                                            <input type='hidden' name='lider' value='$idPedido'>
+                                            <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-plus'></i> Adicionar</button>
+                                            </form>
+                                        </td>";
+                                                            echo "<td></td>";
+                                                        }
+                                                        echo "</tr>";
+                                                    }
+                                                    echo "</tbody>";
+                                                    ?>
                                                 </table>
                                             </div>
                                         </div>
                                         <ul class="list-inline pull-right">
                                             <li>
-                                                <a class="btn btn-default prev-step"><span aria-hidden="true">&larr;</span>
+                                                <a class="btn btn-default prev-step"><span
+                                                            aria-hidden="true">&larr;</span>
                                                     Voltar</a>
                                             </li>
                                             <li>
@@ -211,13 +523,16 @@ $idEvento = $_SESSION['idEvento'];
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-md-5">
-                                                    <label class="radio-inline"><input class="opcArtista" name="opc" type="radio"
+                                                    <label class="radio-inline"><input class="opcArtista" name="opc"
+                                                                                       type="radio"
                                                                                        value="1">Artista
                                                         Local</label>
-                                                    <label class="radio-inline"><input class="opcArtista" name="opc" type="radio"
+                                                    <label class="radio-inline"><input class="opcArtista" name="opc"
+                                                                                       type="radio"
                                                                                        value="2">Artista
                                                         Consagrado</label>
-                                                    <label class="radio-inline"><input class="opcArtista" name="opc" type="radio"
+                                                    <label class="radio-inline"><input class="opcArtista" name="opc"
+                                                                                       type="radio"
                                                                                        value="3">Nenhum</label>
                                                 </div>
                                             </div>
@@ -228,7 +543,8 @@ $idEvento = $_SESSION['idEvento'];
 
                                         <ul class="list-inline pull-right">
                                             <li>
-                                                <a class="btn btn-default prev-step"><span aria-hidden="true">&larr;</span>
+                                                <a class="btn btn-default prev-step"><span
+                                                            aria-hidden="true">&larr;</span>
                                                     Voltar</a>
                                             </li>
                                             <li>
@@ -239,6 +555,15 @@ $idEvento = $_SESSION['idEvento'];
                                     </div>
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-5">
                                         <h3>5. Valor por equipamento</h3>
+                                        <?php
+                                        $sqlEquipamento = "SELECT DISTINCT oco.local_id as 'local_id', local.local as 'local' 
+                            FROM ocorrencias oco
+                            INNER JOIN locais local ON local.id = oco.local_id 
+                            WHERE oco.origem_ocorrencia_id = '$idEvento' AND local.publicado = 1 AND oco.publicado = 1";
+
+                                        $queryEquipamento = mysqli_query($con, $sqlEquipamento);
+                                        $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
+                                        ?>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <table class="table table-bordered table-striped">
@@ -249,14 +574,41 @@ $idEvento = $_SESSION['idEvento'];
                                                     </tr>
                                                     </thead>
                                                     <tbody>
+                                                    <?php
+                                                    if ($numRowsEquipamento == 0) {
+                                                        ?>
+                                                        <tr>
+                                                            <td width="100%" class="text-center" colspan="2">Não existe equipamentos cadastrados
+                                                            </td>
+                                                        </tr>
+                                                        <?php
+                                                    } else {
+
+                                                        while ($equipamento = mysqli_fetch_array($queryEquipamento)) {
+                                                            $idEquipamento = $equipamento['local_id'];
+
+                                                            $sql_valor = "SELECT * FROM valor_equipamentos WHERE pedido_id = '$idPedido' AND local_id = '$idEquipamento'";
+                                                            $queryValor = mysqli_query($con, $sql_valor);
+                                                            $arrayValorEquipamento = mysqli_fetch_array($queryValor);
+
+                                                            ?>
+                                                            <tr>
+                                                                <td><?= $equipamento['local'] ?></td>
+                                                                <input type="hidden" value="<?= $equipamento['local_id'] ?>">
+                                                                <td>
+                                                                    <input type="text" class="form-control" name="valorEquipamento[]"
+                                                                           value="<?= dinheiroParaBr($arrayValorEquipamento['valor']) ?>" onkeyup="somaValorEquipamento()"
+                                                                           onkeypress="return(moeda(this, '.', ',', event));">
+                                                                    <input type="hidden" value="<?= $equipamento['local_id'] ?>" name="equipamentos[]">
+                                                                </td>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
                                                     <tr>
-                                                        <td>TESTE</td>
-                                                        <td>TESTE</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="50%">Valor Total: R$ </td>
-                                                        <td width="50%">Valor Faltante: R$ <span id="valorFaltante"></span>
-                                                        </td>
+                                                        <td width="50%">Valor Total: R$ <?= dinheiroParaBr($pedido['valor_total']) ?></td>
+                                                        <td width="50%">Valor Faltante: R$ <span id="valorFaltante"></span></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
@@ -267,7 +619,8 @@ $idEvento = $_SESSION['idEvento'];
                                         </div>
                                         <ul class="list-inline pull-right">
                                             <li>
-                                                <a class="btn btn-default prev-step"><span aria-hidden="true">&larr;</span>
+                                                <a class="btn btn-default prev-step"><span
+                                                            aria-hidden="true">&larr;</span>
                                                     Voltar</a>
                                             </li>
                                             <li>
@@ -567,9 +920,9 @@ $idEvento = $_SESSION['idEvento'];
         var editarParcelas = document.querySelector('#editarParcelas');
         var dataKit = document.querySelector("#data_kit_pagamento");
 
-        console.log(valorPedido);
+        console.log (valorPedido);
 
-        console.log($('#valor_total').val());
+        console.log ($('#valor_total').val());
 
         if (valorPedido != '0.00') {
             if (optionSelect == "1" || optionSelect == 0) {

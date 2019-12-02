@@ -343,6 +343,9 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                             <input type="text" id="observacao" name="observacao" class="form-control"
                                    maxlength="255" value="<?= $pedido['observacao'] ?>">
                         </div>
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
+                        <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
