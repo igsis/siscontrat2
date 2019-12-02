@@ -508,22 +508,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                         <h3>4. Parecer artístico</h3>
                                         <div class="container">
                                             <div class="row">
-                                                <div class="col-md-5">
-                                                    <label class="radio-inline"><input class="opcArtista" name="opc"
-                                                                                       type="radio"
-                                                                                       value="1">Artista
-                                                        Local</label>
-                                                    <label class="radio-inline"><input class="opcArtista" name="opc"
-                                                                                       type="radio"
-                                                                                       value="2">Artista
-                                                        Consagrado</label>
-                                                    <label class="radio-inline"><input class="opcArtista" name="opc"
-                                                                                       type="radio"
-                                                                                       value="3">Nenhum</label>
-                                                </div>
-                                            </div>
-                                            <div id="caixa">
-
+                                                <?php include "includes/label_parecer_artistico.php" ?>
                                             </div>
                                         </div>
 
