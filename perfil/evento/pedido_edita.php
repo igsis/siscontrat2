@@ -16,29 +16,29 @@ if (isset($_POST['adicionaLider'])) {
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
-if (isset($_POST['trocaPf'])) {
+if(isset($_POST['trocaPf'])){
     $_SESSION['idPedido'] = $_POST['idPedido'];
     $idPedido = $_SESSION['idPedido'];
     $idPessoa = $_POST['idPf'] ?? $_POST['idPessoa'];
     $trocaPf = $con->query("UPDATE pedidos SET pessoa_fisica_id = $idPessoa WHERE id = $idPedido AND origem_tipo_id = 1");
-    if ($trocaPf) {
+    if($trocaPf){
         $deletaPj = $con->query("UPDATE pedidos SET pessoa_juridica_id = null, pessoa_tipo_id = 1 WHERE id = $idPedido AND origem_tipo_id = 1");
         $mensagem = mensagem('success', 'Proponente trocado com sucesso!');
-    } else {
+    }else{
         $mensagem = mensagem('danger', 'Erro ao trocar proponente! Tente novamente.');
     }
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
-if (isset($_POST['trocaPj'])) {
+if(isset($_POST['trocaPj'])){
     $_SESSION['idPedido'] = $_POST['idPedido'];
     $idPedido = $_SESSION['idPedido'];
     $idPessoa = $_POST['idPj'] ?? $_POST['idPessoa'];
     $trocaPj = $con->query("UPDATE pedidos SET pessoa_juridica_id = $idPessoa WHERE id = $idPedido AND origem_tipo_id = 1");
-    if ($trocaPj) {
+    if($trocaPj){
         $deletaPf = $con->query("UPDATE pedidos SET pessoa_fisica_id = null, pessoa_tipo_id = 2 WHERE id = $idPedido AND origem_tipo_id = 1");
         $mensagem = mensagem('success', 'Proponente trocado com sucesso!');
-    } else {
+    }else{
         $mensagem = mensagem('danger', 'Erro ao trocar proponente! Tente novamente.');
     }
     $pedido = recuperaDados("pedidos", "id", $idPedido);
@@ -66,7 +66,7 @@ if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
             $_SESSION['idPedido'] = recuperaUltimo("pedidos");
             $idPedido = $_SESSION['idPedido'];
             $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
-            $queryContratado = mysqli_query($con, $sqlContratado);
+            $queryContratado = mysqli_query($con,$sqlContratado);
         } else {
             echo $sqlFirst;
         }
@@ -173,7 +173,7 @@ if (isset($pedido['numero_parcelas'])) {
     }
 }
 
-if (isset($_POST['gravarValorEquipamento'])) {
+if(isset($_POST['gravarValorEquipamento'])){
     $valoresEquipamentos = $_POST['valorEquipamento'];
     $equipamentos = $_POST['equipamentos'];
     $idPedido = $_SESSION['idPedido'];
@@ -181,7 +181,7 @@ if (isset($_POST['gravarValorEquipamento'])) {
     $sql_delete = "DELETE FROM valor_equipamentos WHERE pedido_id = '$idPedido'";
     mysqli_query($con, $sql_delete);
 
-    for ($i = 0; $i < count($valoresEquipamentos); $i++) {
+    for ($i = 0; $i < count($valoresEquipamentos); $i++){
         $valor = dinheiroDeBr($valoresEquipamentos[$i]);
         $idLocal = $equipamentos[$i];
 
@@ -223,7 +223,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         }
     }
 }
-
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -285,14 +284,14 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                         <div class="row">
                                             <div class="form-group col-md-8">
                                                 <label for="verba_id">Verba *</label>
-                                                <select name="verba_id" id="verba_id" class="form-control">
+                                                <select class="form-control" id="verba_id" name="verba_id" required>
                                                     <option value="">Selecione...</option>
                                                     <?php
                                                     geraOpcao("verbas", $pedido['verba_id'])
                                                     ?>
-
                                                 </select>
                                             </div>
+
                                             <?php
                                             if ($pedido['origem_tipo_id'] != 2) {
                                                 $readonly = 'readonly';
@@ -304,7 +303,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                                 <label for="verba_id">Valor Total</label>
                                                 <input type="text" onkeypress="return(moeda(this, '.', ',', event))"
                                                        id="valor_total" name="valor_total" class="form-control"
-                                                       value="<?= dinheiroParaBr($pedido['valor_total']) ?>" <?= $readonly ?>>
+                                                       value="<?= dinheiroParaBr($pedido['valor_total']) ?>" <?=$readonly?>>
                                             </div>
                                         </div>
                                         <?php
@@ -313,8 +312,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label for="numero_parcelas">Número de Parcelas *</label>
-                                                    <select class="form-control" id="numero_parcelas"
-                                                            name="numero_parcelas"
+                                                    <select class="form-control" id="numero_parcelas" name="numero_parcelas"
                                                             required>
                                                         <option value="">Selecione...</option>
                                                         <?php
@@ -343,21 +341,11 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label for="numero_parcelas">Número de Parcelas *</label>
-                                                    <select class="form-control" id="numero_parcelas"
-                                                            name="numero_parcelas"
+                                                    <select class="form-control" id="numero_parcelas" name="numero_parcelas"
                                                             required>
                                                         <option value="">Selecione...</option>
                                                         <?php
-
-                                                        if ($pedido['numero_parcelas'] == 3) {
-                                                            $option = 4;
-                                                        } elseif ($pedido['numero_parcelas'] == 4) {
-                                                            $option = 3;
-                                                        } else {
-                                                            $option = $pedido['numero_parcelas'];
-                                                        }
-
-                                                        geraOpcaoParcelas("oficina_opcoes", $option);
+                                                        geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']);
                                                         ?>
                                                     </select>
                                                 </div>
@@ -373,8 +361,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                         <div class="row">
                                             <div class="form-group col-md-6">
                                                 <label for="forma_pagamento">Forma de pagamento *</label><br/>
-                                                <textarea id="forma_pagamento" name="forma_pagamento"
-                                                          class="form-control"
+                                                <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
                                                           rows="8"><?= $pedido['forma_pagamento'] ?></textarea>
                                             </div>
                                             <div class="form-group col-md-6">
@@ -386,14 +373,13 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <label for="observacao">Observação</label>
-                                                <input type="text" id="observacao" name="observacao"
-                                                       class="form-control"
+                                                <input type="text" id="observacao" name="observacao" class="form-control"
                                                        maxlength="255" value="<?= $pedido['observacao'] ?>">
                                             </div>
                                         </div>
-                                        <input type="hidden" name="idPedido" value="">
-                                        <input type="hidden" name="tipoPessoa" value="">
-                                        <input type="hidden" name="idProponente" value="">
+                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                        <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
+                                        <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
                                         <ul class="list-inline pull-right">
                                             <li>
                                                 <a class="btn btn-primary next-step">Proxima etapa <span
@@ -416,10 +402,8 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                                     </div>
                                                     <div class="form-group col-md-2"><label><br></label>
                                                         <form method="POST" action="<?= $link_edita ?>" role="form">
-                                                            <input type="hidden" name="idProponente"
-                                                                   value="<?= $idProponente ?>">
-                                                            <button type="submit" name="editProponente"
-                                                                    class="btn btn-primary btn-block">
+                                                            <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
+                                                            <button type="submit" name="editProponente" class="btn btn-primary btn-block">
                                                                 Editar Proponente
                                                             </button>
                                                         </form>
@@ -452,7 +436,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             </li>
                                         </ul>
                                     </div>
-
+                                    <!-- líderes -->
                                     <?php
                                     //if($pedido['pessoa_tipo_id'] == 2){
                                     $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
@@ -461,7 +445,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             WHERE a.publicado = 1 AND a.evento_id = '" . $_SESSION['idEvento'] . "'";
                                     $query_atracao = mysqli_query($con, $sql_atracao);
                                     ?>
-
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
                                         <h3 class="hs">3. Líder</h3>
                                         <div class="row">
@@ -518,6 +501,9 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             </li>
                                         </ul>
                                     </div>
+                                    <?php
+                                    //}
+                                    ?>
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-4">
                                         <h3>4. Parecer artístico</h3>
                                         <div class="container">
@@ -564,57 +550,69 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                         $queryEquipamento = mysqli_query($con, $sqlEquipamento);
                                         $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
                                         ?>
+
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <table class="table table-bordered table-striped">
-                                                    <thead>
-                                                    <tr>
-                                                        <th width="80%">Equipamento</th>
-                                                        <th>Valor</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <?php
-                                                    if ($numRowsEquipamento == 0) {
-                                                        ?>
-                                                        <tr>
-                                                            <td width="100%" class="text-center" colspan="2">Não existe equipamentos cadastrados
-                                                            </td>
-                                                        </tr>
-                                                        <?php
-                                                    } else {
+                                                <form method="POST" action="?perfil=evento&p=pedido_edita" name="form-valor-equipamento"
+                                                      role="form">
+                                                    <div class="form-group">
+                                                        <table class="table table-bordered table-striped">
+                                                            <thead>
+                                                            <tr>
+                                                                <th width="80%">Equipamento</th>
+                                                                <th>Valor</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <?php
+                                                            if ($numRowsEquipamento == 0) {
+                                                                ?>
+                                                                <tr>
+                                                                    <td width="100%" class="text-center" colspan="2">
+                                                                        Não há ocorrências cadastradas!
+                                                                        <br>Por Favor, retorne em atração e cadastre.
+                                                                    </td>
+                                                                </tr>
+                                                                <?php
+                                                            } else {
 
-                                                        while ($equipamento = mysqli_fetch_array($queryEquipamento)) {
-                                                            $idEquipamento = $equipamento['local_id'];
+                                                                while ($equipamento = mysqli_fetch_array($queryEquipamento)) {
+                                                                    $idEquipamento = $equipamento['local_id'];
 
-                                                            $sql_valor = "SELECT * FROM valor_equipamentos WHERE pedido_id = '$idPedido' AND local_id = '$idEquipamento'";
-                                                            $queryValor = mysqli_query($con, $sql_valor);
-                                                            $arrayValorEquipamento = mysqli_fetch_array($queryValor);
+                                                                    $sql_valor = "SELECT * FROM valor_equipamentos WHERE pedido_id = '$idPedido' AND local_id = '$idEquipamento'";
+                                                                    $queryValor = mysqli_query($con, $sql_valor);
+                                                                    $arrayValorEquipamento = mysqli_fetch_array($queryValor);
 
+                                                                    ?>
+                                                                    <tr>
+                                                                        <td><?= $equipamento['local'] ?></td>
+                                                                        <input type="hidden" value="<?= $equipamento['local_id'] ?>">
+                                                                        <td>
+                                                                            <input type="text" class="form-control" name="valorEquipamento[]"
+                                                                                   value="<?= dinheiroParaBr($arrayValorEquipamento['valor']) ?>" onkeyup="somaValorEquipamento()"
+                                                                                   onkeypress="return(moeda(this, '.', ',', event));">
+                                                                            <input type="hidden" value="<?= $equipamento['local_id'] ?>" name="equipamentos[]">
+                                                                        </td>
+                                                                    </tr>
+                                                                    <?php
+                                                                }
+                                                            }
                                                             ?>
                                                             <tr>
-                                                                <td><?= $equipamento['local'] ?></td>
-                                                                <input type="hidden" value="<?= $equipamento['local_id'] ?>">
-                                                                <td>
-                                                                    <input type="text" class="form-control" name="valorEquipamento[]"
-                                                                           value="<?= dinheiroParaBr($arrayValorEquipamento['valor']) ?>" onkeyup="somaValorEquipamento()"
-                                                                           onkeypress="return(moeda(this, '.', ',', event));">
-                                                                    <input type="hidden" value="<?= $equipamento['local_id'] ?>" name="equipamentos[]">
-                                                                </td>
+                                                                <td width="50%">Valor Total: R$ <?= dinheiroParaBr($pedido['valor_total']) ?></td>
+                                                                <td width="50%">Valor Faltante: R$ <span id="valorFaltante"></span></td>
                                                             </tr>
-                                                            <?php
-                                                        }
-                                                    }
-                                                    ?>
-                                                    <tr>
-                                                        <td width="50%">Valor Total: R$ <?= dinheiroParaBr($pedido['valor_total']) ?></td>
-                                                        <td width="50%">Valor Faltante: R$ <span id="valorFaltante"></span></td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                                <input type="hidden" name="idPedido" value="">
-                                                <input type="hidden" name="tipoPessoa" value="">
-                                                <input type="hidden" name="idProponente" value="">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="row col-md-offset-4 col-md-4">
+                                                        <div class="box-footer">
+                                                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                                            <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
+                                                            <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                         <ul class="list-inline pull-right">
@@ -624,7 +622,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                                     Voltar</a>
                                             </li>
                                             <li>
-                                                <a class="btn btn-primary">Finalizar</a>
+                                                <button type="submit" class="btn btn-primary">Finalizar</button>
                                             </li>
                                         </ul>
                                     </div>
@@ -932,7 +930,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             } else {
                 $("#data_kit_pagamento").attr("required", false);
                 editarParcelas.style.display = "block";
-                dataKit.style.display = "none";
+                // dataKit.style.display = "none";
             }
         } else {
             $("#numero_parcelas").attr('title', 'Grave o valor do pedido para poder editar as parcelas!');
@@ -1014,6 +1012,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                         valorFaltando += parseFloat(valor);
                     }
 
+
                     $('#modalOficina').find('#valor_restante').html(valorFaltando.toFixed(2).replace('.', ','));
 
                     if ($("#valor_restante") != 0) {
@@ -1083,6 +1082,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                 var somando = 0;
 
                 console.log(valores);
+
 
                 if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
                     for (var count = 0; count < parcelasSelected; count++) {
@@ -1218,11 +1218,10 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                 horas: horas [count],
                             });
                         }
-
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
                                 // location.reload(true);
-                                //$('#modalOficina').slideDown('slow');
+                                // $('#modalOficina').slideDown('slow');
                             });
                     })
                     .fail(function () {
@@ -1355,6 +1354,8 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                 //location.reload(true);
                                 $('#modalOficina').slideDown("slow");
                             });
+
+
                     })
                     .fail(function () {
                         swal("danger", "Erro ao gravar");
@@ -1401,11 +1402,17 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                             });
                         }
 
+                        $('#forma_pagamento').val() == '';
+                        for(let conta = 1; conta<= parcelas; conta ++){
+                            $('#forma_pagamento').append(conta+'° parcela R$ '+valores[conta]+ '\n')
+                        }
                         swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                             .then(() => {
                                 //location.reload(true);
                                 $('#modalParcelas').slideDown("slow");
                             });
+
+
                     })
                     .fail(function () {
                         swal("danger", "Erro ao gravar");

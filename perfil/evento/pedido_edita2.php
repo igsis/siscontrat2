@@ -270,10 +270,10 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                            id="valor_total" name="valor_total" class="form-control"
                                            value="<?= dinheiroParaBr($pedido['valor_total']) ?>" <?=$readonly?>>
                                 </div>
+                            </div>
                                 <?php
                                 if (isset($oficina)) {
                                 ?>
-                            </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="numero_parcelas">Número de Parcelas *</label>
