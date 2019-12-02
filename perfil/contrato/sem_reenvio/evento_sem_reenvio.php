@@ -63,7 +63,7 @@ $rows = mysqli_num_rows($query);
                                     <tr>
                                         <td>
                                             <form action="#" method="POST">
-                                                <input type="hide" name="idEvento" id="idEvento" value="<?= $evento['id'] ?>">
+                                                <input type="hidden" name="idEvento" id="idEvento" value="<?= $evento['id'] ?>">
                                                 <button type="button" class="btn btn-link"><?= $evento['protocolo'] ?></button>
                                             </form>
                                         </td>
@@ -72,7 +72,7 @@ $rows = mysqli_num_rows($query);
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= exibirDataBr($evento['data_reabertura']) ?></td>
                                         <td><?= recuperaDados('usuarios', 'id', $evento['usuario_reabertura_id'])['nome_completo']; ?></td>
-                                        <td><?= $recuperaDados('usuarios', 'id', $evento['operador_id'])['nome_completo']; ?></td>
+                                        <td><?= recuperaDados('usuarios', 'id', $evento['operador_id'])['nome_completo']; ?></td>
                                     </tr>
                                     <?php
                                 }

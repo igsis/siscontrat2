@@ -1,9 +1,30 @@
 <?php
+
+if(isset($_SESSION['reabertura'])){
+    $con = bancoMysqli();
+    $idEvento = $_SESSION['idEvento'];
+    $now = date('Y-m-d H:i:s');
+    $idUsuario = $_SESSION['idUser'];
+    $sql = "INSERT INTO evento_reaberturas (evento_id, data_reabertura, usuario_reabertura_id) VALUES ('$idEvento', '$now', '$idUsuario')";
+
+    if (mysqli_query($con, $sql)) 
+        $mensagem = mensagem("success", "Reabertura do evento realizada com sucesso!");
+    else 
+        $mensagem = mensagem("danger", "Erro ao efetuar a reabertura do evento! Tente novamente.");
+}
+
+unset($_SESSION['idEvento']);
 unset($_SESSION['idPedido']);
+unset($_SESSION['reabertura']);
 ?>
 <div class="content-wrapper">
     <section class="content">
         <h2 class="page-header">Busca</h2>
+        <div class="row" align="center">
+            <?php if (isset($mensagem)) {
+                echo $mensagem;
+            }; ?>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">

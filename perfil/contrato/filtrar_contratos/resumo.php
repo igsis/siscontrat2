@@ -290,6 +290,11 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right">
                                 Salvar
                             </button>
+
+                            <a href="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos">
+                                <button type="button" class="btn btn-info" name="reabertura" id="reabertura">Reabertura</button>
+                            </a>
+
                             <a href="?perfil=contrato&p=filtrar_contratos&sp=area_impressao">
                                 <button type="button" class="btn btn-default">Ir para área de impressão</button>
                             </a>
@@ -447,3 +452,12 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
         ?>
     </section>
 </div>
+
+<script>
+    //seta um qualquer para session para para saber q é para realizar uma reabertura
+    $('#reabertura').on('click', function(){
+        <?php
+            $_SESSION['reabertura'] = 1;
+        ?>
+    });
+</script>
