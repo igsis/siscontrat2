@@ -65,7 +65,7 @@ $evento = $con->query($sql)->fetch_array();
                     ?>
                     <tr>
                         <th width="30%">Local:</th>
-                        <td><?= $local['local']?></td>
+                        <td><?= $local['local'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Valor:</th>
@@ -73,7 +73,7 @@ $evento = $con->query($sql)->fetch_array();
                     </tr>
                     <tr>
                         <th width="30%">Período:</th>
-                        <td><?= retornaPeriodoNovo($idEvento,'ocorrencias')?></td>
+                        <td><?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?></td>
 
                     </tr>
                     <tr>
@@ -95,15 +95,22 @@ $evento = $con->query($sql)->fetch_array();
                     </tr>
                 </table>
                 <div class="pull-left">
-                <?php // ADICIONAR ANCORA PARA VOLTAR ?>
+                    <?php // ADICIONAR ANCORA PARA VOLTAR ?>
                 </div>
                 <div class="pull-right">
                     <form action="?perfil=juridico&p=tipo_modelo&sp=detalhes_evento" method="post">
-                        <input type="hidden" name="idEvento" value="<?= $idEvento?>">
-                        <input type="hidden" name="idModelo" value="<?= $modelo?>">
-                        <button type="submit" name="detalheEvento" class="btn btn-info pull-right">Detalhes evento</button>
+                        <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                        <input type="hidden" name="idModelo" value="<?= $modelo ?>">
+                        <button type="submit" name="detalheEvento" class="btn btn-info pull-right">Detalhes evento
+                        </button>
                     </form>
                 </div>
+                <form action="#" method="POST">
+                    <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                    <input type="hidden" name="idModelo" value="<?= $modelo ?>">
+                    <button type="submit" name="geraPadrao" class="btn btn-info pull-left">Gravar</button>
+                </form>
+
             </div>
         </div>
     </section>
