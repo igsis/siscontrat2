@@ -127,7 +127,6 @@ if (isset($_POST['busca'])) {
                                         <?php }
                                         echo "<td> </td>";
                                         ?>
-
                                     </tr>
                                     <?php
                                 }

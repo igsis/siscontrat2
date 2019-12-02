@@ -53,8 +53,10 @@ if (isset($_POST['busca'])) {
     AND e.evento_status_id != 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1 
+    AND p.operador_id = null
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso";
+
     $query = mysqli_query($con, $sql);
 }
 
