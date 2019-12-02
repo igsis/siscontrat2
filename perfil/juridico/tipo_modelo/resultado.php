@@ -32,7 +32,6 @@ $sql = "SELECT
     
     WHERE p.publicado = 1 AND p.origem_tipo_id AND p.origem_id = $idEvento";
 $evento = $con->query($sql)->fetch_array();
-echo $sql
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -72,15 +71,10 @@ echo $sql
                         <th width="30%">Valor:</th>
                         <td><?= $evento['valor_total'] ?></td>
                     </tr>
-                    <?php
-                    $sqlPeriodo = "SELECT data_inicio, data_fim
-                    FROM ocorrencias 
-                    WHERE publicado = 1";
-                    $periodo = $con->query($sqlPeriodo)->fetch_array();
-                    ?>
                     <tr>
                         <th width="30%">Período:</th>
-                        <td>De <?= $periodo['data_inicio'] ?> a <?= $periodo['data_fim'] ?></td>
+                        <td><?= retornaPeriodoNovo($idEvento,'ocorrencias')?></td>
+
                     </tr>
                     <tr>
                         <th width="30%">Forma de pagamento:</th>
@@ -101,14 +95,14 @@ echo $sql
                     </tr>
                 </table>
                 <div class="pull-left">
-                    <a href="?perfil=juridico&p=filtrar_formacao&sp=pesquisa_formacao">
-                        <button type="button" class="btn btn-default">Voltar a pesquisa</button>
-                    </a>
+                <?php // ADICIONAR ANCORA PARA VOLTAR ?>
                 </div>
                 <div class="pull-right">
-                    <a href="?perfil=juridico&p=tipo_modelo&sp=detalhes_evento">
-                        <button type="button" class="btn btn-default">Detalhes do evento</button>
-                    </a>
+                    <form action="?perfil=juridico&p=tipo_modelo&sp=detalhes_evento" method="post">
+                        <input type="hidden" name="idEvento" value="<?= $idEvento?>">
+                        <input type="hidden" name="idModelo" value="<?= $modelo?>">
+                        <button type="submit" name="detalheEvento" class="btn btn-info pull-right">Detalhes evento</button>
+                    </form>
                 </div>
             </div>
         </div>

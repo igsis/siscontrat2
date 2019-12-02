@@ -78,24 +78,25 @@ $usuario = recuperaDados('usuarios', 'id', $idUser);
 
                                 <div class="form-group col-md-5">
                                     <label for="email">Email: </label>
-                                    <input type="email" class="form-control" id="email" name="email" maxlength="60"
-                                           required value="<?= $usuario['email'] ?>">
+                                    <input type="email" class="form-control" id="email" name="email" maxlength="60" required value="<?= $usuario['email'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone: </label>
-                                    <input type="text" class="form-control" id="telefone" name="telefone"
-                                           value="<?= $usuario['telefone'] ?>">
+                                    <input type="text" class="form-control" id="telefone" name="telefone"  maxlength="15" onkeyup="mascara( this, mtel );" value="<?= $usuario['telefone'] ?>">
                                 </div>
                             </div>
 
-                            <div class="row ">
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="senhaAtual">Senha atual*: </label>
-                                    <input type="password" class="form-control" id="senhaAtual" name="senhaAtual"
-                                           required>
+                                    <input type="password" class="form-control" id="senhaAtual" name="senhaAtual" required>
                                 </div>
+                            </div>
 
+                            <h3>Alteração de senha:</h3>
+
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="novaSenha">Nova senha: </label>
                                     <input type="password" class="form-control" id="novaSenha" name="novaSenha">
@@ -103,24 +104,40 @@ $usuario = recuperaDados('usuarios', 'id', $idUser);
 
                                 <div class="form-group col-md-4">
                                     <label for="confirmaSenha">Confirmar Senha: </label>
-                                    <input type="password" class="form-control" id="confirmaSenha" name="confirmaSenha"
-                                           onblur="comparaSenhas()" onkeypress="comparaSenhas()">
+                                    <input type="password" class="form-control" id="confirmaSenha" name="confirmaSenha" onblur="comparaSenhas()" onkeypress="comparaSenhas()">
                                 </div>
                             </div>
-
-                                <div class="form-group">
-                                    <label for="ultimo_acesso">Último acesso: </label>
-                                    <input type="text" readonly class="form-control" id="ultimo_acesso"
-                                           name="ultimo_acesso" value="<?= exibirDataBr($usuario['ultimo_acesso']) ?>">
-                                </div>
 
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-default">Cancelar</button>
-                                <button type="submit" name="atualizar" id="atualizar" class="btn btn-info pull-right">
-                                    Atualizar
-                                </button>
+                                <button type="submit" name="atualizar" id="atualizar" class="btn btn-info pull-right">Atualizar</button>
                             </div>
+                        </div>
                     </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-default">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-3"><b>Autorizado como fiscal?</b>
+                                <?php
+                                if ($usuario['fiscal'] == 1){
+                                    echo "Sim";
+                                } else{
+                                    echo "Não";
+                                }
+                                ?>
+                            </div>
+                            <?php
+                            $perfil = recuperaDados("perfis","id",$usuario['perfil_id']);
+                            ?>
+                            <div class="col-md-3"><b>Perfil de acesso:</b> <?= $perfil['descricao'] ?></div>
+                            <div class="col-md-3"><b>Código de acesso:</b> <?= $perfil['token'] ?></div>
+                            <div class="col-md-3"><b>Data do cadastro:</b> <?= exibirDataHoraBr($usuario['data_cadastro']) ?></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

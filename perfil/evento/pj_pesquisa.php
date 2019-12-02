@@ -11,10 +11,34 @@ $resultado = "<td></td>";
 $procurar = NULL;
 
 
+if (isset($_POST['troca_pj'])) {
+    $idPj = $_POST['idProponente'];
+    $idPedido = $_POST['idPedido'];
+}
+
 
 if (isset($_POST['procurar'])){
-
     $procurar = $_POST['procurar'];
+    $idPj = $_POST['idProponente'] ?? NULL;
+    $idPedido = $_POST['idPedido'] ?? NULL;
+
+    if($idPedido != NULL && $idPj != NULL){
+            $botaoSelecionar = "<input type='submit' name='trocaPj' class='btn btn-primary' value='Selecionar como novo proponente'>";
+            $botaoAdd = "<button class='btn btn-primary' name='adicionaPj' type='submit'>
+                                <i class='glyphicon glyphicon-plus'>        
+                                </i>Adicionar
+                            </button>";
+            $actionEdita = "?perfil=evento&p=pedido_edita";
+            $actionCadastra = "?perfil=evento&p=pj_cadastro";
+    }else{
+            $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
+            $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
+                                <i class='glyphicon glyphicon-plus'>        
+                                </i>Adicionar
+                            </button>";
+            $actionEdita = "?perfil=evento&p=pj_edita";
+            $actionCadastra = "?perfil=evento&p=pj_cadastro";
+        }
 
     if ($procurar != NULL) {
 
@@ -38,9 +62,10 @@ if (isset($_POST['procurar'])){
                        $resultado .= "<td>".$pessoa['cnpj']."</td>";
                        $resultado .= "<td>".$pessoa['email']."</td>";
                        $resultado .= "<td>
-                                     <form action='?perfil=evento&p=pj_edita' method='post'>
+                                     <form action='$actionEdita' method='post'>
                                         <input type='hidden' name='idPj' value='".$pessoa['id']."'>
-                                        <input type='submit' name='carregar' class='btn btn-primary' name='selecionar' value='Selecionar'>
+                                        <input type='hidden' name='idPedido' value='$idPedido'>
+                                        $botaoSelecionar
                                      </form>
                                </td>";
                        $resultado .= "</tr>";
@@ -53,12 +78,10 @@ if (isset($_POST['procurar'])){
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=evento&p=pj_cadastro'>
+                        <form method='post' action='$actionCadastra'>
                             <input type='hidden' name='cnpj' value='$procurar'>
-                            <button class=\"btn btn-primary\" name='adicionar' type='submit' id='adicionar'>
-                                <i class=\"glyphicon glyphicon-plus\">        
-                                </i>Adicionar
-                            </button>
+                            <input type='hidden' name='idPedido' value='$idPedido'>
+                           $botaoAdd
                         </form>
                       </td>";
                }
@@ -96,6 +119,8 @@ if (isset($_POST['procurar'])){
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
                                 <div class="input-group">
+                                    <input type="hidden" name="idPedido" value="<?=$idPedido ?? NULL ?>">
+                                    <input type="hidden" name="idProponente" value="<?=$idPj ?? NULL ?>">
                                     <input type="text" class="form-control" id="cnpj" name="procurar" value="<?=$procurar?>" data-mask="00.000.000/0000-00">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>

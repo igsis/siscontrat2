@@ -7,25 +7,11 @@ $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pas
 $http = $server . "/pdf/";
 $link_facc = $http . "rlt_fac_pf.php";
 $tipoPessoa = 1;
-
+$liderOn = 0;
 
 if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
 }
-
-if (isset($_POST['editProponente'])) {
-    $idPedido = $_SESSION['idPedido'];
-    $voltar = "<form action='?perfil=evento&p=pedido_edita' method='post'>
-                    <input type='hidden' name='idProponente' value='$idPf'>
-                    <input type='hidden' name='tipoPessoa' value='$tipoPessoa'>
-                        <button type='submit' name='idPedido' id='idPedido' value='$idPedido' class='btn btn-default'>Voltar</button>
-                    </form>";
-} else {
-    $voltar = "<form action='?perfil=evento&p=pf_pesquisa' method='post'>
-                        <button type='submit' class='btn btn-default'>Voltar</button>
-                    </form>";
-}
-
 
 if (isset($_POST['cadastraLider'])) {
     $idPedido = $_POST['idPedido'];
@@ -43,8 +29,7 @@ if (isset($_POST['cadastraLider'])) {
     }
 }
 
-
-if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
+if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider'])) {
     $nome = addslashes($_POST['nome']);
     $nomeArtistico = addslashes($_POST['nomeArtistico']);
     $rg = $_POST['rg'] ?? NULL;
@@ -70,19 +55,20 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastr
     $conta = $_POST['conta'] ?? NULL;
     $data = date("y-m-d h:i:s");
 }
-if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
+
+if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
     $mensagem = "";
     $sql = "INSERT INTO siscontrat.`pessoa_fisicas` (nome, nome_artistico, rg, passaporte, cpf, ccm, data_nascimento, nacionalidade_id, email, ultima_atualizacao) VALUES('$nome','$nomeArtistico','$rg','$passaporte','$cpf','$ccm','$dtNascimento','$nacionalidade','$email','$data')";
     if (mysqli_query($con, $sql)) {
         $idPf = recuperaUltimo("pessoa_fisicas");
-// cadastrar o telefone de pf
+        // cadastrar o telefone de pf
         foreach ($telefones AS $telefone) {
             if (!empty($telefone)) {
                 $sqlTel = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone, publicado) VALUES ('$idPf','$telefone',1)";
                 mysqli_query($con, $sqlTel);
             }
         }
-// cadastrar endereco de pf
+        // cadastrar endereco de pf
         $sqlEndereco = "INSERT INTO pf_enderecos (pessoa_fisica_id, logradouro, numero, complemento, bairro, cidade, uf, cep) VALUES ('$idPf','$logradouro','$numero', '$complemento', '$bairro', '$cidade', '$uf', '$cep')";
         if (!mysqli_query($con, $sqlEndereco)) {
             $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlEndereco;
@@ -116,6 +102,7 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_PO
         }
 
         if (isset($_POST['cadastraComLider'])) {
+            $liderOn = 1;
             $idPedido = $_POST['idPedido'];
             $idAtracao = $_POST['idAtracao'];
 
@@ -130,23 +117,6 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_PO
             }
         }
 
-        if (isset($_POST['atualizaPf'])) {
-            $idPedido = $_POST['idPedido'];
-            $sqlTestaTroca = "SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 1";
-            $queryTestaTroca = mysqli_query($con, $sqlTestaTroca);
-            $row = mysqli_num_rows($queryTestaTroca);
-            if ($row != 0) {
-                $trocaPf = "<div class='form-group col-md-3 pull-right'>
-                            <form method='POST' action='?perfil=evento&p=pedido_edita' role='form'>
-                                <input type='hidden' name='idPedido' value='$idPedido'>
-                                <input type='hidden' name='idPf' value='$idPf'>
-                                <button type='submit' name='trocaPf' class='btn btn-info btn-block'> Ir ao pedido de contratação </button>
-                            </form>
-                        </div>";
-            }
-        }
-
-
         $mensagem .= mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
     } else {
@@ -158,18 +128,18 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_PO
 if (isset($_POST['edita'])) {
     $mensagem = "";
     $idPf = $_POST['idPf'];
-    $sql = "UPDATE siscontrat.`pessoa_fisicas` SET
-    nome = '$nome',
-    nome_artistico = '$nomeArtistico',
-    rg = '$rg',
-    passaporte = '$passaporte',
-    cpf = '$cpf',
-    ccm = '$ccm',
-    data_nascimento = '$dtNascimento',
-    nacionalidade_id = '$nacionalidade',
-    email = '$email',
-    ultima_atualizacao = '$data'
-    WHERE id = '$idPf'";
+    $sql = "UPDATE siscontrat.`pessoa_fisicas` SET 
+                   nome = '$nome',
+                   nome_artistico = '$nomeArtistico',
+                   rg = '$rg',
+                   passaporte = '$passaporte',
+                   cpf = '$cpf',
+                   ccm = '$ccm',
+                   data_nascimento = '$dtNascimento',
+                   nacionalidade_id = '$nacionalidade',
+                   email = '$email',
+                   ultima_atualizacao = '$data'
+                   WHERE id = '$idPf'";
 
     if (mysqli_query($con, $sql)) {
         //edita telefone
@@ -342,8 +312,7 @@ if (isset($_POST["enviar"])) {
         $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
 
         if ($f_size > 5242880) {
-            $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05
-    MB.</strong>");
+            $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
 
         } else {
             if ($nome_arquivo != "") {
@@ -362,10 +331,9 @@ if (isset($_POST["enviar"])) {
 
                         if ($query) {
                             $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                            echo "
-    <script>
-        swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');
-    </script>";
+                            echo "<script>
+                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
+                            </script>";
                             gravarLog($sql_insere_arquivo);
                         } else {
                             $mensagem = mensagem("danger", "Erro ao gravar no banco");
@@ -374,10 +342,9 @@ if (isset($_POST["enviar"])) {
                         $mensagem = mensagem("danger", "Erro no upload");
                     }
                 } else {
-                    echo "
-    <script>
-        swal(\"Erro no upload! Anexar documentos somente no formato PDF.\", \"\", \"error\");                             
-    </script>";
+                    echo "<script>
+                            swal(\"Erro no upload! Anexar documentos somente no formato PDF.\", \"\", \"error\");                             
+                        </script>";
                 }
             }
         }
@@ -409,8 +376,6 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
 $sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
 $atracao = mysqli_query($con, $sql);
-
-include "includes/menu_interno.php";
 ?>
 
 <script language="JavaScript">
@@ -440,7 +405,7 @@ include "includes/menu_interno.php";
 
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=evento&p=pf_edita" method="post">
+                        <form action="?perfil=contrato&p=filtrar_sem_operador&sp=edita_pf" method="post">
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label for="nome">Nome: *</label>
@@ -456,19 +421,9 @@ include "includes/menu_interno.php";
                             </div>
                             <div class="row">
                                 <?php
-                                if (empty($pf['cpf'])) {?>
-                                    <div class="form-group col-md-12">
-                                        <label for="passaporte">Passaporte:</label>
-                                        <input type="text" class="form-control" name="passaporte" maxlength="70"
-                                               value="<?= $pf['passaporte'] ?>" disabled>
-                                    </div>
-
-                                    <div class="form-group col-md-6">
-                                    <?php
+                                if (empty($pf['cpf'])) {
                                     anexosNaPagina(62, $idPf, "modal-passaporte", "Passaporte");
-                                    ?>
-                                    </div>
-                                <?php } else {
+                                } else {
                                     ?>
                                     <div class="form-group col-md-2">
                                         <label for="rg">RG: *</label>
@@ -482,8 +437,7 @@ include "includes/menu_interno.php";
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="ccm">CCM:</label>
-                                        <input type="text" name="ccm" class="form-control"
-                                               placeholder="Digite o CCM"
+                                        <input type="text" name="ccm" class="form-control" placeholder="Digite o CCM"
                                                maxlength="11" value="<?= $pf['ccm'] ?>">
                                     </div>
                                     <?php
@@ -508,17 +462,17 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-4">
                                     <?php
                                     if (!empty($pf['cpf'])){
-                                    anexosNaPagina(1, $idPf, "modal-rg", "RG");
+                                    anexosNaPagina(2, $idPf, "modal-rg", "RG");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(2, $idPf, "modal-cpf", "CPF");
+                                    anexosNaPagina(3, $idPf, "modal-cpf", "CPF");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(30, $idPf, "modal-ccm", "FDC - CCM");
+                                    anexosNaPagina(31, $idPf, "modal-ccm", "FDC - CCM");
                                     }
                                     ?>
                                 </div>
@@ -546,14 +500,12 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
                                     <input type="number" name="numero" class="form-control" min="1"
-                                           placeholder="Digite o número" required
-                                           value="<?= $endereco['numero'] ?>">
+                                           placeholder="Digite o número" required value="<?= $endereco['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="complemento">Complemento: </label>
                                     <input type="text" name="complemento" class="form-control" maxlength="20"
-                                           placeholder="Digite o complemento"
-                                           value="<?= $endereco['complemento'] ?>">
+                                           placeholder="Digite o complemento" value="<?= $endereco['complemento'] ?>">
                                 </div>
                             </div>
                             <div class="row">
@@ -577,7 +529,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(3, $idPf, "modal-endereco", "Comprovante de endereço");
+                                    anexosNaPagina(4, $idPf, "modal-endereco", "Comprovante de endereço");
                                     ?>
                                 </div>
                             </div>
@@ -648,7 +600,7 @@ include "includes/menu_interno.php";
                                     </div>
                                     <div class="form-group col-md-3">
                                         <?php
-                                        anexosNaPagina(47, $idPf, "modal-drt", "DTR");
+                                        anexosNaPagina(60, $idPf, "modal-drt", "DTR");
                                         ?>
                                     </div>
                                     <?php
@@ -661,7 +613,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-3">
                                     <?php
-                                    anexosNaPagina(27, $idPf, "modal-nit", "NIT");
+                                    anexosNaPagina(25, $idPf, "modal-nit", "NIT");
                                     ?>
                                 </div>
                             </div>
@@ -721,16 +673,18 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(42, $idPf, "modal-facc", "FACC");
+                                    anexosNaPagina(51, $idPf, "modal-facc", "FACC");
                                     ?>
                                 </div>
                             </div>
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
-                                <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
-
+                                <button type="submit" name="edita" class="btn btn-info pull-right">Salvar</button>
+                                <a href="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos">
+                                    <button type='button' class='btn btn-default'>Voltar</button>
+                                    <a>
                         </form>
-                        <?= $voltar ?>
+
                     </div>
                 </div>
                 <!-- /.box-body -->
@@ -746,55 +700,33 @@ include "includes/menu_interno.php";
             <div class="box-body">
                 <div class="row">
                     <div class="form-group col-md-3">
-                        <form method="POST" action="?perfil=evento&p=pf_demais_anexos" role="form">
+                        <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=demais_anexos_pf"
+                              role="form">
                             <button type="submit" name="idPf" value="<?= $pf['id'] ?>"
                                     class="btn btn-info btn-block">Demais Anexos
                             </button>
                         </form>
                     </div>
-                    <?php if (isset($trocaPf)) {
+                    <div class="form-group col-md-3 pull-right">
+                        <?php
+                        $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
+                        $queryPedidos = mysqli_query($con, $sqlPedidos);
+                        $pedidos = mysqli_fetch_array($queryPedidos);
+                        ?>
 
-                        echo $trocaPf;
-
-                    } else { ?>
-
-                        <div class="form-group col-md-3 pull-right">
-                            <?php
-                            $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
-                            $queryPedidos = mysqli_query($con, $sqlPedidos);
-                            $pedidos = mysqli_fetch_array($queryPedidos);
-
-                            if (($pedidos['pessoa_tipo_id'] == 1) && ($pedidos['pessoa_fisica_id'] == $idPf)) {
-
-                                ?>
-                                <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                    <input type="hidden" name="pessoa_tipo_id" value="1">
-                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
-                                    <input type="hidden" name="idProponente" value="<?= $pf['id'] ?>">
-                                    <input type="hidden" name="tipoPessoa" value="1">
-                                    <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
-                                    <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
-                                        contratação
-                                    </button>
-                                </form>
-
-                                <?php
-                            } else {
-                                ?>
-                                <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                    <input type="hidden" name="pessoa_tipo_id" value="1">
-                                    <input type="hidden" name="pessoa_id" value="<?= $pf['id'] ?>">
-                                    <input type="hidden" name="valor" value="<?= $valorTotal ?>">
-                                    <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
-                                    <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
-                                        contratação
-                                    </button>
-                                </form>
-                                <?php
-                            }
-                            ?>
-                        </div>
-                    <?php } ?>
+                        <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=resumo" role="form">
+                            <input type="hidden" name="pessoa_tipo_id" value="1">
+                            <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
+                            <input type="hidden" name="idPf" value="<?= $pf['id'] ?>">
+                            <input type="hidden" name="tipoPessoa" value="1">
+                            <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                            <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
+                            <input type="hidden" name="liderOn" value="<?= $liderOn ?>">
+                            <button type="submit" name="selecionar" class="btn btn-info btn-block">Ir ao pedido de
+                                contratação
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
             <!-- /. box-body -->
@@ -803,13 +735,13 @@ include "includes/menu_interno.php";
 </div>
 
 <?php
-modalUploadArquivoUnico("modal-rg", "?perfil=evento&p=pf_edita", "RG", "rg", $idPf, "1");
-modalUploadArquivoUnico("modal-cpf", "?perfil=evento&p=pf_edita", "CPF", "cpf", $idPf, "1");
-modalUploadArquivoUnico("modal-ccm", "?perfil=evento&p=pf_edita", "FDC - CCM", "ccm", $idPf, "1");
-modalUploadArquivoUnico("modal-nit", "?perfil=evento&p=pf_edita", "NIT", "pis_pasep_", $idPf, "1");
-modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pf_edita", "FACC", "faq", $idPf, "1");
-modalUploadArquivoUnico("modal-drt", "?perfil=evento&p=pf_edita", "DRT", "drt", $idPf, "1");
-modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprovante de endereço", "residencia", $idPf, "1");
+modalUploadArquivoUnico("modal-rg", "?perfil=contrato&p=filtrar_sem_operador&sp=edita_pf", "RG", "rg", $idPf, "1");
+modalUploadArquivoUnico("modal-cpf", "?perfil=contrato&p=filtrar_sem_operador&sp=edita_pf", "CPF", "cpf", $idPf, "1");
+modalUploadArquivoUnico("modal-ccm", "?perfil=contrato&p=filtrar_sem_operador&sp=edita_pf", "FDC - CCM", "ccm", $idPf, "1");
+modalUploadArquivoUnico("modal-nit", "?perfil=contrato&p=filtrar_sem_operador&sp=edita_pf", "NIT", "pis_pasep_", $idPf, "1");
+modalUploadArquivoUnico("modal-facc", "?perfil=contrato&p=filtrar_sem_operador&sp=edita_pf", "faq", "faq", $idPf, "1");
+modalUploadArquivoUnico("modal-drt", "?perfil=contrato&p=filtrar_sem_operador&sp=edita_pf", "DRT", "drt", $idPf, "1");
+modalUploadArquivoUnico("modal-endereco", "?perfil=contrato&p=filtrar_sem_operador&sp=edita_pf", "Comprovante de endereço", "residencia", $idPf, "1");
 ?>
 
 </section>
@@ -829,7 +761,7 @@ modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprova
                 <p>Tem certeza que deseja excluir este arquivo?</p>
             </div>
             <div class="modal-footer">
-                <form action="?perfil=evento&p=pf_edita" method="post">
+                <form action="?perfil=contrato&p=filtrar_sem_operador&sp=edita_pf" method="post">
                     <input type="hidden" name="idArquivo" id="idArquivo" value="">
                     <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
                     <input type="hidden" name="apagar" id="apagar">
@@ -853,6 +785,7 @@ modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprova
 
     })
 </script>
+
 
 
 

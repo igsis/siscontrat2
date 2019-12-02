@@ -1,5 +1,5 @@
 <?php
-include "includes/menu_interno.php";
+
 $con = bancoMysqli();
 $conn = bancoPDO();
 date_default_timezone_set('America/Sao_Paulo');
@@ -14,20 +14,7 @@ if (isset($_POST['idPj']) || isset($_POST['idProponente'])) {
     $idPj = $_POST['idPj'] ?? $_POST['idProponente'];
 }
 
-if (isset($_POST['editProponente'])) {
-    $idPedido = $_SESSION['idPedido'];
-    $voltar = "<form action='?perfil=evento&p=pedido_edita' method='post'>
-                    <input type='hidden' name='idProponente' value='$idPj'>
-                    <input type='hidden' name='tipoPessoa' value='$tipoPessoa'>
-                        <button type='submit' name='idPedido' id='idPedido' value='$idPedido' class='btn btn-default'>Voltar</button>
-                    </form>";
-} else {
-    $voltar = "<form action='?perfil=evento&p=pj_pesquisa' method='post'>
-                        <button type='submit' class='btn btn-default'>Voltar</button>
-                    </form>";
-}
-
-if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['atualizaPj'])) {
+if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $razao_social = addslashes($_POST['razao_social']);
     $cnpj = $_POST['cnpj'];
     $ccm = $_POST['ccm'] ?? NULL;
@@ -47,7 +34,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['atualiz
     $ultima_atualizacao = date('Y-m-d H:i:s');
 }
 
-if (isset($_POST['cadastra']) || isset($_POST['atualizaPj'])) {
+if (isset($_POST['cadastra'])) {
     $mensagem = "";
     $sql = "INSERT INTO pessoa_juridicas (razao_social, cnpj, ccm, email, ultima_atualizacao) VALUES ('$razao_social', '$cnpj', '$ccm', '$email', '$ultima_atualizacao')";
     if (mysqli_query($con, $sql)) {
@@ -82,31 +69,16 @@ if (isset($_POST['cadastra']) || isset($_POST['atualizaPj'])) {
 
         $mensagem .= mensagem("success", "Cadastrado com sucesso!");
         $idPj = recuperaUltimo("pessoa_juridicas");
-        gravarLog($sql);
-
-        if (isset($_POST['atualizaPj'])) {
-            $idPedido = $_POST['idPedido'];
-            $sqlTestaTroca = "SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 1";
-            $queryTestaTroca = mysqli_query($con, $sqlTestaTroca);
-            $row = mysqli_num_rows($queryTestaTroca);
-            if ($row != 0) {
-                $trocaPj = "<div class='form-group col-md-3 pull-right'>
-                            <form method='POST' action='?perfil=evento&p=pedido_edita' role='form'>
-                                <input type='hidden' name='idPedido' value='$idPedido'>
-                                <input type='hidden' name='idPj' value='$idPj'>
-                                <button type='submit' name='trocaPj' class='btn btn-info btn-block'> Ir ao pedido de contratação </button>
-                            </form>
-                        </div>";
-            }
-        }
-
+        //gravarLog($sql);
     } else {
         $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
+        //gravarLog($sql);
     }
 }
 
 if (isset($_POST['edita'])) {
     $idPj = $_POST['edita'];
+
     $mensagem = "";
     $sql = "UPDATE pessoa_juridicas SET razao_social = '$razao_social', cnpj = '$cnpj', ccm = '$ccm', email = '$email' WHERE id = '$idPj'";
 
@@ -248,6 +220,9 @@ if (isset($_POST['apagar'])) {
     }
 }
 
+if (isset($_POST['load'])) {
+    $idPj = $_POST['idPj'];
+}
 
 $sqlTelefones = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
@@ -258,6 +233,7 @@ $pj = recuperaDados("pessoa_juridicas", "id", $idPj);
 $end = recuperaDados("pj_enderecos", "pessoa_juridica_id", $idPj);
 $obs = recuperaDados("pj_observacoes", "pessoa_juridica_id", $idPj);
 
+$idEvento = $_SESSION['idEvento'];
 $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
 
 if (isset($pj['representante_legal1_id'])) {
@@ -288,7 +264,7 @@ if (isset($pj['representante_legal2_id'])) {
                         <?= $mensagem ?? NULL ?>
                     </div>
 
-                    <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
+                    <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=edita_pj" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-12">
@@ -307,7 +283,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(25, $idPj, "modal-cnpj", "CNPJ");
+                                    anexosNaPagina(22, $idPj, "modal-cnpj", "CNPJ");
                                     ?>
                                 </div>
 
@@ -320,7 +296,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 <div class="form-group col-md-4">
                                     <?php
                                     if ($end['uf'] == "SP") {
-                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (38) AND origem_id = '$idPj' AND publicado = 1";
+                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (43) AND origem_id = '$idPj' AND publicado = 1";
                                         $queryExistentes = mysqli_query($con, $sqlExistentes);
                                         $cpom = 0;
                                     } else {
@@ -531,7 +507,7 @@ if (isset($pj['representante_legal2_id'])) {
                                     </div>
                                     <div class="form-group col-md-4" style="display: <?= $facc ?>">
                                         <?php
-                                        anexosNaPagina(71, $idPj, "modal-facc", "FACC");
+                                        anexosNaPagina(89, $idPj, "modal-facc", "FACC");
                                         ?>
                                     </div>
                                     <?php
@@ -550,8 +526,10 @@ if (isset($pj['representante_legal2_id'])) {
                                 <button type="submit" name="edita" value="<?= $pj['id'] ?>"
                                         class="btn btn-info pull-right">Atualizar
                                 </button>
+                                <a href="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos">
+                                    <button type='button' class='btn btn-default'>Voltar</button>
+                                    <a>
                     </form>
-                    <?= $voltar ?>
                 </div>
             </div>
         </div>
@@ -562,7 +540,8 @@ if (isset($pj['representante_legal2_id'])) {
             <div class="box-body">
                 <div class="row">
                     <div class="form-group col-md-3">
-                        <form method="POST" action="?perfil=evento&p=pj_demais_anexos" role="form">
+                        <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=demais_anexos_pj"
+                              role="form">
                             <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                     class="btn btn-info btn-block">Demais Anexos
                             </button>
@@ -573,7 +552,8 @@ if (isset($pj['representante_legal2_id'])) {
                     if ($pj['representante_legal1_id'] == null && $pj['representante_legal2_id'] == null) {
                         ?>
                         <div class="form-group col-md-3">
-                            <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                            <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=representante_busca"
+                                  role="form">
                                 <input type="hidden" name="tipoRepresentante" value="1">
                                 <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                         class="btn btn-info btn-block">Representante 01
@@ -581,7 +561,8 @@ if (isset($pj['representante_legal2_id'])) {
                             </form>
                         </div>
                         <div class="form-group col-md-3">
-                            <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                            <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=representante_busca"
+                                  role="form">
                                 <input type="hidden" name="tipoRepresentante" value="2">
                                 <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                         class="btn btn-info btn-block">Representante 02
@@ -620,7 +601,8 @@ if (isset($pj['representante_legal2_id'])) {
                             </button>
                         </div>
                         <div class="form-group col-md-3">
-                            <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                            <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=representante_busca"
+                                  role="form">
                                 <input type="hidden" name="tipoRepresentante" value="2">
                                 <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                         class="btn btn-info btn-block">
@@ -630,48 +612,45 @@ if (isset($pj['representante_legal2_id'])) {
                         </div>
                         <?php
                     }
-                    if (isset($trocaPj)) {
-                        echo $trocaPj;
-                    } else { ?>
-
-                        <div class="form-group col-md-3">
-                            <?php
-                            $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1";
-                            $queryPedidos = mysqli_query($con, $sqlPedidos);
-                            $pedidos = mysqli_fetch_array($queryPedidos);
-
-                            if (($pedidos['pessoa_tipo_id'] == 2) && ($pedidos['pessoa_juridica_id'] == $idPj)) {
-
-                                ?>
-                                <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                    <input type="hidden" name="pessoa_tipo_id" value="2">
-                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
-                                    <input type="hidden" name="idProponente" value="<?= $pj['id'] ?>">
-                                    <input type="hidden" name="tipoPessoa" value="2">
-                                    <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
-                                    <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
-                                        contratação
-                                    </button>
-                                </form>
-
-                                <?php
-                            } else {
-                                ?>
-                                <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                    <input type="hidden" name="pessoa_tipo_id" value="2">
-                                    <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
-                                    <input type="hidden" name="valor" value="<?= $atracao['valor_individual'] ?>">
-                                    <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
-                                    <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
-                                        contratação
-                                    </button>
-                                </form>
-                                <?php
-                            }
-                            ?>
-                        </div>
-                    <?php }
                     ?>
+
+                    <div class="form-group col-md-3">
+                        <?php
+                        $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1";
+                        $queryPedidos = mysqli_query($con, $sqlPedidos);
+                        $pedidos = mysqli_fetch_array($queryPedidos);
+
+                        if (($pedidos['pessoa_tipo_id'] == 2) && ($pedidos['pessoa_juridica_id'] == $idPj)) {
+
+                            ?>
+                            <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=resumo" role="form">
+                                <input type="hidden" name="pessoa_tipo_id" value="2">
+                                <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
+                                <input type="hidden" name="idPj" value="<?= $pj['id'] ?>">
+                                <input type="hidden" name="tipoPessoa" value="2">
+                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                <button type="submit" name="selecionarPj" class="btn btn-info btn-block">Ir ao pedido de
+                                    contratação
+                                </button>
+                            </form>
+
+                            <?php
+                        } else {
+                            ?>
+                            <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=resumo" role="form">
+                                <input type="hidden" name="pessoa_tipo_id" value="2">
+                                <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
+                                <input type="hidden" name="idPj" value="<?= $pj['id'] ?>">
+                                <input type="hidden" name="tipoPessoa" value="2">
+                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                <button type="submit" name="selecionarPj" class="btn btn-info btn-block">Ir ao pedido de
+                                    contratação
+                                </button>
+                            </form>
+                            <?php
+                        }
+                        ?>
+                    </div>
                 </div>
             </div>
             <!-- /. box-body -->
@@ -679,8 +658,8 @@ if (isset($pj['representante_legal2_id'])) {
     </div>
 </div>
 <?php
-modalUploadArquivoUnico("modal-cnpj", "?perfil=evento&p=pj_edita", "CNPJ", "cartao_cnp", $idPj, "2");
-modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pj_edita", "facc", "facc", $idPj, "2");
+modalUploadArquivoUnico("modal-cnpj", "?perfil=contrato&p=filtrar_sem_operador&sp=edita_pj", "CNPJ", "cartao_cnp", $idPj, "2");
+modalUploadArquivoUnico("modal-facc", "?perfil=contrato&p=filtrar_sem_operador&sp=edita_pj", "facc", "facc", $idPj, "2");
 ?>
 
 </section>
@@ -696,7 +675,8 @@ modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pj_edita", "facc", "facc
             </div>
             <div class="modal-body">
                 <p align='center'><strong>Arquivo somente em PDF e até 05 MB.</strong></p>
-                <form method="POST" action="?perfil=evento&p=pj_edita" enctype="multipart/form-data">
+                <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=edita_pj"
+                      enctype="multipart/form-data">
                     <br/>
                     <div align='center'>
                         <?php
@@ -747,7 +727,8 @@ modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pj_edita", "facc", "facc
                 </div>
                 <div class="col-md-12">
                     <div class="form-group col-md-6"><label><br></label>
-                        <form method="POST" action="?perfil=evento&p=representante_edita" role="form">
+                        <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=representante_edita"
+                              role="form">
                             <input type='hidden' name='idPj' id='idPj' value='<?= $idPj ?>'>
                             <input type='hidden' name='idRepresentante' id='idRepresentante' value=''>
                             <input type='hidden' name='tipoRepresentante' id='tipoRepresentante' value=''>
@@ -757,7 +738,8 @@ modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pj_edita", "facc", "facc
                         </form>
                     </div>
                     <div class="form-group col-md-6"><label><br></label>
-                        <form method="POST" action="?perfil=evento&p=representante_busca" role="form">
+                        <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=representante_busca"
+                              role="form">
                             <input type='hidden' name='idPj' id='idPj' value='<?= $idPj ?>'>
                             <input type='hidden' name='tipoRepresentanteTroca' id='tipoRepresentanteTroca' value=''>
                             <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
@@ -771,7 +753,6 @@ modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pj_edita", "facc", "facc
                 <button type="submit" name="cadastra" class="btn btn-success">Cadastrar</button>
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
             </div>
-            </form>
         </div>
     </div>
 </div>
@@ -830,3 +811,5 @@ modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pj_edita", "facc", "facc
     });
 
 </script>
+
+

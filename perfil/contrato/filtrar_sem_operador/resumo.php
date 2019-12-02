@@ -182,7 +182,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                         <label for="status">Status Contrato</label>
                                         <select name="status" id="status" class="form-control">
                                             <?php
-                                            geraOpcao('pedido_status', $pedido['status_pedido_id']);
+                                                geraOpcao('pedido_status', $pedido['status_pedido_id']);
                                             ?>
                                         </select>
                                     </div>
@@ -290,11 +290,6 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right">
                                 Salvar
                             </button>
-
-                            <a href="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos">
-                                <button type="button" class="btn btn-info" name="reabertura" id="reabertura">Reabertura</button>
-                            </a>
-
                             <a href="?perfil=contrato&p=filtrar_contratos&sp=area_impressao">
                                 <button type="button" class="btn btn-default">Ir para área de impressão</button>
                             </a>
@@ -324,18 +319,18 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                         <tr>
                             <td><?= $proponente['nome'] ?></td>
                             <td>
-                                <form action="?perfil=contrato&p=filtrar_contratos&sp=edita_pf" method="POST">
+                                <form action="?perfil=contrato&p=filtrar_sem_operador&sp=edita_pf" method="POST">
                                     <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
                                     <button type="submit" class="btn btn-primary btn-block"><span
-                                                class="glyphicon glyphicon-pencil"></span></button>
+                                            class="glyphicon glyphicon-pencil"></span></button>
                                 </form>
                             </td>
                             <td>
-                                <form action="?perfil=contrato&p=filtrar_contratos&sp=tipo_pessoa"
+                                <form action="?perfil=contrato&p=filtrar_sem_operador&sp=tipo_pessoa"
                                       method="POST">
                                     <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
                                     <button type="submit" class="btn btn-info btn-block"><span
-                                                class="glyphicon glyphicon-random"></span></button>
+                                            class="glyphicon glyphicon-random"></span></button>
                                 </form>
                             </td>
                         </tr>
@@ -368,19 +363,19 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                         <tr>
                             <td><?= $proponente['razao_social'] ?></td>
                             <td>
-                                <form action="?perfil=contrato&p=filtrar_contratos&sp=edita_pj" method="POST">
+                                <form action="?perfil=contrato&p=filtrar_sem_operador&sp=edita_pj" method="POST">
                                     <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
                                     <input type="hidden" name="idPj" id="idPj" value="<?= $idPj ?>">
                                     <button type="submit" name="load" id="load" class="btn btn-primary btn-block"><span
-                                                class="glyphicon glyphicon-pencil"></span></button>
+                                            class="glyphicon glyphicon-pencil"></span></button>
                                 </form>
                             </td>
                             <td>
-                                <form action="?perfil=contrato&p=filtrar_contratos&sp=tipo_pessoa"
+                                <form action="?perfil=contrato&p=filtrar_sem_operador&sp=tipo_pessoa"
                                       method="POST">
                                     <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
                                     <button type="submit" class="btn btn-info btn-block"><span
-                                                class="glyphicon glyphicon-random"></span></button>
+                                            class="glyphicon glyphicon-random"></span></button>
                                 </form>
                             </td>
                         </tr>
@@ -419,7 +414,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                             <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
                                             <input type='hidden' name='lider' value='<?= $idPedido ?>'>
                                             <button type="submit" name='carregar' class="btn btn-primary"><i
-                                                        class='fa fa-refresh'></i></button>
+                                                    class='fa fa-refresh'></i></button>
                                         </form>
                                     </td>
                                     <?php
@@ -452,12 +447,3 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
         ?>
     </section>
 </div>
-
-<script>
-    //seta um qualquer para session para para saber q é para realizar uma reabertura
-    $('#reabertura').on('click', function(){
-        <?php
-            $_SESSION['reabertura'] = 1;
-        ?>
-    });
-</script>

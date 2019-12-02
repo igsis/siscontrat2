@@ -53,8 +53,10 @@ if (isset($_POST['busca'])) {
     AND e.evento_status_id != 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1 
+    AND p.operador_id = null
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso";
+
     $query = mysqli_query($con, $sql);
 }
 
@@ -114,11 +116,11 @@ if (isset($_POST['busca'])) {
                                 if ($evento['protocolo'] != NULL) {
                                     ?>
                                     <td>
-                                        <form action="#" role="form" method="POST">
+                                        <form action="?perfil=contrato&p=filtrar_sem_operador&sp=resumo" role="form" method="POST">
                                             <input type="hidden" id="idPedido" name="idPedido"
                                                    value="<?= $evento['pedido_id'] ?>">
-                                            <button type="submit"
-                                                    class="btn btn-primary"><?= $evento['protocolo'] ?></button>
+                                            <input type="hidden" name="idEvento" id="idEvento" value="<?=$evento['id']?>">
+                                            <button type="submit" class="btn btn-link"><?= $evento['protocolo'] ?></button>
                                         </form>
                                     </td>
                                     <?php

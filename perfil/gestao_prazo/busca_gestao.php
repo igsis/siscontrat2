@@ -99,7 +99,6 @@ $query = mysqli_query($con, $sql);
                             <?php
                             echo "<tbody>";
                             while ($eventos = mysqli_fetch_array($query)) {
-                                $idUser = $eventos['usuario_id'];
                                 $idEvento = $eventos['id'];
 
                                 //locais
@@ -112,14 +111,23 @@ $query = mysqli_query($con, $sql);
                                 $local = substr($local, 1);
 
                                 //operador
-                                $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser AND uc.nivel_acesso = 2";
-                                $operador = $con->query($sqlOperador)->fetch_array();
+                                $testa = $con->query("SELECT operador_id FROM pedidos WHERE origem_id = $idEvento")->fetch_array();
+                                $idUsuario = $eventos['operador_id'];
+                                if ($idUsuario != 0) {
+                                    $operadorAux = "AND usuario_id = $idUsuario";
+                                    $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUsuario AND uc.nivel_acesso = 2 $operadorAux";
+                                    $operador = $con->query($sqlOperador)->fetch_array();
+                                }
                                 echo "<tr>";
                                 echo "<td>" . $eventos['nome_evento'] . "</td>";
                                 echo "<td>" . $local . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($eventos['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $eventos['fiscal'] . "</td>";
-                                echo "<td>" . $operador['nome_completo'] . "</td>";
+                                if (isset($operador['nome_completo'])) {
+                                    echo "<td>" . $operador['nome_completo'] . "</td>";
+                                } else {
+                                    echo "<td> </td>";
+                                }
                                 echo "<td>
                                                 <form method='POST' action='?perfil=gestao_prazo&p=detalhes_gestao' role='form'>
                                                 <input type='hidden' name='idEvento' value='" . $eventos['id'] . "'>
