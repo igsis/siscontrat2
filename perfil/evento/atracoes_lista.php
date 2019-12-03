@@ -7,6 +7,10 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
 if (isset($_POST['apagar'])) {
 
+    $sql = "SELECT * FROM pedidos where origem_id = '$idEvento' AND origem_tipo_id = 1 AND publicado = 1";
+    $queryPedido = mysqli_query($con, $sql);
+    $rowPedido = mysqli_num_rows($queryPedido);
+
     $idAtracao = $_POST['idAtracao'];
 
     $consulta = "UPDATE atracoes SET publicado = 0 WHERE id = '$idAtracao'";
@@ -15,6 +19,23 @@ if (isset($_POST['apagar'])) {
         $mensagem = mensagem("success", "Atração apagada com sucesso");
         $deletaOcorrenciasAtracao = "UPDATE ocorrencias SET publicado = 0 WHERE atracao_id = '$idAtracao' AND tipo_ocorrencia_id = 1";
         mysqli_query($con, $deletaOcorrenciasAtracao);
+
+        if ($rowPedido > 0) {
+            while ($pedido = mysqli_fetch_array($queryPedido)) {
+                $idPedido = $pedido['id'];
+                $valorTotal = $pedido['valor_total'];
+
+                $atracao = recuperaDados('atracoes', 'id', $idAtracao);
+                $valorIndividual = $atracao['valor_individual'];
+
+                $valorFinal = abs($valorTotal - $valorTotal);
+
+                $sql = "UPDATE pedidos SET valor_total = '$valorFinal' WHERE id = '$idPedido'";
+                mysqli_query($con, $sql);
+
+                $mensagem2 = mensagem("warning", "Lembre-se de ajustar o valor das parcelas e do equipamento!");
+            }
+        }
     } else {
         $mensagem = mensagem("danger", "Erro ao tentar executar operação na atração");
     }
@@ -50,6 +71,10 @@ $query = mysqli_query($con, $sql);
 
                     <div class="row" align="center">
                         <?php if(isset($mensagem)){echo $mensagem;};?>
+                    </div>
+
+                    <div class="row" align="center">
+                        <?php if(isset($mensagem2)){echo $mensagem2;};?>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
