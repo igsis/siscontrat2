@@ -525,91 +525,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                         </ul>
                                     </div>
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-5">
-                                        <h3>5. Valor por equipamento</h3>
-                                        <?php
-                                        $sqlEquipamento = "SELECT DISTINCT oco.local_id as 'local_id', local.local as 'local' 
-                            FROM ocorrencias oco
-                            INNER JOIN locais local ON local.id = oco.local_id 
-                            WHERE oco.origem_ocorrencia_id = '$idEvento' AND local.publicado = 1 AND oco.publicado = 1";
-
-                                        $queryEquipamento = mysqli_query($con, $sqlEquipamento);
-                                        $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
-                                        ?>
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <form method="POST" action="?perfil=evento&p=pedido_edita" name="form-valor-equipamento"
-                                                      role="form">
-                                                    <div class="form-group">
-                                                        <table class="table table-bordered table-striped">
-                                                            <thead>
-                                                            <tr>
-                                                                <th width="80%">Equipamento</th>
-                                                                <th>Valor</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            <?php
-                                                            if ($numRowsEquipamento == 0) {
-                                                                ?>
-                                                                <tr>
-                                                                    <td width="100%" class="text-center" colspan="2">
-                                                                        Não há ocorrências cadastradas!
-                                                                        <br>Por Favor, retorne em atração e cadastre.
-                                                                    </td>
-                                                                </tr>
-                                                                <?php
-                                                            } else {
-
-                                                                while ($equipamento = mysqli_fetch_array($queryEquipamento)) {
-                                                                    $idEquipamento = $equipamento['local_id'];
-
-                                                                    $sql_valor = "SELECT * FROM valor_equipamentos WHERE pedido_id = '$idPedido' AND local_id = '$idEquipamento'";
-                                                                    $queryValor = mysqli_query($con, $sql_valor);
-                                                                    $arrayValorEquipamento = mysqli_fetch_array($queryValor);
-
-                                                                    ?>
-                                                                    <tr>
-                                                                        <td><?= $equipamento['local'] ?></td>
-                                                                        <input type="hidden" value="<?= $equipamento['local_id'] ?>">
-                                                                        <td>
-                                                                            <input type="text" class="form-control" name="valorEquipamento[]"
-                                                                                   value="<?= dinheiroParaBr($arrayValorEquipamento['valor']) ?>" onkeyup="somaValorEquipamento()"
-                                                                                   onkeypress="return(moeda(this, '.', ',', event));">
-                                                                            <input type="hidden" value="<?= $equipamento['local_id'] ?>" name="equipamentos[]">
-                                                                        </td>
-                                                                    </tr>
-                                                                    <?php
-                                                                }
-                                                            }
-                                                            ?>
-                                                            <tr>
-                                                                <td width="50%">Valor Total: R$ <?= dinheiroParaBr($pedido['valor_total']) ?></td>
-                                                                <td width="50%">Valor Faltante: R$ <span id="valorFaltante"></span></td>
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    <div class="row col-md-offset-4 col-md-4">
-                                                        <div class="box-footer">
-                                                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                                            <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
-                                                            <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <ul class="list-inline pull-right">
-                                            <li>
-                                                <a class="btn btn-default prev-step"><span
-                                                            aria-hidden="true">&larr;</span>
-                                                    Voltar</a>
-                                            </li>
-                                            <li>
-                                                <button type="submit" class="btn btn-primary">Finalizar</button>
-                                            </li>
-                                        </ul>
+                                        <?php include_once "includes/label_valor_equipamento.php" ?>
                                     </div>
                                 </div>
                             </form>
@@ -1429,12 +1345,10 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             }
 
             let valor = parseFloat(valorEquipamento[i].value.replace('.', '').replace(',', '.'));
-            console.log(valor);
 
             valor_total += valor;
         }
 
-        console.log(valor_total);
 
         let valorTotal = parseFloat($('#valor_total').val().replace('.', '').replace(',', '.'));
         let valorDif;
@@ -1461,4 +1375,76 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             $('#gravarValorEquipamento').attr("disabled", true);
         }
     }
+
+    $('#gravarValoresEquipamentos').click(function (e) {
+        e.preventDefault();
+        toastr.success('Teste Aeoo')
+    })
+
+    $('.formulario-ajax').submit(function(e){
+        e.preventDefault();
+
+        var form=$(this);
+
+        var tipo=form.attr('data-form');
+        var action=form.attr('action');
+        var method=form.attr('method');
+        var resposta=form.children('.resposta-ajax');
+
+        var msgError="Swal.fire('Ocorreu um erro insesperado','Por favor recarregue a pagina','error')"
+        var formdata = new FormData(this);
+        var textoAlerta;
+
+        if(tipo==="save"){
+            textoAlerta="Os dados enviados serão salvos no sistema";
+        }else if(tipo==="delete"){
+            textoAlerta="Os dados serão eliminados do sistema";
+        }else if(tipo==="update"){
+            textoAlerta="Os dados serão atualizados no sistema";
+        }else{
+            textoAlerta="Deseja realmente realizar a operação";
+        }
+
+
+        Swal.fire({
+            title: "Tem Certeza?",
+            text: textoAlerta,
+            type: "question",
+            showCancelButton: true,
+            confirmButtonText: "Confirmar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: method,
+                    url: action,
+                    data: formdata ? formdata : form.serialize(),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    xhr: function () {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function (evt) {
+                            if (evt.lengthComputable) {
+                                var percentComplete = evt.loaded / evt.total;
+                                percentComplete = parseInt(percentComplete * 100);
+                                if (percentComplete < 100) {
+                                    resposta.html('<p class="text-center">Procesado... (' + percentComplete + '%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: ' + percentComplete + '%;"></div></div>');
+                                } else {
+                                    resposta.html('<p class="text-center"></p>');
+                                }
+                            }
+                        }, false);
+                        return xhr;
+                    },
+                    success: function (data) {
+                        resposta.html(data);
+                    },
+                    error: function () {
+                        resposta.html(msgError);
+                    }
+                });
+            }
+        });
+    })
 </script>
