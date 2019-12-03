@@ -9,18 +9,19 @@ if (isset($_POST['busca'])) {
     $sqlOperador = '';
 
     if ($operador != null && $operador != 0)
-        $sqlOperador = " AND usuario_id = '$operador'";
+        $sqlOperador = " AND p.operador_id = '$operador'";
 
-    $sql = "SELECT e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
+    $sql = "SELECT e.id, e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
     p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, 
-    p.valor_total, e.evento_status_id, e.usuario_id, es.status
+    p.valor_total, e.evento_status_id, p.operador_id, ps.status
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
-    INNER JOIN evento_status es on e.evento_status_id = es.id
+    INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
     INNER JOIN ocorrencias o on e.id = o.origem_ocorrencia_id
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1
+    AND p.status_pedido_id != 1
     AND o.data_inicio >= '$data_inicio'
     AND o.data_fim <= '$data_fim'
     $sqlOperador
@@ -74,19 +75,35 @@ if (isset($_POST['busca'])) {
                                 <?php
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
+                                    $idUser = $evento['operador_id'];
+                                    if($idUser != 0){
+                                        $operadorAux = "AND usuario_id = $idUser";
+                                        $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser $operadorAux";
+                                        $operador = $con->query($sqlOperador)->fetch_array();
+                                    }
                                     if ($evento['pessoa_tipo_id'] == 1)
                                         $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome_artistico'];
                                     else if ($evento['pessoa_fisica_id'] == 2)
                                         $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
 
                                     ?>
-                                    <td><a href="#"><?= $evento['protocolo'] ?></a></td>
+                                    <td>
+                                        <form method="POST" action="?perfil=contrato&p=filtrar_periodo&sp=resumo">
+                                            <input type="hidden" name="idEvento" id="idEvento" value="<?=$evento['id']?>">
+                                            <button type="submit" class="btn btn-link"><?= $evento['protocolo'] ?></button>
+                                        </form>
+                                    </td>
                                     <td><?= $evento['numero_processo'] ?></td>
                                     <td><?= $pessoa ?></td>
                                     <td><?= $evento['nome_evento'] ?></td>
                                     <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
                                     <td><?= $evento['status'] ?></td>
-                                    <td><?= recuperaDados('usuarios', 'id', $evento['usuario_id'])['nome_completo'] ?></td>
+                                    <?php
+                                    if(isset($operador['nome_completo'])){?>
+                                    <td><?= $operador['nome_completo'] ?></td>
+                                    <?php }
+                                    echo "<td> </td>";
+                                    ?>
                                     <?php
                                 }
                             }

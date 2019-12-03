@@ -14,13 +14,13 @@
                                 <div class="form-group col-md-4">
                                     <label for="data_inicio">Data Início *</label> <br>
                                     <input type="date" name="data_inicio" class="form-control" id="datepicker10"
-                                           required placeholder="DD/MM/AAAA" onblur="comparaData()">
+                                           placeholder="DD/MM/AAAA" onblur="comparaData()">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="data_fim">Data Final *</label><br>
                                     <input type="date" name="data_fim" class="form-control" id="datepicker11"
-                                           required placeholder="DD/MM/AAAA" onblur="comparaData()">
+                                           placeholder="DD/MM/AAAA" onblur="comparaData()">
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -28,7 +28,7 @@
                                     <select name="operador" id="operador" class="form-control">
                                         <option value="0">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcaoUsuario("usuarios", 1, "");
+                                        geraOpcao('usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id');
                                         ?>
                                     </select>
                                 </div>

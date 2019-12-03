@@ -3,29 +3,28 @@
 $con = bancoMysqli();
 $idEvento = $_SESSION['eventoId'];
 
-if(isset($_POST['detalheEvento'])){
+if (isset($_POST['detalheEvento'])) {
     $detalheEvento = $_POST['detalheEvento'];
 }
-
-$sql = "SELECT 
-    p.numero_processo,
-    p.justificativa,
-    p.forma_pagamento,
-    p.observacao,
-    p.valor_total 
-    FROM pedidos as p
-    WHERE p.publicado = 1";
-
 // dados //
-$sql = $con->query($sql)->fetch_array();
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$producao_evento = recuperaDados('producao_eventos','id', $idEvento);
-$tipo_evento = recuperaDados('tipo_eventos','id',$idEvento);
-$projeto_especiais = recuperaDados('projeto_especiais','id',$idEvento);
-$relacao_juridica = recuperaDados('relacao_juridicas','id',$idEvento);
-$usuarios = recuperaDados('usuarios','id',$idEvento);
-$local = recuperaDados('locais','id',$idEvento);
+$producao_evento = recuperaDados('producao_eventos', 'id', $idEvento);
+$tipo_evento = recuperaDados('tipo_eventos', 'id', $idEvento);
+$projeto_especiais = recuperaDados('projeto_especiais', 'id', $idEvento);
+$relacao_juridica = recuperaDados('relacao_juridicas', 'id', $idEvento);
+$linguagens = recuperaDados('linguagens', 'id', $idEvento);
+$atracao = recuperaDados('atracoes', 'id', $idEvento);
+$classificacao = recuperaDados('classificacao_indicativas', 'id', $idEvento);
+$suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
+$ocorrencia = recuperaDados('ocorrencias', 'id', $idEvento);
+$retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
+$pedidos = recuperaDados('pedidos', 'id', $idEvento);
+$pagamento = recuperaDados('pagamentos', 'pedido_id', $idEvento);
+$statusPedido = recuperaDados('pedido_status', 'id', $idEvento);
+$produtor = recuperaDados('produtores', 'id', $idEvento);
+$usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
 ?>
+
 
 <div class="content-wrapper">
     <section class="content">
@@ -80,36 +79,31 @@ $local = recuperaDados('locais','id',$idEvento);
                     </tr>
                     <tr>
                         <th width="30%">Reponsável pelo evento:</th>
-                        <td><?= $evento['nome_completo'] ?></td>
+                        <td><?= $usuarios['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $evento['telefone'] ?></td>
+                        <td><?= $usuarios['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $evento['email'] ?></td>
+                        <td><?= $usuarios['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
                         <td></td>
                     </tr>
                     <tr>
-                        <?php
-                        $sqlSuplente = "SELECT * 
-                        FROM usuarios where id = $idEvento";
-                        $mdl = $con->query($sqlSuplente)->fetch_assoc();
-                        ?>
                         <th width="30%">Suplente:</th>
-                        <td><?= $mdl['nome_completo'] ?></td>
+                        <td><?= $suplente['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $mdl['telefone'] ?></td>
+                        <td><?= $suplente['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $mdl['email'] ?></td>
+                        <td><?= $suplente['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -117,20 +111,15 @@ $local = recuperaDados('locais','id',$idEvento);
                     </tr>
                     <tr>
                         <th width="30%">Ficha técnica:</th>
-                        <td><?= $evento['ficha_tecnica'] ?></td>
+                        <td><?= $atracao['ficha_tecnica'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Faixa ou indicação etária:</th>
-                        <td><?= $evento['classificacao_indicativa'] ?></td>
+                        <td><?= $classificacao['classificacao_indicativa'] ?></td>
                     </tr>
                     <tr>
-                        <?php
-                        $sqlLinguagem = "SELECT * 
-                        FROM linguagens where id = $idEvento";
-                        $lingua = $con->query($sqlLinguagem)->fetch_assoc();
-                        ?>
                         <th width="30%">Linguagem / Expressão artística:</th>
-                        <td><?= $lingua['linguagem'] ?></td>
+                        <td><?= $linguagens['linguagem'] ?></td>
                     </tr>
                     <tr>
                         <?php
@@ -147,7 +136,7 @@ $local = recuperaDados('locais','id',$idEvento);
                     </tr>
                     <tr>
                         <th width="30%">Release</th>
-                        <td><?= $evento['release_comunicacao'] ?></td>
+                        <td><?= $atracao['release_comunicacao'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -156,9 +145,14 @@ $local = recuperaDados('locais','id',$idEvento);
                 </table>
                 <h1>Especificidades</h1>
                 <h3>Ocorrências</h3>
-                De <?= $evento['data_inicio'] ?> a <?= $evento['data_fim'] ?>
+                De <?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?>
                 <br>
-                <?= $local['local'] ?>
+                <?php
+                $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']);
+                ?>
+                <tr>
+                    <td><?= $instituicao['nome'] ?> (<?= $instituicao['sigla'] ?>)</td>
+                </tr>
                 <br>
                 <br>
                 <table class="table">
@@ -167,44 +161,35 @@ $local = recuperaDados('locais','id',$idEvento);
                     </tr>
                     <tr>
                         <th width="30%">Data</th>
-                        <td><?= retornaPeriodoNovo($idEvento,'ocorrencias' )?></td>
+                        <td><?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Horário</th>
-                        <td><?= $evento['horario_inicio'] ?></td>
+                        <td><?= $ocorrencia['horario_inicio'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
-                        <td></td>
+                        <td><?= $instituicao['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Retirada de ingressos:</th>
-                        <td><?= $evento['retirada_ingresso'] ?></td>
+                        <td><?= $retirada_ingresso['retirada_ingresso'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Observações:</th>
-                        <td><?= $evento['observacao'] ?></td>
+                        <td><?= $ocorrencia['observacao'] ?></td>
                     </tr>
                     <tr>
-                        <?php
-                        $sqlProdutor = "SELECT 
-                        pro.nome,
-                        pro.telefone1,
-                        pro.email
-                        FROM produtores as pro
-                        INNER JOIN eventos e on e.id = pro.id ";
-                        $mdl = $con->query($sqlProdutor)->fetch_assoc();
-                        ?>
                         <th width="30%">Produtor responsavel:</th>
-                        <td><?= $mdl['nome'] ?></td>
+                        <td><?= $produtor['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $mdl['email'] ?></td>
+                        <td><?= $produtor['email'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $mdl['telefone1'] ?></td>
+                        <td><?= $produtor['telefone1'] ?></td>
                     </tr>
                 </table>
                 <h1>Arquivos Comunicação/Produção anexos</h1>
@@ -212,29 +197,38 @@ $local = recuperaDados('locais','id',$idEvento);
                 <table class="table">
                     <tr>
                         <th width="30%">Protocolo:</th>
-                        <td><?= $evento['id'] ?></td>
+                        <td><?= $evento['protocolo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Número do processo:</th>
-                        <td><?= $evento['numero_processo'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Setor</th>
-                        <td><?= $evento['nome'] ?></td>
+                        <td><?= $pedidos['numero_processo'] ?></td>
                     </tr>
                     <tr>
                         <?php
-                        $sqlTipo = "SELECT pro.nome,pro.telefone1,pro.email
-                        FROM produtores as pro
-                        inner join eventos e on e.id = pro.$idEvento ";
-                        $mdl = $con->query($sqlProdutor)->fetch_assoc();
+                        $tipo_pessoa = "SELECT pt.pessoa FROM
+                        pedidos as p 
+                        INNER JOIN pessoa_tipos pt on p.pessoa_tipo_id = pt.id
+                        WHERE p.publicado = 1";
+                        $tpQuerry = $con->query($tipo_pessoa)->fetch_assoc();
                         ?>
                         <th width="30%">Tipo de pessoa</th>
-                        <td><?= $evento['pessoa'] ?></td>
+                        <td><?= $tpQuerry['pessoa'] ?></td>
                     </tr>
                     <tr>
-                        <th width="30%">Proponente</th>
-                        <td><?= $evento['nome'] ?></td>
+                        <?php
+                        $pedido = "SELECT * FROM PEDIDOS WHERE id = $idEvento AND publicado = 1";
+                        $query = mysqli_query($con,$pedido);
+                        $pessoa = mysqli_num_rows($query);
+
+                        if($pessoa['pessoa_tipo_id'] == 2){
+                        $pj = recuperaDados("pessoa_juridicas","id",$pessoa['pessoa_juridica_id']);
+                        echo "<td>".$pj['razao_social']."</td>";
+                        }
+                        else{
+                        $pf = recuperaDados("pessoa_fisicas","id",$pessoa['pessoa_fisica_id']);
+                        echo "<td>".$pf['nome']."</td>";
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <th width="30%">Objeto</th>
@@ -242,27 +236,27 @@ $local = recuperaDados('locais','id',$idEvento);
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
-                        <td><?= $evento['nome'] ?> (<?= $evento['sigla'] ?>)</td>
+                        <td><?= $instituicao['nome'] ?> (<?= $instituicao['sigla'] ?>)</td>
                     </tr>
                     <tr>
                         <th width="30%">Valor</th>
-                        <td><?= $sql['valor_total'] ?></td>
+                        <td><?= $pedidos['valor_total'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Forma de Pagamento</th>
-                        <td><?= $sql['forma_pagamento'] ?></td>
+                        <td><?= $pedidos['forma_pagamento'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data</th>
-                        <td><?= retornaPeriodoNovo($idEvento,'ocorrencias' )?></td>
+                        <td><?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data de Emissão da N.E:</th>
-                        <td><?= $evento['emissao_nota_empenho'] ?></td>
+                        <td><?= $pagamento['emissao_nota_empenho'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data de Entrega da N.E</th>
-                        <td><?= $evento['entrega_nota_empenho'] ?></td>
+                        <td><?= $pagamento['entrega_nota_empenho'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
@@ -270,11 +264,11 @@ $local = recuperaDados('locais','id',$idEvento);
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>
-                        <td><?= $evento['observacao']?></td>
+                        <td><?= $pedidos['observacao'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Último status:</th>
-                        <td></td>
+                        <td><?= $statusPedido['status'] ?></td>
                     </tr>
                 </table>
                 <br/>
