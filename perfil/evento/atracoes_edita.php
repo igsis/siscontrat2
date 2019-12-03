@@ -24,7 +24,7 @@ if (isset($_POST['cadastra'])) {
             atualizaDadosRelacionamento('acao_atracao', $idAtracao, $_POST['acao'], 'atracao_id', 'acao_id');
         }
 
-        $dataAtual = date("Y-m-d");
+        $dataAtual = date("Y-m-d",strtotime("-3 hours"));
         $sqlOcorrencia = "SELECT atr.valor_individual, ocr.data_inicio 
                           FROM ocorrencias ocr 
                           INNER JOIN atracoes atr 

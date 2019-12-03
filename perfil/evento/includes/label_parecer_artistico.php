@@ -5,35 +5,6 @@ $con = bancoMysqli();
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados("pedidos","id",$idPedido);
 
-
-if(isset($_POST['cadastra_parecer']) || isset($_POST['edita_parecer'])){
-    $topico1 = addslashes($_POST['topico1']);
-    $topico2 = addslashes($_POST['topico2']);
-    $topico3 = addslashes($_POST['topico3']);
-    $topico4 = addslashes($_POST['topico4']);
-}
-
-if(isset($_POST['cadastra_parecer'])){
-    $sql_cadastra = "INSERT INTO parecer_artisticos (pedido_id, topico1, topico2, topico3, topico4) VALUES ('$idPedido','$topico1','$topico2','$topico3','$topico4')";
-    if(mysqli_query($con,$sql_cadastra)){
-        $mensagem = mensagem("success","Cadastrado com sucesso!");
-    }
-    else{
-        $mensagem = mensagem("danger","Erro ao gravar! Tente novamente.");
-    }
-}
-
-if(isset($_POST['edita_parecer'])){
-    $sql_edita = "UPDATE parecer_artisticos SET topico1='$topico1', topico2='$topico2', topico3='$topico3', topico4='$topico4' WHERE pedido_id = '$idPedido'";
-    if(mysqli_query($con,$sql_edita)){
-        $mensagem = mensagem("success","Atualizado com sucesso!");
-    }
-    else{
-        $mensagem = mensagem("danger","Erro ao atualizar! Tente novamente.");
-    }
-}
-
-
 $parecer = recuperaDados("parecer_artisticos","pedido_id",$idPedido);
 
 if ($pedido['pessoa_tipo_id'] == 2)
@@ -92,7 +63,7 @@ else
     }
 </script>
 
-<form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+<form class="formulario-ajax" method="POST" action="../funcoes/api_pedido_eventos.php" role="form" data-etapa="Parecer Artístico">
     <div class="form-group">
         <h4><strong>1º Tópico</strong></h4>
         <label for="topico1">Neste tópico deve conter o posicionamento da comissão e as informações gerais do evento (nome do artista, evento, datas, valor, tempo, etc).</label><br/>
@@ -181,6 +152,13 @@ else
     <!-- /.box-body -->
     <div class="box-footer">
         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-        <button type="submit" name="<?=($parecer == NULL) ? "cadastra_parecer" : "edita_parecer"?>" class="btn btn-info pull-right">Gravar</button>
+        <input type="hidden" name="_method" value="parecerArtistico">
+        <div class="pull-right">
+            <a class="btn btn-default prev-step"><span aria-hidden="true">&larr;</span>
+                Voltar
+            </a>
+            <button type="submit" class="btn btn-primary next-step">Próxima etapa <span aria-hidden="true">&rarr;</span></button>
+        </div>
+        <!--        <button type="submit" name="--><?//=($parecer == NULL) ? "cadastra_parecer" : "edita_parecer"?><!--" class="btn btn-info pull-right" onclick="gravaFormulario(true)">Gravar</button>-->
     </div>
 </form>

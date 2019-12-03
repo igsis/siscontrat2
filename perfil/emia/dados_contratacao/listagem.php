@@ -13,7 +13,7 @@ if (isset($_POST['cadastrar'])) {
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'];
     $usuario = $_SESSION['idUser'];
-    $data = date("Y-m-d H:i:s", strtotime("now"));
+    $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
 
     $sqlInsert = "INSERT INTO emia_contratacao
                                     (pessoa_fisica_id, 

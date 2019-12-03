@@ -2,7 +2,6 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
-date_default_timezone_set('America/Sao_Paulo');
 
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do siscontrat
 $http = $server . "/pdf/";

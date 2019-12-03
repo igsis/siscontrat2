@@ -10,7 +10,7 @@ $con = bancoMysqli();
 
 if (isset($_POST['checarAgendao'])) {
     $idEvento = $_POST['idEvento'];
-    $data = date("Y-m-d H:i:s", strtotime("now"));
+    $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
     $sqlView = "UPDATE producao_agendoes SET visualizado = 1 WHERE id = '$idEvento'";
     $queryView = mysqli_query($con, $sqlView);
     if (mysqli_query($con, $sqlView)) {

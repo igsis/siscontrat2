@@ -18,8 +18,8 @@ if(isset($_POST["enviar"])) {
         } else {
             if ($nome_arquivo != "") {
                 $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
-                $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
-                $hoje = date("Y-m-d H:i:s");
+                $new_name = date("YmdHis",strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
+                $hoje = date("Y-m-d H:i:s",strtotime("-3 hours"));
                 $dir = '../uploadsdocs/'; //Diretório para uploads
                 $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
                 $ext = strtolower(substr($nome_arquivo,-4));

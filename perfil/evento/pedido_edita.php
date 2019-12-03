@@ -3,6 +3,12 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
 
+unset($_SESSION['idPedido']);
+
+if (isset($_POST['carregar'])) {
+    $_SESSION['idPedido'] = $_POST['idPedido'];
+}
+
 if (isset($_POST['idProponente'])) {
     $idProponente = $_POST['idProponente'];
     $tipoPessoa = $_POST['tipoPessoa'];
@@ -173,25 +179,6 @@ if (isset($pedido['numero_parcelas'])) {
     }
 }
 
-if(isset($_POST['gravarValorEquipamento'])){
-    $valoresEquipamentos = $_POST['valorEquipamento'];
-    $equipamentos = $_POST['equipamentos'];
-    $idPedido = $_SESSION['idPedido'];
-
-    $sql_delete = "DELETE FROM valor_equipamentos WHERE pedido_id = '$idPedido'";
-    mysqli_query($con, $sql_delete);
-
-    for ($i = 0; $i < count($valoresEquipamentos); $i++){
-        $valor = dinheiroDeBr($valoresEquipamentos[$i]);
-        $idLocal = $equipamentos[$i];
-
-        $sql_insert_valor = "INSERT INTO valor_equipamentos (local_id, pedido_id, valor) 
-                             VALUES ('$idLocal', '$idPedido', '$valor')";
-
-        mysqli_query($con, $sql_insert_valor);
-    }
-}
-
 $sqlOficina = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
 $queryOficina = mysqli_query($con, $sqlOficina);
 //$atracoes = mysqli_fetch_array($queryAtracao);
@@ -277,8 +264,9 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                     </a>
                                 </li>
                             </ul>
-                            <form role="form">
+                            <form class=".formulario-ajax" role="form">
                                 <div class="tab-content">
+                                    <!-- Detalhes de Parcelas -->
                                     <div class="tab-pane fade in active" role="tabpanel" id="stepper-step-1">
                                         <h3 class="h2">1. Detalhes de parcelas</h3>
 
@@ -388,6 +376,8 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             </li>
                                         </ul>
                                     </div>
+
+                                    <!-- Cadastro de Proponente -->
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-2">
                                         <h3 class="h2">2. Cadastro de Proponente</h3>
                                         <div class="card">
@@ -437,16 +427,17 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             </li>
                                         </ul>
                                     </div>
-                                    <!-- líderes -->
-                                    <?php
-                                    //if($pedido['pessoa_tipo_id'] == 2){
-                                    $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
+
+                                    <!-- Líderes -->
+                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
+                                        <?php
+                                        //if($pedido['pessoa_tipo_id'] == 2){
+                                        $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
                                             WHERE a.publicado = 1 AND a.evento_id = '" . $_SESSION['idEvento'] . "'";
-                                    $query_atracao = mysqli_query($con, $sql_atracao);
-                                    ?>
-                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
+                                        $query_atracao = mysqli_query($con, $sql_atracao);
+                                        ?>
                                         <h3 class="hs">3. Líder</h3>
                                         <div class="row">
                                             <div class="col-md-12">
@@ -502,9 +493,8 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             </li>
                                         </ul>
                                     </div>
-                                    <?php
-                                    //}
-                                    ?>
+
+                                    <!-- Parecer Artístico -->
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-4">
                                         <h3>4. Parecer artístico</h3>
                                         <div class="container">
@@ -512,104 +502,11 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                                 <?php include "includes/label_parecer_artistico.php" ?>
                                             </div>
                                         </div>
-
-                                        <ul class="list-inline pull-right">
-                                            <li>
-                                                <a class="btn btn-default prev-step"><span aria-hidden="true">&larr;</span>
-                                                    Voltar
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="btn btn-primary next-step">Próxima etapa <span aria-hidden="true">&rarr;</span></a>
-                                            </li>
-                                        </ul>
                                     </div>
+
+                                    <!-- Valor por Equipamento -->
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-5">
-                                        <h3>5. Valor por equipamento</h3>
-                                        <?php
-                                        $sqlEquipamento = "SELECT DISTINCT oco.local_id as 'local_id', local.local as 'local' 
-                            FROM ocorrencias oco
-                            INNER JOIN locais local ON local.id = oco.local_id 
-                            WHERE oco.origem_ocorrencia_id = '$idEvento' AND local.publicado = 1 AND oco.publicado = 1";
-
-                                        $queryEquipamento = mysqli_query($con, $sqlEquipamento);
-                                        $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
-                                        ?>
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <form method="POST" action="?perfil=evento&p=pedido_edita" name="form-valor-equipamento"
-                                                      role="form">
-                                                    <div class="form-group">
-                                                        <table class="table table-bordered table-striped">
-                                                            <thead>
-                                                            <tr>
-                                                                <th width="80%">Equipamento</th>
-                                                                <th>Valor</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            <?php
-                                                            if ($numRowsEquipamento == 0) {
-                                                                ?>
-                                                                <tr>
-                                                                    <td width="100%" class="text-center" colspan="2">
-                                                                        Não há ocorrências cadastradas!
-                                                                        <br>Por Favor, retorne em atração e cadastre.
-                                                                    </td>
-                                                                </tr>
-                                                                <?php
-                                                            } else {
-
-                                                                while ($equipamento = mysqli_fetch_array($queryEquipamento)) {
-                                                                    $idEquipamento = $equipamento['local_id'];
-
-                                                                    $sql_valor = "SELECT * FROM valor_equipamentos WHERE pedido_id = '$idPedido' AND local_id = '$idEquipamento'";
-                                                                    $queryValor = mysqli_query($con, $sql_valor);
-                                                                    $arrayValorEquipamento = mysqli_fetch_array($queryValor);
-
-                                                                    ?>
-                                                                    <tr>
-                                                                        <td><?= $equipamento['local'] ?></td>
-                                                                        <input type="hidden" value="<?= $equipamento['local_id'] ?>">
-                                                                        <td>
-                                                                            <input type="text" class="form-control" name="valorEquipamento[]"
-                                                                                   value="<?= dinheiroParaBr($arrayValorEquipamento['valor']) ?>" onkeyup="somaValorEquipamento()"
-                                                                                   onkeypress="return(moeda(this, '.', ',', event));">
-                                                                            <input type="hidden" value="<?= $equipamento['local_id'] ?>" name="equipamentos[]">
-                                                                        </td>
-                                                                    </tr>
-                                                                    <?php
-                                                                }
-                                                            }
-                                                            ?>
-                                                            <tr>
-                                                                <td width="50%">Valor Total: R$ <?= dinheiroParaBr($pedido['valor_total']) ?></td>
-                                                                <td width="50%">Valor Faltante: R$ <span id="valorFaltante"></span></td>
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    <div class="row col-md-offset-4 col-md-4">
-                                                        <div class="box-footer">
-                                                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                                            <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
-                                                            <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <ul class="list-inline pull-right">
-                                            <li>
-                                                <a class="btn btn-default prev-step"><span
-                                                            aria-hidden="true">&larr;</span>
-                                                    Voltar</a>
-                                            </li>
-                                            <li>
-                                                <button type="submit" class="btn btn-primary">Finalizar</button>
-                                            </li>
-                                        </ul>
+                                        <?php include_once "includes/label_valor_equipamento.php" ?>
                                     </div>
                                 </div>
                             </form>
@@ -617,16 +514,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                     </div>
                 </div>
                 <!-- /.box-body -->
-
-                <!-- /.pedido -->
-                <!-- proponente -->
-
-                <!-- líderes -->
-
-                <!-- parecer -->
-
-
-                <!-- VALOR POR EQUIPAMENTO (LOCAL) -->
             </div>
             <!-- /.col -->
         </div>
@@ -1451,4 +1338,40 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             $('#gravarValorEquipamento').attr("disabled", true);
         }
     }
+</script>
+<script>
+    $('.formulario-ajax').submit(function (e) {
+        e.preventDefault();
+
+        var form = $(this);
+
+        var action = form.attr('action');
+        var method = form.attr('method');
+        var etapa = form.attr('data-etapa');
+
+        var formdata = new FormData(this);
+
+        $.ajax({
+            type: method,
+            url: action,
+            data: formdata ? formdata : form.serialize(),
+            cache: false,
+            contentType: false,
+            processData: false,
+            xhr: function () {
+                var xhr = new window.XMLHttpRequest();
+                return xhr;
+            },
+            success: function (data) {
+                if (data) {
+                    toastr.success('Dados da etapa <strong>'+ etapa +'</strong> salvos com sucesso')
+                } else {
+                    toastr.error('Falha ao Gravar os Dados')
+                }
+            },
+            error: function () {
+                toastr.error('Falha ao Gravar os Dados')
+            }
+        })
+    });
 </script>
