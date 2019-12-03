@@ -115,7 +115,7 @@ $query = mysqli_query($con, $sql);
                                 $idUsuario = $eventos['operador_id'];
                                 if ($idUsuario != 0) {
                                     $operadorAux = "AND usuario_id = $idUsuario";
-                                    $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUsuario AND uc.nivel_acesso = 2 $operadorAux";
+                                    $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUsuario $operadorAux";
                                     $operador = $con->query($sqlOperador)->fetch_array();
                                 }
                                 echo "<tr>";
