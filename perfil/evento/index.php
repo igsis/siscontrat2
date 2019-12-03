@@ -136,7 +136,7 @@ if ($linha >= 1) {
                                         <div id="collapse<?= $evento['id'] ?>" class="panel-collapse collapse">
                                             <div class="box-body">
                                                 <p><b>Enviado por: </b><?= $evento['nome_completo'] ?>
-                                                    <b>em:</b> <?= exibirDataBr($evento['data_envio']) ?> </p>
+                                                    <b>em:</b> <?= exibirDataHoraBr($evento['data_envio']) ?> </p>
                                                 <p><b>Período:</b> <?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?> </p>
                                                 <p><b>Local:</b> <?= $locais ?></p>
                                             </div>
