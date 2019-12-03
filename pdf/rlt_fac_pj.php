@@ -30,7 +30,7 @@ function Header()
 $id_Pj=$_GET['id'];
 //$idEvento = $_SESSION['idEvento'];
 
-$ano=date('Y');
+$ano=date('Y', strtotime("-3 hours"));
 
 $pj = recuperaDados("pessoa_juridicas", "id", $id_Pj);
 $rep01 = recuperaDados("representante_legais", "id", $pj['representante_legal1_id']);

@@ -10,7 +10,7 @@ date_default_timezone_set("Brazil/East");
 	//saudacao inicial
 	function saudacao()
 	{
-		$hora = date('H');
+		$hora = date('H', strtotime("-3 hours"));
 		if(($hora > 12) AND ($hora <= 18))
 		{
 			return "Boa tarde";
@@ -1317,8 +1317,7 @@ function retornaPeriodoNovo($id, $tabela)
 
 function geraProtocolo($id)
 {
-    date_default_timezone_set('America/Sao_Paulo');
-    $date = date('Ymd');
+    $date = date('Ymd',strtotime('-3 hours'));
     $preencheZeros = str_pad($id, 5, '0', STR_PAD_LEFT);
     return $date . '.' . $preencheZeros;
 }

@@ -19,7 +19,7 @@ if (isset($_POST['cadastra'])) {
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'];
     $usuario = $_SESSION['idUser'];
-    $data = date("Y-m-d H:i:s", strtotime("now"));
+    $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
     $regiao = $_POST['regiao'];
 
     $sqlInsert = "INSERT INTO formacao_contratacoes (

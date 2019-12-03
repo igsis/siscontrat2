@@ -79,17 +79,8 @@ $query = mysqli_query($con, $sql);
                                 if ($evento['status'] == "Cancelado") {
                                     $idEvento = $evento['idEvento'];
                                     $nomeEvento = $evento['nome_evento'];
-                                    $sqlChamado = "SELECT c.justificativa, c.data FROM chamados AS c WHERE evento_id = $idEvento";
+                                    $sqlChamado = "SELECT u.nome_completo, c.justificativa, c.data FROM chamados AS c INNER JOIN usuarios AS u ON u.id = c.usuario_id WHERE evento_id = $idEvento";
                                     $chamado = $con->query($sqlChamado)->fetch_array();
-
-                                    //operador
-                                    $testa = $con->query("SELECT operador_id FROM pedidos WHERE origem_id = $idEvento")->fetch_array();
-                                    $idUsuario = $eventos['operador_id'];
-                                    if ($idUsuario != 0) {
-                                        $operadorAux = "AND usuario_id = $idUsuario";
-                                        $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUsuario $operadorAux";
-                                        $operador = $con->query($sqlOperador)->fetch_array();
-                                    }
                                     ?>
                                     <td>
                                         <button type="button" class="btn-link" id="exibirMotivo"
@@ -187,14 +178,7 @@ $query = mysqli_query($con, $sql);
                             </thead>
                             <tbody>
                                 <td><?=$chamado['justificativa']?></td>
-                                <?php
-                                    if(isset($operador['nome_completo'])){
-                                        echo "<td>" . $operador['nome_completo']. "</td>";
-                                    }else{
-                                        echo "<td> </td>";
-                                    }
-                                ?>
-
+                                <td><?=$chamado['nome_completo']?></td>
                                 <td><?=exibirDataBr($chamado['data'])?></td>
                             </tbody>
                         </table>

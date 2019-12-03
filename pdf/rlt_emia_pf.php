@@ -28,8 +28,8 @@ class PDF extends FPDF
 //CONSULTA  (copia inteira em todos os docs)
 $idPf = $_SESSION['idPf'];
 
-$ano=date('Y');
-$dataAtual = date("d/m/Y");
+$ano=date('Y', strtotime("-3 hours"));
+$dataAtual = date("d/m/Y", strtotime("-3 hours"));
 
 $sqlFoto = "SELECT arquivo FROM arquivos WHERE lista_documento_id = 59 AND publicado = 1 AND origem_id = '$idPf'";
 $foto = $con->query($sqlFoto)->fetch_assoc()['arquivo'];

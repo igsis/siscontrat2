@@ -7,7 +7,7 @@ if (isset($_POST['aprovar'])) {
     $evento = recuperaDados('eventos', 'id', $idEvento);
     $sqlAprova = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_id = '$idEvento'";
     if (mysqli_query($con, $sqlAprova)) {
-        $data = date("Y-m-d H:i:s", strtotime("now"));
+        $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data')";
         $queryEnvia = mysqli_query($con, $sqlEnvia);
         $idUser = $_SESSION['idUser'];
@@ -38,7 +38,7 @@ if (isset($_POST['vetar'])) {
         $justificativa = $_POST['justificativa'];
         $titulo = "Reabertura do Evento: " . $_POST['titulo'];
         $idUser = $_SESSION['idUser'];
-        $data = $data = date("Y-m-d H:i:s", strtotime("now"));
+        $data = $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
         $sqlChamado = "INSERT INTO chamados (evento_id, 
                                              chamado_tipo_id, 
                                              titulo, 
@@ -112,7 +112,7 @@ $query = mysqli_query($con, $sql);
 
                                 //operador
                                 $testa = $con->query("SELECT operador_id FROM pedidos WHERE origem_id = $idEvento")->fetch_array();
-                                $idUsuario = $eventos['operador_id'];
+                                $idUsuario = $testa['operador_id'];
                                 if ($idUsuario != 0) {
                                     $operadorAux = "AND usuario_id = $idUsuario";
                                     $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUsuario $operadorAux";
