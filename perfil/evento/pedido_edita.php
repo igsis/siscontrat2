@@ -803,15 +803,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
 
     });
 
-    // $('#modalParcelas').on('hide.bs.modal', function () {
-    //     location.reload(true);
-    // });
-    //
-    // $('#modalOficina').on('hide.bs.modal', function () {
-    //     location.reload(true);
-    // });
-
-
     function somar() {
 
         var oficina = parseInt("<?= isset($oficina) ? $oficina : '' ?>");
@@ -834,7 +825,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             var parcelas = $("#numero_parcelas").val();
         }
 
-        var valorTotal = "<?=$pedido['valor_total']?>";
+        var valorTotal = "<?= $pedido['valor_total'] ?>";
         var restante = valorTotal;
 
         var arrayValor = [];
@@ -877,7 +868,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             $('#modalParcelas').find('#valor_restante').html(restante.toFixed(2).replace('.', ','));
 
             if (Math.sign(restante) != 0) {
-                console.log(Math.sign(restante));
                 $("#salvarModal").attr("disabled", true);
                 $("#editarModal").attr("disabled", true);
                 $("#modalParcelas").find('#msg').html("<em class='text-danger'>O valor das parcelas somadas devem ser igual ao valor total do contrato! </em>");
@@ -899,7 +889,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
 
     var ocultarBotao = function () {
 
-        let valorPedido = "<?=$pedido['valor_total']?>";
+        let valorPedido = "<?= dinheiroParaBr($pedido['valor_total'])?>";
 
         var optionSelect = document.querySelector("#numero_parcelas").value;
         var editarParcelas = document.querySelector('#editarParcelas');
@@ -907,14 +897,17 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         var formPagamento = document.querySelector('#forma_pagamento')
 
         if ($('#numero_parcelas').val() != 13){
+            $('#forma_pagamento').val('')
             $('#forma_pagamento').attr('readonly',true);
         }
         else{
             $('#forma_pagamento').attr('readonly',false);
         }
 
-        console.log ($('#valor_total').val());
-
+        if ($('#numero_parcelas').val() == 1){
+            $('#editarParcelas').hide()
+            $('#forma_pagamento').val('Parcela única de R$ '+ valorPedido)
+        }
 
         if ($('#valor_total').val() > '0.00') {
             if (optionSelect == "1" || optionSelect == 0) {
@@ -1075,7 +1068,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
 
                 var somando = 0;
 
-                console.log(valores);
 
 
                 if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
@@ -1429,12 +1421,10 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             }
 
             let valor = parseFloat(valorEquipamento[i].value.replace('.', '').replace(',', '.'));
-            console.log(valor);
 
             valor_total += valor;
         }
 
-        console.log(valor_total);
 
         let valorTotal = parseFloat($('#valor_total').val().replace('.', '').replace(',', '.'));
         let valorDif;
