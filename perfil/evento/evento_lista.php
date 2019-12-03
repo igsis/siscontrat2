@@ -17,7 +17,8 @@ if (isset($_POST['excluir'])) {
 }
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status, ev.usuario_id FROM eventos AS ev
+$sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status, ev.usuario_id, ev.usuario_id, ev.fiscal_id, ev.suplente_id 
+        FROM eventos AS ev
         INNER JOIN tipo_eventos AS te on ev.tipo_evento_id = te.id
         INNER JOIN evento_status es on ev.evento_status_id = es.id
         WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id = 1 OR evento_status_id = 5";
@@ -52,6 +53,7 @@ $query = mysqli_query($con, $sql);
                             <tr>
                                 <th>Nome do evento</th>
                                 <th>Tipo do evento</th>
+                                <th>Vínculo</th>
                                 <th>Status</th>
                                 <th>Visualizar</th>
                                 <th>Apagar</th>
@@ -61,9 +63,19 @@ $query = mysqli_query($con, $sql);
                             <?php
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
+                                $vinculo = '';
+
+                                if ($evento['usuario_id'] == $idUser)
+                                    $vinculo = 'Usuário';
+                                else if ($evento['fiscal_id'] == $idUser)
+                                    $vinculo = 'Físcal';
+                                else
+                                    $vinculo = 'Suplente';
+
                                 echo "<tr>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
                                 echo "<td>" . $evento['tipo_evento'] . "</td>";
+                                echo "<td>" . $vinculo . "</td>";
                                 if ($evento['status'] == "Cancelado") {
                                     $idEvento = $evento['idEvento'];
                                     $nomeEvento = $evento['nome_evento'];
@@ -114,8 +126,10 @@ $query = mysqli_query($con, $sql);
                             <tr>
                                 <th>Nome do evento</th>
                                 <th>Tipo do evento</th>
+                                <th>Vínculo</th>
                                 <th>Status</th>
-                                <th colspan="2" width="15%"></th>
+                                <th>Visualizar</th>
+                                <th>Apagar</th>
                             </tr>
                             </tfoot>
                         </table>
