@@ -39,6 +39,8 @@ else
       <link rel="stylesheet" href="bower_components/fullcalendar/packages/list/main.css">
       <link rel="stylesheet" href="bower_components/fullcalendar/packages/daygrid/main.css">
       <link rel="stylesheet" href="bower_components/fullcalendar/packages/timegrid/main.css">
+      <!-- Toastr -->
+      <link rel="stylesheet" href="plugins/toastr/toastr.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -67,6 +69,8 @@ else
       <script src="bower_components/fullcalendar/packages/list/main.js"></script>
       <script src="bower_components/fullcalendar/packages/core/locales/pt-br.js"></script>
       <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+      <!-- Toastr -->
+      <script src="plugins/toastr/toastr.min.js"></script>
       <style>
           .ui-menu-item{
               text-align: center !important;
