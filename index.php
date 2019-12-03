@@ -103,13 +103,15 @@ if(isset($_POST['login']))
                 <div class="col-xs-8"></div>
                 <!-- /.col -->
                 <div class="col-xs-4">
-                    <button type="submit" ng-disabled="!login.usuario || !login.senha" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    <button type="submit" ng-disabled="!login.usuario || !login.senha" class="btn btn-primary btn-block btn-flat">Entrar</button>
                 </div>
                 <!-- /.col -->
             </div>
         </form>
         <p></p>
         Não possui cadastro? <a href="cadastro_usuario.php" class="text-center">Clique aqui.</a>
+        <br/>Dúvidas? <a href="http://smcsistemas.prefeitura.sp.gov.br/manual/siscontrat/" target="_blank">Acesse aqui</a>
+        <br/>Sugestões: sistema.igsis@gmail.com
     </div>
     <!-- /.login-box-body -->
 </div>
