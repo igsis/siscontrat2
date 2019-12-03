@@ -3,6 +3,12 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
 
+unset($_SESSION['idPedido']);
+
+if (isset($_POST['carregar'])) {
+    $_SESSION['idPedido'] = $_POST['idPedido'];
+}
+
 if (isset($_POST['idProponente'])) {
     $idProponente = $_POST['idProponente'];
     $tipoPessoa = $_POST['tipoPessoa'];
@@ -173,25 +179,6 @@ if (isset($pedido['numero_parcelas'])) {
     }
 }
 
-if(isset($_POST['gravarValorEquipamento'])){
-    $valoresEquipamentos = $_POST['valorEquipamento'];
-    $equipamentos = $_POST['equipamentos'];
-    $idPedido = $_SESSION['idPedido'];
-
-    $sql_delete = "DELETE FROM valor_equipamentos WHERE pedido_id = '$idPedido'";
-    mysqli_query($con, $sql_delete);
-
-    for ($i = 0; $i < count($valoresEquipamentos); $i++){
-        $valor = dinheiroDeBr($valoresEquipamentos[$i]);
-        $idLocal = $equipamentos[$i];
-
-        $sql_insert_valor = "INSERT INTO valor_equipamentos (local_id, pedido_id, valor) 
-                             VALUES ('$idLocal', '$idPedido', '$valor')";
-
-        mysqli_query($con, $sql_insert_valor);
-    }
-}
-
 $sqlOficina = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
 $queryOficina = mysqli_query($con, $sqlOficina);
 //$atracoes = mysqli_fetch_array($queryAtracao);
@@ -277,7 +264,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                     </a>
                                 </li>
                             </ul>
-                            <form role="form">
+                            <form class=".formulario-ajax" role="form">
                                 <div class="tab-content">
                                     <div class="tab-pane fade in active" role="tabpanel" id="stepper-step-1">
                                         <h3 class="h2">1. Detalhes de parcelas</h3>
@@ -1368,75 +1355,37 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         }
     }
 
-    $('#gravarValoresEquipamentos').click(function (e) {
-        e.preventDefault();
-        toastr.success('Teste Aeoo')
-    })
-
     $('.formulario-ajax').submit(function(e){
         e.preventDefault();
 
         var form=$(this);
 
-        var tipo=form.attr('data-form');
         var action=form.attr('action');
         var method=form.attr('method');
-        var resposta=form.children('.resposta-ajax');
 
-        var msgError="Swal.fire('Ocorreu um erro insesperado','Por favor recarregue a pagina','error')"
         var formdata = new FormData(this);
-        var textoAlerta;
 
-        if(tipo==="save"){
-            textoAlerta="Os dados enviados serão salvos no sistema";
-        }else if(tipo==="delete"){
-            textoAlerta="Os dados serão eliminados do sistema";
-        }else if(tipo==="update"){
-            textoAlerta="Os dados serão atualizados no sistema";
-        }else{
-            textoAlerta="Deseja realmente realizar a operação";
-        }
-
-
-        Swal.fire({
-            title: "Tem Certeza?",
-            text: textoAlerta,
-            type: "question",
-            showCancelButton: true,
-            confirmButtonText: "Confirmar",
-            cancelButtonText: "Cancelar"
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    type: method,
-                    url: action,
-                    data: formdata ? formdata : form.serialize(),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    xhr: function () {
-                        var xhr = new window.XMLHttpRequest();
-                        xhr.upload.addEventListener("progress", function (evt) {
-                            if (evt.lengthComputable) {
-                                var percentComplete = evt.loaded / evt.total;
-                                percentComplete = parseInt(percentComplete * 100);
-                                if (percentComplete < 100) {
-                                    resposta.html('<p class="text-center">Procesado... (' + percentComplete + '%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: ' + percentComplete + '%;"></div></div>');
-                                } else {
-                                    resposta.html('<p class="text-center"></p>');
-                                }
-                            }
-                        }, false);
-                        return xhr;
-                    },
-                    success: function (data) {
-                        resposta.html(data);
-                    },
-                    error: function () {
-                        resposta.html(msgError);
-                    }
-                });
+        $.ajax({
+            type: method,
+            url: action,
+            data: formdata ? formdata : form.serialize(),
+            cache: false,
+            contentType: false,
+            processData: false,
+            xhr: function () {
+                var xhr = new window.XMLHttpRequest();
+                return xhr;
+            },
+            success: function (data) {
+                if (data) {
+                    toastr.success('Dados Desta Etapa Salvos com Sucesso')
+                } else {
+                    toastr.error('Falha ao Gravar os Dados')
+                }
+            },
+            error: function () {
+                toastr.error('Falha ao Gravar os Dados')
             }
-        });
+        })
     })
 </script>
