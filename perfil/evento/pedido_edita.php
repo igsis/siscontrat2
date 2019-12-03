@@ -266,6 +266,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                             </ul>
                             <form class=".formulario-ajax" role="form">
                                 <div class="tab-content">
+                                    <!-- Detalhes de Parcelas -->
                                     <div class="tab-pane fade in active" role="tabpanel" id="stepper-step-1">
                                         <h3 class="h2">1. Detalhes de parcelas</h3>
 
@@ -375,6 +376,8 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             </li>
                                         </ul>
                                     </div>
+
+                                    <!-- Cadastro de Proponente -->
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-2">
                                         <h3 class="h2">2. Cadastro de Proponente</h3>
                                         <div class="card">
@@ -424,16 +427,17 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             </li>
                                         </ul>
                                     </div>
-                                    <!-- líderes -->
-                                    <?php
-                                    //if($pedido['pessoa_tipo_id'] == 2){
-                                    $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
+
+                                    <!-- Líderes -->
+                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
+                                        <?php
+                                        //if($pedido['pessoa_tipo_id'] == 2){
+                                        $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
                                             WHERE a.publicado = 1 AND a.evento_id = '" . $_SESSION['idEvento'] . "'";
-                                    $query_atracao = mysqli_query($con, $sql_atracao);
-                                    ?>
-                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
+                                        $query_atracao = mysqli_query($con, $sql_atracao);
+                                        ?>
                                         <h3 class="hs">3. Líder</h3>
                                         <div class="row">
                                             <div class="col-md-12">
@@ -489,10 +493,8 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             </li>
                                         </ul>
                                     </div>
-                                    <?php
-                                    //}
-                                    ?>
-                                    <!--Parecer Artístico-->
+
+                                    <!-- Parecer Artístico -->
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-4">
                                         <h3>4. Parecer artístico</h3>
                                         <div class="container">
@@ -502,7 +504,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                         </div>
                                     </div>
 
-                                    <!--Valor por Equipamento-->
+                                    <!-- Valor por Equipamento -->
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-5">
                                         <?php include_once "includes/label_valor_equipamento.php" ?>
                                     </div>
@@ -1372,9 +1374,4 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             }
         })
     });
-    // if (proximo === true) {
-    //     console.log("Passando pra Proxima Etapa");
-    // } else {
-    //     console.log("Ficando na Etapa Atual");
-    // }
 </script>
