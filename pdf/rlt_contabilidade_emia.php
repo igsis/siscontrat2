@@ -29,7 +29,7 @@ $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
 $sqlLocal = "SELECT local FROM locais l INNER JOIN emia_contratacao ec on ec.local_id = l.id WHERE ec.id = '$idEC' AND ec.publicado = 1";
 $local = $con->query($sqlLocal)->fetch_array();
 
-$data = date("Y-m-d", strtotime("now"));
+$data = date("Y-m-d", strtotime("-3 hours"));
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();

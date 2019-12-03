@@ -20,7 +20,7 @@ $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $empenho = recuperaDados('pagamentos', 'pedido_id', $idPedido);
 
-$data = date("Y-m-d", strtotime("now"));
+$data = date("Y-m-d", strtotime("-3 hours"));
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();

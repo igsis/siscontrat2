@@ -27,7 +27,7 @@ $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 
-$data = date("Y-m-d", strtotime("now"));
+$data = date("Y-m-d", strtotime("-3 hours"));
 
 $dia = date("d");
 

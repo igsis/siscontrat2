@@ -46,6 +46,7 @@ $num_atracoes = 0;
                             <tr>
                                 <th>Protocolo</th>
                                 <th>Objeto</th>
+                                <th>Vínculo</th>
                                 <th>Local</th>
                                 <th>Período</th>
                                 <th>Status</th>
@@ -64,6 +65,14 @@ $num_atracoes = 0;
                                 $sql_atracoes = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
                                 $query_atracoes = mysqli_query($con, $sql_atracoes);
                                 $num_atracoes = mysqli_num_rows($query_atracoes);
+                                $vinculo = '';
+
+                                if ($evento['usuario_id'] == $idUser)
+                                    $vinculo = 'Usuário';
+                                else if ($evento['fiscal_id'] == $idUser)
+                                    $vinculo = 'Físcal';
+                                else
+                                    $vinculo = 'Suplente';
 
                                 echo "<tr>";
                                 echo "<td>" . $evento['protocolo'] . "</td>";
@@ -77,6 +86,7 @@ $num_atracoes = 0;
                                     $num_atracoes++;
                                 }
                                 echo "</td>";
+                                echo "<td>" . $vinculo . "</td>";
                                 echo "<td>" . $locais. "</td>";
                                 echo "<td>" . retornaPeriodoNovo($evento['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $status['status'] . "</td>";
@@ -94,6 +104,7 @@ $num_atracoes = 0;
                             <tr>
                                 <th>Protocolo</th>
                                 <th>Objeto</th>
+                                <th>Vínculo</th>
                                 <th>Local</th>
                                 <th>Período</th>
                                 <th>Status</th>
