@@ -492,6 +492,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                     <?php
                                     //}
                                     ?>
+                                    <!--Parecer Artístico-->
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-4">
                                         <h3>4. Parecer artístico</h3>
                                         <div class="container">
@@ -499,18 +500,9 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                                 <?php include "includes/label_parecer_artistico.php" ?>
                                             </div>
                                         </div>
-
-                                        <ul class="list-inline pull-right">
-                                            <li>
-                                                <a class="btn btn-default prev-step"><span aria-hidden="true">&larr;</span>
-                                                    Voltar
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="btn btn-primary next-step">Próxima etapa <span aria-hidden="true">&rarr;</span></a>
-                                            </li>
-                                        </ul>
                                     </div>
+
+                                    <!--Valor por Equipamento-->
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-5">
                                         <?php include_once "includes/label_valor_equipamento.php" ?>
                                     </div>
@@ -520,16 +512,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                     </div>
                 </div>
                 <!-- /.box-body -->
-
-                <!-- /.pedido -->
-                <!-- proponente -->
-
-                <!-- líderes -->
-
-                <!-- parecer -->
-
-
-                <!-- VALOR POR EQUIPAMENTO (LOCAL) -->
             </div>
             <!-- /.col -->
         </div>
@@ -1354,14 +1336,16 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             $('#gravarValorEquipamento').attr("disabled", true);
         }
     }
-
-    $('.formulario-ajax').submit(function(e){
+</script>
+<script>
+    $('.formulario-ajax').submit(function (e) {
         e.preventDefault();
 
-        var form=$(this);
+        var form = $(this);
 
-        var action=form.attr('action');
-        var method=form.attr('method');
+        var action = form.attr('action');
+        var method = form.attr('method');
+        var etapa = form.attr('data-etapa');
 
         var formdata = new FormData(this);
 
@@ -1378,7 +1362,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             },
             success: function (data) {
                 if (data) {
-                    toastr.success('Dados Desta Etapa Salvos com Sucesso')
+                    toastr.success('Dados da etapa <strong>'+ etapa +'</strong> salvos com sucesso')
                 } else {
                     toastr.error('Falha ao Gravar os Dados')
                 }
@@ -1387,5 +1371,10 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                 toastr.error('Falha ao Gravar os Dados')
             }
         })
-    })
+    });
+    // if (proximo === true) {
+    //     console.log("Passando pra Proxima Etapa");
+    // } else {
+    //     console.log("Ficando na Etapa Atual");
+    // }
 </script>

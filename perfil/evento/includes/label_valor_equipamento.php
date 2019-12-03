@@ -11,7 +11,7 @@ $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
 
 <div class="row">
     <div class="col-md-12">
-        <form class="formulario-ajax" method="POST" action="../funcoes/api_pedido_eventos.php" name="form-valor-equipamento" role="form">
+        <form class="formulario-ajax" method="POST" action="../funcoes/api_pedido_eventos.php" name="form-valor-equipamento" role="form" data-etapa="Valor por Equipamento">
             <input type="hidden" name="_method" value="valorPorEquipamento">
             <div class="form-group">
                 <table class="table table-bordered table-striped">
