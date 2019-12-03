@@ -8,24 +8,24 @@
                         <form action="?perfil=juridico&p=tipo_modelo&sp=resultado" method="POST">
                             <button name="mdlPadrao" type="submit" class="btn btn-primary btn-lg btn-block">PADRÃO
                             </button>
-                            <input type="hidden" value="1" name="idPadrao">
+                            <input type="hidden" value="1" name="tipoModelo">
                         </form>
 
                         <form action="?perfil=juridico&p=tipo_modelo&sp=resultado" method="POST">
                             <button name="mdlVoca" type="submit" class="btn btn-primary btn-lg btn-block">VOCACIONA
                             </button>
-                            <input type="hidden" value="2" name="idVoca">
+                            <input type="hidden" value="2" name="tipoModelo">
                         </form>
 
                         <form action="?perfil=juridico&p=tipo_modelo&sp=resultado" method="POST">
                             <button name="mdlPia" type="submit" class="btn btn-primary btn-lg btn-block">PIÁ</button>
-                            <input type="hidden" value="3" name="idPia">
+                            <input type="hidden" value="3" name="tipoModelo">
                         </form>
 
                         <form action="?perfil=juridico&p=tipo_modelo&sp=resultado" method="POST">
                             <button name="mdlOficina" type="submit" class="btn btn-primary btn-lg btn-block">Oficinas
                             </button>
-                            <input type="hidden" value="4" name="idOficina">
+                            <input type="hidden" value="4" name="tipoModelo">
                         </form>
                     </div>
                 </div>

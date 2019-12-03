@@ -273,7 +273,7 @@ $usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
                 </table>
                 <br/>
                 <div class="pull-left">
-                    <a href="?perfil=juridico&p=filtrar_formacao&sp=pesquisa_formacao">
+                    <a href="?perfil=juridico">
                         <button type="button" class="btn btn-default">Voltar a pesquisa</button>
                     </a>
                 </div>

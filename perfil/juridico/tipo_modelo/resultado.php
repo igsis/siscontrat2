@@ -1,19 +1,16 @@
 <?php
 $con = bancoMysqli();
+$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
+$http = $server . "/pdf/";
+
+$link_padraoEvento = $http . "padrao_evento.php";
+
 $idEvento = $_SESSION['eventoId'];
 
-if (isset($_POST['mdlPadrao'])) {
-    $modelo = $_POST['idPadrao'];
+if (isset($_POST['tipoModelo'])) {
+    $modelo = $_POST['tipoModelo'];
 }
-if (isset($_POST['mdlVoca'])) {
-    $modelo = $_POST['idVoca'];
-}
-if (isset($_POST['mdlPia'])) {
-    $modelo = $_POST['idPia'];
-}
-if (isset($_POST['mdlOficina'])) {
-    $modelo = $_POST['idOficina'];
-}
+
 
 $sql = "SELECT 
     p.numero_processo,
@@ -105,10 +102,10 @@ $evento = $con->query($sql)->fetch_array();
                         </button>
                     </form>
                 </div>
-                <form action="#" method="POST">
+                <form action="<?= $link_padraoEvento ?> " method="post" target="_blank">
                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                     <input type="hidden" name="idModelo" value="<?= $modelo ?>">
-                    <button type="submit" name="geraPadrao" class="btn btn-info pull-left">Gravar</button>
+                    <button type="submit" name="geraPadrao" class="btn btn-info pull-left">Gerar Modelo</button>
                 </form>
 
             </div>
