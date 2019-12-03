@@ -233,7 +233,8 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         <div class="row" align="center">
             <?php if (isset($mensagem)) {
                 echo $mensagem;
-            }; ?>
+            }
+            ?>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -362,7 +363,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                             <div class="form-group col-md-6">
                                                 <label for="forma_pagamento">Forma de pagamento *</label><br/>
                                                 <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
-                                                          rows="8"><?= $pedido['forma_pagamento'] ?></textarea>
+                                                          rows="8" <?= $pedido['numero_parcelas'] != 13 ? 'readonly' : '' ?> ><?= $pedido['forma_pagamento'] ?></textarea>
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="justificativa">Justificativa *</label><br/>
@@ -905,13 +906,17 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         var dataKit = document.querySelector("#data_kit_pagamento");
         var formPagamento = document.querySelector('#forma_pagamento')
 
+        if ($('#numero_parcelas').val() != 13){
+            $('#forma_pagamento').attr('readonly',true);
+        }
+        else{
+            $('#forma_pagamento').attr('readonly',false);
+        }
 
         console.log ($('#valor_total').val());
 
+
         if ($('#valor_total').val() > '0.00') {
-            if ($('#num_parcela').val() != 13){
-            }else{
-            }
             if (optionSelect == "1" || optionSelect == 0) {
                 dataKit.required = true;
                 editarParcelas.style.display = "none";
