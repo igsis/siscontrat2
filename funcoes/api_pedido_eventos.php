@@ -46,6 +46,7 @@ if (isset($_POST['_method'])) {
                 echo false;
             }
             break;
+
         default:
             echo false;
             break;
