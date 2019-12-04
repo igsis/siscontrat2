@@ -21,18 +21,13 @@ if (isset($_POST['apagar'])) {
         mysqli_query($con, $deletaOcorrenciasAtracao);
 
         if ($rowPedido > 0) {
-            while ($pedido = mysqli_fetch_array($queryPedido)) {
-                $idPedido = $pedido['id'];
-                $valorTotal = $pedido['valor_total'];
+            $idPedido = mysqli_fetch_array($queryPedido)['id'];
+            $sql = "SELECT sum(valor_individual) as 'valores' FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+            $valor = mysqli_fetch_array(mysqli_query($con, $sql))['valores'];
 
-                $atracao = recuperaDados('atracoes', 'id', $idAtracao);
-                $valorIndividual = $atracao['valor_individual'];
+            $sql = "UPDATE pedidos SET valor_total = '$valor' where id = '$idPedido' AND publicado = 1";
 
-                $valorFinal = abs($valorTotal - $valorTotal);
-
-                $sql = "UPDATE pedidos SET valor_total = '$valorFinal' WHERE id = '$idPedido'";
-                mysqli_query($con, $sql);
-
+            if (mysqli_query($con, $sql)) {
                 $mensagem2 = mensagem("warning", "Lembre-se de ajustar o valor das parcelas e do equipamento!");
             }
         }
@@ -70,11 +65,15 @@ $query = mysqli_query($con, $sql);
                     </div>
 
                     <div class="row" align="center">
-                        <?php if(isset($mensagem)){echo $mensagem;};?>
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
                     </div>
 
                     <div class="row" align="center">
-                        <?php if(isset($mensagem2)){echo $mensagem2;};?>
+                        <?php if (isset($mensagem2)) {
+                            echo $mensagem2;
+                        }; ?>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -213,7 +212,7 @@ $query = mysqli_query($con, $sql);
                                 /*
                                  * Ocorrência
                                  */
-                                $ocorrencias = recuperaOcorrenciaDados('ocorrencias', 'atracao_id',$atracao['idAtracao'], $evento['tipo_evento_id']);
+                                $ocorrencias = recuperaOcorrenciaDados('ocorrencias', 'atracao_id', $atracao['idAtracao'], $evento['tipo_evento_id']);
 
                                 if ($ocorrencias > 0) {
                                     $idProdutor = $atracao['produtor_id'];
