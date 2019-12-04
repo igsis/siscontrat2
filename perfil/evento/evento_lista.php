@@ -14,6 +14,25 @@ if (isset($_POST['excluir'])) {
     $stmt->execute(['id' => $evento]);
     $mensagem = mensagem("success", "Evento excluido com sucesso!");
 
+    $sqlDeletaAtracao = "UPDATE atracoes SET publicado = 0 WHERE evento_id = '$evento'";
+    mysqli_query($con, $sqlDeletaAtracao);
+
+    $sqlAtracoesDeletadas = "SELECT * FROM atracoes WHERE publicado = 0";
+    $queryAtracoesDeletadas = mysqli_query($con, $sqlAtracoesDeletadas);
+
+    while ($atracaoDeletada = mysqli_fetch_array($queryAtracoesDeletadas)) {
+        $idAtracao = $atracaoDeletada['id'];
+
+        $sqlDeletaOcorrencia = "UPDATE ocorrencias SET publicado = 0 WHERE origem_ocorrencia_id = '$idAtracao'";
+        mysqli_query($con, $sqlDeletaOcorrencia);
+    }
+
+    $sqlDeletaPedido = "UPDATE pedidos SET publicado = 0 WHERE origem_tipo_id = 1 AND origem_id = '$evento'";
+    mysqli_query($con, $sqlDeletaPedido);
+
+    gravarLog($sqlDeletaPedido);
+    gravarLog($sqlDeletaOcorrencia);
+    gravarLog($sqlDeletaAtracao);
 }
 
 $idUser = $_SESSION['idUser'];
