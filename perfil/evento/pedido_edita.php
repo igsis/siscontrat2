@@ -22,29 +22,29 @@ if (isset($_POST['adicionaLider'])) {
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
-if(isset($_POST['trocaPf'])){
+if (isset($_POST['trocaPf'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
     $idPedido = $_SESSION['idPedido'];
     $idPessoa = $_POST['idPf'] ?? $_POST['idPessoa'];
     $trocaPf = $con->query("UPDATE pedidos SET pessoa_fisica_id = $idPessoa WHERE id = $idPedido AND origem_tipo_id = 1");
-    if($trocaPf){
+    if ($trocaPf) {
         $deletaPj = $con->query("UPDATE pedidos SET pessoa_juridica_id = null, pessoa_tipo_id = 1 WHERE id = $idPedido AND origem_tipo_id = 1");
         $mensagem = mensagem('success', 'Proponente trocado com sucesso!');
-    }else{
+    } else {
         $mensagem = mensagem('danger', 'Erro ao trocar proponente! Tente novamente.');
     }
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
-if(isset($_POST['trocaPj'])){
+if (isset($_POST['trocaPj'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
     $idPedido = $_SESSION['idPedido'];
     $idPessoa = $_POST['idPj'] ?? $_POST['idPessoa'];
     $trocaPj = $con->query("UPDATE pedidos SET pessoa_juridica_id = $idPessoa WHERE id = $idPedido AND origem_tipo_id = 1");
-    if($trocaPj){
+    if ($trocaPj) {
         $deletaPf = $con->query("UPDATE pedidos SET pessoa_fisica_id = null, pessoa_tipo_id = 2 WHERE id = $idPedido AND origem_tipo_id = 1");
         $mensagem = mensagem('success', 'Proponente trocado com sucesso!');
-    }else{
+    } else {
         $mensagem = mensagem('danger', 'Erro ao trocar proponente! Tente novamente.');
     }
     $pedido = recuperaDados("pedidos", "id", $idPedido);
@@ -72,7 +72,7 @@ if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
             $_SESSION['idPedido'] = recuperaUltimo("pedidos");
             $idPedido = $_SESSION['idPedido'];
             $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
-            $queryContratado = mysqli_query($con,$sqlContratado);
+            $queryContratado = mysqli_query($con, $sqlContratado);
         } else {
             echo $sqlFirst;
         }
@@ -264,145 +264,37 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                     </a>
                                 </li>
                             </ul>
-                            <form class=".formulario-ajax" role="form">
-                                <div class="tab-content">
-                                    <!-- Detalhes de Parcelas -->
-                                    <div class="tab-pane fade in active" role="tabpanel" id="stepper-step-1">
-                                        <h3 class="h2">1. Detalhes de parcelas</h3>
+                            <div class="tab-content">
+                                <!-- Detalhes de Parcelas -->
+                                <div class="tab-pane fade in active" role="tabpanel" id="stepper-step-1">
+                                    <?php include "includes/label_pedido_parcelas.php" ?>
+                                </div>
 
+                                <!-- Cadastro de Proponente -->
+                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-2">
+                                    <?php include "includes/label_pedido_proponente.php" ?>
+                                </div>
+
+                                <!-- Líderes -->
+                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
+                                    <?php include "includes/label_pedido_lideres.php" ?>
+                                </div>
+
+                                <!-- Parecer Artístico -->
+                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-4">
+                                    <h3>4. Parecer artístico</h3>
+                                    <div class="container">
                                         <div class="row">
-                                            <div class="form-group col-md-8">
-                                                <label for="verba_id">Verba *</label>
-                                                <select class="form-control" id="verba_id" name="verba_id" required>
-                                                    <option value="">Selecione...</option>
-                                                    <?php
-                                                    geraOpcao("verbas", $pedido['verba_id'])
-                                                    ?>
-                                                </select>
-                                            </div>
-
-                                            <?php
-                                            if ($pedido['origem_tipo_id'] != 2) {
-                                                $readonly = 'readonly';
-                                            } else {
-                                                $readonly = '';
-                                            }
-                                            ?>
-                                            <div class="form-group col-md-4">
-                                                <label for="verba_id">Valor Total</label>
-                                                <input type="text" onkeypress="return(moeda(this, '.', ',', event))"
-                                                       id="valor_total" name="valor_total" class="form-control"
-                                                       value="<?= dinheiroParaBr($pedido['valor_total']) ?>" <?=$readonly?>>
-                                            </div>
+                                            <?php include "includes/label_pedido_parecer_artistico.php" ?>
                                         </div>
-                                        <?php
-                                        if (isset($oficina)) {
-                                            ?>
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="numero_parcelas">Número de Parcelas *</label>
-                                                    <select class="form-control" id="numero_parcelas" name="numero_parcelas"
-                                                            required>
-                                                        <option value="">Selecione...</option>
-                                                        <?php
-
-                                                        if ($pedido['numero_parcelas'] == 3) {
-                                                            $option = 4;
-                                                        } elseif ($pedido['numero_parcelas'] == 4) {
-                                                            $option = 3;
-                                                        } else {
-                                                            $option = $pedido['numero_parcelas'];
-                                                        }
-
-                                                        geraOpcaoParcelas("oficina_opcoes", $option);
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                                <button type="button" id="editarParcelas" class="btn btn-primary"
-                                                        style="display: block; margin-top: 2.2%;">
-                                                    Editar Parcelas
-                                                </button>
-                                            </div>
-                                            <?php
-
-                                        } else {
-                                            ?>
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="numero_parcelas">Número de Parcelas *</label>
-                                                    <select class="form-control" id="numero_parcelas" name="numero_parcelas"
-                                                            required>
-                                                        <option value="">Selecione...</option>
-                                                        <?php
-                                                        geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']);
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                                <!-- Button trigger modal -->
-                                                <button type="button" id="editarParcelas" class="btn btn-primary"
-                                                        style="display: block; margin-top: 2.2%;">
-                                                    Editar Parcelas
-                                                </button>
-                                            </div>
-                                            <?php
-                                        }
-                                        ?>
-                                        <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <label for="forma_pagamento">Forma de pagamento *</label><br/>
-                                                <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
-                                                          rows="8" <?= $pedido['numero_parcelas'] != 13 ? 'readonly' : '' ?> ><?= $pedido['forma_pagamento'] ?></textarea>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="justificativa">Justificativa *</label><br/>
-                                                <textarea id="justificativa" name="justificativa" class="form-control"
-                                                          rows="8"><?= $pedido['justificativa'] ?></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-md-12">
-                                                <label for="observacao">Observação</label>
-                                                <input type="text" id="observacao" name="observacao" class="form-control"
-                                                       maxlength="255" value="<?= $pedido['observacao'] ?>">
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                        <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
-                                        <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
-                                        <ul class="list-inline pull-right">
-                                            <li>
-                                                <a class="btn btn-primary next-step">Proxima etapa <span
-                                                            aria-hidden="true">&rarr;</span></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <!-- Cadastro de Proponente -->
-                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-2">
-                                        <?php include "includes/label_pedido_proponente.php" ?>
-                                    </div>
-
-                                    <!-- Líderes -->
-                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
-                                        <?php include "includes/label_pedido_lideres.php" ?>
-                                    </div>
-
-                                    <!-- Parecer Artístico -->
-                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-4">
-                                        <h3>4. Parecer artístico</h3>
-                                        <div class="container">
-                                            <div class="row">
-                                                <?php include "includes/label_pedido_parecer_artistico.php" ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Valor por Equipamento -->
-                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-5">
-                                        <?php include_once "includes/label_pedido_valor_equipamento.php" ?>
                                     </div>
                                 </div>
-                            </form>
+
+                                <!-- Valor por Equipamento -->
+                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-5">
+                                    <?php include_once "includes/label_pedido_valor_equipamento.php" ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -411,9 +303,9 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             <!-- /.col -->
         </div>
 
-<!-- /.row -->
-</section>
-<!-- /.content -->
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
 </div>
 <!-- Modal -->
 <div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
@@ -673,19 +565,18 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         var optionSelect = document.querySelector("#numero_parcelas").value;
         var editarParcelas = document.querySelector('#editarParcelas');
         var dataKit = document.querySelector("#data_kit_pagamento");
-        var formPagamento = document.querySelector('#forma_pagamento')
+        var formPagamento = document.querySelector('#forma_pagamento');
 
-        if ($('#numero_parcelas').val() != 13){
-            $('#forma_pagamento').val('')
-            $('#forma_pagamento').attr('readonly',true);
-        }
-        else{
-            $('#forma_pagamento').attr('readonly',false);
+        if ($('#numero_parcelas').val() != 13) {
+            $('#forma_pagamento').val('');
+            $('#forma_pagamento').attr('readonly', true);
+        } else {
+            $('#forma_pagamento').attr('readonly', false);
         }
 
-        if ($('#numero_parcelas').val() == 1){
-            $('#editarParcelas').hide()
-            $('#forma_pagamento').val('Parcela única de R$ '+ valorPedido)
+        if ($('#numero_parcelas').val() == 1) {
+            $('#editarParcelas').hide();
+            $('#forma_pagamento').val('O pagamento se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
         }
 
         if ($('#valor_total').val() > '0.00') {
@@ -846,7 +737,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                 var datas = StringDatas.split("|");
 
                 var somando = 0;
-
 
 
                 if (parseInt(parcelasSelected) < parseInt(parcelasSalvas)) {
@@ -1168,9 +1058,11 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                         }
 
                         $('#forma_pagamento').val() == '';
-                        for(let conta = 1; conta<= parcelas; conta ++){
-                            $('#forma_pagamento').append(conta+'° parcela R$ '+valores[conta]+ '\n')
+                        for (let conta = 1; conta <= parcelas; conta++) {
+                            let data = datas[conta].split('-');
+                            $('#forma_pagamento').append(conta + '° parcela R$ ' + valores[conta] + '. Entrega de documentos a partir de ' + data[2] + '/' + data[1] + '/' + data[0] + '.\n')
                         }
+                        $('#forma_pagamento').append('\nO pagamento de cada parcela se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
                         swal("" + parcelas + " parcelas editadas com sucesso!", "", "success")
                             .then(() => {
                                 //location.reload(true);
@@ -1230,8 +1122,8 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             $('#gravarValorEquipamento').attr("disabled", true);
         }
     }
-</script>
-<script>
+
+    //Faz a gravação dos dados no banco via ajax
     $('.formulario-ajax').submit(function (e) {
         e.preventDefault();
 
@@ -1256,7 +1148,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             },
             success: function (data) {
                 if (data) {
-                    toastr.success('Dados da etapa <strong>'+ etapa +'</strong> salvos com sucesso')
+                    toastr.success('Dados da etapa <strong>' + etapa + '</strong> salvos com sucesso')
                 } else {
                     toastr.error('Falha ao Gravar os Dados')
                 }
