@@ -78,8 +78,15 @@ if (isset($_POST['salvar'])) {
             gravarLog($sql);
 
         $sql = "UPDATE pedidos SET status_pedido_id = '$status' WHERE id = '$idPedido'";
-        if (mysqli_query($con, $sql))
+        if (mysqli_query($con, $sql)){
             gravarLog($sql);
+
+            if ($status == 20) {
+                $sql = "UPDATE eventos SET evento_status_id = 5 WHERE id = '$idEvento'";
+                gravarLog($sql);
+                mysqli_query($con, $sql);
+            }
+        }
     }
 
     $idAtracao = $_POST['idAtracao'];
