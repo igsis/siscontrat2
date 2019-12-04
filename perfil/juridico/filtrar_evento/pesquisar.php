@@ -90,7 +90,7 @@ $sql = "SELECT p.numero_processo,
                                     ?>
                                     <td>
                                         <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"  method="POST">
-                                            <button type="submit" class="btn btn-primary"><?= $evento['numero_processo'] ?></button>
+                                            <button type="submit" class="btn btn-link"><?= $evento['numero_processo'] ?></button>
                                         </form>
                                     </td>
                                     <?php
@@ -124,7 +124,7 @@ $sql = "SELECT p.numero_processo,
                 </table>
             </div>
             <div class="box-footer">
-                <a href="?perfil=contabilidade&p=formacao&sp=pesquisa">
+                <a href="#">
                     <button type="button" class="btn btn-default">Voltar a pesquisa</button>
                 </a>
             </div>

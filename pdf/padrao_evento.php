@@ -8,18 +8,14 @@ require_once("../funcoes/funcoesGerais.php");
 $con = bancoMysqli();
 session_start();
 
-
 $idEvento = $_SESSION['eventoId'];
-
-if (isset($_POST['geraPadrao'])) {
-    $modeloPadrao = $_POST['geraPadrao'];
-}
-if(isset($_POST['idModelo'])){
-    $idModelo = $_POST['idModelo'];
-}
 
 
 $evento = recuperaDados('eventos','id',$idEvento);
+$modelo_juridico = recuperaDados('juridicos','pedido_id',$idEvento);
+$finalizacao = $modelo_juridico['finalizacao'];
+$amparo = $modelo_juridico['amparo_legal'];
+$dotacao = $modelo_juridico['dotacao'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idEvento);
 $pedidos = recuperaDados('pedidos','id',$idEvento);
 $ocorrencias = recuperaDados('ocorrencias','id',$idEvento);
@@ -62,7 +58,7 @@ $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
 <?php
 $dados =
     "<p>&nbsp;</p>" .
-    "<p align='justify'>" . "I – À vista dos elementos constantes do presente, em especial o Parecer da Comissão de Atividades Artísticas e Culturais n° , diante da competência a mim delegada pela Portaria nº 17/2018-SMC/G, AUTORIZO, com fundamento no artigo 25, inciso III, da Lei Federal nº 8.666/93, a contratação nas condições abaixo estipuladas, observada a legislação vigente e demais cautelas legais:" . "</p>" .
+    "<p align='justify'>" . "$amparo" . "</p>" .
     "<p>&nbsp;</p>" .
     "<p><strong>Contratado:</strong> " . "$nome" . ", CPF (" . "$cpf" . ")</p>" .
     "<p><strong>Objeto:</strong> " . "$nome_evento" . "</p>" .
@@ -74,9 +70,9 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p><strong> Valor:</strong> " . "R$ " .$valor. "  " . "($valor_extenso)" . "</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . "$pagamento" . "</p>" .
-    "<p><strong>Dotação Orçamentária:</strong> " . "" . "</p>" .
+    "<p><strong>Dotação Orçamentária:</strong> " . "$finalizacao" . "</p>" .
     "<p>&nbsp;</p>" .
-    "<p align='justify'>" . "II - Nos termos do art. 6º do Decreto nº 54.873/2014, designo o(a) servidor(a) Stefani de Oliveira Trindade, RF 8390754, como fiscal do contrato e o(a) servidor(a) Lucia Ágata, RF d604737, como seu substituto. III - Autorizo a emissão da competente nota de empenho de acordo com o Decreto Municipal nº 58.070/2018 e demais normas de execução orçamentárias vigentes. IV - Publique-se e encaminhe-se à CAF/Contabilidade para as providências cabíveis." . "</p>" .
+    "<p align='justify'>" . "" . "</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
