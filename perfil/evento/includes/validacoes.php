@@ -192,7 +192,6 @@ if ($evento['tipo_evento_id'] == 1) {
             if ($pedido['verba_id'] == null)
                 array_push($erros, "Não há verba cadastrada no pedido");
 
-
             if ($pedido['numero_parcelas'] == null)
                 array_push($erros, "Não há número de parcelas cadastrada no pedido");
 
@@ -201,6 +200,19 @@ if ($evento['tipo_evento_id'] == 1) {
 
             if ($pedido['forma_pagamento'] == null)
                 array_push($erros, "Não há forma de pagamento cadastrada no pedido");
+
+            $idPedido = $pedido['id'];
+
+            $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo FROM lista_documentos ld
+                        LEFT JOIN (SELECT * FROM arquivos WHERE publicado = 1 AND origem_id = '$idPedido') a ON a.lista_documento_id = ld.id
+                        WHERE ld.publicado = 1 AND ld.tipo_documento_id = 3";
+
+            $queryArqs = mysqli_query($con, $sqlArqs);
+
+            while ($arquivo = mysqli_fetch_array($queryArqs)) {
+                if ($arquivo['arquivo'] == NULL)
+                    array_push($errosArqs, $arquivo['documento'] . " não enviado");
+            }
         }
     }
 }
