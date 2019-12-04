@@ -1322,7 +1322,7 @@ function retornaPeriodoFormacao($idVigencia){
     if($data_inicio['data_inicio'] == $data_fim['data_fim']){
         return $data_inicio;
     }else{
-        return "de ". exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim);
+        return "de ". exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim['data_fim']);
     }
 }
 
