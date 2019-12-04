@@ -379,119 +379,12 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
 
                                     <!-- Cadastro de Proponente -->
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-2">
-                                        <h3 class="h2">2. Cadastro de Proponente</h3>
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="form-group col-md-8">
-                                                        <div class="jumbotrom">
-                                                            <label for="proponente">Proponente</label>
-                                                            <input type="text" id="proponente" name="proponente"
-                                                                   class="form-control" disabled
-                                                                   value="<?= $proponente ?>">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-md-2"><label><br></label>
-                                                        <form method="POST" action="<?= $link_edita ?>" role="form">
-                                                            <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
-                                                            <button type="submit" name="editProponente" class="btn btn-primary btn-block">
-                                                                Editar Proponente
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                    <div class="form-group col-md-2"><label><br></label>
-                                                        <form method="POST" action="?perfil=evento&p=troca_proponente"
-                                                              role="form">
-                                                            <input type="hidden" name="idPedido"
-                                                                   value="<?= $idPedido ?>">
-                                                            <input type="hidden" name="idProponente"
-                                                                   value="<?= $idProponente ?>">
-                                                            <button type="submit" name="trocaProponente"
-                                                                    class="btn btn-primary btn-block">Trocar de
-                                                                Proponente
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <ul class="list-inline pull-right">
-                                            <li>
-                                                <a class="btn btn-default prev-step"><span
-                                                            aria-hidden="true">&larr;</span>
-                                                    Voltar</a>
-                                            </li>
-                                            <li>
-                                                <a class="btn btn-primary next-step">Próxima etapa <span
-                                                            aria-hidden="true">&rarr;</span></a>
-                                            </li>
-                                        </ul>
+                                        <?php include "includes/label_pedido_proponente.php" ?>
                                     </div>
 
                                     <!-- Líderes -->
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
-                                        <?php
-                                        //if($pedido['pessoa_tipo_id'] == 2){
-                                        $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
-                                            LEFT JOIN lideres l on a.id = l.atracao_id
-                                            left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
-                                            WHERE a.publicado = 1 AND a.evento_id = '" . $_SESSION['idEvento'] . "'";
-                                        $query_atracao = mysqli_query($con, $sql_atracao);
-                                        ?>
-                                        <h3 class="hs">3. Líder</h3>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <table class="table table-bordered table-striped">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>Atração</th>
-                                                        <th>Proponente</th>
-                                                        <th width="10%">Ação</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <?php
-                                                    echo "<tbody>";
-                                                    while ($atracao = mysqli_fetch_array($query_atracao)) {
-                                                        //analisaArray($atracao);
-                                                        echo "<tr>";
-                                                        echo "<td>" . $atracao['nome_atracao'] . "</td>";
-                                                        if ($atracao['pessoa_fisica_id'] > 0) {
-                                                            echo "<td>" . $atracao['nome'] . "</td>";
-                                                            echo "<td>
-                                            <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
-                                            <input type='hidden' name='oficina' value='" . $atracao['id'] . "'>
-                                            <input type='hidden' name='lider' value='$idPedido'>
-                                            <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-refresh'></i> Trocar</button>
-                                            </form>
-                                        </td>";
-                                                        } else {
-                                                            echo "<td>
-                                            <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
-                                            <input type='hidden' name='oficina' value='" . $atracao['id'] . "'>
-                                            <input type='hidden' name='lider' value='$idPedido'>
-                                            <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-plus'></i> Adicionar</button>
-                                            </form>
-                                        </td>";
-                                                            echo "<td></td>";
-                                                        }
-                                                        echo "</tr>";
-                                                    }
-                                                    echo "</tbody>";
-                                                    ?>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <ul class="list-inline pull-right">
-                                            <li>
-                                                <a class="btn btn-default prev-step"><span
-                                                            aria-hidden="true">&larr;</span>
-                                                    Voltar</a>
-                                            </li>
-                                            <li>
-                                                <a class="btn btn-primary next-step">Próxima etapa <span
-                                                            aria-hidden="true">&rarr;</span></a>
-                                            </li>
-                                        </ul>
+                                        <?php include "includes/label_pedido_lideres.php" ?>
                                     </div>
 
                                     <!-- Parecer Artístico -->
@@ -499,14 +392,14 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                         <h3>4. Parecer artístico</h3>
                                         <div class="container">
                                             <div class="row">
-                                                <?php include "includes/label_parecer_artistico.php" ?>
+                                                <?php include "includes/label_pedido_parecer_artistico.php" ?>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- Valor por Equipamento -->
                                     <div class="tab-pane fade" role="tabpanel" id="stepper-step-5">
-                                        <?php include_once "includes/label_valor_equipamento.php" ?>
+                                        <?php include_once "includes/label_pedido_valor_equipamento.php" ?>
                                     </div>
                                 </div>
                             </form>
@@ -519,7 +412,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         </div>
 
 <!-- /.row -->
-<!-- END ACCORDION & CAROUSEL-->
 </section>
 <!-- /.content -->
 </div>
