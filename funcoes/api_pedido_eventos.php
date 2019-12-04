@@ -5,16 +5,16 @@ $con = bancoMysqli();
 
 if (isset($_POST['_method'])) {
     session_start();
-    switch ($_POST['_method']){
+    switch ($_POST['_method']) {
         case "valorPorEquipamento":
             $valoresEquipamentos = $_POST['valorEquipamento'];
             $equipamentos = $_POST['equipamentos'];
-            $idPedido = $_SESSION['idPedido'];
+            $idPedido = $_POST['idPedido'];
 
             $sql_delete = "DELETE FROM valor_equipamentos WHERE pedido_id = '$idPedido'";
             mysqli_query($con, $sql_delete);
 
-            for ($i = 0; $i < count($valoresEquipamentos); $i++){
+            for ($i = 0; $i < count($valoresEquipamentos); $i++) {
                 $valor = dinheiroDeBr($valoresEquipamentos[$i]);
                 $idLocal = $equipamentos[$i];
 
@@ -45,6 +45,37 @@ if (isset($_POST['_method'])) {
             } else {
                 echo false;
             }
+            break;
+        case "parcelas":
+
+            $idVerba = $_POST["verba_id"];
+            $valor_total = $_POST["valor_total"];
+            $num_parcelas = $_POST["numero_parcelas"];
+            $forma_pagamento = $_POST["forma_pagamento"];
+            $justificativa = $_POST["justificativa"];
+            $observacao = $_POST["observacao"];
+            $idPedido = $_POST["idPedido"];
+            $tipoPesso = $_POST["tipoPessoa"];
+            $idProponent = $_POST["idProponente"];
+
+            if ($num_parcelas == 1 || $num_parcelas == 13) {
+                $query_data = "SELECT MIN(c.data_inicio)
+                               FROM
+                                ocorrencias AS c INNER JOIN eventos AS e
+                               ON c.origem_ocorrencia_id = e.id
+                               WHERE e.id = '$idPedido'";
+
+                if (mysqli_query($con,$query_data)){
+                    if ($query_data == null){
+                        echo "É necessario cadastrar uma ocorrencia antes de continuar";
+                    }
+                    else{
+                            
+                    }
+                }
+
+            }
+
             break;
 
         default:
