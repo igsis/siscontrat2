@@ -30,7 +30,7 @@ function Header()
 //CONSULTA 
 $id_Pf = $_GET['id'];
 
-$ano=date('Y');
+$ano=date('Y', strtotime("-3 hours"));
 
 $pf = recuperaDados("pessoa_fisicas", "id", $id_Pf);
 

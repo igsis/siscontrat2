@@ -20,11 +20,27 @@ if (isset($_POST['cadastra'])) {
         $idAtracao = recuperaUltimo("atracoes");
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
 
+        $sql = "SELECT * FROM pedidos WHERE origem_id = '$idEvento' AND origem_tipo_id = 1 AND publicado = 1";
+        $query = mysqli_query($con, $sql);
+        $numRow = mysqli_num_rows($query);
+
+        if ($numRow > 0) {
+            $sql = "SELECT sum(valor_individual) AS 'valores'  FROM atracoes WHERE publicado = 1 AND evento_id = '$idEvento'";
+
+            $query = mysqli_query($con, $sql);
+            $valor = mysqli_fetch_array($query)['valores'];
+
+            $sql = "UPDATE pedidos SET valor_total = '$valor' WHERE origem_id = '$idEvento' AND origem_tipo_id = 1 and publicado = 1";
+            if (mysqli_query($con, $sql)) {
+                $mensagem3 = mensagem("warning", "Lembre-se de ajustar o valor das parcelas e do equipamento!");
+            }
+        }
+
         if (isset($_POST['acao'])) {
             atualizaDadosRelacionamento('acao_atracao', $idAtracao, $_POST['acao'], 'atracao_id', 'acao_id');
         }
 
-        $dataAtual = date("Y-m-d");
+        $dataAtual = date("Y-m-d", strtotime("-3 hours"));
         $sqlOcorrencia = "SELECT atr.valor_individual, ocr.data_inicio 
                           FROM ocorrencias ocr 
                           INNER JOIN atracoes atr 
@@ -51,6 +67,22 @@ if (isset($_POST['edita'])) {
     $idAtracao = $_POST['idAtracao'];
     $sql_atracoes = "UPDATE atracoes SET nome_atracao = '$nome_atracao', ficha_tecnica = '$ficha_tecnica', integrantes = '$integrantes', classificacao_indicativa_id = '$classificacao_indicativa_id', release_comunicacao = '$release_comunicacao', links = '$links', quantidade_apresentacao = '$quantidade_apresentacao', valor_individual = '$valor_individual', oficina = '$oficina' WHERE id = '$idAtracao'";
     if (mysqli_query($con, $sql_atracoes)) {
+
+        $sql = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
+        $query = mysqli_query($con, $sql);
+        $numRow = mysqli_num_rows($query);
+
+        if ($numRow > 0) {
+            $sql = "SELECT sum(valor_individual) as 'valores' FROM atracoes WHERE publicado = 1 AND evento_id = '$idEvento'";
+            $query = mysqli_query($con, $sql);
+            $valor = mysqli_fetch_array($query)['valores'];
+
+            $sql = "UPDATE pedidos SET valor_total = '$valor' WHERE origem_id = '$idEvento' AND origem_tipo_id = 1 AND publicado = 1";
+            if (mysqli_query($con, $sql)) {
+                $mensagem3 = mensagem("warning", "Lembre-se de ajustar o valor das parcelas e do equipamento!");
+            }
+        }
+
         if (isset($_POST['acao'])) {
             atualizaDadosRelacionamento('acao_atracao', $idAtracao, $_POST['acao'], 'atracao_id', 'acao_id');
         }
@@ -89,11 +121,19 @@ include "includes/menu_interno.php";
                             echo $mensagem;
                         }; ?>
                     </div>
+
                     <div class="row" align="center">
                         <?php if (isset($mensagem2)) {
                             echo $mensagem2;
                         }; ?>
                     </div>
+
+                    <div class="row" align="center">
+                        <?php if (isset($mensagem3)) {
+                            echo $mensagem3;
+                        }; ?>
+                    </div>
+
                     <form method="POST" action="?perfil=evento&p=atracoes_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
@@ -224,7 +264,7 @@ include "includes/menu_interno.php";
         <!-- END ACCORDION & CAROUSEL-->
         <!-- /modal -->
 
-        <?php @include "../perfil/includes/modal_classificacao.php"?>
+        <?php @include "../perfil/includes/modal_classificacao.php" ?>
 
     </section>
     <!-- /.content -->
@@ -268,12 +308,8 @@ include "includes/menu_interno.php";
 </div>
 
 <script>
-
     $('#valor_individual').mask('000.000.000.000.000,00', {reverse: true});
 
-</script>
-
-<script>
     let fomento = $('.fomento');
     let acao = $("input[name='acao[]']");
     const oficinaId = "Oficinas e Formação Cultural";
@@ -282,11 +318,11 @@ include "includes/menu_interno.php";
 
     function verificaOficina() {
         if ($('#simOficina').is(':checked')) {
-            checaCampos(oficinaOficial)
-            acaoValidacao()
+            checaCampos(oficinaOficial);
+            acaoValidacao();
         } else {
-            checaCampos("")
-            acaoValidacao()
+            checaCampos("");
+            acaoValidacao();
         }
     }
 
@@ -342,10 +378,7 @@ include "includes/menu_interno.php";
                 .attr('required', false)
         }
     }
-</script>
 
-
-<script>
     function acaoValidacao() {
         var isMsg = $('#msgEsconde');
         isMsg.hide();

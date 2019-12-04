@@ -10,7 +10,7 @@ date_default_timezone_set("Brazil/East");
 	//saudacao inicial
 	function saudacao()
 	{
-		$hora = date('H');
+		$hora = date('H', strtotime("-3 hours"));
 		if(($hora > 12) AND ($hora <= 18))
 		{
 			return "Boa tarde";
@@ -1315,10 +1315,20 @@ function retornaPeriodoNovo($id, $tabela)
     }
 }
 
+function retornaPeriodoFormacao($idVigencia){
+    $con = bancoMysqli();
+    $data_inicio = $con->query("SELECT data_inicio FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array();
+    $data_fim = $con->query("SELECT data_fim FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array();
+    if($data_inicio['data_inicio'] == $data_fim['data_fim']){
+        return $data_inicio;
+    }else{
+        return "de ". exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim['data_fim']);
+    }
+}
+
 function geraProtocolo($id)
 {
-    date_default_timezone_set('America/Sao_Paulo');
-    $date = date('Ymd');
+    $date = date('Ymd',strtotime('-3 hours'));
     $preencheZeros = str_pad($id, 5, '0', STR_PAD_LEFT);
     return $date . '.' . $preencheZeros;
 }

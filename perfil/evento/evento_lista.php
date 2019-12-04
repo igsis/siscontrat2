@@ -14,10 +14,30 @@ if (isset($_POST['excluir'])) {
     $stmt->execute(['id' => $evento]);
     $mensagem = mensagem("success", "Evento excluido com sucesso!");
 
+    $sqlDeletaAtracao = "UPDATE atracoes SET publicado = 0 WHERE evento_id = '$evento'";
+    mysqli_query($con, $sqlDeletaAtracao);
+
+    $sqlAtracoesDeletadas = "SELECT * FROM atracoes WHERE publicado = 0";
+    $queryAtracoesDeletadas = mysqli_query($con, $sqlAtracoesDeletadas);
+
+    while ($atracaoDeletada = mysqli_fetch_array($queryAtracoesDeletadas)) {
+        $idAtracao = $atracaoDeletada['id'];
+
+        $sqlDeletaOcorrencia = "UPDATE ocorrencias SET publicado = 0 WHERE origem_ocorrencia_id = '$idAtracao'";
+        mysqli_query($con, $sqlDeletaOcorrencia);
+    }
+
+    $sqlDeletaPedido = "UPDATE pedidos SET publicado = 0 WHERE origem_tipo_id = 1 AND origem_id = '$evento'";
+    mysqli_query($con, $sqlDeletaPedido);
+
+    gravarLog($sqlDeletaPedido);
+    gravarLog($sqlDeletaOcorrencia);
+    gravarLog($sqlDeletaAtracao);
 }
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status, ev.usuario_id FROM eventos AS ev
+$sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status, ev.usuario_id, ev.usuario_id, ev.fiscal_id, ev.suplente_id 
+        FROM eventos AS ev
         INNER JOIN tipo_eventos AS te on ev.tipo_evento_id = te.id
         INNER JOIN evento_status es on ev.evento_status_id = es.id
         WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id = 1 OR evento_status_id = 5";
@@ -52,6 +72,7 @@ $query = mysqli_query($con, $sql);
                             <tr>
                                 <th>Nome do evento</th>
                                 <th>Tipo do evento</th>
+                                <th>Vínculo</th>
                                 <th>Status</th>
                                 <th>Visualizar</th>
                                 <th>Apagar</th>
@@ -61,23 +82,24 @@ $query = mysqli_query($con, $sql);
                             <?php
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
+                                $vinculo = '';
+
+                                if ($evento['usuario_id'] == $idUser)
+                                    $vinculo = 'Usuário';
+                                else if ($evento['fiscal_id'] == $idUser)
+                                    $vinculo = 'Físcal';
+                                else
+                                    $vinculo = 'Suplente';
+
                                 echo "<tr>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
                                 echo "<td>" . $evento['tipo_evento'] . "</td>";
+                                echo "<td>" . $vinculo . "</td>";
                                 if ($evento['status'] == "Cancelado") {
                                     $idEvento = $evento['idEvento'];
                                     $nomeEvento = $evento['nome_evento'];
-                                    $sqlChamado = "SELECT c.justificativa, c.data FROM chamados AS c WHERE evento_id = $idEvento";
+                                    $sqlChamado = "SELECT u.nome_completo, c.justificativa, c.data FROM chamados AS c INNER JOIN usuarios AS u ON u.id = c.usuario_id WHERE evento_id = $idEvento";
                                     $chamado = $con->query($sqlChamado)->fetch_array();
-
-                                    //operador
-                                    $testa = $con->query("SELECT operador_id FROM pedidos WHERE origem_id = $idEvento")->fetch_array();
-                                    $idUsuario = $eventos['operador_id'];
-                                    if ($idUsuario != 0) {
-                                        $operadorAux = "AND usuario_id = $idUsuario";
-                                        $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUsuario $operadorAux";
-                                        $operador = $con->query($sqlOperador)->fetch_array();
-                                    }
                                     ?>
                                     <td>
                                         <button type="button" class="btn-link" id="exibirMotivo"
@@ -114,8 +136,10 @@ $query = mysqli_query($con, $sql);
                             <tr>
                                 <th>Nome do evento</th>
                                 <th>Tipo do evento</th>
+                                <th>Vínculo</th>
                                 <th>Status</th>
-                                <th colspan="2" width="15%"></th>
+                                <th>Visualizar</th>
+                                <th>Apagar</th>
                             </tr>
                             </tfoot>
                         </table>
@@ -173,14 +197,7 @@ $query = mysqli_query($con, $sql);
                             </thead>
                             <tbody>
                                 <td><?=$chamado['justificativa']?></td>
-                                <?php
-                                    if(isset($operador['nome_completo'])){
-                                        echo "<td>" . $operador['nome_completo']. "</td>";
-                                    }else{
-                                        echo "<td> </td>";
-                                    }
-                                ?>
-
+                                <td><?=$chamado['nome_completo']?></td>
                                 <td><?=exibirDataBr($chamado['data'])?></td>
                             </tbody>
                         </table>

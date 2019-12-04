@@ -20,7 +20,7 @@ $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
 
-$ano = date('Y',strtotime("now"));
+$ano = date('Y',strtotime("-3 hours"));
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();

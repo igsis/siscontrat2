@@ -13,7 +13,7 @@ if(isset($_POST['enviar'])){
     if($sql_cadastra){
         $mensagem = mensagem("success","Evento enviado com sucesso!");
         $idUser = $_SESSION['idUser'];
-        $data = date("Y-m-d H:i:s", strtotime("now"));
+        $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
         $sqlEnvio = "INSERT INTO producao_agendoes (agendao_id, usuario_id, data) VALUES ('$idEvento', '$idUser','$data')";
         $queryEnvio = mysqli_query($con,$sqlEnvio);
     }

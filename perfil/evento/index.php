@@ -83,7 +83,15 @@ $idUsuario = $_SESSION['idUser'];
 
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos e INNER JOIN pedidos p ON p.origem_id = e.id WHERE e.publicado = 1 AND p.publicado = 1 AND e.evento_status_id >= 3 AND p.origem_tipo_id = 1 AND p.status_pedido_id = 2 AND (e.suplente_id = '$idUsuario' OR e.fiscal_id = '$idUsuario' OR e.usuario_id = '$idUsuario') ORDER BY e.id DESC LIMIT 0,20";
+$sql = "SELECT e.id, e.nome_evento, u.nome_completo, ee.data_envio FROM eventos e 
+                INNER JOIN pedidos p ON p.origem_id = e.id 
+                INNER JOIN usuarios u on e.usuario_id = u.id
+                INNER JOIN evento_envios ee on e.id = ee.evento_id
+                WHERE e.publicado = 1 AND p.publicado = 1 AND e.evento_status_id >= 3 
+                AND p.origem_tipo_id = 1 AND p.status_pedido_id = 2 
+                AND (e.suplente_id = '$idUsuario' OR e.fiscal_id = '$idUsuario' OR e.usuario_id = '$idUsuario') 
+                AND ee.data_envio is not null 
+                ORDER BY e.id DESC LIMIT 0,20";
 
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
@@ -127,12 +135,8 @@ if ($linha >= 1) {
                                         </div>
                                         <div id="collapse<?= $evento['id'] ?>" class="panel-collapse collapse">
                                             <div class="box-body">
-                                                <?php
-                                                $dataEnvio = recuperaDados('evento_envios', 'evento_id', $evento['id']);
-                                                $usuario = recuperaDados('usuarios', 'id', $evento['usuario_id']);
-                                                ?>
-                                                <p><b>Enviado por: </b><?= $usuario['nome_completo'] ?>
-                                                    <b>em:</b> <?= exibirDataBr($dataEnvio['data_envio']) ?> </p>
+                                                <p><b>Enviado por: </b><?= $evento['nome_completo'] ?>
+                                                    <b>em:</b> <?= exibirDataHoraBr($evento['data_envio']) ?> </p>
                                                 <p><b>Período:</b> <?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?> </p>
                                                 <p><b>Local:</b> <?= $locais ?></p>
                                             </div>

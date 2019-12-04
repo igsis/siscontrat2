@@ -37,11 +37,11 @@ if (isset($_POST['enviar'])) {
                 $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3 WHERE id = '$idEvento'";
                 mysqli_query($con, $sqlEnviaEvento);
 
-                $data = date("Y-m-d H:i:s",strtotime("now"));
+                $data = date("Y-m-d H:i:s",strtotime("-3 hours"));
                 $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
                 $queryEnvia = mysqli_query($con, $sqlEnvia);
                 $idUser = $_SESSION['idUser'];
-                $data = date("Y-m-d H:i:s", strtotime("now"));
+                $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
                 $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
                 $queryEnvio = mysqli_query($con,$sqlEnvio);
                 $mensagem = mensagem("success", "Evento enviado com sucesso!");
