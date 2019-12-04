@@ -9,7 +9,7 @@ if (isset($_POST['_method'])) {
         case "valorPorEquipamento":
             $valoresEquipamentos = $_POST['valorEquipamento'];
             $equipamentos = $_POST['equipamentos'];
-            $idPedido = $_SESSION['idPedido'];
+            $idPedido = $_POST['idPedido'];
 
             $sql_delete = "DELETE FROM valor_equipamentos WHERE pedido_id = '$idPedido'";
             mysqli_query($con, $sql_delete);
