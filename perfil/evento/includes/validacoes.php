@@ -8,6 +8,7 @@ $tipoEvento = $evento['tipo_evento_id'];
 $sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = '$tipoEvento' AND origem_id = '$idEvento' AND publicado = 1";
 $pedidos = mysqli_query($con, $sqlPedidos);
 $pedido = mysqli_fetch_array($pedidos);
+$tipoPessoa = $pedido['pessoa_tipo_id'];
 $numPedidos = mysqli_num_rows($pedidos);
 
 $errosArqs = [];
@@ -15,8 +16,6 @@ $erros = [];
 
 // CASO SEJA EVENTO ENTRA AQUI NESSA PARADA
 if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
-    $tipoPessoa = $pedido['pessoa_tipo_id'];
-
     $sqlAtracaos = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
     $atracoes = mysqli_query($con, $sqlAtracaos);
     $numAtracoes = mysqli_num_rows($atracoes);
@@ -27,46 +26,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
             if (($atracao['produtor_id'] == "") || ($atracao['produtor_id'] == NULL))
                 array_push($erros, "Produtor não cadastrado na atração <b> " . $atracao['nome_atracao'] . "</b>");
 
-            // VERIFICA SE TEM OS ARQUIVOS DE PESSOA FISICA ENVIADOS
-            if ($tipoPessoa == 1) {
-                $idPessoa = $pedido['pessoa_fisica_id'];
-                $pf = recuperaDados("pessoa_fisicas", "id", $idPessoa);
-
-                $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo 
-                            FROM lista_documentos ld
-                            LEFT JOIN (SELECT * FROM arquivos 
-                                        WHERE publicado = 1 AND origem_id = '$idPessoa') a ON ld.id = a.lista_documento_id
-                            WHERE ld.tipo_documento_id = '$tipoPessoa' AND ld.publicado = 1";
-                $queryArqs = mysqli_query($con, $sqlArqs);
-
-                while ($arquivo = mysqli_fetch_array($queryArqs)) {
-                    if ($arquivo['arquivo'] == NULL) {
-                        array_push($errosArqs, $arquivo['documento'] . " não enviado");
-                    }
-                }
-
-            } else {
-                // VERIFICA SE TEM OS ARQUIVOS DE PESSOA JURIDICA ENVIADOS
-                $idPessoa = $pedido['pessoa_juridica_id'];
-                $pj = recuperaDados("pessoa_juridicas", "id", $idPessoa);
-                $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo 
-                            FROM lista_documentos ld
-                            LEFT JOIN (SELECT * FROM arquivos 
-                                        WHERE publicado = 1 AND origem_id = '$idPessoa') a ON ld.id = a.lista_documento_id
-                            WHERE ld.tipo_documento_id = '$tipoPessoa' AND ld.publicado = 1";
-                $queryArqs = mysqli_query($con, $sqlArqs);
-                while ($arquivo = mysqli_fetch_array($queryArqs)) {
-
-                    if ($pj['representante_legal1_id'] == NULL && ($arquivo['id'] == 23 || $arquivo['id'] == 24))
-                        continue;
-
-                    if ($pj['representante_legal2_id'] == null && ($arquivo['id'] == 85 || $arquivo['id'] == 86))
-                        continue;
-
-                    if ($arquivo['arquivo'] == NULL)
-                        array_push($errosArqs, $arquivo['documento'] . " não enviado");
-                }
-
+            if ($tipoPessoa == 2) {
                 $idPedidoLider = $pedido['id'];
                 $idAtracao = $atracao['id'];
                 $sqlLider = "SELECT pessoa_fisica_id FROM lideres WHERE pedido_id = '$idPedidoLider' AND atracao_id = '$idAtracao'";
@@ -184,12 +144,79 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
     }
 
 } else if ($evento['tipo_evento_id'] == 2 && $pedidos != NULL) {
-    // FALTA FAZER O FILTRO DE FILME AGORA (FHODEU)
+    $tipoPessoa = $pedido['pessoa_tipo_id'];
 
+    $sqlFilme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
+    $filmes = mysqli_query($con, $sqlFilme);
+    $numFilmes = mysqli_num_rows($filmes);
 
+    if ($numFilmes == 0) {
+        array_push($erros, "Não possui filmes cadastrados");
+    } else {
+        foreach ($filmes as $filme) {
+            $idFilme = $filme['id'];
+            $sqlOcorrencia = "SELECT * FROM ocorrencias oco INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1";
+            $ocorrencias = mysqli_query($con, $sqlOcorrencia);
+            $numOcorrencias = mysqli_num_rows($ocorrencias);
+
+            if ($numOcorrencias == 0) {
+                array_push($erros, "Não há ocorrência cadastrada para o filme <b>" . $filme['titulo'] . "</b>");
+            }
+        }
+    }
 } else {
     if ($evento['contratacao'] == 1) {
         array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
+    }
+}
+
+if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
+    // VERIFICA SE TEM OS ARQUIVOS DE PESSOA FISICA ENVIADOS
+    if ($tipoPessoa == 1) {
+        $idPessoa = $pedido['pessoa_fisica_id'];
+        $pf = recuperaDados("pessoa_fisicas", "id", $idPessoa);
+
+        $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo 
+                            FROM lista_documentos ld
+                            LEFT JOIN (SELECT * FROM arquivos 
+                                        WHERE publicado = 1 AND origem_id = '$idPessoa') a ON ld.id = a.lista_documento_id
+                            WHERE ld.tipo_documento_id = '$tipoPessoa' AND ld.publicado = 1";
+
+        $queryArqs = mysqli_query($con, $sqlArqs);
+
+        while ($arquivo = mysqli_fetch_array($queryArqs)) {
+            if ($arquivo['arquivo'] == NULL) {
+                array_push($errosArqs, $arquivo['documento'] . " não enviado");
+            }
+        }
+
+    } else {
+        // VERIFICA SE TEM OS ARQUIVOS DE PESSOA JURIDICA ENVIADOS
+        $idPessoa = $pedido['pessoa_juridica_id'];
+        $pj = recuperaDados("pessoa_juridicas", "id", $idPessoa);
+        $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo 
+                            FROM lista_documentos ld
+                            LEFT JOIN (SELECT * FROM arquivos 
+                                        WHERE publicado = 1 AND origem_id = '$idPessoa') a ON ld.id = a.lista_documento_id
+                            WHERE ld.tipo_documento_id = '$tipoPessoa' AND ld.publicado = 1";
+
+        $queryArqs = mysqli_query($con, $sqlArqs);
+        while ($arquivo = mysqli_fetch_array($queryArqs)) {
+
+            if ($pj['representante_legal1_id'] == NULL && ($arquivo['id'] == 23 || $arquivo['id'] == 24))
+                continue;
+
+            if ($pj['representante_legal2_id'] == null && ($arquivo['id'] == 85 || $arquivo['id'] == 86))
+                continue;
+
+            if ($arquivo['arquivo'] == NULL)
+                array_push($errosArqs, $arquivo['documento'] . " não enviado");
+        }
+    }
+} else {
+    if ($evento['contratacao'] == 1) {
+        array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
+        array_push($erros, "Não há pedido inserido neste evento");
     }
 }
 
