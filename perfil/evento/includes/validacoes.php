@@ -170,6 +170,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
     }
 }
 
+// VERIFICA SE TEM PEDIDO E É CONTRATACAO CASO O CONTRARIO ELE ADICIONA OS ERROS NA PARTE DE FILME JA QUE ELA NAO FICOU TAAAAAAAAO BEM OTIMIZADA
 if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
     // VERIFICA SE TEM OS ARQUIVOS DE PESSOA FISICA ENVIADOS
     if ($tipoPessoa == 1) {
@@ -214,6 +215,7 @@ if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
         }
     }
 } else {
+    // CASO SEJA CONTRATACAO E NAO TENHA PEDIDO ELA ADD ERRO PARA EVITAR O ENVIO DO EVENTO
     if ($evento['contratacao'] == 1) {
         array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
         array_push($erros, "Não há pedido inserido neste evento");
