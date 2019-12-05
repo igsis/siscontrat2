@@ -13,6 +13,21 @@ if (isset($_POST['tipoModelo'])) {
 }
 
 
+$sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
+$mdl = $con->query($sqlModelo)->fetch_assoc();
+$usuarios = recuperaDados('usuarios','id',$idEvento);
+$fiscal= $usuarios["nome_completo"];
+$suplente= $usuarios["nome_completo"];
+$rfSuplente= $usuarios["rf_rg"];
+$rfFiscal= $usuarios["rf_rg"];
+
+$mdl = str_replace("nomeFiscal", $fiscal, $mdl);
+$mdl = str_replace("rfFiscal", $rfFiscal, $mdl);
+$mdl = str_replace("nomeSuplente", $suplente, $mdl);
+$mdl = str_replace("rfSuplente", $rfSuplente, $mdl);
+
+
+
 $sql = "SELECT 
     p.numero_processo,
     p.forma_pagamento,
@@ -80,10 +95,6 @@ $evento = $con->query($sql)->fetch_array();
                             <td><?= $evento['forma_pagamento'] ?></td>
                         </tr>
                         <tr>
-                            <?php
-                            $sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
-                            $mdl = $con->query($sqlModelo)->fetch_assoc();
-                            ?>
                             <th width="30%">Amparo:</th>
                             <td><textarea name="amparo" rows="6" cols="85"><?= $mdl['amparo'] ?></textarea></td>
                         </tr>
@@ -93,7 +104,7 @@ $evento = $con->query($sql)->fetch_array();
                         </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
-                            <td><textarea name="finalizar" rows="6" cols="85"><?= $mdl['finalizacao'] ?></textarea></td>
+                            <td><textarea name="finalizar" rows="8" cols="85"><?= $mdl['finalizacao'] ?></textarea></td>
                         </tr>
                     </table>
                     <div class="pull-left">
