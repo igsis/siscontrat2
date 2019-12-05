@@ -1,6 +1,7 @@
 <?php
 include "includes/menu_interno.php";
 unset($_SESSION['idPj']);
+unset($_SESSION['idPedido']);
 
 $con = bancoMysqli();
 $conn = bancoPDO();
