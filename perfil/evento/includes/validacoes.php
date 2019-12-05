@@ -1,121 +1,43 @@
 <?php
 $con = bancoMysqli();
-$conn = bancoPDO();
 
 $idEvento = $_SESSION['idEvento'];
-
 $evento = recuperaDados('eventos', 'id', $idEvento);
-
 $tipoEvento = $evento['tipo_evento_id'];
 
-$sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = $tipoEvento AND origem_id = '$idEvento' AND publicado = 1";
-$pedidos = $con->query($sqlPedidos)->fetch_assoc();
-
-$atracoes = $con->query("SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'");
+$sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = '$tipoEvento' AND origem_id = '$idEvento' AND publicado = 1";
+$pedidos = mysqli_query($con, $sqlPedidos);
+$pedido = mysqli_fetch_array($pedidos);
+$tipoPessoa = $pedido['pessoa_tipo_id'];
+$numPedidos = mysqli_num_rows($pedidos);
 
 $errosArqs = [];
 $erros = [];
-if ($pedidos != null) {
-    while ($atracao = mysqli_fetch_array($atracoes)) {
-        $tipoPessoa = $pedidos['pessoa_tipo_id'];
 
-        if ($tipoPessoa == 1) {
-            $idPessoa = $pedidos['pessoa_fisica_id'];
-            $pf = recuperaDados("pessoa_fisicas", "id", $idPessoa);
+// CASO SEJA EVENTO ENTRA AQUI NESSA PARADA
+if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
+    $sqlAtracaos = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+    $atracoes = mysqli_query($con, $sqlAtracaos);
+    $numAtracoes = mysqli_num_rows($atracoes);
 
-            $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo 
-                            FROM lista_documentos ld
-                            LEFT JOIN (SELECT * FROM arquivos 
-                                        WHERE publicado = 1 AND origem_id = '$idPessoa') a ON ld.id = a.lista_documento_id
-                            WHERE ld.tipo_documento_id = '$tipoPessoa' AND ld.publicado = 1";
-            $queryArqs = mysqli_query($con, $sqlArqs);
+    // VERIFICA SE TEM ATRACOES CADASTRADAS
+    if ($numAtracoes > 0) {
+        while ($atracao = mysqli_fetch_array($atracoes)) {
+            if (($atracao['produtor_id'] == "") || ($atracao['produtor_id'] == NULL))
+                array_push($erros, "Produtor não cadastrado na atração <b> " . $atracao['nome_atracao'] . "</b>");
 
-            while ($arquivo = mysqli_fetch_array($queryArqs)) {
-                if ($arquivo['arquivo'] == NULL) {
-                    array_push($errosArqs, $arquivo['documento'] . " não enviado");
-                }
+            if ($tipoPessoa == 2) {
+                $idPedidoLider = $pedido['id'];
+                $idAtracao = $atracao['id'];
+                $sqlLider = "SELECT pessoa_fisica_id FROM lideres WHERE pedido_id = '$idPedidoLider' AND atracao_id = '$idAtracao'";
+                $queryLider = mysqli_query($con, $sqlLider);
+
+                if (mysqli_num_rows($queryLider) == 0)
+                    array_push($erros, "Líder não cadastrado na atração: <b>" . $atracao['nome_atracao'] . '</b>');
+
             }
 
-        } else {
-            $idPessoa = $pedidos['pessoa_juridica_id'];
-            $pj = recuperaDados("pessoa_juridicas", "id", $idPessoa);
-            $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo 
-                            FROM lista_documentos ld
-                            LEFT JOIN (SELECT * FROM arquivos 
-                                        WHERE publicado = 1 AND origem_id = '$idPessoa') a ON ld.id = a.lista_documento_id
-                            WHERE ld.tipo_documento_id = '$tipoPessoa' AND ld.publicado = 1";
-            $queryArqs = mysqli_query($con, $sqlArqs);
-            while ($arquivo = mysqli_fetch_array($queryArqs)) {
-
-                if ($pj['representante_legal1_id'] == NULL && ($arquivo['id'] == 23 || $arquivo['id'] == 24))
-                    continue;
-
-                if ($pj['representante_legal2_id'] == null && ($arquivo['id'] == 85 || $arquivo['id'] == 86))
-                    continue;
-
-                if ($arquivo['arquivo'] == NULL)
-                    array_push($errosArqs, $arquivo['documento'] . " não enviado");
-            }
-
-            $idPedidoLider = $pedidos['id'];
-            $idAtracao = $atracao['id'];
-            $sqlLider = "SELECT pessoa_fisica_id FROM lideres WHERE pedido_id = '$idPedidoLider' AND atracao_id = '$idAtracao'";
-            $queryLider = mysqli_query($con, $sqlLider);
-
-            if (mysqli_num_rows($queryLider) == 0)
-                array_push($erros, "Líder não cadastrado na atração: <b>" . $atracao['nome_atracao'] . '</b>');
-
-        }
-    }
-} else {
-    if ($evento['contratacao'] == 1) {
-        array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
-    }
-}
-
-$numAtracoes = $atracoes->num_rows;
-
-/**
- * <p>Recebe um array multidimensional para ser utilizado na função in_array()</p>
- *
- * @param string|int $needle <p>
- * Valor a ser procurado </p>
- * @param array $haystack <p>
- * Array multidimensional onde deve procurar
- * @return array <p>
- * Retorna um array contendo os indices: <br>
- * 'bool' - false ou true <br>
- * 'especificidade' - indice do array multidimencional onde foi encontrado o valor </p>
- */
-function in_array_key($needle, $haystack)
-{
-    $return = [
-        'bool' => false,
-        'especificidade' => null
-    ];
-
-    foreach ($haystack as $key => $array) {
-        if (in_array($needle, $array)) {
-            $return = [
-                'bool' => true,
-                'especificidade' => $key
-            ];
-            return $return;
-        }
-    }
-    return $return;
-}
-
-if ($evento['tipo_evento_id'] == 1) {
-    if ($numAtracoes == 0) {
-        array_push($erros, "Não possui atrações cadastradas");
-    } else {
-        foreach ($atracoes as $atracao) {
-            if (($atracao['produtor_id'] == "") || ($atracao['produtor_id'] == null)) {
-                array_push($erros, "Produtor não cadastrado na atração <b>" . $atracao['nome_atracao'] . "</b>");
-            }
-
-
+            // VERIFICA O TIPO DE ACAO E VE SE TEM ESPECIFICIDADE
             $idAtracao = $atracao['id'];
             $acoes = recuperaDados('acao_atracao', 'atracao_id', $idAtracao);
             $idAcao = $acoes['acao_id'];
@@ -137,13 +59,16 @@ if ($evento['tipo_evento_id'] == 1) {
                     $possui = false;
             }
 
+            // CASO POSSUA ESPECIFICIDADE REALMENTE CONFERIR SE FOI CADASTRADA ALGUMA
             if ($possui) {
-                $numEspecificidades = $con->query("SELECT * FROM $tabela WHERE atracao_id = '$idAtracao'")->num_rows;
-                if ($numEspecificidades == 0) {
-                    array_push($erros, "Não há especificidade cadastrada para a atração <b>" . $atracao['nome_atracao'] . "</b>");
-                }
+                $sqlEspecificidade = "SELECT * FROM  $tabela WHERE atracao_id = '$idAtracao'";
+                $especificidades = mysqli_query($con, $sqlEspecificidade);
+                $numEspecificidade = mysqli_num_rows($especificidades);
+                if ($numEspecificidade == 0)
+                    array_push($erros, "Não há especificidade cadastrada para a atração <b> " . $atracao['nome_atracao'] . " </b>");
             }
 
+            // VERIFICA SE TEM OCORRENCIAS CADASTRADAS
             $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE tipo_ocorrencia_id = $tipoEvento AND atracao_id = '$idAtracao' AND publicado = '1'";
             $ocorrencias = mysqli_query($con, $sqlOcorrencia);
             $numOcorrencias = mysqli_num_rows($ocorrencias);
@@ -152,6 +77,7 @@ if ($evento['tipo_evento_id'] == 1) {
             } else {
                 while ($ocorrencia = mysqli_fetch_array($ocorrencias)) {
                     if ($evento['contratacao'] == 1) {
+                        // VERIFICA SE ESTA DENTRO DO PRAZO
                         $hoje = new DateTime(date("Y-m-d"));
                         $dataInicio = new DateTime($ocorrencia['data_inicio']);
                         $diff = $hoje->diff($dataInicio);
@@ -172,69 +98,194 @@ if ($evento['tipo_evento_id'] == 1) {
                 }
             }
         }
-    }
 
-    if ($evento['contratacao'] == 1) {
-        $pedidos = $con->query("SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'");
-        $numPedidos = $pedidos->num_rows;
-        $pedido = $pedidos->fetch_assoc();
-        if ($numPedidos == 0) {
-            array_push($erros, "Não há pedido inserido neste evento");
-        } else {
-            if ($pedido['pessoa_tipo_id'] == 2) {
-                $pj = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
+        //PARTE DOS CONTRATOS SE FOR EVENTO
+        if ($evento['contratacao'] == 1) {
+            if ($numPedidos == 0) {
+                array_push($erros, "Não há pedido inserido neste evento");
+            } else {
+                // VE SE É PESSOA JURIDICA PARA VER SE TEM REPRESENTANTE LEGAL CADASTRADO
+                if ($pedido['pessoa_tipo_id'] == 2) {
+                    $pj = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
+                    if (($pj['representante_legal1_id'] == null) && ($pj['representante_legal2_id'] == null)) {
+                        array_push($erros, "Não há Representante Legal cadastrado no proponente <b>" . $pj['razao_social'] . "</b>");
+                    }
+                }
 
-                if (($pj['representante_legal1_id'] == null) && ($pj['representante_legal2_id'] == null)) {
-                    array_push($erros, "Não há Representante Legal cadastrado no proponente <b>" . $pj['razao_social'] . "</b>");
+                if ($pedido['verba_id'] == null)
+                    array_push($erros, "Não há verba cadastrada no pedido");
+
+                if ($pedido['numero_parcelas'] == null)
+                    array_push($erros, "Não há número de parcelas cadastrada no pedido");
+
+                if ($pedido['justificativa'] == null)
+                    array_push($erros, "Não há justificativa cadastrada no pedido");
+
+                if ($pedido['forma_pagamento'] == null)
+                    array_push($erros, "Não há forma de pagamento cadastrada no pedido");
+
+                // VERIFICA SE OS ARQUIVOS DE PEDIDO FORAM ENVIADOS
+                $idPedido = $pedido['id'];
+                $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo
+                            FROM lista_documentos ld
+                            LEFT JOIN (SELECT * FROM arquivos 
+                                       WHERE publicado = 1 AND origem_id = '$idPedido' AND publicado = 1) a ON ld.id = a.lista_documento_id
+                            WHERE ld.tipo_documento_id = 3 AND ld.publicado = 1";
+
+                $queryArqs = mysqli_query($con, $sqlArqs);
+                while ($arquivo = mysqli_fetch_array($queryArqs)) {
+                    if ($arquivo['arquivo'] == NULL)
+                        array_push($errosArqs, $arquivo['documento'] . " não enviado");
                 }
             }
-
-            if ($pedido['verba_id'] == null)
-                array_push($erros, "Não há verba cadastrada no pedido");
-
-            if ($pedido['numero_parcelas'] == null)
-                array_push($erros, "Não há número de parcelas cadastrada no pedido");
-
-            if ($pedido['justificativa'] == null)
-                array_push($erros, "Não há justificativa cadastrada no pedido");
-
-            if ($pedido['forma_pagamento'] == null)
-                array_push($erros, "Não há forma de pagamento cadastrada no pedido");
-
-            $idPedido = $pedido['id'];
-
-            $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo FROM lista_documentos ld
-                        LEFT JOIN (SELECT * FROM arquivos WHERE publicado = 1 AND origem_id = '$idPedido') a ON a.lista_documento_id = ld.id
-                        WHERE ld.publicado = 1 AND ld.tipo_documento_id = 3";
-
-            $queryArqs = mysqli_query($con, $sqlArqs);
-
-            while ($arquivo = mysqli_fetch_array($queryArqs)) {
-                if ($arquivo['arquivo'] == NULL)
-                    array_push($errosArqs, $arquivo['documento'] . " não enviado");
-            }
         }
+    } else {
+        array_push($erros, "Não possui atrações cadastradas!");
     }
-}
 
-if ($evento['tipo_evento_id'] == 2) {
-    $filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
-    $filmes = mysqli_query($con, $filme);
+} else if ($evento['tipo_evento_id'] == 2 && $pedidos != NULL) {
+    $tipoPessoa = $pedido['pessoa_tipo_id'];
+
+    $sqlFilme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
+    $filmes = mysqli_query($con, $sqlFilme);
     $numFilmes = mysqli_num_rows($filmes);
 
     if ($numFilmes == 0) {
         array_push($erros, "Não possui filmes cadastrados");
     } else {
         foreach ($filmes as $filme) {
-
-            $idAtracao = $filme['id'];
-            $ocorrencias = $con->query("SELECT * FROM ocorrencias WHERE atracao_id = '$idAtracao'");
-            $ocorrenciasAssocs = $ocorrencias->fetch_assoc();
-            $numOcorrencias = $ocorrencias->num_rows;
+            $idFilme = $filme['id'];
+            $sqlOcorrencia = "SELECT * FROM ocorrencias oco INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1";
+            $ocorrencias = mysqli_query($con, $sqlOcorrencia);
+            $numOcorrencias = mysqli_num_rows($ocorrencias);
 
             if ($numOcorrencias == 0) {
                 array_push($erros, "Não há ocorrência cadastrada para o filme <b>" . $filme['titulo'] . "</b>");
             }
         }
+
+        //PARTE DOS CONTRATOS SE FOR FILME
+        if ($evento['contratacao'] == 1) {
+            if ($numPedidos == 0) {
+                array_push($erros, "Não há pedido inserido neste evento");
+            } else {
+                // VE SE É PESSOA JURIDICA PARA VER SE TEM REPRESENTANTE LEGAL CADASTRADO
+                if ($pedido['pessoa_tipo_id'] == 2) {
+                    $pj = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
+                    if (($pj['representante_legal1_id'] == null) && ($pj['representante_legal2_id'] == null)) {
+                        array_push($erros, "Não há Representante Legal cadastrado no proponente <b>" . $pj['razao_social'] . "</b>");
+                    }
+                }
+
+                if ($pedido['verba_id'] == null)
+                    array_push($erros, "Não há verba cadastrada no pedido");
+
+                if ($pedido['numero_parcelas'] == null)
+                    array_push($erros, "Não há número de parcelas cadastrada no pedido");
+
+                if ($pedido['justificativa'] == null)
+                    array_push($erros, "Não há justificativa cadastrada no pedido");
+
+                if ($pedido['forma_pagamento'] == null)
+                    array_push($erros, "Não há forma de pagamento cadastrada no pedido");
+
+                // VERIFICA SE OS ARQUIVOS DE PEDIDO FORAM ENVIADOS
+                $idPedido = $pedido['id'];
+                $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo
+                            FROM lista_documentos ld
+                            LEFT JOIN (SELECT * FROM arquivos 
+                                       WHERE publicado = 1 AND origem_id = '$idPedido' AND publicado = 1) a ON ld.id = a.lista_documento_id
+                            WHERE ld.tipo_documento_id = 3 AND ld.publicado = 1";
+
+                $queryArqs = mysqli_query($con, $sqlArqs);
+
+                // REMOVER OS ARQUIVOS Q SAO DE MUSICA E TEATRO
+                $balde = array(26, 50, 78, 79, 87, 90);
+                while ($arquivo = mysqli_fetch_array($queryArqs)) {
+
+                    if (in_array($arquivo['id'], $balde))
+                        continue;
+
+                    if ($arquivo['arquivo'] == NULL)
+                        array_push($errosArqs, $arquivo['documento'] . " não enviado");
+                }
+            }
+        }
+
     }
+} else {
+    if ($evento['contratacao'] == 1) {
+        array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
+    }
+}
+
+// VERIFICA SE TEM PEDIDO E É CONTRATACAO CASO O CONTRARIO ELE ADICIONA OS ERROS NA PARTE DE FILME JA QUE ELA NAO FICOU TAAAAAAAAO BEM OTIMIZADA
+if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
+    // VERIFICA SE TEM OS ARQUIVOS DE PESSOA FISICA ENVIADOS
+    if ($tipoPessoa == 1) {
+        $idPessoa = $pedido['pessoa_fisica_id'];
+        $pf = recuperaDados("pessoa_fisicas", "id", $idPessoa);
+
+        $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo 
+                            FROM lista_documentos ld
+                            LEFT JOIN (SELECT * FROM arquivos 
+                                        WHERE publicado = 1 AND origem_id = '$idPessoa') a ON ld.id = a.lista_documento_id
+                            WHERE ld.tipo_documento_id = '$tipoPessoa' AND ld.publicado = 1";
+
+        $queryArqs = mysqli_query($con, $sqlArqs);
+
+        while ($arquivo = mysqli_fetch_array($queryArqs)) {
+            if ($arquivo['arquivo'] == NULL) {
+                array_push($errosArqs, $arquivo['documento'] . " não enviado");
+            }
+        }
+
+    } else {
+        // VERIFICA SE TEM OS ARQUIVOS DE PESSOA JURIDICA ENVIADOS
+        $idPessoa = $pedido['pessoa_juridica_id'];
+        $pj = recuperaDados("pessoa_juridicas", "id", $idPessoa);
+        $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo 
+                            FROM lista_documentos ld
+                            LEFT JOIN (SELECT * FROM arquivos 
+                                        WHERE publicado = 1 AND origem_id = '$idPessoa') a ON ld.id = a.lista_documento_id
+                            WHERE ld.tipo_documento_id = '$tipoPessoa' AND ld.publicado = 1";
+
+        $queryArqs = mysqli_query($con, $sqlArqs);
+        while ($arquivo = mysqli_fetch_array($queryArqs)) {
+
+            if ($pj['representante_legal1_id'] == NULL && ($arquivo['id'] == 23 || $arquivo['id'] == 24))
+                continue;
+
+            if ($pj['representante_legal2_id'] == null && ($arquivo['id'] == 85 || $arquivo['id'] == 86))
+                continue;
+
+            if ($arquivo['arquivo'] == NULL)
+                array_push($errosArqs, $arquivo['documento'] . " não enviado");
+        }
+    }
+} else {
+    // CASO SEJA CONTRATACAO E NAO TENHA PEDIDO ELA ADD ERRO PARA EVITAR O ENVIO DO EVENTO
+    if ($evento['contratacao'] == 1) {
+        array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
+        array_push($erros, "Não há pedido inserido neste evento");
+    }
+}
+
+function in_array_key($needle, $haystack)
+{
+    $return = [
+        'bool' => false,
+        'especificidade' => null
+    ];
+
+    foreach ($haystack as $key => $array) {
+        if (in_array($needle, $array)) {
+            $return = [
+                'bool' => true,
+                'especificidade' => $key
+            ];
+            return $return;
+        }
+    }
+    return $return;
 }
