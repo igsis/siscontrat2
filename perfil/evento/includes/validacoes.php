@@ -163,6 +163,55 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                 array_push($erros, "Não há ocorrência cadastrada para o filme <b>" . $filme['titulo'] . "</b>");
             }
         }
+
+        //PARTE DOS CONTRATOS SE FOR FILME
+        if ($evento['contratacao'] == 1) {
+            if ($numPedidos == 0) {
+                array_push($erros, "Não há pedido inserido neste evento");
+            } else {
+                // VE SE É PESSOA JURIDICA PARA VER SE TEM REPRESENTANTE LEGAL CADASTRADO
+                if ($pedido['pessoa_tipo_id'] == 2) {
+                    $pj = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
+                    if (($pj['representante_legal1_id'] == null) && ($pj['representante_legal2_id'] == null)) {
+                        array_push($erros, "Não há Representante Legal cadastrado no proponente <b>" . $pj['razao_social'] . "</b>");
+                    }
+                }
+
+                if ($pedido['verba_id'] == null)
+                    array_push($erros, "Não há verba cadastrada no pedido");
+
+                if ($pedido['numero_parcelas'] == null)
+                    array_push($erros, "Não há número de parcelas cadastrada no pedido");
+
+                if ($pedido['justificativa'] == null)
+                    array_push($erros, "Não há justificativa cadastrada no pedido");
+
+                if ($pedido['forma_pagamento'] == null)
+                    array_push($erros, "Não há forma de pagamento cadastrada no pedido");
+
+                // VERIFICA SE OS ARQUIVOS DE PEDIDO FORAM ENVIADOS
+                $idPedido = $pedido['id'];
+                $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo
+                            FROM lista_documentos ld
+                            LEFT JOIN (SELECT * FROM arquivos 
+                                       WHERE publicado = 1 AND origem_id = '$idPedido' AND publicado = 1) a ON ld.id = a.lista_documento_id
+                            WHERE ld.tipo_documento_id = 3 AND ld.publicado = 1";
+
+                $queryArqs = mysqli_query($con, $sqlArqs);
+
+                // REMOVER OS ARQUIVOS Q SAO DE MUSICA E TEATRO
+                $balde = array(26, 50, 78, 79, 87, 90);
+                while ($arquivo = mysqli_fetch_array($queryArqs)) {
+
+                    if (in_array($arquivo['id'], $balde))
+                        continue;
+
+                    if ($arquivo['arquivo'] == NULL)
+                        array_push($errosArqs, $arquivo['documento'] . " não enviado");
+                }
+            }
+        }
+
     }
 } else {
     if ($evento['contratacao'] == 1) {
