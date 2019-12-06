@@ -96,7 +96,7 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . $evento['tipo_evento'] . "</td>";
                                 echo "<td>" . $vinculo . "</td>";
                                 $disabled = '';
-                                if ($evento['status'] == "Cancelado") {
+                                if ($evento['status'] == "Não aprovado") {
                                     $idEvento = $evento['idEvento'];
                                     $nomeEvento = $evento['nome_evento'];
                                     $sqlChamado = "SELECT u.nome_completo, c.justificativa, c.data FROM chamados AS c INNER JOIN usuarios AS u ON u.id = c.usuario_id WHERE evento_id = $idEvento";
