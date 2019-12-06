@@ -1,37 +1,11 @@
 <?php
 
-// INSTALAÇÃO DA CLASSE NA PASTA FPDF.
-require_once("../include/lib/fpdf/fpdf.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
 session_start();
-
-class PDF extends FPDF
-{
-    function Header()
-    {
-        // Move to the right
-
-        // Logo
-        $this->Cell(80);
-        $this->Image('../pdf/logo_smc.jpg', 170, 10);
-
-        // Line break
-        $this->Ln(20);
-    }
-
-    function Footer()
-    {
-        $this->SetY(-15);
-        $this->SetFont('Arial', 'B', 9);
-        $this->Cell(0, 15, "Clique aqui para ir para o ", 0, 0, 'L');
-        $this->Image("../visual/images/logo_sei.jpg", 50, 286, 0, 5, "", "http://sei.prefeitura.sp.gov.br");
-    }
-
-}
 
 $idPedido = $_SESSION['idPedido'];
 
@@ -52,8 +26,16 @@ $queryLocal = mysqli_query($con, $sqlLocal);
 
 $idAtracao = $_SESSION['idAtracao'];
 
+$atracao = recuperaDados('atracoes', 'id', $idAtracao);
+
 $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
 $carga = $con->query($sqlCarga)->fetch_array();
+
+if($carga['carga_horaria'] != 0 || $carga['carga_horaria'] != NULL){
+    $cargaHoraria =  $carga['carga_horaria'] . " hora(s)";
+}else{
+    $cargaHoraria = "Não possuí.";
+}
 
 $sqlInstituicao = "SELECT i.nome FROM instituicoes AS i INNER JOIN ocorrencias AS o ON i.id = o.instituicao_id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
 $instituicao = $con->query($sqlInstituicao)->fetch_array();
@@ -62,150 +44,99 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 
 $fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
 $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
-
-$nome_fiscal = $fiscal['nome_completo'];
-$rfFiscal = $fiscal['rf_rg'];
-
-$nome_suplente = $suplente['nome_completo'];
-$rfSuplente = $suplente['rf_rg'];
-
-$pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
-$pdf->AliasNbPages();
-$pdf->AddPage();
-
-
-$x = 20;
-$l = 7; //DEFINE A ALTURA DA LINHA
-
-$pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 14);
-$pdf->Cell(180, 15, utf8_decode("PEDIDO DE CONTRATAÇÃO DE PESSOA JURÍDICA"), 0, 1, 'C');
-
-$pdf->Ln(5);
-
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->MultiCell(12, $l, 'Sr(a)', 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(60, $l, utf8_decode("Solicitamos a contratação a seguir:"), 0, 'L', 0);
-
-$pdf->Ln(5);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(24, $l, utf8_decode("Protocolo nº:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($evento['protocolo']), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(29, $l, utf8_decode("Processo SEI nº:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($pedido['numero_processo']), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(30, $l, 'Setor solicitante:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($instituicao['nome']), 0, 'L', 0);
-
-$pdf->Ln(5);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(24, $l, utf8_decode('Razão Social:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($pessoa['razao_social']), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11, $l, utf8_decode('CNPJ:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($pessoa['cnpj']), 0, 'L', 0);
-
 while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
     $tel = $tel . $linhaTel['telefone'] . ' | ';
 }
 
 $tel = substr($tel, 0, -3);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(21, $l, 'Telefone(s):', '0', '0', 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($tel), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(12, $l, 'Email:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($pessoa['email']), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(13, $l, "Objeto:", 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(20, $l, utf8_decode($objeto), 0, 0, 'L');
-
-
-$pdf->Ln(7);
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(15, $l, utf8_decode('Período:'), '0', '0', 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode(retornaPeriodoNovo($idEvento,'ocorrencias')), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(26, $l, utf8_decode("Carga Horária:"), '0', '0', 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($carga['carga_horaria'] ?? "Não Possuí" ), 0, 'L', 0);
-
-
 while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
     $local = $local . $linhaLocal['local'] . ' | ';
 }
 
 $local = substr($local, 0, -3);
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(16, $l, 'Local(s):', '0', '0', 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(165, $l, utf8_decode($local), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11, $l, 'Valor:', '0', '0', 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode("R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " )"), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(38, $l, 'Forma de Pagamento:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(122, $l, utf8_decode($pedido['forma_pagamento']));
-
-$pdf->Ln(5);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(22, $l, 'Justificativa:', '0', '0', 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(155, $l, utf8_decode($pedido['justificativa']));
-
-$pdf->Ln(5);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(155, $l, utf8_decode("Nos termos do art. 6º do decreto 54.873/2014, fica designado como fiscal desta contratação artística o(a) servidor(a) "."$nome_fiscal".", RF "."$rfFiscal"." e, como substituto, "."$nome_suplente".", RF "."$rfSuplente".". Diante do exposto, solicitamos autorização para prosseguimento do presente."));
-
-$pdf->Output();
+if ($pedido['numero_processo_mae'] != NULL) {
+    $processoMae = "<p><strong>Processo SEI de reserva global:</strong> " . $pedido['numero_processo_mae'] . "</p>";
+} else {
+    $processoMae = NULL;
+}
 ?>
 
+<html>
+<head>
+    <meta http-equiv=\"Content-Type\" content=\"text/html. charset=Windows-1252\">
+
+    <style>
+
+        .texto {
+            width: 900px;
+            border: solid;
+            padding: 20px;
+            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: justify;
+        }
+    </style>
+    <link rel="stylesheet" href="../visual/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="include/dist/ZeroClipboard.min.js"></script>
+</head>
+
+<body>
+<br>
+<div align="center">
+    <?php
+    $conteudo =
+        "<p align='center'><strong>PEDIDO DE  CONTRATAÇÃO DE PESSOA JURÍDICA</strong></p>" .
+        "<p>&nbsp;</p>" .
+        "<p><strong>Sr(a) </strong></p>" .
+        "<p>Solicitamos a contratação a seguir:</p>" .
+        "<p>&nbsp;</p>" .
+        "<p><strong>Pedido de Contratação nº:</strong> " . $evento['protocolo'] . "</p>" .
+        "<p><strong>Processo SEI nº:</strong> " . $pedido['numero_processo'] . "</p>" .
+        $processoMae .
+        "<p><strong>Setor  solicitante:</strong> " . $instituicao['nome'] . "</p>" .
+        "<p>&nbsp;</p>" .
+        "<p><strong>Razão Social:</strong> " . $pessoa['razao_social'] . " <br />" .
+        "<strong>CNPJ:</strong> " . $pessoa['cnpj'] . "<br />" .
+        "<strong>Telefone:</strong> " . $tel . "<br />" .
+        "<strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
+        "<p>&nbsp;</p>" .
+        "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
+        "<p><strong>Data / Período:</strong> " . retornaPeriodoNovo($idEvento,'ocorrencias') . ", totalizando " .  $atracao['quantidade_apresentacao'] . " apresentações conforme proposta/cronograma.</p>" .
+        "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
+        "<p align='justify'><strong>Local:</strong> " . $local . "</p>" .
+        "<p><strong>Valor: </strong> R$ " . $pedido['valor_total'] . " ( ". valorPorExtenso($pedido['valor_total']) . " )"  . "</p>" .
+        "<p align='justify'><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
+        "<p align='justify'><strong>Justificativa: </strong> " . $pedido['justificativa'] . "</p>" .
+        "<p align='justify'>Nos termos do art. 6º do decreto 54.873/2014, fica designado como fiscal desta contratação artística o(a) servidor(a) " . $fiscal['nome_completo'] . ", RF " . $fiscal['rf_rg'] . " e, como substituto, " . $suplente['nome_completo'] . ", RF " . $suplente['rf_rg'] . ". Diante do exposto, solicitamos autorização para prosseguimento do presente." . "</p>";
+    ?>
+
+    <div id="texto" class="texto"><?php echo $conteudo; ?></div>
+</div>
+
+<p>&nbsp;</p>
+
+<div align="center">
+    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+        COPIAR TODO O TEXTO
+        <i class="fa fa-copy"></i>
+    </button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="http://sei.prefeitura.sp.gov.br" target="_blank">
+        <button class="btn btn-primary">CLIQUE AQUI PARA ACESSAR O <img src="../visual/images/logo_sei.jpg"></button>
+    </a>
+</div>
+
+<script>
+    var client = new ZeroClipboard();
+    client.clip(document.getElementById("botao-copiar"));
+    client.on("aftercopy", function () {
+        alert("Copiado com sucesso!");
+    });
+</script>
+
+</body>
+</html>
 

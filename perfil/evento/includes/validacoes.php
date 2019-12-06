@@ -289,7 +289,6 @@ if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
     // CASO SEJA CONTRATACAO E NAO TENHA PEDIDO ELA ADD ERRO PARA EVITAR O ENVIO DO EVENTO
     if ($evento['contratacao'] == 1) {
         array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
-        array_push($erros, "Não há pedido inserido neste evento");
     }
 }
 
