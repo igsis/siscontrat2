@@ -4,19 +4,18 @@ $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 $http = $server . "/pdf/";
 
 $link_padraoEvento = $http . "padrao_evento.php";
-$link_piaEvento = $http . "pia_evento.php";
+$link_piaEvento = $http . "vocacional_evento.php";
 
 $amparo = $_POST['amparo'];
 $idEvento = $_SESSION['eventoId'];
 $dotacao = $_POST['dotacao'];
 $finalizacao = $_POST['finalizar'];
 
-if ($idEvento == NULL) {
+if ($idEvento != $idEvento) {
     if (isset($_POST['finalizar'])) {
         $sqlInsert = "INSERT INTO juridicos(pedido_id, amparo_legal, finalizacao, dotacao) 
                 VALUES ('$idEvento','$amparo','$finalizacao','$dotacao')";
         $queryInsert = mysqli_query($con, $sqlInsert);
-        echo $sqlInsert;
     }
 } else {
     $sqlUptate = "UPDATE juridicos SET pedido_id = $idEvento, amparo_legal = '$amparo', finalizacao = '$finalizacao', dotacao ='$dotacao'

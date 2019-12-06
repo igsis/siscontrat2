@@ -13,13 +13,13 @@ $idEvento = $_SESSION['eventoId'];
 
 $evento = recuperaDados('eventos','id',$idEvento);
 $modelo_juridico = recuperaDados('juridicos','pedido_id',$idEvento);
-$finalizacao = $modelo_juridico['finalizacao'];
-$amparo = $modelo_juridico['amparo_legal'];
-$dotacao = $modelo_juridico['dotacao'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idEvento);
 $pedidos = recuperaDados('pedidos','id',$idEvento);
 $ocorrencias = recuperaDados('ocorrencias','id',$idEvento);
 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencias['instituicao_id']);
+$finalizacao = $modelo_juridico['finalizacao'];
+$amparo = $modelo_juridico['amparo_legal'];
+$dotacao = $modelo_juridico['dotacao'];
 $hora_inicio = $ocorrencias['horario_inicio'];
 $nome_evento = $evento['nome_evento'];
 $nome_instituicao = $instituicao['nome'];
@@ -65,8 +65,7 @@ $dados =
     "<p><strong>Data / Período:</strong>"."$periodo"."</p>" .
     "<p>&nbsp;</p>" .
     "<p><strong>Locais e Horários:</strong> " . "</p>" .
-    "<p>"."$nome_instituicao"."&nbsp;"."($sigla)"."</p>".
-    "<p>$periodo"."&nbsp;"."($diaSemana)"."&nbsp;ás&nbsp;$hora_inicio</p>".
+    "<p>"."$nome_instituicao"."&nbsp;"."($sigla)"."<br>$dotacao$periodo"."&nbsp;"."($diaSemana)"."&nbsp;ás&nbsp;$hora_inicio</p>"."$periodo"."&nbsp;"."($diaSemana)"."&nbsp;ás&nbsp;$hora_inicio</p>".
     "<p>&nbsp;</p>" .
     "<p><strong> Valor:</strong> " . "R$ " .$valor. "  " . "($valor_extenso)" . "</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . "$pagamento" . "</p>" .

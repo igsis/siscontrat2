@@ -12,7 +12,7 @@
                         </form>
 
                         <form action="?perfil=juridico&p=tipo_modelo&sp=resultado" method="POST">
-                            <button name="mdlVoca" type="submit" class="btn btn-primary btn-lg btn-block">VOCACIONA
+                            <button name="mdlVoca" type="submit" class="btn btn-primary btn-lg btn-block">VOCACIONAL
                             </button>
                             <input type="hidden" value="2" name="tipoModelo">
                         </form>
