@@ -20,10 +20,16 @@ if($publico != null){
     $sqlPublico = " AND ep.publico_id = '$publico'";
 }
 
-$sql = "SELECT e.id, e.nome_evento, e.data_cadastro, p.publico FROM capac_new.eventos e 
-    INNER JOIN capac_new.evento_publico ep ON ep.evento_id = e.id
-    INNER JOIN capac_new.publicos p ON p.id = ep.publico_id
-    WHERE e.publicado = 2 $sqlIdCapac $sqlNomeEvento $sqlPublico";
+$sql = "SELECT
+	        e.id,
+	        e.nome_evento,
+	        e.data_cadastro,
+	        (SELECT GROUP_CONCAT('\'',p.publico,'\'') FROM capac_new.evento_publico AS ep
+	            INNER JOIN capac_new.publicos AS p ON ep.publico_id = p.id
+	            WHERE ep.evento_id = e.id
+            ) AS 'publico'
+FROM capac_new.eventos AS e
+WHERE e.publicado = 2 $sqlIdCapac $sqlNomeEvento $sqlPublico";
 
 $query = mysqli_query($con, $sql);
 $numRows = mysqli_num_rows($query);
@@ -57,19 +63,21 @@ $numRows = mysqli_num_rows($query);
                         }else{
                             while ($evento = mysqli_fetch_array($query)){
                                 ?>
-                                <td><?= $evento['id'] ?></td>
-                                <td><?= $evento['nome_evento'] ?></td>
-                                <td><?= exibirDataHoraBr($evento['data_cadastro']) ?></td>
-                                <td><?= $evento['publico'] ?></td>
-                                <td>
+                                <tr>
+                                    <td><?= $evento['id'] ?></td>
+                                    <td><?= $evento['nome_evento'] ?></td>
+                                    <td><?= exibirDataHoraBr($evento['data_cadastro']) ?></td>
+                                    <td><?= $evento['publico'] ?></td>
+                                    <td>
 
-                                    <form action="?perfil=evento&p=resumo_capac" method="POST">
-                                        <input type="hidden" id="idCapac" name="idCapac" value="<?= $evento['id'] ?>">
-                                        <button type="submit" name="buscar" id="buscar" class="btn btn-block btn-info">
-                                            <span class="glyphicon glyphicon-folder-open"></span>
-                                        </button>
-                                    </form>
-                                </td>
+                                        <form action="?perfil=evento&p=resumo_capac" method="POST">
+                                            <input type="hidden" id="idCapac" name="idCapac" value="<?= $evento['id'] ?>">
+                                            <button type="submit" name="buscar" id="buscar" class="btn btn-block btn-info">
+                                                <span class="glyphicon glyphicon-folder-open"></span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
                                 <?php
                             }
                             ?>
@@ -96,8 +104,8 @@ $numRows = mysqli_num_rows($query);
 </div>
 
 
-<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script defer src="./bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script defer src="./bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">
     $(function () {
