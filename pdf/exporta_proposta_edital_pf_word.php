@@ -67,7 +67,7 @@ if ($checa['oficina'] == 1) {
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=$idPedido.doc");
 echo "<html>";
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1252\">";
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">";
 echo "<body>";
 
 echo

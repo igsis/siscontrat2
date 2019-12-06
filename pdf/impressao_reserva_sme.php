@@ -1,37 +1,11 @@
 <?php
 
-// INSTALAÇÃO DA CLASSE NA PASTA FPDF.
-require_once("../include/lib/fpdf/fpdf.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
 session_start();
-
-class PDF extends FPDF
-{
-    function Header()
-    {
-        // Move to the right
-
-        // Logo
-        $this->Cell(80);
-        $this->Image('../pdf/logo_smc.jpg', 170, 10);
-
-        // Line break
-        $this->Ln(20);
-    }
-
-    function Footer()
-    {
-        $this->SetY(-15);
-        $this->SetFont('Arial', 'B', 9);
-        $this->Cell(0, 15, "Clique aqui para ir para o ", 0, 0, 'L');
-        $this->Image("../visual/images/logo_sei.jpg", 50, 286, 0, 5, "", "http://sei.prefeitura.sp.gov.br");
-    }
-
-}
 
 $idPedido = $_SESSION['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -40,82 +14,79 @@ $idPf = $pedido['pessoa_fisica_id'];
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
-$pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
-$pdf->AliasNbPages();
-$pdf->AddPage();
-
-$x = 20;
-$l = 7; //DEFINE A ALTURA DA LINHA
-
-$pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(29, $l, utf8_decode("Do Processo nº:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($pedido['numero_processo']), 0, 'L', 0);
-
-$pdf->Ln(8);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(28, $l, 'INTERESSADO:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
-
 $idLinguagem = $contratacao['linguagem_id'];
 $linguagem = recuperaDados('linguagens', 'id', $idLinguagem);
 
 $idPrograma = $contratacao['programa_id'];
 $programa = recuperaDados('programas', 'id', $idPrograma);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(18,$l,"Programa:",0,0,'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(20,$l, utf8_decode($programa['programa']), 0,0,'L');
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(21,$l,"Linguagem:", 0,0,'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(20,$l, utf8_decode($linguagem['linguagem']), 0,0,'L');
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11,$l,"Edital:", 0,0,'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(20,$l, utf8_decode($programa['edital']), 0,0,'L');
-
-$pdf->Ln(8);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->MultiCell(60, $l, utf8_decode('CONTABILIDADE'), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode("Sr(a). Responsável"), 0, 'L', 0);
-
-$pdf->Ln(18);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode("O presente processo se trata de " . $pessoa['nome']
-    . ", CONTRATAÇÃO COMO ARTISTA EDUCADOR DE " . $linguagem['linguagem']
-    . " DO PROGRAMA DE " . $programa['programa']
-    . " NOS TERMOS DO EDITAL " . $programa['edital']
-    . ", no valor de R$ " . dinheiroParaBr($pedido['valor_total'])
-    . " (" . valorPorExtenso($pedido['valor_total']) . " )"
-    . ", conforme solicitação (link da solicitação), foram anexados os documentos necessários exigidos no edital, no ano de " . $contratacao['ano']), 0, 'L', 0);
-
-$pdf->Ln(18);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode("Assim, solicito a reserva de recursos, que deverá onerar os recursos da Nota de Reserva com Transferência da SME nº 22.671/2019 e para o INSS Patronal a Nota de Reserva com Transferência nº 22.711/2019 SEI (link do SEI)"), 0, 'L', 0);
-
-$pdf->Ln(10);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(155, $l, utf8_decode("Após, enviar para SMC/AJ, para prosseguimento."), 0, 'L', 0);
-
-$pdf->Output();
 ?>
+
+<html>
+<head>
+    <meta http-equiv=\"Content-Type\" content=\"text/html. charset=Windows-1252\">
+
+    <style>
+
+        .texto {
+            width: 900px;
+            border: solid;
+            padding: 20px;
+            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: justify;
+        }
+    </style>
+    <link rel="stylesheet" href="../visual/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="include/dist/ZeroClipboard.min.js"></script>
+</head>
+
+<body>
+<br>
+<div align="center">
+    <?php
+    $conteudo =
+        "<p><strong>Do processo nº:</strong> " . $contratacao['protocolo'] . "</p>" .
+        "<p>&nbsp;</p>" .
+        "<p><strong>INTERESSADO:</strong> " . $pessoa['nome'] . "  </span></p>" .
+        "<p><strong>Programa:</strong> " . $programa['programa'] . " <strong>Linguagem:</strong> " . $linguagem['linguagem'] . " <strong>Edital:</strong> " . $programa['edital'] . "</p>" .
+        "<p>&nbsp;</p>" .
+        "<p><strong>CONTABILIDADE</strong></p>" .
+        "<p><strong>Sr(a). Responsável</strong></p>" .
+        "<p>&nbsp;</p>" .
+        "<p>O presente processo trata de " . $pessoa['nome'] . ", " . $programa['programa'] . ", " . $linguagem['linguagem'] . " NOS TERMOS DO EDITAL - " . $programa['edital'] . ", no valor de " . "R$ " . "  " . dinheiroParaBr($pedido['valor_total']) . "( ". valorPorExtenso($pedido['valor_total']) . ")" .  ", conforme solicitação (link da solicitação), foram anexados os documentos necessários exigidos no edital, no período de " . retornaPeriodoFormacao($contratacao['form_vigencia_id']) . " </p>" .
+        "<p>&nbsp;</p>" .
+        "<p>Assim, solicito a reserva de recursos, que deverá onerar os recursos da Nota de Reserva com Transferência da SME nº 22.671/2019 e para o INSS Patronal a Nota de Reserva com Transferência nº 22.711/2019 SEI (link do SEI)</p>".
+        "<p>&nbsp;</p>".
+        "<p>Após, enviar para SMC/AJ,  para prosseguimento.</p>".
+        "<p>&nbsp;</p>"
+    ?>
+
+    <div id="texto" class="texto"><?php echo $conteudo; ?></div>
+</div>
+
+<p>&nbsp;</p>
+
+<div align="center">
+    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+        COPIAR TODO O TEXTO
+        <i class="fa fa-copy"></i>
+    </button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="http://sei.prefeitura.sp.gov.br" target="_blank">
+        <button class="btn btn-primary">CLIQUE AQUI PARA ACESSAR O <img src="../visual/images/logo_sei.jpg"></button>
+    </a>
+</div>
+
+<script>
+    var client = new ZeroClipboard();
+    client.clip(document.getElementById("botao-copiar"));
+    client.on("aftercopy", function () {
+        alert("Copiado com sucesso!");
+    });
+</script>
+
+</body>
+</html>
+
