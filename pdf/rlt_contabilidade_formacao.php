@@ -1,24 +1,11 @@
 <?php
 
-// INSTALAÇÃO DA CLASSE NA PASTA FPDF.
-require_once("../include/lib/fpdf/fpdf.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
 session_start();
-
-class PDF extends FPDF{
-
-    function Footer()
-    {
-        $this->SetY(-15);
-        $this->SetFont('Arial', 'B', 9);
-        $this->Cell(0, 15, "Clique aqui para ir para o ", 0, 0, 'L');
-        $this->Image("../visual/images/logo_sei.jpg", 50, 286, 0, 5, "", "http://sei.prefeitura.sp.gov.br");
-    }
-}
 
 $idPedido = $_SESSION['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -75,101 +62,98 @@ switch ($mes) {
         break;
 }
 
-$pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
-$pdf->AliasNbPages();
-$pdf->AddPage();
-
-
-$x = 20;
-$l = 7; //DEFINE A ALTURA DA LINHA
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(22, $l, utf8_decode("Interessado:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(160, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
-
 $idLinguagem = $contratacao['linguagem_id'];
 $linguagem = recuperaDados('linguagens', 'id', $idLinguagem);
 
 $idPrograma = $contratacao['programa_id'];
 $programa = recuperaDados('programas', 'id', $idPrograma);
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(19, $l, utf8_decode("Do evento:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($programa['programa'] . " - " . $linguagem['linguagem']), 0, 'L', 0);
-
-$pdf->Ln(17);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l, utf8_decode("Atesto o recebimento em " . exibirDataBr($data) . ", de toda a documentação: recibo link SEI e arquivos consolidados, previstos na Portaria SF 08/16."),0,'L',0);
-
-$pdf->Ln(17);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->MultiCell(180, $l, utf8_decode("SMC - CONTABILIDADE"), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(120, $l, utf8_decode("Sr.(a) Contador(a)"), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(180, $l, utf8_decode("Encaminho o presente para providências quanto ao pagamento, uma vez que os serviços foram realizados e confirmados a contento conforme documento link SEI."), 0, 'L', 0);
-
-$pdf->Ln(7);
-
 $idCoord = $contratacao['coordenadoria_id'];
 $coordenadoria = recuperaDados('coordenadorias','id', $idCoord);
 
-$pdf->SetX($x);
-$pdf->MultiCell(180, $l, utf8_decode("Em virtude da Regionalização e Georreferenciamento das Despesas Municipais com a nova implantação do Detalhamento da Ação em 2019 no Sistema SOF,  informamos que os valores do presente pagamento foram gastos na região ".$coordenadoria['coordenadoria']."."), 0, 'L', 0);
 
-$pdf->Ln(17);
 
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("INFORMAÇÕES COMPLEMENTARES"),'B', 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B',10);
-$pdf->MultiCell(180,$l,utf8_decode("Nota de Empenho:"),0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Anexo Nota de Empenho:"),0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Recibo da Nota de Empenho:"),0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Pedido de Pagamento:"),0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Recibo de pagamento:"),0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Relatório de Horas Trabalhadas:"),0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("NIT/PIS/PASEP:"),0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Certidões fiscais:"),0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("CCM:"),0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("FACC:"),0, 'L', 0);
-
-$pdf->Ln(17);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(180,$l,utf8_decode("São Paulo, " . $dia . " de " . $mes . " de " . $ano));
-
-$pdf->Output();
 ?>
 
+<html>
+<head>
+    <meta http-equiv=\"Content-Type\" content=\"text/html. charset=Windows-1252\">
 
+    <style>
+
+        .texto {
+            width: 900px;
+            border: solid;
+            padding: 20px;
+            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: justify;
+        }
+    </style>
+    <link rel="stylesheet" href="../visual/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="include/dist/ZeroClipboard.min.js"></script>
+</head>
+
+<body>
+<br>
+<div align="center">
+    <?php
+    $conteudo =
+        "<p>&nbsp;</p>".
+        "<p><strong>Interessado:</strong> ".$pessoa['nome']."</p>".
+        "<p><strong>Programa:</strong> " . $programa['programa'] . " <strong>Linguagem:</strong> " . $linguagem['linguagem'] . " <strong>Edital:</strong> " . $programa['edital'] . "</p>" .
+        "<p>&nbsp;</p>".
+        "<p>Atesto o recebimento em ".exibirDataBr($data).", de toda a documentação: recibo link SEI e arquivos consolidados, previstos na Portaria SF 08/16.</p>".
+
+        "<p>&nbsp;</p>".
+        "<p><strong>SMC - CONTABILIDADE</strong></p>".
+        "<p><strong>Sr.(a) Contador(a)</strong></p>".
+        "<p align='justify'>Encaminho o presente para providências quanto ao pagamento, uma vez que os serviços foram realizados e confirmados a contento conforme documento link SEI.</p>".
+        "<p align='justify'>Em virtude da Regionalização e Georreferenciamento das Despesas Municipais com a nova implantação do Detalhamento da Ação em 2019 no Sistema SOF,  informamos que os valores do presente pagamento foram gastos na região ".$coordenadoria['coordenadoria'].".</p>".
+        "<p>&nbsp;</p>".
+
+        "<p>INFORMAÇÕES COMPLEMENTARES</p>".
+        "<hr />".
+        "<p><strong>Nota de Empenho:</strong></p>".
+        "<p><strong>Anexo Nota de Empenho:</strong></p>".
+        "<p><strong>Recibo da Nota de Empenho:</strong></p>".
+        "<p><strong>Pedido de Pagamento:</strong></p>".
+        "<p><strong>Recibo de pagamento:</strong></p>".
+        "<p><strong>Relatório de Horas Trabalhadas:</strong></p>".
+        "<p><strong>NIT/PIS/PASEP:</strong></p>".
+        "<p><strong>Certidões fiscais:</strong></p>".
+        "<p><strong>CCM:</strong></p>".
+        "<p><strong>FACC:</strong></p>".
+        "<p>&nbsp;</p>".
+
+        "<p>São Paulo, ".$dia." de ".$mes." de ".$ano.".</p>";
+    ?>
+
+    <div id="texto" class="texto"><?php echo $conteudo; ?></div>
+</div>
+
+<p>&nbsp;</p>
+
+<div align="center">
+    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+        COPIAR TODO O TEXTO
+        <i class="fa fa-copy"></i>
+    </button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="http://sei.prefeitura.sp.gov.br" target="_blank">
+        <button class="btn btn-primary">CLIQUE AQUI PARA ACESSAR O <img src="../visual/images/logo_sei.jpg"></button>
+    </a>
+</div>
+
+<script>
+    var client = new ZeroClipboard();
+    client.clip(document.getElementById("botao-copiar"));
+    client.on("aftercopy", function () {
+        alert("Copiado com sucesso!");
+    });
+</script>
+
+</body>
+</html>

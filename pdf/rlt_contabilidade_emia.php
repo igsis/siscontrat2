@@ -1,7 +1,5 @@
 <?php
 
-// INSTALAÇÃO DA CLASSE NA PASTA FPDF.
-require_once("../include/lib/fpdf/fpdf.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
@@ -9,16 +7,7 @@ require_once("../funcoes/funcoesGerais.php");
 $con = bancoMysqli();
 session_start();
 
-class PDF extends FPDF{
 
-    function Footer()
-    {
-        $this->SetY(-15);
-        $this->SetFont('Arial', 'B', 9);
-        $this->Cell(0, 15, "Clique aqui para ir para o ", 0, 0, 'L');
-        $this->Image("../visual/images/logo_sei.jpg", 50, 286, 0, 5, "", "http://sei.prefeitura.sp.gov.br");
-    }
-}
 $idParcela = $_POST['idParcela'];
 $idPedido = $_SESSION['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -29,60 +18,84 @@ $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
 $sqlLocal = "SELECT local FROM locais l INNER JOIN emia_contratacao ec on ec.local_id = l.id WHERE ec.id = '$idEC' AND ec.publicado = 1";
 $local = $con->query($sqlLocal)->fetch_array();
 
+$horas = $con->query("SELECT carga_horaria FROM emia_parcelas WHERE id = $idParcela")->fetch_array();
+
+$cargo = recuperaDados('emia_cargos', 'id', $contratacao['emia_cargo_id']);
+
 $data = date("Y-m-d", strtotime("-3 hours"));
-
-$pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
-$pdf->AliasNbPages();
-$pdf->AddPage();
-
-
-$x = 20;
-$l = 7; //DEFINE A ALTURA DA LINHA
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->MultiCell(180, $l, utf8_decode("SMC - CONTABILIDADE"), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(120, $l, utf8_decode("Sr.(a) Contador(a)"), 0, 'L', 0);
-
-$pdf->Ln(20);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B',10);
-$pdf->Cell(12,$l,utf8_decode("Nome:"),0, 0, 'L');
-$pdf->SetFont('Arial', '',10);
-$pdf->MultiCell(40,$l,utf8_decode($pessoa['nome']),0,'L',0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B',10);
-$pdf->Cell(9,$l,utf8_decode("CPF:"),0, 0, 'L');
-$pdf->SetFont('Arial', '',10);
-$pdf->MultiCell(40,$l,utf8_decode($pessoa['cpf']),0,'L',0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B',10);
-$pdf->Cell(10,$l,utf8_decode("Local:"),0, 0, 'L');
-$pdf->SetFont('Arial', '',10);
-$pdf->MultiCell(100,$l,utf8_decode($local['local']),0,'L',0);
-
-$pdf->Ln(10);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Com base na Confirmação de Serviços (Documento SEI link ), atesto que foi efetivamente cumprido horas de trabalho durante o período supra citado."),0,'L',0);
-
-$pdf->Ln(5);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Em virtude do detalhamento da Ação em 2019, informamos que o pagamento  no valor de R$ 4.194,72 (quatro mil, cento e noventa e quatro reais e setenta e dois centavos) foi gasto na zona sul de São Paulo, rua Volkswagen, s/nº, Jabaquara, SP."),0,'L',0);
-
-$pdf->Ln(5);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Encaminhamos o presente para as providências necessárias relativas ao pagamento da parcela do referido processo."),0,'L',0);
-
-$pdf->Output();
 ?>
+
+<html>
+<head>
+    <meta http-equiv=\"Content-Type\" content=\"text/html. charset=Windows-1252\">
+
+    <style>
+
+        .texto {
+            width: 900px;
+            border: solid;
+            padding: 20px;
+            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: justify;
+        }
+    </style>
+    <link rel="stylesheet" href="../visual/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="include/dist/ZeroClipboard.min.js"></script>
+</head>
+
+<body>
+<br>
+<div align="center">
+    <?php
+    $conteudo =
+        "<p>&nbsp;</p>" .
+        "<p><strong>SMC - CONTABILIDADE</strong></p>" .
+        "<p><strong>Sr.(a) Contador(a)</strong></p>" .
+        "<p>&nbsp;</p>" .
+        "<p>&nbsp;</p>" .
+        "<p><strong>Nome:</strong> " . $pessoa['nome'] . "</p>" .
+        "<p><strong>CPF:</strong> " . $pessoa['cpf'] . "</p>" .
+        "<p><strong>Cargo:</strong> " . $cargo['cargo'] . "</p>" .
+        "<p><strong>Local:</strong> " . $local['local'] . "</p>" .
+        "<p><strong>Período:</strong> " . retornaPediodoEmia($contratacao['emia_vigencia_id']) . "</p>" .
+        "<p>&nbsp;</p>" .
+        "<p align='justify'>Com base na Confirmação de Serviços (Documento SEI link ), atesto que foi efetivamente cumprido " . $horas['carga_horaria'] . " horas de trabalho durante o período supra citado.</p>" .
+        "<p align='justify'>Em virtude do detalhamento da Ação em 2019, informamos que o pagamento  no valor de R$ 4.194,72 (quatro mil, cento e noventa e quatro reais e setenta e dois centavos) foi gasto na zona sul de São Paulo, rua Volkswagen, s/nº, Jabaquara, SP.</p>" .
+        "<p align='justify'>Encaminhamos o presente para as providências necessárias relativas ao pagamento da parcela do referido processo.</p>" .
+        "<p>&nbsp;</p>" .
+        "<p>&nbsp;</p>"
+    ?>
+
+    <div id="texto" class="texto"><?php echo $conteudo; ?></div>
+</div>
+
+<p>&nbsp;</p>
+
+<div align="center">
+    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+        COPIAR TODO O TEXTO
+        <i class="fa fa-copy"></i>
+    </button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="http://sei.prefeitura.sp.gov.br" target="_blank">
+        <button class="btn btn-primary">CLIQUE AQUI PARA ACESSAR O <img src="../visual/images/logo_sei.jpg"></button>
+    </a>
+</div>
+
+<script>
+    var client = new ZeroClipboard();
+    client.clip(document.getElementById("botao-copiar"));
+    client.on("aftercopy", function () {
+        alert("Copiado com sucesso!");
+    });
+</script>
+
+</body>
+</html>
+
 
 
 
