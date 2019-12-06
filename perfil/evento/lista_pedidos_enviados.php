@@ -13,7 +13,8 @@ $sql = "SELECT eve.id AS id, eve.protocolo, ped.numero_processo, ped.pessoa_tipo
         FROM eventos AS eve
         INNER JOIN pedidos AS ped ON eve.id = ped.origem_id
         INNER JOIN pedido_status AS pst ON ped.status_pedido_id = pst.id
-        WHERE eve.publicado = 1 AND ped.publicado = 1 AND (ped.origem_tipo_id = 1 OR ped.origem_tipo_id = 2) AND evento_status_id between(3, 4) AND contratacao = 1 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+        WHERE eve.publicado = 1 AND ped.publicado = 1 AND (ped.origem_tipo_id = 1 OR ped.origem_tipo_id = 2) AND evento_status_id between 3 AND 4 AND contratacao = 1 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+echo $sql;
 $query = mysqli_query($con, $sql);
 ?>
 
