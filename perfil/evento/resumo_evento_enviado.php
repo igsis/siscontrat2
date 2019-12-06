@@ -57,7 +57,6 @@ if (isset($_POST['enviar'])) {
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $tipo_evento = recuperaDados('tipo_eventos', 'id', $evento['tipo_evento_id']);
-$original = $evento['original'] == 1 ? 'Sim' : 'Não';
 $relacao_juridica = recuperaDados('relacao_juridicas', 'id', $evento['relacao_juridica_id']);
 $projeto_especial = recuperaDados('projeto_especiais', 'id', $evento['projeto_especial_id']);
 $fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
@@ -109,9 +108,6 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                         </div>
                                         <div class="form-group col-md-12">
                                             <strong>Tipo evento: </strong><?= $tipo_evento['tipo_evento']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>É original? </strong><?= $original ?>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <strong>Relação

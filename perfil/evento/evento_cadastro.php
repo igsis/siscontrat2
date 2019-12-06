@@ -19,11 +19,6 @@ include "includes/menu_interno.php";
 
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="original">É um evento original?</label> <br>
-                                    <label><input type="radio" name="original" value="1" checked> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="original" value="0"> Não </label>
-                                </div>
-                                <div class="form-group col-md-4">
                                     <label for="contratacao">Haverá contratação?</label> <br>
                                     <label><input type="radio" name="contratacao" value="1" checked> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="contratacao" value="0"> Não </label>
@@ -34,15 +29,15 @@ include "includes/menu_interno.php";
                                     <label><input type="radio" name="tipoLugar" value="1"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="tipoLugar" value="0" checked> Não </label>
                                 </div>
-                            </div>
 
-                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="tipo">Este evento é cinema?</label> <br>
                                     <label><input type="radio" name="tipo" value="2"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="tipo" value="1" checked> Não </label>
                                 </div>
+                            </div>
 
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="fomento">É fomento/programa?</label> <br>
                                     <label><input type="radio" class="fomento" name="fomento" value="1" id="sim"> Sim
