@@ -20,6 +20,8 @@ $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
 
+$cargo = recuperaDados('emia_cargos','id',$contratacao['emia_cargo_id']);
+
 $ano = date('Y',strtotime("-3 hours"));
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
@@ -43,6 +45,12 @@ $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(14, $l, 'Nome:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 11);
 $pdf->MultiCell(180, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 11);
+$pdf->Cell(14, $l, 'Cargo:', 0, 0, 'L');
+$pdf->SetFont('Arial', '', 11);
+$pdf->MultiCell(180, $l, utf8_decode($cargo['cargo']), 0, 'L', 0);
 
 $pdf->Ln(5);
 
@@ -107,7 +115,7 @@ while($parcela = mysqli_fetch_array($query))
 $pdf->Ln(16);
 
 $pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Atesto que recebi da Prefeitura do Múnicípio de São Paulo - Secretaria Municipal de Cultura a importância de R$ ". $valorParcela . " (" . valorPorExtenso($valorParcela) . " )"),0,'L',0);
+$pdf->MultiCell(180,$l,utf8_decode("Atesto que recebi da Prefeitura do Múnicípio de São Paulo - Secretaria Municipal de Cultura a importância de R$ ". $valorParcela . " (" . valorPorExtenso($valorParcela) . " ) .  referente ao período " . retornaPediodoEmia($contratacao['emia_vigencia_id']) . " da " . $cargo['cargo']),0,'L',0);
 
 $pdf->Ln(16);
 

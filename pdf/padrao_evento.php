@@ -70,8 +70,8 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p><strong> Valor:</strong> " . "R$ " .$valor. "  " . "($valor_extenso)" . "</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . "$pagamento" . "</p>" .
-    "<p><strong>Dotação Orçamentária:</strong> " . "$finalizacao" . "</p>" .
-    "<p>&nbsp;</p>" .
+    "<p><strong>Dotação Orçamentária:</strong>"."$dotacao"."&nbsp;"."</p>" .
+    "<p>$finalizacao;</p>" .
     "<p align='justify'>" . "" . "</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .

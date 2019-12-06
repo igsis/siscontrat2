@@ -37,7 +37,7 @@ $local = substr($local, 0, -3);
 $nome = $pessoa['nome'];
 $cpf = $pessoa['cpf'];
 
-$periodo = $fc['ano'];
+$periodo = retornaPeriodoFormacao($fc['form_vigencia_id']);
 
 $valor = $pedido['valor_total'];
 $valor_extenso = valorPorExtenso($valor);
@@ -61,7 +61,7 @@ $dataAtual = date("d/m/Y");
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=" . $pedido['numero_processo'] . " em $dataAtual.doc");
 echo "<html>";
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1252\">";
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">";
 echo "<body>";
 
 echo "<p align='justify'><b>CONTRATANTE:</b> " . "SMC" . "</p>";
