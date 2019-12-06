@@ -3,8 +3,6 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
 
-unset($_SESSION['idPedido']);
-
 if (isset($_POST['carregar'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
 }

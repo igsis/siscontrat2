@@ -11,7 +11,6 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $fiscal_id = $_POST['fiscal'];
     $suplente_id = $_POST['suplente'];
     $usuario = $_SESSION['idUser'];
-    $original = $_POST['original'];
     $contratacao = $_POST['contratacao'];
     $eventoStatus = "1";
     $fomento = $_POST['fomento'];
@@ -30,7 +29,6 @@ if (isset($_POST['cadastra'])) {
                                  suplente_id, 
                                  usuario_id, 
                                  contratacao, 
-                                 original, 
                                  evento_status_id,
                                  fomento, 
                                  espaco_publico) 
@@ -43,7 +41,6 @@ if (isset($_POST['cadastra'])) {
                                   '$suplente_id',
                                   '$usuario',
                                   '$contratacao',
-                                  '$original',
                                   '$eventoStatus',
                                   '$fomento',
                                   '$tipoLugar')";
@@ -87,8 +84,7 @@ if (isset($_POST['edita'])) {
                               sinopse = '$sinopse', 
                               fiscal_id = '$fiscal_id', 
                               suplente_id = '$suplente_id', 
-                              contratacao = '$contratacao', 
-                              original = '$original',
+                              contratacao = '$contratacao',
                               fomento = '$fomento',
                               espaco_publico = '$tipoLugar'
                               WHERE id = '$idEvento'";
@@ -150,15 +146,6 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
                         <div class="box-body">
 
                             <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="original">É um evento original?</label> <br>
-                                    <label><input type="radio" name="original"
-                                                  value="1" <?= $evento['original'] == 1 ? 'checked' : NULL ?>> Sim
-                                    </label>
-                                    <label><input type="radio" name="original"
-                                                  value="0" <?= $evento['original'] == 0 ? 'checked' : NULL ?>> Não
-                                    </label>
-                                </div>
                                 <div class="form-group col-md-4">
                                     <label for="contratacao">Haverá contratação?</label> <br>
                                     <label><input type="radio" name="contratacao"

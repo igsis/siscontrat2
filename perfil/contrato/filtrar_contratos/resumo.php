@@ -78,7 +78,7 @@ if (isset($_POST['salvar'])) {
             gravarLog($sql);
 
         $sql = "UPDATE pedidos SET status_pedido_id = '$status' WHERE id = '$idPedido'";
-        if (mysqli_query($con, $sql)){
+        if (mysqli_query($con, $sql)) {
             gravarLog($sql);
 
             if ($status == 20) {
@@ -180,7 +180,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                         <select name="operador" id="operador" class="form-control">
                                             <option value="">Selecione um operador</option>
                                             <?php
-                                                geraOpcao('usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id', $pedido['operador_id']);
+                                            geraOpcao('usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id', $pedido['operador_id']);
                                             ?>
                                         </select>
                                     </div>
@@ -298,15 +298,23 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 Salvar
                             </button>
 
-                            <a href="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos">
-                                <button type="button" class="btn btn-info" name="reabertura" id="reabertura">Reabertura</button>
-                            </a>
-
                             <a href="?perfil=contrato&p=filtrar_contratos&sp=area_impressao">
                                 <button type="button" class="btn btn-default">Ir para área de impressão</button>
                             </a>
                         </div>
                     </form>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:center">
+                            <form action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos"
+                                  method="post">
+                                <button type="submit" class="btn btn-info" name="reabertura" style="width: 35%;"
+                                        id="reabertura">
+                                    Reabertura
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -459,12 +467,3 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
         ?>
     </section>
 </div>
-
-<script>
-    //seta um qualquer para session para para saber q é para realizar uma reabertura
-    $('#reabertura').on('click', function(){
-        <?php
-            $_SESSION['reabertura'] = 1;
-        ?>
-    });
-</script>

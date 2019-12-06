@@ -1,5 +1,8 @@
 <?php
 include "includes/menu_principal.php";
+
+unset($_SESSION['idPedido']);
+
 $con = bancoMysqli();
 
 if (isset($_POST['cadastraLocal'])) {

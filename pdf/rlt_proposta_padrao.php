@@ -27,7 +27,6 @@ class PDF extends FPDF
 $idPedido = $_SESSION['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPf = $pedido['pessoa_fisica_id'];
-$idFC = $pedido['origem_id'];
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
@@ -68,6 +67,19 @@ $drt = $con->query($sqlDRT)->fetch_array();
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
+
+$idAtracao = $_SESSION['idAtracao'];
+
+$atracao = recuperaDados('atracoes', 'id', $idAtracao);
+
+$sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
+$carga = $con->query($sqlCarga)->fetch_array();
+
+if($carga['carga_horaria'] != 0 || $carga['carga_horaria'] != NULL){
+    $cargaHoraria =  $carga['carga_horaria'] . " hora(s)";
+}else{
+    $cargaHoraria = "Não possuí.";
+}
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -190,6 +202,12 @@ $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(26, $l, utf8_decode('Data / Período:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(50, $l, utf8_decode($periodo), 0, 'L', 0);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(26, $l, utf8_decode('Carga Horária:'), 0, 0, 'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->MultiCell(50, $l, utf8_decode($cargaHoraria), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -319,32 +337,45 @@ $pdf->Cell(180,5,"CRONOGRAMA",0,1,'C');
 $pdf->Ln(5);
 
 $pdf->SetX($x);
+$pdf->SetFont('Arial','B', 10);
+$pdf->Cell(13,$l,'Objeto:',0,0,'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(40, $l, utf8_decode($objeto), 0, 'L', 0);
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, 'Tipo:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode(retornaTipo($evento['id'])), 0, 'L', 0);
+$cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " .$evento['id']);
+while($aux = mysqli_fetch_array($cronograma)){
+    $tipo = retornaTipo($aux['tipo_ocorrencia_id']);
+    $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
+    $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
+    $local = $con->query("SELECT local FROM locais WHERE id = ". $aux['local_id'])->fetch_array();
+    $lugar = $local['local'];
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(22, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(75, $l, utf8_decode($periodo), 0, 'L', 0);
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial','B', 10);
+    $pdf->Cell(9,$l,utf8_decode('Tipo:'),0,0,'L');
+    $pdf->SetFont('Arial','', 10);
+    $pdf->MultiCell(158,$l,utf8_decode($tipo));
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(15, $l,utf8_decode('Horário:'),0,0,'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode(exibirHora($ocorrencia['horario_inicio']) . " - " . exibirHora($ocorrencia['horario_fim'])), 0, 'L', 0);
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial','B', 10);
+    $pdf->Cell(22,$l,utf8_decode('Data/Perído:'),0,0,'L');
+    $pdf->SetFont('Arial','', 10);
+    $pdf->MultiCell(148,$l,utf8_decode($dia));
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11, $l,utf8_decode('Local:'),0,0,'L');
-$pdf->SetFont('Arial', '', '10');
-$pdf->MultiCell(140,$l, utf8_decode($locais['local']), 0,'L',0);
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial','B', 10);
+    $pdf->Cell(15,$l,utf8_decode('Horário:'),0,0,'L');
+    $pdf->SetFont('Arial','', 10);
+    $pdf->MultiCell(155,$l,utf8_decode($hour));
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial','B', 10);
+    $pdf->Cell(12,$l,utf8_decode('Local:'),0,0,'L');
+    $pdf->SetFont('Arial','', 10);
+    $pdf->MultiCell(158,$l,utf8_decode($lugar));
+
+    $pdf->Ln(5);
+}
 
 $pdf->SetXY($x,262);
 $pdf->SetFont('Arial','', 10);
