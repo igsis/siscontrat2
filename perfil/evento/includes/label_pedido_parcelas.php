@@ -1,9 +1,19 @@
 <?php
+
+$query_data = "SELECT c.data_inicio
+                                   FROM
+                                    ocorrencias AS c INNER JOIN eventos AS e
+                                   ON c.origem_ocorrencia_id = e.id
+                                   WHERE e.id = '$idPedido'";
+
+$data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
+
 ?>
-form.
 <h3 class="h2">1. Detalhes de parcelas</h3>
-<form action="" class="formulario-ajax" name="form-valor-equipamento" role="form" data-etapa="Parcelas">
+<form action="../funcoes/api_pedido_eventos.php" method="POST" class="formulario-ajax" name="form-valor-equipamento" role="form" data-etapa="Parcelas">
     <input type="hidden" name="_method" value="parcelas">
+    <div id="mensagem-alerta">
+    </div>
     <div class="row">
         <div class="form-group col-md-8">
             <label for="verba_id">Verba *</label>
@@ -105,6 +115,7 @@ form.
     <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
     <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
     <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
+    <input type="hidden" name="data_kit" id="dataKit">
     <ul class="list-inline pull-right">
         <li>
             <button type="submit" class="btn btn-primary next-step">Proxima etapa <span
