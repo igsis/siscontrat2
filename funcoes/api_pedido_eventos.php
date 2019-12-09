@@ -57,23 +57,21 @@ if (isset($_POST['_method'])) {
             $idPedido = $_POST["idPedido"];
             $tipoPesso = $_POST["tipoPessoa"];
             $idProponent = $_POST["idProponente"];
+            $data_kit_pagamento = $_POST["data_kit"];
 
             if ($num_parcelas == 1 || $num_parcelas == 13) {
-                $query_data = "SELECT MIN(c.data_inicio)
-                               FROM
-                                ocorrencias AS c INNER JOIN eventos AS e
-                               ON c.origem_ocorrencia_id = e.id
-                               WHERE e.id = '$idPedido'";
+                $data_kit_pagamento = date('Y-m-d', strtotime("+1 days", strtotime($data_kit_pagamento)));
+            }else{
+                $queryParcela = "SELECT data_pagamento FROM parcelas WHERE pedido_id = ".$idPedido." AND numero_parcelas = 1";
+                $data_kit_pagamento = mysqli_fetch_row(mysqli_query($con,$queryParcela))[0];
+            }
+             $query = "UPDATE pedidos SET 
+                        verba_id = ".$idVerba.", numero_parcelas = ".$num_parcelas.", valor_total = ".$valor_total.", forma_pagamento = ".$forma_pagamento.", data_kit_pagamento=".$data_kit_pagamento.", justificativa =".$justificativa.", observacao = ".$observacao." WHERE id = ".$idPedido;
 
-                if (mysqli_query($con,$query_data)){
-                    if ($query_data == null){
-                        echo "É necessario cadastrar uma ocorrencia antes de continuar";
-                    }
-                    else{
-                            
-                    }
-                }
-
+            if (mysqli_query($con,$query)){
+                echo true;
+            }else{
+                echo false;
             }
 
             break;

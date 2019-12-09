@@ -259,6 +259,8 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
 
                                                     $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
                                                     $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
+                                                    $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
+                                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
 
                                                     ?>
 
@@ -273,7 +275,16 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
-                                                        <strong>Local: </strong><?= $local['local']; ?>
+                                                        <strong>Instituição: </strong><?= $instituicao ?>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Local: </strong><?= $local['local'] ?? "Não possui" ?>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Espaço: </strong><?= $espaco ?? "Não possui" ?>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Valor do ingresso: </strong>R$<?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>
                                                     </div>
                                                     <?php
                                                     if ($ocorrencia['horario_inicio'] != NULL) {
@@ -299,7 +310,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                     if ($ocorrencia['virada'] != NULL) {
                                                         ?>
                                                         <div class="form-group col-md-12">
-                                                            <strong>Virada:</strong> <?= $ocorrencia['virada'] = 1 ? "Sim" : "Não"; ?>
+                                                            <strong>Virada:</strong> <?= $ocorrencia['virada'] == 1 ? "Sim" : "Não"; ?>
                                                         </div>
                                                     <?php } ?>
                                                 <?php }

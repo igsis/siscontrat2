@@ -7,6 +7,7 @@ if (isset($_POST['carregar'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
 }
 
+
 if (isset($_POST['idProponente'])) {
     $idProponente = $_POST['idProponente'];
     $tipoPessoa = $_POST['tipoPessoa'];
@@ -85,6 +86,7 @@ if (isset($_POST['edita'])) {
     $justificativa = addslashes($_POST['justificativa']);
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
+
     $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? '0000-00-00';
 
     if ($tipoPessoa == 1) {
@@ -469,7 +471,22 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
 
         $('#editarModal').on('click', editarModal);
 
+        <?php
 
+
+        if ($data_kit == null){
+        ?>
+        $('.next-step').prop('disabled', true);
+        $('#mensagem-alerta').append('<div class="alert alert-danger col-md-12" role="alert">Crie uma ocorrência antes de procegguir com pedido.</div>');
+
+        <?php
+        }else{
+        ?>
+           $('#dataKit').val("<?= $data_kit ?>");
+        <?php
+
+        }
+        ?>
     });
 
     function somar() {
