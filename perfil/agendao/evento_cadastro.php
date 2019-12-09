@@ -79,14 +79,6 @@ require "includes/menu_principal.php";
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="tipo">Este evento é oficina?</label> <br>
-                                    <label><input type="radio" name="oficina" value="1" id="simOficina"> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="oficina" value="0" checked> Não </label>
-                                </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="acao">Ações (Expressões Artístico-culturais) * <i>(multipla
                                             escolha) </i></label>
@@ -243,65 +235,96 @@ require "includes/menu_principal.php";
 
 <?php @include "../perfil/includes/modal_classificacao.php"?>
 
-
 <script>
-    let fomento = $('.fomento');
-    let acao = $("input[name='acao[]']");
-    const oficinaId = "Oficinas e Formação Cultural";
-    let oficinaRadio = $("input[name='oficina']");
-    var oficinaOficial = acao[8];
+    const btnCadastra = $('#cadastra');
+    let checkPublico = false;
+    let checkedAcao = false;
 
-    function verificaOficina() {
-        if ($('#simOficina').is(':checked')) {
-            checaCampos(oficinaOficial);
-            acaoValidacao()
-        } else {
-            checaCampos("");
-            acaoValidacao()
+    function travaBotao() {
+        if (checkPublico && checkedAcao)
+            btnCadastra.attr("disabled", false);
+        else
+            btnCadastra.attr("disabled", true);
+    }
+
+    // ACOES
+    function desabilitaCheckBox(acoes) {
+        if (acoes[8].checked) {
+            for (let x = 0; x < acoes.length; x++) {
+                if (x !== 8) {
+                    acoes[x].disabled = true;
+                    acoes[x].checked = false;
+                }
+            }
         }
     }
 
-    function checaCampos(obj) {
-        if (obj.id == oficinaId && obj.value == '8') {
-
-            for (i = 0; i < acao.size(); i++) {
-                if (!(acao[i] == obj)) {
-                    let acoes = acao[i].id;
-
-                    document.getElementById(acoes).disabled = true;
-                    document.getElementById(acoes).checked = false;
-                    document.getElementById(oficinaId).checked = true;
-                    document.getElementById(oficinaId).disabled = false;
-
-                    document.getElementById(oficinaId).readonly = true;
-
-                }
-            }
-        } else {
-            for (i = 0; i < acao.size(); i++) {
-
-                if (!(acao[i] == acao[8])) {
-                    let acoes = acao[i].id;
-
-                    document.getElementById(acoes).disabled = false;
-                    document.getElementById(oficinaId).checked = false;
-                    document.getElementById(oficinaId).disabled = true;
-
-                    document.getElementById(oficinaId).readonly = false;
-                }
-            }
-
+    function reabilitaCheckBox(acoes) {
+        for (let x = 0; x < acoes.length; x++) {
+            acoes[x].disabled = false;
         }
     }
 
-    fomento.on("change", verificaFomento);
-    oficinaRadio.on("change", verificaOficina);
+    function validaAcoes() {
+        var acoes = $('.acoes');
+        var msg = $('#msgEscondeAcao');
+        checkedAcao = false;
 
-    $(document).ready(
-        verificaFomento(),
-        verificaOficina()
-    );
+        for (let x = 0; x < acoes.length; x++) {
+            if (acoes[x].checked) {
+                if (acoes[8].checked) {
+                    desabilitaCheckBox(acoes);
+                } else {
+                    acoes[8].disabled = true;
+                }
+                checkedAcao = true;
+            }
+        }
 
+        if (checkedAcao) {
+            msg.hide();
+            btnCadastra.removeAttr("data-toggle");
+            btnCadastra.removeAttr("data-placement");
+            btnCadastra.removeAttr("title");
+        } else {
+            reabilitaCheckBox(acoes);
+            msg.show();
+            btnCadastra.attr("data-toggle", "tooltip");
+            btnCadastra.attr("data-placement", "left");
+            btnCadastra.attr("title", "Selecione pelo menos uma Ação");
+        }
+        travaBotao();
+    }
+
+    //PÚBLICO
+    function validaPublico() {
+        var publicos = $('.publicos');
+        var isMsg = $('#msgEscondePublico');
+        checkPublico = false;
+
+        for (let x = 0 ; x < publicos.length; x++) {
+            if (publicos[x].checked) {
+                checkPublico = true;
+            }
+        }
+
+        if (checkPublico) {
+            isMsg.hide();
+            btnCadastra.removeAttr("data-toggle");
+            btnCadastra.removeAttr("data-placement");
+            btnCadastra.removeAttr("title");
+        } else {
+            isMsg.show();
+            btnCadastra.attr("data-toggle", "tooltip");
+            btnCadastra.attr("data-placement", "left");
+            btnCadastra.attr("title", "Selecione pelo menos uma Representatividade");
+        }
+
+        travaBotao();
+    }
+
+
+    //FOMENTO
     function verificaFomento() {
         if ($('#sim').is(':checked')) {
             $('#tipoFomento')
@@ -313,81 +336,15 @@ require "includes/menu_principal.php";
                 .attr('required', false)
         }
     }
-</script>
 
-<script>
-    let isAcaoSelected = false;
-    let isPublicoSelected = false;
+    //EXECUTA TUDO
+    $('.acoes').on('change', validaAcoes);
+    $('.publicos').on('change', validaPublico);
+    $('.fomento').on('change', verificaFomento);
 
-    function publicoValidacao() {
-        var isMsg = $('#msgEscondePublico');
-        isMsg.hide();
-
-        var i = 0;
-        var counter = 0;
-        var publico = $('.publico');
-
-        for (; i < publico.length; i++) {
-            if (publico[i].checked) {
-                counter++;
-            }
-        }
-
-        if (counter == 0) {
-            $('#cadastra').attr("disabled", true);
-            isAcaoSelected = false;
-            isMsg.show();
-            return false;
-        }
-        isAcaoSelected = true;
-        if(!isPublicoSelected){
-            $('#cadastra').attr("disabled", true);
-            return false;
-        }
-
-        $('#cadastra').attr("disabled", false);
-        isMsg.hide();
-        return true;
-    }
-
-    $(document).ready(publicoValidacao);
-
-    $('.publico').on("change", publicoValidacao);
-
-
-    function acaoValidacao() {
-        var isMsg = $('#msgEscondeAcao');
-        isMsg.hide();
-
-        var i = 0;
-        var counter = 0;
-        var acao = $('.acao');
-
-        for (; i < acao.length; i++) {
-            if (acao[i].checked) {
-                counter++;
-            }
-        }
-
-        if (counter == 0) {
-            $('#cadastra').attr("disabled", true);
-            isPublicoSelected = false;
-            isMsg.show();
-            return false;
-        }
-        isPublicoSelected = true;
-        if(!isAcaoSelected){
-            $('#cadastra').attr("disabled", true);
-            return false;
-        }
-
-
-        $('#cadastra').attr("disabled", false);
-        isMsg.hide();
-        return true;
-    }
-
-    $(document).ready(acaoValidacao);
-
-    $('.acao').on("change", acaoValidacao);
+    $(document).ready(function () {
+        validaAcoes();
+        validaPublico();
+        verificaFomento();
+    })
 </script>
