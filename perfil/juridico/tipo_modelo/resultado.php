@@ -21,9 +21,9 @@ $suplente= $usuarios["nome_completo"];
 $rfSuplente= $usuarios["rf_rg"];
 $rfFiscal= $usuarios["rf_rg"];
 
-$mdl = str_replace("\nnomeFiscal", $fiscal, $mdl);
+$mdl = str_replace("nomeFiscal", $fiscal, $mdl);
 $mdl = str_replace("rfFiscal", $rfFiscal, $mdl);
-$mdl = str_replace("\nnomeSuplente", $suplente, $mdl);
+$mdl = str_replace("nomeSuplente", $suplente, $mdl);
 $mdl = str_replace("rfSuplente", $rfSuplente, $mdl);
 
 
