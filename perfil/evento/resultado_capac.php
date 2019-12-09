@@ -24,12 +24,12 @@ $sql = "SELECT
 	        e.id,
 	        e.nome_evento,
 	        e.data_cadastro,
-	        (SELECT GROUP_CONCAT('\'',p.publico,'\'') FROM capac_new.evento_publico AS ep
+	        (SELECT GROUP_CONCAT(' ',p.publico) FROM capac_new.evento_publico AS ep
 	            INNER JOIN capac_new.publicos AS p ON ep.publico_id = p.id
 	            WHERE ep.evento_id = e.id
             ) AS 'publico'
-FROM capac_new.eventos AS e
-WHERE e.publicado = 2 $sqlIdCapac $sqlNomeEvento $sqlPublico";
+        FROM capac_new.eventos AS e
+        WHERE e.publicado = 2 $sqlIdCapac $sqlNomeEvento $sqlPublico";
 
 $query = mysqli_query($con, $sql);
 $numRows = mysqli_num_rows($query);
@@ -47,53 +47,44 @@ $numRows = mysqli_num_rows($query);
                     <div class="box-body">
                     <table id="tblCapac" class="table table-bordered table-striped">
                         <thead>
-                        <th>Código</th>
-                        <th>Nome do Evento</th>
-                        <th>Data do cadastro</th>
-                        <th>Representatividade</th>
-                        <th>Abrir</th>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nome do Evento</th>
+                                <th>Data do cadastro</th>
+                                <th>Representatividade</th>
+                                <th>Abrir</th>
+                            </tr>
                         </thead>
-
                         <tbody>
                         <?php
-                        if($numRows == 0){
+                        while ($evento = mysqli_fetch_array($query)){
                             ?>
-                            <td colspan="5"><p align="center"><b>Não foram encontrados registros</b></p></td>
-                        <?php
-                        }else{
-                            while ($evento = mysqli_fetch_array($query)){
-                                ?>
-                                <tr>
-                                    <td><?= $evento['id'] ?></td>
-                                    <td><?= $evento['nome_evento'] ?></td>
-                                    <td><?= exibirDataHoraBr($evento['data_cadastro']) ?></td>
-                                    <td><?= $evento['publico'] ?></td>
-                                    <td>
-
-                                        <form action="?perfil=evento&p=resumo_capac" method="POST">
-                                            <input type="hidden" id="idCapac" name="idCapac" value="<?= $evento['id'] ?>">
-                                            <button type="submit" name="buscar" id="buscar" class="btn btn-block btn-info">
-                                                <span class="glyphicon glyphicon-folder-open"></span>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <?php
-                            }
-                            ?>
-
-                        <?php
+                            <tr>
+                                <td><?= $evento['id'] ?></td>
+                                <td><?= $evento['nome_evento'] ?></td>
+                                <td><?= exibirDataHoraBr($evento['data_cadastro']) ?></td>
+                                <td><?= $evento['publico'] ?></td>
+                                <td>
+                                    <form action="?perfil=evento&p=resumo_capac" method="POST">
+                                        <input type="hidden" id="idCapac" name="idCapac" value="<?= $evento['id'] ?>">
+                                        <button type="submit" name="buscar" id="buscar" class="btn btn-block btn-info">
+                                            <span class="glyphicon glyphicon-folder-open"></span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <?php
                         }
                         ?>
-
                         </tbody>
-
                         <tfoot>
-                        <th>Código</th>
-                        <th>Nome do Evento</th>
-                        <th>Data do cadastro</th>
-                        <th>Representatividade</th>
-                        <th>Abrir</th>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nome do Evento</th>
+                                <th>Data do cadastro</th>
+                                <th>Representatividade</th>
+                                <th>Abrir</th>
+                            </tr>
                         </tfoot>
                     </table>
                     </div>
@@ -102,7 +93,6 @@ $numRows = mysqli_num_rows($query);
         </div>
     </section>
 </div>
-
 
 <script defer src="./bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="./bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
