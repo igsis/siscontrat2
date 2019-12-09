@@ -167,12 +167,12 @@ $pedido = mysqli_fetch_array($query_pedido);
         <h2 class="page-header">Dados do Proponente</h2>
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Proponente</h3>
+                <h3 class="box-title">Dados do Proponente</h3>
             </div>
             <div class="box-body">
                 <?php
                 if ($pedido['pessoa_tipo_id'] == 1){
-                    $idPf = $pedido['pessoa_fisica_id'];
+                    $idProponente = $pedido['pessoa_fisica_id'];
                     $sql_pf = "SELECT * FROM pessoa_fisicas AS pf
                                     LEFT JOIN pf_enderecos pe on pf.id = pe.pessoa_fisica_id
                                     LEFT JOIN pf_bancos pb on pf.id = pb.pessoa_fisica_id
@@ -184,7 +184,7 @@ $pedido = mysqli_fetch_array($query_pedido);
                                     LEFT JOIN etnias e on pd.etnia_id = e.id
                                     LEFT JOIN regiaos r on pd.regiao_id = r.id
                                     LEFT JOIN grau_instrucoes gi on pd.grau_instrucao_id = gi.id
-                                    WHERE pf.id = '$idPf'";
+                                    WHERE pf.id = '$idProponente'";
                     $query_pf = mysqli_query($bdc,$sql_pf);
                     $pf = mysqli_fetch_array($query_pf);
                     ?>
@@ -233,13 +233,13 @@ $pedido = mysqli_fetch_array($query_pedido);
                     </div>
                     <?php
                 } else {
-                    $idPj = $pedido['pessoa_juridica_id'];
+                    $idProponente = $pedido['pessoa_juridica_id'];
                     $sql_pj = "SELECT pj.*, pe.*, pb.*, bc.banco, bc.codigo
                                 FROM pessoa_juridicas AS pj
                                 LEFT JOIN pj_enderecos pe on pj.id = pe.pessoa_juridica_id
                                 LEFT JOIN pj_bancos pb on pj.id = pb.pessoa_juridica_id
                                 LEFT JOIN bancos bc on pb.banco_id = bc.id
-                                WHERE pj.id = '$idPj'";
+                                WHERE pj.id = '$idProponente'";
                     $query_pj = mysqli_query($bdc,$sql_pj);
                     $pj = mysqli_fetch_assoc($query_pj);
                     $idRep1 = $pj['representante_legal1_id'];
@@ -247,7 +247,7 @@ $pedido = mysqli_fetch_array($query_pedido);
                     $query_rep1 = mysqli_query($bdc,$sql_rep1);
                     $rep1 = mysqli_fetch_array($query_rep1);
 
-                    $sql_tel = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
+                    $sql_tel = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idProponente'";
                     $query_tel = mysqli_query($bdc,$sql_tel);
                     ?>
                     <div class="row">
@@ -301,10 +301,161 @@ $pedido = mysqli_fetch_array($query_pedido);
                 }
                 ?>
             </div>
+            <div class="box-header with-border">
+                <h3 class="box-title">Arquivos do Proponente</h3>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12 text-center">
+                    <div class="table-responsive list_info"><br>
+                        <?php
+                        /* Lista os arquivos do Proponente */
+                        $sql = "SELECT arq.id, ld.documento, arq.arquivo, arq.data FROM arquivos AS arq
+                                INNER JOIN lista_documentos AS ld ON arq.lista_documento_id = ld.id
+                                WHERE 
+                                    arq.origem_id = '$idProponente' AND
+	                                arq.publicado = 1 AND
+	                                arq.lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '{$pedido['pessoa_tipo_id']}' AND publicado = 1)";
+                        $query = mysqli_query($bdc, $sql);
+                        $linhas = mysqli_num_rows($query);
+
+                        if ($linhas > 0) {
+                            echo "
+                                    <table class='table text-center table-striped table-bordered table-condensed'>
+                                        <thead>
+                                            <tr class='bg-info text-bold'>
+                                                <td>Tipo de documento</td>
+                                                <td>Nome do documento</td>
+                                                <td>Data de envio</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>";
+                            while ($arquivo = mysqli_fetch_array($query)) {
+                                echo "<tr>";
+                                echo "<td>".$arquivo['documento']."</td>";
+                                echo "<td class='list_description'><a href='../../capac/uploads/" . $arquivo['arquivo'] . "' target='_blank'>" . mb_strimwidth($arquivo['arquivo'], 15, 50, "...") . "</a></td>";
+                                echo "<td class='list_description'>(" . exibirDataBr($arquivo['data']) . ")</td>";
+                                echo "</tr>";
+                            }
+                            echo "
+                                        </tbody>
+                                        </table>";
+                        } else {
+                            echo "<p>Não há listas disponíveis no momento.<p/><br/>";
+                        }
+
+                        ?>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Documentos Enviados -->
-        <h2 class="page-header">Arquivos Enviados</h2>
+        <h2 class="page-header">Arquivos do Evento</h2>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Arquivos do Proponente</h3>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12 text-center">
+                    <div class="table-responsive list_info"><br>
+                        <?php
+                        /* Lista os arquivos do Proponente */
+                        $sql = "SELECT arq.id, ld.documento, arq.arquivo, arq.data FROM arquivos AS arq
+                                INNER JOIN lista_documentos AS ld ON arq.lista_documento_id = ld.id
+                                WHERE 
+                                    arq.origem_id = '$id' AND
+	                                arq.publicado = 1 AND
+	                                arq.lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '3' AND publicado = 1)";
+                        $query = mysqli_query($bdc, $sql);
+                        $linhas = mysqli_num_rows($query);
+
+                        if ($linhas > 0) {
+                            echo "
+                                    <table class='table text-center table-striped table-bordered table-condensed'>
+                                        <thead>
+                                            <tr class='bg-info text-bold'>
+                                                <td>Tipo de documento</td>
+                                                <td>Nome do documento</td>
+                                                <td>Data de envio</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>";
+                            while ($arquivo = mysqli_fetch_array($query)) {
+                                echo "<tr>";
+                                echo "<td>".$arquivo['documento']."</td>";
+                                echo "<td class='list_description'><a href='../../capac/uploads/" . $arquivo['arquivo'] . "' target='_blank'>" . mb_strimwidth($arquivo['arquivo'], 15, 50, "...") . "</a></td>";
+                                echo "<td class='list_description'>(" . exibirDataBr($arquivo['data']) . ")</td>";
+                                echo "</tr>";
+                            }
+                            echo "
+                                        </tbody>
+                                        </table>";
+                        } else {
+                            echo "<p>Não há listas disponíveis no momento.<p/><br/>";
+                        }
+
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Arquivos para Comunicação / Produção</h3>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12 text-center">
+                    <div class="table-responsive list_info"><br>
+                        <?php
+                        /* Lista os arquivos do Proponente */
+                        $sql = "SELECT arq.id, ld.documento, arq.arquivo, arq.data FROM arquivos AS arq
+                                INNER JOIN lista_documentos AS ld ON arq.lista_documento_id = ld.id
+                                WHERE 
+                                    arq.origem_id = '$id' AND
+	                                arq.publicado = 1 AND
+	                                arq.lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '8' AND publicado = 1)";
+                        $query = mysqli_query($bdc, $sql);
+                        $linhas = mysqli_num_rows($query);
+
+                        if ($linhas > 0) {
+                            echo "
+                                    <table class='table text-center table-striped table-bordered table-condensed'>
+                                        <thead>
+                                            <tr class='bg-info text-bold'>
+                                                <td>Tipo de documento</td>
+                                                <td>Nome do documento</td>
+                                                <td>Data de envio</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>";
+                            while ($arquivo = mysqli_fetch_array($query)) {
+                                echo "<tr>";
+                                echo "<td>".$arquivo['documento']."</td>";
+                                echo "<td class='list_description'><a href='../../capac/uploads/" . $arquivo['arquivo'] . "' target='_blank'>" . mb_strimwidth($arquivo['arquivo'], 15, 50, "...") . "</a></td>";
+                                echo "<td class='list_description'>(" . exibirDataBr($arquivo['data']) . ")</td>";
+                                echo "</tr>";
+                            }
+                            echo "
+                                        </tbody>
+                                        </table>";
+                        } else {
+                            echo "<p>Não há listas disponíveis no momento.<p/><br/>";
+                        }
+
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-offset-3 col-md-6">
+                <form class="form-horizontal" method="POST" action="?perfil=evento&p=importar_capac" role="form">
+                    <input type="hidden" name="idCapac" value="<?= $id ?>">
+                    <button type="submit" class="btn btn-success btn-block float-right" >Importar</button>
+                </form>
+            </div>
+        </div>
     </section>
     <!-- /.content -->
 </div>
