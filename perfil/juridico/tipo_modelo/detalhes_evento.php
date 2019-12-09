@@ -23,6 +23,7 @@ $pagamento = recuperaDados('pagamentos', 'pedido_id', $idEvento);
 $statusPedido = recuperaDados('pedido_status', 'id', $idEvento);
 $produtor = recuperaDados('produtores', 'id', $idEvento);
 $usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
+$dataEvento = recuperaDados('evento_envios','id',$idEvento);
 ?>
 
 
@@ -43,7 +44,7 @@ $usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
                     </tr>
                     <tr>
                         <th width="30%">Evento enviado em:</th>
-                        <td><?= $producao_evento['data'] ?></td>
+                        <td><?= $dataEvento['data_envio'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Tipo de evento:</th>
