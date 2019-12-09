@@ -167,11 +167,12 @@ $pedido = mysqli_fetch_array($query_pedido);
         <h2 class="page-header">Dados do Proponente</h2>
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><strong>Proponente:</strong> <?= $evento['nome_evento'] ?></h3>
+                <h3 class="box-title">Proponente</h3>
             </div>
             <div class="box-body">
                 <?php
                 if ($pedido['pessoa_tipo_id'] == 1){
+                    $idPf = $pedido['pessoa_fisica_id'];
                     $sql_pf = "SELECT * FROM pessoa_fisicas AS pf
                                     LEFT JOIN pf_enderecos pe on pf.id = pe.pessoa_fisica_id
                                     LEFT JOIN pf_bancos pb on pf.id = pb.pessoa_fisica_id
@@ -183,7 +184,7 @@ $pedido = mysqli_fetch_array($query_pedido);
                                     LEFT JOIN etnias e on pd.etnia_id = e.id
                                     LEFT JOIN regiaos r on pd.regiao_id = r.id
                                     LEFT JOIN grau_instrucoes gi on pd.grau_instrucao_id = gi.id
-                                    WHERE pf.id = '$id'";
+                                    WHERE pf.id = '$idPf'";
                     $query_pf = mysqli_query($bdc,$sql_pf);
                     $pf = mysqli_fetch_array($query_pf);
                     ?>
@@ -232,19 +233,21 @@ $pedido = mysqli_fetch_array($query_pedido);
                     </div>
                     <?php
                 } else {
-                    $sql_pj = "SELECT * FROM pessoa_juridicas AS pj
-                                    LEFT JOIN pj_enderecos pe on pj.id = pe.pessoa_juridica_id
-                                    LEFT JOIN pj_bancos pb on pj.id = pb.pessoa_juridica_id
-                                    LEFT JOIN bancos bc on pb.banco_id = bc.id
-                                    WHERE pj.id = '$id'";
+                    $idPj = $pedido['pessoa_juridica_id'];
+                    $sql_pj = "SELECT pj.*, pe.*, pb.*, bc.banco, bc.codigo
+                                FROM pessoa_juridicas AS pj
+                                LEFT JOIN pj_enderecos pe on pj.id = pe.pessoa_juridica_id
+                                LEFT JOIN pj_bancos pb on pj.id = pb.pessoa_juridica_id
+                                LEFT JOIN bancos bc on pb.banco_id = bc.id
+                                WHERE pj.id = '$idPj'";
                     $query_pj = mysqli_query($bdc,$sql_pj);
-                    $pj = mysqli_fetch_array($query_pj);
+                    $pj = mysqli_fetch_assoc($query_pj);
                     $idRep1 = $pj['representante_legal1_id'];
                     $sql_rep1 = "SELECT * FROM representante_legais WHERE id = '$idRep1'";
                     $query_rep1 = mysqli_query($bdc,$sql_rep1);
                     $rep1 = mysqli_fetch_array($query_rep1);
 
-                    $sql_tel = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$id'";
+                    $sql_tel = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
                     $query_tel = mysqli_query($bdc,$sql_tel);
                     ?>
                     <div class="row">
@@ -299,6 +302,9 @@ $pedido = mysqli_fetch_array($query_pedido);
                 ?>
             </div>
         </div>
+
+        <!-- Documentos Enviados -->
+        <h2 class="page-header">Arquivos Enviados</h2>
     </section>
     <!-- /.content -->
 </div>
