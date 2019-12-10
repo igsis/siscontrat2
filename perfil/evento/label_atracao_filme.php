@@ -16,12 +16,12 @@ if ($evento['tipo_evento_id'] == 2) {
                         <div class="box-header with-border">
                             <h4 class="box-title">
                                 <a data-toggle="collapse" data-parent="#accordionAtracao"
-                                   href="#collapse<?= $filme['id'] ?>">
-                                    Resumo do Filme: <?= $filme['titulo'] ?>
+                                   href="#collapse<?= $filme['idFilmeEvento'] ?>">
+                                    Resumo do Filme: <?= $filme['titulo'] ?> <?= $filme['idFilmeEvento'] ?>
                                 </a>
                             </h4>
                         </div>
-                        <div id="collapse<?= $filme['id'] ?>" class="panel-collapse collapse">
+                        <div id="collapse<?= $filme['idFilmeEvento'] ?>" class="panel-collapse collapse">
                             <div class="box-body">
                                 <div class="table-responsive">
                                     <table class="table">

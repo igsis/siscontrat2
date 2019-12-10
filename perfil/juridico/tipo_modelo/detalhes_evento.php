@@ -8,7 +8,6 @@ if (isset($_POST['detalheEvento'])) {
 }
 // dados //
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$producao_evento = recuperaDados('producao_eventos', 'id', $idEvento);
 $tipo_evento = recuperaDados('tipo_eventos', 'id', $idEvento);
 $projeto_especiais = recuperaDados('projeto_especiais', 'id', $idEvento);
 $relacao_juridica = recuperaDados('relacao_juridicas', 'id', $idEvento);
@@ -24,6 +23,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $idEvento);
 $produtor = recuperaDados('produtores', 'id', $idEvento);
 $usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
 $dataEvento = recuperaDados('evento_envios','id',$idEvento);
+$dotação = recuperaDados('juridicos', 'pedido_id', $idEvento);
 ?>
 
 
@@ -261,7 +261,7 @@ $dataEvento = recuperaDados('evento_envios','id',$idEvento);
                     </tr>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
-                        <td></td>
+                        <td><?=$dotação['dotacao']?></td>
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>

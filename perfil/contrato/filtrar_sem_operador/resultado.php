@@ -53,7 +53,7 @@ if (isset($_POST['busca'])) {
     AND e.evento_status_id != 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1 
-    AND p.operador_id = null
+    AND p.operador_id IS NULL
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso";
 
