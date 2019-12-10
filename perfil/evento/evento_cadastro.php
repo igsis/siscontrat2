@@ -220,6 +220,7 @@ include "includes/menu_interno.php";
 
 <script>
     const btnCadastra = $('#cadastra');
+    let publicos = $('.publicos');
 
     //FOMENTO
     function verificaFomento() {
@@ -235,7 +236,6 @@ include "includes/menu_interno.php";
     }
 
     function validaPublico() {
-        var publicos = $('.publicos');
         var isMsg = $('#msgEsconde');
         var checked = false;
 
@@ -261,7 +261,7 @@ include "includes/menu_interno.php";
     }
 
     //EXECUTA TUDO
-    $('.publicos').on('change', validaPublico);
+    publicos.on('change', validaPublico);
     $('.fomento').on('change', verificaFomento);
 
     $(document).ready(function () {

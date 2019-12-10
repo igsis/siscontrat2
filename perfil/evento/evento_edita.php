@@ -320,6 +320,7 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
 
 <script>
     const btnCadastra = $('#cadastra');
+    let publicos = $('.publicos');
 
     //FOMENTO
     function verificaFomento() {
@@ -335,7 +336,6 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
     }
 
     function validaPublico() {
-        var publicos = $('.publicos');
         var isMsg = $('#msgEsconde');
         var checked = false;
 
@@ -361,7 +361,7 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
     }
 
     //EXECUTA TUDO
-    $('.publicos').on('change', validaPublico);
+    publicos.on('change', validaPublico);
     $('.fomento').on('change', verificaFomento);
 
     $(document).ready(function () {
