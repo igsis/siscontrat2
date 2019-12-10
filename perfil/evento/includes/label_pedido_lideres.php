@@ -27,7 +27,7 @@ $query_atracao = mysqli_query($con, $sql_atracao);
                     echo "<td>" . $atracao['nome'] . "</td>";
                     echo "<td>
                                             <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
-                                            <input type='hidden' name='oficina' value='" . $atracao['id'] . "'>
+                                            <input type='hidden' name='atracao' value='" . $atracao['id'] . "'>
                                             <input type='hidden' name='lider' value='$idPedido'>
                                             <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-refresh'></i> Trocar</button>
                                             </form>
@@ -35,7 +35,7 @@ $query_atracao = mysqli_query($con, $sql_atracao);
                 } else {
                     echo "<td>
                                             <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
-                                            <input type='hidden' name='oficina' value='" . $atracao['id'] . "'>
+                                            <input type='hidden' name='atracao' value='" . $atracao['id'] . "'>
                                             <input type='hidden' name='lider' value='$idPedido'>
                                             <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-plus'></i> Adicionar</button>
                                             </form>

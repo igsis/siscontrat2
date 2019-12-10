@@ -21,8 +21,7 @@ if (isset($_POST['excluir'])) {
 
 $idEvento = $_SESSION['idEvento'];
 $evento = recuperaDados("eventos", "id", $idEvento);
-$tipoEvento = $evento['tipo_evento_id'];
-$sql = "SELECT * FROM pedidos WHERE origem_tipo_id = '$tipoEvento' AND origem_id = '$idEvento' AND publicado = '1'";
+$sql = "SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
 $query = mysqli_query($con,$sql);
 $num = mysqli_num_rows($query);
 
