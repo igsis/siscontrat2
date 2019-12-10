@@ -4,7 +4,7 @@ $id = $_POST['idCapac'];
 
 $bdc = bancoCapac();
 
-$sql_evento = "SELECT * FROM eventos WHERE id = '$id'";
+$sql_evento = "SELECT eventos.*, f.fomento as fomento_nome FROM eventos INNER JOIN evento_fomento ON eventos.id = evento_fomento.evento_id INNER JOIN fomentos f on evento_fomento.fomento_id = f.id WHERE eventos.id = '$id'";
 $query_evento = mysqli_query($bdc,$sql_evento);
 $evento = mysqli_fetch_array($query_evento);
 
@@ -69,7 +69,7 @@ $pedido = mysqli_fetch_array($query_pedido);
                         </a>
                     </h4>
                 </div>
-                <div id="collapse<?= $atracao['id'] ?>" class="panel-collapse collapse">
+                <div id="collapse<?= $atracao['id'] ?>" class="panel-collapse collapse in">
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-12"><b>Nome da atração:</b> <?= $atracao['nome_atracao'] ?></div>
@@ -106,6 +106,7 @@ $pedido = mysqli_fetch_array($query_pedido);
                             <div class="col-md-6"><b>Quantidade de Apresentação:</b>  <?= $atracao['quantidade_apresentacao'] ?></div>
                             <div class="col-md-6"><b>Valor:</b> R$ <?= dinheiroParaBr($atracao['valor_individual']) ?></div>
                         </div>
+                        <br/>
                         <div class="row">
                             <?php
                             $idProdutor = $atracao['produtor_id'];
@@ -187,6 +188,9 @@ $pedido = mysqli_fetch_array($query_pedido);
                                     WHERE pf.id = '$idProponente'";
                     $query_pf = mysqli_query($bdc,$sql_pf);
                     $pf = mysqli_fetch_array($query_pf);
+
+                    $sql_tel = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idProponente'";
+                    $query_tel = mysqli_query($bdc,$sql_tel);
                     ?>
                     <div class="row">
                         <div class="col-md-6"><b> Nome:</b> <?= $pf['nome'] ?></div>
@@ -214,7 +218,11 @@ $pedido = mysqli_fetch_array($query_pedido);
                         <div class="col-md-4"><b>E-mail:</b> <?= $pf['email'] ?></div>
                         <div class="col-md-6">
                             <b>Telefones:</b>
-                            <?= isset($pf['telefones']) ? implode(" | ", $pf['telefones']) : "" ?>
+                            <?php
+                            while ($telefones = mysqli_fetch_array($query_tel)){
+                                echo $telefones['telefone']." | ";
+                            }
+                            ?>
                         </div>
                     </div>
                     <div class="row">
