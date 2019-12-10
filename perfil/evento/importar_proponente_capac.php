@@ -1,26 +1,101 @@
 <?php
 include "includes/menu_principal.php";
 
-$idCapac = isset($_POST['idCapac']) ? $_POST['idCapac'] : null;
 $idUser = $_SESSION['idUser'];
 
 $conSis = bancoMysqli();
 $conCpc = bancoCapac();
 
-if (isset($_GET['error'])) {
-    $idCapac = $_GET['idCpc'];
-    $mensagem = mensagem('danger', 'Falha ao importar o evento. Tente novamente.');
+if (isset($_POST['importarEventoCpc'])) {
+    $idCapac = $_POST['idCapac'];
+
+    $nomeEvento = addslashes($_POST['nomeEvento']);
+    $relacao_juridica_id = $_POST['relacaoJuridica'];
+    $projeto_especial_id = $_POST['projetoEspecial'];
+    $sinopse = addslashes($_POST['sinopse']);
+    $tipo = $_POST['tipo'];
+    $fiscal_id = $_POST['fiscal'];
+    $suplente_id = $_POST['suplente'];
+    $usuario = $_SESSION['idUser'];
+    $contratacao = $_POST['contratacao'];
+    $eventoStatus = "1";
+    $fomento = $_POST['fomento'];
+    $tipoLugar = $_POST['tipoLugar'];
+    $idFomento = $_POST['tipoFomento'] ?? null;
+
+    $sqlInsertSis = "INSERT INTO siscontrat.eventos (nome_evento,
+                                 relacao_juridica_id, 
+                                 projeto_especial_id, 
+                                 tipo_evento_id, 
+                                 sinopse, 
+                                 fiscal_id, 
+                                 suplente_id, 
+                                 usuario_id, 
+                                 contratacao, 
+                                 evento_status_id,
+                                 fomento, 
+                                 espaco_publico) 
+                          VALUES ('$nomeEvento',
+                                  '$relacao_juridica_id',
+                                  '$projeto_especial_id',
+                                  '$tipo',
+                                  '$sinopse',
+                                  '$fiscal_id',
+                                  '$suplente_id',
+                                  '$usuario',
+                                  '$contratacao',
+                                  '$eventoStatus',
+                                  '$fomento',
+                                  '$tipoLugar')";
+
+    if(mysqli_query($conSis, $sqlInsertSis)) {
+        $idEvento = $conSis->insert_id;
+
+        if ($idFomento != null) {
+            $sqlFomentoCpc = "INSERT INTO siscontrat.evento_fomento  (evento_id, fomento_id) VALUES ('$idEvento', '$idFomento')";
+            mysqli_query($conSis, $sqlFomentoCpc);
+        }
+
+        if (isset($_POST['publico'])) {
+            atualizaDadosRelacionamento('siscontrat.evento_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
+        }
+
+        /* IMPORTANDO AS ATRAÇÕES */
+        $sqlAtracoesCpc = "SELECT * FROM capac_new.atracoes WHERE evento_id = '$idCapac' AND publicado = 1";
+        $atracoes = $conCpc->query($sqlAtracoesCpc)->fetch_all(MYSQLI_ASSOC);
+
+        foreach ($atracoes as $atracao) {
+            $sqlAcoesCpc = "SELECT acao_id FROM capac_new.acao_atracao WHERE atracao_id = {$atracao['id']}";
+            $acoes = $conCpc->query($sqlAcoesCpc)->fetch_all(MYSQLI_ASSOC);
+
+            /* INSERINDO PRODUTOR */
+            $sqlInsertProdutor = "INSERT INTO siscontrat.produtores (nome, email, telefone1, telefone2, observacao)
+                              SELECT nome, email, telefone1, telefone2, observacao FROM capac_new.produtores WHERE id = {$atracao['produtor_id']}";
+            if(mysqli_query($conSis, $sqlInsertProdutor)) {
+                $idProdutor = $conSis->insert_id;
+                $sqlInsertAtracao = "INSERT INTO siscontrat.atracoes (evento_id, nome_atracao, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, produtor_id)
+                                 SELECT '$idEvento', cpca.nome_atracao, cpca.ficha_tecnica, cpca.integrantes, cpca.classificacao_indicativa_id, cpca.release_comunicacao, cpca.links, cpca.quantidade_apresentacao, cpca.valor_individual, '$idProdutor' FROM capac_new.atracoes AS cpca WHERE id = {$atracao['id']}";
+
+                if(mysqli_query($conSis, $sqlInsertAtracao)) {
+                    $idAtracao = $conSis->insert_id;
+                    foreach ($acoes as $acao) {
+                        $sqlInsertAcao = "INSERT INTO siscontrat.acao_atracao (acao_id, atracao_id) VALUES ('{$acao['acao_id']}', '$idAtracao')";
+                    }
+                }
+            }
+        }
+
+        $sqlInsertImportado = "INSERT INTO siscontrat.eventos_importados (eventos_id, eventos_capac_id) VALUES ('$idEvento', '$idCapac')";
+        mysqli_query($conSis, $sqlInsertImportado);
+    } else {
+        echo "<script>window.location.href = 'index.php?perfil=evento&p=importar_evento_capac&error=1&idCpc=".$idCapac."</script>";
+    }
+} else {
+    echo "<script>window.location.href = 'index.php?perfil=evento&p=buscar_capac'</script>";
 }
 
 $sqlEventoCpc = "SELECT * FROM capac_new.eventos WHERE id = '$idCapac' AND publicado = 2";
 $eventoCpc = $conCpc->query($sqlEventoCpc)->fetch_assoc();
-
-if ($eventoCpc['fomento'] == 1) {
-    $sqlFomentoCpc = "SELECT * FROM capac_new.evento_fomento WHERE evento_id = '$idCapac'";
-    $fomento = $conCpc->query($sqlFomentoCpc)->fetch_row();
-} else {
-    $fomento = null;
-}
 
 ?>
 
@@ -42,8 +117,8 @@ if ($eventoCpc['fomento'] == 1) {
                     </div>
 
                     <form method="POST" action="?perfil=evento&p=importar_proponente_capac" role="form">
-                        <input type="hidden" name="idCapac" value="<?=$idCapac?>">
                         <div class="box-body">
+
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="contratacao">Haverá contratação?</label> <br>
@@ -164,7 +239,7 @@ if ($eventoCpc['fomento'] == 1) {
                         </div>
 
                         <div class="box-footer">
-                            <button type="submit" name="importarEventoCpc" id="cadastra" class="btn btn-info pull-right">Gravar
+                            <button type="submit" name="importaCapac" id="cadastra" class="btn btn-info pull-right">Gravar
                             </button>
                         </div>
                     </form>
