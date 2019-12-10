@@ -476,6 +476,7 @@ $pedido = mysqli_fetch_array($query_pedido);
         <div class="row">
             <div class="col-md-offset-3 col-md-6">
                 <form class="form-horizontal" method="POST" action="?perfil=evento&p=importar_capac" role="form">
+                <form class="form-horizontal" method="POST" action="?perfil=evento&p=importar_evento_capac" role="form">
                     <input type="hidden" name="idCapac" value="<?= $id ?>">
                     <button type="submit" class="btn btn-success btn-block float-right" >Importar</button>
                 </form>
