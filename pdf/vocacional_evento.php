@@ -1,5 +1,4 @@
 <?php
-
 require_once("../include/lib/fpdf/fpdf.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
@@ -8,31 +7,29 @@ require_once("../funcoes/funcoesGerais.php");
 $con = bancoMysqli();
 session_start();
 
+
 $idEvento = $_SESSION['eventoId'];
-
-
+$pessoa = recuperaDados('pessoa_fisicas','id',$idEvento);
+$modelo = recuperaDados('juridicos','pedido_id',$idEvento);
+$pedido = recuperaDados('pedidos','id',$idEvento);
+$periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
 $evento = recuperaDados('eventos','id',$idEvento);
-$modelo_juridico = recuperaDados('juridicos','pedido_id',$idEvento);
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idEvento);
-$pedidos = recuperaDados('pedidos','id',$idEvento);
-$ocorrencias = recuperaDados('ocorrencias','id',$idEvento);
-$instituicao = recuperaDados('instituicoes', 'id', $ocorrencias['instituicao_id']);
-$finalizacao = $modelo_juridico['finalizacao'];
-$amparo = $modelo_juridico['amparo_legal'];
-$dotacao = $modelo_juridico['dotacao'];
-$hora_inicio = $ocorrencias['horario_inicio'];
-$nome_evento = $evento['nome_evento'];
+$instituicao = recuperaDados('instituicoes','id',$idEvento);
 $nome_instituicao = $instituicao['nome'];
 $sigla = $instituicao['sigla'];
+$nome_evento = $evento['nome_evento'];
+$pagamento = $pedido['forma_pagamento'];
+$valor = $pedido['valor_total'];
+$valor_extenso = valorPorExtenso($valor);
 $nome = $pessoa['nome'];
 $cpf = $pessoa['cpf'];
+$amparo = $modelo['amparo_legal'];
+$dotacao = $modelo['dotacao'];
+$finalizacao = $modelo['finalizacao'];
 $data = date("Y/m/d");
-$diaSemana = diasemana($data);
-$valor = $pedidos['valor_total'];
-$pagamento = $pedidos['forma_pagamento'];
-$valor_extenso = valorPorExtenso($valor);
-$periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
+
 ?>
+
 
 <html>
 <head>
@@ -63,19 +60,17 @@ $dados =
     "<p><strong>Contratado:</strong> " . "$nome" . ", CPF (" . "$cpf" . ")</p>" .
     "<p><strong>Objeto:</strong> " . "$nome_evento" . "</p>" .
     "<p><strong>Data / Período:</strong>"."$periodo"."</p>" .
-    "<p>&nbsp;</p>" .
-    "<p><strong>Locais e Horários:</strong> " . "</p>" .
-    "<p>"."$nome_instituicao"."&nbsp;"."($sigla)"."<br>$dotacao$periodo"."&nbsp;"."($diaSemana)"."&nbsp;ás&nbsp;$hora_inicio</p>".
-    "<p>&nbsp;</p>" .
-    "<p><strong> Valor:</strong> " . "R$ " .$valor. "  " . "($valor_extenso)" . "</p>" .
+    "<p><strong>Locais:</strong> " ." $nome_instituicao ".""."($sigla)"." </p>" .
+    "<p><strong>Carga Horária:</strong><p>".""."</p>".
+    "<p><strong> Valor:</strong> " . "R$ " . " $valor " . "($valor_extenso)" . "</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . "$pagamento" . "</p>" .
-    "<p><strong>Dotação Orçamentária:</strong>"."$dotacao"."&nbsp;"."</p>" .
-    "<p>$finalizacao;</p>" .
-    "<p align='justify'>" . "" . "</p>" .
+    "<p><strong>Dotação Orçamentária: </strong> " . " $dotacao"."</p>" .
     "<p>&nbsp;</p>" .
+    "<p align='justify'>" . "$finalizacao" . "</p>" .
     "<p>&nbsp;</p>" .
+    "<p>&nbsp;</p>".
     "<p>&nbsp;</p>" .
-    "<p align='center'>São Paulo, ".$data. "</p>" .
+    "<p align='center'>São Paulo, "."$data"."</p>" .
     "<p>&nbsp;</p>"
 
 
@@ -86,3 +81,4 @@ $dados =
 
 </body>
 </html>
+

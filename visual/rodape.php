@@ -1,6 +1,6 @@
 <footer class="main-footer">
     <div class="pull-right hidden-xs" align="right">
-        <strong>2018 &copy; SISCONTRAT</strong><br/>
+        <strong><?= date('Y') ?> &copy; SISCONTRAT</strong><br/>
         STI - Sistemas de Informação - <b>Version</b> 2.0
     </div>
     <img src="images/logo_cultura.png"/>

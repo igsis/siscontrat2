@@ -3,11 +3,10 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
 
-unset($_SESSION['idPedido']);
-
 if (isset($_POST['carregar'])) {
     $_SESSION['idPedido'] = $_POST['idPedido'];
 }
+
 
 if (isset($_POST['idProponente'])) {
     $idProponente = $_POST['idProponente'];
@@ -87,6 +86,7 @@ if (isset($_POST['edita'])) {
     $justificativa = addslashes($_POST['justificativa']);
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
+
     $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? '0000-00-00';
 
     if ($tipoPessoa == 1) {
@@ -179,13 +179,15 @@ if (isset($pedido['numero_parcelas'])) {
     }
 }
 
-$sqlOficina = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+$sqlOficina = "SELECT a.valor_individual, aa.acao_id FROM eventos e
+                INNER JOIN atracoes a on e.id = a.evento_id
+                INNER JOIN acao_atracao aa on a.id = aa.atracao_id
+                WHERE e.id = '$idEvento' and a.publicado = 1";
 $queryOficina = mysqli_query($con, $sqlOficina);
-//$atracoes = mysqli_fetch_array($queryAtracao);
 
 while ($atracoes = mysqli_fetch_array($queryOficina)) {
     $valores [] = $atracoes['valor_individual'];
-    if ($atracoes['oficina'] == 1) {
+    if ($atracoes['acao_id'] == 8) {
         $oficina = 1;
     }
 }
@@ -471,7 +473,22 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
 
         $('#editarModal').on('click', editarModal);
 
+        <?php
 
+
+        if ($data_kit == null){
+        ?>
+        $('.next-step').prop('disabled', true);
+        $('#mensagem-alerta').append('<div class="alert alert-danger col-md-12" role="alert">Crie uma ocorrência antes de procegguir com pedido.</div>');
+
+        <?php
+        }else{
+        ?>
+           $('#dataKit').val("<?= $data_kit ?>");
+        <?php
+
+        }
+        ?>
     });
 
     function somar() {

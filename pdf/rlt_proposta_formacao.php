@@ -196,13 +196,17 @@ $pdf->Ln(6);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, 'Ano:', 0, 0, 'L');
+$pdf->Cell(13, $l, utf8_decode('Perído:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(50, $l, utf8_decode($contratacao['ano']), 0, 0, 'L');
+$pdf->Cell(180, $l, utf8_decode(retornaPeriodoFormacao($contratacao['form_vigencia_id'])), 0, 0, 'L');
+
+$pdf->Ln(6);
+
+$pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(25, $l, utf8_decode("Carga Horária:"), '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(168, $l, utf8_decode($carga), 0, 0, 'L');
+$pdf->Cell(168, $l, utf8_decode($carga . " hora(s)"), 0, 0, 'L');
 
 $pdf->Ln(7);
 

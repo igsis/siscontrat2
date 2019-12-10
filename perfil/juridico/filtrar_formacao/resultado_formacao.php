@@ -30,7 +30,6 @@ $sql = "SELECT p.numero_processo,
         INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
         WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 $numprocesso $codigopedido $statuspedido";
 
-
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -63,7 +62,7 @@ $sql = "SELECT p.numero_processo,
                                     ?>
                                     <td>
                                         <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"  method="POST">
-                                            <button type="submit" class="btn btn-primary"><?= $formacao['numero_processo'] ?></button>
+                                            <button type="submit" class="btn btn-link"><?= $formacao['numero_processo'] ?></button>
                                         </form>
                                     </td>
                                     <?php

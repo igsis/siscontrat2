@@ -30,7 +30,7 @@ if (isset($_POST['aprovar'])) {
 
 if (isset($_POST['vetar'])) {
     $idEvento = $_POST['idEvento'];
-    $sqlVeta = "UPDATE eventos SET evento_status_id = 5 WHERE id = '$idEvento'";
+    $sqlVeta = "UPDATE eventos SET evento_status_id = 6 WHERE id = '$idEvento'";
     if (mysqli_query($con, $sqlVeta)) {
         $sqlVeta = "UPDATE pedidos SET status_pedido_id = 3 WHERE origem_id = '$idEvento'";
         $queryVeta = mysqli_query($con, $sqlVeta);

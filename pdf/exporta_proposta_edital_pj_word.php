@@ -61,9 +61,9 @@ if ($checa['oficina'] == 1) {
 
 
 header("Content-type: application/vnd.ms-word");
-header("Content-Disposition: attachment;Filename=$idPedido.doc");
+header("Content-Disposition: attachment;Filename=proposta_edital_pj_$idPedido.doc");
 echo "<html>";
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1252\">";
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">";
 echo "<body>";
 
 echo
@@ -122,11 +122,20 @@ echo
     "<p>".$objeto."</p>".
     "<p>&nbsp;</p>";
 
-echo "<p><strong>Tipo:</strong> ".retornaTipo($evento['id'])."</p>";
-echo "<p><strong>Data/Período:</strong> ".$periodo."</p>";
-echo "<p><strong>Horário:</strong> ".$ocorrencia['horario_inicio']. ' - ' . $ocorrencia['horario_fim']. "</p>";
-echo "<p><strong>Local:</strong> ".$locais['local']."</p>";
-echo "<p>&nbsp;</p>";
+$cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id']);
+while ($aux = mysqli_fetch_array($cronograma)) {
+    $tipo = retornaTipo($aux['tipo_ocorrencia_id']);
+    $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
+    $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
+    $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'])->fetch_array();
+    $lugar = $local['local'];
+
+    echo "<p><strong>Tipo:</strong> " . $tipo . "</p>";
+    echo "<p><strong>Data/Período:</strong> " . $dia . "</p>";
+    echo "<p><strong>Horário:</strong> " . $hour . "</p>";
+    echo "<p><strong>Local:</strong> " . $lugar . "</p>";
+    echo "<p>&nbsp;</p>";
+}
 
 echo
     "<p>&nbsp;</p>".

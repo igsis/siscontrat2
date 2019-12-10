@@ -11,7 +11,6 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $fiscal_id = $_POST['fiscal'];
     $suplente_id = $_POST['suplente'];
     $usuario = $_SESSION['idUser'];
-    $original = $_POST['original'];
     $contratacao = $_POST['contratacao'];
     $eventoStatus = "1";
     $fomento = $_POST['fomento'];
@@ -30,7 +29,6 @@ if (isset($_POST['cadastra'])) {
                                  suplente_id, 
                                  usuario_id, 
                                  contratacao, 
-                                 original, 
                                  evento_status_id,
                                  fomento, 
                                  espaco_publico) 
@@ -43,7 +41,6 @@ if (isset($_POST['cadastra'])) {
                                   '$suplente_id',
                                   '$usuario',
                                   '$contratacao',
-                                  '$original',
                                   '$eventoStatus',
                                   '$fomento',
                                   '$tipoLugar')";
@@ -87,8 +84,7 @@ if (isset($_POST['edita'])) {
                               sinopse = '$sinopse', 
                               fiscal_id = '$fiscal_id', 
                               suplente_id = '$suplente_id', 
-                              contratacao = '$contratacao', 
-                              original = '$original',
+                              contratacao = '$contratacao',
                               fomento = '$fomento',
                               espaco_publico = '$tipoLugar'
                               WHERE id = '$idEvento'";
@@ -150,15 +146,6 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
                         <div class="box-body">
 
                             <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="original">É um evento original?</label> <br>
-                                    <label><input type="radio" name="original"
-                                                  value="1" <?= $evento['original'] == 1 ? 'checked' : NULL ?>> Sim
-                                    </label>
-                                    <label><input type="radio" name="original"
-                                                  value="0" <?= $evento['original'] == 0 ? 'checked' : NULL ?>> Não
-                                    </label>
-                                </div>
                                 <div class="form-group col-md-4">
                                     <label for="contratacao">Haverá contratação?</label> <br>
                                     <label><input type="radio" name="contratacao"
@@ -332,61 +319,10 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
 </div>
 
 <script>
-    let fomento = $('.fomento');
-    let acao = $("input[name='acao[]']");
-    const oficinaId = "Oficinas e Formação Cultural";
-    let oficinaRadio = $("input[name='oficina']");
-    var oficinaOficial = acao[8];
+    const btnCadastra = $('#cadastra');
+    let publicos = $('.publicos');
 
-    function verificaOficina() {
-        if ($('#simOficina').is(':checked')) {
-            checaCampos(oficinaOficial);
-        } else {
-            checaCampos("");
-        }
-    }
-
-    function checaCampos(obj) {
-        if (obj.id == oficinaId && obj.value == '8') {
-
-            for (i = 0; i < acao.size(); i++) {
-                if (!(acao[i] == obj)) {
-                    let acoes = acao[i].id;
-
-                    document.getElementById(acoes).disabled = true;
-                    document.getElementById(acoes).checked = false;
-                    document.getElementById(oficinaId).checked = true;
-                    document.getElementById(oficinaId).disabled = false;
-
-                    document.getElementById(oficinaId).readonly = true;
-
-                }
-            }
-        } else {
-            for (i = 0; i < acao.size(); i++) {
-
-                if (!(acao[i] == acao[8])) {
-                    let acoes = acao[i].id;
-
-                    document.getElementById(acoes).disabled = false;
-                    document.getElementById(oficinaId).checked = false;
-                    document.getElementById(oficinaId).disabled = true;
-
-                    document.getElementById(oficinaId).readonly = false;
-                }
-            }
-
-        }
-    }
-
-    fomento.on("change", verificaFomento);
-    oficinaRadio.on("change", verificaOficina);
-
-    $(document).ready(
-        verificaFomento(),
-        verificaOficina()
-    );
-
+    //FOMENTO
     function verificaFomento() {
         if ($('#sim').is(':checked')) {
             $('#tipoFomento')
@@ -398,36 +334,38 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
                 .attr('required', false)
         }
     }
-</script>
 
-
-<script>
-    function publicoValidacao() {
+    function validaPublico() {
         var isMsg = $('#msgEsconde');
-        isMsg.hide();
+        var checked = false;
 
-        var i = 0;
-        var counter = 0;
-        var publico = $('.publico');
-
-        for (; i < publico.length; i++) {
-            if (publico[i].checked) {
-                counter++;
+        for (let x = 0 ; x < publicos.length; x++) {
+            if (publicos[x].checked) {
+                checked = true;
             }
         }
 
-        if (counter == 0) {
-            $('#edita').attr("disabled", true);
+        if (checked) {
+            isMsg.hide();
+            btnCadastra.attr("disabled", false);
+            btnCadastra.removeAttr("data-toggle");
+            btnCadastra.removeAttr("data-placement");
+            btnCadastra.removeAttr("title");
+        } else {
             isMsg.show();
-            return false;
+            btnCadastra.attr("disabled", true);
+            btnCadastra.attr("data-toggle", "tooltip");
+            btnCadastra.attr("data-placement", "left");
+            btnCadastra.attr("title", "Selecione pelo menos uma Representatividade");
         }
-
-        $('#edita').attr("disabled", false);
-        isMsg.hide();
-        return true;
     }
 
-    $(document).ready(publicoValidacao);
+    //EXECUTA TUDO
+    publicos.on('change', validaPublico);
+    $('.fomento').on('change', verificaFomento);
 
-    $('.publico').on("change", publicoValidacao);
+    $(document).ready(function () {
+        validaPublico();
+        verificaFomento();
+    })
 </script>

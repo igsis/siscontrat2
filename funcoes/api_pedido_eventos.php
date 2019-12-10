@@ -9,7 +9,7 @@ if (isset($_POST['_method'])) {
         case "valorPorEquipamento":
             $valoresEquipamentos = $_POST['valorEquipamento'];
             $equipamentos = $_POST['equipamentos'];
-            $idPedido = $_SESSION['idPedido'];
+            $idPedido = $_POST['idPedido'];
 
             $sql_delete = "DELETE FROM valor_equipamentos WHERE pedido_id = '$idPedido'";
             mysqli_query($con, $sql_delete);
@@ -49,31 +49,27 @@ if (isset($_POST['_method'])) {
         case "parcelas":
 
             $idVerba = $_POST["verba_id"];
-            $valor_total = $_POST["valor_total"];
+            $valor_total = dinheiroDeBr($_POST["valor_total"]);
             $num_parcelas = $_POST["numero_parcelas"];
-            $forma_pagamento = $_POST["forma_pagamento"];
+            $forma_pagamento = trim(addslashes($_POST["forma_pagamento"]));
             $justificativa = $_POST["justificativa"];
             $observacao = $_POST["observacao"];
             $idPedido = $_POST["idPedido"];
             $tipoPesso = $_POST["tipoPessoa"];
             $idProponent = $_POST["idProponente"];
+            $data_kit_pagamento = $_POST["data_kit"];
 
             if ($num_parcelas == 1 || $num_parcelas == 13) {
-                $query_data = "SELECT MIN(c.data_inicio)
-                               FROM
-                                ocorrencias AS c INNER JOIN eventos AS e
-                               ON c.origem_ocorrencia_id = e.id
-                               WHERE e.id = '$idPedido'";
-
-                if (mysqli_query($con,$query_data)){
-                    if ($query_data == null){
-                        echo "É necessario cadastrar uma ocorrencia antes de continuar";
-                    }
-                    else{
-                            
-                    }
-                }
-
+                $data_kit_pagamento = date('Y-m-d', strtotime("+1 days", strtotime($data_kit_pagamento)));
+            }else{
+                $queryParcela = "SELECT data_pagamento FROM parcelas WHERE pedido_id = ".$idPedido." AND numero_parcelas = 1";
+                $data_kit_pagamento = mysqli_fetch_row(mysqli_query($con,$queryParcela))[0];
+            }
+             $query = "UPDATE pedidos SET verba_id = ".$idVerba.", numero_parcelas = ".$num_parcelas.", valor_total = ".$valor_total.", forma_pagamento = '".$forma_pagamento."', data_kit_pagamento='".$data_kit_pagamento."', justificativa ='".$justificativa."', observacao = '".$observacao."' WHERE id = ".$idPedido;
+            if (mysqli_query($con,$query)){
+                echo true;
+            }else{
+                echo false;
             }
 
             break;

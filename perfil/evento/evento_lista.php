@@ -40,7 +40,7 @@ $sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status, ev.
         FROM eventos AS ev
         INNER JOIN tipo_eventos AS te on ev.tipo_evento_id = te.id
         INNER JOIN evento_status es on ev.evento_status_id = es.id
-        WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id = 1 OR evento_status_id = 5";
+        WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id IN (1, 2, 5)";
 $query = mysqli_query($con, $sql);
 ?>
 
@@ -95,7 +95,8 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
                                 echo "<td>" . $evento['tipo_evento'] . "</td>";
                                 echo "<td>" . $vinculo . "</td>";
-                                if ($evento['status'] == "Cancelado") {
+                                $disabled = '';
+                                if ($evento['status'] == "Não aprovado") {
                                     $idEvento = $evento['idEvento'];
                                     $nomeEvento = $evento['nome_evento'];
                                     $sqlChamado = "SELECT u.nome_completo, c.justificativa, c.data FROM chamados AS c INNER JOIN usuarios AS u ON u.id = c.usuario_id WHERE evento_id = $idEvento";
@@ -108,19 +109,22 @@ $query = mysqli_query($con, $sql);
                                         </button>
                                     </td>
                                 <?php } else {
-                                    echo "<td>" . $evento['status'] . "</td>";
+                                        if ($evento['status'] == "Aguardando")
+                                            $disabled = "disabled";
+
+                                        echo "<td>" . $evento['status'] . "</td>";
                                 }
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
-                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
+                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\" ". $disabled . "><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
                                 ?>
                                 <td>
                                     <form method="post" id="formExcluir">
                                         <input type="hidden" name="idEvento" value="<?= $evento['idEvento'] ?>">
-                                        <button type="button" class="btn btn-block btn-danger" id="excluiEvento"
+                                        <button <?= $disabled ?> type="button" class="btn btn-block btn-danger" id="excluiEvento"
                                                 data-toggle="modal" data-target="#exclusao" name="excluiEvento"
                                                 data-name="<?= $evento['nome_evento'] ?>"
                                                 data-id="<?= $evento['idEvento'] ?>"><span

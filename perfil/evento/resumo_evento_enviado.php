@@ -57,7 +57,6 @@ if (isset($_POST['enviar'])) {
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $tipo_evento = recuperaDados('tipo_eventos', 'id', $evento['tipo_evento_id']);
-$original = $evento['original'] == 1 ? 'Sim' : 'Não';
 $relacao_juridica = recuperaDados('relacao_juridicas', 'id', $evento['relacao_juridica_id']);
 $projeto_especial = recuperaDados('projeto_especiais', 'id', $evento['projeto_especial_id']);
 $fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
@@ -109,9 +108,6 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                         </div>
                                         <div class="form-group col-md-12">
                                             <strong>Tipo evento: </strong><?= $tipo_evento['tipo_evento']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>É original? </strong><?= $original ?>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <strong>Relação
@@ -263,6 +259,8 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
 
                                                     $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
                                                     $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
+                                                    $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
+                                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
 
                                                     ?>
 
@@ -277,7 +275,16 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
-                                                        <strong>Local: </strong><?= $local['local']; ?>
+                                                        <strong>Instituição: </strong><?= $instituicao ?>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Local: </strong><?= $local['local'] ?? "Não possui" ?>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Espaço: </strong><?= $espaco ?? "Não possui" ?>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Valor do ingresso: </strong>R$<?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>
                                                     </div>
                                                     <?php
                                                     if ($ocorrencia['horario_inicio'] != NULL) {
@@ -303,7 +310,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                     if ($ocorrencia['virada'] != NULL) {
                                                         ?>
                                                         <div class="form-group col-md-12">
-                                                            <strong>Virada:</strong> <?= $ocorrencia['virada'] = 1 ? "Sim" : "Não"; ?>
+                                                            <strong>Virada:</strong> <?= $ocorrencia['virada'] == 1 ? "Sim" : "Não"; ?>
                                                         </div>
                                                     <?php } ?>
                                                 <?php }

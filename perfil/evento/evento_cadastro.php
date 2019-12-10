@@ -19,11 +19,6 @@ include "includes/menu_interno.php";
 
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="original">É um evento original?</label> <br>
-                                    <label><input type="radio" name="original" value="1" checked> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="original" value="0"> Não </label>
-                                </div>
-                                <div class="form-group col-md-4">
                                     <label for="contratacao">Haverá contratação?</label> <br>
                                     <label><input type="radio" name="contratacao" value="1" checked> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="contratacao" value="0"> Não </label>
@@ -34,15 +29,15 @@ include "includes/menu_interno.php";
                                     <label><input type="radio" name="tipoLugar" value="1"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="tipoLugar" value="0" checked> Não </label>
                                 </div>
-                            </div>
 
-                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="tipo">Este evento é cinema?</label> <br>
                                     <label><input type="radio" name="tipo" value="2"> Sim </label>&nbsp;&nbsp;
                                     <label><input type="radio" name="tipo" value="1" checked> Não </label>
                                 </div>
+                            </div>
 
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="fomento">É fomento/programa?</label> <br>
                                     <label><input type="radio" class="fomento" name="fomento" value="1" id="sim"> Sim
@@ -224,62 +219,10 @@ include "includes/menu_interno.php";
 </div>
 
 <script>
-    let fomento = $('.fomento');
-    let acao = $("input[name='acao[]']");
-    const oficinaId = "Oficinas e Formação Cultural";
-    let oficinaRadio = $("input[name='oficina']");
-    var oficinaOficial = acao[8];
+    const btnCadastra = $('#cadastra');
+    let publicos = $('.publicos');
 
-    function verificaOficina() {
-        if ($('#simOficina').is(':checked')) {
-            checaCampos(oficinaOficial);
-        } else {
-            checaCampos("");
-        }
-    }
-
-    function checaCampos(obj) {
-        if (obj.id == oficinaId && obj.value == '8') {
-
-            for (i = 0; i < acao.size(); i++) {
-                if (!(acao[i] == obj)) {
-                    let acoes = acao[i].id;
-
-                    document.getElementById(acoes).disabled = true;
-                    document.getElementById(acoes).checked = false;
-                    document.getElementById(oficinaId).checked = true;
-                    document.getElementById(oficinaId).disabled = false;
-
-                    document.getElementById(oficinaId).readonly = true;
-
-                }
-            }
-        } else {
-            for (i = 0; i < acao.size(); i++) {
-
-                if (!(acao[i] == acao[8])) {
-                    let acoes = acao[i].id;
-
-                    document.getElementById(acoes).disabled = false;
-                    document.getElementById(acoes).checked = false;
-                    document.getElementById(oficinaId).checked = false;
-                    document.getElementById(oficinaId).disabled = true;
-
-                    document.getElementById(oficinaId).readonly = false;
-                }
-            }
-
-        }
-    }
-
-    fomento.on("change", verificaFomento);
-    oficinaRadio.on("change", verificaOficina);
-
-    $(document).ready(
-        verificaFomento(),
-        verificaOficina()
-    );
-
+    //FOMENTO
     function verificaFomento() {
         if ($('#sim').is(':checked')) {
             $('#tipoFomento')
@@ -291,36 +234,38 @@ include "includes/menu_interno.php";
                 .attr('required', false)
         }
     }
-</script>
 
-<script>
-
-    function publicoValidacao() {
+    function validaPublico() {
         var isMsg = $('#msgEsconde');
-        isMsg.hide();
+        var checked = false;
 
-        var i = 0;
-        var counter = 0;
-        var publico = $('.publico');
-
-        for (; i < publico.length; i++) {
-            if (publico[i].checked) {
-                counter++;
+        for (let x = 0 ; x < publicos.length; x++) {
+            if (publicos[x].checked) {
+                checked = true;
             }
         }
 
-        if (counter == 0) {
-            $('#cadastra').attr("disabled", true);
+        if (checked) {
+            isMsg.hide();
+            btnCadastra.attr("disabled", false);
+            btnCadastra.removeAttr("data-toggle");
+            btnCadastra.removeAttr("data-placement");
+            btnCadastra.removeAttr("title");
+        } else {
             isMsg.show();
-            return false;
+            btnCadastra.attr("disabled", true);
+            btnCadastra.attr("data-toggle", "tooltip");
+            btnCadastra.attr("data-placement", "left");
+            btnCadastra.attr("title", "Selecione pelo menos uma Representatividade");
         }
-
-        $('#cadastra').attr("disabled", false);
-        isMsg.hide();
-        return true;
     }
 
-    $(document).ready(publicoValidacao);
+    //EXECUTA TUDO
+    publicos.on('change', validaPublico);
+    $('.fomento').on('change', verificaFomento);
 
-    $('.publico').on("change", publicoValidacao);
+    $(document).ready(function () {
+        validaPublico();
+        verificaFomento();
+    })
 </script>

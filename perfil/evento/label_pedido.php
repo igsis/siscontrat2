@@ -61,6 +61,7 @@ switch ($pedido['pessoa_tipo_id']) {
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
             'Logradouro' => $endereco['logradouro'],
+            'Número' => $endereco['numero'],
             'Complemento' => $endereco['complemento'],
             'Bairro' => $endereco['bairro'],
             'Cidade' => $endereco['cidade'],
@@ -92,6 +93,7 @@ switch ($pedido['pessoa_tipo_id']) {
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
             'Logradouro' => $endereco['logradouro'],
+            'Número' => $endereco['numero'],
             'Complemento' => $endereco['complemento'],
             'Bairro' => $endereco['bairro'],
             'Cidade' => $endereco['cidade'],

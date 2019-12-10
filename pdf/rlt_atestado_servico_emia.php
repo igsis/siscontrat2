@@ -1,24 +1,11 @@
 <?php
 
-// INSTALAÇÃO DA CLASSE NA PASTA FPDF.
-require_once("../include/lib/fpdf/fpdf.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
 session_start();
-
-class PDF extends FPDF
-{
-    function Footer()
-    {
-        $this->SetY(-15);
-        $this->SetFont('Arial', 'B', 9);
-        $this->Cell(0, 15, "Clique aqui para ir para o ", 0, 0, 'L');
-        $this->Image("../visual/images/logo_sei.jpg", 50, 286, 0, 5, "", "http://sei.prefeitura.sp.gov.br");
-    }
-}
 
 $idParcela = $_POST['idParcela'];
 $idPedido = $_SESSION['idPedido'];
@@ -30,6 +17,8 @@ $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
 $fiscal = recuperaDados('usuarios', 'id', $contratacao['fiscal_id']);
 $suplente = recuperaDados('usuarios', 'id', $contratacao['suplente_id']);
+
+$cargo = recuperaDados('emia_cargos', 'id', $contratacao['emia_cargo_id']);
 
 $dia = date('d');
 $mes = date('m');
@@ -53,100 +42,6 @@ switch ($mes){
 
 }
 
-$pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
-$pdf->AliasNbPages();
-$pdf->AddPage();
-
-
-$x = 20;
-$l = 7; //DEFINE A ALTURA DA LINHA
-
-$pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial','B', 12);
-$pdf->Cell(170,5,utf8_decode("ATESTADO DE CONFIRMAÇÃO DE SERVIÇOS"),0,1,'C');
-
-$pdf->Ln(5);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->MultiCell(200, $l, utf8_decode("Informamos que os serviços prestados por: " . $pessoa['nome']), 0, 'L', 0);
-
-$pdf->Ln(5);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(12, $l, 'Nome:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(22, $l, utf8_decode("PROCESSO:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($pedido['numero_processo']), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, utf8_decode("Ano:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($contratacao['ano']), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode("(     ) NÃO FORAM REALIZADOS"), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(120, $l, utf8_decode("( X ) FORAM REALIZADOS A CONTENTO"), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180, $l, utf8_decode("(     ) NÃO FORAM REALIZADOS A CONTENTO, PELO SEGUINTE MOTIVO:"), 0, 'L', 0);
-
-$pdf->Ln(9);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->MultiCell(180, $l, utf8_decode("DADOS DO SERVIDOR (A) QUE ESTÁ CONFIRMANDO OU NÃO A REALIZAÇÃO DOS SERVIÇOS:"), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->Cell(15, $l, utf8_decode("FISCAL:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40,$l,utf8_decode($fiscal['nome_completo']),0,'L',0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(16, $l, utf8_decode("Lotação:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(160,$l,utf8_decode("EMIA - Escola Municipal de Iniciação Artística"),0,'L',0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(7, $l, utf8_decode("RF:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40,$l,utf8_decode($fiscal['rf_rg']),0,'L',0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(21, $l, utf8_decode("SUPLENTE:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40,$l,utf8_decode($suplente['nome_completo']),0,'L',0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(16, $l, utf8_decode("Lotação:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(160,$l,utf8_decode("EMIA - Escola Municipal de Iniciação Artística"),0,'L',0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(7, $l, utf8_decode("RF:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40,$l,utf8_decode($suplente['rf_rg']),0,'L',0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(180,$l,utf8_decode("Com base na Folha de Frequência Individual: (Documento SEI link ) atesto que os materiais/serviços prestados discriminados no documento fiscal (Documento SEI link ) foram entregues e/ou executados a contento nos termos previstos no instrumento contratual (ou documento equivalente), dentro do prazo previsto."),0,'L',0);
-
 $sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela'";
 $query = mysqli_query($con,$sqlParcelas);
 while($parcela = mysqli_fetch_array($query))
@@ -157,35 +52,87 @@ while($parcela = mysqli_fetch_array($query))
     }
 }
 
-$pdf->Ln(9);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(34, $l, utf8_decode("Data de Pagamento:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(180,$l,utf8_decode($datapgt),0,'L',0);
-
-$pdf->Ln(7);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial','B', 12);
-$pdf->Cell(170,5,utf8_decode("INFORMAÇÕES COMPLEMENTARES"),0,1,'C');
-
-$pdf->Ln(5);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(100,$l,utf8_decode('À área gestora/de liquidação e pagamento:'),0,'L',0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(100,$l,utf8_decode('Encaminho para prosseguimento.'),0,'L',0);
-
-$pdf->SetX($x);
-$pdf->MultiCell(100,$l,utf8_decode('São Paulo, ' . $dia . ' de ' . $mes . ' de ' . $ano . '.'),0,'L',0);
-
-
-$pdf->Output();
 ?>
 
+<html>
+<head>
+    <meta http-equiv=\"Content-Type\" content=\"text/html. charset=Windows-1252\">
+
+    <style>
+
+        .texto {
+            width: 900px;
+            border: solid;
+            padding: 20px;
+            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: justify;
+        }
+    </style>
+    <link rel="stylesheet" href="../visual/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="include/dist/ZeroClipboard.min.js"></script>
+</head>
+
+<body>
+<br>
+<div align="center">
+    <?php
+    $conteudo =
+        "<p><strong><u><center>ATESTADO DE CONFIRMAÇÃO DE SERVIÇOS</strong></p></u></center>".
+        "<p>&nbsp;</p>".
+        "<p>Informamos que os serviços prestados pelo(a): ".$pessoa['nome']."</p>".
+        "<p><strong>Cargo: </strong>" . $cargo['cargo'] ."</p>" .
+        "<p><strong>NA: </strong> EMIA </p>".
+        "<P><strong>DIA(S) / HORÁRIO(S): </strong>".retornaPediodoEmia($contratacao['emia_vigencia_id'])."</p>".
+        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS</p>".
+        "<p>( X ) FORAM REALIZADOS A CONTENTO</p>".
+        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS A CONTENTO, PELO SEGUINTE MOTIVO:</p>".
+        "<p>&nbsp;</p>".
+        "<p><strong>DADOS DO SERVIDOR (A) QUE ESTÁ CONFIRMANDO OU NÃO A REALIZAÇÃO DOS SERVIÇOS:</strong></p>".
+        "<p><strong>NOME LEGÍVEL:</strong> ".$fiscal['nome_completo']."</p>".
+        "<p><strong>TELEFONE DE CONTATO:</strong> (11) 5017-2192</p>".
+        "<p><strong>LOTAÇÃO:</strong> EMIA-Escola Municipal de Iniciação Artística</p>".
+        "<p><strong>REGISTRO FUNCIONAL: </strong>".$fiscal['rf_rg']."</p>".
+        "<p><strong>SUPLENTE:</strong> ".$suplente['nome_completo']."</p>".
+        "<p><strong>TELEFONE DE CONTATO:</strong> (11) 5017-2192</p>".
+        "<p><strong>LOTAÇÃO:</strong> EMIA-Escola Municipal de Iniciação Artística</p>".
+        "<p><strong>REGISTRO FUNCIONAL:</strong> ".$suplente['rf_rg']."</p>".
+        "<p>&nbsp;</p>".
+        "<p>Com base na Folha de Frequência Individual: (Documento SEI link ) atesto que os materiais/serviços prestados discriminados no documento fiscal (Documento SEI link )  foram entregues e/ou executados a contento nos termos previstos no instrumento contratual (ou documento equivalente) no dia: ".$datapgt.", dentro do prazo previsto. O prazo contratual é do dia ".retornaPediodoEmia($contratacao['emia_vigencia_id']).". </p>".
+        "<p>&nbsp;</p>".
+        "<p><strong><center>INFORMAÇÕES COMPLEMENTARES</strong></p></center>".
+        "<p>À área gestora/de liquidação e pagamento:</p>".
+        "<p>Encaminho para prosseguimento.</p>".
+        "<p>São Paulo, ".$dia." de ".$mes." de ".$ano.".</p>"
+    ?>
+
+    <div id="texto" class="texto"><?php echo $conteudo; ?></div>
+</div>
+
+<p>&nbsp;</p>
+
+<div align="center">
+    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+        COPIAR TODO O TEXTO
+        <i class="fa fa-copy"></i>
+    </button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="http://sei.prefeitura.sp.gov.br" target="_blank">
+        <button class="btn btn-primary">CLIQUE AQUI PARA ACESSAR O <img src="../visual/images/logo_sei.jpg"></button>
+    </a>
+</div>
+
+<script>
+    var client = new ZeroClipboard();
+    client.clip(document.getElementById("botao-copiar"));
+    client.on("aftercopy", function () {
+        alert("Copiado com sucesso!");
+    });
+</script>
+
+</body>
+</html>
 
 

@@ -1320,7 +1320,18 @@ function retornaPeriodoFormacao($idVigencia){
     $data_inicio = $con->query("SELECT data_inicio FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array();
     $data_fim = $con->query("SELECT data_fim FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array();
     if($data_inicio['data_inicio'] == $data_fim['data_fim']){
-        return $data_inicio;
+        return $data_inicio['data_inicio'];
+    }else{
+        return "de ". exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim['data_fim']);
+    }
+}
+
+function retornaPediodoEmia($idVigencia){
+    $con = bancoMysqli();
+    $data_inicio = $con->query("SELECT data_inicio FROM emia_parcelas WHERE emia_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array();
+    $data_fim = $con->query("SELECT data_fim FROM emia_parcelas WHERE emia_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array();
+    if($data_inicio['data_inicio'] == $data_fim['data_fim']){
+        return $data_inicio['data_inicio'];
     }else{
         return "de ". exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim['data_fim']);
     }
@@ -1357,7 +1368,7 @@ function geraCheckBox($tabela, $name, $tabelaRelacionamento, $colMd, $campo, $ca
     while($checkbox = $dados->fetch_row()){
         ?>
         <div class="checkbox-grid-2 text-left <?= $colMd ?>">
-            <input type="checkbox" name="<?=$name?>[]" id="<?=$checkbox[1]?>" value="<?=$checkbox[0]?>" class="<?= $name ?>"
+            <input type="checkbox" name="<?=$name?>[]" id="<?=$checkbox[1]?>" value="<?=$checkbox[0]?>" class="<?= $tabela ?>"
                 <?=in_array_r($checkbox[0], $relacionamentos) ? "checked" : ""?>>
             <label for="<?=$checkbox[1]?>"><?=$checkbox[1]?></label>
         </div>

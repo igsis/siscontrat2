@@ -166,9 +166,9 @@ $pdf->Ln(6);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, 'Ano:', 0, 0, 'L');
+$pdf->Cell(22, $l, 'Data/Perido:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(50, $l, utf8_decode($contratacao['ano']), 0, 0, 'L');
+$pdf->Cell(50, $l, utf8_decode(retornaPediodoEmia($contratacao['emia_vigencia_id'])), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(25, $l, utf8_decode("Carga Horária:"), '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
@@ -209,10 +209,6 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
-
 $pdf->AddPage('','');
 
 $pdf->SetX($x);
@@ -243,65 +239,15 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
-
 $pdf->AddPage('','');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 12);
-$pdf->Cell(180,5,"CRONOGRAMA",0,1,'C');
+$pdf->MultiCell(180,5,"CRONOGRAMA",0,'C',0);
 
-$pdf->Ln(5);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(12, $l, 'Nome:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
-
-$idCargo = $contratacao['emia_cargo_id'];
-$cargo = recuperaDados('emia_cargos', 'id', $idCargo);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(12, $l, 'Cargo:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($cargo['cargo']), 0, 'L', 0);
-
-/*$pdf->Ln(5);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(160, $l, utf8_decode("O prestador de serviços acima citado é contratado nos termos do Edital " . $programa['edital']
-    . ", no ano de " . $ano
-    . ", com carga horária total de até: " . $carga
-    . " hora(s), na forma abaixo descrita:"), 0, 'L', 0);*/
-
-$pdf->Ln(5);
-
-$idVigencia = $contratacao['emia_vigencia_id'];
-
-/*$sqlParcelas = "SELECT * FROM parcelas WHERE formacao_vigencia_id = '$idVigencia' ORDER BY data_inicio ASC";
-$query = mysqli_query($con,$sqlParcelas);
-while($parcela = mysqli_fetch_array($query))
-{
-    if($parcela['valor'] > 0)
-    {
-        $inicio = exibirDataBr($parcela['data_inicio']);
-        $fim = exibirDataBr($parcela['data_fim']);
-        $horas = $parcela['carga_horaria'];
-
-        $pdf->SetX($x);
-        $pdf->SetFont('Arial','', 10);
-        $pdf->MultiCell(180,$l,utf8_decode("De $inicio a $fim - até $horas hora(s)"));
-    }
-}
-*/
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(180,$l,utf8_decode("São Paulo, ______ de ____________________ de ".$ano).".",0,0,'L');
+$pdf->MultiCell(140,5,utf8_decode($contratacao['cronograma']),0,'L',0);
 
 $pdf->SetXY($x,262);
 $pdf->SetFont('Arial','', 10);
@@ -310,10 +256,6 @@ $pdf->Cell(100,4,utf8_decode($pessoa['nome']),'T',1,'L');
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
 
 $pdf->Output();
 ?>
