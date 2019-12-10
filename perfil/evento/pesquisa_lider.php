@@ -12,7 +12,7 @@ $tipoDocumento = null;
 
 if (isset($_POST['pesquisar'])) {
     $idPedido = $_POST['lider'];
-    $idAtracao = $_POST['oficina'];
+    $idAtracao = $_POST['atracao'];
 }
 
 if (isset($_POST['troca_lider'])) {
@@ -68,18 +68,18 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                     $exibir = true;
                     $resultado = "";
 
-                    foreach ($querycpf as $lider) {
+                    foreach ($querycpf as $pessoa) {
 
                         $resultado .= "<tr>";
-                        $resultado .= "<td>" . $lider['nome'] . "</td>";
-                        $resultado .= "<td>" . $lider['cpf'] . "</td>";
-                        $resultado .= "<td>" . $lider['email'] . "</td>";
+                        $resultado .= "<td>" . $pessoa['nome'] . "</td>";
+                        $resultado .= "<td>" . $pessoa['cpf'] . "</td>";
+                        $resultado .= "<td>" . $pessoa['email'] . "</td>";
                         $resultado .= "<td>
                                      <form action='$edita' method='post'> 
-                                        <input type='hidden' name='idLider' value='" . $lider['id'] . "'>
-                                        <input type='hidden' name='idPedido' value='$idPedido'>
-                                        <input type='hidden' name='idAtracao' value='$idAtracao'>
-                                        <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
+                                        <input type='hidden' name='idLider' value='" . $pessoa['id'] . "'>
+                                        <input type='hidden' name='idPedido' value='{$idPedido}'>
+                                        <input type='hidden' name='idAtracao' value='{$idAtracao}'>
+                                        <input type='hidden' name='tipoDocumento' value='{$tipoDocumento}'>
                                         $botaoSelecionar                                        
                                      </form>
                                </td>";
@@ -93,11 +93,11 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='$cadastra'>
-                            <input type='hidden' name='idPedido' value='$idPedido'>
-                            <input type='hidden' name='documentacao' value='$procurar'>
-                            <input type='hidden' name='idAtracao' value='$idAtracao'>
-                            <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
+                        <form method='post' action='{$cadastra}'>
+                            <input type='hidden' name='idPedido' value='{$idPedido}'>
+                            <input type='hidden' name='documentacao' value='{$procurar}'>
+                            <input type='hidden' name='idAtracao' value='{$idAtracao}'>
+                            <input type='hidden' name='tipoDocumento' value='{$tipoDocumento}'>
                             $botaoAdd
                         </form>
                  </td>";
@@ -117,16 +117,17 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                     if ($num_passaporte > 0) {
                         $exibir = true;
                         $resultado = "";
-                        foreach ($result as $lider) {
+                        foreach ($result as $pessoa) {
                             $resultado .= "<tr>";
-                            $resultado .= "<td>" . $lider['nome'] . "</td>";
-                            $resultado .= "<td>" . $lider['passaporte'] . "</td>";
-                            $resultado .= "<td>" . $lider['email'] . "</td>";
+                            $resultado .= "<td>" . $pessoa['nome'] . "</td>";
+                            $resultado .= "<td>" . $pessoa['passaporte'] . "</td>";
+                            $resultado .= "<td>" . $pessoa['email'] . "</td>";
                             $resultado .= "<td>
                                         <form action='$edita' method='post'>
-                                        <input type='hidden' name='idLider' value='" . $lider['id'] . "'>
-                                        <input type='hiden' name='idPedido' value='$idPedido'>
-                                        <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
+                                        <input type='hidden' name='idLider' value='" . $pessoa['id'] . "'>
+                                        <input type='hiden' name='idPedido' value='{$idPedido}'>
+                                        <input type='hidden' name='tipoDocumento' value='{$tipoDocumento}'>
+                                        <input type='hidden' name='idAtracao' value='{$idAtracao}' >
                                         <input type='submit' class='btn btn-primary' name='selecionar' value='selecionar'>
                                         </form>
                                         </td>";
@@ -138,10 +139,11 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='...'>Sem Resultado</span>
                         </td>
                         <td>
-                        <form method='post' action='$cadastra'>
-                        <input type='hidden' name='documentacao' value='$procurar'>
-                        <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
-                        <input type='hidden' name='idPedido' value='$idPedido'>
+                        <form method='post' action='{$cadastra}'>
+                        <input type='hidden' name='documentacao' value='{$procurar}'>
+                        <input type='hidden' name='tipoDocumento' value='{$tipoDocumento}'>
+                        <input type='hidden' name='idPedido' value='{$idPedido}'>
+                        <input type='hidden' name='idAtracao' value='{$idAtracao}'>
                         $botaoAdd
                         </form>
                        </td>";

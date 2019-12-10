@@ -7,6 +7,7 @@ if (isset($_POST['idLider'])) {
     $idLider = $_POST['idLider'];
 }
 
+
 if (isset($_POST['cadastrar']) || isset($_POST['editar'])) {
     $idPedido = $_SESSION['idPedido'];
     $nome = addslashes($_POST['nome']);
@@ -29,17 +30,17 @@ if (isset($_POST['editar'])) {
                    email = '$email',
                    passaporte = '$passaporte',
                    cpf = '$cpf'
-                   WHERE id = $idLider";
+                   WHERE id = '$idLider'";
 
 
     if (mysqli_query($con, $sqlUpdate)) { // --> Query dos UPDATES
         if (isset($_POST['cpf'])) {
             $cpf = $_POST['cpf'];
-            $sqlCpf = "UPDATE pessoa_fisicas SET cpf = '$cpf' WHERE id = $idLider";
+            $sqlCpf = "UPDATE pessoa_fisicas SET cpf = '$cpf' WHERE id = '$idLider'";
         }
         if (isset($_POST['passaporte'])) {
             $passaporte = $_POST['passaporte'];
-            $sqlPassaporte = "UPDATE pessoa_fisicas SET passaporte = '$passaporte' WHERE id = $idLider";
+            $sqlPassaporte = "UPDATE pessoa_fisicas SET passaporte = '$passaporte' WHERE id = '$idLider'";
         }
         if (isset($_POST['telefone2'])) {
             $telefone2 = $_POST['telefone2'];
@@ -57,19 +58,19 @@ if (isset($_POST['editar'])) {
 
         foreach ($telefones AS $idTelefone => $telefone) {
             if (!strlen($telefone)) { // -> Determina o tamanho de uma string.
-                $sqlDeleteTel = "DELETE FROM pf_telefones WHERE id = $idTelefone";
+                $sqlDeleteTel = "DELETE FROM pf_telefones WHERE id = '$idTelefone'";
                 mysqli_query($con, $sqlDeleteTel);
                 gravarLog($sqlDeleteTel);
             }
             if ($telefone != '') {
-                $sqlTelefone = "UPDATE pf_telefones SET telefone = '$telefone' WHERE id = $idTelefone";
+                $sqlTelefone = "UPDATE pf_telefones SET telefone = '$telefone' WHERE id = '$idTelefone'";
                 mysqli_query($con, $sqlTelefone);
                 gravarLog($sqlTelefone);
             }
             if ($drt != NULL) {
                 $drt_existe = verificaExiste("drts", "pessoa_fisica_id", $idLider, 0);
                 if ($drt_existe ['numero'] > 0) {
-                    $sqldrt = "UPDATE drts SET drt = '$drt' WHERE pessoa_fisica_id = $idLider"; // -> Caso for maior que 0 ele ele retorna erro .
+                    $sqldrt = "UPDATE drts SET drt = '$drt' WHERE pessoa_fisica_id = '$idLider'"; // -> Caso for maior que 0 ele ele retorna erro .
                     if (!mysqli_query($con, $sqldrt)) {
                         $mensagem .= mensagem("danger", "Erro ao gravar! Tente Novamente. ! ") . $sqldrt;
                     }
@@ -91,7 +92,6 @@ if (isset($_POST['editar'])) {
 if (isset($_POST['cadastrar'])) {
     $mensagem = "";
     $sqlInsert = "INSERT INTO pessoa_fisicas (nome, nome_artistico, email , ultima_atualizacao, passaporte, cpf) VALUES ('$nome','$nomeArtistico','$email','$data','$passaporte','$cpf')";
-    $sqlDeleteLider = "DELETE FROM lideres WHERE atracao_id = '$idAtracao'";
 
     if (mysqli_query($con, $sqlInsert)) {
         $idLider = recuperaUltimo("pessoa_fisicas");
@@ -184,6 +184,7 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <div class="row">
+                                <input type="hidden" name="tipoDocumento" value='<?= $tipoDocumento ?>'>
                                 <?php
                                 if ($tipoDocumento == 1) {
                                     ?>
@@ -263,11 +264,16 @@ include "includes/menu_interno.php";
                             </div>
                         </div>
                         <div class="box-footer">
+                            <input type="hidden" name="idLider" value="<?= $_POST['idLider'] ?>">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <input type="hidden" name="idAtracao" value="<?= $_POST['idAtracao'] ?>">
                             <button type="submit" name="editar" class="btn btn-info pull-right">Salvar</button>
                     </form>
                     <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                        <input type="hidden" name="idLider" value="<?= $idLider ?>">
+                        <input type="hidden" name="idLider" value="<?= $_POST['idLider'] ?>">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <input type="hidden" name="idAtracao" value="<?= $_POST['idAtracao'] ?>">
+
                         <button type="submit" name="adicionaLider" class="btn btn-info pull-left">Ir ao pedido de
                             contratação
                         </button>
