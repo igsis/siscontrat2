@@ -24,14 +24,17 @@ $displayEditar = "display: none";
 $displayKit = "display: block";
 
 
-$sqlAtracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+$sqlOficina = "SELECT a.valor_individual, aa.acao_id FROM eventos e
+                INNER JOIN atracoes a on e.id = a.evento_id
+                INNER JOIN acao_atracao aa on a.id = aa.atracao_id
+                WHERE e.id = '$idEvento' and a.publicado = 1";
 $queryAtracao = mysqli_query($con, $sqlAtracao);
 //$atracoes = mysqli_fetch_array($queryAtracao);
 
 while ($atracao = mysqli_fetch_array($queryAtracao)) {
     $valores [] = $atracao['valor_individual'];
 
-    if ($atracao['oficina'] == 1) {
+    if ($atracao['acao_id'] == 8) {
         $oficina = 4;
     }
 }

@@ -312,9 +312,6 @@ $queryOficina = mysqli_query($con, $sqlOficina);
 
 while ($atracoes = mysqli_fetch_array($queryOficina)) {
     $valores [] = $atracoes['valor_individual'];
-    if ($atracoes['oficina'] == 1) {
-        $oficina = 1;
-    }
 }
 
 if (isset($valores) && $valores > 0) {

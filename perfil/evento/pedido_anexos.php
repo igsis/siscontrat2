@@ -1,7 +1,7 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-$idPedido = $_SESSION['idPedido'];
+$idPedido = $_POST['idPedido'];
 $tipoPessoa = 3; // arquivos necessarios para pedidos
 
 if(isset($_POST["enviar"])) {

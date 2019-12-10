@@ -179,13 +179,15 @@ if (isset($pedido['numero_parcelas'])) {
     }
 }
 
-$sqlOficina = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+$sqlOficina = "SELECT a.valor_individual, aa.acao_id FROM eventos e
+                INNER JOIN atracoes a on e.id = a.evento_id
+                INNER JOIN acao_atracao aa on a.id = aa.atracao_id
+                WHERE e.id = '$idEvento' and a.publicado = 1";
 $queryOficina = mysqli_query($con, $sqlOficina);
-//$atracoes = mysqli_fetch_array($queryAtracao);
 
 while ($atracoes = mysqli_fetch_array($queryOficina)) {
     $valores [] = $atracoes['valor_individual'];
-    if ($atracoes['oficina'] == 1) {
+    if ($atracoes['acao_id'] == 8) {
         $oficina = 1;
     }
 }
