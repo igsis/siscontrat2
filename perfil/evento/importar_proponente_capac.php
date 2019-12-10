@@ -85,7 +85,7 @@ if (isset($_POST['importarEventoCpc'])) {
             }
         }
 
-        $sqlInsertImportado = "INSERT INTO siscontrat.eventos_importados (eventos_id, eventos_capac_id) VALUES ('$idEvento', '$idCapac')";
+        $sqlInsertImportado = "INSERT INTO siscontrat.eventos_importados (evento_id, evento_capac_id) VALUES ('$idEvento', '$idCapac')";
         mysqli_query($conSis, $sqlInsertImportado);
     } else {
         echo "<script>window.location.href = 'index.php?perfil=evento&p=importar_evento_capac&error=1&idCpc=".$idCapac."</script>";
