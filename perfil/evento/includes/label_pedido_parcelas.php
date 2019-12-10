@@ -1,10 +1,10 @@
 <?php
 
-$query_data = "SELECT c.data_inicio
-                                   FROM
-                                    ocorrencias AS c INNER JOIN eventos AS e
-                                   ON c.origem_ocorrencia_id = e.id
-                                   WHERE e.id = '$idPedido'";
+    $query_data = "SELECT MIN(o.data_inicio)
+FROM eventos AS e INNER JOIN atracoes AS a ON a.evento_id = e.id
+INNER JOIN  ocorrencias AS o ON a.id = o.atracao_id 
+INNER JOIN pedidos AS p ON p.origem_id = e.id 
+WHERE p.origem_tipo_id = 1 AND p.id = '$idPedido' AND p.publicado = 1 AND a.publicado = 1 AND o.publicado = 1";
 
 $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
 
