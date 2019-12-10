@@ -2,6 +2,7 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idPedido = $_POST['idPedido'];
+$idEvento = $_SESSION['idEvento'];
 $tipoPessoa = 3; // arquivos necessarios para pedidos
 
 if(isset($_POST["enviar"])) {
@@ -155,7 +156,12 @@ if(isset($_POST['apagar']))
                                                     <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 5MB.</h4>
                                                 </tr>
                                                 <?php
-                                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                $evento = recuperaDados('eventos', 'id', $idEvento);
+                                                if($evento['tipo_evento_id'] == 1) {
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                } else {
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
+                                                }
                                                 $query_arquivos = mysqli_query($con,$sql_arquivos);
                                                 while($arq = mysqli_fetch_array($query_arquivos))
                                                 {

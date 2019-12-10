@@ -35,8 +35,8 @@ if (isset($_POST['cadastra'])) {
                           '$paisOrigem','$paisCoProducao');";
     if (mysqli_query($con, $sql)) {
         $idFilme = recuperaUltimo("filmes");
-        $sql = "INSERT INTO `filme_eventos`
-                    VALUES('$idFilme','$idEvento')";
+        $sql = "INSERT INTO `filme_eventos` (filme_id, evento_id)
+                VALUES('$idFilme','$idEvento')";
         mysqli_query($con, $sql);
         $mensagem = mensagem("success", "Filme gravado com sucesso.");
     } else {
@@ -47,7 +47,7 @@ if (isset($_POST['cadastra'])) {
 if(isset($_POST['adicionar'])){
     $idFilme = $_POST['idFilme'];
 
-    $sql = "INSERT INTO `filme_eventos`
+    $sql = "INSERT INTO `filme_eventos` (filme_id, evento_id)
                     VALUES('$idFilme','$idEvento')";
     if(mysqli_query($con, $sql)){
         $mensagem = mensagem("success", "Evento adicionado com sucesso ao evento.");
@@ -75,9 +75,6 @@ if (isset($_POST['edita'])) {
                      pais_origem_coproducao_id = '$paisCoProducao'
                  WHERE id = '$idFilme'";
     if (mysqli_query($con, $sql)) {
-        $sql = "INSERT INTO `filme_eventos`
-                    VALUES('$idFilme','$idEvento')";
-        mysqli_query($con, $sql);
         $mensagem = mensagem("success", "Cadastro atualizado!");
     } else {
         $mensagem = mensagem("danger", "Erro ao atualizar! Tente novamente.");
