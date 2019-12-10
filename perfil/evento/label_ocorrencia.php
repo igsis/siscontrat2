@@ -155,20 +155,20 @@
             <?php }
             } else {
                 foreach ($filmes as $filme){
-                    $idFilme = $filme['id'];
-                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1";
+                    $idFilme = $filme['idFilmeEvento'];
+                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco INNER JOIN filme_eventos fe ON fe.id = oco.origem_ocorrencia_id WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1";
                     $ocorrencias = $con->query($sqlOcorrencia);
                     ?>
                     <div class="panel box box-primary">
                         <div class="box-header with-border">
                             <h4 class="box-title">
                                 <a data-toggle="collapse" data-parent="#accordionOcorrencia"
-                                   href="#ocorrencia<?= $filme['id'] ?>">
+                                   href="#ocorrencia<?= $filme['idFilmeEvento'] ?>">
                                     Ocorrências do Filme: <?= $filme['titulo'] ?>
             </a>
             </h4>
         </div>
-        <div id="ocorrencia<?= $filme['id'] ?>" class="panel-collapse collapse">
+        <div id="ocorrencia<?= $filme['idFilmeEvento'] ?>" class="panel-collapse collapse">
             <div class="box-body">
                 <div class="table-responsive">
                     <table class="table">

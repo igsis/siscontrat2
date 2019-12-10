@@ -66,7 +66,7 @@ if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
             $campo = "pessoa_juridica_id";
         }
         $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
-                                  VALUES ($tipoEvento, $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
         if (mysqli_query($con, $sqlFirst)) {
             $_SESSION['idPedido'] = recuperaUltimo("pedidos");
             $idPedido = $_SESSION['idPedido'];

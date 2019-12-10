@@ -5,7 +5,7 @@ $idEvento = $_SESSION['idEvento'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $tipoEvento = $evento['tipo_evento_id'];
 
-$sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = '$tipoEvento' AND origem_id = '$idEvento' AND publicado = 1";
+$sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
 $pedidos = mysqli_query($con, $sqlPedidos);
 $pedido = mysqli_fetch_array($pedidos);
 $tipoPessoa = $pedido['pessoa_tipo_id'];
@@ -146,7 +146,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
 } else if ($evento['tipo_evento_id'] == 2 && $pedidos != NULL) {
     $tipoPessoa = $pedido['pessoa_tipo_id'];
 
-    $sqlFilme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
+    $sqlFilme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao, fe.id as 'idFilmeEvento' FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
     $filmes = mysqli_query($con, $sqlFilme);
     $numFilmes = mysqli_num_rows($filmes);
 
@@ -217,17 +217,11 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                             FROM lista_documentos ld
                             LEFT JOIN (SELECT * FROM arquivos 
                                        WHERE publicado = 1 AND origem_id = '$idPedido' AND publicado = 1) a ON ld.id = a.lista_documento_id
-                            WHERE ld.tipo_documento_id = 3 AND ld.publicado = 1";
+                            WHERE ld.tipo_documento_id = 3 AND ld.publicado = 1 AND (ld.musica = 1 AND ld.teatro = 1 AND ld.oficina = 1  AND ld.documento NOT LIKE '%Pessoa Jurídica%')";
 
                 $queryArqs = mysqli_query($con, $sqlArqs);
 
-                // REMOVER OS ARQUIVOS Q SAO DE MUSICA E TEATRO
-                $balde = array(26, 50, 78, 79, 87, 90);
                 while ($arquivo = mysqli_fetch_array($queryArqs)) {
-
-                    if (in_array($arquivo['id'], $balde))
-                        continue;
-
                     if ($arquivo['arquivo'] == NULL)
                         array_push($errosArqs, $arquivo['documento'] . " não enviado");
                 }
