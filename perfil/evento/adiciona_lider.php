@@ -34,9 +34,9 @@ if (isset($_POST['adicionar']) || $_POST['adicionaLider'] || $_POST['adicionarLi
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="nomeArtistico">Nome Artístico: *</label>
+                                    <label for="nomeArtistico">Nome Artístico: </label>
                                     <input type='text' class='form-control' id='nomeArtistico'
-                                           name='nomeArtistico' maxlength='120' required>
+                                           name='nomeArtistico' maxlength='120'>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="email">E-mail: *</label>
