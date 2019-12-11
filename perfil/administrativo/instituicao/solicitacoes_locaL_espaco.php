@@ -84,7 +84,7 @@ $query_espaco = mysqli_query($con, $sql_espaco);
                             <tr>
                                 <th>Local</th>
                                 <th>Logradouro</th>
-                                <th width="5%">Visualizar</th>
+                                <th width="5%">Editar</th>
                             </tr>
                             </thead>
 
@@ -107,7 +107,7 @@ $query_espaco = mysqli_query($con, $sql_espaco);
                             <tr>
                                 <th>Local</th>
                                 <th>Logradouro</th>
-                                <th width="5%">Visualizar</th>
+                                <th width="5%">Editar</th>
                             </tr>
                             </tfoot>
                         </table>
@@ -138,7 +138,7 @@ $query_espaco = mysqli_query($con, $sql_espaco);
                             <thead>
                             <tr>
                                 <th>Espaço</th>
-                                <th width="5%">Visualizar</th>
+                                <th width="5%">Editar</th>
                             </tr>
                             </thead>
 
@@ -159,7 +159,7 @@ $query_espaco = mysqli_query($con, $sql_espaco);
                             <tfoot>
                             <tr>
                                 <th>Espaço</th>
-                                <th width="5%">Visualizar</th>
+                                <th width="5%">Editar</th>
                             </tr>
                             </tfoot>
                         </table>

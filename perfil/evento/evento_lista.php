@@ -74,7 +74,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Tipo do evento</th>
                                 <th>Vínculo</th>
                                 <th>Status</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Apagar</th>
                             </tr>
                             </thead>
@@ -142,7 +142,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Tipo do evento</th>
                                 <th>Vínculo</th>
                                 <th>Status</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Apagar</th>
                             </tr>
                             </tfoot>

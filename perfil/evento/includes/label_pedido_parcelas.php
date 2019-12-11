@@ -1,6 +1,6 @@
 <?php
 
-    $query_data = "SELECT MIN(o.data_inicio)
+$query_data = "SELECT MIN(o.data_inicio)
 FROM eventos AS e INNER JOIN atracoes AS a ON a.evento_id = e.id
 INNER JOIN  ocorrencias AS o ON a.id = o.atracao_id 
 INNER JOIN pedidos AS p ON p.origem_id = e.id 
@@ -10,7 +10,8 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
 
 ?>
 <h3 class="h2">1. Detalhes de parcelas</h3>
-<form action="../funcoes/api_pedido_eventos.php" method="POST" class="formulario-ajax" name="form-valor-equipamento" role="form" data-etapa="Parcelas">
+<form action="../funcoes/api_pedido_eventos.php" method="POST" class="formulario-ajax" name="form-valor-equipamento"
+      role="form" data-etapa="Parcelas">
     <input type="hidden" name="_method" value="parcelas">
     <div id="mensagem-alerta">
     </div>
@@ -119,7 +120,7 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
     <ul class="list-inline pull-right">
         <li>
             <button type="submit" class="btn btn-primary next-step">Proxima etapa <span
-                    aria-hidden="true">&rarr;</span></button>
+                        aria-hidden="true">&rarr;</span></button>
         </li>
     </ul>
 </form>

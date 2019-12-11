@@ -26,7 +26,7 @@ if (isset($_POST['busca'])) {
     AND o.data_fim <= '$data_fim'
     $sqlOperador
     group by e.id";
-    
+
     $query = mysqli_query($con, $sql);
     $num_rows = mysqli_num_rows($query);
 }

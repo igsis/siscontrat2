@@ -76,7 +76,7 @@ $resul = mysqli_query($con, $query);
                                 <th>Duração</th>
                                 <th>Diretor</th>
                                 <th width="15%">Ocorrência</th>
-                                <th width="10%">Visualizar</th>
+                                <th width="10%">Editar</th>
                                 <th width="7%">Apagar</th>
                             </tr>
                             </thead>
@@ -135,7 +135,7 @@ $resul = mysqli_query($con, $query);
                                 <th>Duração</th>
                                 <th>Diretor</th>
                                 <th>Ocorrência</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Apagar</th>
                             </tr>
                             </tfoot>

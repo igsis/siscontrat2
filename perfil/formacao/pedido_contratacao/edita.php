@@ -115,7 +115,6 @@ if (isset($_POST['parcelaEditada'])) {
     mysqli_query($con, $sql);
 }
 
-
 $_SESSION['idPedido'] = $idPedido;
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -369,19 +368,21 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
                         <input type="hidden" name="idPedido" value="<?= $pedido['id'] ?>" id="idPedido">
 
-                        <div class="col-md-1">
-                            <a href="?perfil=formacao&p=pedido_contratacao&sp=area_impressao">
-                                <button type="button" class="btn btn-default">Ir para área de impressão</button>
-                            </a>
-                        </div>
-
-
                         <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
                             Salvar
                         </button>
 
                     </div>
             </form>
+            <hr/>
+            <div class="row">
+                <div class="col-md-12" style="text-align:center">
+                    <form action="?perfil=formacao&p=pedido_contratacao&sp=area_impressao" method="post" role="form">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-default" style="width: 35%;">Ir para a área de impressão</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </section>
 </div>

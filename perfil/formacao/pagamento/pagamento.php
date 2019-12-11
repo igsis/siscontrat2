@@ -17,10 +17,10 @@ if (isset($_POST['salvar'])) {
 
 
 $formacao = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
-$pedido = recuperaDados('pedidos', 'origem_id', $idFormacao . ' AND origem_tipo_id = 2');
-$pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
+$sqlPedido = "SELECT * FROM pedidos WHERE origem_tipo_id = 2 AND origem_id = $idFormacao";
+$pedido = $con->query($sqlPedido)->fetch_array();
+$pf = recuperaDados('pessoa_fisicas', 'id', $formacao['pessoa_fisica_id']);
 $idPedido = $pedido['id'];
-$_SESSION['idPedido'] = $idPedido;
 $sql = "SELECT * FROM parcelas where pedido_id = '$idPedido'";
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
@@ -143,6 +143,7 @@ $link_contabilidade = $http . "rlt_contabilidade_formacao.php";
                                     <th style="text-align:center">
                                         <form action="<?= $link_pagamento ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                             <button type="submit" class="btn btn-primary">Pagamento</button>
                                         </form>
                                     </th>
@@ -150,6 +151,7 @@ $link_contabilidade = $http . "rlt_contabilidade_formacao.php";
                                     <th style="text-align:center">
                                         <form action="<?= $link_recibo ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                             <button type="submit" class="btn btn-primary">Recibo</button>
                                         </form>
                                     </th>
@@ -157,6 +159,7 @@ $link_contabilidade = $http . "rlt_contabilidade_formacao.php";
                                     <th style="text-align:center">
                                         <form action="<?= $link_atestado ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                             <button type="submit" class="btn btn-primary">Atestado Serviço</button>
                                         </form>
                                     </th>
@@ -164,6 +167,7 @@ $link_contabilidade = $http . "rlt_contabilidade_formacao.php";
                                     <th style="text-align:center">
                                         <form action="<?= $link_horas ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                             <button type="submit" class="btn btn-primary">Relatório Horas</button>
                                         </form>
                                     </th>
@@ -171,6 +175,7 @@ $link_contabilidade = $http . "rlt_contabilidade_formacao.php";
                                     <th style="text-align:center">
                                         <form action="<?= $link_contabilidade ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                             <button type="submit" class="btn btn-primary">Contabilidade</button>
                                         </form>
                                     </th>
