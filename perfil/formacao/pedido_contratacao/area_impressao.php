@@ -14,7 +14,7 @@ $link_reserva_sme = $http . "impressao_reserva_sme.php";
 
 $link_reserva_pia = $http . "impressao_reserva_pia.php";
 
-$idPedido = $_SESSION['idPedido'];
+$idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPf = $pedido['pessoa_fisica_id'];
 ?>
@@ -33,11 +33,12 @@ $idPf = $pedido['pessoa_fisica_id'];
                         <nav class="navbar navbar-static-top bg-light-blue-active">
                             <h4 align="center">PEDIDO</h4>
                         </nav>
-                        <a href="<?= $link_pcf ?>" target="_blank">
-                            <button type="button" class="btn btn-outline-info center-block">
+                        <form action="<?= $link_pcf ?>" target="_blank" method="POST">
+                            <input type="hidden" name="idPedido" value="<?=$idPedido?>">
+                            <button type="submit" class="btn btn-outline-info center-block">
                                 Pedido de Contratação - Formação
                             </button>
-                        </a>
+                        </form>
                         <hr/>
                     </div>
                 </div>
@@ -49,19 +50,21 @@ $idPf = $pedido['pessoa_fisica_id'];
                         </nav>
                     </div>
                     <div class="col-md-6">
-                        <a href="<?= $link_vocacional ?>" target="_blank">
-                            <button type="button" class="btn btn-outline-info center-block">
+                        <form action="<?= $link_vocacional ?>" target="_blank" method="POST">
+                            <input type="hidden" name="idPedido" value="<?=$idPedido?>">
+                            <button type="submit" class="btn btn-outline-info center-block">
                                 Vocacional
                             </button>
-                        </a>
+                        </form>
                         <hr/>
                     </div>
                     <div class="col-md-6">
-                        <a href="<?= $link_vocacional ?>" target="_blank">
-                            <button type="button" class="btn btn-outline-info center-block">
+                        <form action="<?= $link_vocacional ?>" target="_blank" method="POST">
+                            <input type="hidden" name="idPedido" value="<?=$idPedido?>">
+                            <button type="submit" class="btn btn-outline-info center-block">
                                 PIÁ
                             </button>
-                        </a>
+                        </form>
                         <hr/>
                     </div>
                 </div>
@@ -71,11 +74,11 @@ $idPf = $pedido['pessoa_fisica_id'];
                         <nav class="navbar navbar-static-top bg-light-blue-active">
                             <h4 align="center">OUTROS</h4>
                         </nav>
-                        <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank">
-                            <button type="button" class="btn btn-outline-info center-block">
+                        <form action="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" method="POST">
+                            <button type="submit" class="btn btn-outline-info center-block">
                                 FACC
                             </button>
-                        </a>
+                        </form>
                         <hr/>
                     </div>
                 </div>
@@ -88,25 +91,28 @@ $idPf = $pedido['pessoa_fisica_id'];
                     </div>
 
                     <div class="col-md-6">
-                        <a href="<?= $link_reserva_vocacional ?>" target="_blank">
-                            <button type="button" class="btn btn-outline-info center-block">
+                        <form action="<?= $link_reserva_vocacional ?>" target="_blank" method="POST">
+                            <input type="hidden" name="idPedido" value="<?=$idPedido?>">
+                            <button type="submit" class="btn btn-outline-info center-block">
                                 FORMAÇÃO - Vocacional
                             </button>
-                        </a>
+                        </form>
                         <hr/>
-                        <a href="<?= $link_reserva_sme ?>" target="_blank">
-                            <button type="button" class="btn btn-outline-info center-block">
+                        <form action="<?= $link_reserva_sme ?>" target="_blank" method="POST">
+                            <input type="hidden" name="idPedido" value="<?=$idPedido?>">
+                            <button type="submit" class="btn btn-outline-info center-block">
                                 VOCACIONAL/PIÁ - SME
                             </button>
-                        </a>
+                        </form>
                     </div>
 
                     <div class="col-md-6">
-                        <a href="<?= $link_reserva_pia ?>" target="_blank">
-                            <button type="button" class="btn btn-outline-info center-block">
+                        <form action="<?= $link_reserva_pia ?>" target="_blank" method="POST">
+                            <input type="hidden" name="idPedido" value="<?=$idPedido?>">
+                            <button type="submit" class="btn btn-outline-info center-block">
                                 FORMAÇÃO - PIÁ
                             </button>
-                        </a>
+                        </form>
                         <hr/>
                     </div>
                 </div>

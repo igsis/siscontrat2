@@ -5,10 +5,10 @@ require_once("../funcoes/funcoesGerais.php");
 
 //CONEXÃO COM BANCO DE DADOS
 $con = bancoMysqli();
-session_start();
+
 
 //CONSULTA
-$idPedido = $_SESSION['idPedido'];
+$idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);

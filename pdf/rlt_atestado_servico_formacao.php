@@ -5,10 +5,10 @@ require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
-session_start();
+
 
 $idParcela = $_POST['idParcela'];
-$idPedido = $_SESSION['idPedido'];
+$idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idFC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
