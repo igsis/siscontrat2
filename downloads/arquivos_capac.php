@@ -1,8 +1,6 @@
 <?php
 require_once("../funcoes/funcoesConecta.php");
-$path = "../../capac/uploadsdocs/";
-$path2 = "../../capac/uploads/";
-//require_once("../funcoes/funcoesGerais.php");
+$path = "../../capac/uploads/";
 
 $con = bancoCapac();
 $idEvento = $_GET['idCapac'];
@@ -19,16 +17,21 @@ if( $zip->open( $nome_arquivo , ZipArchive::CREATE )  === true)
     // arquivos do evento
     $sql = "SELECT arq.* FROM arquivos AS arq INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='3'";
     $query = mysqli_query($con,$sql);
-
-    // arquivos comunicação / produção
-    $sql_com_prod = "SELECT arq.* FROM arquivos AS arq INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='8'";
-    $query_com_prod = mysqli_query($con,$sql_com_prod);
-
     while($arquivo = mysqli_fetch_array($query))
     {
         $file = $path.$arquivo['arquivo'];
         $file2 = $arquivo['arquivo'];
         $zip->addFile($file, "evento/".$file2);
+    }
+
+    // arquivos comunicação / produção
+    $sql_com_prod = "SELECT arq.* FROM arquivos AS arq INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='8'";
+    $query_com_prod = mysqli_query($con,$sql_com_prod);
+    while($arquivo = mysqli_fetch_array($query_com_prod))
+    {
+        $file = $path.$arquivo['arquivo'];
+        $file2 = $arquivo['arquivo'];
+        $zip->addFile($file, "com_prod/".$file2);
     }
 
     if ($tipo_pessoa == 1){
@@ -53,13 +56,6 @@ if( $zip->open( $nome_arquivo , ZipArchive::CREATE )  === true)
         }
     }
 
-    while($arquivo = mysqli_fetch_array($query_com_prod))
-    {
-        $file = $path2.$arquivo['arquivo'];
-        $file2 = $arquivo['arquivo'];
-        $zip->addFile($file, "com_prod/".$file2);
-    }
-
     $zip->close();
 }
 
@@ -77,3 +73,5 @@ ob_end_clean(); //essas duas linhas antes do readfile
 flush();
 
 readfile($nome_arquivo);
+
+unlink($data.".zip");

@@ -457,18 +457,7 @@ $pedido = mysqli_fetch_array($query_pedido);
         </div>
 
         <div class="row">
-            <div class="col-md-offset-3 col-md-6">
-                <form class="form-horizontal" method="POST" target="_blank" action="?downloads/arquivos_capac" role="form">
-                    <input type="hidden" name="idCapac" value="<?= $id ?>">
-                    <input type="hidden" name="tipo_pessoa" value="<?= $pedido['pessoa_tipo_id'] ?>">
-                    <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
-                    <button type="submit" class="btn btn-success btn-block float-right" >Baixar todos os arquivos</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-offset-2 col-md-8">
+            <div class="col-md-offset-4 col-md-4">
                 <a href="../downloads/arquivos_capac.php?idCapac=<?= $id ?>&tipo_pessoa=<?= $pedido['pessoa_tipo_id'] ?>&idProponente=<?= $idProponente ?>" class="btn btn-warning btn-block float-right" target="_blank">Baixar todos os arquivos</a><br/>
             </div>
         </div>
