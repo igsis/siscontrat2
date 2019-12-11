@@ -93,7 +93,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Período</th>
                                 <th>Fiscal</th>
                                 <th>Operador</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                             </tr>
                             </thead>
                             <?php

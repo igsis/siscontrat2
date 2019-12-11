@@ -42,7 +42,7 @@ $query = mysqli_query($con, $sql);
                                 <th width="20%">Título</th>
                                 <th>Mensagem</th>
                                 <th width="10%">Data</th>
-                                <th width="10%">Visualizar</th>
+                                <th width="10%">Editar</th>
                                 <th width="10%">Excluir</th>
                             </tr>
                             </thead>
@@ -92,7 +92,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Título</th>
                                 <th>Mensagem</th>
                                 <th>Data</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Excluir</th>
                             </tr>
                             </tfoot>

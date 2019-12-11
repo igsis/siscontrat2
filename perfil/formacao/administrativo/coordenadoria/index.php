@@ -44,7 +44,7 @@ $num_arrow = mysqli_num_rows($query);
                             <thead>
                             <tr>
                                 <th>Coordenadoria</th>
-                                <th width="5%">Visualizar</th>
+                                <th width="5%">Editar</th>
                                 <th width="5%">Excluir</th>
                             </tr>
                             </thead>
@@ -95,7 +95,7 @@ $num_arrow = mysqli_num_rows($query);
                             <tfoot>
                             <tr>
                                 <th>Coordenadoria</th>
-                                <th width="5%">Visualizar</th>
+                                <th width="5%">Editar</th>
                                 <th width="5%">Excluir</th>
                             </tr>
                             </tfoot>

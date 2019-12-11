@@ -40,7 +40,7 @@ $query = mysqli_query($con, $sql);
                             <thead>
                             <tr>
                                 <th width="95%">Projeto Especial</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Excluir</th>
                             </tr>
                             </thead>
@@ -74,7 +74,7 @@ $query = mysqli_query($con, $sql);
                             <tfoot>
                             <tr>
                                 <th>Projeto Especial</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Excluir</th>
                             </tr>
                             </tfoot>

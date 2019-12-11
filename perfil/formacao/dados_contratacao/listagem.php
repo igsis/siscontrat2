@@ -123,7 +123,7 @@ $queryDados = mysqli_query($con,$sqlDados);
                            <th> Programa </th>
                            <th> Linguagem </th>
                            <th> Cargo </th>
-                           <th> Visualizar </th>
+                           <th> Editar </th>
                            <th> Editar </th>
                         </tr>
                         </thead>
@@ -160,7 +160,7 @@ $queryDados = mysqli_query($con,$sqlDados);
                                     <th> Programa </th>
                                     <th> Linguagem </th>
                                     <th> Cargo </th>
-                                    <th> Visualizar </th>
+                                    <th> Editar </th>
                                     <th> Editar </th>
                                 </tr>
                             </tfoot>

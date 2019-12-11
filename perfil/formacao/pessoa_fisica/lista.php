@@ -35,7 +35,7 @@ $num_arrow = mysqli_num_rows($query);
                                 <th>CPF</th>
                                 <th>Data nascimento</th>
                                 <th>Email</th>
-                                <th width="5%">Visualizar</th>
+                                <th width="5%">Editar</th>
                             </tr>
                             </thead>
 
@@ -79,7 +79,7 @@ $num_arrow = mysqli_num_rows($query);
                                 <th>CPF</th>
                                 <th>Data nascimento</th>
                                 <th>Email</th>
-                                <th width="5%">Visualizar</th>
+                                <th width="5%">Editar</th>
                             </tr>
                             </tfoot>
                         </table>

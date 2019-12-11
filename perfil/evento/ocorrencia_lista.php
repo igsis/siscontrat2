@@ -113,7 +113,7 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
                                 <th>Horario início</th>
                                 <th>Horario final</th>
                                 <th>Local</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Replicar</th>
                                 <th>Apagar</th>
                             </tr>

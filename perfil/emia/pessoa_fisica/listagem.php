@@ -26,7 +26,7 @@ $query = mysqli_query($con, $sql);
                         <th>CPF</th>
                         <th>Data de Nascimento</th>
                         <th>Email</th>
-                        <th>Visualizar</th>
+                        <th>Editar</th>
                     </tr>
                     </thead>
                     <?php
@@ -53,7 +53,7 @@ $query = mysqli_query($con, $sql);
                         <th>CPF</th>
                         <th>Data de Nascimento</th>
                         <th>Email</th>
-                        <th>Visualizar</th>
+                        <th>Editar</th>
                     </tr>
                     </tfoot>
                 </table>
