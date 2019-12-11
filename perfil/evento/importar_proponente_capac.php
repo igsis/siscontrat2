@@ -89,163 +89,123 @@ if (isset($_POST['importarEventoCpc'])) {
         }
 
         $sqlInsertImportado = "INSERT INTO siscontrat.eventos_importados (evento_id, evento_capac_id) VALUES ('$idEvento', '$idCapac')";
-        mysqli_query($conSis, $sqlInsertImportado);
+        if (mysqli_query($conSis, $sqlInsertImportado)) {
+            $mensagem = mensagem('success', 'Evento importado. Abaixo, verifique os dados do Proponente para efetuar a importação');
+        }
     } else {
         echo "<script>window.location.href = 'index.php?perfil=evento&p=importar_evento_capac&error=1&idCpc=".$idCapac."</script>";
     }
-} else {
-    echo "<script>window.location.href = 'index.php?perfil=evento&p=buscar_capac'</script>";
 }
 
-$sqlEventoCpc = "SELECT * FROM capac_new.eventos WHERE id = '$idCapac' AND publicado = 2";
-$eventoCpc = $conCpc->query($sqlEventoCpc)->fetch_assoc();
+$sqlConsultaPedido = "SELECT * FROM capac_new.pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idCapac'";
+$pedido = $conCpc->query($sqlConsultaPedido)->fetch_assoc();
+
+if ($pedido['pessoa_tipo_id'] == 1) {
+    $idProponenteCpc = $pedido['pessoa_fisica_id'];
+    $sqlConsultaProponente = "SELECT * FROM capac_new.pessoa_fisicas WHERE id = '$idProponenteCpc'";
+
+    $proponente = $conCpc->query($sqlConsultaProponente)->fetch_assoc();
+
+    $sqlComparaProponente = "SELECT * FROM siscontrat.pessoa_fisicas WHERE cpf = '{$proponente['cpf']}'";
+
+} elseif ($pedido['pessoa_tipo_id'] == 2) {
+    $idProponenteCpc = $pedido['pessoa_juridica_id'];
+    $sqlConsultaProponente = "SELECT * FROM capac_new.pessoa_juridicas WHERE id = '$idProponenteCpc'";
+
+    $proponente = $conCpc->query($sqlConsultaProponente)->fetch_assoc();
+
+    $sqlComparaProponente = "SELECT * FROM siscontrat.pessoa_juridicas WHERE cnpj = '{$proponente['cnpj']}'";
+}
+
+$queryProponenteSis = $conSis->query($sqlComparaProponente);
+
+if ($queryProponenteSis->num_rows > 0) {
+    $existeProponente = true;
+} else {
+    $existeProponente = false;
+    $_POST['importarProponenteCpc'] = true;
+}
+
+if (isset($_POST['importarProponenteCpc'])) {
+    if ($pedido['pessoa_tipo_id'] == 1) {
+        $idProponentePj = "null";
+
+        $idProponentePf = "aeoo";
+    } elseif ($pedido['pessoa_tipo_id'] == 2) {
+        $idProponentePf = "null";
+        if (!$existeProponente) {
+            $dataAtual = date("Y-m-d H:i:s");
+
+            $sqlInsertRepresentante1 = "INSERT INTO siscontrat.representante_legais (nome, rg, cpf)
+                                        SELECT nome, rg, cpf FROM capac_new.representante_legais WHERE id = '{$proponente['representante_legal1_id']}'";
+            if (mysqli_query($conSis, $sqlInsertRepresentante1)) {
+                $idRepresentante1 = $conSis->insert_id;
+
+                if ($proponente['representante_legal2_id'] != NULL) {
+                    $sqlInsertRepresentante2 = "INSERT INTO siscontrat.representante_legais (nome, rg, cpf)
+                                                SELECT nome, rg, cpf FROM capac_new.representante_legais WHERE id = '{$proponente['representante_legal2_id']}'";
+                    mysqli_query($conSis, $sqlInsertRepresentante2);
+                    $idRepresentante2 = "'".$conSis->insert_id."'";
+                } else {
+                    $idRepresentante2 = "NULL";
+                }
+
+                $sqlInsertProponente = "INSERT INTO siscontrat.pessoa_juridicas (razao_social, cnpj, ccm, email, representante_legal1_id, representante_legal2_id, ultima_atualizacao)
+                                        SELECT razao_social, cnpj, ccm, email, '$idRepresentante1', $idRepresentante2, '$dataAtual' FROM capac_new.pessoa_juridicas WHERE id = '$idProponenteCpc'";
+            }
+        } else {
+            echo "proponente já existe";
+        }
+        if (mysqli_query($conSis, $sqlInsertProponente)) {
+            $idProponentePj = "'".$conSis->insert_id."'";
+
+            $sqlInsertBanco = "INSERT INTO siscontrat.pj_bancos (pessoa_juridica_id, banco_id, agencia, conta)
+                               SELECT $idProponentePj, banco_id, agencia, conta FROM capac_new.pj_bancos WHERE pessoa_juridica_id = '$idProponenteCpc'";
+            $conSis->query($sqlInsertBanco);
+
+            $sqlInsertEndereco = "INSERT INTO siscontrat.pj_enderecos (pessoa_juridica_id, logradouro, numero, complemento, bairro, cidade, uf, cep)
+                                  SELECT $idProponentePj, logradouro, numero, complemento, bairro, cidade, uf, cep FROM capac_new.pj_enderecos WHERE pessoa_juridica_id = '$idProponenteCpc'";
+            $conSis->query($sqlInsertEndereco);
+
+            $telefones = $conCpc->query("SELECT telefone FROM capac_new.pj_telefones WHERE pessoa_juridica_id = '$idProponenteCpc'")->fetch_all(MYSQLI_ASSOC);
+            foreach ($telefones as $telefone) {
+                $sqlInsertTelefone = "INSERT INTO siscontrat.pj_telefones (pessoa_juridica_id, telefone) VALUES ($idProponentePj, '{$telefone['telefone']}')";
+                $conSis->query($sqlInsertTelefone);
+            }
+        }
+    }
+
+    /* INSERINDO PEDIDO */
+    $sqlInsertPedido = "INSERT INTO siscontrat.pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_juridica_id, pessoa_fisica_id) VALUES 
+                        (1, '$idEvento', {$pedido['pessoa_tipo_id']}, $idProponentePj, $idProponentePf)";
+    $query = $conSis->query($sqlInsertPedido);
+}
 
 ?>
 
 <div class="content-wrapper">
     <section class="content">
 
-        <h2 class="page-header">Importação de Evento</h2>
+        <h2 class="page-header">Importação de Evento / Proponente</h2>
 
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Informações Gerais</h3>
+                        <h3 class="box-title">Dados do Proponente</h3>
                     </div>
                     <div class="row" align="center">
                         <?php if (isset($mensagem)) {
                             echo $mensagem;
                         }; ?>
                     </div>
-
-                    <form method="POST" action="?perfil=evento&p=importar_proponente_capac" role="form">
-                        <div class="box-body">
-
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="contratacao">Haverá contratação?</label> <br>
-                                    <label><input type="radio" name="contratacao"
-                                                  value="1" <?= $eventoCpc['tipo_contratacao_id'] != 5 ? 'checked' : NULL ?>> Sim
-                                    </label>
-                                    <label><input type="radio" name="contratacao"
-                                                  value="0" <?= $eventoCpc['tipo_contratacao_id'] == 5 ? 'checked' : NULL ?>> Não
-                                    </label>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="contratacao">Espaço em que será realizado o evento é público?</label>
-                                    <br>
-                                    <label><input type="radio" name="tipoLugar" value="1" <?= $eventoCpc['espaco_publico'] == 1 ? 'checked' : NULL ?>> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="tipoLugar" value="0" <?= $eventoCpc['espaco_publico'] == 0 ? 'checked' : NULL ?>> Não </label>
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label for="tipo">Este evento é cinema?</label> <br>
-                                    <label><input type="radio" name="tipo" value="2">Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="tipo" value="1" checked>Não </label>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="fomento">É fomento/programa?</label> <br>
-                                    <label><input type="radio" class="fomento" name="fomento" value="1"
-                                                  id="sim" <?= $eventoCpc['fomento'] == 1 ? 'checked' : NULL ?>> Sim
-                                    </label>&nbsp;&nbsp;
-                                    <label><input type="radio" class="fomento" name="fomento" value="0"
-                                                  id="nao" <?= $eventoCpc['fomento'] == 0 ? 'checked' : NULL ?>> Não
-                                    </label>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="tipoFomento">Fomento/Programa </label> <br>
-                                    <select class="form-control" name="tipoFomento" id="tipoFomento">
-                                        <option value="">Selecione uma opção...</option>
-                                        <?php
-                                        geraOpcao("fomentos", $fomento['fomento_id']);
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="nomeEvento">Nome do evento *</label>
-                                <input type="text" class="form-control" id="nomeEvento" name="nomeEvento"
-                                       maxlength="240" required value="<?= $eventoCpc['nome_evento'] ?>">
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="relacaoJuridica">Tipo de relação jurídica *</label>
-                                    <select class="form-control" name="relacaoJuridica" id="relacaoJuridica" required>
-                                        <option value="">Selecione uma opção...</option>
-                                        <?php
-                                        geraOpcao("relacao_juridicas", $eventoCpc['relacao_juridica_id']);
-                                        ?>
-                                    </select>
-                                </div>
-
-                                <div class="form-group col-md-6">
-                                    <label for="projetoEspecial">Projeto Especial *</label>
-                                    <select class="form-control" id="projetoEspecial" name="projetoEspecial" required>
-                                        <option value="">Selecione uma opção...</option>
-                                        <?php
-                                        geraOpcaoPublicado("projeto_especiais", $eventoCpc['projeto_especial_id']);
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="acao">Público (Representatividade e Visibilidade Sócio-cultural)* <i>(multipla
-                                            escolha) </i></label>
-                                    <button class='btn btn-default' type='button' data-toggle='modal'
-                                            data-target='#modalPublico' style="border-radius: 30px;">
-                                        <i class="fa fa-question-circle"></i></button>
-                                    <div class="row" id="msgEsconde">
-                                        <div class="form-group col-md-6">
-                                            <span style="color: red;">Selecione ao menos uma representatividade!</span>
-                                        </div>
-                                    </div>
-                                    <?php
-                                    geraCheckBox('publicos', 'publico', 'capac_new.evento_publico', 'col-md-6', 'evento_id', 'publico_id', $idCapac);
-                                    ?>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="sinopse">Sinopse *</label><br/>
-                                <i>Esse campo deve conter uma breve descrição do que será apresentado no evento.</i>
-                                <p align="justify"><span
-                                        style="color: gray; "><strong><i>Texto de exemplo:</strong><br/>Ana Cañas faz o show de lançamento do seu quarto disco, “Tô na Vida” (Som Livre/Guela Records). Produzido por Lúcio Maia (Nação Zumbi) em parceria com Ana e mixado por Mario Caldato Jr, é o primeiro disco totalmente autoral da carreira da cantora e traz parcerias com Arnaldo Antunes e Dadi entre outros.</span></i>
-                                </p>
-                                <textarea name="sinopse" id="sinopse" class="form-control" rows="5"
-                                          required><?= $eventoCpc['sinopse'] ?></textarea>
-                            </div>
-
-                            <div class="row ">
-                                <div class="form-group col-md-6">
-                                    <label for="fiscal">Fiscal *</label>
-                                    <select class="form-control" id="fiscal" name="fiscal" required>
-                                        <option value="">Selecione um fiscal...</option>
-                                        <?php
-                                        geraOpcaoUsuario("usuarios", 1, $eventoCpc['fiscal_id']);
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="suplente">Suplente</label>
-                                    <select class="form-control" id="suplente" name="suplente">
-                                        <option value="">Selecione um suplente...</option>
-                                        <?php
-                                        geraOpcaoUsuario("usuarios", 1, $eventoCpc['suplente_id']);
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="box-footer">
-                            <button type="submit" name="importaCapac" id="cadastra" class="btn btn-info pull-right">Gravar
-                            </button>
-                        </div>
-                    </form>
+                    <?php
+                    if($existeProponente) {
+                        echo "importado";
+                    } else {
+                        echo "importado";
+                    }
+                    ?>
                 </div>
             </div>
         </div>
@@ -288,55 +248,3 @@ $eventoCpc = $conCpc->query($sqlEventoCpc)->fetch_assoc();
         </div>
     </div>
 </div>
-Aeoo
-<script>
-    const btnCadastra = $('#cadastra');
-    let publicos = $('.publicos');
-
-    //FOMENTO
-    function verificaFomento() {
-        if ($('#sim').is(':checked')) {
-            $('#tipoFomento')
-                .attr('disabled', false)
-                .attr('required', true)
-        } else {
-            $('#tipoFomento')
-                .attr('disabled', true)
-                .attr('required', false)
-        }
-    }
-
-    function validaPublico() {
-        var isMsg = $('#msgEsconde');
-        var checked = false;
-
-        for (let x = 0 ; x < publicos.length; x++) {
-            if (publicos[x].checked) {
-                checked = true;
-            }
-        }
-
-        if (checked) {
-            isMsg.hide();
-            btnCadastra.attr("disabled", false);
-            btnCadastra.removeAttr("data-toggle");
-            btnCadastra.removeAttr("data-placement");
-            btnCadastra.removeAttr("title");
-        } else {
-            isMsg.show();
-            btnCadastra.attr("disabled", true);
-            btnCadastra.attr("data-toggle", "tooltip");
-            btnCadastra.attr("data-placement", "left");
-            btnCadastra.attr("title", "Selecione pelo menos uma Representatividade");
-        }
-    }
-
-    //EXECUTA TUDO
-    publicos.on('change', validaPublico);
-    $('.fomento').on('change', verificaFomento);
-
-    $(document).ready(function () {
-        validaPublico();
-        verificaFomento();
-    })
-</script>
