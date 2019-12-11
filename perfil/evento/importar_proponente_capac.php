@@ -23,6 +23,7 @@ if (isset($_POST['importarEventoCpc'])) {
     $tipoLugar = $_POST['tipoLugar'];
     $idFomento = $_POST['tipoFomento'] ?? null;
 
+    /* INSERE EVENTO NO SISCONTRAT */
     $sqlInsertSis = "INSERT INTO siscontrat.eventos (nome_evento,
                                  relacao_juridica_id, 
                                  projeto_especial_id, 
@@ -51,6 +52,7 @@ if (isset($_POST['importarEventoCpc'])) {
     if(mysqli_query($conSis, $sqlInsertSis)) {
         $idEvento = $conSis->insert_id;
 
+        /* VERIFICA SE O EVENTO É FOMENTO */
         if ($idFomento != null) {
             $sqlFomentoCpc = "INSERT INTO siscontrat.evento_fomento  (evento_id, fomento_id) VALUES ('$idEvento', '$idFomento')";
             mysqli_query($conSis, $sqlFomentoCpc);
@@ -80,6 +82,7 @@ if (isset($_POST['importarEventoCpc'])) {
                     $idAtracao = $conSis->insert_id;
                     foreach ($acoes as $acao) {
                         $sqlInsertAcao = "INSERT INTO siscontrat.acao_atracao (acao_id, atracao_id) VALUES ('{$acao['acao_id']}', '$idAtracao')";
+                        $conSis->query($sqlInsertAcao);
                     }
                 }
             }
