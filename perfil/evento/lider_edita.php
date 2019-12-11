@@ -177,10 +177,10 @@ include "includes/menu_interno.php";
                                            value="<?= $lider['nome'] ?>" required>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="nome">Nome Artístico: *</label>
+                                    <label for="nome">Nome Artístico:</label>
                                     <input type='text' class='form-control' id='nomeArtistico' name='nomeArtistico'
                                            maxlength='120'
-                                           value="<?= $lider['nome_artistico'] ?>" required>
+                                           value="<?= $lider['nome_artistico'] ?>">
                                 </div>
                             </div>
                             <div class="row">

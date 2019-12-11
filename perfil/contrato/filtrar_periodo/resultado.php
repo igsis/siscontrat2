@@ -26,7 +26,7 @@ if (isset($_POST['busca'])) {
     AND o.data_fim <= '$data_fim'
     $sqlOperador
     group by e.id";
-
+    
     $query = mysqli_query($con, $sql);
     $num_rows = mysqli_num_rows($query);
 }
@@ -83,7 +83,7 @@ if (isset($_POST['busca'])) {
                                     }
                                     if ($evento['pessoa_tipo_id'] == 1)
                                         $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome_artistico'];
-                                    else if ($evento['pessoa_fisica_id'] == 2)
+                                    else if ($evento['pessoa_tipo_id'] == 2)
                                         $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
 
                                     ?>

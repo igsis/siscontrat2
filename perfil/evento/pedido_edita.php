@@ -66,7 +66,7 @@ if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
             $campo = "pessoa_juridica_id";
         }
         $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
-                                  VALUES ($tipoEvento, $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
         if (mysqli_query($con, $sqlFirst)) {
             $_SESSION['idPedido'] = recuperaUltimo("pedidos");
             $idPedido = $_SESSION['idPedido'];
@@ -235,36 +235,67 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                     <div class="box-body">
                         <div class="stepper">
                             <ul class="nav nav-tabs nav-justified" role="tablist">
-                                <li role="presentation" class="active">
-                                    <a class="persistant-disabled" href="#stepper-step-1" data-toggle="tab"
-                                       aria-controls="stepper-step-1" role="tab" title="Parcelas">
-                                        <span class="round-tab">1</span>
-                                    </a>
-                                </li>
-                                <li role="presentation" class="disabled">
-                                    <a class="persistant-disabled" href="#stepper-step-2" data-toggle="tab"
-                                       aria-controls="stepper-step-2" role="tab" title="Proponente">
-                                        <span class="round-tab">2</span>
-                                    </a>
-                                </li>
-                                <li role="presentation" class="disabled">
-                                    <a class="persistant-disabled" href="#stepper-step-3" data-toggle="tab"
-                                       aria-controls="stepper-step-3" role="tab" title="Lider">
-                                        <span class="round-tab">3</span>
-                                    </a>
-                                </li>
-                                <li role="presentation" class="disabled">
-                                    <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
-                                       aria-controls="stepper-step-4" role="tab" title="Parecer artístico">
-                                        <span class="round-tab">4</span>
-                                    </a>
-                                </li>
-                                <li role="presentation" class="disabled">
-                                    <a class="persistant-disabled" href="#stepper-step-5" data-toggle="tab"
-                                       aria-controls="stepper-step-5" role="tab" title="Valor por equipamento">
-                                        <span class="round-tab">5</span>
-                                    </a>
-                                </li>
+                                <?php if ($tipoPessoa == 2) { ?>
+                                    <li role="presentation" class="active">
+                                        <a class="persistant-disabled" href="#stepper-step-1" data-toggle="tab"
+                                           aria-controls="stepper-step-1" role="tab" title="Parcelas">
+                                            <span class="round-tab">1</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="disabled">
+                                        <a class="persistant-disabled" href="#stepper-step-2" data-toggle="tab"
+                                           aria-controls="stepper-step-2" role="tab" title="Proponente">
+                                            <span class="round-tab">2</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="disabled">
+                                        <a class="persistant-disabled" href="#stepper-step-3" data-toggle="tab"
+                                           aria-controls="stepper-step-3" role="tab" title="Lider">
+                                            <span class="round-tab">3</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="disabled">
+                                        <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
+                                           aria-controls="stepper-step-4" role="tab" title="Parecer artístico">
+                                            <span class="round-tab">4</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="disabled">
+                                        <a class="persistant-disabled" href="#stepper-step-5" data-toggle="tab"
+                                           aria-controls="stepper-step-5" role="tab" title="Valor por equipamento">
+                                            <span class="round-tab">5</span>
+                                        </a>
+                                    </li>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <li role="presentation" class="active">
+                                        <a class="persistant-disabled" href="#stepper-step-1" data-toggle="tab"
+                                           aria-controls="stepper-step-1" role="tab" title="Parcelas">
+                                            <span class="round-tab">1</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="disabled">
+                                        <a class="persistant-disabled" href="#stepper-step-2" data-toggle="tab"
+                                           aria-controls="stepper-step-2" role="tab" title="Proponente">
+                                            <span class="round-tab">2</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="disabled">
+                                        <a class="persistant-disabled" href="#stepper-step-3" data-toggle="tab"
+                                           aria-controls="stepper-step-3" role="tab" title="Parecer artístico">
+                                            <span class="round-tab">3</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="disabled">
+                                        <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
+                                           aria-controls="stepper-step-4" role="tab" title="Valor por equipamento">
+                                            <span class="round-tab">4</span>
+                                        </a>
+                                    </li>
+                                    <?php
+                                }
+                                ?>
                             </ul>
                             <div class="tab-content">
                                 <!-- Detalhes de Parcelas -->
@@ -276,14 +307,14 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                 <div class="tab-pane fade" role="tabpanel" id="stepper-step-2">
                                     <?php include "includes/label_pedido_proponente.php" ?>
                                 </div>
-
+                                <?php if ($tipoPessoa == 2){?>
                                 <!-- Líderes -->
                                 <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
                                     <?php include "includes/label_pedido_lideres.php" ?>
                                 </div>
-
+                                <?php } ?>
                                 <!-- Parecer Artístico -->
-                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-4">
+                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '4' : '3'?>">
                                     <h3>4. Parecer artístico</h3>
                                     <div class="container">
                                         <div class="row">
@@ -293,7 +324,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                 </div>
 
                                 <!-- Valor por Equipamento -->
-                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-5">
+                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '5' : '4'?>">
                                     <?php include_once "includes/label_pedido_valor_equipamento.php" ?>
                                 </div>
                             </div>
@@ -484,7 +515,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         <?php
         }else{
         ?>
-           $('#dataKit').val("<?= $data_kit ?>");
+        $('#dataKit').val("<?= $data_kit ?>");
         <?php
 
         }
@@ -1175,4 +1206,47 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             }
         })
     });
+
+    function mostrarResultado(box,num_max,campospan){
+        var contagem_carac = box.length;
+        if (contagem_carac != 0){
+            document.getElementById(campospan).innerHTML = contagem_carac + " caracteres digitados";
+            if (contagem_carac == 1){
+                document.getElementById(campospan).innerHTML = contagem_carac + " caracter digitado";
+            }
+            if (contagem_carac < num_max){
+                document.getElementById(campospan).innerHTML = "<font color='red'>Você não inseriu a quantidade mínima de caracteres!</font>";
+            }
+        }else{
+            document.getElementById(campospan).innerHTML = "Ainda não temos nada digitado...";
+        }
+    }
+    function contarCaracteres(box,valor,campospan){
+        var conta = valor - box.length;
+        document.getElementById(campospan).innerHTML = "Faltam " + conta + " caracteres";
+        if(box.length >= valor){
+            document.getElementById(campospan).innerHTML = "Quantidade mínima de caracteres atingida!";
+        }
+    }
+    function mostrarResultado3(box,num_max,campospan){
+        var contagem_carac = box.length;
+        if (contagem_carac != 0){
+            document.getElementById(campospan).innerHTML = contagem_carac + " caracteres digitados";
+            if (contagem_carac == 1){
+                document.getElementById(campospan).innerHTML = contagem_carac + " caracter digitado";
+            }
+            if (contagem_carac < num_max){
+                document.getElementById(campospan).innerHTML = "<font color='red'>Você não inseriu a quantidade mínima de caracteres!</font>";
+            }
+        }else{
+            document.getElementById(campospan).innerHTML = "Ainda não temos nada digitado...";
+        }
+    }
+    function contarCaracteres3(box,valor,campospan){
+        var conta = valor - box.length;
+        document.getElementById(campospan).innerHTML = "Faltam " + conta + " caracteres";
+        if(box.length >= valor){
+            document.getElementById(campospan).innerHTML = "Quantidade mínima de caracteres atingida!";
+        }
+    }
 </script>

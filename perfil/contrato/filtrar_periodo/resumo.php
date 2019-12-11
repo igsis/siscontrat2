@@ -295,9 +295,10 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 <button type="button" class="btn btn-info" name="reabertura" id="reabertura">Reabertura</button>
                             </a>
 
-                            <a href="?perfil=contrato&p=filtrar_periodo&sp=area_impressao">
-                                <button type="button" class="btn btn-default">Ir para área de impressão</button>
-                            </a>
+                            <form action="?perfil=contrato&p=filtrar_contratos&sp=area_impressao" method="post" role="form">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-default pull-left">Ir para a área de impressão</button>
+                            </form>
                         </div>
                     </form>
                 </div>

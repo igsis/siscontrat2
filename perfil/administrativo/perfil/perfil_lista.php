@@ -42,7 +42,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Perfil</th>
                                 <th>Modulos</th>
                                 <th>Token</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Excluir</th>
                             </tr>
                             </thead>
@@ -87,7 +87,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Perfil</th>
                                 <th>Modulos</th>
                                 <th>Token</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Excluir</th>
                             </tr>
                             </tfoot>

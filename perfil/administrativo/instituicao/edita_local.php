@@ -199,7 +199,7 @@ $query = mysqli_query($con, $sql);
                                 <thead>
                                 <tr>
                                     <th>Espaço</th>
-                                    <th width="5%">Visualizar</th>
+                                    <th width="5%">Editar</th>
                                 </tr>
                                 </thead>
 
@@ -219,7 +219,7 @@ $query = mysqli_query($con, $sql);
                                 <tfoot>
                                 <tr>
                                     <th>Espaço</th>
-                                    <th>Visualizar</th>
+                                    <th>Editar</th>
                                 </tr>
                                 </tfoot>
                             </table>

@@ -8,14 +8,14 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
 if (isset($_POST['apagar'])) {
 
-    $idFilme = $_POST['idFilme'];
+    $idApagar = $_POST['idApagar'];
 
-    $sqlDelete = "DELETE FROM filme_eventos WHERE filme_id = '$idFilme' AND evento_id = '$idEvento'";
+    $sqlDelete = "DELETE FROM filme_eventos WHERE id = '$idApagar'";
 
     if ($query = mysqli_query($con, $sqlDelete)) {
         $mensagem = mensagem("success", "Filme deletado com sucesso");
 
-        $deletaOcorrenciasFilme = "UPDATE ocorrencias SET publicado = 0 WHERE atracao_id = '$idFilme' AND tipo_ocorrencia_id = 2";
+        $deletaOcorrenciasFilme = "UPDATE ocorrencias SET publicado = 0 WHERE atracao_id = '$idApagar' AND tipo_ocorrencia_id = 2";
         mysqli_query($con, $deletaOcorrenciasFilme);
     } else {
         $mensagem = mensagem("danger", "Erro ao tentar executar operação na atração");
@@ -25,7 +25,7 @@ if (isset($_POST['apagar'])) {
 if (isset($_POST['selecionar'])) {
     $idFilme = $_POST['idFilme'];
 
-    $sql = "INSERT INTO filme_eventos 
+    $sql = "INSERT INTO filme_eventos (filme_id, evento_id)
     VALUES ('$idFilme','$idEvento')";
 
     if (mysqli_query($con, $sql)) {
@@ -36,13 +36,12 @@ if (isset($_POST['selecionar'])) {
 
 }
 
-$query = "SELECT f.id, f.titulo, f.ano_producao, f.duracao, f.direcao 
+$query = "SELECT f.id, f.titulo, f.ano_producao, f.duracao, f.direcao, fe.id AS 'idFilmeEvento'
 FROM filmes f
 INNER JOIN filme_eventos fe ON fe.filme_id = f.id
 WHERE f.publicado = 1 AND fe.evento_id='$idEvento'";
 
 $resul = mysqli_query($con, $query);
-
 ?>
 
 <div class="content-wrapper">
@@ -77,7 +76,7 @@ $resul = mysqli_query($con, $query);
                                 <th>Duração</th>
                                 <th>Diretor</th>
                                 <th width="15%">Ocorrência</th>
-                                <th width="10%">Visualizar</th>
+                                <th width="10%">Editar</th>
                                 <th width="7%">Apagar</th>
                             </tr>
                             </thead>
@@ -92,7 +91,7 @@ $resul = mysqli_query($con, $query);
 
                                 // OCORRENCIAS
                                 // se no 'campo' nao for 'atracao_id' é origem_ocorrencia_id
-                                $ocorrencias = recuperaOcorrenciaDados('ocorrencias', 'atracao_id', $filmes['id'], $evento['tipo_evento_id']);
+                                $ocorrencias = recuperaOcorrenciaDados('ocorrencias', 'atracao_id', $filmes['idFilmeEvento'], $evento['tipo_evento_id']);
 
                                 if ($ocorrencias > 0) {
 
@@ -106,7 +105,7 @@ $resul = mysqli_query($con, $query);
 
                                     echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_cadastro\" role=\"form\">
-                                    <input type='hidden' name='idOrigem' value='" . $filmes['id'] . "'>
+                                    <input type='hidden' name='idOrigem' value='" . $filmes['idFilmeEvento'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Ocorrência</button>
                                     </form>
                                     </td>";
@@ -118,7 +117,11 @@ $resul = mysqli_query($con, $query);
                                 </form>
                                 </td>";
                                 echo "<td>
-                                <buttonn class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-ocorrencia-id='" . $filmes['id'] . "' data-tittle='Apagar Filme' data-message='Deseja mesmo excluir o filme do evento?' onclick ='passarId(" . $filmes['id'] . ")'><span class='glyphicon glyphicon-trash'></span></buttonn>
+                                <buttonn class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' 
+                                    data-ocorrencia-id='" . $filmes['id'] . "' data-tittle='Apagar Filme' 
+                                    data-message='Deseja mesmo excluir o filme do evento?' 
+                                    onclick ='passarId(" . $filmes['idFilmeEvento'] . ")'>
+                                    <span class='glyphicon glyphicon-trash'></span></buttonn>
                                 </td>";
                                 echo "</tr>";
                             }
@@ -132,7 +135,7 @@ $resul = mysqli_query($con, $query);
                                 <th>Duração</th>
                                 <th>Diretor</th>
                                 <th>Ocorrência</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Apagar</th>
                             </tr>
                             </tfoot>
@@ -160,7 +163,7 @@ $resul = mysqli_query($con, $query);
                     <p>Deseja mesmo excluir o filme do evento? </p>
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" name="idFilme">
+                    <input type="hidden" name="idApagar">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                     <button type='submit' class='btn btn-danger btn-sm' name="apagar">Confirmar</button>
                 </div>
@@ -190,6 +193,6 @@ $resul = mysqli_query($con, $query);
 <script>
 
     function passarId(id) {
-        document.querySelector('#formApagar input[name="idFilme"]').value = id;
+        document.querySelector('#formApagar input[name="idApagar"]').value = id;
     }
 </script>

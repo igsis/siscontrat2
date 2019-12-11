@@ -52,7 +52,7 @@ if ($linha >= 1) {
                                     <th>Nome do evento</th>
                                     <th>Local</th>
                                     <th>Período</th>
-                                    <th width="10%">Visualizar</th>
+                                    <th width="10%">Editar</th>
                                     <th width="10%">Apagar</th>
                                 </tr>
                                 </thead>
@@ -92,7 +92,7 @@ if ($linha >= 1) {
                                     <th>Nome do evento</th>
                                     <th>Local</th>
                                     <th>Período</th>
-                                    <th>Visualizar</th>
+                                    <th>Editar</th>
                                     <th>Apagar</th>
                                 </tr>
                                 </tfoot>

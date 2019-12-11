@@ -33,7 +33,7 @@ $query = mysqli_query($con, $sql);
                             <thead>
                             <tr>
                                 <th width="95%">Módulo</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                             </tr>
                             </thead>
 
@@ -54,7 +54,7 @@ $query = mysqli_query($con, $sql);
                             <tfoot>
                             <tr>
                                 <th>Módulo</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                             </tr>
                             </tfoot>
                         </table>

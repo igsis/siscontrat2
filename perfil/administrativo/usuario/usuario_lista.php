@@ -44,7 +44,7 @@ $query = mysqli_query($con, $sql);
                                 <th>RF/RG</th>
                                 <th>email</th>
                                 <th>telefone</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Excluir</th>
                             </tr>
                             </thead>
