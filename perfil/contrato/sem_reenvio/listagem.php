@@ -4,10 +4,9 @@ $con = bancoMysqli();
 $sql = "SELECT e.id, e.protocolo, e.nome_evento,  er.data_reabertura, e.usuario_id, er.usuario_reabertura_id, p.pessoa_tipo_id, p.pessoa_juridica_id, p.pessoa_fisica_id, p.valor_total, p.operador_id
         FROM eventos e 
         INNER JOIN evento_envios ee ON e.id = ee.evento_id 
-        INNER JOIN evento_reaberturas er on e.id = er.eventos_id
+        INNER JOIN evento_reaberturas er on e.id = er.evento_id
         INNER JOIN pedidos p ON p.origem_id = e.id
         WHERE er.data_reabertura > ee.data_envio and e.publicado = 1 AND p.origem_tipo_id = 1";
-
 $query = mysqli_query($con, $sql);
 $rows = mysqli_num_rows($query);
 
@@ -62,9 +61,9 @@ $rows = mysqli_num_rows($query);
                                     ?>
                                     <tr>
                                         <td>
-                                            <form action="#" method="POST">
+                                            <form action="?perfil=contrato&p=sem_reenvio&sp=resumo" method="POST">
                                                 <input type="hidden" name="idEvento" id="idEvento" value="<?= $evento['id'] ?>">
-                                                <button type="button" class="btn btn-link"><?= $evento['protocolo'] ?></button>
+                                                <button type="submit" class="btn btn-link"><?= $evento['protocolo'] ?></button>
                                             </form>
                                         </td>
                                         <td><?= $baldeProponente ?></td>

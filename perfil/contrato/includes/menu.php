@@ -34,7 +34,7 @@ $nivelUsuario = recuperaDados('usuario_contratos', 'usuario_id', $idUsuarioDoMen
                 }
 
                 ?>
-                <li><a href="<?= $pasta ?>sem_reenvio&sp=evento_sem_reenvio"><i class="fa fa-circle-o"></i>
+                <li><a href="<?= $pasta ?>sem_reenvio&sp=listagem"><i class="fa fa-circle-o"></i>
                         <span>Eventos sem Reenvio</span></a>
                 </li>
 

@@ -78,8 +78,15 @@ if (isset($_POST['salvar'])) {
             gravarLog($sql);
 
         $sql = "UPDATE pedidos SET status_pedido_id = '$status' WHERE id = '$idPedido'";
-        if (mysqli_query($con, $sql))
+        if (mysqli_query($con, $sql)) {
             gravarLog($sql);
+
+            if ($status == 20) {
+                $sql = "UPDATE eventos SET evento_status_id = 5 WHERE id = '$idEvento'";
+                gravarLog($sql);
+                mysqli_query($con, $sql);
+            }
+        }
     }
 
     $idAtracao = $_POST['idAtracao'];
@@ -138,6 +145,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     $idPj = $pedido['pessoa_juridica_id'];
 }
 
+
 $contrato = recuperaDados('contratos', 'pedido_id', $pedido['id']);
 $sqlAtracao = "SELECT * FROM atracoes where evento_id = '$idEvento' AND publicado = 1";
 $queryAtracao = mysqli_query($con, $sqlAtracao);
@@ -158,7 +166,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             echo $mensagem;
                         }; ?>
                     </div>
-                    <form method="POST" action="?perfil=contrato&p=filtrar_sem_operador&sp=resumo"
+                    <form method="POST" action="?perfil=contrato&p=sem_reenvio&sp=resumo"
                           role="form">
                         <div class="box-body">
 
@@ -290,22 +298,10 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             </button>
                     </form>
 
-                    <form action="?perfil=contrato&p=filtrar_sem_operador&sp=area_impressao" method="post" role="form">
+                    <form action="?perfil=contrato&p=sem_reenvio&sp=area_impressao" method="post" role="form">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-default pull-left">Ir para a área de impressão</button>
                     </form>
-                </div>
-                <hr/>
-                <div class="row">
-                    <div class="col-md-12" style="text-align:center">
-                        <form action="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos"
-                              method="post">
-                            <button type="submit" class="btn btn-info" name="reabertura" style="width: 35%;"
-                                    id="reabertura">
-                                Reabertura
-                            </button>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>
@@ -331,18 +327,18 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                 <tr>
                     <td><?= $proponente['nome'] ?></td>
                     <td>
-                        <form action="?perfil=contrato&p=filtrar_sem_operador&sp=edita_pf" method="POST">
+                        <form action="?perfil=contrato&p=sem_reenvio&sp=edita_pf" method="POST">
                             <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
                             <button type="submit" class="btn btn-primary btn-block"><span
-                                        class="glyphicon glyphicon-pencil"></span></button>
+                                    class="glyphicon glyphicon-pencil"></span></button>
                         </form>
                     </td>
                     <td>
-                        <form action="?perfil=contrato&p=filtrar_sem_operador&sp=tipo_pessoa"
+                        <form action="?perfil=contrato&p=sem_reenvio&sp=tipo_pessoa"
                               method="POST">
                             <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
                             <button type="submit" class="btn btn-info btn-block"><span
-                                        class="glyphicon glyphicon-random"></span></button>
+                                    class="glyphicon glyphicon-random"></span></button>
                         </form>
                     </td>
                 </tr>
@@ -375,19 +371,19 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                 <tr>
                     <td><?= $proponente['razao_social'] ?></td>
                     <td>
-                        <form action="?perfil=contrato&p=filtrar_sem_operador&sp=edita_pj" method="POST">
+                        <form action="?perfil=contrato&p=sem_reenvio&sp=edita_pj" method="POST">
                             <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
                             <input type="hidden" name="idPj" id="idPj" value="<?= $idPj ?>">
                             <button type="submit" name="load" id="load" class="btn btn-primary btn-block"><span
-                                        class="glyphicon glyphicon-pencil"></span></button>
+                                    class="glyphicon glyphicon-pencil"></span></button>
                         </form>
                     </td>
                     <td>
-                        <form action="?perfil=contrato&p=filtrar_sem_operador&sp=tipo_pessoa"
+                        <form action="?perfil=contrato&p=sem_reenvio&sp=tipo_pessoa"
                               method="POST">
                             <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
                             <button type="submit" class="btn btn-info btn-block"><span
-                                        class="glyphicon glyphicon-random"></span></button>
+                                    class="glyphicon glyphicon-random"></span></button>
                         </form>
                     </td>
                 </tr>
@@ -421,12 +417,12 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             <td><?= $atracao['nome'] ?></td>
                             <td>
                                 <form method="POST"
-                                      action="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_lider"
+                                      action="?perfil=contrato&p=sem_reenvio&sp=pesquisa_lider"
                                       role="form">
                                     <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
                                     <input type='hidden' name='lider' value='<?= $idPedido ?>'>
                                     <button type="submit" name='carregar' class="btn btn-primary"><i
-                                                class='fa fa-refresh'></i></button>
+                                            class='fa fa-refresh'></i></button>
                                 </form>
                             </td>
                             <?php
@@ -435,7 +431,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             <td></td>
                             <td>
                                 <form method="POST"
-                                      action="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_lider"
+                                      action="?perfil=contrato&p=sem_reenvio&sp=pesquisa_lider"
                                       role="form">
                                     <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
                                     <input type='hidden' name='lider' value='<?= $idPedido ?>'>

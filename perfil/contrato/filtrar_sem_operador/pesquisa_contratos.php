@@ -1,3 +1,20 @@
+<?php
+if(isset($_POST['reabertura'])){
+    $con = bancoMysqli();
+    $idEvento = $_SESSION['idEvento'];
+    $now = date('Y-m-d H:i:s',strtotime("-3 Hours"));
+    $idUsuario = $_SESSION['idUser'];
+    $sql = "INSERT INTO evento_reaberturas (evento_id, data_reabertura, usuario_reabertura_id) VALUES ('$idEvento', '$now', '$idUsuario')";
+
+    if (mysqli_query($con, $sql))
+        $mensagem = mensagem("success", "Reabertura do evento realizada com sucesso!");
+    else
+        $mensagem = mensagem("danger", "Erro ao efetuar a reabertura do evento! Tente novamente.");
+}
+
+unset($_SESSION['idEvento']);
+unset($_SESSION['idPedido']);
+?>
 <div class="content-wrapper">
     <section class="content">
         <h2 class="page-header">Contratos</h2>
