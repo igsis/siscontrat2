@@ -8,7 +8,6 @@ require_once("../funcoes/funcoesGerais.php");
 
 $con = bancoMysqli();
 
-
 class PDF extends FPDF
 {
     function Header()
@@ -68,17 +67,20 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 
-$idAtracao = $_SESSION['idAtracao'];
+$idAtracao = $ocorrencia['atracao_id'];
 
 $atracao = recuperaDados('atracoes', 'id', $idAtracao);
 
-$sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
-$carga = $con->query($sqlCarga)->fetch_array();
+$idAtracao = $ocorrencia['atracao_id'];
+$sqlCheca = $con->query("SELECT * FROM acao_atracao WHERE atracao_id = '$idAtracao' AND acao_id = 8");
+$checa = mysqli_num_rows($sqlCheca);
 
-if($carga['carga_horaria'] != 0 || $carga['carga_horaria'] != NULL){
-    $cargaHoraria =  $carga['carga_horaria'] . " hora(s)";
-}else{
-    $cargaHoraria = "Não possuí.";
+if ($checa != 0) {
+    $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
+    $carga = $con->query($sqlCarga)->fetch_array();
+    $carga = $carga['carga_horaria'];
+} else if ($checa == 0) {
+    $carga = "Não se aplica.";
 }
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
@@ -207,7 +209,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(26, $l, utf8_decode('Carga Horária:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(50, $l, utf8_decode($cargaHoraria), 0, 'L', 0);
+$pdf->MultiCell(50, $l, utf8_decode($carga), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);

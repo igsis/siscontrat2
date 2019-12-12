@@ -16,7 +16,9 @@ class PDF extends FPDF
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPf = $pedido['pessoa_fisica_id'];
-$idAtracao = $_SESSION['idAtracao'];
+$evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
+$ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
+$idAtracao = $ocorrencia['atracao_id'];
 $atracao = recuperaDados('atracoes', 'id', $idAtracao);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 

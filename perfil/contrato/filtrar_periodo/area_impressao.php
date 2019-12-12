@@ -91,7 +91,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         <?php
                         if ($pedido['origem_tipo_id'] == 2) { ?>
                             <div class="col-md-12">
-                                <form href="<?= $link_pcf ?>" target="_blank" method="post">
+                                <form action="<?= $link_pcf ?>" target="_blank" method="post">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" class="btn btn-outline-info center-block">
                                         Pedido de Contratação - Formação
@@ -101,7 +101,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </div>
                         <?php } else { ?>
                             <div class="col-md-12">
-                                <form href="<?= $link_pc ?>" target="_blank" method="post">
+                                <form action="<?= $link_pc ?>" target="_blank" method="post">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" class="btn btn-outline-info center-block">
                                         Pedido de Contratação
@@ -122,7 +122,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     <?php
                     if ($pedido['origem_tipo_id'] == 2){ ?>
                     <div class="col-md-6">
-                        <form href="<?= $link_vocacional ?>" target="_blank" method="post">
+                        <form action="<?= $link_vocacional ?>" target="_blank" method="post">
                             <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                             <button type="submit" class="btn btn-outline-info center-block">
                                 Vocacional
@@ -132,7 +132,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         <?php } else{
                         ?>
                         <div class="col-md-6">
-                            <form href="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Vocacional
@@ -141,7 +141,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             <hr/>
                             <?php } ?>
 
-                            <form href="<?= $link_edital ?>" target="_blank" method="post">
+                            <form action="<?= $link_edital ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Editais
@@ -149,7 +149,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Contratações gerais - Com cachê
@@ -157,7 +157,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="<?= $link_proposta_convenio ?>" target="_blank" method="post">
+                            <form action="<?= $link_proposta_convenio ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Proposta Oficinas / Convênio MINC
@@ -168,7 +168,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         <?php
                         if ($pedido['origem_tipo_id'] == 2){ ?>
                         <div class="col-md-6">
-                            <form href="<?= $link_vocacional ?>" target="_blank" method="post">
+                            <form action="<?= $link_vocacional ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     PIÁ
@@ -178,7 +178,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             <?php } else{
                             ?>
                             <div class="col-md-6">
-                                <form href="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                                <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" class="btn btn-outline-info center-block">
                                         PIÁ
@@ -189,7 +189,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                                 if ($pedido['origem_tipo_id'] == 3) {
                                     ?>
-                                    <form href="<?= $link_emia ?>" target="_blank" method="post">
+                                    <form action="<?= $link_emia ?>" target="_blank" method="post">
                                         <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                         <button type="submit" class="btn btn-outline-info center-block">
                                             EMIA
@@ -198,7 +198,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                                     <hr/>
                                 <?php } ?>
 
-                                <form href="<?= $link_reversao ?>" target="_blank" method="post">
+                                <form action="<?= $link_reversao ?>" target="_blank" method="post">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" class="btn btn-outline-info center-block">
                                         Contratações gerais - Reversão de Bilheteria
@@ -216,7 +216,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </div>
 
                             <div class="col-md-6">
-                                <form href="<?= $link_direitos ?>" target="_blank" method="post">
+                                <form action="<?= $link_direitos ?>" target="_blank" method="post">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" class="btn btn-outline-info center-block">
                                         Direitos Conexos
@@ -224,7 +224,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                                 </form>
                                 <hr/>
 
-                                <form href="<?= $link_convenio ?>" target="_blank" method="post">
+                                <form action="<?= $link_convenio ?>" target="_blank" method="post">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" class="btn btn-outline-info center-block">
                                         Convênio 500
@@ -234,7 +234,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </div>
 
                             <div class="col-md-6">
-                                <form href="<?= $link_exclusividade ?>" target="_blank" method="post">
+                                <form action="<?= $link_exclusividade ?>" target="_blank" method="post">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" class="btn btn-outline-info center-block">
                                         Exclusividade
@@ -242,7 +242,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                                 </form>
                                 <hr/>
 
-                                <form href="<?= $link_condicionamento ?>" target="_blank" method="post">
+                                <form action="<?= $link_condicionamento ?>" target="_blank" method="post">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" class="btn btn-outline-info center-block">
                                         Condicionamento
@@ -260,7 +260,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </div>
 
                             <div class="col-md-6">
-                                <form href="<?= $link_facc . "?id=" . $idPessoa ?>" target="_blank" method="post">
+                                <form action="<?= $link_facc . "?id=" . $idPessoa ?>" target="_blank" method="post">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" class="btn btn-outline-info center-block">
                                         FACC
@@ -270,7 +270,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </div>
 
                             <div class="col-md-6">
-                                <form href="#" type="submit" target="_blank" method="post">
+                                <form action="#" type="submit" target="_blank" method="post">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" class="btn btn-outline-info center-block">
                                         Parecer da Comissão
@@ -282,7 +282,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                         <div class="row">
                             <div class="col-md-12">
-                                <form href="#" target="_blank" method="post">
+                                <form action="#" target="_blank" method="post">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                     <button type="submit" class="btn btn-outline-info center-block">
                                         NORMAS INTERNAS - Teatros Municipais
@@ -301,7 +301,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </div>
 
                         <div class="col-md-6">
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     FORMAÇÃO - Vocacional
@@ -309,7 +309,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     VOCACIONAL/PIÁ - SME
@@ -317,7 +317,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Reserva CSMB
@@ -325,7 +325,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Reserva CCSP
@@ -333,7 +333,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Oficina
@@ -341,7 +341,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Reserva Gabinete
@@ -349,7 +349,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Reserva DPH
@@ -359,7 +359,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </div>
 
                         <div class="col-md-6">
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     FORMAÇÃO - PIÁ
@@ -367,7 +367,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Reserva Centros Culturais
@@ -375,14 +375,14 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Reserva Casas de Cultura
                                 </button>
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Reserva BMA
@@ -390,7 +390,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Reserva Oficinas CSMB e BMA
@@ -398,7 +398,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Reserva Global
@@ -406,7 +406,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form href="#" target="_blank" method="post">
+                            <form action="#" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Reserva DPH - Jornada do Patrimônio

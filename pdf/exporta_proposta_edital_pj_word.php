@@ -9,7 +9,6 @@ require_once("../funcoes/funcoesGerais.php");
 $con = bancoMysqli();
 
 
-
 //CONSULTA
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -48,14 +47,14 @@ $idRepresentante = $pessoa['representante_legal1_id'];
 $representante = recuperaDados('representante_legais', 'id', $idRepresentante);
 
 $idAtracao = $ocorrencia['atracao_id'];
-$sqlCheca = "SELECT oficina FROM atracoes WHERE id = '$idAtracao'";
-$checa = $con->query($sqlCheca)->fetch_array();
+$sqlCheca = $con ->query("SELECT * FROM acao_atracao WHERE atracao_id = '$idAtracao' AND acao_id = 8");
+$checa = mysqli_num_rows($sqlCheca);
 
-if ($checa['oficina'] == 1) {
+if ($checa != 0) {
     $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
     $carga = $con->query($sqlCarga)->fetch_array();
     $carga = $carga['carga_horaria'];
-} else if ($checa['oficina'] == 0) {
+} else if ($checa == 0) {
     $carga = "Não se aplica.";
 }
 

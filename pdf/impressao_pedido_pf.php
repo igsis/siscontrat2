@@ -3,12 +3,13 @@
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
-
 $con = bancoMysqli();
 
 $idPedido = $_POST['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
+$evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
+$ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 $idEvento = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
@@ -22,7 +23,7 @@ $sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.lo
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
 
-$idAtracao = $_SESSION['idAtracao'];
+$idAtracao = $ocorrencia['atracao_id'];
 
 $atracao = recuperaDados('atracoes', 'id', $idAtracao);
 
