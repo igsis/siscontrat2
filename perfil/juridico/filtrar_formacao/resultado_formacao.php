@@ -25,7 +25,8 @@ $sql = "SELECT p.numero_processo,
             fc.id
             
 
-        FROM pedidos as p INNER JOIN formacao_status fs on p.id = fs.id 
+        FROM pedidos as p 
+        INNER JOIN formacao_status fs on p.id = fs.id 
         INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
         INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
         WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 $numprocesso $codigopedido $statuspedido";
@@ -62,6 +63,7 @@ $sql = "SELECT p.numero_processo,
                                     ?>
                                     <td>
                                         <form action="?perfil=juridico&p=filtrar_formacao&sp=seleciona_modelo_formacao" role="form"  method="POST">
+                                            <input type="hidden" value="<?= $formacao['id']?>" name="idFormacao">
                                             <button type="submit" class="btn btn-link"><?= $formacao['numero_processo'] ?></button>
                                         </form>
                                     </td>
