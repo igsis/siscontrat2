@@ -151,10 +151,9 @@ include "includes/menu_interno.php";
                     </div>
                     <div class="modal-footer">
                             <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
-                            <input type="hidden" name="vetar" id="vetar">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                             </button>
-                            <input type="submit" class="btn btn-danger btn-outline" name="veta" value="Vetar">
+                            <input type="submit" class="btn btn-danger btn-outline" name="vetar" value="Vetar">
                     </form>
                     </div>
                 </div>
