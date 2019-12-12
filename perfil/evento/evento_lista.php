@@ -40,7 +40,7 @@ $sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status, ev.
         FROM eventos AS ev
         INNER JOIN tipo_eventos AS te on ev.tipo_evento_id = te.id
         INNER JOIN evento_status es on ev.evento_status_id = es.id
-        WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id IN (1, 2, 5)";
+        WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id IN (1, 2, 5,6)";
 $query = mysqli_query($con, $sql);
 ?>
 
