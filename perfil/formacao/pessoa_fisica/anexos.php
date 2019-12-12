@@ -21,7 +21,11 @@ if (isset($_POST["enviar"])) {
                 $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
                 $hoje = date("Y-m-d H:i:s");
                 $dir = '../uploadsdocs/'; //Diretório para uploads
-                $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                if ($y != 141) {
+                    $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                }else{
+                    $allowedExts = array(".png", ".PNG", ".JPG", ".jpg"); //Extensões permitidas
+                }
                 $ext = strtolower(substr($nome_arquivo, -4));
 
                 if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
@@ -224,7 +228,7 @@ if (isset($_POST['apagar'])) {
                             </div>
                         </div>
                         <div class="box-footer">
-                            <form action="?perfil=formacao&p=pessoa_fisica&sp=anexos" method="post">
+                            <form action="?perfil=formacao&p=pessoa_fisica&sp=lista" method="post">
                                 <input type="hidden" value="<?= $idPf ?>" name="idPf">
                                 <button type="submit" name="Voltar" class="btn btn-default pull-left">Voltar</button>
                             </form>

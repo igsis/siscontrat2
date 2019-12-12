@@ -205,7 +205,7 @@ if (isset($_POST['carregar'])) {
 
 if (isset($_POST["enviar"])) {
     $idPf = $_POST['idPessoa'];
-    $tipoPessoa = $_POST['tipoPessoa'];
+    $tipoPessoa = 6;
 
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
 
@@ -226,7 +226,7 @@ if (isset($_POST["enviar"])) {
                 $new_name = date("YmdHis", strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
                 $hoje = date("Y-m-d H:i:s", strtotime("-3 hours"));
                 $dir = '../uploadsdocs/'; //Diretório para uploads
-                if ($y != 59) {
+                if ($y != 141) {
                     $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
                 }else{
                     $allowedExts = array(".png", ".PNG", ".JPG", ".jpg"); //Extensões permitidas
@@ -284,7 +284,7 @@ $nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
 $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
 $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
-$foto = "SELECT arquivo FROM arquivos WHERE lista_documento_id = 59 AND publicado = 1 AND origem_id = '$idPf'";
+$foto = "SELECT arquivo FROM arquivos WHERE lista_documento_id = 141 AND publicado = 1 AND origem_id = '$idPf'";
 $foto = $con->query($foto)->fetch_assoc()['arquivo'];
 if ($foto == null) {
     $foto = "avatar_default.png";
@@ -343,7 +343,7 @@ if ($foto == null) {
                             <div class="row">
                                 <?php
                                 if (empty($pf['cpf'])) {
-                                    anexosNaPagina(62, $idPf, "modal-passaporte", "Passaporte");
+                                    anexosNaPagina(116, $idPf, "modal-passaporte", "Passaporte");
                                 } else {
                                     ?>
                                     <div class="form-group col-md-2">
@@ -383,17 +383,17 @@ if ($foto == null) {
                                 <div class="form-group col-md-4">
                                     <?php
                                     if (!empty($pf['cpf'])){
-                                    anexosNaPagina(2, $idPf, "modal-rg", "RG");
+                                    anexosNaPagina(116, $idPf, "modal-rg", "RG");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(3, $idPf, "modal-cpf", "CPF");
+                                    anexosNaPagina(117, $idPf, "modal-cpf", "CPF");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(31, $idPf, "modal-ccm", "FDC - CCM");
+                                    anexosNaPagina(118, $idPf, "modal-ccm", "FDC - CCM");
                                     }
                                     ?>
                                 </div>
@@ -413,7 +413,7 @@ if ($foto == null) {
 
                                 <div class="form-group col-md-6">
                                     <?php
-                                    anexosNaPagina(59, $idPf, "modal-foto", "Foto 3x4");
+                                    anexosNaPagina(141, $idPf, "modal-foto", "Foto 3x4");
                                     ?>
                                 </div>
                             </div>
@@ -456,7 +456,7 @@ if ($foto == null) {
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(4, $idPf, "modal-endereco", "Comprovante de endereço");
+                                    anexosNaPagina(120, $idPf, "modal-endereco", "Comprovante de endereço");
                                     ?>
                                 </div>
                             </div>
@@ -524,7 +524,7 @@ if ($foto == null) {
                                 </div>
                                 <div class="form-group col-md-3">
                                     <?php
-                                    anexosNaPagina(25, $idPf, "modal-nit", "NIT");
+                                    anexosNaPagina(119, $idPf, "modal-nit", "NIT");
                                     ?>
                                 </div>
                             </div>
@@ -563,7 +563,7 @@ if ($foto == null) {
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
+                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 122 AND origem_id = '$idPf' AND publicado = 1";
                                     $queryFACC = mysqli_query($con, $sqlFACC);
                                     ?>
 
@@ -582,7 +582,7 @@ if ($foto == null) {
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(51, $idPf, "modal-facc", "FACC");
+                                    anexosNaPagina(122, $idPf, "modal-facc", "FACC");
                                     ?>
                                 </div>
                             </div>
@@ -610,15 +610,14 @@ if ($foto == null) {
         </div>
 
         <?php
-        modalUploadArquivoUnico("modal-rg", "?perfil=formacao&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
-        modalUploadArquivoUnico("modal-foto", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "1");
-        modalUploadArquivoUnico("modal-cpf", "?perfil=formacao&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
-        modalUploadArquivoUnico("modal-ccm", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
-        modalUploadArquivoUnico("modal-nit", "?perfil=formacao&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
-        modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
-        modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "1");
+        modalUploadArquivoUnico("modal-rg", "?perfil=formacao&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "6");
+        modalUploadArquivoUnico("modal-foto", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "6");
+        modalUploadArquivoUnico("modal-cpf", "?perfil=formacao&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "6");
+        modalUploadArquivoUnico("modal-ccm", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "6");
+        modalUploadArquivoUnico("modal-nit", "?perfil=formacao&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "6");
+        modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "6");
+        modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "6");
         ?>
-
     </section>
 </div>
 
