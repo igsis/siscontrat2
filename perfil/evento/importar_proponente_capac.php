@@ -2,66 +2,171 @@
 include "includes/menu_principal.php";
 
 $idUser = $_SESSION['idUser'];
+$idCapac = $_POST['idCapac'];
+unset($_POST['idCapac']);
+
+$eventoImportado = false;
+$dataAtual = date("Y-m-d H:i:s");
 
 $conSis = bancoMysqli();
 $conCpc = bancoCapac();
 
-if (isset($_POST['importarEventoCpc'])) {
-    $idCapac = $_POST['idCapac'];
+$sqlConsultaPedido = "SELECT * FROM capac_new.pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idCapac'";
+$pedido = $conCpc->query($sqlConsultaPedido)->fetch_assoc();
 
-    $nomeEvento = addslashes($_POST['nomeEvento']);
-    $relacao_juridica_id = $_POST['relacaoJuridica'];
-    $projeto_especial_id = $_POST['projetoEspecial'];
-    $sinopse = addslashes($_POST['sinopse']);
-    $tipo = $_POST['tipo'];
-    $fiscal_id = $_POST['fiscal'];
-    $suplente_id = $_POST['suplente'];
-    $usuario = $_SESSION['idUser'];
-    $contratacao = $_POST['contratacao'];
-    $eventoStatus = "1";
-    $fomento = $_POST['fomento'];
-    $tipoLugar = $_POST['tipoLugar'];
-    $idFomento = $_POST['tipoFomento'] ?? null;
+//if (isset($_POST['importarEventoCpc'])) {
+//    $nomeEvento = addslashes($_POST['nomeEvento']);
+//    $relacao_juridica_id = $_POST['relacaoJuridica'];
+//    $projeto_especial_id = $_POST['projetoEspecial'];
+//    $sinopse = addslashes($_POST['sinopse']);
+//    $tipo = $_POST['tipo'];
+//    $fiscal_id = $_POST['fiscal'];
+//    $suplente_id = $_POST['suplente'];
+//    $usuario = $_SESSION['idUser'];
+//    $contratacao = $_POST['contratacao'];
+//    $eventoStatus = "1";
+//    $fomento = $_POST['fomento'];
+//    $tipoLugar = $_POST['tipoLugar'];
+//    $idFomento = $_POST['tipoFomento'] ?? null;
+//
+//    /* INSERE EVENTO NO SISCONTRAT */
+//    $sqlInsertSis = "INSERT INTO siscontrat.eventos (nome_evento,
+//                                 relacao_juridica_id,
+//                                 projeto_especial_id,
+//                                 tipo_evento_id,
+//                                 sinopse,
+//                                 fiscal_id,
+//                                 suplente_id,
+//                                 usuario_id,
+//                                 contratacao,
+//                                 evento_status_id,
+//                                 fomento,
+//                                 espaco_publico)
+//                          VALUES ('$nomeEvento',
+//                                  '$relacao_juridica_id',
+//                                  '$projeto_especial_id',
+//                                  '$tipo',
+//                                  '$sinopse',
+//                                  '$fiscal_id',
+//                                  '$suplente_id',
+//                                  '$usuario',
+//                                  '$contratacao',
+//                                  '$eventoStatus',
+//                                  '$fomento',
+//                                  '$tipoLugar')";
+//
+//    if(mysqli_query($conSis, $sqlInsertSis)) {
+//        $idEvento = $conSis->insert_id;
+//
+//        /* VERIFICA SE O EVENTO É FOMENTO */
+//        if ($idFomento != null) {
+//            $sqlFomentoCpc = "INSERT INTO siscontrat.evento_fomento  (evento_id, fomento_id) VALUES ('$idEvento', '$idFomento')";
+//            mysqli_query($conSis, $sqlFomentoCpc);
+//        }
+//
+//        if (isset($_POST['publico'])) {
+//            atualizaDadosRelacionamento('siscontrat.evento_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
+//        }
+//
+//        $sqlInsertImportado = "INSERT INTO siscontrat.evento_importados (evento_id, evento_capac_id) VALUES ('$idEvento', '$idCapac')";
+//        if (mysqli_query($conSis, $sqlInsertImportado)) {
+//            $eventoImportado = true;
+//            $mensagem = mensagem('success', 'Evento importado. Abaixo, verifique os dados do Proponente para efetuar a importação');
+//        }
+//    } else {
+//        echo "<script>window.location.href = 'index.php?perfil=evento&p=importar_evento_capac&error=1&idCpc=".$idCapac."</script>";
+//    }
+//}
 
-    /* INSERE EVENTO NO SISCONTRAT */
-    $sqlInsertSis = "INSERT INTO siscontrat.eventos (nome_evento,
-                                 relacao_juridica_id, 
-                                 projeto_especial_id, 
-                                 tipo_evento_id, 
-                                 sinopse, 
-                                 fiscal_id, 
-                                 suplente_id, 
-                                 usuario_id, 
-                                 contratacao, 
-                                 evento_status_id,
-                                 fomento, 
-                                 espaco_publico) 
-                          VALUES ('$nomeEvento',
-                                  '$relacao_juridica_id',
-                                  '$projeto_especial_id',
-                                  '$tipo',
-                                  '$sinopse',
-                                  '$fiscal_id',
-                                  '$suplente_id',
-                                  '$usuario',
-                                  '$contratacao',
-                                  '$eventoStatus',
-                                  '$fomento',
-                                  '$tipoLugar')";
+if ($pedido['pessoa_tipo_id'] == 1) {
+    $idProponenteCpc = $pedido['pessoa_fisica_id'];
+    $sqlConsultaProponente = "SELECT * FROM capac_new.pessoa_fisicas WHERE id = '$idProponenteCpc'";
 
-    if(mysqli_query($conSis, $sqlInsertSis)) {
-        $idEvento = $conSis->insert_id;
+    $proponenteCpc = $conCpc->query($sqlConsultaProponente)->fetch_assoc();
 
-        /* VERIFICA SE O EVENTO É FOMENTO */
-        if ($idFomento != null) {
-            $sqlFomentoCpc = "INSERT INTO siscontrat.evento_fomento  (evento_id, fomento_id) VALUES ('$idEvento', '$idFomento')";
-            mysqli_query($conSis, $sqlFomentoCpc);
+    $sqlComparaProponente = "SELECT * FROM siscontrat.pessoa_fisicas WHERE cpf = '{$proponenteCpc['cpf']}'";
+
+} elseif ($pedido['pessoa_tipo_id'] == 2) {
+    $idProponenteCpc = $pedido['pessoa_juridica_id'];
+    $sqlConsultaProponente = "SELECT * FROM capac_new.pessoa_juridicas WHERE id = '$idProponenteCpc'";
+
+    $proponenteCpc = $conCpc->query($sqlConsultaProponente)->fetch_assoc();
+
+    $sqlComparaProponente = "SELECT * FROM siscontrat.pessoa_juridicas WHERE cnpj = '{$proponenteCpc['cnpj']}'";
+}
+
+$queryProponenteSis = $conSis->query($sqlComparaProponente);
+
+if ($queryProponenteSis->num_rows > 0) {
+    $existeProponente = true;
+    $proponenteSis = $queryProponenteSis->fetch_assoc();
+} else {
+    $existeProponente = false;
+    $_POST['importarProponenteCpc'] = true;
+}
+
+if (isset($_POST['importarProponenteCpc'])) {
+    if ($pedido['pessoa_tipo_id'] == 1) {
+        $idProponentePj = "null";
+
+        $idProponentePf = "aeoo";
+    } elseif ($pedido['pessoa_tipo_id'] == 2) {
+        $idProponentePf = "null";
+        if (!$existeProponente) {
+
+            $sqlInsertRepresentante1 = "INSERT INTO siscontrat.representante_legais (nome, rg, cpf)
+                                        SELECT nome, rg, cpf FROM capac_new.representante_legais WHERE id = '{$proponenteCpc['representante_legal1_id']}'";
+            if (mysqli_query($conSis, $sqlInsertRepresentante1)) {
+                $idRepresentante1 = $conSis->insert_id;
+
+                if ($proponenteCpc['representante_legal2_id'] != NULL) {
+                    $sqlInsertRepresentante2 = "INSERT INTO siscontrat.representante_legais (nome, rg, cpf)
+                                                SELECT nome, rg, cpf FROM capac_new.representante_legais WHERE id = '{$proponenteCpc['representante_legal2_id']}'";
+                    mysqli_query($conSis, $sqlInsertRepresentante2);
+                    $idRepresentante2 = "'".$conSis->insert_id."'";
+                } else {
+                    $idRepresentante2 = "NULL";
+                }
+
+                $sqlInsertProponente = "INSERT INTO siscontrat.pessoa_juridicas (razao_social, cnpj, ccm, email, representante_legal1_id, representante_legal2_id, ultima_atualizacao)
+                                        SELECT razao_social, cnpj, ccm, email, '$idRepresentante1', $idRepresentante2, '$dataAtual' FROM capac_new.pessoa_juridicas WHERE id = '$idProponenteCpc'";
+            }
+        } else {
+            $idProponenteSis = $_POST['idProponenteSis'];
+            unset($_POST['idProponenteSis']);
+            unset($_POST['importarProponenteCpc']);
+            foreach ($_POST as $key => $post) {
+                $update[] = $key." = '".$post."'";
+            }
+
+            $sqlUpdateProponente = "UPDATE siscontrat.pessoa_juridicas SET ".implode(", ", $update)." WHERE id = '$idProponenteSis'";
         }
+        if (mysqli_query($conSis, $sqlInsertProponente)) {
+            $idProponentePj = "'".$conSis->insert_id."'";
 
-        if (isset($_POST['publico'])) {
-            atualizaDadosRelacionamento('siscontrat.evento_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
+            $sqlInsertBanco = "INSERT INTO siscontrat.pj_bancos (pessoa_juridica_id, banco_id, agencia, conta)
+                               SELECT $idProponentePj, banco_id, agencia, conta FROM capac_new.pj_bancos WHERE pessoa_juridica_id = '$idProponenteCpc'";
+            $conSis->query($sqlInsertBanco);
+
+            $sqlInsertEndereco = "INSERT INTO siscontrat.pj_enderecos (pessoa_juridica_id, logradouro, numero, complemento, bairro, cidade, uf, cep)
+                                  SELECT $idProponentePj, logradouro, numero, complemento, bairro, cidade, uf, cep FROM capac_new.pj_enderecos WHERE pessoa_juridica_id = '$idProponenteCpc'";
+            $conSis->query($sqlInsertEndereco);
+
+            $telefones = $conCpc->query("SELECT telefone FROM capac_new.pj_telefones WHERE pessoa_juridica_id = '$idProponenteCpc'")->fetch_all(MYSQLI_ASSOC);
+            foreach ($telefones as $telefone) {
+                $sqlInsertTelefone = "INSERT INTO siscontrat.pj_telefones (pessoa_juridica_id, telefone) VALUES ($idProponentePj, '{$telefone['telefone']}')";
+                $conSis->query($sqlInsertTelefone);
+            }
         }
+    }
 
+    /* INSERINDO PEDIDO */
+    $sqlInsertPedido = "INSERT INTO siscontrat.pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_juridica_id, pessoa_fisica_id) VALUES 
+                        (1, '$idEvento', {$pedido['pessoa_tipo_id']}, $idProponentePj, $idProponentePf)";
+    $conSis->query($sqlInsertPedido);
+    $idPedido = $conSis->insert_id;
+
+    if ($eventoImportado) {
         /* IMPORTANDO AS ATRAÇÕES */
         $sqlAtracoesCpc = "SELECT * FROM capac_new.atracoes WHERE evento_id = '$idCapac' AND publicado = 1";
         $atracoes = $conCpc->query($sqlAtracoesCpc)->fetch_all(MYSQLI_ASSOC);
@@ -86,99 +191,29 @@ if (isset($_POST['importarEventoCpc'])) {
                     }
                 }
             }
-        }
 
-        $sqlInsertImportado = "INSERT INTO siscontrat.eventos_importados (evento_id, evento_capac_id) VALUES ('$idEvento', '$idCapac')";
-        if (mysqli_query($conSis, $sqlInsertImportado)) {
-            $mensagem = mensagem('success', 'Evento importado. Abaixo, verifique os dados do Proponente para efetuar a importação');
-        }
-    } else {
-        echo "<script>window.location.href = 'index.php?perfil=evento&p=importar_evento_capac&error=1&idCpc=".$idCapac."</script>";
-    }
-}
+            if ($pedido['pessoa_tipo_id'] == 2) {
+                $lider = $conCpc->query("SELECT pf.* FROM capac_new.pessoa_fisicas AS pf
+                                INNER JOIN capac_new.lideres AS l ON pf.id = l.pessoa_fisica_id
+                                WHERE l.atracao_id = '{$atracao['id']}'")->fetch_assoc();
 
-$sqlConsultaPedido = "SELECT * FROM capac_new.pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idCapac'";
-$pedido = $conCpc->query($sqlConsultaPedido)->fetch_assoc();
-
-if ($pedido['pessoa_tipo_id'] == 1) {
-    $idProponenteCpc = $pedido['pessoa_fisica_id'];
-    $sqlConsultaProponente = "SELECT * FROM capac_new.pessoa_fisicas WHERE id = '$idProponenteCpc'";
-
-    $proponente = $conCpc->query($sqlConsultaProponente)->fetch_assoc();
-
-    $sqlComparaProponente = "SELECT * FROM siscontrat.pessoa_fisicas WHERE cpf = '{$proponente['cpf']}'";
-
-} elseif ($pedido['pessoa_tipo_id'] == 2) {
-    $idProponenteCpc = $pedido['pessoa_juridica_id'];
-    $sqlConsultaProponente = "SELECT * FROM capac_new.pessoa_juridicas WHERE id = '$idProponenteCpc'";
-
-    $proponente = $conCpc->query($sqlConsultaProponente)->fetch_assoc();
-
-    $sqlComparaProponente = "SELECT * FROM siscontrat.pessoa_juridicas WHERE cnpj = '{$proponente['cnpj']}'";
-}
-
-$queryProponenteSis = $conSis->query($sqlComparaProponente);
-
-if ($queryProponenteSis->num_rows > 0) {
-    $existeProponente = true;
-} else {
-    $existeProponente = false;
-    $_POST['importarProponenteCpc'] = true;
-}
-
-if (isset($_POST['importarProponenteCpc'])) {
-    if ($pedido['pessoa_tipo_id'] == 1) {
-        $idProponentePj = "null";
-
-        $idProponentePf = "aeoo";
-    } elseif ($pedido['pessoa_tipo_id'] == 2) {
-        $idProponentePf = "null";
-        if (!$existeProponente) {
-            $dataAtual = date("Y-m-d H:i:s");
-
-            $sqlInsertRepresentante1 = "INSERT INTO siscontrat.representante_legais (nome, rg, cpf)
-                                        SELECT nome, rg, cpf FROM capac_new.representante_legais WHERE id = '{$proponente['representante_legal1_id']}'";
-            if (mysqli_query($conSis, $sqlInsertRepresentante1)) {
-                $idRepresentante1 = $conSis->insert_id;
-
-                if ($proponente['representante_legal2_id'] != NULL) {
-                    $sqlInsertRepresentante2 = "INSERT INTO siscontrat.representante_legais (nome, rg, cpf)
-                                                SELECT nome, rg, cpf FROM capac_new.representante_legais WHERE id = '{$proponente['representante_legal2_id']}'";
-                    mysqli_query($conSis, $sqlInsertRepresentante2);
-                    $idRepresentante2 = "'".$conSis->insert_id."'";
+                $queryConsultaLider = $conSis->query("SELECT * FROM siscontrat.pessoa_fisicas WHERE cpf = '{$lider['cpf']}'");
+                if ($queryConsultaLider->num_rows > 0) {
+                    echo "PF já Existe";
+                    $idLider = "";
                 } else {
-                    $idRepresentante2 = "NULL";
+                    $sqlInsertPfLider = "INSERT INTO siscontrat.pessoa_fisicas (nome, nome_artistico, rg, passaporte, cpf, ccm, data_nascimento, nacionalidade_id, email, ultima_atualizacao)
+                                       SELECT nome, nome_artistico, rg, passaporte, cpf, ccm, data_nascimento, nacionalidade_id, email, '$dataAtual' FROM capac_new.pessoa_fisicas WHERE id = '{$lider['id']}'";
+                    $conSis->query($sqlInsertPfLider);
+                    $idLider = $conSis->insert_id;
                 }
 
-                $sqlInsertProponente = "INSERT INTO siscontrat.pessoa_juridicas (razao_social, cnpj, ccm, email, representante_legal1_id, representante_legal2_id, ultima_atualizacao)
-                                        SELECT razao_social, cnpj, ccm, email, '$idRepresentante1', $idRepresentante2, '$dataAtual' FROM capac_new.pessoa_juridicas WHERE id = '$idProponenteCpc'";
-            }
-        } else {
-            echo "proponente já existe";
-        }
-        if (mysqli_query($conSis, $sqlInsertProponente)) {
-            $idProponentePj = "'".$conSis->insert_id."'";
-
-            $sqlInsertBanco = "INSERT INTO siscontrat.pj_bancos (pessoa_juridica_id, banco_id, agencia, conta)
-                               SELECT $idProponentePj, banco_id, agencia, conta FROM capac_new.pj_bancos WHERE pessoa_juridica_id = '$idProponenteCpc'";
-            $conSis->query($sqlInsertBanco);
-
-            $sqlInsertEndereco = "INSERT INTO siscontrat.pj_enderecos (pessoa_juridica_id, logradouro, numero, complemento, bairro, cidade, uf, cep)
-                                  SELECT $idProponentePj, logradouro, numero, complemento, bairro, cidade, uf, cep FROM capac_new.pj_enderecos WHERE pessoa_juridica_id = '$idProponenteCpc'";
-            $conSis->query($sqlInsertEndereco);
-
-            $telefones = $conCpc->query("SELECT telefone FROM capac_new.pj_telefones WHERE pessoa_juridica_id = '$idProponenteCpc'")->fetch_all(MYSQLI_ASSOC);
-            foreach ($telefones as $telefone) {
-                $sqlInsertTelefone = "INSERT INTO siscontrat.pj_telefones (pessoa_juridica_id, telefone) VALUES ($idProponentePj, '{$telefone['telefone']}')";
-                $conSis->query($sqlInsertTelefone);
+                $sqlInsertLider = "INSERT INTO siscontrat.lideres (pedido_id, atracao_id, pessoa_fisica_id)
+                                   VALUES ('$idPedido', '$idAtracao', '$idLider')";
+                $conSis->query($sqlInsertLider);
             }
         }
     }
-
-    /* INSERINDO PEDIDO */
-    $sqlInsertPedido = "INSERT INTO siscontrat.pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_juridica_id, pessoa_fisica_id) VALUES 
-                        (1, '$idEvento', {$pedido['pessoa_tipo_id']}, $idProponentePj, $idProponentePf)";
-    $query = $conSis->query($sqlInsertPedido);
 }
 
 ?>
@@ -201,7 +236,11 @@ if (isset($_POST['importarProponenteCpc'])) {
                     </div>
                     <?php
                     if($existeProponente) {
-                        echo "importado";
+                        if ($pedido['pessoa_tipo_id'] == 1) {
+                            echo "compara PF";
+                        } else {
+                            include_once "includes/include_import_proponentePj.php";
+                        }
                     } else {
                         echo "importado";
                     }
