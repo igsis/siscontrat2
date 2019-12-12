@@ -130,9 +130,9 @@ include "includes/menu_interno.php";
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Confirmação de Vetação</h4>
                     </div>
-                    <div class="modal-body">
-                        <p>Tem certeza que deseja vetar este evento?</p>
-                        <form action="?perfil=gestao_prazo&p=busca_gestao" method="post">
+                    <form action="?perfil=gestao_prazo&p=busca_gestao" method="post">
+                        <div class="modal-body">
+                            <p>Tem certeza que deseja vetar este evento?</p>
                             <input type="hidden" name="titulo" value="<?=$evento['nome_evento']?>">
                             <label for="motivo">Motivo da Vetação:</label>
                             <select name="motivo" class="form-control">
@@ -147,15 +147,14 @@ include "includes/menu_interno.php";
                             </select>
                             <label for="justificativa">Justificativa:</label>
                             <textarea name="justificativa" class="form-control" rows="3"></textarea>
-
-                    </div>
-                    <div class="modal-footer">
+                        </div>
+                        <div class="modal-footer">
                             <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                             </button>
                             <input type="submit" class="btn btn-danger btn-outline" name="vetar" value="Vetar">
+                        </div>
                     </form>
-                    </div>
                 </div>
             </div>
         </div>
