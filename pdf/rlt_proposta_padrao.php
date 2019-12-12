@@ -7,7 +7,7 @@ require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
-session_start();
+
 
 class PDF extends FPDF
 {
@@ -24,7 +24,7 @@ class PDF extends FPDF
     }
 }
 
-$idPedido = $_SESSION['idPedido'];
+$idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPf = $pedido['pessoa_fisica_id'];
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);

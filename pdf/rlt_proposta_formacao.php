@@ -7,7 +7,7 @@ require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
-session_start();
+
 
 class PDF extends FPDF
 {
@@ -24,7 +24,7 @@ class PDF extends FPDF
     }
 }
 
-$idPedido = $_SESSION['idPedido'];
+$idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPf = $pedido['pessoa_fisica_id'];
 $idFC = $pedido['origem_id'];
@@ -329,7 +329,7 @@ $pdf->Ln(5);
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(160, $l, utf8_decode("O prestador de serviços acima citado é contratado nos termos do Edital " . $programa['edital']
-                                                . ", no ano de " . $ano
+                                                . ", no período " . retornaPeriodoFormacao($idVigencia)
                                                 . ", com carga horária total de até: " . $carga
                                                 . " hora(s), na forma abaixo descrita:"), 0, 'L', 0);
 
