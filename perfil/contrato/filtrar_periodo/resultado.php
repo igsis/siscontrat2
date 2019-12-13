@@ -21,6 +21,7 @@ if (isset($_POST['busca'])) {
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1
+    AND p.status_pedido_id != 3
     AND p.status_pedido_id != 1
     AND o.data_inicio >= '$data_inicio'
     AND o.data_fim <= '$data_fim'

@@ -2,11 +2,10 @@
 $con = bancoMysqli();
 $idPedido = $_POST['idPedido'];
 
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$sqlPedido = "SELECT * FROM pedidos WHERE origem_tipo_id = 3 AND id = $idPedido";
+$pedido = $con->query($sqlPedido)->fetch_array();
 $ec = recuperaDados('emia_contratacao', 'id', $pedido['origem_id']);
 $pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
-
-$_SESSION['idPedido'] = $idPedido;
 
 $sql = "SELECT * FROM parcelas where pedido_id = '$idPedido'";
 $query = mysqli_query($con, $sql);
@@ -94,6 +93,7 @@ $link_contabilidade = $http . "rlt_contabilidade_emia.php";
                                     <th style="text-align:center">
                                         <form action="<?= $link_pagamento ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                             <button type="submit" class="btn btn-primary">Pagamento</button>
                                         </form>
                                     </th>
@@ -101,6 +101,7 @@ $link_contabilidade = $http . "rlt_contabilidade_emia.php";
                                     <th style="text-align:center">
                                         <form action="<?= $link_recibo ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                             <button type="submit" class="btn btn-primary">Recibo</button>
                                         </form>
                                     </th>
@@ -108,6 +109,7 @@ $link_contabilidade = $http . "rlt_contabilidade_emia.php";
                                     <th style="text-align:center">
                                         <form action="<?= $link_atestado ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                             <button type="submit" class="btn btn-primary">Atestado Serviço</button>
                                         </form>
                                     </th>
@@ -115,6 +117,7 @@ $link_contabilidade = $http . "rlt_contabilidade_emia.php";
                                     <th style="text-align:center">
                                         <form action="<?= $link_horas ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                             <button type="submit" class="btn btn-primary">FFI</button>
                                         </form>
                                     </th>
@@ -122,6 +125,7 @@ $link_contabilidade = $http . "rlt_contabilidade_emia.php";
                                     <th style="text-align:center">
                                         <form action="<?= $link_contabilidade ?>" method="post" target="_blank">
                                             <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                             <button type="submit" class="btn btn-primary">Contabilidade</button>
                                         </form>
                                     </th>

@@ -51,6 +51,7 @@ if (isset($_POST['busca'])) {
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
     WHERE e.publicado = 1 
     AND e.evento_status_id != 1 
+    AND p.status_pedido_id != 3
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1 
     AND p.operador_id IS NULL

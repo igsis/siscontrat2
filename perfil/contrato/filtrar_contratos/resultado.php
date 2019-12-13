@@ -45,6 +45,7 @@ if (isset($_POST['busca'])) {
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1
     AND p.status_pedido_id != 1
+    AND p.status_pedido_id != 3
     AND p.origem_tipo_id = 1 
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso";
