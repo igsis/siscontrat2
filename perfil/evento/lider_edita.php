@@ -7,6 +7,8 @@ if (isset($_POST['idLider'])) {
     $idLider = $_POST['idLider'];
 }
 
+$mensagem = '';
+
 
 if (isset($_POST['cadastrar']) || isset($_POST['editar'])) {
     $idPedido = $_SESSION['idPedido'];
@@ -33,58 +35,63 @@ if (isset($_POST['editar'])) {
                    WHERE id = '$idLider'";
 
 
-    if (mysqli_query($con, $sqlUpdate)) { // --> Query dos UPDATES
-        if (isset($_POST['cpf'])) {
-            $cpf = $_POST['cpf'];
-            $sqlCpf = "UPDATE pessoa_fisicas SET cpf = '$cpf' WHERE id = '$idLider'";
-        }
-        if (isset($_POST['passaporte'])) {
-            $passaporte = $_POST['passaporte'];
-            $sqlPassaporte = "UPDATE pessoa_fisicas SET passaporte = '$passaporte' WHERE id = '$idLider'";
-        }
-        if (isset($_POST['telefone2'])) {
-            $telefone2 = $_POST['telefone2'];
-            $sqlTelefone2 = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone)VALUES ('$idLider','$telefone2')";
-            $queryTelefone2 = mysqli_query($con, $sqlTelefone2);
-            gravarLog($sqlTelefone2); // > 		//grava na tabela log os inserts e updates
-        }
+    if (mysqli_query($con, $sqlUpdate)) {
 
-        if (isset($_POST['telefone3'])) {
-            $telefone3 = $_POST['telefone3'];
-            $sqlTelefone3 = "INSERT INTO pf_telefones (pessoa_fisica_id,telefone) VALUES ('$idLider','$telefone3')";
-            $queryTelefone3 = mysqli_query($con, $sqlTelefone3);
-            gravarLog($sqlTelefone3); // > 		//grava na tabela log os inserts e updates
-        }
+        $existeLider = "SELECT * FROM Lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
 
-        foreach ($telefones AS $idTelefone => $telefone) {
-            if (!strlen($telefone)) { // -> Determina o tamanho de uma string.
-                $sqlDeleteTel = "DELETE FROM pf_telefones WHERE id = '$idTelefone'";
-                mysqli_query($con, $sqlDeleteTel);
-                gravarLog($sqlDeleteTel);
+        $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
+        if ($resultado) {
+            $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
+        } else {
+            $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido','$idAtracao','$idLider')";
+        }
+        if (mysqli_query($con, $sqLider)) {
+            if (isset($_POST['telefone2'])) {
+                $telefone2 = $_POST['telefone2'];
+                $sqlTelefone2 = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone)VALUES ('$idLider','$telefone2')";
+                $queryTelefone2 = mysqli_query($con, $sqlTelefone2);
+                gravarLog($sqlTelefone2); // > 		//grava na tabela log os inserts e updates
             }
-            if ($telefone != '') {
-                $sqlTelefone = "UPDATE pf_telefones SET telefone = '$telefone' WHERE id = '$idTelefone'";
-                mysqli_query($con, $sqlTelefone);
-                gravarLog($sqlTelefone);
+
+            if (isset($_POST['telefone3'])) {
+                $telefone3 = $_POST['telefone3'];
+                $sqlTelefone3 = "INSERT INTO pf_telefones (pessoa_fisica_id,telefone) VALUES ('$idLider','$telefone3')";
+                $queryTelefone3 = mysqli_query($con, $sqlTelefone3);
+                gravarLog($sqlTelefone3); // > 		//grava na tabela log os inserts e updates
             }
-            if ($drt != NULL) {
-                $drt_existe = verificaExiste("drts", "pessoa_fisica_id", $idLider, 0);
-                if ($drt_existe ['numero'] > 0) {
-                    $sqldrt = "UPDATE drts SET drt = '$drt' WHERE pessoa_fisica_id = '$idLider'"; // -> Caso for maior que 0 ele ele retorna erro .
-                    if (!mysqli_query($con, $sqldrt)) {
-                        $mensagem .= mensagem("danger", "Erro ao gravar! Tente Novamente. ! ") . $sqldrt;
-                    }
-                } else {
-                    $sqldrt = "INSERT INTO drts (pessoa_fisica_id, drt , publicado) VALUES ('$idLider', '$drt', 1)";
-                    if (!mysqli_query($con, $sqldrt)) {
-                        $mensagem .= mensagem("danger", "Erro ao gravar! Insira um lider para poder finalizar ") . $sqldrt;
+
+            foreach ($telefones AS $idTelefone => $telefone) {
+                if (!strlen($telefone)) { // -> Determina o tamanho de uma string.
+                    $sqlDeleteTel = "DELETE FROM pf_telefones WHERE id = '$idTelefone'";
+                    mysqli_query($con, $sqlDeleteTel);
+                    gravarLog($sqlDeleteTel);
+                }
+                if ($telefone != '') {
+                    $sqlTelefone = "UPDATE pf_telefones SET telefone = '$telefone' WHERE id = '$idTelefone'";
+                    mysqli_query($con, $sqlTelefone);
+                    gravarLog($sqlTelefone);
+                }
+                if ($drt != NULL) {
+                    $drt_existe = verificaExiste("drts", "pessoa_fisica_id", $idLider, 0);
+                    if ($drt_existe ['numero'] > 0) {
+                        $sqldrt = "UPDATE drts SET drt = '$drt' WHERE pessoa_fisica_id = '$idLider'"; // -> Caso for maior que 0 ele ele retorna erro .
+                        if (!mysqli_query($con, $sqldrt)) {
+                            $mensagem .= mensagem("danger", "Erro ao gravar! Tente Novamente. ! ") . $sqldrt;
+                        }
+                    } else {
+                        $sqldrt = "INSERT INTO drts (pessoa_fisica_id, drt , publicado) VALUES ('$idLider', '$drt', 1)";
+                        if (!mysqli_query($con, $sqldrt)) {
+                            $mensagem .= mensagem("danger", "Erro ao gravar! Insira um lider para poder finalizar ") . $sqldrt;
+                        }
                     }
                 }
             }
+            $mensagem .= mensagem("success", "Atualizado com sucesso!");
+        } else {
+            $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
         }
-        $mensagem .= mensagem("success", "Atualizado com sucesso!");
     } else {
-        //$mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
+        $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
 }
 
@@ -95,26 +102,37 @@ if (isset($_POST['cadastrar'])) {
 
     if (mysqli_query($con, $sqlInsert)) {
         $idLider = recuperaUltimo("pessoa_fisicas");
-        $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
-                                VALUES ('$idPedido', '$idAtracao', '$idLider')";
-        mysqli_query($con, $sqLider);
+        $existeLider = "SELECT * FROM Lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
 
-        foreach ($telefones AS $telefone) {
-            if (!empty($telefone)) {
-                $sqlTelefone = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone, publicado) VALUES ('$idLider','$telefone',1)";
-                mysqli_query($con, $sqlTelefone);
-            }
+        $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
+        if ($resultado) {
+            $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
+        } else {
+            $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido','$idAtracao','$idLider')";
         }
-        if ($drt != NULL) {
-            $sqlDRT = "INSERT INTO drts (pessoa_fisica_id, drt, publicado)  VALUES ('$idLider','$drt',1)";
-            if (!mysqli_query($con, $sqlDRT)) {
-                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlDRT;
+
+        if (mysqli_query($con, $sqLider)) {
+
+            foreach ($telefones AS $telefone) {
+                if (!empty($telefone)) {
+                    $sqlTelefone = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone, publicado) VALUES ('$idLider','$telefone',1)";
+                    mysqli_query($con, $sqlTelefone);
+                }
             }
+            if ($drt != NULL) {
+                $sqlDRT = "INSERT INTO drts (pessoa_fisica_id, drt, publicado)  VALUES ('$idLider','$drt',1)";
+                if (!mysqli_query($con, $sqlDRT)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlDRT;
+                }
+            }
+            $mensagem .= mensagem("success", "Cadastro realizado com sucesso");
+        } else {
+            $mensagem .= mensagem("danger", "Erro ao cadastrar");
         }
-        $mensagem .= mensagem("success", "Cadastro realizado com sucesso");
     } else {
         $mensagem .= mensagem("danger", "Erro ao cadastrar");
     }
+
 }
 
 if (isset($_POST['selecionar'])) {
@@ -148,11 +166,6 @@ include "includes/menu_interno.php";
         <!-- START FORM-->
         <h2 class="page-header">Edição de Líder</h2>
         <div class="row">
-            <div class="box-header">
-                <a href="?perfil=evento&p=pesquisa_lider">
-                    <button type="submit" name="trocaArtista" class="btn btn-info pull-left">TROCAR O ARTISTA</button>
-                </a>
-            </div>
             <div class="col-md-12">
                 <div class="row" align="center">
                     <?= $mensagem ?? NULL; ?>
@@ -264,15 +277,15 @@ include "includes/menu_interno.php";
                             </div>
                         </div>
                         <div class="box-footer">
-                            <input type="hidden" name="idLider" value="<?= $_POST['idLider'] ?>">
+                            <input type="hidden" name="idLider" value="<?= $idLider ?>">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <input type="hidden" name="idAtracao" value="<?= $_POST['idAtracao'] ?>">
+                            <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
                             <button type="submit" name="editar" class="btn btn-info pull-right">Salvar</button>
                     </form>
                     <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                        <input type="hidden" name="idLider" value="<?= $_POST['idLider'] ?>">
+                        <input type="hidden" name="idLider" value="<?= $idLider ?>">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <input type="hidden" name="idAtracao" value="<?= $_POST['idAtracao'] ?>">
+                        <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
 
                         <button type="submit" name="adicionaLider" class="btn btn-info pull-left">Ir ao pedido de
                             contratação
