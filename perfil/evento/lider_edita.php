@@ -36,8 +36,8 @@ if (isset($_POST['editar'])) {
 
 
     if (mysqli_query($con, $sqlUpdate)) {
-        $sqlLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE atracao_id = '$idAtracao' AND pedido_id = '$idPedido'";
-        if (mysqli_query($con, $sqlLider)) {
+        $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
+        if (mysqli_query($con, $sqLider)) {
             if (isset($_POST['telefone2'])) {
                 $telefone2 = $_POST['telefone2'];
                 $sqlTelefone2 = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone)VALUES ('$idLider','$telefone2')";
@@ -92,26 +92,37 @@ if (isset($_POST['cadastrar'])) {
 
     if (mysqli_query($con, $sqlInsert)) {
         $idLider = recuperaUltimo("pessoa_fisicas");
-        $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
-                                VALUES ('$idPedido', '$idAtracao', '$idLider')";
-        mysqli_query($con, $sqLider);
+        $existeLider = "SELECT * FROM Lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
 
-        foreach ($telefones AS $telefone) {
-            if (!empty($telefone)) {
-                $sqlTelefone = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone, publicado) VALUES ('$idLider','$telefone',1)";
-                mysqli_query($con, $sqlTelefone);
-            }
+        $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
+        if ($resultado) {
+            $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
+        }else{
+            $sqLider = "INSERT INTO lideres VALUE ('$idPedido','$idAtracao','$idLider')";
         }
-        if ($drt != NULL) {
-            $sqlDRT = "INSERT INTO drts (pessoa_fisica_id, drt, publicado)  VALUES ('$idLider','$drt',1)";
-            if (!mysqli_query($con, $sqlDRT)) {
-                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlDRT;
+
+        if (mysqli_query($con, $sqLider)) {
+
+            foreach ($telefones AS $telefone) {
+                if (!empty($telefone)) {
+                    $sqlTelefone = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone, publicado) VALUES ('$idLider','$telefone',1)";
+                    mysqli_query($con, $sqlTelefone);
+                }
             }
+            if ($drt != NULL) {
+                $sqlDRT = "INSERT INTO drts (pessoa_fisica_id, drt, publicado)  VALUES ('$idLider','$drt',1)";
+                if (!mysqli_query($con, $sqlDRT)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlDRT;
+                }
+            }
+            $mensagem .= mensagem("success", "Cadastro realizado com sucesso");
+        } else {
+            $mensagem .= mensagem("danger", "Erro ao cadastrar");
         }
-        $mensagem .= mensagem("success", "Cadastro realizado com sucesso");
     } else {
         $mensagem .= mensagem("danger", "Erro ao cadastrar");
     }
+
 }
 
 if (isset($_POST['selecionar'])) {
