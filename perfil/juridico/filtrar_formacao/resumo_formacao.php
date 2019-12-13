@@ -35,6 +35,18 @@ $periodo = retornaPeriodoFormacao($fc['form_vigencia_id']);
 // pegar o local
 $sqlLocal = "SELECT l.local FROM formacao_locais fl 
 INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFormacao'";
+/// insere o nome fiscal no texto que apresenta na finalização
+///
+$usuarios = recuperaDados('usuarios','id',$idFormacao);
+$fiscal= $usuarios["nome_completo"];
+$suplente= $usuarios["nome_completo"];
+$rfSuplente= $usuarios["rf_rg"];
+$rfFiscal= $usuarios["rf_rg"];
+
+$mdl = str_replace("nomeFiscal", $fiscal, $mdl);
+$mdl = str_replace("rfFiscal", $rfFiscal, $mdl);
+$mdl = str_replace("nomeSuplente", $suplente, $mdl);
+$mdl = str_replace("rfSuplente", $rfSuplente, $mdl);
 
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
@@ -48,7 +60,7 @@ $queryLocal = mysqli_query($con, $sqlLocal);
         <form action="?perfil=juridico&p=tipo_modelo&sp=dados_modelo" role="form" method="post">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Detalhes do evento selecionado</h3>
+                    <h3 class="box-title">Detalhes da formação selecionada</h3>
                 </div>
                 <div class="box-body">
                     <table class="table">
@@ -111,7 +123,7 @@ $queryLocal = mysqli_query($con, $sqlLocal);
         </form>
         <form action="?perfil=juridico&p=filtrar_formacao&sp=detalhe_formacao" method="post">
             <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
-            <button type="submit" class="btn btn-info pull-right">Detalhes evento
+            <button type="submit" class="btn btn-info pull-right">Detalhes Formação
 
             </button>
         </form>

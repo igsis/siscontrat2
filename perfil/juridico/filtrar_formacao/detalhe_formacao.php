@@ -3,6 +3,21 @@
 $con = bancoMysqli();
 isset($_POST['idFormacao']);
 $idFormacao = $_POST['idFormacao'];
+//$dotacao = $_POST['dotacao'];
+//$finalizacao = $_POST['finalizar'];
+//$amparo = $_POST['amparo'];
+
+if ($idFormacao == $idFormacao) {
+    if (isset($_POST['finalizar'])) {
+        $sqlUptate = "UPDATE juridicos SET pedido_id = $idFormacao, amparo_legal = '$amparo', finalizacao = '$finalizacao', dotacao ='$dotacao'
+    WHERE pedido_id = $idFormacao";
+        $queryInsert = mysqli_query($con, $sqlUptate);
+    }
+} else {
+    $sqlInsert = "INSERT INTO juridicos(pedido_id, amparo_legal, finalizacao, dotacao)
+        VALUES ('$idFormacao','$amparo','$finalizacao','$dotacao')";
+    $queryUpdate = mysqli_query($con, $sqlInsert);
+}
 
 
 $sql = "SELECT p.numero_processo,
@@ -13,15 +28,18 @@ $sql = "SELECT p.numero_processo,
             fc.data_envio,
             fc.protocolo,
             fc.observacao,
-            pf.nome, 
+            pf.nome,
+            pf.email,
             fs.status,
             fc.id,
             ci.classificacao_indicativa,
             pt.pessoa,
             l.linguagem,
+            pro.programa,
+            pro.edital,
             pag.nota_empenho,
             pag.emissao_nota_empenho,
-            pag.entrega.nota_empenho
+            pag.entrega_nota_empenho
             
 
         FROM pedidos as p
@@ -30,17 +48,46 @@ $sql = "SELECT p.numero_processo,
         INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
         INNER JOIN pessoa_tipos pt on pt.id = p.pessoa_tipo_id
         INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id
+        INNER JOIN programas pro on pro.id = fc.programa_id
         INNER JOIN linguagens l on l.id = fc.linguagem_id
         INNER JOIN classificacao_indicativas ci on ci.id = fc.classificacao
         WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 AND p.id = $idFormacao";
 $query = $con->query($sql)->fetch_assoc();
+$usuarios = recuperaDados('usuarios', 'id', $idFormacao);
 
+// fiscal , suplente //
+$suplente = recuperaDados('usuarios', 'id', $idFormacao);
+
+// pegando locais //
 $sqlLocal = "SELECT l.local FROM formacao_locais fl 
 INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFormacao'";
 
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
 
+
+// pegando telefone de pf_telefones //
+$pedido = recuperaDados('pedidos', 'id', $idFormacao);
+$idPf = $pedido['pessoa_fisica_id'];
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$tel = "";
+$queryTelefone = mysqli_query($con, $sqlTelefone);
+
+while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
+    $tel = $tel . $linhaTel['telefone'] . ' | ';
+}
+
+$tel = substr($tel, 0, -3);
+
+// retorna o data formação //
+$fc = recuperaDados('formacao_contratacoes', 'id', $query['origem_id']);
+$periodo = retornaPeriodoFormacao($fc['form_vigencia_id']);
+
+// recuperando horario //
+$fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
+
+// dotacao //
+$dotacao = recuperaDados('juridicos','id',$idFormacao);
 ?>
 
 
@@ -50,9 +97,6 @@ $queryLocal = mysqli_query($con, $sqlLocal);
             <h2 class="page-title">Jurídico</h2>
         </div>
         <div class="box box-primary">
-            <div class="box-header with-border">
-                <h1 class="box-title"></h1>
-            </div>
             <div class="box-body">
                 <table class="table">
                     <tr>
@@ -68,16 +112,16 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                         <td></td>
                     </tr>
                     <tr>
-                        <th width="30%">Usuário que cadastrou o evento:</th>
-                        <td></td>
+                        <th width="30%">Usuário que cadastrou a formação:</th>
+                        <td><?= $query['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td></td>
+                        <td><?= $tel ?> </td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td></td>
+                        <td><?= $query['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -85,15 +129,15 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                     </tr>
                     <tr>
                         <th width="30%">Reponsável pelo evento:</th>
-                        <td></td>
+                        <td><?= $usuarios['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td></td>
+                        <td><?= $usuarios['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td></td>
+                        <td><?= $usuarios['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -101,15 +145,15 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                     </tr>
                     <tr>
                         <th width="30%">Suplente:</th>
-                        <td></td>
+                        <td><?= $suplente['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td></td>
+                        <td><?= $suplente['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td></td>
+                        <td><?= $suplente['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -126,10 +170,6 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                     <tr>
                         <th width="30%">Linguagem / Expressão artística:</th>
                         <td><?= $query['linguagem'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Público / Representatividade social:</th>
-                        <td></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -150,35 +190,32 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                     </tr>
                     <tr>
                         <th width="30%">Data</th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Horário</th>
-                        <td></td>
+                        <td><?=  $periodo ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Retirada de ingressos:</th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Observações:</th>
-                        <td></td>
+                        <td>
+                            <?php
+                            while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
+                                $local = $local . $linhaLocal['local'] . ' - ';
+                            }
+
+                            $local = substr($local, 0, -3);
+                            echo $local;
+                            ?>
+                        </td>
                     </tr>
                     <tr>
                         <th width="30%">Produtor responsavel:</th>
-                        <td></td>
+                        <td><?= $query['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td></td>
+                        <td><?= $query['email'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td></td>
+                        <td><?= $tel ?></td>
                     </tr>
                 </table>
                 <h1>Arquivos Comunicação/Produção anexos</h1>
@@ -200,14 +237,14 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                     </tr>
                     <tr>
                         <th width="30%">Objeto</th>
-                        <td></td>
+                        <td><?= $query['programa'] ?>-<?= $query['linguagem'] ?>-<?= $query['edital'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
                         <td>
                             <?php
                             while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-                                $local = $local . $linhaLocal['local'] . ' - ';
+                                $local = $local . $linhaLocal['local'] . '-';
                             }
 
                             $local = substr($local, 0, -3);
@@ -237,7 +274,7 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                     </tr>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
-                        <td></td>
+                        <td><?= $dotacao ['dotacao'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>

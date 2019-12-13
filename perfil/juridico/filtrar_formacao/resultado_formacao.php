@@ -31,6 +31,10 @@ $sql = "SELECT p.numero_processo,
         INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
         WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 $numprocesso $codigopedido $statuspedido";
 
+
+
+
+
 ?>
 <div class="content-wrapper">
     <section class="content">
