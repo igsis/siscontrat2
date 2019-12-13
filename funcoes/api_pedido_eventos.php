@@ -52,8 +52,8 @@ if (isset($_POST['_method'])) {
             $valor_total = dinheiroDeBr($_POST["valor_total"]);
             $num_parcelas = $_POST["numero_parcelas"];
             $forma_pagamento = trim(addslashes($_POST["forma_pagamento"]));
-            $justificativa = $_POST["justificativa"];
-            $observacao = $_POST["observacao"];
+            $justificativa = trim(addslashes($_POST["justificativa"]));
+            $observacao = trim(addslashes($_POST["observacao"]));
             $idPedido = $_POST["idPedido"];
             $tipoPesso = $_POST["tipoPessoa"];
             $idProponent = $_POST["idProponente"];
