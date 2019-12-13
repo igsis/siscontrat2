@@ -36,7 +36,15 @@ if (isset($_POST['editar'])) {
 
 
     if (mysqli_query($con, $sqlUpdate)) {
-        $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
+
+        $existeLider = "SELECT * FROM Lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
+
+        $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
+        if ($resultado) {
+            $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
+        } else {
+            $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido','$idAtracao','$idLider')";
+        }
         if (mysqli_query($con, $sqLider)) {
             if (isset($_POST['telefone2'])) {
                 $telefone2 = $_POST['telefone2'];
@@ -78,10 +86,12 @@ if (isset($_POST['editar'])) {
                     }
                 }
             }
+            $mensagem .= mensagem("success", "Atualizado com sucesso!");
+        } else {
+            $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
         }
-        $mensagem .= mensagem("success", "Atualizado com sucesso!");
     } else {
-        //$mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
+        $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
 }
 
@@ -97,8 +107,8 @@ if (isset($_POST['cadastrar'])) {
         $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
         if ($resultado) {
             $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
-        }else{
-            $sqLider = "INSERT INTO lideres VALUE ('$idPedido','$idAtracao','$idLider')";
+        } else {
+            $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido','$idAtracao','$idLider')";
         }
 
         if (mysqli_query($con, $sqLider)) {
