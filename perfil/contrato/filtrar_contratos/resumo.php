@@ -112,17 +112,20 @@ if (isset($_POST['salvar'])) {
     $processoMae = $_POST['processoMae'];
     $processo = $_POST['processo'];
     $justificativa = $_POST['justificativa'];
-    $operador = $_POST['operador'];
+    $operador = $_POST['operador'] ?? NULL;
 
     //eventos
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'] ?? null;
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', operador_id = '$operador' WHERE id = '$idPedido'";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido'";
 
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
+        if($operador != NULL){
+            $trocaOp = $con->query("UPDATE pedidos SET operador_id = '$operador' WHERE id = $idPedido");
+        }
         gravarLog($sqlEvento);
         gravarLog($sqlPedido);
         $mensagem = mensagem("success", "Atualizações salvas com sucesso!");
