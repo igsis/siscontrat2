@@ -130,6 +130,24 @@ if (isset($_POST['importarProponenteCpc'])) {
 
                 $sqlInsertProponente = "INSERT INTO siscontrat.pessoa_juridicas (razao_social, cnpj, ccm, email, representante_legal1_id, representante_legal2_id, ultima_atualizacao)
                                         SELECT razao_social, cnpj, ccm, email, '$idRepresentante1', $idRepresentante2, '$dataAtual' FROM capac_new.pessoa_juridicas WHERE id = '$idProponenteCpc'";
+
+                if (mysqli_query($conSis, $sqlInsertProponente)) {
+                    $idProponentePj = "'".$conSis->insert_id."'";
+
+                    $sqlInsertBanco = "INSERT INTO siscontrat.pj_bancos (pessoa_juridica_id, banco_id, agencia, conta)
+                               SELECT $idProponentePj, banco_id, agencia, conta FROM capac_new.pj_bancos WHERE pessoa_juridica_id = '$idProponenteCpc'";
+                    $conSis->query($sqlInsertBanco);
+
+                    $sqlInsertEndereco = "INSERT INTO siscontrat.pj_enderecos (pessoa_juridica_id, logradouro, numero, complemento, bairro, cidade, uf, cep)
+                                  SELECT $idProponentePj, logradouro, numero, complemento, bairro, cidade, uf, cep FROM capac_new.pj_enderecos WHERE pessoa_juridica_id = '$idProponenteCpc'";
+                    $conSis->query($sqlInsertEndereco);
+
+                    $telefones = $conCpc->query("SELECT telefone FROM capac_new.pj_telefones WHERE pessoa_juridica_id = '$idProponenteCpc'")->fetch_all(MYSQLI_ASSOC);
+                    foreach ($telefones as $telefone) {
+                        $sqlInsertTelefone = "INSERT INTO siscontrat.pj_telefones (pessoa_juridica_id, telefone) VALUES ($idProponentePj, '{$telefone['telefone']}')";
+                        $conSis->query($sqlInsertTelefone);
+                    }
+                }
             }
         } else {
             $idProponenteSis = $_POST['idProponenteSis'];
@@ -140,22 +158,8 @@ if (isset($_POST['importarProponenteCpc'])) {
             }
 
             $sqlUpdateProponente = "UPDATE siscontrat.pessoa_juridicas SET ".implode(", ", $update)." WHERE id = '$idProponenteSis'";
-        }
-        if (mysqli_query($conSis, $sqlInsertProponente)) {
-            $idProponentePj = "'".$conSis->insert_id."'";
-
-            $sqlInsertBanco = "INSERT INTO siscontrat.pj_bancos (pessoa_juridica_id, banco_id, agencia, conta)
-                               SELECT $idProponentePj, banco_id, agencia, conta FROM capac_new.pj_bancos WHERE pessoa_juridica_id = '$idProponenteCpc'";
-            $conSis->query($sqlInsertBanco);
-
-            $sqlInsertEndereco = "INSERT INTO siscontrat.pj_enderecos (pessoa_juridica_id, logradouro, numero, complemento, bairro, cidade, uf, cep)
-                                  SELECT $idProponentePj, logradouro, numero, complemento, bairro, cidade, uf, cep FROM capac_new.pj_enderecos WHERE pessoa_juridica_id = '$idProponenteCpc'";
-            $conSis->query($sqlInsertEndereco);
-
-            $telefones = $conCpc->query("SELECT telefone FROM capac_new.pj_telefones WHERE pessoa_juridica_id = '$idProponenteCpc'")->fetch_all(MYSQLI_ASSOC);
-            foreach ($telefones as $telefone) {
-                $sqlInsertTelefone = "INSERT INTO siscontrat.pj_telefones (pessoa_juridica_id, telefone) VALUES ($idProponentePj, '{$telefone['telefone']}')";
-                $conSis->query($sqlInsertTelefone);
+            if (mysqli_query($conSis, $sqlUpdateProponente)) {
+                $idProponentePj = "'" . $idProponenteSis . "'";
             }
         }
     }
