@@ -46,6 +46,8 @@ $link_facc_pj = $http . "rlt_fac_pj.php";
 
 $idPedido = $_POST['idPedido'];
 
+$idEvento = $_SESSION['idEvento'];
+
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 
 if ($pedido['pessoa_tipo_id'] == 1) {
