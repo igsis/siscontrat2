@@ -402,9 +402,10 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                 </div>
             </div>
             <div class="box-footer">
-                <a href="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos">
+                <form action="?perfil=contrato&p=filtrar_contratos&sp=resumo" method="post">
+                    <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                     <button type="submit" class="btn btn-default">Voltar</button>
-                </a>
+                </form>
             </div>
         </div>
     </section>
