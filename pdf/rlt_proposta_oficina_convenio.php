@@ -58,6 +58,18 @@ if($carga['carga_horaria'] != 0 || $carga['carga_horaria'] != NULL){
     $cargaHoraria = "Não possuí.";
 }
 
+if($drt['drt'] != "" || $drt['drt'] != NULL){
+    $drt = $drt['drt'];
+}else{
+    $drt =  "Não Cadastrado.";
+}
+
+if($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL){
+    $ccm = $pessoa['ccm'];
+}else{
+    $ccm = "Não Cadastrado.";
+}
+
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$idPedido.doc");
 ?>
@@ -73,8 +85,8 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
 <p><strong>Nacionalidade:</strong> <?= $nacionalidade['nacionalidade'] ?></p>
 <p><strong>RG:</strong> <?= $pessoa['rg'] ?></p>
 <p><strong>CPF:</strong> <?= $pessoa['cpf'] ?></p>
-<p><strong>CCM:</strong> <?= $pessoa['ccm'] ?></p>
-<p><strong>DRT:</strong> <?= $drt['drt'] ?></p>
+<p><strong>CCM:</strong> <?= $ccm ?></p>
+<p><strong>DRT:</strong> <?= $drt ?></p>
 <p>
     <strong>Endereço:</strong> <?= $endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " . $endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf'] ?>
 </p>
