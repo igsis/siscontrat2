@@ -62,6 +62,18 @@ $penalidades = $con->query($sqlPenalidade)->fetch_array();
 
 $sqlDRT = "SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf";
 $drt = $con->query($sqlDRT)->fetch_array();
+if($drt['drt'] != "" || $drt['drt'] != NULL){
+    $drt = $drt['drt'];
+}else{
+    $drt =  "Não Cadastrado.";
+}
+
+if($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL){
+    $ccm = $pessoa['ccm'];
+}else{
+    $ccm = "Não Cadastrado.";
+}
+
 
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
@@ -132,7 +144,7 @@ $pdf->Cell(45, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(9, $l, utf8_decode("DRT:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(5, $l, utf8_decode($drt['drt']), 0, 0, 'L');
+$pdf->Cell(5, $l, utf8_decode($drt), 0, 0, 'L');
 
 $pdf->Ln(7);
 
@@ -148,7 +160,7 @@ $pdf->Cell(30, $l, utf8_decode($nacionalidade['nacionalidade']),0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, "CCM:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(30, $l, utf8_decode($pessoa['ccm']),0 ,0, 'L');
+$pdf->Cell(30, $l, utf8_decode($ccm),0 ,0, 'L');
 
 $pdf->Ln(7);
 

@@ -107,7 +107,7 @@ if ($pedido['numero_processo_mae'] != NULL) {
         "<p><strong>Data / Período:</strong> " . retornaPeriodoNovo($idEvento,'ocorrencias') . ", totalizando " .  $atracao['quantidade_apresentacao'] . " apresentações conforme proposta/cronograma.</p>" .
         "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
         "<p align='justify'><strong>Local:</strong> " . $local . "</p>" .
-        "<p><strong>Valor: </strong> R$ " . $pedido['valor_total'] . " ( ". valorPorExtenso($pedido['valor_total']) . " )"  . "</p>" .
+        "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . " ( ". valorPorExtenso($pedido['valor_total']) . " )"  . "</p>" .
         "<p align='justify'><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
         "<p align='justify'><strong>Justificativa: </strong> " . $pedido['justificativa'] . "</p>" .
         "<p align='justify'>Nos termos do art. 6º do decreto 54.873/2014, fica designado como fiscal desta contratação artística o(a) servidor(a) " . $fiscal['nome_completo'] . ", RF " . $fiscal['rf_rg'] . " e, como substituto, " . $suplente['nome_completo'] . ", RF " . $suplente['rf_rg'] . ". Diante do exposto, solicitamos autorização para prosseguimento do presente." . "</p>";

@@ -49,7 +49,7 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
 
                             <div class="form-group col-md-2">
                                 <label for="anoProducao">Ano de produção: *</label>
-                                <input type="number" class="form-control" id="anoProducao" name="anoProducao" placeholder="Ex: 1995" maxlength="4" required>
+                                <input type="number" class="form-control" id="anoProducao" name="anoProducao" placeholder="Ex: 1995" min="0" maxlength="4" required>
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="genero">Gênero:</label>
@@ -78,7 +78,7 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="duracao">Duração (em minutos):</label>
-                                <input type="number" class="form-control" name="duracao" id="duracao">
+                                <input type="number" class="form-control" name="duracao" min="0" id="duracao">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="classidicacaoIndicativa">Classificação indicativa: *</label>

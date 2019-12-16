@@ -18,12 +18,14 @@ $nivelUsuario = recuperaDados('usuario_contratos', 'usuario_id', $idUsuarioDoMen
                         </a></li>
                     <?php
                 }
+            }
+            ?>
+            <li><a href="<?= $pasta ?>filtrar_contratos&sp=pesquisa_contratos"><i class="fa fa-circle-o"></i>
+                    <span>Filtrar Contratos</span></a>
+            </li>
+            <?php
+            if ($nivelUsuario != null) {
                 ?>
-
-                <li><a href="<?= $pasta ?>filtrar_contratos&sp=pesquisa_contratos"><i class="fa fa-circle-o"></i>
-                        <span>Filtrar Contratos</span></a>
-                </li>
-
                 <?php
                 if ($nivelUsuario == 1 || $nivelUsuario == 2) {
                     ?>
