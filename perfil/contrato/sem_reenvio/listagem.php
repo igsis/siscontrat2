@@ -6,7 +6,14 @@ $sql = "SELECT e.id, e.protocolo, e.nome_evento,  er.data_reabertura, e.usuario_
         INNER JOIN evento_envios ee ON e.id = ee.evento_id 
         INNER JOIN evento_reaberturas er on e.id = er.evento_id
         INNER JOIN pedidos p ON p.origem_id = e.id
-        WHERE er.data_reabertura > ee.data_envio and e.publicado = 1 AND p.origem_tipo_id = 1";
+        WHERE er.data_reabertura > ee.data_envio 
+        AND e.publicado = 1 
+        AND p.publicado = 1
+        AND p.origem_tipo_id = 1
+        AND e.evento_status_id != 1 
+        AND p.status_pedido_id != 3";
+
+
 $query = mysqli_query($con, $sql);
 $rows = mysqli_num_rows($query);
 
