@@ -3,9 +3,6 @@
 $con = bancoMysqli();
 isset($_POST['idFormacao']);
 $idFormacao = $_POST['idFormacao'];
-//$dotacao = $_POST['dotacao'];
-//$finalizacao = $_POST['finalizar'];
-//$amparo = $_POST['amparo'];
 
 if ($idFormacao == $idFormacao) {
     if (isset($_POST['finalizar'])) {
@@ -25,45 +22,45 @@ $sql = "SELECT p.numero_processo,
             p.valor_total,
             p.data_kit_pagamento,
             p.origem_id,
-            fc.data_envio,
-            fc.protocolo,
-            fc.observacao,
             pf.nome,
             pf.email,
-            fs.status,
-            fc.id,
             ci.classificacao_indicativa,
-            pt.pessoa,
             l.linguagem,
+            fc.protocolo,
+            fc.observacao,
             pro.programa,
             pro.edital,
-            pag.nota_empenho,
+            fc.observacao,
             pag.emissao_nota_empenho,
-            pag.entrega_nota_empenho
+            pag.entrega_nota_empenho,
+            fs.status
             
 
         FROM pedidos as p
-        INNER JOIN pagamentos pag on p.id = pag.pedido_id
-        INNER JOIN formacao_status fs on p.status_pedido_id = fs.id 
         INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
-        INNER JOIN pessoa_tipos pt on pt.id = p.pessoa_tipo_id
-        INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id
-        INNER JOIN programas pro on pro.id = fc.programa_id
-        INNER JOIN linguagens l on l.id = fc.linguagem_id
-        INNER JOIN classificacao_indicativas ci on ci.id = fc.classificacao
-        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 AND p.id = $idFormacao";
+        INNER JOIN formacao_contratacoes fc on p.id = fc.pedido_id
+        INNER JOIN classificacao_indicativas ci on fc.classificacao = ci.id
+        INNER JOIN linguagens l on fc.linguagem_id = l.id
+        INNER JOIN programas pro on fc.programa_id = pro.id
+        INNER JOIN pagamentos pag on pag.pedido_id = p.id
+        INNER JOIN formacao_status fs on fs.id = fc.form_status_id
+        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND p.id = $idFormacao";
 $query = $con->query($sql)->fetch_assoc();
+
 $usuarios = recuperaDados('usuarios', 'id', $idFormacao);
 
 // fiscal , suplente //
 $suplente = recuperaDados('usuarios', 'id', $idFormacao);
 
-// pegando locais //
+//  local //
 $sqlLocal = "SELECT l.local FROM formacao_locais fl 
 INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFormacao'";
-
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
+
+// pegando a vigencia
+$f = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
+$idVigencia = $f['form_vigencia_id'];
 
 
 // pegando telefone de pf_telefones //
@@ -76,18 +73,16 @@ $queryTelefone = mysqli_query($con, $sqlTelefone);
 while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
     $tel = $tel . $linhaTel['telefone'] . ' | ';
 }
-
 $tel = substr($tel, 0, -3);
+////
 
-// retorna o data formação //
-$fc = recuperaDados('formacao_contratacoes', 'id', $query['origem_id']);
-$periodo = retornaPeriodoFormacao($fc['form_vigencia_id']);
+
 
 // recuperando horario //
 $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
 
 // dotacao //
-$dotacao = recuperaDados('juridicos','id',$idFormacao);
+//$dotacao = recuperaDados('juridicos','id',$idFormacao);
 ?>
 
 
@@ -105,7 +100,7 @@ $dotacao = recuperaDados('juridicos','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Enviado em:</th>
-                        <td><?= $query['data_envio'] ?></td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th></th>
@@ -190,7 +185,7 @@ $dotacao = recuperaDados('juridicos','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Data</th>
-                        <td><?=  $periodo ?></td>
+                        <td><?= retornaPeriodoFormacao($idVigencia) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
@@ -228,10 +223,6 @@ $dotacao = recuperaDados('juridicos','id',$idFormacao);
                     <tr>
                         <th width="30%">Número do processo:</th>
                         <td><?= $query['numero_processo'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Tipo de pessoa</th>
-                        <td><?= $query['pessoa'] ?></td>
                     </tr>
                     <tr>
                     </tr>
@@ -274,7 +265,7 @@ $dotacao = recuperaDados('juridicos','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
-                        <td><?= $dotacao ['dotacao'] ?></td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>

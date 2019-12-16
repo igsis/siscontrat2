@@ -57,7 +57,7 @@ $queryLocal = mysqli_query($con, $sqlLocal);
         <div class="page-header">
             <h2 class="page-title">Jurídico</h2>
         </div>
-        <form action="?perfil=juridico&p=tipo_modelo&sp=dados_modelo" role="form" method="post">
+        <form action="?perfil=juridico&p=filtrar_formacao&sp=modelo_final_formacao" role="form" method="post">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Detalhes da formação selecionada</h3>
@@ -118,11 +118,11 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                     <div class="pull-left">
                         <?php // ADICIONAR ANCORA PARA VOLTAR ?>
                     </div>
+                    <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
                     <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left">Gravar
                     </button>
         </form>
         <form action="?perfil=juridico&p=filtrar_formacao&sp=detalhe_formacao" method="post">
-            <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
             <button type="submit" class="btn btn-info pull-right">Detalhes Formação
 
             </button>

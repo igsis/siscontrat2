@@ -3,10 +3,10 @@ $con = bancoMysqli();
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 $http = $server . "/pdf/";
 
-$link_padraoEvento = $http . "padrao_evento.php";
-$link_vocacionalEvento = $http . "vocacional_evento.php";
-$link_manifestacaojuridicaEvento = $http . "manifestacao_evento.php";
-$link_oficinaEvento = $http . "oficina_evento.php";
+$link_padraoEvento = $http . "evento_padrao_evento.php";
+$link_vocacionalEvento = $http . "evento_vocacional_evento.php";
+$link_manifestacaojuridicaEvento = $http . "evento_manifestacao_evento.php";
+$link_oficinaEvento = $http . "evento_oficina_evento.php";
 
 $amparo = $_POST['amparo'];
 $idEvento = $_SESSION['eventoId'];
