@@ -87,7 +87,7 @@ $query = mysqli_query($con, $sql);
                                 if ($evento['usuario_id'] == $idUser)
                                     $vinculo = 'Usuário';
                                 else if ($evento['fiscal_id'] == $idUser)
-                                    $vinculo = 'Físcal';
+                                    $vinculo = 'Fiscal';
                                 else
                                     $vinculo = 'Suplente';
 
