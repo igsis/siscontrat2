@@ -144,13 +144,8 @@ while ($aux = mysqli_fetch_array($cronograma)) {
         $filme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
         $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
         $acao = $tipoAcao['acao'];
-        if ($filme['duracao'] != NULL || $filme['duracao'] != "") {
-            $duracao = $filme['duracao'] . " Hora(s).";
-        } else {
-            $duracao = "Não se aplica.";
-        }
         $labelFilme = "<p><strong> Título: </strong>" . $filme['titulo'] . "</p>" .
-            "<p><strong>Duração: </strong>" . $filme['duracao'] . "</p>";
+            "<p><strong>Duração: </strong>" . $filme['duracao'] . " Hora(s)" . "</p>";
     } else {
         $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
         $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'])->fetch_array();
