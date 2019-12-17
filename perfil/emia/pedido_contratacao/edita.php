@@ -325,18 +325,17 @@ $link_proposta = $http . "rlt_proposta_emia.php";
                     </div>
 
                     <input type="hidden" name="idEc" value="<?= $idPedido ?>" id="idEc">
-
-                    <div class="col-md-1">
-                        <a href="<?= $link_proposta ?>" target="_blank">
-                            <button type="button" class="btn btn-primary center-block">Gerar Proposta</button>
-                        </a>
-                    </div>
-
-                    <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
-                        Salvar
-                    </button>
-                </div>
             </form>
+            <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
+                Salvar
+            </button>
+            <div class="col-md-1">
+                <form action="<?= $link_proposta ?>" target="_blank" method="post">
+                    <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                    <button type="submit" class="btn btn-primary center-block">Gerar Proposta</button>
+                </form>
+            </div>
         </div>
-    </section>
+</div>
+</section>
 </div>

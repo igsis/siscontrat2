@@ -72,12 +72,12 @@ switch ($pedido['pessoa_tipo_id']) {
 
     case 2:
         $tipo = "Pessoa Jurídica";
-        $proponente = recuperaDados('pessoa_juridica', 'id', $pedido['pessoa_juridica_id']);
+        $proponente = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
         $endereco = recuperaDados('pj_enderecos', 'pessoa_juridica_id', $pedido['pessoa_juridica_id']);
         $pjBancos = recuperaDados('pj_bancos', 'pessoa_juridica_id', $pedido['pessoa_juridica_id']);
         $banco = recuperaDados('bancos', 'id', $pjBancos['banco_id'])['banco'];
-        $idRepresentante1 = $pedido['representante_legal1_id'] ?? "";
-        $idRepresentante2 = $pedido['representante_legal2_id'] ?? "";
+        $idRepresentante1 = $proponente['representante_legal1_id'] ?? "";
+        $idRepresentante2 = $proponente['representante_legal2_id'] ?? "";
         $representante1 = recuperaDados('representante_legais', 'id', $idRepresentante1);
         $representante2 = recuperaDados('representante_legais', 'id', $idRepresentante2);
 
@@ -254,7 +254,7 @@ $parcelado = false;
         </div>
         <div class="box-header with-border">
             <h3 class="box-title">
-               Dados Bancarios</h3>
+               Dados Bancários</h3>
         </div>
         <div class="box-body">
             <div class="table-responsive">

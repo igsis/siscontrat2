@@ -16,7 +16,7 @@ if (isset($_POST['cadastra'])) {
 
     if (mysqli_query($con, $sql)) {
         $mensagem = mensagem("success", 'Pagamento cadastrado com sucesso!');
-    }else{
+    } else {
         $mensagem = mensagem("danger", 'Ocorreu um erro ao cadastrar o pagamento! Tente novamente.');
     }
 }
@@ -41,8 +41,7 @@ $link = $http . "rlt_ne_formacao.php";
                     <div class="box-header with-border">
                         <h3 class="box-title">Notas de empenho</h3>
                     </div>
-                    <form method="POST" action="?perfil=formacao&p=pagamento&sp=resultado"
-                          role="form">
+                    <form>
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -67,16 +66,23 @@ $link = $http . "rlt_ne_formacao.php";
                             </div>
                         </div>
                         <div class="box-footer">
-                            <a href="?perfil=formacao&p=pagamento&sp=index">
-                                <button type="button" class="btn btn-default">Voltar</button>
-                            </a>
-                            <a href="<?=$link?>" target="_blank" type="button">
-                                <button type="button" class="btn btn-success pull-right">Gerar Recibo</button>
-                            </a>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a href="?perfil=formacao&p=pagamento&sp=index">
+                                        <button type="button" class="btn btn-default">Voltar</button>
+                                    </a>
+                                </div>
+                    </form>
+                    <form action="<?= $link ?>" target="_blank" method="post">
+                        <div class="col-md-6">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <button type="submit" class="btn btn-success pull-right">Gerar Recibo</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </section>
+</div>
+</div>
+</section>
 </div>

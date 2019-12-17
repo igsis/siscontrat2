@@ -160,8 +160,8 @@ $queryDados = mysqli_query($con,$sqlDados);
                                     <th> Programa </th>
                                     <th> Linguagem </th>
                                     <th> Cargo </th>
-                                    <th> Visualizar </th>
-                                    <th> Editar </th>
+                                    <th width="5%"> Visualizar </th>
+                                    <th width="5%"> Editar </th>
                                 </tr>
                             </tfoot>
                     </table>

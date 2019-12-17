@@ -49,11 +49,19 @@ if (isset($_POST['busca'])) {
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
+    INNER JOIN evento_envios ee ON e.id = ee.evento_id 
+    LEFT JOIN evento_reaberturas er on e.id = er.evento_id
     WHERE e.publicado = 1 
     AND e.evento_status_id != 1 
+    AND p.status_pedido_id != 3
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1 
     AND p.operador_id IS NULL
+    AND (
+      (er.data_reabertura < ee.data_envio) 
+    OR 
+      (er.data_reabertura is null)
+    )
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso";
 

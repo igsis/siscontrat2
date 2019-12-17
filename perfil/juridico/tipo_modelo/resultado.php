@@ -3,8 +3,6 @@ $con = bancoMysqli();
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 $http = $server . "/pdf/";
 
-$link_padraoEvento = $http . "padrao_evento.php";
-$link_piaEvento = $http . "pia.evento.php";
 
 $idEvento = $_SESSION['eventoId'];
 
@@ -15,6 +13,8 @@ if (isset($_POST['tipoModelo'])) {
 
 $sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
 $mdl = $con->query($sqlModelo)->fetch_assoc();
+
+
 $usuarios = recuperaDados('usuarios','id',$idEvento);
 $fiscal= $usuarios["nome_completo"];
 $suplente= $usuarios["nome_completo"];

@@ -88,8 +88,8 @@ if (isset($_POST['salvar'])) {
 
     for ($i = 0; $i < count($idAtracao); $i++) { // altera de uma ou de todas as atracoes (nome da atracao e integrantes)
         $baldeId = $idAtracao[$i];
-        $baldeNome = $nome_atracao[$i];
-        $baldeIntegrantes = $integrantes[$i];
+        $baldeNome = addslashes($nome_atracao[$i]);
+        $baldeIntegrantes = addslashes($integrantes[$i]);
 
         $sql = "UPDATE atracoes SET 
                     nome_atracao = '$baldeNome', 
@@ -100,22 +100,25 @@ if (isset($_POST['salvar'])) {
     }
 
     //pedidos
-    $formaPagamento = $_POST['formaPagamento'];
+    $formaPagamento = addslashes($_POST['formaPagamento']);
     $verba = $_POST['verba'];
     $processoMae = $_POST['processoMae'];
     $processo = $_POST['processo'];
-    $justificativa = $_POST['justificativa'];
-    $operador = $_POST['operador'];
+    $justificativa = addslashes($_POST['justificativa']);
+    $operador = $_POST['operador'] ?? NULL;
 
     //eventos
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'] ?? null;
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', operador_id = '$operador' WHERE id = '$idPedido'";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido'";
 
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
+        if($operador != NULL){
+            $trocaOp = $con->query("UPDATE pedidos SET operador_id = '$operador' WHERE id = $idPedido");
+        }
         gravarLog($sqlEvento);
         gravarLog($sqlPedido);
         $mensagem = mensagem("success", "Atualizações salvas com sucesso!");
@@ -295,6 +298,18 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                         <button type="submit" class="btn btn-default pull-left">Ir para a área de impressão</button>
                     </form>
                 </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-12" style="text-align:center">
+                        <form action="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos"
+                              method="post">
+                            <button type="submit" class="btn btn-info" name="reabertura" style="width: 35%;"
+                                    id="reabertura">
+                                Reabertura
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 </div>
@@ -343,7 +358,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
-                                            WHERE evento_id = '$idEvento'";
+                                            WHERE evento_id = '$idEvento' AND a.publicado = 1";
     $query_atracao = mysqli_query($con, $sql_atracao);
     ?>
     <div class="box box-danger">

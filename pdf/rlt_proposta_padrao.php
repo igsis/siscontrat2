@@ -7,7 +7,6 @@ require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
-session_start();
 
 class PDF extends FPDF
 {
@@ -24,7 +23,7 @@ class PDF extends FPDF
     }
 }
 
-$idPedido = $_SESSION['idPedido'];
+$idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPf = $pedido['pessoa_fisica_id'];
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
@@ -63,22 +62,37 @@ $penalidades = $con->query($sqlPenalidade)->fetch_array();
 
 $sqlDRT = "SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf";
 $drt = $con->query($sqlDRT)->fetch_array();
+if($drt['drt'] != "" || $drt['drt'] != NULL){
+    $drt = $drt['drt'];
+}else{
+    $drt =  "Não Cadastrado.";
+}
+
+if($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL){
+    $ccm = $pessoa['ccm'];
+}else{
+    $ccm = "Não Cadastrado.";
+}
+
 
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 
-$idAtracao = $_SESSION['idAtracao'];
+$idAtracao = $ocorrencia['atracao_id'];
 
 $atracao = recuperaDados('atracoes', 'id', $idAtracao);
 
-$sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
-$carga = $con->query($sqlCarga)->fetch_array();
+$idAtracao = $ocorrencia['atracao_id'];
+$sqlCheca = $con->query("SELECT * FROM acao_atracao WHERE atracao_id = '$idAtracao' AND acao_id = 8");
+$checa = mysqli_num_rows($sqlCheca);
 
-if($carga['carga_horaria'] != 0 || $carga['carga_horaria'] != NULL){
-    $cargaHoraria =  $carga['carga_horaria'] . " hora(s)";
-}else{
-    $cargaHoraria = "Não possuí.";
+if ($checa != 0) {
+    $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
+    $carga = $con->query($sqlCarga)->fetch_array();
+    $carga = $carga['carga_horaria'];
+} else if ($checa == 0) {
+    $carga = "Não se aplica.";
 }
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
@@ -130,7 +144,7 @@ $pdf->Cell(45, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(9, $l, utf8_decode("DRT:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(5, $l, utf8_decode($drt['drt']), 0, 0, 'L');
+$pdf->Cell(5, $l, utf8_decode($drt), 0, 0, 'L');
 
 $pdf->Ln(7);
 
@@ -146,7 +160,7 @@ $pdf->Cell(30, $l, utf8_decode($nacionalidade['nacionalidade']),0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, "CCM:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(30, $l, utf8_decode($pessoa['ccm']),0 ,0, 'L');
+$pdf->Cell(30, $l, utf8_decode($ccm),0 ,0, 'L');
 
 $pdf->Ln(7);
 
@@ -207,7 +221,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(26, $l, utf8_decode('Carga Horária:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(50, $l, utf8_decode($cargaHoraria), 0, 'L', 0);
+$pdf->MultiCell(50, $l, utf8_decode($carga), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);

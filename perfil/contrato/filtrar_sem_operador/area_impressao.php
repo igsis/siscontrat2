@@ -4,13 +4,9 @@ $con = bancoMysqli();
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
 
-$link_pcf = $http . "impressao_pedido_formacao.php";
-
 $linkpf_pc = $http . "impressao_pedido_pf.php";
 
 $linkpj_pc = $http . "impressao_pedido_pj.php";
-
-$link_vocacional = $http . "rlt_proposta_formacao.php";
 
 $linkpf_edital = $http . "exporta_proposta_edital_pf_word.php";
 
@@ -50,6 +46,8 @@ $link_facc_pj = $http . "rlt_fac_pj.php";
 
 $idPedido = $_POST['idPedido'];
 
+$idEvento = $_SESSION['idEvento'];
+
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 
 if ($pedido['pessoa_tipo_id'] == 1) {
@@ -88,26 +86,15 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </nav>
                     </div>
                     <div class="row">
-                        <?php
-                        if ($pedido['origem_tipo_id'] == 2) { ?>
-                            <div class="col-md-12">
-                                <form href="<?= $link_pcf ?>" target="_blank" method="post">
-                                    <button type="submit" class="btn btn-outline-info center-block">
-                                        Pedido de Contratação - Formação
-                                    </button>
-                                </form>
-                                <hr/>
-                            </div>
-                        <?php } else { ?>
-                            <div class="col-md-12">
-                                <form href="<?= $link_pc ?>" target="_blank" method="post">
-                                    <button type="submit" class="btn btn-outline-info center-block">
-                                        Pedido de Contratação
-                                    </button>
-                                </form>
-                                <hr/>
-                            </div>
-                        <?php } ?>
+                        <div class="col-md-12">
+                            <form action="<?= $link_pc ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-outline-primary center-block">
+                                    Pedido de Contratação
+                                </button>
+                            </form>
+                            <hr/>
+                        </div>
                     </div>
                 </div>
 
@@ -118,278 +105,311 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </nav>
                     </div>
                     <?php
-                    if ($pedido['origem_tipo_id'] == 2){ ?>
-                    <div class="col-md-6">
-                        <form href="<?= $link_vocacional ?>" target="_blank" method="post">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Vocacional
-                            </button>
-                        </form>
-                        <hr/>
-                        <?php } else{
-                        ?>
+                    if ($pedido['pessoa_tipo_id'] == 2) { ?>
                         <div class="col-md-6">
-                            <form href="<?= $link_proposta_padrao ?>" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Vocacional
-                                </button>
-                            </form>
-                            <hr/>
-                            <?php } ?>
-
-                            <form href="<?= $link_edital ?>" target="_blank" method="post">
+                            <form action="<?= $link_edital ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Editais
                                 </button>
                             </form>
                             <hr/>
 
-                            <form href="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-outline-info center-block">
+                                    Contratações gerais - Com cachê
+                                </button>
+                            </form>
+                            <hr/>
+                        </div>
+                        <div class="col-md-6">
+                            <form action="<?= $link_reversao ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-outline-info center-block">
+                                    Contratações gerais - Reversão de Bilheteria
+                                </button>
+                            </form>
+                            <hr/>
+                        </div>
+                    <?php } else if ($pedido['pessoa_tipo_id'] == 1) {
+                        ?>
+                        <div class="col-md-6">
+                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-outline-info center-block">
+                                    Vocacional
+                                </button>
+                            </form>
+                            <hr/>
+
+                            <form action="<?= $link_edital ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-outline-info center-block">
+                                    Editais
+                                </button>
+                            </form>
+                            <hr/>
+
+                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Contratações gerais - Com cachê
                                 </button>
                             </form>
                             <hr/>
 
-                            <form href="<?= $link_proposta_convenio ?>" target="_blank" method="post">
+                            <form action="<?= $link_proposta_convenio ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Proposta Oficinas / Convênio MINC
                                 </button>
                             </form>
                             <hr/>
                         </div>
-                        <?php
-                        if ($pedido['origem_tipo_id'] == 2){ ?>
+
+
                         <div class="col-md-6">
-                            <form href="<?= $link_vocacional ?>" target="_blank" method="post">
+                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     PIÁ
                                 </button>
                             </form>
                             <hr/>
-                            <?php } else{
-                            ?>
-                            <div class="col-md-6">
-                                <form href="<?= $link_proposta_padrao ?>" target="_blank" method="post">
-                                    <button type="submit" class="btn btn-outline-info center-block">
-                                        PIÁ
-                                    </button>
-                                </form>
-                                <hr/>
-                                <?php }
 
-                                if ($pedido['origem_tipo_id'] == 3) {
-                                    ?>
-                                    <form href="<?= $link_emia ?>" target="_blank" method="post">
-                                        <button type="submit" class="btn btn-outline-info center-block">
-                                            EMIA
-                                        </button>
-                                    </form>
-                                    <hr/>
-                                <?php } ?>
-
-                                <form href="<?= $link_reversao ?>" target="_blank" method="post">
-                                    <button type="submit" class="btn btn-outline-info center-block">
-                                        Contratações gerais - Reversão de Bilheteria
-                                    </button>
-                                </form>
-                                <hr/>
-                            </div>
+                            <form action="<?= $link_reversao ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-outline-info center-block">
+                                    Contratações gerais - Reversão de Bilheteria
+                                </button>
+                            </form>
+                            <hr/>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <nav class="navbar navbar-static-top bg-light-blue-active">
-                                    <h4 align="center">DECLARAÇÃO</h4>
-                                </nav>
-                            </div>
+                    <?php }
+                    if ($pedido['origem_tipo_id'] == 3) {
+                        ?>
+                        <form action="<?= $link_emia ?>" target="_blank" method="post">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <button type="submit" class="btn btn-outline-info center-block">
+                                EMIA
+                            </button>
+                        </form>
+                        <hr/>
+                    <?php } ?>
+                </div>
 
-                            <div class="col-md-6">
-                                <form href="<?= $link_direitos ?>" target="_blank" method="post">
-                                    <button type="submit" class="btn btn-outline-info center-block">
-                                        Direitos Conexos
-                                    </button>
-                                </form>
-                                <hr/>
-
-                                <form href="<?= $link_convenio ?>" target="_blank" method="post">
-                                    <button type="submit" class="btn btn-outline-info center-block">
-                                        Convênio 500
-                                    </button>
-                                </form>
-                                <hr/>
-                            </div>
-
-                            <div class="col-md-6">
-                                <form href="<?= $link_exclusividade ?>" target="_blank" method="post">
-                                    <button type="submit" class="btn btn-outline-info center-block">
-                                        Exclusividade
-                                    </button>
-                                </form>
-                                <hr/>
-
-                                <form href="<?= $link_condicionamento ?>" target="_blank" method="post">
-                                    <button type="submit" class="btn btn-outline-info center-block">
-                                        Condicionamento
-                                    </button>
-                                </form>
-                                <hr/>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <nav class="navbar navbar-static-top bg-light-blue-active">
-                                    <h4 align="center">OUTROS</h4>
-                                </nav>
-                            </div>
-
-                            <div class="col-md-6">
-                                <form href="<?= $link_facc . "?id=" . $idPessoa ?>" target="_blank" method="post">
-                                    <button type="submit" class="btn btn-outline-info center-block">
-                                        FACC
-                                    </button>
-                                </form>
-                                <hr/>
-                            </div>
-
-                            <div class="col-md-6">
-                                <form href="#" type="submit" target="_blank" method="post">
-                                    <button type="submit" class="btn btn-outline-info center-block">
-                                        Parecer da Comissão
-                                    </button>
-                                </form>
-                                <hr/>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <form href="#" target="_blank" method="post">
-                                    <button type="submit" class="btn btn-outline-info center-block">
-                                        NORMAS INTERNAS - Teatros Municipais
-                                    </button>
-                                </form>
-                                <hr/>
-                            </div>
-                        </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <nav class="navbar navbar-static-top bg-light-blue-active">
+                            <h4 align="center">DECLARAÇÃO</h4>
+                        </nav>
                     </div>
+                    <?php
+                    if ($pedido['pessoa_tipo_id'] == 1) { ?>
+                        <div class="col-md-6">
+                            <form action="<?= $link_direitos ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-outline-info center-block">
+                                    Direitos Conexos
+                                </button>
+                            </form>
+                            <hr/>
 
-                    <div class="row">
+                            <form action="<?= $link_convenio ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-outline-info center-block">
+                                    Convênio 500
+                                </button>
+                            </form>
+                            <hr/>
+                        </div>
+                        <div class="col-md-6">
+                            <form action="<?= $link_exclusividade ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-outline-info center-block">
+                                    Exclusividade
+                                </button>
+                            </form>
+                            <hr/>
+
+                        </div>
+                    <?php } else if ($pedido['pessoa_tipo_id'] == 2) { ?>
                         <div class="col-md-12">
-                            <nav class="navbar navbar-static-top bg-light-blue-active">
-                                <h4 align="center">PEDIDO DE RESERVA</h4>
-                            </nav>
+                            <form action="<?= $link_exclusividade ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-outline-info center-block">
+                                    Exclusividade
+                                </button>
+                            </form>
+                            <hr/>
                         </div>
-
                         <div class="col-md-6">
-                            <form href="#" target="_blank" method="post">
+                            <form action="<?= $link_convenio ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
-                                    FORMAÇÃO - Vocacional
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    VOCACIONAL/PIÁ - SME
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva CSMB
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva CCSP
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Oficina
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva Gabinete
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva DPH
+                                    Convênio 500
                                 </button>
                             </form>
                             <hr/>
                         </div>
+                    <?php } ?>
+                    <form action="<?= $link_condicionamento ?>" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Condicionamento
+                        </button>
+                    </form>
+                    <hr/>
+                </div>
 
-                        <div class="col-md-6">
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    FORMAÇÃO - PIÁ
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva Centros Culturais
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva Casas de Cultura
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva BMA
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva Oficinas CSMB e BMA
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva Global
-                                </button>
-                            </form>
-                            <hr/>
-
-                            <form href="#" target="_blank" method="post">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva DPH - Jornada do Patrimônio
-                                </button>
-                            </form>
-                            <hr/>
-                        </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <nav class="navbar navbar-static-top bg-light-blue-active">
+                            <h4 align="center">OUTROS</h4>
+                        </nav>
                     </div>
-                    <div class="box-footer">
-                        <a href="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos">
-                            <button type="submit" class="btn btn-default">Voltar</button>
-                        </a>
+
+                    <div class="col-md-6">
+                        <form action="<?= $link_facc . "?id=" . $idPessoa ?>" target="_blank" method="post">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <button type="submit" class="btn btn-outline-info center-block">
+                                FACC
+                            </button>
+                        </form>
+                        <hr/>
+                    </div>
+
+                    <div class="col-md-6">
+                        <form action="#" type="submit" target="_blank" method="post">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <button type="submit" class="btn btn-outline-info center-block">
+                                Parecer da Comissão
+                            </button>
+                        </form>
+                        <hr/>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" target="_blank" method="post">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <button type="submit" class="btn btn-outline-info center-block">
+                                NORMAS INTERNAS - Teatros Municipais
+                            </button>
+                        </form>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <nav class="navbar navbar-static-top bg-light-blue-active">
+                        <h4 align="center">PEDIDO DE RESERVA</h4>
+                    </nav>
+                </div>
+
+                <div class="col-md-6">
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva CSMB
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva CCSP
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Oficina
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Gabinete
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva DPH
+                        </button>
+                    </form>
+                    <hr/>
+                </div>
+
+                <div class="col-md-6">
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Centros Culturais
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Casas de Cultura
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva BMA
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Oficinas CSMB e BMA
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Global
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva DPH - Jornada do Patrimônio
+                        </button>
+                    </form>
+                    <hr/>
+                </div>
+            </div>
+            <div class="box-footer">
+                <form action="?perfil=contrato&p=filtrar_sem_operador&sp=resumo" method="post">
+                    <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
+                    <button type="submit" class="btn btn-default">Voltar</button>
+                </form>
+            </div>
+        </div>
     </section>
 </div>
 

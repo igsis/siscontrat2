@@ -131,7 +131,7 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>
                                                 <form method='POST' action='?perfil=gestao_prazo&p=detalhes_gestao' role='form'>
                                                 <input type='hidden' name='idEvento' value='" . $eventos['id'] . "'>
-                                                <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span> </button>
+                                                <button type='submit' name='carregar' class='btn btn-block btn-primary'><i class='fa fa-file-text-o'></i> </button>
                                                 </form>
                                         </td>";
                             }

@@ -84,7 +84,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Produtor</th>
                                 <th>Especificidade</th>
                                 <th>Ocorrência</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Apagar</th>
 
                             </tr>
@@ -252,7 +252,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Produtor</th>
                                 <th>Especificidade</th>
                                 <th>Ocorrência</th>
-                                <th>Visualizar</th>
+                                <th>Editar</th>
                                 <th>Apagar</th>
                             </tr>
                             </tfoot>

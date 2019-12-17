@@ -5,10 +5,10 @@ require_once("../funcoes/funcoesGerais.php");
 
 //CONEXÃO COM BANCO DE DADOS
 $con = bancoMysqli();
-session_start();
+
 
 //CONSULTA
-$idPedido = $_SESSION['idPedido'];
+$idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
@@ -49,15 +49,25 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 $tel = substr($tel, 0, -3);
 
 $idAtracao = $ocorrencia['atracao_id'];
-$sqlCheca = "SELECT oficina FROM atracoes WHERE id = '$idAtracao'";
-$checa = $con->query($sqlCheca)->fetch_array();
+$sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
+$carga = $con->query($sqlCarga)->fetch_array();
 
-if ($checa['oficina'] == 1) {
-    $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
-    $carga = $con->query($sqlCarga)->fetch_array();
-    $carga = $carga['carga_horaria'];
-} else if ($checa['oficina'] == 0) {
-    $carga = "Não se aplica.";
+if($carga['carga_horaria'] != 0 || $carga['carga_horaria'] != NULL){
+    $cargaHoraria =  $carga['carga_horaria'] . " hora(s)";
+}else{
+    $cargaHoraria = "Não possuí.";
+}
+
+if($drt['drt'] != "" || $drt['drt'] != NULL){
+    $drt = $drt['drt'];
+}else{
+    $drt =  "Não Cadastrado.";
+}
+
+if($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL){
+    $ccm = $pessoa['ccm'];
+}else{
+    $ccm = "Não Cadastrado.";
 }
 
 header("Content-type: application/vnd.ms-word");
@@ -75,8 +85,8 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
 <p><strong>Nacionalidade:</strong> <?= $nacionalidade['nacionalidade'] ?></p>
 <p><strong>RG:</strong> <?= $pessoa['rg'] ?></p>
 <p><strong>CPF:</strong> <?= $pessoa['cpf'] ?></p>
-<p><strong>CCM:</strong> <?= $pessoa['ccm'] ?></p>
-<p><strong>DRT:</strong> <?= $drt['drt'] ?></p>
+<p><strong>CCM:</strong> <?= $ccm ?></p>
+<p><strong>DRT:</strong> <?= $drt ?></p>
 <p>
     <strong>Endereço:</strong> <?= $endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " . $endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf'] ?>
 </p>
@@ -93,7 +103,7 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
     Contratação artística de oficinas de dança, teatro, circo, literatura e música para realização em Bibliotecas, Casas
     de Cultura e Centros Culturais da Secretaria Municipal de Cultura.</p>
 <p><strong>Data / Período:</strong> <?= $periodo ?> - conforme cronograma</p>
-<p><strong>Carga Horária:</strong> <?= $carga ?></p>
+<p><strong>Carga Horária:</strong> <?= $cargaHoraria ?></p>
 <p><strong>Local:</strong> <?= $locais['local'] ?></p>
 <p><strong>Valor:</strong> <?= $pedido['valor_total'] ?> (<?= valorPorExtenso($pedido['valor_total']) ?>)</p>
 <p><strong>Forma de Pagamento:</strong> <?= $pedido['forma_pagamento'] ?></p>

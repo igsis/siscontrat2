@@ -1,3 +1,23 @@
+<?php
+if (isset($_POST['reabertura'])) {
+    $con = bancoMysqli();
+    $idEvento = $_SESSION['idEvento'];
+    $now = date('Y-m-d H:i:s', strtotime("-3 Hours"));
+    $idUsuario = $_SESSION['idUser'];
+    $sql = "INSERT INTO evento_reaberturas (evento_id, data_reabertura, usuario_reabertura_id) VALUES ('$idEvento', '$now', '$idUsuario')";
+    $sqlStatus = "UPDATE eventos SET evento_status_id = 1 WHERE id = '$idEvento'";
+
+    if ((mysqli_query($con, $sql)) && (mysqli_query($con, $sqlStatus))) {
+        $mensagem = mensagem("success", "Reabertura do evento realizada com sucesso!");
+        gravarLog($sql);
+    } else {
+        $mensagem = mensagem("danger", "Erro ao efetuar a reabertura do evento! Tente novamente.");
+    }
+}
+
+unset($_SESSION['idEvento']);
+unset($_SESSION['idPedido']);
+?>
 <div class="content-wrapper">
     <section class="content">
         <h2 class="page-header">Contratos</h2>
@@ -53,7 +73,7 @@
                                     <select name="status" id="status" class="form-control">
                                         <option value="0">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao('pedido_status');
+                                        geraOpcao('pedido_status WHERE id != 3 ');
                                         ?>
                                     </select>
                                 </div>

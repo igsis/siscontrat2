@@ -7,11 +7,10 @@ require_once("../funcoes/funcoesGerais.php");
 
 //CONEXÃO COM BANCO DE DADOS
 $con = bancoMysqli();
-session_start();
 
 
 //CONSULTA
-$idPedido = $_SESSION['idPedido'];
+$idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $pessoa = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
@@ -48,14 +47,14 @@ $idRepresentante = $pessoa['representante_legal1_id'];
 $representante = recuperaDados('representante_legais', 'id', $idRepresentante);
 
 $idAtracao = $ocorrencia['atracao_id'];
-$sqlCheca = "SELECT oficina FROM atracoes WHERE id = '$idAtracao'";
-$checa = $con->query($sqlCheca)->fetch_array();
+$sqlCheca = $con ->query("SELECT * FROM acao_atracao WHERE atracao_id = '$idAtracao' AND acao_id = 8");
+$checa = mysqli_num_rows($sqlCheca);
 
-if ($checa['oficina'] == 1) {
+if ($checa != 0) {
     $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
     $carga = $con->query($sqlCarga)->fetch_array();
     $carga = $carga['carga_horaria'];
-} else if ($checa['oficina'] == 0) {
+} else if ($checa == 0) {
     $carga = "Não se aplica.";
 }
 
@@ -124,13 +123,31 @@ echo
 
 $cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id']);
 while ($aux = mysqli_fetch_array($cronograma)) {
-    $tipo = retornaTipo($aux['tipo_ocorrencia_id']);
+    if ($aux['tipo_ocorrencia_id'] == 2) {
+        $testaFilme = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id = $idEvento")->fetch_array();
+        $filme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
+        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
+        $acao = $tipoAcao['acao'];
+        if ($filme['duracao'] != NULL || $filme['duracao'] != "") {
+            $duracao = $filme['duracao'] . " Hora(s).";
+        } else {
+            $duracao = "Não se aplica.";
+        }
+        $labelFilme = "<p><strong> Título: </strong>" . $filme['titulo'] . "</p>" .
+            "<p><strong>Duração: </strong>" . $filme['duracao'] . "</p>";
+    } else {
+        $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
+        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'])->fetch_array();
+        $acao = $tipoAcao['acao'];
+        $labelFilme = "";
+    }
     $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
     $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
     $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'])->fetch_array();
     $lugar = $local['local'];
 
-    echo "<p><strong>Tipo:</strong> " . $tipo . "</p>";
+    echo $labelFilme;
+    echo "<p><strong>Ação:</strong> " . $acao . "</p>";
     echo "<p><strong>Data/Período:</strong> " . $dia . "</p>";
     echo "<p><strong>Horário:</strong> " . $hour . "</p>";
     echo "<p><strong>Local:</strong> " . $lugar . "</p>";
