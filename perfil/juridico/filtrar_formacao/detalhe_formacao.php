@@ -1,6 +1,7 @@
 <?php
 
 $con = bancoMysqli();
+
 isset($_POST['idFormacao']);
 $idFormacao = $_POST['idFormacao'];
 
@@ -9,6 +10,7 @@ if ($idFormacao == $idFormacao) {
         $sqlUptate = "UPDATE juridicos SET pedido_id = $idFormacao, amparo_legal = '$amparo', finalizacao = '$finalizacao', dotacao ='$dotacao'
     WHERE pedido_id = $idFormacao";
         $queryInsert = mysqli_query($con, $sqlUptate);
+        echo $sqlUptate;
     }
 } else {
     $sqlInsert = "INSERT INTO juridicos(pedido_id, amparo_legal, finalizacao, dotacao)
