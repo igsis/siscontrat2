@@ -12,7 +12,7 @@ if (isset($_POST['excluir'])) {
     $evento = $_POST['idEvent'];
     $stmt = $conn->prepare("UPDATE eventos SET publicado = 0 WHERE id = :id");
     $stmt->execute(['id' => $evento]);
-    $mensagem = mensagem("success", "Evento excluido com sucesso!");
+    $mensagem = mensagem("success", "Evento excluído com sucesso!");
 
     $sqlDeletaAtracao = "UPDATE atracoes SET publicado = 0 WHERE evento_id = '$evento'";
     mysqli_query($con, $sqlDeletaAtracao);
