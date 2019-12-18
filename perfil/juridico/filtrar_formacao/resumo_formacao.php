@@ -6,8 +6,9 @@ $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 if (isset($_POST['tipoModelo'])) {
     $modelo = $_POST['tipoModelo'];
 }
-isset($_POST['idFormacao']);
-$idFormacao = $_POST['idFormacao'];
+if(isset($_POST['idFormacao'])){
+    $idFormacao = $_POST['idFormacao'];
+}
 
 
 $sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
@@ -123,8 +124,8 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                     </button>
         </form>
         <form action="?perfil=juridico&p=filtrar_formacao&sp=detalhe_formacao" method="post">
+            <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
             <button type="submit" class="btn btn-info pull-right">Detalhes Formação
-
             </button>
         </form>
 </div>
