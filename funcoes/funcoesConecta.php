@@ -3,8 +3,8 @@
 function bancoMysqli()
 {
 	$servidor = 'localhost';
-	$usuario = 'siscontrat';
-	$senha = 'siscontrat!@#';
+	$usuario = 'root';
+	$senha = '';
 	$banco = 'siscontrat';
 	$con = mysqli_connect($servidor,$usuario,$senha,$banco);
 	mysqli_set_charset($con,"utf8");
@@ -14,8 +14,8 @@ function bancoMysqli()
 function bancoPDO()
 {
 	$host = 'localhost';
-	$user = 'siscontrat';
-	$pass = 'siscontrat!@#';
+	$user = 'root';
+	$pass = '';
 	$db = 'siscontrat';
 	$charset = 'utf8';
 	$dsn = "mysql:host=$host;dbname=$db;charset=$charset;";
@@ -45,8 +45,8 @@ function bancoCapac()
 function bancoMysqliCep()
 {
 	$servidor = 'localhost';
-	$usuario = 'cep';
-	$senha = 'cep!@#';
+	$usuario = 'root';
+	$senha = '';
 	$banco = 'cep';
 	$con = mysqli_connect($servidor,$usuario,$senha,$banco);
 	mysqli_set_charset($con,"utf8");
