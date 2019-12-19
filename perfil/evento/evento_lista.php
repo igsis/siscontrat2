@@ -17,7 +17,7 @@ if (isset($_POST['excluir'])) {
     $sqlDeletaAtracao = "UPDATE atracoes SET publicado = 0 WHERE evento_id = '$evento'";
     mysqli_query($con, $sqlDeletaAtracao);
 
-    $sqlAtracoesDeletadas = "SELECT * FROM atracoes WHERE publicado = 0";
+    $sqlAtracoesDeletadas = "SELECT * FROM atracoes WHERE publicado = 0 AND evento_id = '$evento'";
     $queryAtracoesDeletadas = mysqli_query($con, $sqlAtracoesDeletadas);
 
     while ($atracaoDeletada = mysqli_fetch_array($queryAtracoesDeletadas)) {
