@@ -4,6 +4,8 @@ $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 $http = $server . "/pdf/";
 
 $link_vocacional = $http . "formacao_vocacional.php";
+$link_pia = $http . "formacao_pia.php";
+
 
 isset($_POST['idFormacao']);
 $idFormacao = $_POST['idFormacao'];
@@ -13,14 +15,22 @@ $dotacao = $_POST['dotacao'];
 $finalizacao = $_POST['finalizar'];
 
 
-if ($idFormacao == "") {
+
+$sql = "SELECT * FROM juridicos where pedido_id = '$idFormacao'";
+$query = mysqli_query($con,$sql);
+
+$num = mysqli_num_rows($query);
+
+if ($num > 0) {
+    $sqlUpdate = "UPDATE juridicos SET pedido_id = $idFormacao, amparo_legal = '$amparo',dotacao ='$dotacao', finalizacao = '$finalizacao'
+    WHERE pedido_id = $idFormacao";
+    $query = mysqli_query($con,$sqlUpdate);
+}
+else {
     $sqlInsert = "INSERT INTO juridicos(pedido_id, amparo_legal, finalizacao, dotacao)
         VALUES ('$idFormacao','$amparo','$finalizacao','$dotacao')";
-    $query2 = mysqli_query($con, $sqlInsert);
-} else {
-    $sqlUptate = "UPDATE juridicos SET pedido_id = $idFormacao, amparo_legal = '$amparo', finalizacao = '$finalizacao', dotacao ='$dotacao'
-WHERE pedido_id = $idFormacao";
-    $query1 = mysqli_query($con, $sqlUptate);
+    $query = mysqli_query($con,$sqlInsert);
+
 }
 ?>
 
@@ -32,16 +42,16 @@ WHERE pedido_id = $idFormacao";
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-offset-4 col-md-4" align="center">
-                        <a href="<?= $link_vocacional ?>" target='_blank' value="<?= $idFormacao ?>">
-                            <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO FORMAÇÃO
+                        <form action="<?= $link_vocacional ?>" method="post">
+                        <input type="hidden" value="<?= $idFormacao ?>" name="idFormacao">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO VOCACIONAL
+                        </button>
+                        </form>
+                        <form action="<?= $link_pia ?>" method="post">
+                            <input type="hidden" value="<?= $idFormacao ?>" name="idFormacao">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO PIÁ
                             </button>
-                        </a>
-                        <br>
-                        <a href="" target='_blank'>
-                            <button type="submit" class="btn btn-primary btn-lg btn-block"> MANIFESTAÇÃO JURÍDICA
-                            </button>
-                        </a>
-                        <br>
+                        </form>
                     </div>
                 </div>
             </div>

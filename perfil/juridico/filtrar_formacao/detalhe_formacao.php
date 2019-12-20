@@ -5,20 +5,6 @@ $con = bancoMysqli();
 isset($_POST['idFormacao']);
 $idFormacao = $_POST['idFormacao'];
 
-if ($idFormacao == $idFormacao) {
-    if (isset($_POST['finalizar'])) {
-        $sqlUptate = "UPDATE juridicos SET pedido_id = $idFormacao, amparo_legal = '$amparo', finalizacao = '$finalizacao', dotacao ='$dotacao'
-    WHERE pedido_id = $idFormacao";
-        $queryInsert = mysqli_query($con, $sqlUptate);
-        echo $sqlUptate;
-    }
-} else {
-    $sqlInsert = "INSERT INTO juridicos(pedido_id, amparo_legal, finalizacao, dotacao)
-        VALUES ('$idFormacao','$amparo','$finalizacao','$dotacao')";
-    $queryUpdate = mysqli_query($con, $sqlInsert);
-}
-
-
 $sql = "SELECT p.numero_processo,
             p.forma_pagamento,
             p.valor_total,
@@ -35,7 +21,8 @@ $sql = "SELECT p.numero_processo,
             fc.observacao,
             pag.emissao_nota_empenho,
             pag.entrega_nota_empenho,
-            fs.status
+            fs.status,
+            fc.data_envio
             
 
         FROM pedidos as p
@@ -78,13 +65,8 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 $tel = substr($tel, 0, -3);
 ////
 
-
-
-// recuperando horario //
 $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
 
-// dotacao //
-//$dotacao = recuperaDados('juridicos','id',$idFormacao);
 ?>
 
 
@@ -102,7 +84,7 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Enviado em:</th>
-                        <td></td>
+                        <td><?= $query['data_envio'] ?></td>
                     </tr>
                     <tr>
                         <th></th>

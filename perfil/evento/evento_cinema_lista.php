@@ -40,6 +40,7 @@ $query = "SELECT f.id, f.titulo, f.ano_producao, f.duracao, f.direcao, fe.id AS 
 FROM filmes f
 INNER JOIN filme_eventos fe ON fe.filme_id = f.id
 WHERE f.publicado = 1 AND fe.evento_id='$idEvento'";
+echo $query;
 
 $resul = mysqli_query($con, $query);
 ?>
