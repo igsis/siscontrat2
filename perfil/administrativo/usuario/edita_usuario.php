@@ -45,6 +45,18 @@ if (isset($_POST['cadastra']) || (isset($_POST['edita']))) {
     }
 }
 
+if (isset($_POST['reset'])){
+    $idUsuario = $_POST['idUsuario'];
+    $senha = MD5("siscontrat2019");
+    $sql_reset = "UPDATE usuarios SET senha = '$senha' WHERE id = '$idUsuario'";
+    if(mysqli_query($con,$sql_reset)){
+        gravarLog($sql_reset);
+        $mensagem = mensagem("success", "Senha reiniciada com sucesso para: siscontrat2019");
+    } else {
+        $mensagem = mensagem("danger", "Erro ao reiniciar a senha! Tente novamente.");
+    }
+}
+
 if (isset($_POST['carregar'])) {
     $idUsuario = $_POST['idUsuario'];
 }
@@ -136,6 +148,7 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
                             <a href="?perfil=administrativo&p=usuario&sp=usuario_lista">
                                 <button type="button" class="btn btn-default">Voltar</button>
                             </a>
+                            <button type="submit" name="reset" class="btn btn-warning">Resetar senha</button>
                             <input type="hidden" name="idUsuario" id="idUsuario" value="<?= $idUsuario ?>">
                             <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">Salvar
                             </button>
@@ -147,7 +160,6 @@ $usuario = recuperaDados('usuarios', 'id', $idUsuario);
             <!-- /.col -->
         </div>
         <!-- /.row -->
-        <!-- END ACCORDION & CAROUSEL-->
 
     </section>
     <!-- /.content -->
