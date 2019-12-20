@@ -66,13 +66,13 @@ $numeroEspacos = mysqli_num_rows($queryEspacos);
             <!-- /.col -->
         </div>
 
-
+<!--
         <div class="box box-solid">
-            <!-- /.box-header -->
             <div class="box-body center-block" align="center">
                 <img src="https://media.giphy.com/media/fdXR4TOByOVIwLNhlW/giphy.gif" alt="para bens"
                      class="img-responsive">
             </div>
         </div>
+-->
     </section>
 </div>
