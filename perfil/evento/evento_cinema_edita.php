@@ -33,6 +33,7 @@ if (isset($_POST['cadastra'])) {
                           '$sinopse','$elenco','$duracao',
                           '$link','$classidicacaoIndicativa',
                           '$paisOrigem','$paisCoProducao');";
+    echo $sql;
     if (mysqli_query($con, $sql)) {
         $idFilme = recuperaUltimo("filmes");
         $sql = "INSERT INTO `filme_eventos` (filme_id, evento_id)
@@ -109,7 +110,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="tituloFilme">Título do filme *:</label>
-                                <input type='text' class='form-control' id='tituloFilme' name='tituloFilme' maxlength='100' required value='<?= $row['titulo'] ?>'>
+                                <input type='text' class='form-control' id='tituloFilme' name='tituloFilme' maxlength='100' value='<?= $row['titulo'] ?>'>
                             </div>
                             <div class="form-group">
                                 <label for="tituloOriginal">Título original:</label>
@@ -118,8 +119,8 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label>País de origem *:</label>
-                                    <select class="form-control" name="paisOrigem" id="paisOrigem" required>
-                                        <option value="">Selecione uma opção...</option>
+                                    <select class="form-control" name="paisOrigem" id="paisOrigem"  value="">
+                                        <option  value="" >Selecione uma opção... </option>
                                         <?php
                                         geraOpcao("paises", $row['pais_origem_id']);
                                         ?>
@@ -137,7 +138,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="anoProducao">Ano de produção: *</label>
-                                    <input type="text" class="form-control" id="anoProducao"  min="0" name="anoProducao" placeholder="Ex: 1995" maxlength="4" required value="<?= $row['ano_producao'] ?>">
+                                    <input type="text" class="form-control" id="anoProducao"  min="0" name="anoProducao" placeholder="Ex: 1995" maxlength="4" value="<?= $row['ano_producao'] ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="genero">Gênero:</label>
@@ -150,7 +151,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             </div>
                             <div class="form-group">
                                 <label for="direcao">Direção:</label>
-                                <textarea class="form-control" name="direcao" id="direcao" rows="5"><?= $row['direcao'] ?></textarea>
+                                <textarea class="form-control" required name="direcao" id="direcao" rows="5"><?= $row['direcao'] ?></textarea>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -165,10 +166,10 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="duracao">Duração (em minutos):</label>
-                                    <input type="number" class="form-control" name="duracao" min="0" id="duracao" value="<?= $row['duracao'] ?>">
+                                    <input type="number" class="form-control" name="duracao" min="0" id="duracao" required value="<?= $row['duracao'] ?>">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="classidicacaoIndicativa">Classificação indicativa: *</label>
+                                    <label for="classidicacaoIndicativa" required>Classificação indicativa: *</label>
                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                             data-target="#modal-default"><i class="fa fa-info"></i></button>
                                     <select class="form-control" name="classidicacaoIndicativa" id="classidicacaoIndicativa">

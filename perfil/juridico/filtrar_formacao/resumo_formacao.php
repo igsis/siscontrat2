@@ -24,7 +24,8 @@ $sql = "SELECT p.numero_processo,
             fc.id
             
 
-        FROM pedidos as p INNER JOIN formacao_status fs on p.id = fs.id 
+        FROM pedidos as p 
+        INNER JOIN formacao_status fs on p.id = fs.id 
         INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
         INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
         WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 AND p.id = $idFormacao";
@@ -109,7 +110,7 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
-                            <td><textarea name="dotacao" rows="1" cols="85"></textarea></td>
+                            <td><textarea name="dotacao" rows="1" cols="85" required></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Finalização:</th>

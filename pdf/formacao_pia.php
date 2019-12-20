@@ -29,6 +29,7 @@ $finalizacao = $modelo['finalizacao'];
 $fp = recuperaDados('formacao_parcelas','id',$idFormacao);
 $carga = $fp['carga_horaria'];
 $dataAtual = date("Y/m/d");
+$diaSemana = diasemana($dataAtual);
 
 //periodo
 $data = retornaPeriodoFormacao($vigencia);
@@ -73,7 +74,11 @@ $dados =
     "<p><strong>Contratado:</strong> " . "$nome" . ", CPF (" . "$cpf" . ")</p>" .
     "<p><strong>Objeto:</strong> " . "$programa" . " " . "$linguagem" . " " . "$edital" . "</p>" .
     "<p><strong>Data / Período:</strong>" . "$data" . "</p>" .
-    "<p><strong>Locais:</strong> " . "  " . "$local" . "</p>" .
+    "<p>&nbsp;</p>" .
+    "<p><strong>Locais e Horários</strong></p>" .
+    "<p>"."$local"."</p>" .
+    "<p>"."$data"."&nbsp;"."($diaSemana)"."</p>".
+    "<p>&nbsp;</p>" .
     "<p><strong>Carga Horária:</strong>"."" . "$carga" . "" .
     "<p><strong> Valor:</strong> " . "R$ $valorT " . "  " . "($valor_extenso)" . "</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . "$pagamento" . "</p>" .
