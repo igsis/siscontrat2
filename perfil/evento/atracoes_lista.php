@@ -36,6 +36,30 @@ if (isset($_POST['apagar'])) {
     }
 }
 
+if (isset($_POST['cadastraProdutor'])){
+    $nome = addslashes($_POST['nome']);
+    $email = $_POST['email'];
+    $telefone1 = $_POST['telefone1'];
+    $telefone2 = $_POST['telefone2'];
+    $observacao = addslashes($_POST['observacao']);
+    $idAtracoes = $_POST['idAtracoes'];
+    $sqlInsert = "INSERT INTO `produtores`
+                      (nome, email, telefone1, telefone2, observacao)
+                      VALUES ('$nome','$email','$telefone1','$telefone2','$observacao')";
+
+    if (mysqli_query($con,$sqlInsert)){
+        $idProdutor = recuperaUltimo("produtores");
+        $sqlUpdate = "UPDATE `atracoes`
+                          SET produtor_id = '$idProdutor'
+                          WHERE id ='$idAtracoes'";
+        if(mysqli_query($con,$sqlUpdate)){
+            $mensagem = mensagem("success","Produtor cadastrado");
+        }else{
+            $mensagem = mensagem("danger","Erro ao cadastrar");
+        }
+    }
+}
+
 $sql = "SELECT at.id AS idAtracao, nome_atracao, produtor_id 
         FROM atracoes AS at
         WHERE at.publicado = 1 AND at.evento_id = '$idEvento'";
