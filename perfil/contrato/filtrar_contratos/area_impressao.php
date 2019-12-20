@@ -14,7 +14,9 @@ $linkpj_edital = $http . "exporta_proposta_edital_pj_word.php";
 
 $link_emia = $http . "rlt_proposta_emia.php";
 
-$link_proposta_padrao = $http . "rlt_proposta_padrao.php";
+$link_proposta_padrao_pf = $http . "rlt_proposta_padrao_pf.php";
+
+$link_proposta_padrao_pj = $http . "rlt_proposta_padrao_pj.php";
 
 $link_reserva_vocacional = $http . "impressao_reserva_vocacional.php";
 
@@ -24,7 +26,9 @@ $link_reserva_pia = $http . "impressao_reserva_pia.php";
 
 $link_proposta_convenio = $http . "rlt_proposta_oficina_convenio.php";
 
-$link_reversao = $http . "rlt_reversao_proposta.php";
+$link_reversao_pf = $http . "rlt_reversao_proposta_pf.php";
+
+$link_reversao_pj = $http . "rlt_reversao_proposta_pj.php";
 
 $link_direitos = $http . "rlt_direitos_conexos.php";
 
@@ -46,11 +50,15 @@ $link_facc_pj = $http . "rlt_fac_pj.php";
 
 $idPedido = $_POST['idPedido'];
 
+$idEvento = $_SESSION['idEvento'];
+
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 
 if ($pedido['pessoa_tipo_id'] == 1) {
     $link_pc = $linkpf_pc;
     $link_edital = $linkpf_edital;
+    $link_reversao = $link_reversao_pf;
+    $link_proposta_padrao = $link_proposta_padrao_pf;
     $link_convenio = $link_convenio_pf;
     $link_exclusividade = $link_exclusividade_pf;
     $link_condicionamento = $link_condicionamento_pf;
@@ -59,6 +67,8 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 } else if ($pedido['pessoa_tipo_id'] == 2) {
     $link_pc = $linkpj_pc;
     $link_edital = $linkpj_edital;
+    $link_reversao = $link_reversao_pj;
+    $link_proposta_padrao = $link_proposta_padrao_pj;
     $link_convenio = $link_convenio_pj;
     $link_exclusividade = $link_exclusividade_pj;
     $link_condicionamento = $link_condicionamento_pj;
@@ -113,19 +123,20 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
-                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Contratações gerais - Com cachê
-                                </button>
-                            </form>
-                            <hr/>
-                        </div>
-                        <div class="col-md-6">
                             <form action="<?= $link_reversao ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Contratações gerais - Reversão de Bilheteria
+                                </button>
+                            </form>
+                            <hr/>
+                        </div>
+
+                        <div class="col-md-6">
+                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-outline-info center-block">
+                                    Contratações gerais - Com cachê
                                 </button>
                             </form>
                             <hr/>
@@ -402,9 +413,10 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                 </div>
             </div>
             <div class="box-footer">
-                <a href="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos">
+                <form action="?perfil=contrato&p=filtrar_contratos&sp=resumo" method="post">
+                    <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                     <button type="submit" class="btn btn-default">Voltar</button>
-                </a>
+                </form>
             </div>
         </div>
     </section>

@@ -18,6 +18,8 @@ if (isset($_POST['busca'])) {
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
     INNER JOIN ocorrencias o on e.id = o.origem_ocorrencia_id
+    INNER JOIN evento_envios ee ON e.id = ee.evento_id 
+    LEFT JOIN evento_reaberturas er on e.id = er.evento_id
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1
@@ -25,6 +27,11 @@ if (isset($_POST['busca'])) {
     AND p.status_pedido_id != 1
     AND o.data_inicio >= '$data_inicio'
     AND o.data_fim <= '$data_fim'
+    AND (
+      (er.data_reabertura < ee.data_envio) 
+    OR 
+      (er.data_reabertura is null)
+    )
     $sqlOperador
     group by e.id";
 

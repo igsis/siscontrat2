@@ -63,6 +63,9 @@ if (isset($_POST['cadastra'])) {
         $sqlPessoaJuridica = "UPDATE pessoa_juridicas SET $representante = '$idRepresentante' WHERE id = '$idPj'";
         mysqli_query($con, $sqlPessoaJuridica);
 
+        $sqlLimpaArquivosRepresentante = "UPDATE siscontrat.arquivos SET publicado = 0 WHERE origem_id = '$idPj' AND publicado = 1 AND lista_documento_id IN ('$RG', '$CPF')";
+        mysqli_query($con, $sqlLimpaArquivosRepresentante);
+
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
 
@@ -89,6 +92,9 @@ if (isset($_POST['edita']) || isset($_POST['carregar'])) {
 
             $sqlSeleciona = "UPDATE pessoa_juridicas SET $representante = '$idRepresentante' WHERE id = '$idPj'";
             mysqli_query($con, $sqlSeleciona);
+
+            $sqlLimpaArquivosRepresentante = "UPDATE siscontrat.arquivos SET publicado = 0 WHERE origem_id = '$idPj' AND lista_documento_id IN ('$RG', '$CPF')";
+            mysqli_query($con, $sqlLimpaArquivosRepresentante);
 
             echo "<script>swal('Lembre-se de conferir os dados', '', 'warning') </script>";
 
@@ -133,6 +139,11 @@ if (isset($_POST["enviar"])) {
                         VALUES ('$idPj', '$y', '$new_name', '$hoje', '1')";
 
                         if (mysqli_query($con, $sql_insere_arquivo)) {
+                            if (($y == 23) || ($y == 24)) {
+                                $idRepresentante = $pessoa_juridica['representante_legal1_id'];
+                            } else {
+                                $idRepresentante = $pessoa_juridica['representante_legal2_id'];
+                            }
                             $mensagem = mensagem("success", "Arquivo recebido com sucesso");
                             echo "<script>
                                 swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             

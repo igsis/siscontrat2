@@ -88,8 +88,8 @@ if (isset($_POST['salvar'])) {
 
     for ($i = 0; $i < count($idAtracao); $i++) { // altera de uma ou de todas as atracoes (nome da atracao e integrantes)
         $baldeId = $idAtracao[$i];
-        $baldeNome = $nome_atracao[$i];
-        $baldeIntegrantes = $integrantes[$i];
+        $baldeNome = addslashes($nome_atracao[$i]);
+        $baldeIntegrantes = addslashes($integrantes[$i]);
 
         $sql = "UPDATE atracoes SET 
                     nome_atracao = '$baldeNome', 
@@ -100,11 +100,11 @@ if (isset($_POST['salvar'])) {
     }
 
     //pedidos
-    $formaPagamento = $_POST['formaPagamento'];
+    $formaPagamento = addslashes($_POST['formaPagamento']);
     $verba = $_POST['verba'];
     $processoMae = $_POST['processoMae'];
     $processo = $_POST['processo'];
-    $justificativa = $_POST['justificativa'];
+    $justificativa = addslashes($_POST['justificativa']);
     $operador = $_POST['operador'] ?? NULL;
 
     //eventos

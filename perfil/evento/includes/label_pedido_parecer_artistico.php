@@ -16,8 +16,7 @@ if ($pedido['pessoa_tipo_id'] == 2) {
 }
 ?>
 
-<form class="formulario-ajax" method="POST" action="../funcoes/api_pedido_eventos.php" role="form"
-      data-etapa="Parecer Artístico">
+<form class="formulario-ajax" method="POST" action="../funcoes/api_pedido_eventos.php" role="form" data-etapa="Parecer Artístico">
     <div class="row">
         <div class="form-group col-md-11">
             <h4><strong>1º Tópico</strong></h4>
@@ -39,6 +38,7 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             ?>
         </div>
     </div>
+
     <div class="row">
         <div class="form-group col-md-11">
             <h4><strong>2º Tópico (mínimo de 500 caracteres)</strong></h4>
@@ -56,6 +56,8 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             <span id="sprestante" style="font-family:Georgia;"></span>
         </div>
     </div>
+
+
     <div class="row">
         <div class="form-group col-md-11">
             <h4><strong>3º Tópico (mínimo de 700 caracteres)</strong></h4>
@@ -71,6 +73,8 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             <span id="sprestante3" style="font-family:Georgia;"></span>
         </div>
     </div>
+
+
     <div class="row">
         <div class="form-group col-md-11">
             <h4><strong>4º Tópico</strong></h4>
@@ -107,7 +111,7 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             </div>
             <!-- /.box -->
             <div class="row">
-                <div class="col-md-12">
+                <div class="form-group col-md-12">
                     <div class="box box-default collapsed-box">
                         <div class="box-header with-border">
                             <h4 class="box-title">
@@ -141,6 +145,9 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             <textarea id="topico4" name="topico4" class="form-control" rows="5"><?= $parecer['topico4'] ?></textarea>
         </div>
     </div>
+
+
+
     <!-- /.box-body -->
     <div class="box-footer col-md-11">
         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">

@@ -28,9 +28,10 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
                         </div>
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label>País de origem*:</label>
-                                <select class="form-control" name="paisOrigem" id="paisOrigem" required>
-                                    <option value="1">Selecione uma opção...</option>
+                                <label
+                                >País de origem*:</label>
+                                <select required class="form-control" name="paisOrigem" id="paisOrigem" >
+                                    <option value="">Selecione uma opção...</option>
                                     <?php
                                     geraOpcao("paises");
                                     ?>
@@ -38,8 +39,8 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label>País de origem (co-produção):</label>
-                                <select class="form-control" name="paisCoProducao" id="paisCoProducao">
+                                <label>País de origem (co-produção)* :</label>
+                                <select required class="form-control" name="paisCoProducao" id="paisCoProducao">
                                     <option value="">Selecione uma opção...</option>
                                     <?php
                                     geraOpcao("paises");
@@ -49,7 +50,7 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
 
                             <div class="form-group col-md-2">
                                 <label for="anoProducao">Ano de produção: *</label>
-                                <input type="number" class="form-control" id="anoProducao" name="anoProducao" placeholder="Ex: 1995" maxlength="4" required>
+                                <input type="number" class="form-control" id="anoProducao" name="anoProducao" placeholder="Ex: 1995" min="0" maxlength="4" required>
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="genero">Gênero:</label>
@@ -62,8 +63,8 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="direcao">Direção:</label>
-                            <textarea class="form-control" name="direcao" id="direcao" rows="5"></textarea>
+                            <label for="direcao">Direção *:</label>
+                            <textarea class="form-control" name="direcao" id="direcao" rows="5" required></textarea>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
@@ -77,14 +78,14 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="duracao">Duração (em minutos):</label>
-                                <input type="number" class="form-control" name="duracao" id="duracao">
+                                <label for="duracao">Duração (em minutos) *:</label>
+                                <input type="number" class="form-control" name="duracao" min="0" id="duracao" required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="classidicacaoIndicativa">Classificação indicativa: *</label>
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                         data-target="#modal-default"><i class="fa fa-info"></i></button>
-                                <select class="form-control" name="classidicacaoIndicativa" id="classidicacaoIndicativa">
+                                <select required class="form-control" name="classidicacaoIndicativa" id="classidicacaoIndicativa">
                                     <option value="">Selecione uma opção...</option>
                                     <?php
                                     geraOpcao("classificacao_indicativas");

@@ -12,12 +12,12 @@ if (isset($_POST['excluir'])) {
     $evento = $_POST['idEvent'];
     $stmt = $conn->prepare("UPDATE eventos SET publicado = 0 WHERE id = :id");
     $stmt->execute(['id' => $evento]);
-    $mensagem = mensagem("success", "Evento excluido com sucesso!");
+    $mensagem = mensagem("success", "Evento excluído com sucesso!");
 
     $sqlDeletaAtracao = "UPDATE atracoes SET publicado = 0 WHERE evento_id = '$evento'";
     mysqli_query($con, $sqlDeletaAtracao);
 
-    $sqlAtracoesDeletadas = "SELECT * FROM atracoes WHERE publicado = 0";
+    $sqlAtracoesDeletadas = "SELECT * FROM atracoes WHERE publicado = 0 AND evento_id = '$evento'";
     $queryAtracoesDeletadas = mysqli_query($con, $sqlAtracoesDeletadas);
 
     while ($atracaoDeletada = mysqli_fetch_array($queryAtracoesDeletadas)) {
@@ -87,7 +87,7 @@ $query = mysqli_query($con, $sql);
                                 if ($evento['usuario_id'] == $idUser)
                                     $vinculo = 'Usuário';
                                 else if ($evento['fiscal_id'] == $idUser)
-                                    $vinculo = 'Físcal';
+                                    $vinculo = 'Fiscal';
                                 else
                                     $vinculo = 'Suplente';
 
@@ -100,7 +100,6 @@ $query = mysqli_query($con, $sql);
                                     $idEvento = $evento['idEvento'];
                                     $nomeEvento = $evento['nome_evento'];
                                     $sqlChamado = "SELECT u.nome_completo, c.justificativa, c.data FROM chamados AS c INNER JOIN usuarios AS u ON u.id = c.usuario_id WHERE evento_id = $idEvento";
-                                    $chamado = $con->query($sqlChamado)->fetch_array();
                                     ?>
                                     <td>
                                         <button type="button" class="btn-link" id="exibirMotivo"
@@ -109,25 +108,27 @@ $query = mysqli_query($con, $sql);
                                         </button>
                                     </td>
                                 <?php } else {
-                                        if ($evento['status'] == "Aguardando")
-                                            $disabled = "disabled";
+                                    if ($evento['status'] == "Aguardando")
+                                        $disabled = "disabled";
 
-                                        echo "<td>" . $evento['status'] . "</td>";
+                                    echo "<td>" . $evento['status'] . "</td>";
                                 }
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
-                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\" ". $disabled . "><span class='glyphicon glyphicon-eye-open'></span></button>
+                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\" " . $disabled . "><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
                                 ?>
                                 <td>
                                     <form method="post" id="formExcluir">
                                         <input type="hidden" name="idEvento" value="<?= $evento['idEvento'] ?>">
-                                        <button <?= $disabled ?> type="button" class="btn btn-block btn-danger" id="excluiEvento"
-                                                data-toggle="modal" data-target="#exclusao" name="excluiEvento"
-                                                data-name="<?= $evento['nome_evento'] ?>"
-                                                data-id="<?= $evento['idEvento'] ?>"><span
+                                        <button <?= $disabled ?> type="button" class="btn btn-block btn-danger"
+                                                                 id="excluiEvento"
+                                                                 data-toggle="modal" data-target="#exclusao"
+                                                                 name="excluiEvento"
+                                                                 data-name="<?= $evento['nome_evento'] ?>"
+                                                                 data-id="<?= $evento['idEvento'] ?>"><span
                                                     class="glyphicon glyphicon-trash"></span></button>
                                     </form>
                                 </td>
@@ -190,7 +191,7 @@ $query = mysqli_query($con, $sql);
                         <h4 class="modal-title">Motivo do Cancelamento</h4>
                     </div>
                     <div class="modal-body">
-                        <p><strong>Nome do Evento:</strong> <?=$nomeEvento?></p>
+                        <p><strong>Nome do Evento:</strong> <?= $nomeEvento ?></p>
                         <table class="table table-striped table-bordered">
                             <thead>
                             <tr>
@@ -200,9 +201,11 @@ $query = mysqli_query($con, $sql);
                             </tr>
                             </thead>
                             <tbody>
-                                <td><?=$chamado['justificativa']?></td>
-                                <td><?=$chamado['nome_completo']?></td>
-                                <td><?=exibirDataBr($chamado['data'])?></td>
+                            <?php while ($chamado = mysqli_fetch_array($sqlChamado)) { ?>
+                                <td><?= $chamado['justificativa'] ?></td>
+                                <td><?= $chamado['nome_completo'] ?></td>
+                                <td><?= exibirDataBr($chamado['data']) ?></td>
+                            <?php } ?>
                             </tbody>
                         </table>
                     </div>

@@ -113,6 +113,17 @@ include "includes/menu_interno.php";
 
                             <div class="row ">
                                 <div class="form-group col-md-6">
+                                    <label for="fiscal">Nome do Responsável Interno *</label>
+                                    <input class="form-control" type="text" name="nomeResponsavel" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="fiscal">Telefone do Responsável Interno *</label>
+                                    <input class="form-control" type="text" name="telResponsavel" onkeyup="mascara( this, mtel );" required>
+                                </div>
+                            </div>
+
+                            <div class="row ">
+                                <div class="form-group col-md-6">
                                     <label for="fiscal">Fiscal *</label>
                                     <select class="form-control" id="fiscal" name="fiscal" required>
                                         <option value="">Selecione um fiscal...</option>

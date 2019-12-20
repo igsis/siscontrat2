@@ -258,7 +258,7 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
 
                             <div class="form-group">
                                 <label for="observacao">Observação</label><br/>
-                                <textarea name="observacao" id="observacao" class="form-control" rows="5"></textarea>
+                                <textarea name="observacao" id="observacao" class="form-control" rows="1"></textarea>
                             </div>
 
                         </div>

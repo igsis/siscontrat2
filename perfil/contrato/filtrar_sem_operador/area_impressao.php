@@ -46,6 +46,8 @@ $link_facc_pj = $http . "rlt_fac_pj.php";
 
 $idPedido = $_POST['idPedido'];
 
+$idEvento = $_SESSION['idEvento'];
+
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 
 if ($pedido['pessoa_tipo_id'] == 1) {
@@ -402,9 +404,10 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                 </div>
             </div>
             <div class="box-footer">
-                <a href="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos">
+                <form action="?perfil=contrato&p=filtrar_sem_operador&sp=resumo" method="post">
+                    <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                     <button type="submit" class="btn btn-default">Voltar</button>
-                </a>
+                </form>
             </div>
         </div>
     </section>

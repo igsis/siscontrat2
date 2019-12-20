@@ -6,8 +6,9 @@ $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 if (isset($_POST['tipoModelo'])) {
     $modelo = $_POST['tipoModelo'];
 }
-isset($_POST['idFormacao']);
-$idFormacao = $_POST['idFormacao'];
+if(isset($_POST['idFormacao'])){
+    $idFormacao = $_POST['idFormacao'];
+}
 
 
 $sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
@@ -23,7 +24,8 @@ $sql = "SELECT p.numero_processo,
             fc.id
             
 
-        FROM pedidos as p INNER JOIN formacao_status fs on p.id = fs.id 
+        FROM pedidos as p 
+        INNER JOIN formacao_status fs on p.id = fs.id 
         INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
         INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
         WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 AND p.id = $idFormacao";
@@ -57,7 +59,7 @@ $queryLocal = mysqli_query($con, $sqlLocal);
         <div class="page-header">
             <h2 class="page-title">Jurídico</h2>
         </div>
-        <form action="?perfil=juridico&p=tipo_modelo&sp=dados_modelo" role="form" method="post">
+        <form action="?perfil=juridico&p=filtrar_formacao&sp=modelo_final_formacao" role="form" method="post">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Detalhes da formação selecionada</h3>
@@ -108,7 +110,7 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
-                            <td><textarea name="dotacao" rows="1" cols="85"></textarea></td>
+                            <td><textarea name="dotacao" rows="1" cols="85" required></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
@@ -118,13 +120,13 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                     <div class="pull-left">
                         <?php // ADICIONAR ANCORA PARA VOLTAR ?>
                     </div>
+                    <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
                     <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left">Gravar
                     </button>
         </form>
         <form action="?perfil=juridico&p=filtrar_formacao&sp=detalhe_formacao" method="post">
             <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
             <button type="submit" class="btn btn-info pull-right">Detalhes Formação
-
             </button>
         </form>
 </div>

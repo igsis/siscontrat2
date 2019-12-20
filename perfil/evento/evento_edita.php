@@ -8,6 +8,8 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $projeto_especial_id = $_POST['projetoEspecial'];
     $sinopse = addslashes($_POST['sinopse']);
     $tipo = $_POST['tipo'];
+    $nomeResponsavel = $_POST['nomeResponsavel'];
+    $telResponsavel = $_POST['telResponsavel'];
     $fiscal_id = $_POST['fiscal'];
     $suplente_id = $_POST['suplente'];
     $usuario = $_SESSION['idUser'];
@@ -24,7 +26,9 @@ if (isset($_POST['cadastra'])) {
                                  relacao_juridica_id, 
                                  projeto_especial_id, 
                                  tipo_evento_id, 
-                                 sinopse, 
+                                 sinopse,   
+                                 nome_responsavel,
+                                 tel_resposavel,
                                  fiscal_id, 
                                  suplente_id, 
                                  usuario_id, 
@@ -37,6 +41,8 @@ if (isset($_POST['cadastra'])) {
                                   '$projeto_especial_id',
                                   '$tipo',
                                   '$sinopse',
+                                  '$nomeResponsavel',
+                                  '$telResponsavel',
                                   '$fiscal_id',
                                   '$suplente_id',
                                   '$usuario',
@@ -80,7 +86,9 @@ if (isset($_POST['edita'])) {
                               nome_evento = '$nomeEvento', 
                               relacao_juridica_id = '$relacao_juridica_id', 
                               projeto_especial_id = '$projeto_especial_id', 
-                              tipo_evento_id = '$tipo', 
+                              tipo_evento_id = '$tipo',
+                              nome_responsavel = '$nomeResponsavel',
+                              tel_resposavel = '$telResponsavel',
                               sinopse = '$sinopse', 
                               fiscal_id = '$fiscal_id', 
                               suplente_id = '$suplente_id', 
@@ -119,6 +127,7 @@ if (isset($_POST['carregar'])) {
 }
 
 $evento = recuperaDados("eventos", "id", $idEvento);
+$nomeEvento = $evento['nome_evento'];
 
 include "includes/menu_interno.php";
 
@@ -194,7 +203,7 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
                             <div class="form-group">
                                 <label for="nomeEvento">Nome do evento *</label>
                                 <input type="text" class="form-control" id="nomeEvento" name="nomeEvento"
-                                       maxlength="240" required value="<?= $evento['nome_evento'] ?>">
+                                       maxlength="240" required value="">
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -244,6 +253,17 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
                                 </p>
                                 <textarea name="sinopse" id="sinopse" class="form-control" rows="5"
                                           required><?= $evento['sinopse'] ?></textarea>
+                            </div>
+
+                            <div class="row ">
+                                <div class="form-group col-md-6">
+                                    <label for="fiscal">Nome do Responsável Interno *</label>
+                                    <input class="form-control" type="text" name="nomeResponsavel" value="<?= $evento['nome_responsavel'] ?>" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="fiscal">Telefone do Responsável Interno *</label>
+                                    <input class="form-control" type="text" name="telResponsavel" value="<?= $evento['tel_responsavel'] ?>" onkeyup="mascara( this, mtel );" required>
+                                </div>
                             </div>
 
                             <div class="row ">
@@ -319,7 +339,7 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
 </div>
 
 <script>
-    const btnCadastra = $('#cadastra');
+    const btnEdita = $('#edita');
     let publicos = $('.publicos');
 
     //FOMENTO
@@ -347,16 +367,16 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
 
         if (checked) {
             isMsg.hide();
-            btnCadastra.attr("disabled", false);
-            btnCadastra.removeAttr("data-toggle");
-            btnCadastra.removeAttr("data-placement");
-            btnCadastra.removeAttr("title");
+            btnEdita.attr("disabled", false);
+            btnEdita.removeAttr("data-toggle");
+            btnEdita.removeAttr("data-placement");
+            btnEdita.removeAttr("title");
         } else {
             isMsg.show();
-            btnCadastra.attr("disabled", true);
-            btnCadastra.attr("data-toggle", "tooltip");
-            btnCadastra.attr("data-placement", "left");
-            btnCadastra.attr("title", "Selecione pelo menos uma Representatividade");
+            btnEdita.attr("disabled", true);
+            btnEdita.attr("data-toggle", "tooltip");
+            btnEdita.attr("data-placement", "left");
+            btnEdita.attr("title", "Selecione pelo menos uma Representatividade");
         }
     }
 
@@ -368,4 +388,7 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
         validaPublico();
         verificaFomento();
     })
+
+    const nomeEvento = `<?=$nomeEvento?>`;
+    $('#nomeEvento').val(nomeEvento);
 </script>

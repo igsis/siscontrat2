@@ -410,7 +410,7 @@ $ocorrencia = recuperaDados('agendao_ocorrencias', 'id', $idOcorrencia);
                             <div class="form-group">
                                 <label for="observacao">Observação</label><br/>
                                 <textarea name="observacao" id="observacao" class="form-control"
-                                          rows="5"><?= isset($ocorrencia['observacao']) ? $ocorrencia['observacao'] : NULL ?></textarea>
+                                          rows="1"><?= isset($ocorrencia['observacao']) ? $ocorrencia['observacao'] : NULL ?></textarea>
                             </div>
 
                         </div>

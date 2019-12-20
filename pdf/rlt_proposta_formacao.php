@@ -56,6 +56,18 @@ while ($countt = mysqli_fetch_array($queryCarga))
 
 $sqlDRT = "SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf";
 $drt = $con->query($sqlDRT)->fetch_array();
+if($drt['drt'] != "" || $drt['drt'] != NULL){
+    $drt = $drt['drt'];
+}else{
+    $drt =  "Não Cadastrado.";
+}
+
+if($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL){
+    $ccm = $pessoa['ccm'];
+}else{
+    $ccm = "Não Cadastrado.";
+}
+
 
 $Observacao = "Todas as atividades dos programas da Supervisão de Formação são inteiramente gratuitas e é terminantemente proibido cobrar por elas sob pena de multa e rescisão de contrato.";
 $sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 20";
@@ -123,7 +135,7 @@ $pdf->Cell(30, $l, utf8_decode($nacionalidade['nacionalidade']),0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, "CCM:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(30, $l, utf8_decode($pessoa['ccm']),0 ,0, 'L');
+$pdf->Cell(30, $l, utf8_decode($ccm),0 ,0, 'L');
 
 $pdf->Ln(7);
 
@@ -131,7 +143,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10,$l,'DRT:',0,0,'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40,$l,utf8_decode($drt['drt']), 0,'L',0);
+$pdf->MultiCell(40,$l,utf8_decode($drt), 0,'L',0);
 
 $endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
 

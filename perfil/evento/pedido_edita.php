@@ -322,7 +322,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- Valor por Equipamento -->
                                 <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '5' : '4'?>">
                                     <?php include_once "includes/label_pedido_valor_equipamento.php" ?>
