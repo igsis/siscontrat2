@@ -4,6 +4,11 @@ $con = bancoMysqli();
 $idPj = $_POST['idPj'];
 $tipoPessoa = 2; // arquivos necessarios para pessoa juridica
 
+$existeRepresentante2 = $con->query("SELECT representante_legal2_id FROM siscontrat.pessoa_juridicas WHERE id = '$idPj'")
+                            ->fetch_assoc()['representante_legal2_id'];
+
+$arquivosRepr2 = ($existeRepresentante2) ? "" : "AND id NOT IN (85, 86)";
+
 if(isset($_POST["enviar"])) {
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
     $query_arquivos = mysqli_query($con, $sql_arquivos);
@@ -162,7 +167,7 @@ if(isset($_POST['apagar']))
                                                     </tr>
                                                     <?php
 
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (20, 21, 22, 28, 43, 89, 103, 104) AND tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (20, 21, 22, 28, 43, 89, 103, 104) AND tipo_documento_id = '$tipoPessoa' and publicado = 1 $arquivosRepr2";
                                                     $query_arquivos = mysqli_query($con,$sql_arquivos);
                                                     while($arq = mysqli_fetch_array($query_arquivos))
                                                     {
