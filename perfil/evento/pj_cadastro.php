@@ -102,7 +102,9 @@ $atracao = mysqli_query($con, $sql);
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" min="1" class="form-control"
+                                    <br>
+                                    <i>(se não houver número marcar 0)</i>
+                                    <input type="number" name="numero" min="0" class="form-control"
                                            placeholder="Ex.: 10"
                                            required>
                                 </div>

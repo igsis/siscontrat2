@@ -36,7 +36,7 @@ if (isset($_POST['vetar'])) {
         $queryVeta = mysqli_query($con, $sqlVeta);
         $motivo = $_POST['motivo'];
         $justificativa = $_POST['justificativa'];
-        $titulo = "Reabertura do Evento: " . $_POST['titulo'];
+        $titulo = "Motivo da Não Aprovação: " . $_POST['titulo'];
         $idUser = $_SESSION['idUser'];
         $data = $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
         $sqlChamado = "INSERT INTO chamados (evento_id, 

@@ -96,14 +96,13 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . $evento['tipo_evento'] . "</td>";
                                 echo "<td>" . $vinculo . "</td>";
                                 $disabled = '';
-                                if ($evento['status'] == "Não aprovado") {
-                                    $idEvento = $evento['idEvento'];
-                                    $nomeEvento = $evento['nome_evento'];
-                                    $sqlChamado = "SELECT u.nome_completo, c.justificativa, c.data FROM chamados AS c INNER JOIN usuarios AS u ON u.id = c.usuario_id WHERE evento_id = $idEvento";
-                                    ?>
+                                if ($evento['status'] == "Não aprovado") { ?>
                                     <td>
                                         <button type="button" class="btn-link" id="exibirMotivo"
-                                                data-toggle="modal" data-target="#exibicao" name="exibirMotivo">
+                                                data-toggle="modal" data-target="#exibicao"
+                                                data-id="<?= $evento['idEvento'] ?>"
+                                                data-name="<?= $evento['nome_evento'] ?>"
+                                                name="exibirMotivo">
                                             <p class="text-danger"><?= $evento['status'] ?></p>
                                         </button>
                                     </td>
@@ -191,7 +190,15 @@ $query = mysqli_query($con, $sql);
                         <h4 class="modal-title">Motivo do Cancelamento</h4>
                     </div>
                     <div class="modal-body">
-                        <p><strong>Nome do Evento:</strong> <?= $nomeEvento ?></p>
+                        <script type="text/javascript">
+                            $('#exibicao').on('show.bs.modal', function (e) {
+                                let id = $(e.relatedTarget).attr('data-id');
+                                let nome = $(e.relatedTarget).attr('data-name');
+                                alert('nome: ' + nome);
+                                $(this).find('#idEvento').attr('value', `${id}`);
+                            })
+                        </script>
+                        <p><strong>Nome do Evento:</strong> </p>
                         <table class="table table-striped table-bordered">
                             <thead>
                             <tr>
@@ -201,7 +208,11 @@ $query = mysqli_query($con, $sql);
                             </tr>
                             </thead>
                             <tbody>
-                            <?php while ($chamado = mysqli_fetch_array($sqlChamado)) { ?>
+                            <?php
+                            $sqlChamado = "SELECT u.nome_completo, c.justificativa, c.data FROM chamados AS c 
+                                            INNER JOIN usuarios AS u ON u.id = c.usuario_id WHERE evento_id = $idEvento";
+                            $queryChamado = mysqli_query($con, $sql);
+                            while ($chamado = mysqli_fetch_array($sqlChamado)) { ?>
                                 <td><?= $chamado['justificativa'] ?></td>
                                 <td><?= $chamado['nome_completo'] ?></td>
                                 <td><?= exibirDataBr($chamado['data']) ?></td>

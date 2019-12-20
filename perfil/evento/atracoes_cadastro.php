@@ -96,7 +96,7 @@
                             <div class="row ">
                                 <div class="form-group col-md-6">
                                     <label for="quantidade_apresentacao">Quantidade de Apresentação *</label>
-                                    <input type="number" class="form-control" min="0" id="quantidade_apresentacao"
+                                    <input type="number" class="form-control" min="1" id="quantidade_apresentacao"
                                            name="quantidade_apresentacao" maxlength="2" required>
                                 </div>
                                 <div class="form-group col-md-6">

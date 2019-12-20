@@ -127,7 +127,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             $resultado .= "<td>" . $pessoa['email'] . "</td>";
                             $resultado .= "<td>
                                      <form action='$actionEdita' method='post'>
-                                        <input type='hidden' name='idPessoa' value='" . $pessoa['id'] . "'>
+                                        <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
                                         <input type='hidden' name='idPedido' value='$idPedido'>
                                         $botaoSelecionar
                                      </form>

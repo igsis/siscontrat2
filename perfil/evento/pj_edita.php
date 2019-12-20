@@ -441,7 +441,9 @@ if (isset($pj['representante_legal2_id'])) {
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control" min="1"
+                                    <br>
+                                    <i>(se não houver número marcar 0)</i>
+                                    <input type="number" name="numero" class="form-control" min="0"
                                            placeholder="Ex.: 10"
                                            required value="<?= $end['numero'] ?>">
                                 </div>
