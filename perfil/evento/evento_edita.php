@@ -119,6 +119,7 @@ if (isset($_POST['carregar'])) {
 }
 
 $evento = recuperaDados("eventos", "id", $idEvento);
+$nomeEvento = $evento['nome_evento'];
 
 include "includes/menu_interno.php";
 
@@ -194,7 +195,7 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
                             <div class="form-group">
                                 <label for="nomeEvento">Nome do evento *</label>
                                 <input type="text" class="form-control" id="nomeEvento" name="nomeEvento"
-                                       maxlength="240" required value="<?= $evento['nome_evento'] ?>">
+                                       maxlength="240" required value="">
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -368,4 +369,7 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
         validaPublico();
         verificaFomento();
     })
+
+    const nomeEvento = `<?=$nomeEvento?>`;
+    $('#nomeEvento').val(nomeEvento);
 </script>
