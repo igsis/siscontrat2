@@ -320,7 +320,7 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
 </div>
 
 <script>
-    const btnCadastra = $('#cadastra');
+    const btnEdita = $('#edita');
     let publicos = $('.publicos');
 
     //FOMENTO
@@ -348,16 +348,16 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
 
         if (checked) {
             isMsg.hide();
-            btnCadastra.attr("disabled", false);
-            btnCadastra.removeAttr("data-toggle");
-            btnCadastra.removeAttr("data-placement");
-            btnCadastra.removeAttr("title");
+            btnEdita.attr("disabled", false);
+            btnEdita.removeAttr("data-toggle");
+            btnEdita.removeAttr("data-placement");
+            btnEdita.removeAttr("title");
         } else {
             isMsg.show();
-            btnCadastra.attr("disabled", true);
-            btnCadastra.attr("data-toggle", "tooltip");
-            btnCadastra.attr("data-placement", "left");
-            btnCadastra.attr("title", "Selecione pelo menos uma Representatividade");
+            btnEdita.attr("disabled", true);
+            btnEdita.attr("data-toggle", "tooltip");
+            btnEdita.attr("data-placement", "left");
+            btnEdita.attr("title", "Selecione pelo menos uma Representatividade");
         }
     }
 
