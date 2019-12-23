@@ -9,13 +9,13 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT * FROM eventos 
-        WHERE publicado = 1 AND evento_status_id >= 3 AND contratacao = 0  
+$sql = "SELECT eve.id AS idEvento, eve.protocolo, eve.nome_evento, es.status
+        FROM eventos as eve
+        INNER JOIN evento_status es on eve.evento_status_id = es.id
+        WHERE publicado = 1 AND evento_status_id between 3 AND 4 AND contratacao = 0  
         AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
-
 $query = mysqli_query($con, $sql);
 
-$num_atracoes = 0;
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -45,10 +45,9 @@ $num_atracoes = 0;
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
-                                <th>Objeto</th>
-                                <th>Vínculo</th>
+                                <th width="15%">Objeto</th>
                                 <th>Local</th>
-                                <th>Período</th>
+                                <th width="17%">Período</th>
                                 <th>Status</th>
                                 <th>Visualizar</th>
                             </tr>
@@ -57,42 +56,19 @@ $num_atracoes = 0;
                             <?php
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
-                                $idEvento = $evento['id'];
+                                $idEvento = $evento['idEvento'];
                                 $locais = listaLocais($idEvento);
 
-                                $status = recuperaDados("evento_status", "id", $evento['evento_status_id']);
-
-                                $sql_atracoes = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
-                                $query_atracoes = mysqli_query($con, $sql_atracoes);
-                                $num_atracoes = mysqli_num_rows($query_atracoes);
-                                $vinculo = '';
-
-                                if ($evento['usuario_id'] == $idUser)
-                                    $vinculo = 'Usuário';
-                                else if ($evento['fiscal_id'] == $idUser)
-                                    $vinculo = 'Físcal';
-                                else
-                                    $vinculo = 'Suplente';
-
+                                // $locais = listaLocais($evento['idAtracao']);
                                 echo "<tr>";
                                 echo "<td>" . $evento['protocolo'] . "</td>";
-                                echo "<td>";
-                                while($atracao = mysqli_fetch_array($query_atracoes)){
-                                    $categorias = recuperaDados("categoria_atracoes", "id", $atracao['categoria_atracao_id']);
-
-                                    ?>
-                                    <p><?= $categorias['categoria_atracao'] . " - " . $evento['nome_evento'] ?></p><hr>
-                                    <?php
-                                    $num_atracoes++;
-                                }
-                                echo "</td>";
-                                echo "<td>" . $vinculo . "</td>";
+                                echo "<td>" . $evento['nome_evento'] . "</td>";
                                 echo "<td>" . $locais. "</td>";
-                                echo "<td>" . retornaPeriodoNovo($evento['id'], 'ocorrencias') . "</td>";
-                                echo "<td>" . $status['status'] . "</td>";
+                                echo "<td>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</td>";
+                                echo "<td>" . $evento['status'] . "</td>";
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=resumo_evento_enviado\" role=\"form\">
-                                    <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>
+                                    <input type='hidden' name='idEvento' value='" . $idEvento . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
@@ -104,7 +80,6 @@ $num_atracoes = 0;
                             <tr>
                                 <th>Protocolo</th>
                                 <th>Objeto</th>
-                                <th>Vínculo</th>
                                 <th>Local</th>
                                 <th>Período</th>
                                 <th>Status</th>
