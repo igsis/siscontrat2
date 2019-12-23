@@ -9,6 +9,7 @@ $sqlEvento = "SELECT
                eve.sinopse AS 'Sinopse',
                fiscal.nome_completo AS 'Fiscal',
                suplente.nome_completo AS 'Suplente',
+               usuario.nome_completo AS 'Usuário que cadastrou',
                eve.espaco_publico AS 'Evento Público',
                eve.fomento AS 'Fomento'
                
@@ -18,6 +19,7 @@ $sqlEvento = "SELECT
                 INNER JOIN projeto_especiais AS pe ON eve.projeto_especial_id = pe.id
                 INNER JOIN usuarios AS fiscal ON eve.fiscal_id = fiscal.id
                 INNER JOIN usuarios AS suplente ON eve.suplente_id = suplente.id
+                INNER JOIN usuarios AS usuario ON eve.usuario_id = usuario.id
                 
                 WHERE eve.id = '$idEvento'";
 
