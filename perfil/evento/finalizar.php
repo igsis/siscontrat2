@@ -77,10 +77,10 @@ include "includes/validacoes.php";
                             </ul>
                         </div>
                     <?php }
-                } else{
+                } else {
                     $errosArqs = [];
                 }
-                    ?>
+                ?>
             </div>
         </div>
 
@@ -150,7 +150,7 @@ include "includes/validacoes.php";
                         <div class="alert alert-danger">
                             <h4><i class="icon fa fa-ban"></i>Não há atrações cadastradas</h4>
                         </div>
-                    <?php
+                        <?php
                         $mostra = false;
                     } else {
                         if ((isset($numFilmes) && $numFilmes == 0) && $evento['tipo_evento_id'] == 2) {
@@ -161,7 +161,7 @@ include "includes/validacoes.php";
                             <?php
                             $mostra = false;
                         }
-                        if($mostra){
+                        if ($mostra) {
                             include "label_atracao_filme.php";
                         }
                     } ?>
@@ -182,10 +182,15 @@ include "includes/validacoes.php";
                     <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                     <input type="hidden" name="fora" value="<?= $fora ?? 0 ?>">
                     <button class="btn btn-success" name="enviar"
-                            type="submit" <?= (count($erros) != 0 or count($errosArqs) != 0) ? "disabled" : "" ?>>Enviar Evento
+                            type="submit"
+                            <?= (count($erros) != 0 or count($errosArqs) != 0) and ($_SESSION['atracao_repetida']) ? "disabled" : "" ?>
+                    >Enviar Evento
                     </button>
                 </form>
             </div>
         </div>
     </section>
 </div>
+<script>
+    alert('<?= $_SESSION['atracao_repetida'] ?>')
+</script>
