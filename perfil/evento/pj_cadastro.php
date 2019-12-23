@@ -14,16 +14,9 @@ if (isset($_POST['adicionar']) || isset($_POST['adicionaPj'])) {
 
 $idEvento = $_SESSION['idEvento'];
 
-$sql_evento = "SELECT tipo_evento_id FROM eventos WHERE id = '$idEvento'";
-$evento = $con->query($sql_evento)->fetch_array();
+$evento = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = '$idEvento'")->fetch_array();
 
-$sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'";
 $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'")->fetch_array();
-
-$sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'";
-$query = mysqli_query($con,$sql);
-$atracao = mysqli_fetch_array($query);
-
 ?>
 
 <script>
