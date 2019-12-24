@@ -190,15 +190,7 @@ $query = mysqli_query($con, $sql);
                         <h4 class="modal-title">Motivo do Cancelamento</h4>
                     </div>
                     <div class="modal-body">
-                        <script type="text/javascript">
-                            $('#exibicao').on('show.bs.modal', function (e) {
-                                let id = $(e.relatedTarget).attr('data-id');
-                                let nome = $(e.relatedTarget).attr('data-name');
-                                alert('nome: ' + nome);
-                                $(this).find('#idEvento').attr('value', `${id}`);
-                            })
-                        </script>
-                        <p><strong>Nome do Evento:</strong> </p>
+                        <p><strong>Nome do Evento:</strong></p>
                         <table class="table table-striped table-bordered">
                             <thead>
                             <tr>
@@ -207,16 +199,8 @@ $query = mysqli_query($con, $sql);
                                 <th width="15%">Data</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <?php
-                            $sqlChamado = "SELECT u.nome_completo, c.justificativa, c.data FROM chamados AS c 
-                                            INNER JOIN usuarios AS u ON u.id = c.usuario_id WHERE evento_id = $idEvento";
-                            $queryChamado = mysqli_query($con, $sql);
-                            while ($chamado = mysqli_fetch_array($sqlChamado)) { ?>
-                                <td><?= $chamado['justificativa'] ?></td>
-                                <td><?= $chamado['nome_completo'] ?></td>
-                                <td><?= exibirDataBr($chamado['data']) ?></td>
-                            <?php } ?>
+                            <tbody id="conteudoModal">
+
                             </tbody>
                         </table>
                     </div>
@@ -244,6 +228,28 @@ $query = mysqli_query($con, $sql);
         });
     });
 </script>
+
+<script type="text/javascript">
+    $('#exibicao').on('show.bs.modal', function (e) {
+
+        $('#conteudoModal').html('');
+
+        let nome = $(e.relatedTarget).attr('data-name');
+        let id = $(e.relatedTarget).attr('data-id');
+        $(this).find('p').text(`Nome do Evento: ${nome}`);
+
+        <?php
+        $idEventoModal = "<script> document.write(id) </script>";
+        $sqlChamado= "SELECT u.nome_completo, c.justificativa, c.data FROM usuarios AS u
+                                   INNER JOIN chamados AS c ON u.id = c.usuario_id WHERE c.evento_id = '$idEventoModal'";
+        $queryChamado = mysqli_query($con, $sqlChamado);
+        ?>
+
+        //$(this).find('conteudoModal').append("<td><?=$idEventoModal?></td>");
+
+    })
+</script>
+
 <script type="text/javascript">
     $('#exclusao').on('show.bs.modal', function (e) {
         let evento = $(e.relatedTarget).attr('data-name');
