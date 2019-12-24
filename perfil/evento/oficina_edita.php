@@ -1,10 +1,11 @@
 <?php
 $con = bancoMysqli();
 
+
+
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $idAtracao = $_POST['idAtracao'];
     $modalidade = $_POST['modalidade'];
-    $desc_modalidade = $_POST['desc_modalidade'];
     $data_inicio = $_POST ['data_inicio'];
     $data_fim = $_POST ['data_fim'];
     $execucaodia1 = $_POST['idDia1'];
@@ -14,15 +15,6 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 }
 
 if (isset($_POST['cadastra'])) {
-    $sqlInsertModalidade = "INSERT INTO modalidades (modalidade,
-                                                 descricao)
-                                                 VALUES(
-                                                 '$modalidade',
-                                                 '$desc_modalidade')";
-    if (mysqli_query($con, $sqlInsertModalidade)) {
-        $idModalidade = recuperaUltimo('modalidades');
-    }
-
     $sqlInsertOficinas = "INSERT INTO oficinas (atracao_id,
                                   modalidade_id, 
                                   data_inicio,
@@ -32,7 +24,7 @@ if (isset($_POST['cadastra'])) {
                                   valor_hora,
                                   carga_horaria) 
                           VALUES ('$idAtracao',
-                                  '$idModalidade',
+                                  '$modalidade',
                                   '$data_inicio',
                                   '$data_fim',
                                   '$execucaodia1',
@@ -55,6 +47,7 @@ if (isset($_POST['edita'])) {
     $idOficina = $_POST['idOficina'];
 
     $sqlUpdateOficina = "UPDATE oficinas SET
+                            modalidade_id = '$modalidade',
                             carga_horaria = '$carga_horaria',
                             data_inicio = '$data_inicio',
                             data_fim = '$data_fim',
@@ -64,12 +57,6 @@ if (isset($_POST['edita'])) {
                             WHERE id = '$idOficina'";
 
     if (mysqli_query($con, $sqlUpdateOficina)) {
-        $idModalidade = recuperaUltimo('modalidades');
-        $sqlUpdateModalidade = "UPDATE modalidades SET
-                            modalidade = '$modalidade',
-                            descricao = '$desc_modalidade'
-                            WHERE id = '$idModalidade'";
-        $queryUpdateModalidades = mysqli_query($con, $sqlUpdateModalidade);
         $mensagem = mensagem("success", "Gravado com sucesso!");
         //gravarLog($sql);
     } else {
@@ -80,7 +67,8 @@ if (isset($_POST['edita'])) {
 if (isset($_POST['carregar'])) {
     $idOficina = $_POST['idOficina'];
 }
-
+$oficina = recuperaDados("oficinas", "id", $idOficina);
+$idAtracao = $oficina['atracao_id'];
 include "includes/menu_interno.php";
 
 ?>
@@ -151,7 +139,7 @@ include "includes/menu_interno.php";
                         }; ?>
                     </div>
                     <?php
-                    $oficina = recuperaDados("oficinas", "id", $idOficina);
+
                     $idModalidade = $oficina['modalidade_id'];
                     $execucaodia1 = $oficina['execucao_dia1_id'];
                     $execucaodia2 = $oficina['execucao_dia2_id'];
@@ -161,16 +149,11 @@ include "includes/menu_interno.php";
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="modalidade">Modalidade: *</label>
-                                    <input type="text" id="modalidade" name="modalidade" class="form-control" required
-                                           value="<?= $modalidade['modalidade'] ?>">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="desc_modalidade">Descrição da Modalidade: *</label><br/>
-                                    <textarea name="desc_modalidade" id="desc_modalidade" class="form-control" required
-                                              rows="3"><?= $modalidade['descricao'] ?></textarea>
+                                    <label for="modalidade">Modalidade: *</label> <button class='btn btn-default btn-sm' type='button' data-toggle='modal' data-target='#infoModalidade' style="border-radius: 15px;"><i class="fa fa-question-circle"></i></button>
+                                    <select id="modalidade" name="modalidade" required class="form-control">
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php geraOpcao('modalidades', $oficina['modalidade_id']); ?>
+                                    </select>
                                 </div>
                             </div>
                             <div class="row">
@@ -183,7 +166,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-3">
                                     <label for="carga_horaria">Carga Horária (em horas): *</label><br>
                                     <input class="form-control" style="max-width: 175px;" type="number" required
-                                           name="carga_horaria" min="0" value="<?= $oficina['carga_horaria'] ?>">
+                                           name="carga_horaria" min="1" value="<?= $oficina['carga_horaria'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -245,6 +228,27 @@ include "includes/menu_interno.php";
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="infoModalidade" role="dialog" aria-labelledby="infoModalidadeLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Informações para a Escolha da Modalidade</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <tbody>
+                            <?php geraModalDescritivo('modalidades', true); ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -63,15 +63,11 @@ $queryDias = mysqli_query($con, $sqlDias);
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="modalidade">Modalidade: *</label>
-                                    <input type="text" id="modalidade" name="modalidade" required class="form-control">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="desc_modalidade">Descrição da Modalidade: *</label><br/>
-                                    <textarea name="desc_modalidade" id="desc_modalidade" required class="form-control"
-                                              rows="3"></textarea>
+                                    <label for="modalidade">Modalidade: *</label> <button class='btn btn-default btn-sm' type='button' data-toggle='modal' data-target='#infoModalidade' style="border-radius: 15px;"><i class="fa fa-question-circle"></i></button>
+                                    <select id="modalidade" name="modalidade" required class="form-control">
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php geraOpcao('modalidades'); ?>
+                                    </select>
                                 </div>
                             </div>
                             <div class="row">
@@ -84,7 +80,7 @@ $queryDias = mysqli_query($con, $sqlDias);
                                 <div class="form-group col-md-3">
                                     <label for="carga_horaria">Carga Horária (em horas): *</label><br>
                                     <input class="form-control" style="max-width: 175px;" type="number" required
-                                           name="carga_horaria" min="0">
+                                           name="carga_horaria" min="1">
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -150,6 +146,27 @@ $queryDias = mysqli_query($con, $sqlDias);
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="infoModalidade" role="dialog" aria-labelledby="infoModalidadeLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Informações para a Escolha da Modalidade</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <?php geraModalDescritivo('modalidades', true); ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                    </div>
                 </div>
             </div>
         </div>

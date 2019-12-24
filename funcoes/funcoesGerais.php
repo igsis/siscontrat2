@@ -1392,3 +1392,19 @@ function atualizaDadosRelacionamento($tabela, $id, $post, $campo, $coluna){
         $con->query($sqlInsertRelacionamento);
     }
 }
+
+function geraModalDescritivo($tabela, $publicado = false) {
+    $con = bancoPDO();
+    $publicado = $publicado ? "WHERE publicado = 1" : "";
+    $sql = "SELECT * FROM $tabela ".$publicado;
+    $linhas = $con->query($sql)->fetchAll(PDO::FETCH_NUM);
+
+    foreach ($linhas as $linha) {
+        ?>
+        <tr>
+            <td width="50%"><strong><?= $linha[1] ?></strong></td>
+            <td width="50%" class="text-center"><?= $linha[2] ?></td>
+        </tr>
+        <?php
+    }
+}

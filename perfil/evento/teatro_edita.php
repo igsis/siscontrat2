@@ -81,9 +81,9 @@ include "includes/menu_interno.php";
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-2 text-center">
-                                    <label for="genero">Gênero</label><br/>
+                                    <label for="genero">Gênero *</label><br/>
                                     <input class='form-control' type="text" id="genero" name="genero" size="30"
-                                           value="<?= $teatro['genero'] ?>">
+                                           value="<?= $teatro['genero'] ?>" required>
                                 </div>
                                 <div class="form-group col-md-2 text-center">
                                     <label for="estreia">Estréia?</label> <br>

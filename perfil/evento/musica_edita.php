@@ -79,9 +79,9 @@ include "includes/menu_interno.php";
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-2">
-                                    <label for="genero">Gênero</label><br/>
+                                    <label for="genero">Gênero *</label><br/>
                                     <input type="text" class="form-control" id="genero" name="genero" size="30"
-                                           value="<?= $musica['genero'] ?>">
+                                           value="<?= $musica['genero'] ?>" required>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="venda">Venda de material?</label> <br>
