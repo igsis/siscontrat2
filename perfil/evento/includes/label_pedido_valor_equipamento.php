@@ -1,9 +1,16 @@
-<h3>5. Valor por equipamento</h3>
+<?php
+if ($tipoPessoa == 2){
+    $vpe = 5;
+} else{
+    $vpe = 4;
+}
+?>
+<h3><?= $vpe ?>. Valor por equipamento</h3>
 <?php
 $sqlEquipamento = "SELECT DISTINCT oco.local_id as 'local_id', local.local as 'local' 
-                                                            FROM ocorrencias AS oco
-                                                            INNER JOIN locais local ON local.id = oco.local_id 
-                                                            WHERE oco.origem_ocorrencia_id = '$idEvento' AND local.publicado = 1 AND oco.publicado = 1";
+                    FROM ocorrencias AS oco
+                    INNER JOIN locais local ON local.id = oco.local_id 
+                    WHERE oco.origem_ocorrencia_id = '$idEvento' AND local.publicado = 1 AND oco.publicado = 1";
 
 $queryEquipamento = mysqli_query($con, $sqlEquipamento);
 $numRowsEquipamento = mysqli_num_rows($queryEquipamento);

@@ -315,7 +315,14 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                 <?php } ?>
                                 <!-- Parecer Artístico -->
                                 <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '4' : '3'?>">
-                                    <h3>4. Parecer artístico</h3>
+                                    <?php
+                                    if ($tipoPessoa == 2){
+                                        $par = 4;
+                                    } else{
+                                        $par = 3;
+                                    }
+                                    ?>
+                                    <h3><?= $par ?>. Parecer artístico</h3>
                                     <div class="container">
                                         <div class="row">
                                             <?php include "includes/label_pedido_parecer_artistico.php" ?>
