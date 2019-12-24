@@ -95,9 +95,10 @@ if(isset($_POST['apagar']))
                                 <div class="table-responsive list_info"><h4><strong>Update de arquivos somente em PDF!</strong></h4><br>
                             <?php
                             //lista arquivos de determinado pedido
-                            $sql = "SELECT * FROM lista_documentos as list
+                            $sql = "SELECT * 
+                                    FROM lista_documentos as list
 			                        INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
-                                    WHERE arq.origem_id = '$idPedido'
+                                    WHERE arq.origem_id = '$idPedido' AND list.tipo_documento_id = 3
                                     AND arq.publicado = '1' ORDER BY arq.id";
                             $query = mysqli_query($con,$sql);
                             $linhas = mysqli_num_rows($query);
@@ -124,7 +125,8 @@ if(isset($_POST['apagar']))
                                     echo "
                                           <td class='list_description'>
                                                     <form id='formExcliuir' method='POST'>
-                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' data-nome='" . $arquivo['arquivo'] . "' data-id='". $arquivo['id'] ."' data-pessoa='". $tipoPessoa."'>
+                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' 
+                                                        data-nome='" . $arquivo['arquivo'] . "' data-id='". $arquivo['id'] ."' >
                                                         </button></td>
                                                     </form>";
                                     echo "</tr>";
@@ -191,10 +193,20 @@ if(isset($_POST['apagar']))
                                             {
                                                 echo "<input type='hidden' name='volta' value='".$_POST['volta']."' />";
                                             }
+
+                                            $num_lista = mysqli_num_rows($query_arquivos);
+                                            $num_arquivos = $con->query("SELECT * FROM arquivos WHERE lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1) AND origem_id = '$idPedido' AND publicado = 1")->num_rows;
+                                            $num_total = $num_lista - $num_arquivos;
+                                            if($num_total != 0) {
+                                                ?>
+                                                <input type='hidden' name='idPedido' value='<?= $idPedido ?>'/>
+                                                <input type="hidden" name="tipoPessoa"
+                                                       value="<?php echo $tipoPessoa; ?>"/>
+                                                <input type="submit" class="btn btn-primary btn-lg btn-block"
+                                                       name="enviar" value='Enviar'>
+                                                <?php
+                                            }
                                             ?>
-                                            <input type='hidden' name='idPedido' value='<?=$idPedido?>' />
-                                            <input type="hidden" name="tipoPessoa" value="<?php echo $tipoPessoa; ?>"  />
-                                            <input type="submit" class="btn btn-primary btn-lg btn-block" name="enviar" value='Enviar'>
                                         </form>
                                     </div>
                                 </div>
@@ -214,6 +226,7 @@ if(isset($_POST['apagar']))
                                                 <form action="?perfil=evento&p=pedido_anexos" method="post">
                                                     <input type="hidden" name="idArquivo" id="idArquivo" value="">
                                                     <input type="hidden" name="tipoPessoa" id="tipoPessoa" value="">
+                                                    <input type="hidden" name="idPedido" id="idPedido" value="<?=$idPedido?>">
                                                     <input type="hidden" name="apagar" id="apagar">
                                                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                                                     </button>

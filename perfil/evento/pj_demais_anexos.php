@@ -159,7 +159,7 @@ if(isset($_POST['apagar']))
                                                         <h1 class="text-center">Envio de Arquivos</h1>
                                                     </tr>
                                                     <tr>
-                                                        <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 06MB.</h4>
+                                                        <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 5MB.</h4>
                                                     </tr>
                                                     <?php
 
