@@ -31,6 +31,7 @@ if (isset($_POST['apagar'])) {
                 $mensagem2 = mensagem("warning", "Lembre-se de ajustar o valor das parcelas e do equipamento!");
             }
         }
+
     } else {
         $mensagem = mensagem("danger", "Erro ao tentar executar operação na atração");
     }

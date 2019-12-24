@@ -17,7 +17,7 @@ if (isset($_POST['cadastra'])) {
     $sql_atracoes = "INSERT INTO atracoes(evento_id, nome_atracao, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$idEvento','$nome_atracao', '$ficha_tecnica', '$integrantes', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
     if (mysqli_query($con, $sql_atracoes)) {
         $idAtracao = recuperaUltimo("atracoes");
-        $mensagem = mensagem("success", "Cadastrado com sucesso!");
+        $mensagem = mensagem("success", "Cadastrado com sucesso! Retornando a listagem de atrações");
 
         $sql = "SELECT * FROM pedidos WHERE origem_id = '$idEvento' AND origem_tipo_id = 1 AND publicado = 1";
         $query = mysqli_query($con, $sql);
@@ -57,6 +57,8 @@ if (isset($_POST['cadastra'])) {
                 $mensagem2 = mensagem("warning", "Atração atual tem valor acima de outras atrações com os mesmos nomes realizados anteriormente!");
             }
         }
+
+        echo "<meta http-equiv='refresh' content='3;url=?perfil=evento&p=atracoes_lista' />";
     } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.") . $sql_atracoes;
     }
@@ -234,6 +236,7 @@ include "includes/menu_interno.php";
                         <div class="box-footer">
                             <input type="hidden" name="idAtracao" value="<?= $atracao['id'] ?>">
                             <button type="submit" name="edita" id="cadastra" class="btn btn-info pull-right">Gravar</button>
+                            <a href="index.php?perfil=evento&p=atracoes_lista" class="btn btn-default pull-left">Voltar</a>
                         </div>
                     </form>
                 </div>
