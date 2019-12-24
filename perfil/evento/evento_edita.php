@@ -262,7 +262,7 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="fiscal">Telefone do Responsável Interno *</label>
-                                    <input class="form-control" type="text" name="telResponsavel" value="<?= $evento['tel_responsavel'] ?>" onkeyup="mascara( this, mtel );" required>
+                                    <input class="form-control" type="text" name="telResponsavel" maxlength="15" value="<?= $evento['tel_responsavel'] ?>" onkeyup="mascara( this, mtel );" required>
                                 </div>
                             </div>
 

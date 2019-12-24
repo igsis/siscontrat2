@@ -138,7 +138,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="anoProducao">Ano de produção: *</label>
-                                    <input type="text" class="form-control" id="anoProducao"  min="0" name="anoProducao" placeholder="Ex: 1995" maxlength="4" value="<?= $row['ano_producao'] ?>">
+                                    <input type="text" class="form-control" id="anoProducao"  min="1" name="anoProducao" placeholder="Ex: 1995" maxlength="4" value="<?= $row['ano_producao'] ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="genero">Gênero:</label>
@@ -166,7 +166,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="duracao">Duração (em minutos):</label>
-                                    <input type="number" class="form-control" name="duracao" min="0" id="duracao" required value="<?= $row['duracao'] ?>">
+                                    <input type="number" class="form-control" name="duracao" min="1" id="duracao" required value="<?= $row['duracao'] ?>">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="classidicacaoIndicativa" required>Classificação indicativa: *</label>
