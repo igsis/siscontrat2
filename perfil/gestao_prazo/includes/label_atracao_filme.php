@@ -137,10 +137,16 @@ if ($evento['tipo_evento_id'] == 2) {
                                                 <th width="30%">Telefone #2:</th>
                                                 <td><?= $produtor['telefone2'] ?></td>
                                             </tr>
-                                        <?php } ?>
+                                        <?php }
+                                        if($produtor['observacao'] != "" || $produtor != NULL){
+                                            $obs = $produtor['observacao'];
+                                        }else{
+                                            $obs = "Não cadastado";
+                                        }
+                                        ?>
                                         <tr>
                                             <th width="30%">Observação:</th>
-                                            <td><?= $produtor['observacao'] ?></td>
+                                            <td><?= $obs?></td>
                                         </tr>
                                     </table>
                                 </div>
