@@ -1,8 +1,6 @@
 <?php
 include "includes/menu_interno.php";
 
-session_start();
-
 $con = bancoMysqli();
 $conn = bancoPDO();
 
@@ -34,6 +32,10 @@ if (isset($_POST['duplicar'])) {
     $cloneOcorrencia = $stmt->fetch();
 
     array_shift($cloneOcorrencia);
+
+    foreach ($cloneOcorrencia as $key => $dado) {
+        $cloneOcorrencia[$key] = addslashes($dado);
+    }
     $inserir = "INSERT INTO siscontrat.ocorrencias 
             (" . implode(',', array_keys($cloneOcorrencia)) . ") VALUES 
             (" . sprintf("'%s'", implode("','", $cloneOcorrencia)) . ")";

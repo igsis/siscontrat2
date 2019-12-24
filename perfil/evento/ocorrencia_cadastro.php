@@ -231,7 +231,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
                                 <div class="form-group col-md-4">
                                     <label for="local">Local *</label>
-                                    <select class="form-control" id="local" name="local">
+                                    <select class="form-control" id="local" name="local" required>
                                         <!-- Populando pelo js -->
                                     </select>
 
@@ -494,10 +494,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                 .attr('readonly', true)
                 .val($('option:contains("Virada Cultural")').val());
 
-            $('#local')
-                .attr('readonly', true)
-                .val($('option:contains("De acordo com a programação do evento")').val());
-
             $('#retiradaIngresso')
                 .attr('readonly', true)
                 .val($('option:contains("INGRESSOS GRÁTIS")').val());
@@ -509,8 +505,12 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                 .attr('readonly', true)
                 .val('0,00');
 
-            getLocais(10, 626);
+            getLocais(10, 627);
             getEspacos();
+
+            $('#local')
+                .attr('readonly', true)
+                .val(627);
         }
     });
 
