@@ -229,31 +229,24 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="email">Email</label>
                                     <input type='text' class='form-control' id='email' name='email'
-                                           required maxlength="8" value="<?= $lider['email'] ?>" required>
+                                           required maxlength="60" value="<?= $lider['email'] ?>" required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="celular">Telefone #1</label>
-                                    <input type="text" class="form-control"
-                                           id='telefone' name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
-                                           required maxlength="11" value="<?= $arrayTelefones[0]['telefone']; ?>">
+                                    <input type="text" class="form-control"  onkeyup="mascara( this, mtel );" maxlength="15"  id='telefone' name="telefone[<?= $arrayTelefones[0]['id'] ?>]" required value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone">Telefone #2 </label>
                                     <?php
                                     if (isset($arrayTelefones[1])) {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
-                                               value="<?= $arrayTelefones[1]['telefone']; ?>">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]" value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone1" name="telefone1">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone1" name="telefone1">
                                         <?php
                                     }
                                     ?>
@@ -262,18 +255,13 @@ include "includes/menu_interno.php";
                                     <label for="telefone2">Telefone #3</label>
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
-                                               value="<?= $arrayTelefones[2]['telefone']; ?>">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]" value="<?= $arrayTelefones[2]['telefone']; ?>">
 
                                         <?php
                                     } else {
                                         ?>
 
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone2" name="telefone2">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone2" name="telefone2">
 
                                         <?php
                                     }
