@@ -142,6 +142,18 @@ if (isset($_POST['selecionar'])) {
     $tipoDocumento = $_POST['tipoDocumento'];
 }
 
+if (isset($_POST['carregar'])){
+    $idLider = $_POST['idLider'];
+    $idPedido = $_POST['idPedido'];
+    $idAtracao = $_POST['idAtracao'];
+    $tipo = $con->query("SELECT cpf FROM pessoa_fisicas WHERE id = '$idLider'")->fetch_array();
+    if(!empty($tipo['cpf'])){
+        $tipoDocumento = 1;
+    } else{
+        $tipoDocumento = 2;
+    }
+}
+
 $lider = recuperaDados("pessoa_fisicas", "id", $idLider);
 $drt = recuperaDados("drts", "pessoa_fisica_id", $idLider);
 
