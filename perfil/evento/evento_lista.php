@@ -229,10 +229,10 @@ $query = mysqli_query($con, $sql);
     });
 </script>
 
-<script type="text/javascript">
+<?php /*<script type="text/javascript">
     $('#exibicao').on('show.bs.modal', function (e) {
 
-        $('#conteudoModal').html('');
+    //    $('#conteudoModal').html('');
 
         let nome = $(e.relatedTarget).attr('data-name');
         let id = $(e.relatedTarget).attr('data-id');
@@ -248,7 +248,7 @@ $query = mysqli_query($con, $sql);
         //$(this).find('conteudoModal').append("<td><?=$idEventoModal?></td>");
 
     })
-</script>
+</script>*/ ?>
 
 <script type="text/javascript">
     $('#exclusao').on('show.bs.modal', function (e) {

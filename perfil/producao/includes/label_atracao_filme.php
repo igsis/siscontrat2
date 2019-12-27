@@ -139,15 +139,16 @@ if ($evento['tipo_evento_id'] == 2) {
                                             </tr>
                                         <?php }
                                         if($produtor['observacao'] != "" || $produtor != NULL){
-                                        $obs = $produtor['observacao'];
+                                            $obs = $produtor['observacao'];
                                         }else{
-                                        $obs = "Não cadastado";
+                                            $obs = "Não cadastado";
                                         }
                                         ?>
                                         <tr>
                                             <th width="30%">Observação:</th>
                                             <td><?= $obs?></td>
                                         </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>

@@ -118,7 +118,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="fiscal">Telefone do Responsável Interno *</label>
-                                    <input class="form-control" type="text" name="telResponsavel" maxlength="14" onkeyup="mascara( this, mtel );" required>
+                                    <input class="form-control" type="text" name="telResponsavel" maxlength="15" onkeyup="mascara( this, mtel );" required>
                                 </div>
                             </div>
 

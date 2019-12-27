@@ -33,7 +33,7 @@ if (isset($_POST['cadastra'])) {
                           '$sinopse','$elenco','$duracao',
                           '$link','$classidicacaoIndicativa',
                           '$paisOrigem','$paisCoProducao');";
-    echo $sql;
+    //echo $sql;
     if (mysqli_query($con, $sql)) {
         $idFilme = recuperaUltimo("filmes");
         $sql = "INSERT INTO `filme_eventos` (filme_id, evento_id)

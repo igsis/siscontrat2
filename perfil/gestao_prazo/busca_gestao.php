@@ -9,10 +9,10 @@ if (isset($_POST['aprovar'])) {
     if (mysqli_query($con, $sqlAprova)) {
         $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data')";
-        $queryEnvia = mysqli_query($con, $sqlEnvia);
+        mysqli_query($con, $sqlEnvia);
         $idUser = $_SESSION['idUser'];
         $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-        $queryEnvio = mysqli_query($con, $sqlEnvio);
+        mysqli_query($con, $sqlEnvio);
         $mensagem = mensagem("success", "Evento aprovado com sucesso!");
 
         if ($evento['tipo_evento_id'] == 1) {
