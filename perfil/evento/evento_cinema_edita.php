@@ -51,7 +51,7 @@ if(isset($_POST['adicionar'])){
     $sql = "INSERT INTO `filme_eventos` (filme_id, evento_id)
                     VALUES('$idFilme','$idEvento')";
     if(mysqli_query($con, $sql)){
-        $mensagem = mensagem("success", "Evento adicionado com sucesso ao evento.");
+        $mensagem = mensagem("success", "Filme adicionado com sucesso ao evento.");
     }else{
         $mensagem = mensagem("danger", "Erro ao adicionar o filme ao evento.");
 
