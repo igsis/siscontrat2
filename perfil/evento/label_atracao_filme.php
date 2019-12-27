@@ -17,7 +17,7 @@ if ($evento['tipo_evento_id'] == 2) {
                             <h4 class="box-title">
                                 <a data-toggle="collapse" data-parent="#accordionAtracao"
                                    href="#collapse<?= $filme['idFilmeEvento'] ?>">
-                                    Resumo do Filme: <?= $filme['titulo'] ?> 
+                                    Resumo do Filme: <?= $filme['titulo'] ?>
                                 </a>
                             </h4>
                         </div>

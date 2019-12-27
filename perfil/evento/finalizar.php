@@ -181,11 +181,17 @@ include "includes/validacoes.php";
                 <form action="?perfil=evento&p=resumo_evento_enviado" method="post">
                     <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                     <input type="hidden" name="fora" value="<?= $fora ?? 0 ?>">
-                    <button class="btn btn-success" name="enviar"
-                            type="submit"
-                            <?= (count($erros) != 0 or count($errosArqs) != 0) and ($_SESSION['atracao_repetida']) ? "disabled" : "" ?>
-                    >Enviar Evento
-                    </button>
+                    <?php
+                    if($evento['tipo_evento_id'] == 1){
+                        ?>
+                        <button class="btn btn-success" name="enviar" type="submit" <?= (count($erros) != 0 or count($errosArqs) != 0) and ($_SESSION['atracao_repetida']) ? "disabled" : "" ?>>Enviar Evento</button>
+                    <?php
+                    } else{
+                        ?>
+                        <button class="btn btn-success" name="enviar" type="submit" <?= (count($erros) != 0 or count($errosArqs) != 0) ?>>Enviar Evento</button>
+                    <?php
+                    }
+                    ?>
                 </form>
             </div>
         </div>
