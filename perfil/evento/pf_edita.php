@@ -403,8 +403,7 @@ $nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
 $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
 $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
-$sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
-$atracao = mysqli_query($con, $sql);
+$atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'")->fetch_array();
 
 include "includes/menu_interno.php";
 ?>
@@ -500,25 +499,7 @@ include "includes/menu_interno.php";
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    if (!empty($pf['cpf'])){
-                                    anexosNaPagina(1, $idPf, "modal-rg", "RG");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(2, $idPf, "modal-cpf", "CPF");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(30, $idPf, "modal-ccm", "FDC - CCM");
-                                    }
-                                    ?>
-                                </div>
-                            </div>
+
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -541,8 +522,7 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <br>
-                                    <i>(se não houver número marcar 0)</i>
+                                    <i>(se não houver, marcar 0)</i>
                                     <input type="number" name="numero" class="form-control" min="0"
                                            placeholder="(se não houver número marcar 0)" required
                                            value="<?= $endereco['numero'] ?>">
@@ -555,28 +535,23 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="bairro">Bairro: *</label>
                                     <input type="text" class="form-control" name="bairro" id="bairro"
                                            placeholder="Digite o Bairro" maxlength="80" readonly
                                            value="<?= $endereco['bairro'] ?>">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="cidade">Cidade: *</label>
                                     <input type="text" class="form-control" name="cidade" id="cidade"
                                            placeholder="Digite a cidade" maxlength="50" readonly
                                            value="<?= $endereco['cidade'] ?>">
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
                                     <input type="text" class="form-control" name="estado" id="estado" maxlength="2"
                                            placeholder="Digite o estado ex: (SP)" readonly
                                            value="<?= $endereco['uf'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(3, $idPf, "modal-endereco", "Comprovante de endereço");
-                                    ?>
                                 </div>
                             </div>
                             <hr/>
@@ -639,90 +614,84 @@ include "includes/menu_interno.php";
                                 <?php
                                 if ($mostraDRT) {
                                     ?>
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-6">
                                         <label for="drt">DRT: </label>
                                         <input type="text" name="drt" class="form-control telefone" maxlength="15"
                                                placeholder="Digite o DRT" value="<?= $drts['drt'] ?>">
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <?php
-                                        anexosNaPagina(47, $idPf, "modal-drt", "DTR");
-                                        ?>
-                                    </div>
                                     <?php
                                 }
                                 ?>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
                                            placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    anexosNaPagina(27, $idPf, "modal-nit", "NIT");
-                                    ?>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
-                                    <textarea name="observacao" rows="3"
-                                              class="form-control"><?= $observacao['observacao'] ?></textarea>
+                                    <textarea name="observacao" rows="3" class="form-control"><?= $observacao['observacao'] ?></textarea>
                                 </div>
                             </div>
-                            <hr/>
+                            <?php
+                            if($atracao['valor_individual'] > 0 || $evento['tipo_evento_id'] == 2) {
+                                ?>
+                                <hr/>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="banco">Banco:</label>
+                                        <select id="banco" name="banco" class="form-control" required>
+                                            <option value="">Selecione um banco...</option>
+                                            <?php
+                                            geraOpcao("bancos", $banco['banco_id']);
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="agencia">Agência: *</label>
+                                        <input type="text" name="agencia" class="form-control"
+                                               placeholder="Digite a Agência" maxlength="12" required
+                                               value="<?= $banco['agencia'] ?>">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="conta">Conta: *</label>
+                                        <input type="text" name="conta" class="form-control"
+                                               placeholder="Digite a Conta" maxlength="12" required
+                                               value="<?= $banco['conta'] ?>">
+                                    </div>
+                                </div>
 
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="banco">Banco:</label>
-                                    <select id="banco" name="banco" class="form-control" required>
-                                        <option value="">Selecione um banco...</option>
+                                <div class="row">
+                                    <div class="form-group col-md-3">
                                         <?php
-                                        geraOpcao("bancos", $banco['banco_id']);
+                                        $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
+                                        $queryFACC = mysqli_query($con, $sqlFACC);
                                         ?>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="agencia">Agência: *</label>
-                                    <input type="text" name="agencia" class="form-control"
-                                           placeholder="Digite a Agência" maxlength="12" required
-                                           value="<?= $banco['agencia'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="conta">Conta: *</label>
-                                    <input type="text" name="conta" class="form-control"
-                                           placeholder="Digite a Conta" maxlength="12" required
-                                           value="<?= $banco['conta'] ?>">
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
-                                    $queryFACC = mysqli_query($con, $sqlFACC);
-                                    ?>
+                                        <label>Gerar FACC</label><br>
+                                        <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
+                                           class="btn btn-primary btn-block">Clique aqui para
+                                            gerar a FACC
+                                        </a>
+                                    </div>
 
-                                    <label>Gerar FACC</label><br>
-                                    <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
-                                       class="btn btn-primary btn-block">Clique aqui para
-                                        gerar a FACC
-                                    </a>
+                                    <div class="form-group col-md-5">
+                                        <label>&nbsp;</label><br>
+                                        <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                            documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                            no campo correspondente.</p>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <?php
+                                        anexosNaPagina(42, $idPf, "modal-facc", "FACC");
+                                        ?>
+                                    </div>
                                 </div>
-
-                                <div class="form-group col-md-5">
-                                    <label>&nbsp;</label><br>
-                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                        no campo correspondente.</p>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(42, $idPf, "modal-facc", "FACC");
-                                    ?>
-                                </div>
-                            </div>
+                                <?php
+                            }
+                            ?>
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
