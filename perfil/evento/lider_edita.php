@@ -199,6 +199,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: *</label>
                                     <input type='text' class='form-control' id='nome' name='nome' maxlength='120'
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ]{1,120}" title="Apenas letras"
                                            value="<?= $lider['nome'] ?>" required>
                                 </div>
                                 <div class="form-group col-md-6">

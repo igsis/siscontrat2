@@ -78,7 +78,7 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: *</label>
-                                    <input type="text" class="form-control" name="nome" id="nome" placeholder="Digite o nome" maxlength="70" required>
+                                    <input type="text" class="form-control" name="nome" id="nome" placeholder="Digite o nome" maxlength="70" required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ]{1,70}" title="Apenas letras">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="nomeArtistico">Nome Artistico:</label>
@@ -174,15 +174,15 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Telefone #1: *</label>
-                                    <input type="text" id="telefone" name="telefone[0]" onkeyup="mascara( this, mtel );" class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                    <input type="text" id="telefone" name="telefone[0]" onkeyup="mascara( this, mtel );" class="form-control" placeholder="Digite o telefone" required maxlength="15" pattern=".{14,15}"  title="14 a 15 caracteres">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Telefone #2:</label>
-                                    <input type="text" id="telefone1" name="telefone[1]" onkeyup="mascara( this, mtel );" class="form-control" placeholder="Digite o telefone" maxlength="15">
+                                    <input type="text" id="telefone1" name="telefone[1]" onkeyup="mascara( this, mtel );" class="form-control" placeholder="Digite o telefone" maxlength="15" pattern=".{14,15}"  title="14 a 15 caracteres">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Telefone #3:</label>
-                                    <input type="text" id="telefone2" name="telefone[2]" onkeyup="mascara( this, mtel );" class="form-control telefone" placeholder="Digite o telefone" maxlength="15">
+                                    <input type="text" id="telefone2" name="telefone[2]" onkeyup="mascara( this, mtel );" class="form-control telefone" placeholder="Digite o telefone" maxlength="15" pattern=".{14,15}"  title="14 a 15 caracteres">
                                 </div>
                             </div>
 

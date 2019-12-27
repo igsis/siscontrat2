@@ -622,8 +622,9 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         var formPagamento = document.querySelector('#forma_pagamento');
 
         if ($('#numero_parcelas').val() != 13) {
-            $('#forma_pagamento').val('');
             $('#forma_pagamento').attr('readonly', true);
+            $('#forma_pagamento').val('');
+            //$('#forma_pagamento').val('O pagamento se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
         } else {
             $('#forma_pagamento').attr('readonly', false);
         }

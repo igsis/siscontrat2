@@ -58,7 +58,7 @@
                             
                             <div class="form-group">
                                 <label for="nome">Nome: *</label>
-                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value='<?= $row['nome']?>' required>
+                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value='<?= $row['nome']?>' required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ]{1,120}" title="Apenas letras">
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -67,12 +67,12 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone1">Telefone #1</label>
-                                    <input type="text" class="form-control" id='telefone' name='telefone1' maxlength='15' onkeyup="mascara( this, mtel );" placeholder='Digite o Telefone principal' required value='<?= $row['telefone1']?>'>
+                                    <input type="text" class="form-control" id='telefone' name='telefone1' maxlength='15' onkeyup="mascara( this, mtel );" placeholder='Digite o Telefone principal' required value='<?= $row['telefone1']?>' pattern=".{14,15}"  title="14 a 15 caracteres">
                                     
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone2">Telefone #2</label>
-                                    <input type="text" class="form-control" id='telefone' name='telefone2' onkeyup="mascara( this, mtel );" maxlength="15" placeholder='Digite o Telefone secundário' value='<?= $row['telefone2']?>'>
+                                    <input type="text" class="form-control" id='telefone' name='telefone2' onkeyup="mascara( this, mtel );" maxlength="15" placeholder='Digite o Telefone secundário' value='<?= $row['telefone2']?>' pattern=".{14,15}"  title="14 a 15 caracteres">
                                 </div>
                             </div>
                             <div class="form-group">
