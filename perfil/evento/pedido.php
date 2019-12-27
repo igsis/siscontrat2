@@ -90,7 +90,13 @@ $num = mysqli_num_rows($query);
                                 <thead>
                                 <tr>
                                     <th>Proponente</th>
-                                    <th>Atração</th>
+                                    <?php
+                                    if($evento['tipo_evento_id']==1){
+                                        echo "<th>Atração</th>";
+                                    } else{
+                                        echo "<th>Filme</th>";
+                                    }
+                                    ?>
                                     <th width="15%">Anexos</th>
                                     <th width="15%">Ação</th>
                                     <th width="5%">Excluir</th>
@@ -112,14 +118,24 @@ $num = mysqli_num_rows($query);
                                         $idProponente = $pf['id'];
                                     }
 
-                                    $sql_atracao = "SELECT id, nome_atracao FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
-                                    $query_atracao = mysqli_query($con, $sql_atracao);
-                                    $nome_atracao = "";
-                                    while ($arr = mysqli_fetch_array($query_atracao)) {
-                                        $nome_atracao = $nome_atracao . $arr['nome_atracao'] . " <br> ";
+                                    if($evento['tipo_evento_id']==1) {
+                                        $sql_atracao = "SELECT id, nome_atracao FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+                                        $query_atracao = mysqli_query($con, $sql_atracao);
+                                        $nome_atracao = "";
+                                        while ($arr = mysqli_fetch_array($query_atracao)) {
+                                            $nome_atracao = $nome_atracao . $arr['nome_atracao'] . " <br> ";
+                                        }
+                                        $nome_atracao = substr($nome_atracao, 0, -3);
+                                        echo "<td>" . $nome_atracao . "</td>";
+                                    } else{
+                                        $sql_filmes = $con->query("SELECT f.titulo FROM eventos AS eve INNER JOIN filme_eventos fe on eve.id = fe.evento_id INNER JOIN filmes f on fe.filme_id = f.id WHERE eve.id = '$idEvento'");
+                                        $nome_filme = "";
+                                        while ($arr = mysqli_fetch_array($sql_filmes)){
+                                            $nome_filme = $nome_filme . $arr['titulo'] . " <br> ";
+                                        }
+                                        $nome_filme = substr($nome_filme,0,-3);
+                                        echo "<td>$nome_filme</td>";
                                     }
-                                    $nome_atracao = substr($nome_atracao, 0, -3);
-                                    echo "<td>" . $nome_atracao . "</td>";
 
                                     echo "<td>                                    
                                         <input type='hidden' name='idPedido' value='" . $pedido['id'] . "'>
