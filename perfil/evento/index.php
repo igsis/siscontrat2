@@ -115,6 +115,11 @@ if ($linha >= 1) {
             }; ?>
         </div>
         <h2 class="page-header">Seus últimos eventos enviados</h2>
+        <p>
+            <small class="label pull-right bg-yellow-active">Suplente</small>
+            <small class="label pull-right bg-primary">Fiscal</small>
+            <small class="label pull-right bg-green-active">Usuário</small>
+        </p>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-solid">
