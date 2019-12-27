@@ -14,6 +14,11 @@ $numPedidos = mysqli_num_rows($pedidos);
 $errosArqs = [];
 $erros = [];
 
+$musica = false;
+$oficina = false;
+$teatro = false;
+$edital = false;
+
 // CASO SEJA EVENTO ENTRA AQUI NESSA PARADA
 if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
     $sqlAtracaos = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
@@ -39,24 +44,31 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
 
             // VERIFICA O TIPO DE ACAO E VE SE TEM ESPECIFICIDADE
             $idAtracao = $atracao['id'];
-            $acoes = recuperaDados('acao_atracao', 'atracao_id', $idAtracao);
-            $idAcao = $acoes['acao_id'];
+            $sqlAcao = "SELECT acao_id FROM acao_atracao WHERE atracao_id = '{$atracao['id']}'";
+            $acoes = $con->query($sqlAcao)->fetch_all(MYSQLI_ASSOC);
             $possui = true;
-            switch ($idAcao) {
-                case 11 : // teatro
-                    $tabela = 'teatro';
-                    break;
-                case 7 : // música
-                    $tabela = 'musica';
-                    break;
-                case 5 : // exposição (feira)
-                    $tabela = 'exposicoes';
-                    break;
-                case 8 : // oficina
-                    $tabela = 'oficinas';
-                    break;
-                default :
-                    $possui = false;
+
+            foreach ($acoes as $acao) {
+                $idAcao = $acao['acao_id'];
+                switch ($idAcao) {
+                    case 11 : // teatro
+                        $tabela = 'teatro';
+                        $teatro = true;
+                        break;
+                    case 7 : // música
+                        $tabela = 'musica';
+                        $musica = true;
+                        break;
+                    case 5 : // exposição (feira)
+                        $tabela = 'exposicoes';
+                        break;
+                    case 8 : // oficina
+                        $tabela = 'oficinas';
+                        $oficina = true;
+                        break;
+                    default :
+                        $possui = false;
+                }
             }
 
             // CASO POSSUA ESPECIFICIDADE REALMENTE CONFERIR SE FOI CADASTRADA ALGUMA
@@ -125,12 +137,23 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                     array_push($erros, "Não há forma de pagamento cadastrada no pedido");
 
                 // VERIFICA SE OS ARQUIVOS DE PEDIDO FORAM ENVIADOS
+                if ($musica) { $whereAdicional[] = "musica = '1'"; }
+                if ($oficina) { $whereAdicional[] = "oficina = '1'"; }
+                if ($teatro) { $whereAdicional[] = "teatro = '1'"; }
+                if ($edital) { $whereAdicional[] = "edital = '1'"; }
+
+                if ($musica || $oficina || $teatro) {
+                    $sqlAdicional = "AND (".implode("OR ", $whereAdicional).")";
+                } else
+                    $sqlAdicional = "";
+
+
                 $idPedido = $pedido['id'];
                 $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo
                             FROM lista_documentos ld
                             LEFT JOIN (SELECT * FROM arquivos 
                                        WHERE publicado = 1 AND origem_id = '$idPedido' AND publicado = 1) a ON ld.id = a.lista_documento_id
-                            WHERE ld.tipo_documento_id = 3 AND ld.publicado = 1";
+                            WHERE ld.tipo_documento_id = 3 AND ld.publicado = 1 $sqlAdicional";
 
                 $queryArqs = mysqli_query($con, $sqlArqs);
                 while ($arquivo = mysqli_fetch_array($queryArqs)) {
