@@ -110,7 +110,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="tituloFilme">Título do filme *:</label>
-                                <input type='text' class='form-control' id='tituloFilme' name='tituloFilme' maxlength='100' value='<?= $row['titulo'] ?>'>
+                                <input type='text' class='form-control' id='tituloFilme' name='tituloFilme' maxlength='100' value='<?= $row['titulo'] ?>' readonly>
                             </div>
                             <div class="form-group">
                                 <label for="tituloOriginal">Título original:</label>
