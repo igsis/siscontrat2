@@ -1,6 +1,8 @@
 <?php
 include "includes/menu_principal.php";
 
+$url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_chamados.php';
+
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
@@ -229,26 +231,41 @@ $query = mysqli_query($con, $sql);
     });
 </script>
 
-<?php /*<script type="text/javascript">
+<!--<script>-->
+<!--    $('#exibirMotivo').click(function () {-->
+<!--        $('#exibicao').modal('show');-->
+<!--        let nome = $(this).attr('data-name');-->
+<!---->
+<!--        console.log(nome);-->
+<!--    })-->
+<!--</script>-->
+
+<script>
+    const url = `<?=$url?>`;
+
     $('#exibicao').on('show.bs.modal', function (e) {
-
-    //    $('#conteudoModal').html('');
-
         let nome = $(e.relatedTarget).attr('data-name');
         let id = $(e.relatedTarget).attr('data-id');
-        $(this).find('p').text(`Nome do Evento: ${nome}`);
+        $(this).find('p').html(`<strong>Nome do Evento:</strong> ${nome}`);
 
-        <?php
-        $idEventoModal = "<script> document.write(id) </script>";
-        $sqlChamado= "SELECT u.nome_completo, c.justificativa, c.data FROM usuarios AS u
-                                   INNER JOIN chamados AS c ON u.id = c.usuario_id WHERE c.evento_id = '$idEventoModal'";
-        $queryChamado = mysqli_query($con, $sqlChamado);
-        ?>
+        $('#exibicao').find('#conteudoModal').empty();
 
-        //$(this).find('conteudoModal').append("<td><?=$idEventoModal?></td>");
+        // @TODO: Melhorar esse código
+        $.getJSON(url + "?idEvento=" + id, function (data) {
+            $.each(data, function (key, value) {
+                $.each(value, function (key, valor) {
+                    $('#exibicao').find('#conteudoModal').append(`<td>${valor}</td>`);
+                    console.log(key + ": " + valor);
+                })
+            })
+        })
 
+        //let operador = <?//=$chamado['nome_completo']?>//;
+        //let data = <?//=$chamado['data']?>//;
+
+        // $(this).find('#conteudoModal').append(`<td>${motivo}</td>`);
     })
-</script>*/ ?>
+</script>
 
 <script type="text/javascript">
     $('#exclusao').on('show.bs.modal', function (e) {
