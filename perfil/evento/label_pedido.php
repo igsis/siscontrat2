@@ -80,8 +80,8 @@ switch ($pedido['pessoa_tipo_id']) {
         $endereco = recuperaDados('pj_enderecos', 'pessoa_juridica_id', $pedido['pessoa_juridica_id']);
         $pjBancos = recuperaDados('pj_bancos', 'pessoa_juridica_id', $pedido['pessoa_juridica_id']);
         $banco = recuperaDados('bancos', 'id', $pjBancos['banco_id'])['banco'];
-        $idRepresentante1 = $pedido['representante_legal1_id'] ?? "";
-        $idRepresentante2 = $pedido['representante_legal2_id'] ?? "";
+        $idRepresentante1 = $proponente['representante_legal1_id'] ?? "";
+        $idRepresentante2 = $proponente['representante_legal2_id'] ?? "";
         $representante1 = recuperaDados('representante_legais', 'id', $idRepresentante1);
         $representante2 = recuperaDados('representante_legais', 'id', $idRepresentante2);
 
