@@ -715,7 +715,7 @@ include "includes/menu_interno.php";
                     <div class="form-group col-md-3">
                         <form method="POST" action="?perfil=evento&p=pf_demais_anexos" role="form">
                             <button type="submit" name="idPf" value="<?= $pf['id'] ?>"
-                                    class="btn btn-info btn-block">Demais Anexos
+                                    class="btn btn-warning btn-block">Demais Anexos
                             </button>
                         </form>
                     </div>
