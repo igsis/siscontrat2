@@ -513,7 +513,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         <?php
 
 
-        if ($data_kit == null){
+        if ($data_kit == null && $data_kit2 == 0){
         ?>
         $('.next-step').prop('disabled', true);
         $('#mensagem-alerta').append('<div class="alert alert-danger col-md-12" role="alert">Crie uma ocorrência antes de prosseguir com pedido.</div>');

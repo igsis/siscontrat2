@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 $query_data = "SELECT MIN(o.data_inicio)
 FROM eventos AS e INNER JOIN atracoes AS a ON a.evento_id = e.id
@@ -7,6 +7,11 @@ INNER JOIN pedidos AS p ON p.origem_id = e.id
 WHERE p.origem_tipo_id = 1 AND p.id = '$idPedido' AND p.publicado = 1 AND a.publicado = 1 AND o.publicado = 1";
 
 $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
+
+$query_data2="SELECT count(*) FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
+INNER JOIN eventos AS e ON fe.evento_id = e.id WHERE e.id = '$idEvento'";
+
+$data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
 
 ?>
 <h3 class="h2">1. Detalhes de parcelas</h3>
