@@ -15,22 +15,24 @@ $edital = false;
 
 foreach ($atracoes as $atracao) {
     $sqlAcao = "SELECT acao_id FROM acao_atracao WHERE atracao_id = '{$atracao['id']}'";
-    $acao = $con->query($sqlAcao)->fetch_assoc()['acao_id'];
-    switch ($acao) {
-        case 7:
-            $musica = true;
-            break;
+    $acoes = $con->query($sqlAcao)->fetch_all(MYSQLI_ASSOC);
+    foreach ($acoes as $acao) {
+        switch ($acao['acao_id']) {
+            case 7:
+                $musica = true;
+                break;
 
-        case 8;
-            $oficina = true;
-            break;
+            case 8;
+                $oficina = true;
+                break;
 
-        case 11:
-            $teatro = true;
-            break;
+            case 11:
+                $teatro = true;
+                break;
 
-        default:
-            break;
+            default:
+                break;
+        }
     }
 }
 
@@ -195,7 +197,7 @@ if(isset($_POST['apagar']))
                                                 $evento = recuperaDados('eventos', 'id', $idEvento);
                                                 if($evento['tipo_evento_id'] == 1) {
                                                     if ($musica || $oficina || $teatro) {
-                                                        $sqlAdicional = "AND (".implode("OR ", $whereAdicional).")";
+                                                        $sqlAdicional = "AND (".implode(" OR ", $whereAdicional).")";
                                                     } else
                                                         $sqlAdicional = "";
                                                     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 $sqlAdicional";
