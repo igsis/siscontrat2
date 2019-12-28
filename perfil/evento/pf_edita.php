@@ -323,6 +323,25 @@ if (isset($valores) && $valores > 0) {
     $valorTotal = 0;
 }
 
+if (isset($_POST['selecionar'])) {
+    $tipoPessoa = 1;
+    $idPessoa = $_POST['idPf'];
+    $tipoEvento = $evento['tipo_evento_id'];
+    $campo = "pessoa_fisica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
 
 if (isset($_POST["enviar"])) {
     $idPf = $_POST['idPessoa'];
@@ -440,7 +459,7 @@ include "includes/menu_interno.php";
                                 <div class="col-md-6 form-group">
                                     <label for="nome">Nome: *</label>
                                     <input type="text" class="form-control" name="nome" placeholder="Digite o nome"
-                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ]{1,70}" title="Apenas letras"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}" title="Apenas letras"
                                            maxlength="70" required value="<?= $pf['nome'] ?>">
                                 </div>
                                 <div class="col-md-6 form-group">
