@@ -609,7 +609,8 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                                 <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
                                     <input type="hidden" name="pessoa_tipo_id" value="2">
                                     <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
-                                    <input type="hidden" name="valor" value="<?= $atracao['valor_individual'] ?>">
+                                    <?php $valor = $evento['tipo_evento_id'] != 2 ? $atracao['valor_individual'] : "0.00"?>
+                                    <input type="hidden" name="valor" value="<?= $valor ?>">
                                     <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
                                     <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
                                         contratação
