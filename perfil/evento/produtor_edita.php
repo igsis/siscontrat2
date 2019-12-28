@@ -58,7 +58,7 @@
                             
                             <div class="form-group">
                                 <label for="nome">Nome: *</label>
-                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value='<?= $row['nome']?>' required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ]{1,120}" title="Apenas letras">
+                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value='<?= $row['nome']?>' required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras">
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">

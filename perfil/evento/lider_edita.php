@@ -140,6 +140,20 @@ if (isset($_POST['selecionar'])) {
     $idPedido = $_POST['idPedido'];
     $idAtracao = $_POST['idAtracao'];
     $tipoDocumento = $_POST['tipoDocumento'];
+
+    $existeLider = "SELECT * FROM Lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
+
+    $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
+    if ($resultado) {
+        $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
+    } else {
+        $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido','$idAtracao','$idLider')";
+    }
+
+    if (mysqli_query($con, $sqLider)) {
+        $mensagem = mensagem("success", "Lider inserido com sucesso. Retornando ao pedido...");
+        echo "<meta http-equiv='refresh' content='2;url=index.php?perfil=evento&p=pedido_edita&lider=true' />";
+    }
 }
 
 if (isset($_POST['carregar'])){
@@ -199,7 +213,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: *</label>
                                     <input type='text' class='form-control' id='nome' name='nome' maxlength='120'
-                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ]{1,120}" title="Apenas letras"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras"
                                            value="<?= $lider['nome'] ?>" required>
                                 </div>
                                 <div class="form-group col-md-6">

@@ -49,7 +49,7 @@ if (isset($_POST['trocaPj'])) {
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
-if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
+if (isset($_SESSION['idPedido']) && (isset($_POST['cadastra'])) || isset($_GET['lider'])) {
     unset($_POST['cadastra']);
     $_POST['carregar'] = 1;
     $idPedido = $_SESSION['idPedido'];
