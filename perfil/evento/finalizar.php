@@ -89,7 +89,7 @@ include "includes/validacoes.php";
                 }; ?></em></h2>
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right">
-                <?php if ($evento['contratacao'] == 1 && $evento['tipo_evento_id'] == 1) { ?>
+                <?php if ($evento['contratacao'] == 1) { ?>
                     <li><a href="#pedido" data-toggle="tab">Pedido de Contratação</a></li>
                 <?php } ?>
                 <li><a href="#ocorrencia" data-toggle="tab">Ocorrências</a></li>
@@ -171,7 +171,7 @@ include "includes/validacoes.php";
                     <?php include "label_ocorrencia.php" ?>
                 </div>
 
-                <?php if ($evento['contratacao'] == 1 && $evento['tipo_evento_id'] == 1) { ?>
+                <?php if ($evento['contratacao'] == 1) { ?>
                     <div class="tab-pane" id="pedido">
                         <?php include "label_pedido.php" ?>
                     </div>

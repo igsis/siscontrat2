@@ -320,7 +320,7 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
                                     <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
-                                           class="form-control"
+                                           class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -330,14 +330,14 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                                     if (isset($arrayTelefones[1])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -348,7 +348,7 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
@@ -356,7 +356,7 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone2" name="telefone2">
 
                                         <?php

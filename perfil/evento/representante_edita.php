@@ -206,6 +206,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: </label>
                                     <input type="text" class="form-control" id="nome" name="nome"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ]{1,70}" title="Apenas letras"
                                            maxlength="70" required value="<?= $representantes['nome'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
