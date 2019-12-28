@@ -292,6 +292,27 @@ if (isset($_POST['selecionar'])) {
     }
 }
 
+if (isset($_POST['cadastra'])) {
+    $tipoPessoa = 2;
+    $tipoEvento = $evento['tipo_evento_id'];
+    $valor = $evento['tipo_evento_id'] != 2 ? $atracao['valor_individual'] : "0.00";
+    $campo = "pessoa_juridica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPj, $valor, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Proponente cadastrado. Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
+
+
 ?>
 
 <script>

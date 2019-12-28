@@ -145,7 +145,6 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_PO
             }
         }
 
-
         $mensagem .= mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
     } else {
@@ -342,6 +341,26 @@ if (isset($_POST['selecionar'])) {
         echo $sqlFirst;
     }
 }
+
+if (isset($_POST['cadastra'])) {
+    $tipoPessoa = 1;
+    $tipoEvento = $evento['tipo_evento_id'];
+    $campo = "pessoa_fisica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPf, $valorTotal, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Proponente cadastrado. Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
+
 
 if (isset($_POST["enviar"])) {
     $idPf = $_POST['idPessoa'];
