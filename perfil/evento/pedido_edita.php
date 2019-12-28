@@ -192,6 +192,9 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
     }
 }
 
+$evento = recuperaDados('eventos', 'id', $idEvento);
+$tipoEvento = $evento['tipo_evento_id'];
+
 if (isset($valores) && $valores > 0) {
     $valorTotal = 0;
     foreach ($valores as $valor) {
@@ -201,7 +204,7 @@ if (isset($valores) && $valores > 0) {
     $valorTotal = 0;
 }
 
-if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
+if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal) && $tipoEvento != 2) {
     if ($valorTotal > $pedido['valor_total'] || $valorTotal < $pedido['valor_total']) {
         $sqlUpdate = "UPDATE pedidos SET valor_total = '$valorTotal' WHERE id = $idPedido";
         if (mysqli_query($con, $sqlUpdate)) {
@@ -212,9 +215,6 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         }
     }
 }
-
-$evento = recuperaDados('eventos', 'id', $idEvento);
-$tipoEvento = $evento['tipo_evento_id'];
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
