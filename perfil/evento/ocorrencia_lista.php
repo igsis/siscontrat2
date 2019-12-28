@@ -322,19 +322,7 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
 
         if (cont > 0) {
             $("#duplicated-message").html(menssagem)
-            <?php
-                $_SESSION['atracao_repetida'] = true;
-                echo($_SESSION['atracao_repetida']);
-            ?>
-
-            alert('vai da verdadeiro')
-        } else {
-            alert('vai da falso')
-            <?php
-                $_SESSION['atracao_repetida'] = false;
-            ?>
         }
-
     }
 
     highlightDoubles(document.getElementById('tblOcorrencia'));
