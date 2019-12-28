@@ -65,7 +65,7 @@ if (isset($_POST['_method'])) {
                 $queryParcela = "SELECT data_pagamento FROM parcelas WHERE pedido_id = ".$idPedido." AND numero_parcelas = 1";
                 $data_kit_pagamento = mysqli_fetch_row(mysqli_query($con,$queryParcela))[0];
             }
-             $query = "UPDATE pedidos SET verba_id = ".$idVerba.", numero_parcelas = ".$num_parcelas.", valor_total = ".$valor_total.", forma_pagamento = '".$forma_pagamento."', data_kit_pagamento='".$data_kit_pagamento."', justificativa ='".$justificativa."', observacao = '".$observacao."' WHERE id = ".$idPedido;
+             $query = "UPDATE pedidos SET verba_id = '$idVerba', numero_parcelas = '$num_parcelas', valor_total = '$valor_total', forma_pagamento = '$forma_pagamento', data_kit_pagamento = '$data_kit_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
             if (mysqli_query($con,$query)){
                 echo true;
             }else{

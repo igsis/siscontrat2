@@ -212,6 +212,9 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         }
     }
 }
+
+$evento = recuperaDados('eventos', 'id', $idEvento);
+$tipoEvento = $evento['tipo_evento_id'];
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">

@@ -33,7 +33,11 @@ $data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
 
         <?php
         if ($pedido['origem_tipo_id'] != 2) {
-            $readonly = 'readonly';
+            if ($tipoEvento != 2) {
+                $readonly = 'readonly';
+            } else {
+                $readonly = '';
+            }
         } else {
             $readonly = '';
         }
