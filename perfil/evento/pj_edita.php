@@ -270,6 +270,28 @@ if (isset($pj['representante_legal2_id'])) {
 $idEvento = $_SESSION['idEvento'];
 $evento = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = '$idEvento'")->fetch_array();
 $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'")->fetch_array();
+
+if (isset($_POST['selecionar'])) {
+    $tipoPessoa = 2;
+    $idPessoa = $_POST['idPj'];
+    $tipoEvento = $evento['tipo_evento_id'];
+    $valor = $evento['tipo_evento_id'] != 2 ? $atracao['valor_individual'] : "0.00";
+    $campo = "pessoa_juridica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPessoa, $valor, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
+
 ?>
 
 <script>
@@ -609,7 +631,6 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                                 <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
                                     <input type="hidden" name="pessoa_tipo_id" value="2">
                                     <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
-                                    <?php $valor = $evento['tipo_evento_id'] != 2 ? $atracao['valor_individual'] : "0.00"?>
                                     <input type="hidden" name="valor" value="<?= $valor ?>">
                                     <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
                                     <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
