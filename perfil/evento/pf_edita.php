@@ -46,10 +46,10 @@ if (isset($_POST['cadastraLider'])) {
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
     $nome = trim(addslashes($_POST['nome']));
     $nomeArtistico = trim(addslashes($_POST['nomeArtistico']));
-    $rg = trim($_POST['rg']) ?? NULL;
+    $rg =  isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
-    $ccm = trim($_POST['ccm']) ?? NULL;
+    $ccm = isset($_POST['ccm']) ? trim($_POST['ccm']) : NULL;
     $dtNascimento = $_POST['dtNascimento'] ?? NULL;
     $nacionalidade = $_POST['nacionalidade'];
     $cep = $_POST['cep'];
@@ -61,12 +61,12 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastr
     $uf = trim($_POST['estado']);
     $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
-    $drt = trim($_POST['drt']) ?? NULL;
+    $drt = isset($_POST['drt']) ? trim($_POST['drt']) : NULL;
     $nit = trim($_POST['nit']) ?? NULL;
     $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $banco = $_POST['banco'] ?? NULL;
-    $agencia = trim($_POST['agencia']) ?? NULL;
-    $conta = trim($_POST['conta']) ?? NULL;
+    $agencia = isset($_POST['agencia']) ? trim($_POST['agencia']) : NULL;
+    $conta = isset($_POST['conta']) ? trim($_POST['conta']) : NULL;
     $data = date("y-m-d h:i:s", strtotime("-3 hours"));
 }
 if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
@@ -499,7 +499,7 @@ include "includes/menu_interno.php";
 
                                     <div class="form-group col-md-6">
                                     <?php
-                                    anexosNaPagina(62, $idPf, "modal-passaporte", "Passaporte");
+                                    anexosNaPagina(1, $idPf, "modal-passaporte", "Passaporte");
                                     ?>
                                     </div>
                                 <?php } else {
@@ -815,6 +815,7 @@ modalUploadArquivoUnico("modal-ccm", "?perfil=evento&p=pf_edita", "FDC - CCM", "
 modalUploadArquivoUnico("modal-nit", "?perfil=evento&p=pf_edita", "NIT", "pis_pasep_", $idPf, "1");
 modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pf_edita", "FACC", "faq", $idPf, "1");
 modalUploadArquivoUnico("modal-drt", "?perfil=evento&p=pf_edita", "DRT", "drt", $idPf, "1");
+modalUploadArquivoUnico("modal-passaporte", "?perfil=evento&p=pf_edita", "Passaporte", "rg", $idPf, "1");
 modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprovante de endereço", "residencia", $idPf, "1");
 ?>
 
