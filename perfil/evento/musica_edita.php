@@ -4,9 +4,9 @@ $con = bancoMysqli();
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $idAtracao = $_POST['idAtracao'] ?? NULL;
     $idMusica = $_POST['idMusica'] ?? NULL;
-    $genero = addslashes($_POST['genero']);
-    $venda = ($_POST['venda']);
-    $descricao = addslashes($_POST['descricao']);
+    $genero = trim(addslashes($_POST['genero']));
+    $venda = $_POST['venda'];
+    $descricao = trim(addslashes($_POST['descricao']));
 }
 
 if (isset($_POST['cadastra'])) {

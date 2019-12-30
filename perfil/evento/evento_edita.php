@@ -3,12 +3,12 @@ $con = bancoMysqli();
 $idEvento = isset($_SESSION['idEvento']) ? $_SESSION['idEvento'] : null;
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
-    $nomeEvento = addslashes($_POST['nomeEvento']);
+    $nomeEvento = trim(addslashes($_POST['nomeEvento']));
     $relacao_juridica_id = $_POST['relacaoJuridica'];
     $projeto_especial_id = $_POST['projetoEspecial'];
-    $sinopse = addslashes($_POST['sinopse']);
+    $sinopse = trim(addslashes($_POST['sinopse']));
     $tipo = $_POST['tipo'];
-    $nomeResponsavel = $_POST['nomeResponsavel'];
+    $nomeResponsavel = trim($_POST['nomeResponsavel']);
     $telResponsavel = $_POST['telResponsavel'];
     $fiscal_id = $_POST['fiscal'];
     $suplente_id = $_POST['suplente'];

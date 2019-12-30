@@ -16,8 +16,8 @@ if (isset($_POST['carregar']) || isset($_POST['apagar']) || isset($_POST['enviar
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['carregar']) ) {
-    $nome = addslashes($_POST['nome']) ?? null;
-    $rg = $_POST['rg'];
+    $nome = trim(addslashes($_POST['nome'])) ?? null;
+    $rg = trim($_POST['rg']);
     $cpf = $_POST['cpf'];
     $tipoRepresentante = $_POST['tipoRepresentante'];
 }

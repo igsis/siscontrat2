@@ -12,11 +12,11 @@ $mensagem = '';
 
 if (isset($_POST['cadastrar']) || isset($_POST['editar'])) {
     $idPedido = $_SESSION['idPedido'];
-    $nome = addslashes($_POST['nome']);
-    $nomeArtistico = $_POST['nomeArtistico'];
-    $email = $_POST['email'];
+    $nome = trim(addslashes($_POST['nome']));
+    $nomeArtistico = trim($_POST['nomeArtistico']);
+    $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
-    $drt = $_POST['drt'];
+    $drt = trim($_POST['drt']);
     $data = date("y-m-d h:i:s");
     $passaporte = $_POST['passaporte'] ?? NULL;
     $cpf = $_POST['cpf'] ?? NULL;

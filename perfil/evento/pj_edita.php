@@ -27,21 +27,21 @@ if (isset($_POST['editProponente'])) {
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['atualizaPj'])) {
-    $razao_social = addslashes($_POST['razao_social']);
+    $razao_social = trim(addslashes($_POST['razao_social']));
     $cnpj = $_POST['cnpj'];
-    $ccm = $_POST['ccm'] ?? NULL;
-    $email = $_POST['email'];
+    $ccm = trim($_POST['ccm']) ?? NULL;
+    $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
     $cep = $_POST['cep'];
     $logradouro = addslashes($_POST['rua']);
     $numero = $_POST['numero'];
-    $complemento = $_POST['complemento'] ?? NULL;
-    $bairro = addslashes($_POST['bairro']);
-    $cidade = addslashes($_POST['cidade']);
-    $uf = $_POST['estado'];
-    $banco = $_POST['banco'] ?? NULL;
-    $agencia = $_POST['agencia'] ?? NULL;
-    $conta = $_POST['conta'] ?? NULL;
+    $complemento = trim($_POST['complemento']) ?? NULL;
+    $bairro = trim(addslashes($_POST['bairro']));
+    $cidade = trim(addslashes($_POST['cidade']));
+    $uf = trim($_POST['estado']);
+    $banco = trim($_POST['banco']) ?? NULL;
+    $agencia = trim($_POST['agencia']) ?? NULL;
+    $conta = trim($_POST['conta']) ?? NULL;
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $ultima_atualizacao = date('Y-m-d H:i:s');
 }

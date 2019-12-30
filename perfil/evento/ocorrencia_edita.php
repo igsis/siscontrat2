@@ -33,7 +33,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $horario_fim = $_POST['horaFim'];
     $retirada_ingresso_id = $_POST['retiradaIngresso'];
     $valor_ingresso = dinheiroDeBr($_POST['valor_ingresso']);
-    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $idOcorrencia =  $_POST['idOcorrencia'] ?? NULL;
     $periodo_id = $_POST['periodo'];
     $subprefeitura_id = $_POST['subprefeitura'];

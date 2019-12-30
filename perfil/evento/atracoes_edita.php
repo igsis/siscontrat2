@@ -4,12 +4,12 @@ $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
-    $nome_atracao = addslashes($_POST['nome_atracao']);
-    $ficha_tecnica = addslashes($_POST['ficha_tecnica']);
-    $integrantes = addslashes($_POST['integrantes']);
+    $nome_atracao = trim(addslashes($_POST['nome_atracao']));
+    $ficha_tecnica = trim(addslashes($_POST['ficha_tecnica']));
+    $integrantes = trim(addslashes($_POST['integrantes']));
     $classificacao_indicativa_id = $_POST['classificacao_indicativa_id'];
-    $release_comunicacao = addslashes($_POST['release_comunicacao']);
-    $links = addslashes($_POST['links']);
+    $release_comunicacao = trim(addslashes($_POST['release_comunicacao']));
+    $links = trim(addslashes($_POST['links']));
     $quantidade_apresentacao = $_POST['quantidade_apresentacao'];
     $valor_individual = dinheiroDeBr($_POST['valor_individual']);
 }
