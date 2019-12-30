@@ -265,7 +265,13 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal) && $tipoEvento != 2) {
                                     </li>
                                     <li role="presentation" class="disabled">
                                         <a class="persistant-disabled" href="#stepper-step-5" data-toggle="tab"
-                                           aria-controls="stepper-step-5" role="tab" title="Valor por equipamento">
+                                           aria-controls="stepper-step-5" role="tab" title="Anexos do pedido">
+                                            <span class="round-tab">5</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="disabled">
+                                        <a class="persistant-disabled" href="#stepper-step-6" data-toggle="tab"
+                                           aria-controls="stepper-step-6" role="tab" title="Valor por equipamento">
                                             <span class="round-tab">5</span>
                                         </a>
                                     </li>
@@ -292,7 +298,13 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal) && $tipoEvento != 2) {
                                     </li>
                                     <li role="presentation" class="disabled">
                                         <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
-                                           aria-controls="stepper-step-4" role="tab" title="Valor por equipamento">
+                                           aria-controls="stepper-step-4" role="tab" title="Anexos do pedido">
+                                            <span class="round-tab">4</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="disabled">
+                                        <a class="persistant-disabled" href="#stepper-step-5" data-toggle="tab"
+                                           aria-controls="stepper-step-5" role="tab" title="Valor por equipamento">
                                             <span class="round-tab">4</span>
                                         </a>
                                     </li>
@@ -332,8 +344,24 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal) && $tipoEvento != 2) {
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Valor por Equipamento -->
+                                <!-- Anexos do pedido -->
                                 <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '5' : '4'?>">
+                                    <?php
+                                    if ($tipoPessoa == 2){
+                                        $i_a = 5;
+                                    } else{
+                                        $i_a = 4;
+                                    }
+                                    ?>
+                                    <h3><?= $i_a ?>. Anexos do pedido</h3>
+                                    <div class="container">
+                                        <div class="row">
+                                            <?php include "includes/label_pedido_anexos.php" ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Valor por Equipamento -->
+                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '6' : '5'?>">
                                     <?php include_once "includes/label_pedido_valor_equipamento.php" ?>
                                 </div>
                             </div>

@@ -74,6 +74,69 @@ if (isset($_POST['_method'])) {
 
             break;
 
+        case "enviosArquivos":
+            $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+            $query_arquivos = mysqli_query($con, $sql_arquivos);
+            while ($arq = mysqli_fetch_array($query_arquivos)) {
+                $y = $arq['id'];
+                $x = $arq['sigla'];
+                $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
+                $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
+
+                if ($f_size > 5242880) {
+                    $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
+                } else {
+                    if ($nome_arquivo != "") {
+                        $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
+                        $new_name = date("YmdHis",strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
+                        $hoje = date("Y-m-d H:i:s",strtotime("-3 hours"));
+                        $dir = '../uploadsdocs/'; //Diretório para uploads
+                        $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                        $ext = strtolower(substr($nome_arquivo,-4));
+
+                        if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                        {
+                            if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
+                                $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPedido', '$y', '$new_name', '$hoje', '1'); ";
+                                $query = mysqli_query($con, $sql_insere_arquivo);
+
+                                if ($query) {
+                                    $mensagem = mensagem("success", "Arquivo recebido com sucesso");
+                                    echo "<script>
+                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
+                            </script>";
+                                    gravarLog($sql_insere_arquivo);
+                                } else {
+                                    $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                                }
+                            } else {
+                                $mensagem = mensagem("danger", "Erro no upload");
+                            }
+                        }else {
+                            echo "<script>
+                            swal('Erro no upload!', 'Anexar documentos somente no formato PDF.', 'error');                             
+                        </script>";
+                        }
+                    }
+                }
+            }
+            break;
+
+        case "apagaArquivo":
+            $idArquivo = $_POST['idArquivo'];
+            $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
+            if(mysqli_query($con,$sql_apagar_arquivo))
+            {
+                $arq = recuperaDados("arquivos",$idArquivo,"id");
+                $mensagem = mensagem("success", "Arquivo ".$arq['arquivo']."apagado com sucesso!");
+                gravarLog($sql_apagar_arquivo);
+            }
+            else
+            {
+                $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
+            }
+            break;
+
         default:
             echo false;
             break;
