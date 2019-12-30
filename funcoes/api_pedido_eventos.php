@@ -75,8 +75,6 @@ if (isset($_POST['_method'])) {
             break;
 
         case "enviosArquivos":
-            $idPedido = $_POST['idPedido'];
-            $tipoPessoa = 3;
             $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
             $query_arquivos = mysqli_query($con, $sql_arquivos);
             while ($arq = mysqli_fetch_array($query_arquivos)) {
@@ -132,11 +130,10 @@ if (isset($_POST['_method'])) {
                 $arq = recuperaDados("arquivos",$idArquivo,"id");
                 $mensagem = mensagem("success", "Arquivo ".$arq['arquivo']."apagado com sucesso!");
                 gravarLog($sql_apagar_arquivo);
-                echo true;
             }
             else
             {
-                echo false;
+                $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
             }
             break;
 
