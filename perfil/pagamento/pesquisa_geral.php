@@ -14,7 +14,7 @@ unset($_SESSION['idPedido']);
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Busca de contratos</h3>
+                        <h3 class="box-title">Busca geral</h3>
                     </div>
                     <form method="POST" action="?perfil=pagamento&p=resultado" role="form">
                         <div class="box-body">
