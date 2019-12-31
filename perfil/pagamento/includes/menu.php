@@ -8,17 +8,11 @@ $pasta = "?perfil=pagamento&p=";
 
             <li class="header">PAGAMENTOS</li>
 
-            <li><a href="<?= $pasta ?>pesquisa_geral"><i class="fa fa-circle-o"></i>
-                    <span>Buscar</span></a>
-            </li>
+            <li><a href="<?= $pasta ?>pesquisa_geral"><i class="fa fa-circle-o"></i> <span>Buscar</span></a></li>
 
-            <li><a href="<?= $pasta ?>#"><i class="fa fa-circle-o"></i>
-                    <span>Buscar por período</span></a>
-            </li>
+            <li><a href="<?= $pasta ?>pesquisa_periodo"><i class="fa fa-circle-o"></i> <span>Buscar por período</span></a></li>
 
-            <li><a href="<?= $pasta ?>#"><i class="fa fa-circle-o"></i>
-                    <span>Buscar por data kit / operador</span></a>
-            </li>
+            <li><a href="<?= $pasta ?>pesquisa_operador"><i class="fa fa-circle-o"></i> <span>Buscar por data kit / operador</span></a></li>
 
             <?php
             include "../perfil/includes/menu_mais.php";
