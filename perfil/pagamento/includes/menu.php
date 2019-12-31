@@ -8,7 +8,7 @@ $pasta = "?perfil=pagamento&p=";
 
             <li class="header">PAGAMENTOS</li>
 
-            <li><a href="<?= $pasta ?>#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?= $pasta ?>pesquisa_geral"><i class="fa fa-circle-o"></i>
                     <span>Buscar</span></a>
             </li>
 
