@@ -202,7 +202,7 @@ include "includes/menu_interno.php";
                     </div>
                     <div class="row" align="center">
                         <?php if (isset($resultado)) {
-                            echo $resultado;
+                            //echo $resultado;
                         }; ?>
                     </div>
                     <!-- /.box-header -->
