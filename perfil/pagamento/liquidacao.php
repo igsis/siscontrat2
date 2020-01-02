@@ -43,6 +43,16 @@ if($liquidacao == NULL){
         <div class="box">
             <div class="box-header">
                 <h2 class="box-title">Cadastro de Nota de Liquidação</h2>
+                <?php
+                if ($botao == "editar"){
+                    $link = "http://".$_SERVER['SERVER_NAME']."/siscontrat2/pdf/recibo_liquidacao.php";
+                    ?>
+                    <form action="<?= $link ?>" method="post" target="_blank" role="form">
+                        <button type="submit" class="btn btn-primary pull-right" name="idPedido" value="<?= $idPedido ?>">Imprimir Recibo</button>
+                    </form>
+                <?php
+                }
+                ?>
             </div>
             <div class="row" align="center">
                 <?= $mensagem ?? NULL; ?>
@@ -75,7 +85,7 @@ if($liquidacao == NULL){
                 </div>
                 <div class="box-footer">
                     <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                    <button type="submit" class="btn btn-primary pull-right" name="<?= $botao ?>">Cadastrar</button>
+                    <button type="submit" class="btn btn-primary pull-right" name="<?= $botao ?>">Gravar</button>
                 </div>
             </form>
         </div>
