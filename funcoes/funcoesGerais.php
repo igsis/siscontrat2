@@ -191,6 +191,11 @@ date_default_timezone_set("Brazil/East");
         return $dt->format('Y-m-d');
         */
 	}
+	// retorna a data e hora atual com fuso horário
+	function dataHoraNow(){
+	    $date = date('Y-m-d H:i:s',strtotime('-3 hours'));
+	    return $date;
+    }
 	//retorna o endereço da página atual
 	function urlAtual()
 	{
