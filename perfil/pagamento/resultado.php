@@ -160,8 +160,18 @@ if(isset($_POST['operador'])) {
                                         <td><?= $evento['status'] ?></td>
                                         <td><?= $evento['nome_completo'] ? strstr($evento['nome_completo'],' ', true) : NULL ?></td>
                                         <td><?= $evento['data_kit_pagamento'] ? date('d/m/Y', strtotime($evento['data_kit_pagamento'])) : NULL ?></td>
+                                        <?php
+                                        $sqlTesta = "SELECT pedido_id FROM pagamentos WHERE pedido_id = " . $evento['idPedido'];
+                                        $queryTesta = mysqli_query($con,$sqlTesta);
+                                        $num = mysqli_num_rows($queryTesta);
+                                        if($num > 0){
+                                            $action = "?perfil=pagamento&p=empenho_edita";
+                                        }else{
+                                            $action = "?perfil=pagamento&p=empenho";
+                                        }
+                                        ?>
                                         <td>
-                                            <form method="POST" action="?perfil=pagamento&p=empenho">
+                                            <form method="POST" action="<?=$action?>">
                                                 <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
                                             </form>
                                         </td>

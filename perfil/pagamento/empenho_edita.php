@@ -3,7 +3,7 @@
 $con = bancoMysqli();
 $idPedido = $_POST['idPedido'];
 
-if (isset($_POST['cadastra']) || $_POST['edita']) {
+if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $empenho = trim(addslashes($_POST['numEmpenho']));
     $dataEntrega = $_POST['data_entrega'];
     $dataEmissao = $_POST['data_emissao'];
@@ -17,9 +17,10 @@ if (isset($_POST['cadastra'])) {
                                     entrega_nota_empenho, 
                                     usuario_pagamento_id) 
                                     VALUES($idPedido,
-                                           $empenho,
-                                           $dataEmissao,
-                                           $dataEntrega)";
+                                           '$empenho',
+                                           '$dataEmissao',
+                                           '$dataEntrega',
+                                           $idUser)";
     if (mysqli_query($con, $sqlCadastra)) {
         $mensagem = mensagem("success", "Cadastado com sucesso!");
     } else {
@@ -27,17 +28,18 @@ if (isset($_POST['cadastra'])) {
     }
 }
 
-if(isset($_POST['edita'])){
-    $sqlEdita = "UPDATE pagamentos SET nota_empenho = $empenho, emissao_nota_empenho = $dataEmissao, entrega_nota_empenho = $dataEntrega WHERE pedido_id = $idPedido";
-    if(mysqli_query($con,$sqlEdita)){
+if (isset($_POST['edita'])) {
+    $sqlEdita = "UPDATE pagamentos SET nota_empenho = '$empenho', emissao_nota_empenho = '$dataEmissao', entrega_nota_empenho = '$dataEntrega' WHERE pedido_id = $idPedido";
+    if (mysqli_query($con, $sqlEdita)) {
         $mensagem = mensagem("success", "Editado com sucesso!");
-    }else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao editar.");
     }
 }
 
 $empenho = recuperaDados('pagamentos', 'pedido_id', $idPedido);
-$pedido = $con->query("SELECT protocolo, numero_processo FROM pedidos WHERE id = $idPedido")->fetch_array();
+$pedido = $con->query("SELECT e.protocolo, p.numero_processo FROM pedidos AS p INNER JOIN eventos AS e ON p.origem_id = e.id WHERE p.id = $idPedido")->fetch_array();
+
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -48,8 +50,15 @@ $pedido = $con->query("SELECT protocolo, numero_processo FROM pedidos WHERE id =
             <div class="box-header">
                 <h2 class="box-title">Cadastro de Nota de Empenho</h2>
             </div>
+            <div class="row" align="center">
+                <?php
+                if (isset($mensagem)) {
+                    echo $mensagem;
+                };
+                ?>
+            </div>
             <div class="box-body">
-                <form action="#" method="post" role="form">
+                <form action="?perfil=pagamento&p=empenho_edita" method="post" role="form">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="protocolo">Protocolo: </label>
@@ -68,7 +77,8 @@ $pedido = $con->query("SELECT protocolo, numero_processo FROM pedidos WHERE id =
                     <div class="row">
                         <div class="col-md-12">
                             <label for="numEmpenho">Numero da Nota de Empenho: *</label>
-                            <input type="text" class="form-control" name="numEmpenho" id="numEmpenho" value="<?=$empenho['nota_empenho']?>">
+                            <input type="text" class="form-control" name="numEmpenho" id="numEmpenho"
+                                   value="<?= $empenho['nota_empenho'] ?>">
                         </div>
                     </div>
                     <br>
@@ -76,13 +86,15 @@ $pedido = $con->query("SELECT protocolo, numero_processo FROM pedidos WHERE id =
                     <div class="row">
                         <div class="col-md-6">
                             <label for="data_inicio">Data de Emissão da Nota de Empenho: *</label>
-                            <input type="date" class="form-control" name="data_inicio" placeholder="DD/MM/AAAA" value="<?=$empenho['emissao_nota_empenho']?>"
+                            <input type="date" class="form-control" name="data_emissao" placeholder="DD/MM/AAAA"
+                                   value="<?= $empenho['emissao_nota_empenho'] ?>"
                                    id="data_fim">
                         </div>
 
                         <div class="col-md-6">
                             <label for="data_fim"> Data de Entrega da Nota de Empenho: *</label>
-                            <input type="date" class="form-control" name="data_fim" placeholder="DD/MM/AAAA" value="<?=$empenho['entrega_nota_empenho']?>"
+                            <input type="date" class="form-control" name="data_entrega" placeholder="DD/MM/AAAA"
+                                   value="<?= $empenho['entrega_nota_empenho'] ?>"
                                    id="data_fim">
                         </div>
                     </div>
@@ -92,15 +104,25 @@ $pedido = $con->query("SELECT protocolo, numero_processo FROM pedidos WHERE id =
             <div class="box-footer">
                 <div class="row">
                     <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary pull-right" name="edita">Salvar</button>
-                        <a href="#">
+                        <a href="?perfil=pagamento">
                             <button type="button" class="btn btn-default">Voltar</button>
                         </a>
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-primary pull-right" name="edita">Salvar</button>
+                        </form>
                     </div>
                 </div>
+                <hr/>
+
+                <div class="col-md-12" style="align-text:center">
+                    <form action="#" method="POST">
+                        <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
+                        <button type="submit" class="btn btn-success center-block" style="width: 35%">Gerar Recibo</button>
+                    </form>
+                </div>
+
             </div>
         </div>
-        </form>
     </section>
 </div>
 

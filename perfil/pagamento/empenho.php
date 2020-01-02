@@ -1,9 +1,9 @@
 <?php
 $con = bancoMysqli();
 
-//$idPedido = $_POST['idPedido'];
+$idPedido = $_POST['idPedido'];
 
-//$pedido = $con->query("SELECT protocolo, numero_processo FROM pedidos WHERE id = $idPedido")->fetch_array();
+$pedido = $con->query("SELECT e.protocolo, p.numero_processo FROM pedidos AS p INNER JOIN eventos AS e ON p.origem_id = e.id WHERE p.id = $idPedido")->fetch_array();
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -15,7 +15,7 @@ $con = bancoMysqli();
                 <h2 class="box-title">Cadastro de Nota de Empenho</h2>
             </div>
             <div class="box-body">
-                <form action="#" method="post" role="form">
+                <form action="?perfil=pagamento&p=empenho_edita" method="post" role="form">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="protocolo">Protocolo: </label>
@@ -59,7 +59,7 @@ $con = bancoMysqli();
                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                 <button type="submit" class="btn btn-primary pull-right" name="cadastra">Cadastrar</button>
 
-                <a href="#">
+                <a href="?perfil=pagamento">
                     <button type="button" class="btn btn-default">Voltar</button>
                 </a>
             </div>
