@@ -11,6 +11,14 @@ if(isset($_POST['operador'])){
     $cadastra = $con->query($sql);
     if($cadastra){
         $botao = true;
+        $existeEtapa = $con->query("SELECT pedido_id, data_pagamento FROM pedido_etapas WHERE pedido_id = '$idPedido'")->fetch_assoc();
+        $now = dataHoraNow();
+        if($existeEtapa != NULL && $existeEtapa['data_pagamento'] == NULL){
+            $con->query("UPDATE pedido_etapas SET data_pagamento = '$now' WHERE pedido_id = '$idPedido'");
+        }
+        if($existeEtapa == NULL){
+            $con->query("INSERT INTO pedido_etapas (pedido_id,data_pagamento) VALUES ('$idPedido','$now')");
+        }
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
     } else{
         $mensagem = mensagem("danger", "Erro ao cadastrar.");
@@ -21,6 +29,14 @@ if(isset($_POST['cadastrar'])){
     $cadastra = $con->query("UPDATE pedidos SET status_pedido_id = 19 WHERE id = '$idPedido'");
     if($cadastra){
         $botao = true;
+        $existeEtapa = $con->query("SELECT pedido_id, data_pagamento FROM pedido_etapas WHERE pedido_id = '$idPedido'")->fetch_assoc();
+        $now = dataHoraNow();
+        if($existeEtapa != NULL && $existeEtapa['data_pagamento'] == NULL){
+            $con->query("UPDATE pedido_etapas SET data_pagamento = '$now' WHERE pedido_id = '$idPedido'");
+        }
+        if($existeEtapa == NULL){
+            $con->query("INSERT INTO pedido_etapas (pedido_id,data_pagamento) VALUES ('$idPedido','$now')");
+        }
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
     } else{
         $mensagem = mensagem("danger", "Erro ao cadastrar.");
@@ -32,6 +48,7 @@ if(isset($_POST['concluir'])){
     if($cadastra){
         $botao = true;
         $mensagem = mensagem("success", "Evento concluído com sucesso!");
+        echo "<meta http-equiv='refresh' content='3;url=?perfil=pagamento' />";
     } else{
         $mensagem = mensagem("danger", "Erro ao concluir evento.");
     }
