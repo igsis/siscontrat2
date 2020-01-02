@@ -166,7 +166,7 @@ if(isset($_POST['operador'])) {
                                             </form>
                                         </td>
                                         <td>
-                                            <form method="POST" action="?perfil=pagamento&p=pagamento">
+                                            <form method="POST" action="?perfil=pagamento&p=parcela_unica">
                                                 <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
                                             </form>
                                         </td>
