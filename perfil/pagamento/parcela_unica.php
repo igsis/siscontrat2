@@ -187,8 +187,8 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                 $link1 = $server . "pagamento_integral_pf.php";
                 $link2 = $server . "documento.php";
                 $link3 = $server . "documento.php";
-                $link4 = $server . "ateste_confirmacao.php";
-                $link5 = $server . "documento.php";
+                $link4 = $server . "ateste_documentacao.php";
+                $link5 = $server . "confirmacao_servico.php";
                 ?>
                 <div class="box">
                     <div class="box-header">
@@ -234,8 +234,8 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
             else{
                 $link11 = $server . "pagamento_integral_pj.php";
                 $link12 = $server . "documento.php";
-                $link13 = $server . "ateste_confirmacao.php";
-                $link14 = $server . "documento.php";
+                $link13 = $server . "ateste_documentacao.php";
+                $link14 = $server . "confirmacao_servico.php";
                 $link15 = $server . "documento.php";
                 $link16 = $server . "documento.php";
                 $link17 = $server . "documento.php";
