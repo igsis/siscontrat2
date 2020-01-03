@@ -461,6 +461,19 @@ function geraOpcaoLocais ($tabela, $select = '')
         }
     }
 
+    function retornaLocal($idEvento){
+        $con = bancoMysqli();
+        $query = $con->query("SELECT oco.local_id as 'local_id', local.local as 'local' 
+            FROM ocorrencias AS oco
+            INNER JOIN locais local ON local.id = oco.local_id 
+            WHERE oco.origem_ocorrencia_id = '$idEvento' AND local.publicado = 1 AND oco.publicado = 1 GROUP BY local ORDER BY local");
+
+        while($locais = mysqli_fetch_array($query))
+        {
+            echo $locais['local'].", ";
+        }
+    }
+
 	function recuperaModulo($pag)
 	{
 		$sql = "SELECT * FROM modulo WHERE pagina = '$pag'";
