@@ -474,6 +474,29 @@ function geraOpcaoLocais ($tabela, $select = '')
         }
     }
 
+    function ocorrenciaDias($idEvento){
+        $con = bancoMysqli();
+
+        //Data início
+        $dateStart = $con->query("SELECT MIN(o.data_inicio) AS dateStart FROM ocorrencias AS o WHERE o.atracao_id IN (SELECT id FROM atracoes WHERE evento_id = '$idEvento' AND atracoes.publicado = 1) AND o.publicado = 1")->fetch_assoc()['dateStart'];
+        $dateStart = implode('-', array_reverse(explode('/', substr($dateStart, 0, 10)))).substr($dateStart, 10);
+        $dateStart = new DateTime($dateStart);
+
+        //Data fim
+        $dateEnd = $con->query("SELECT MAX(o.data_inicio) AS dateEnd FROM ocorrencias AS o WHERE o.atracao_id IN (SELECT id FROM atracoes WHERE evento_id = '$idEvento' AND atracoes.publicado = 1) AND o.publicado = 1")->fetch_assoc()['dateEnd'];
+        $dateEnd = implode('-', array_reverse(explode('/', substr($dateEnd, 0, 10)))).substr($dateEnd, 10);
+        $dateEnd = new DateTime($dateEnd);
+
+        //Gerando os dias do intervalo
+        $dateRange = array();
+        while($dateStart <= $dateEnd){
+            $dateRange[] = $dateStart->format('Y-m-d');
+            $dateStart = $dateStart->modify('+1day');
+        }
+
+        var_dump($dateRange);
+    }
+
 	function recuperaModulo($pag)
 	{
 		$sql = "SELECT * FROM modulo WHERE pagina = '$pag'";

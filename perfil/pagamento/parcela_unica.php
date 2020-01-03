@@ -174,7 +174,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
             <div class="box-footer">
                 <form action="#" method="post" role="form">
                     <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                    <button type="submit" class="btn btn-success pull-left" name="concluir">Concluir evento</button>
+                    <button type="submit" class="btn btn-warning pull-left" name="concluir">Concluir evento</button>
                     <button type="submit" class="btn btn-primary pull-right" name="cadastrar">Gravar</button>
                 </form>
             </div>
@@ -182,48 +182,154 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
 
         <?php
         if ($botao){
-        $server = "http://".$_SERVER['SERVER_NAME']."/siscontrat2/pdf/";
-        $link1 = $server."pagamento_integral_pf.php";
-        $link2 = $server."documento.php";
-        $link3 = $server."documento.php";
-        $link4 = $server."documento.php";
-        $link5 = $server."documento.php";
-        ?>
-            <div class="box">
-                <div class="box-header">
-                    <h2 class="box-title">Modelos de impressão</h2>
-                </div>
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <form action="<?= $link1 ?>" method="post" target="_blank" role="form">
-                                <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido Integral</button>
-                            </form>
-                        </div>
-                        <div class="col-md-2">
-                            <form action="<?= $link2 ?>" method="post" target="_blank" role="form">
-                                <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido parcelado</button>
-                            </form>
-                        </div>
-                        <div class="col-md-2">
-                            <form action="<?= $link3 ?>" method="post" target="_blank" role="form">
-                                <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Recibo Integral</button>
-                            </form>
-                        </div>
-                        <div class="col-md-2">
-                            <form action="<?= $link4 ?>" method="post" target="_blank" role="form">
-                                <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Ateste (Documentação)</button>
-                            </form>
-                        </div>
-                        <div class="col-md-2">
-                            <form action="<?= $link5 ?>" method="post" target="_blank" role="form">
-                                <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Confirmação de serviço</button>
-                            </form>
+            $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/";
+            if ($pedido['pessoa_tipo_id'] == 1) {
+                $link1 = $server . "pagamento_integral_pf.php";
+                $link2 = $server . "documento.php";
+                $link3 = $server . "documento.php";
+                $link4 = $server . "ateste_confirmacao.php";
+                $link5 = $server . "documento.php";
+                ?>
+                <div class="box">
+                    <div class="box-header">
+                        <h2 class="box-title">Modelos de impressão</h2>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <form action="<?= $link1 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido Integral
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link2 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido parcelado
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link3 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Recibo Integral
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link4 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Ateste (Documentação)
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link5 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Confirmação de serviço
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <?php
+            }
+            else{
+                $link11 = $server . "pagamento_integral_pj.php";
+                $link12 = $server . "documento.php";
+                $link13 = $server . "ateste_confirmacao.php";
+                $link14 = $server . "documento.php";
+                $link15 = $server . "documento.php";
+                $link16 = $server . "documento.php";
+                $link17 = $server . "documento.php";
+                $link18 = $server . "documento.php";
+                $link19 = $server . "documento.php";
+                $link20 = $server . "documento.php";
+                $link21 = $server . "documento.php";
+                $link22 = $server . "documento.php";
+                ?>
+                <div class="box">
+                    <div class="box-header">
+                        <h2 class="box-title">Modelos de impressão</h2>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <form action="<?= $link11 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido Integral
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link12 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido parcelado
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link13 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Ateste (Documentação)
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link14 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Confirmação de serviço
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link15 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Minuta acima de R$ 176 mil
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link16 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Instruções para
+                                        emissão de NF
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link17 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Declaração
+                                        Simples
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link18 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Declaração de associação sem fins lucrativos
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link19 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email Empresas
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link20 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email Cooperativas
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link21 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email Associações e institutos
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link22 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email Empresas com Minuta de Contrato
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <?php
+            }
         }
         ?>
 
