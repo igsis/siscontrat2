@@ -143,7 +143,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label>Local:</label>
+                        <label>Local:</label> <?php retornaLocal($pedido['id']) ?>
                     </div>
                 </div>
                 <div class="row">
@@ -183,7 +183,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
         <?php
         if ($botao){
         $server = "http://".$_SERVER['SERVER_NAME']."/siscontrat2/pdf/";
-        $link1 = $server."documento.php";
+        $link1 = $server."pagamento_integral_pf.php";
         $link2 = $server."documento.php";
         $link3 = $server."documento.php";
         $link4 = $server."documento.php";
