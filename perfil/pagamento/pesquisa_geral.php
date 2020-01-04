@@ -60,7 +60,7 @@ unset($_SESSION['idPedido']);
                                     <select name="operador_id" id="operador_id" class="form-control">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao('usuaqio_contratos');
+                                        geraOpcao('usuario_contratos');
                                         ?>
                                     </select>
                                 </div>
