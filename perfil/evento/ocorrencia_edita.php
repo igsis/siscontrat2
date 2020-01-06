@@ -37,7 +37,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $idOcorrencia = $_POST['idOcorrencia'] ?? NULL;
     $periodo_id = $_POST['periodo'];
     $subprefeitura_id = $_POST['subprefeitura'];
-    $virada = ($_POST['virada']);
+    $virada = $_POST['virada'];
     $libras = $_POST['libras'] ?? 0;
     $audiodescricao = $_POST['audiodescricao'] ?? 0;
 
@@ -349,7 +349,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                     <input type="radio" name="virada" id="viradaSim"
                                            value="1" <?= $ocorrencia['virada'] == 1 ? "checked" : NULL ?>class="virada">
                                     Sim &nbsp;
-                                    <input type="radio" name="virada" id="viradaNao"
+                                    <input type="radio" name="virada" id="viradaNaoviradaNao"
                                            value="0" <?= $ocorrencia['virada'] == 0 ? "checked" : NULL ?>class="virada">
                                     Não
                                 </div>

@@ -604,6 +604,7 @@ include "includes/menu_interno.php";
                                     <label for="telefone">Telefone #1 * </label>
                                     <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
                                            class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                           data-mask="(00) 00000-0000"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -614,6 +615,7 @@ include "includes/menu_interno.php";
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
                                                class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
@@ -621,6 +623,7 @@ include "includes/menu_interno.php";
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
                                                class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -632,6 +635,7 @@ include "includes/menu_interno.php";
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
                                                class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               data-mask="(00) 00000-0000"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
@@ -640,6 +644,7 @@ include "includes/menu_interno.php";
                                         ?>
 
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               data-mask="(00) 00000-0000"
                                                class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone2" name="telefone2">
 
