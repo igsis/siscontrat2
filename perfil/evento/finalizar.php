@@ -265,14 +265,14 @@ include "includes/validacoes.php";
                     if ($evento['tipo_evento_id'] == 1) {
                         ?>
                         <button class="btn btn-success" name="enviar" type="submit"
-                                <?= count($erros) != 0 && count($errosArqs) != 0 && $ocorrencias_rept ? "disabled" : "" ?>>
+                                <?= count($erros) != 0 || count($errosArqs) != 0 || $ocorrencias_rept ? "disabled" : "" ?>>
                             Enviar Evento
                         </button>
                         <?php
                     } else {
                         ?>
                         <button class="btn btn-success" name="enviar" type="submit"
-                                <?= count($erros) != 0 && count($errosArqs) != 0 && $ocorrencias_rept ? "disabled" : "" ?>>Enviar Evento
+                                <?= count($erros) != 0 || count($errosArqs) != 0 || $ocorrencias_rept ? "disabled" : "" ?>>Enviar Evento
                         </button>
                         <?php
                     }
