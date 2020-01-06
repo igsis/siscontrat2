@@ -1,38 +1,23 @@
 <?php
-$idPedido = $_POST['idPedido'];
-
-$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/";
-$http = $server . "/pdf/";
-$linkpf = $http . "exporta_word_contabilidade_pf.php";
-$linkpj = $http . "exporta_word_contabilidade_pj.php";
+$idEvento = $_POST['idEvento'];
 
 $con = bancoMysqli();
-$sql = "SELECT  e.id AS 'idEvento',
-                e.nome_evento,
-                e.tipo_evento_id,
-                p.id,
-                i.nome,
-                e.protocolo,
-		        p.numero_processo,
-                p.pessoa_tipo_id,
-                p.pessoa_fisica_id,
-                p.pessoa_juridica_id,
-                p.valor_total,
-                p.forma_pagamento,
-                p.justificativa,
-                o.atracao_id,
-                e.fiscal_id,
-                e.suplente_id,
-                p.observacao
-        FROM pedidos AS p
-        INNER JOIN eventos AS e ON e.id = p.origem_id
-        INNER JOIN pessoa_fisicas AS pf ON pf.id = p.pessoa_fisica_id
-        INNER JOIN ocorrencias AS o ON e.id = o.origem_ocorrencia_id
-        INNER JOIN instituicoes AS i ON o.instituicao_id = i.id 
-        WHERE p.id = '$idPedido' AND p.publicado = 1 AND e.publicado = 1";
-$pedido = $con->query($sql)->fetch_assoc();
+$sql = "SELECT e.nome_evento, e.tipo_evento_id, 
+p.id, i.nome, e.protocolo, 
+p.numero_processo, p.pessoa_tipo_id,
+p.pessoa_fisica_id, p.pessoa_juridica_id,
+p.valor_total, p.forma_pagamento, 
+p.justificativa, o.atracao_id, 
+e.fiscal_id, e.suplente_id, p.observacao 
+FROM pedidos AS p 
+INNER JOIN eventos AS e ON p.origem_id = e.id
+INNER JOIN ocorrencias AS o ON e.id = o.origem_ocorrencia_id 
+INNER JOIN instituicoes AS i ON o.instituicao_id = i.id 
+WHERE e.id = '$idEvento' AND p.publicado = 1 AND e.publicado = 1";
 
-$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $pedido['idEvento'] . " AND o.publicado = 1";
+$pedido = $con->query($sql)->fetch_array();
+
+$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id =  $idEvento  AND o.publicado = 1";
 $queryLocal = mysqli_query($con, $sqlLocal);
 $local = '';
 while ($locais = mysqli_fetch_array($queryLocal)) {
@@ -48,11 +33,11 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2 class="page-title">Contabilidade - Eventos</h2>
+            <h2 class="page-title">Resumo do Evento</h2>
         </div>
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Detalhes do pedido selecionado</h3>
+                <h3 class="box-title">Detalhes do evento selecionado</h3>
             </div>
             <div class="box-body">
                 <div class="table-responsive">
@@ -75,10 +60,8 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                         <?php
                         if ($pedido['pessoa_tipo_id'] == 1) {
                             $pessoa = recuperaDados("pessoa_fisicas", 'id', $pedido['pessoa_fisica_id'])['nome'];
-                            $link = $linkpf;
                         } else if ($pedido['pessoa_tipo_id'] == 2) {
                             $pessoa = recuperaDados("pessoa_juridicas", 'id', $pedido['pessoa_juridica_id'])['razao_social'];
-                            $link = $linkpj;
                         }
                         ?>
 
@@ -113,7 +96,7 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
 
                         <tr>
                             <th width="30%">Período:</th>
-                            <td><?= retornaPeriodoNovo($pedido['idEvento'], 'ocorrencias') ?></td>
+                            <td><?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?></td>
                         </tr>
 
                         <?php
@@ -157,7 +140,6 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                         </tr>
 
                         <?php
-                        $idEvento = $pedido['idEvento'];
                         $sqlEnvio = "SELECT data_envio FROM  evento_envios WHERE evento_id = '$idEvento'";
                         $dia = $con->query($sqlEnvio)->fetch_array();
                         ?>
@@ -171,15 +153,12 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                 </div>
             </div>
             <div class="box-footer">
-                <form action="<?= $link ?>" role="form" target="_blank" method="POST">
-                    <a href="?perfil=contabilidade&p=eventos&sp=pesquisa">
-                        <button type="button" class="btn btn-default">Voltar</button>
-                    </a>
-                    <input type="hidden" value="<?= $pedido['id'] ?>" id="idPedido" name="idPedido">
-                    <button type="submit" class="btn btn-success pull-right">Gerar Word</button>
-                </form>
+                <a href="?perfil=curadoria&p=buscar">
+                    <button type="button" class="btn btn-default">Voltar</button>
+                </a>
             </div>
         </div>
     </section>
 </div>
+
 

@@ -1,7 +1,7 @@
 <?php
 $con = bancoMysqli();
 
-if (isset($_POST['busca'])){
+if (isset($_POST['busca'])) {
     $protocolo = $_POST['protocolo'] ?? NULL;
     $nomeEvento = $_POST['nomeEvento'] ?? NULL;
     $usuario = $_POST['usuario'] ?? NULL;
@@ -22,7 +22,7 @@ if (isset($_POST['busca'])){
         $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
     if ($usuario != null && $usuario != 0)
         $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
-    if($status != null && $status != 0)
+    if ($status != null && $status != 0)
         $sqlStatus = " AND evento_status_id = '$status'";
 
     $sql = "SELECT e.id, p.id AS idPedido, 
@@ -67,7 +67,7 @@ if (isset($_POST['busca'])){
                             <tbody>
                             <?php
                             while ($evento = mysqli_fetch_array($resultado)) {
-                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
+                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
                                 $queryLocal = mysqli_query($con, $sqlLocal);
                                 $local = '';
                                 while ($locais = mysqli_fetch_array($queryLocal)) {
@@ -75,17 +75,23 @@ if (isset($_POST['busca'])){
                                 }
                                 $local = substr($local, 1);
                                 ?>
-                                    <tr>
-                                        <td><?= $evento['protocolo'] ?></td>
-                                        <td><?= $evento['numero_processo'] ? NULL : "Não cadastado" ?></td>
-                                        <td><?= $evento['nome_evento'] ?></td>
-                                        <td><?= $evento['fiscal']?></td>
-                                        <td><?= $local ?></td>
-                                        <td><?= retornaPeriodoNovo($evento['id'],'ocorrencias') ?></td>
-                                        <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                    </tr>
-                                    <?php
-                                }
+                                <tr>
+                                    <td><?= $evento['protocolo'] ?></td>
+                                    <td>
+                                        <form action="?perfil=curadoria&p=resumo" method="POST">
+                                            <input type="hidden" name="idEvento" value="<?= $evento['id'] ?>">
+                                            <button type="submit" name="carregar" id="carregar"
+                                                    class="btn btn-primary"><?= $evento['numero_processo'] ?></button>
+                                        </form>
+                                    </td>
+                                    <td><?= $evento['nome_evento'] ?></td>
+                                    <td><?= $evento['fiscal'] ?></td>
+                                    <td><?= $local ?></td>
+                                    <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
+                                    <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
+                                </tr>
+                                <?php
+                            }
                             ?>
                             </tbody>
                             <tfoot>
