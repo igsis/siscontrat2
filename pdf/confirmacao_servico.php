@@ -27,7 +27,7 @@ if($pedido['pessoa_tipo_id'] == 1){
 }
 
 $periodo = retornaPeriodo($pedido['idEvento']);
-$tudo = ocorrenciaDias($pedido['idEvento']);
+$tudo = retornaDiasOcorrencias($pedido['idEvento']);
 ?>
  
 <html>
@@ -71,7 +71,7 @@ $sei =
   "<p>&nbsp;</p>".
   "<p>Atesto que os serviços prestados discriminados no documento:<strong> LINK NOTA FISCAL OU RECIBO DE PAGAMENTO</strong>, foram executados a contento nos termos previstos no instrumento contracontratual (ou documento equivalente) nos dias:</p>".
   "<p>&nbsp;</p>".
-  "<p>".$tudo."</p>".  
+  "<p>".var_dump($tudo)."</p>".
   "<p>&nbsp;</p>".
   "<p>Dentro do prazo previsto.</p>".
   "<p>O prazo contratual é:".$periodo."</p>".
