@@ -1253,6 +1253,18 @@ function listaLocais($idEvento, $tiraLinha = "")
     return $locais;
 }
 
+function listaOcorrenciasContrato($idEvento){
+    $con = bancoMysqli();
+    $cronograma = $con->query("SELECT * 
+        FROM ocorrencias o
+            INNER JOIN instituicoes i on o.instituicao_id = i.id
+            INNER JOIN locais l on o.local_id = l.id
+            LEFT JOIN espacos e on l.id = e.local_id
+        WHERE o.publicado = 1 AND o.origem_ocorrencia_id = '$idEvento';
+        ");
+    return $cronograma;
+}
+
 function retornaPeriodoNovo($id, $tabela)
 {
     //retorna o período

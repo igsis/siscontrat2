@@ -5,9 +5,9 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Busca geral</h3>
+                        <h3 class="box-title">Buscar</h3>
                     </div>
-                    <form method="POST" action="#" role="form">
+                    <form method="POST" action="?perfil=curadoria&p=resultado" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-6 form-group">
@@ -17,7 +17,7 @@
 
                                 <div class="col-md-6 form-group">
                                     <label for="evento">Nome do Evento:</label>
-                                    <input type="text" class="form-control" name="nome_evento" id="evento">
+                                    <input type="text" class="form-control" name="nomeEvento" id="evento">
                                 </div>
                             </div>
 
