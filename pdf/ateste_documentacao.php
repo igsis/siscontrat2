@@ -4,6 +4,8 @@ require_once("../include/lib/fpdf/fpdf.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
+setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+
 //CONEXÃO COM BANCO DE DADOS
 $con = bancoMysqli();
 
@@ -78,6 +80,7 @@ if($centro != NULL){
 if($norte != "0,00" || $sul != "0,00" || $leste != "0,00" || $oeste != "0,00" || $centro != "0,00"){
     $texto = "<p>&nbsp;</p><p>Em atendimento ao item referente a regionalização e georreferenciamento das despesas municipais com a implantação do detalhamento da ação, informo que a despesa aqui tratada se refere(m) ".$valores.".</p>";
 }
+$teste = retornaDiasOcorrencias($idEvento);
 ?>
  
 <html>

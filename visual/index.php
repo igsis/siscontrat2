@@ -3,6 +3,8 @@
 @ini_set('display_errors', '1');
 error_reporting(E_ALL);
 
+setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+
 //define a session como 60 min
 session_cache_expire(60);
 

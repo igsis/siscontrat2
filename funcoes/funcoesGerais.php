@@ -1,5 +1,6 @@
 <?php
 date_default_timezone_set("Brazil/East");
+setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 
 	function habilitarErro()
 	{
@@ -436,19 +437,19 @@ function geraOpcaoLocais ($tabela, $select = '')
     function retornaPeriodo($idEvento){
         $con = bancoMysqli();
         $sql_data_inicio = "SELECT data_inicio FROM ocorrencias AS oco
-                            INNER JOIN atracoes AS atr ON oco.origem_ocorrencia_id = atr.id
-                            INNER JOIN eventos AS eve on atr.evento_id = eve.id
-                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND atr.publicado = 1 AND eve.id = '$idEvento'
+                            INNER JOIN eventos AS eve on oco.origem_ocorrencia_id = eve.id
+                            INNER JOIN atracoes AS atr ON oco.atracao_id = atr.id
+                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND eve.id = '$idEvento'
                             ORDER BY data_inicio ASC LIMIT 0,1";
         $query_data_inicio = mysqli_query($con,$sql_data_inicio);
         $array_inicio = mysqli_fetch_array($query_data_inicio);
         $data_inicio = $array_inicio['data_inicio'];
 
         $sql_data_fim = "SELECT data_fim FROM ocorrencias AS oco
-                            INNER JOIN atracoes AS atr ON oco.origem_ocorrencia_id = atr.id
-                            INNER JOIN eventos AS eve on atr.evento_id = eve.id
-                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND atr.publicado = 1 AND eve.id = '$idEvento'
-                            ORDER BY data_fim ASC LIMIT 0,1";
+                            INNER JOIN eventos AS eve on oco.origem_ocorrencia_id = eve.id
+                            INNER JOIN atracoes AS atr ON oco.atracao_id = atr.id
+                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND eve.id = '$idEvento'
+                            ORDER BY data_fim DESC LIMIT 0,1";
         $query_data_fim = mysqli_query($con,$sql_data_fim);
         $array_fim = mysqli_fetch_array($query_data_fim);
 
@@ -472,6 +473,77 @@ function geraOpcaoLocais ($tabela, $select = '')
         {
             echo $locais['local'].", ";
         }
+    }
+
+    function testaPeriodo($idOcorrencia) {
+        $con = bancoMysqli();
+        $ocorrencia = $con->query("SELECT data_fim FROM ocorrencias WHERE id = '$idOcorrencia'")->fetch_assoc();
+
+        $data_fim = $ocorrencia['data_fim'];
+
+        if($data_fim == '0000-00-00' OR $data_fim == NULL){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    function retornaDiasPeriodo($idOcorrencia) {
+        $con = bancoMysqli();
+        $dias = [];
+
+        $ocorrencia = $con->query("SELECT data_inicio, data_fim, segunda, terca, quarta, quinta, sexta, sabado, domingo FROM ocorrencias WHERE id = '$idOcorrencia'")->fetch_assoc();
+
+        $data_inicio = new DateTime($ocorrencia['data_inicio']);
+        $data_fim = new DateTime($ocorrencia['data_fim']);
+
+        unset($ocorrencia['data_inicio']);
+        unset($ocorrencia['data_fim']);
+
+        foreach ($ocorrencia as $key => $dia) {
+            if($dia){
+                if ($key == "sabado" || $key == "domingo") {
+                    $diasExecucao[] = ($key == "sabado") ? "sábado" : "domingo";
+                } else {
+                    $diasExecucao[] = $key."-feira";
+                }
+            }
+        }
+
+        while ($data_inicio <= $data_fim) {
+            $dia = strftime('%A', $data_inicio->getTimestamp());
+
+            if (in_array($dia, $diasExecucao)) {
+                $dias[] = new DateTime($data_inicio->format('Y-m-d'));
+            }
+            $data_inicio = $data_inicio->modify('+1 day');
+        }
+
+        return $dias;
+    }
+
+    function retornaDiasOcorrencias($idEvento) {
+        $con = bancoMysqli();
+
+        $ocorrencias = $con->query("SELECT id, data_inicio, data_fim FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1-'")->fetch_all(MYSQLI_ASSOC);
+        $diasExecucao = [];
+
+        foreach ($ocorrencias as $ocorrencia) {
+            if (testaPeriodo($ocorrencia['id'])){
+                $periodo = retornaDiasPeriodo($ocorrencia['id']);
+                $diasExecucao = array_merge($diasExecucao, $periodo);
+            } else {
+                $diasExecucao[] = new DateTime($ocorrencia['data_inicio']);
+            }
+        }
+
+        sort($diasExecucao);
+
+        foreach ($diasExecucao as $key => $dia) {
+            $dias[] = $diasExecucao[$key]->format('d/m/Y');
+        }
+        return $dias;
     }
 
     function ocorrenciaDias($idEvento){
