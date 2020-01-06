@@ -239,7 +239,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                 $link15 = $server . "minuta.php";
                 $link16 = $server . "emissao_nf_integral.php";
                 $link17 = $server . "declaracao_simples.php";
-                $link18 = $server . "documento.php";
+                $link18 = $server . "declaracao_semFinsLucrativos.php";
                 $link19 = $server . "documento.php";
                 $link20 = $server . "documento.php";
                 $link21 = $server . "documento.php";
