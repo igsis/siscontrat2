@@ -117,8 +117,8 @@ include "includes/menu_interno.php";
                                     <input class="form-control" type="text" name="nomeResponsavel" required>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="fiscal">Telefone do Responsável Interno *</label>
-                                    <input class="form-control" type="text" name="telResponsavel" maxlength="15" onkeyup="mascara( this, mtel );" required>
+                                    <label for="fiscal">telefone do Responsável Interno *</label>
+                                    <input class="form-control" type="text" name="telResponsavel" data-mask="(99)99999.9999" maxlength="15" onkeyup="mascara( this, mtel );" required>
                                 </div>
                             </div>
 
@@ -153,7 +153,7 @@ include "includes/menu_interno.php";
             </div>
         </div>
     </section>
-</div>
+
 
 <div class="modal fade" id="modalAcoes" role="dialog" aria-labelledby="lblmodalAcoes" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -228,7 +228,7 @@ include "includes/menu_interno.php";
         </div>
     </div>
 </div>
-
+</div>
 <script>
     const btnCadastra = $('#cadastra');
     let publicos = $('.publicos');
