@@ -240,8 +240,8 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                 $link16 = $server . "emissao_nf_integral.php";
                 $link17 = $server . "declaracao_simples.php";
                 $link18 = $server . "declaracao_semFinsLucrativos.php";
-                $link19 = $server . "documento.php";
-                $link20 = $server . "documento.php";
+                $link19 = $server . "email_empresas.php?modelo=empresas";
+                $link20 = $server . "email_empresas.php?modelo=cooperativas";
                 $link21 = $server . "documento.php";
                 $link22 = $server . "documento.php";
                 ?>
