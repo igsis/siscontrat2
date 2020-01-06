@@ -22,7 +22,7 @@ $tipoRepresentante = $_POST['tipoRepresentante'];
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: </label>
                                     <input type="text" class="form-control" id="nome" name="nome"
-                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ]{1,70}" title="Apenas letras"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}" title="Apenas letras"
                                            maxlength="70" required>
                                 </div>
 

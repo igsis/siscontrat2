@@ -5,9 +5,9 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $idAtracao = $_POST['idAtracao'] ?? NULL;
     $idTeatro = $_POST['idTeatro'] ?? NULL;
     $estreia = $_POST ['estreia'];
-    $genero = $_POST['genero'];
-    $venda = ($_POST['venda']);
-    $descricao = addslashes($_POST['descricao']);
+    $genero = trim($_POST['genero']);
+    $venda = $_POST['venda'];
+    $descricao = trim(addslashes($_POST['descricao']));
 }
 
 if (isset($_POST['cadastra'])) {

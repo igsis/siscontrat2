@@ -44,29 +44,29 @@ if (isset($_POST['cadastraLider'])) {
 
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
-    $nome = addslashes($_POST['nome']);
-    $nomeArtistico = addslashes($_POST['nomeArtistico']);
-    $rg = $_POST['rg'] ?? NULL;
+    $nome = trim(addslashes($_POST['nome']));
+    $nomeArtistico = trim(addslashes($_POST['nomeArtistico']));
+    $rg =  isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
-    $ccm = $_POST['ccm'] ?? NULL;
+    $ccm = isset($_POST['ccm']) ? trim($_POST['ccm']) : NULL;
     $dtNascimento = $_POST['dtNascimento'] ?? NULL;
     $nacionalidade = $_POST['nacionalidade'];
     $cep = $_POST['cep'];
-    $logradouro = addslashes($_POST['rua']);
+    $logradouro = trim(addslashes($_POST['rua']));
     $numero = $_POST['numero'];
-    $complemento = $_POST['complemento'] ?? NULL;
-    $bairro = addslashes($_POST['bairro']);
-    $cidade = addslashes($_POST['cidade']);
-    $uf = $_POST['estado'];
-    $email = $_POST['email'];
+    $complemento = trim($_POST['complemento']) ?? NULL;
+    $bairro = trim(addslashes($_POST['bairro']));
+    $cidade = trim(addslashes($_POST['cidade']));
+    $uf = trim($_POST['estado']);
+    $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
-    $drt = $_POST['drt'] ?? NULL;
-    $nit = $_POST['nit'] ?? NULL;
-    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $drt = isset($_POST['drt']) ? trim($_POST['drt']) : NULL;
+    $nit = trim($_POST['nit']) ?? NULL;
+    $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $banco = $_POST['banco'] ?? NULL;
-    $agencia = $_POST['agencia'] ?? NULL;
-    $conta = $_POST['conta'] ?? NULL;
+    $agencia = isset($_POST['agencia']) ? trim($_POST['agencia']) : NULL;
+    $conta = isset($_POST['conta']) ? trim($_POST['conta']) : NULL;
     $data = date("y-m-d h:i:s", strtotime("-3 hours"));
 }
 if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
@@ -144,7 +144,6 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_PO
                         </div>";
             }
         }
-
 
         $mensagem .= mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
@@ -323,6 +322,45 @@ if (isset($valores) && $valores > 0) {
     $valorTotal = 0;
 }
 
+if (isset($_POST['selecionar'])) {
+    $tipoPessoa = 1;
+    $idPessoa = $_POST['idPf'];
+    $tipoEvento = $evento['tipo_evento_id'];
+    $campo = "pessoa_fisica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
+
+if (isset($_POST['cadastra'])) {
+    $tipoPessoa = 1;
+    $tipoEvento = $evento['tipo_evento_id'];
+    $campo = "pessoa_fisica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPf, $valorTotal, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Proponente cadastrado. Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
+
 
 if (isset($_POST["enviar"])) {
     $idPf = $_POST['idPessoa'];
@@ -440,7 +478,7 @@ include "includes/menu_interno.php";
                                 <div class="col-md-6 form-group">
                                     <label for="nome">Nome: *</label>
                                     <input type="text" class="form-control" name="nome" placeholder="Digite o nome"
-                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ]{1,70}" title="Apenas letras"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}" title="Apenas letras"
                                            maxlength="70" required value="<?= $pf['nome'] ?>">
                                 </div>
                                 <div class="col-md-6 form-group">
@@ -461,7 +499,7 @@ include "includes/menu_interno.php";
 
                                     <div class="form-group col-md-6">
                                     <?php
-                                    anexosNaPagina(62, $idPf, "modal-passaporte", "Passaporte");
+                                    anexosNaPagina(1, $idPf, "modal-passaporte", "Passaporte");
                                     ?>
                                     </div>
                                 <?php } else {
@@ -777,6 +815,7 @@ modalUploadArquivoUnico("modal-ccm", "?perfil=evento&p=pf_edita", "FDC - CCM", "
 modalUploadArquivoUnico("modal-nit", "?perfil=evento&p=pf_edita", "NIT", "pis_pasep_", $idPf, "1");
 modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pf_edita", "FACC", "faq", $idPf, "1");
 modalUploadArquivoUnico("modal-drt", "?perfil=evento&p=pf_edita", "DRT", "drt", $idPf, "1");
+modalUploadArquivoUnico("modal-passaporte", "?perfil=evento&p=pf_edita", "Passaporte", "rg", $idPf, "1");
 modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprovante de endereço", "residencia", $idPf, "1");
 ?>
 

@@ -78,7 +78,7 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: *</label>
-                                    <input type="text" class="form-control" name="nome" id="nome" placeholder="Digite o nome" maxlength="70" required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ]{1,70}" title="Apenas letras">
+                                    <input type="text" class="form-control" name="nome" id="nome" placeholder="Digite o nome" maxlength="70" required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}" title="Apenas letras">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="nomeArtistico">Nome Artistico:</label>

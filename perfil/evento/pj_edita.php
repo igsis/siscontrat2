@@ -27,21 +27,21 @@ if (isset($_POST['editProponente'])) {
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['atualizaPj'])) {
-    $razao_social = addslashes($_POST['razao_social']);
+    $razao_social = trim(addslashes($_POST['razao_social']));
     $cnpj = $_POST['cnpj'];
-    $ccm = $_POST['ccm'] ?? NULL;
-    $email = $_POST['email'];
+    $ccm = trim($_POST['ccm']) ?? NULL;
+    $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
     $cep = $_POST['cep'];
     $logradouro = addslashes($_POST['rua']);
     $numero = $_POST['numero'];
-    $complemento = $_POST['complemento'] ?? NULL;
-    $bairro = addslashes($_POST['bairro']);
-    $cidade = addslashes($_POST['cidade']);
-    $uf = $_POST['estado'];
-    $banco = $_POST['banco'] ?? NULL;
-    $agencia = $_POST['agencia'] ?? NULL;
-    $conta = $_POST['conta'] ?? NULL;
+    $complemento = trim($_POST['complemento']) ?? NULL;
+    $bairro = trim(addslashes($_POST['bairro']));
+    $cidade = trim(addslashes($_POST['cidade']));
+    $uf = trim($_POST['estado']);
+    $banco = trim($_POST['banco']) ?? NULL;
+    $agencia = trim($_POST['agencia']) ?? NULL;
+    $conta = trim($_POST['conta']) ?? NULL;
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $ultima_atualizacao = date('Y-m-d H:i:s');
 }
@@ -270,6 +270,49 @@ if (isset($pj['representante_legal2_id'])) {
 $idEvento = $_SESSION['idEvento'];
 $evento = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = '$idEvento'")->fetch_array();
 $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'")->fetch_array();
+
+if (isset($_POST['selecionar'])) {
+    $tipoPessoa = 2;
+    $idPessoa = $_POST['idPj'];
+    $tipoEvento = $evento['tipo_evento_id'];
+    $valor = $evento['tipo_evento_id'] != 2 ? $atracao['valor_individual'] : "0.00";
+    $campo = "pessoa_juridica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPessoa, $valor, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
+
+if (isset($_POST['cadastra'])) {
+    $tipoPessoa = 2;
+    $tipoEvento = $evento['tipo_evento_id'];
+    $valor = $evento['tipo_evento_id'] != 2 ? $atracao['valor_individual'] : "0.00";
+    $campo = "pessoa_juridica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPj, $valor, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Proponente cadastrado. Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
+
+
 ?>
 
 <script>
@@ -609,7 +652,6 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                                 <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
                                     <input type="hidden" name="pessoa_tipo_id" value="2">
                                     <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
-                                    <?php $valor = $evento['tipo_evento_id'] != 2 ? $atracao['valor_individual'] : "0.00"?>
                                     <input type="hidden" name="valor" value="<?= $valor ?>">
                                     <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
                                     <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de

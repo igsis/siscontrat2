@@ -49,7 +49,7 @@ if (isset($_POST['trocaPj'])) {
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
-if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
+if (isset($_SESSION['idPedido']) && (isset($_POST['cadastra'])) || isset($_GET['lider'])) {
     unset($_POST['cadastra']);
     $_POST['carregar'] = 1;
     $idPedido = $_SESSION['idPedido'];
@@ -82,9 +82,9 @@ if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
 if (isset($_POST['edita'])) {
     $verba_id = $_POST['verba_id'];
     $valor_total = dinheiroDeBr($_POST['valor_total']);
-    $forma_pagamento = addslashes($_POST['forma_pagamento']);
-    $justificativa = addslashes($_POST['justificativa']);
-    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $forma_pagamento = trim(addslashes($_POST['forma_pagamento']));
+    $justificativa = trim(addslashes($_POST['justificativa']));
+    $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
 
     $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? '0000-00-00';

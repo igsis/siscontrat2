@@ -33,7 +33,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $horario_fim = $_POST['horaFim'];
     $retirada_ingresso_id = $_POST['retiradaIngresso'];
     $valor_ingresso = dinheiroDeBr($_POST['valor_ingresso']);
-    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $idOcorrencia =  $_POST['idOcorrencia'] ?? NULL;
     $periodo_id = $_POST['periodo'];
     $subprefeitura_id = $_POST['subprefeitura'];
@@ -364,8 +364,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <div class="form-group col-md-3">
-                                    <label for="retiradaIngresso">Retirada de Ingresso</label>
-                                    <select name="retiradaIngresso" id="retiradaIngresso" class="form-control">
+                                    <label for="retiradaIngresso">Retirada de Ingresso *</label>
+                                    <select name="retiradaIngresso" id="retiradaIngresso" class="form-control" required>
                                         <option value="">Selecione uma opção...</option>
                                         <?php
                                         geraOpcao("retirada_ingressos", $ocorrencia['retirada_ingresso_id']);

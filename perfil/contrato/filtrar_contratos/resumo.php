@@ -312,7 +312,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                     <div class="col-md-12" style="text-align:center">
                         <form action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos"
                               method="post">
-                            <button type="submit" class="btn btn-info" name="reabertura" style="width: 35%;"
+                            <button type="submit" class="btn btn-info" name="reabertura" style="width: 35%"
                                     id="reabertura">
                                 Reabertura
                             </button>

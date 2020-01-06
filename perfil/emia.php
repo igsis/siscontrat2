@@ -1,5 +1,5 @@
 <?php
-//include para contratos
+
 include "../perfil/emia/includes/menu.php";
 
 if (isset($_GET['p'])) {

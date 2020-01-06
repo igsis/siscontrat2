@@ -202,7 +202,7 @@ if(isset($_POST['apagar']))
                                                         $sqlAdicional = "";
                                                     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 $sqlAdicional";
                                                 } else {
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 AND (".implode(" OR ", $whereAdicional)." AND documento NOT LIKE '%Pessoa Jurídica%')";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
                                                 }
                                                 $query_arquivos = mysqli_query($con,$sql_arquivos);
                                                 while($arq = mysqli_fetch_array($query_arquivos))
@@ -220,7 +220,7 @@ if(isset($_POST['apagar']))
                                                             <td>
                                                                 <input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'>
                                                             </td>
-                                                        </tr>
+                                                         </tr>
                                                         <?php
                                                     }
                                                 }

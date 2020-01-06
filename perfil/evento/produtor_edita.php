@@ -3,11 +3,11 @@
     include "includes/menu_interno.php";
 
     if (isset($_POST['edita'])){
-        $nome = addslashes($_POST['nome']);
-        $email = $_POST['email'];
+        $nome = trim(addslashes($_POST['nome']));
+        $email = trim($_POST['email']);
         $telefone1 = $_POST['telefone1'];
         $telefone2 = $_POST['telefone2'];
-        $observacao = addslashes($_POST['observacao']);
+        $observacao = trim(addslashes($_POST['observacao']));
         $idProdutor = $_POST['idProdutor'];
         $sql  = "UPDATE `produtores`
                  SET  nome = '$nome',
@@ -58,7 +58,7 @@
                             
                             <div class="form-group">
                                 <label for="nome">Nome: *</label>
-                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value='<?= $row['nome']?>' required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ]{1,120}" title="Apenas letras">
+                                <input type='text' class='form-control' id='nome' name='nome' maxlength='120' value='<?= $row['nome']?>' required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras">
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">

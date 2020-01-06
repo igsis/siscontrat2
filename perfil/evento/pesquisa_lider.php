@@ -125,7 +125,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             $resultado .= "<td>
                                         <form action='$edita' method='post'>
                                         <input type='hidden' name='idLider' value='" . $pessoa['id'] . "'>
-                                        <input type='hiden' name='idPedido' value='{$idPedido}'>
+                                        <input type='hidden' name='idPedido' value='{$idPedido}'>
                                         <input type='hidden' name='tipoDocumento' value='{$tipoDocumento}'>
                                         <input type='hidden' name='idAtracao' value='{$idAtracao}' >
                                         <input type='submit' class='btn btn-primary' name='selecionar' value='selecionar'>

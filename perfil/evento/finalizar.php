@@ -1,6 +1,8 @@
 <?php
 include "includes/menu_interno.php";
 
+$ocorrencias_rept = false;
+
 $sqlEvento = "SELECT
                eve.nome_evento AS 'Nome do Evento',
                te.tipo_evento AS 'Tipo do Evento',
@@ -24,6 +26,84 @@ $sqlEvento = "SELECT
                 WHERE eve.id = '$idEvento'";
 
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
+
+if ($evento['tipo_evento_id'] == 1) {
+    $ocorrencia_atracao = "SELECT  	o.tipo_ocorrencia_id,
+			o.origem_ocorrencia_id,
+			o.instituicao_id,local_id,
+			o.espaco_id,
+			o.data_inicio,
+			o.data_fim,
+			o.segunda,o.terca
+			,o.quarta,
+			o.quinta,
+			o.sexta,
+			o.sabado,
+			o.domingo,
+			o.horario_inicio, 
+			o.horario_fim, 
+			o.retirada_ingresso_id,
+			o.valor_ingresso,
+			o.observacao,
+			o.periodo_id,
+			o.subprefeitura_id,
+			o.virada,
+			o.libras,
+			o.audiodescricao
+FROM ocorrencias AS o INNER JOIN atracoes AS a ON o.atracao_id = a.id
+INNER JOIN eventos AS e ON e.id = a.evento_id
+WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
+
+
+    $result = mysqli_fetch_all(mysqli_query($con, $ocorrencia_atracao));
+
+} else {
+    $ocorrencia_filmes = "SELECT  	o.tipo_ocorrencia_id,
+			o.origem_ocorrencia_id,
+			o.instituicao_id,local_id,
+			o.espaco_id,
+			o.data_inicio,
+			o.data_fim,
+			o.segunda,o.terca
+			,o.quarta,
+			o.quinta,
+			o.sexta,
+			o.sabado,
+			o.domingo,
+			o.horario_inicio, 
+			o.horario_fim, 
+			o.retirada_ingresso_id,
+			o.valor_ingresso,
+			o.observacao,
+			o.periodo_id,
+			o.subprefeitura_id,
+			o.virada,
+			o.libras,
+			o.audiodescricao
+FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
+INNER JOIN eventos AS e ON fe.evento_id = e.id 
+WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
+
+
+    $result = mysqli_fetch_all(mysqli_query($con, $ocorrencia_filmes));
+}
+
+$quant = count($result);
+$contad = 0;
+for ($i = 0; $i < $quant; $i++) {
+    for ($j = 1; $j < $quant; $j++) {
+        for ($k = 0; $k < $quant; $k++) {
+            if ($result[$i][$k] == $result[$j][$k]) {
+                $contad += 1;
+                if ($contad == 6) {
+                    $ocorrencias_rept = true;
+                    $contad = 0;
+                }
+            }
+        }
+    }
+}
+
 
 include "includes/validacoes.php";
 
@@ -182,14 +262,19 @@ include "includes/validacoes.php";
                     <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                     <input type="hidden" name="fora" value="<?= $fora ?? 0 ?>">
                     <?php
-                    if($evento['tipo_evento_id'] == 1){
+                    if ($evento['tipo_evento_id'] == 1) {
                         ?>
-                        <button class="btn btn-success" name="enviar" type="submit" <?= (count($erros) != 0 or count($errosArqs) != 0) and ($_SESSION['atracao_repetida']) ? "disabled" : "" ?>>Enviar Evento</button>
-                    <?php
-                    } else{
+                        <button class="btn btn-success" name="enviar" type="submit"
+                                <?= count($erros) != 0 && count($errosArqs) != 0 && $ocorrencias_rept ? "disabled" : "" ?>>
+                            Enviar Evento
+                        </button>
+                        <?php
+                    } else {
                         ?>
-                        <button class="btn btn-success" name="enviar" type="submit" <?= (count($erros) != 0 or count($errosArqs) != 0) ?>>Enviar Evento</button>
-                    <?php
+                        <button class="btn btn-success" name="enviar" type="submit"
+                                <?= count($erros) != 0 && count($errosArqs) != 0 && $ocorrencias_rept ? "disabled" : "" ?>>Enviar Evento
+                        </button>
+                        <?php
                     }
                     ?>
                 </form>
@@ -197,6 +282,3 @@ include "includes/validacoes.php";
         </div>
     </section>
 </div>
-<script>
-    alert('<?= $_SESSION['atracao_repetida'] ?>')
-</script>
