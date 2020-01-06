@@ -15,9 +15,13 @@ $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
-$idLocal = $ocorrencia['local_id'];
-$sqlLocal = "SELECT local FROM locais WHERE id = '$idLocal'";
-$locais = $con->query($sqlLocal)->fetch_array();
+$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
+$queryLocal = mysqli_query($con, $sqlLocal);
+$local = '';
+while ($locais = mysqli_fetch_array($queryLocal)) {
+    $local = $local . '; ' . $locais['local'];
+}
+$local = substr($local, 1);
 $idEvento = $ocorrencia['origem_ocorrencia_id'];
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
@@ -39,7 +43,7 @@ echo
     "<p>&nbsp;</p>".
     "<p>Nós, abaixo assinadas, AUTORIZAMOS, gratuitamente, a PREFEITURA DO MUNICÍPIO DE SÃO PAULO, por meio da Secretaria Municipal de Cultura/" . $instituicao['nome'] .
         ", a utilizar os direitos conexos relativos às gravações de áudio e vídeo da nossa participação, captado no concerto a ser realizado em " . $periodo .
-        " no(s) local(is) " . $locais['local'] . ", para fins de inserção no site, exclusivamente para fins não comerciais, pelo prazo de proteção do artigo 96 da Lei 9.610/98." . "</p>".
+        " no(s) local(is) " . $local . ", para fins de inserção no site, exclusivamente para fins não comerciais, pelo prazo de proteção do artigo 96 da Lei 9.610/98." . "</p>".
     "<p>&nbsp;</p>".
     "<p>Data: ____ / ____ / ".$ano."</p>".
     "<p>&nbsp;</p>".

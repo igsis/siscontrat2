@@ -16,17 +16,18 @@ $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
-$idLocal = $ocorrencia['local_id'];
-$sqlLocal = "SELECT local FROM locais WHERE id = '$idLocal'";
-$idEvento = $ocorrencia['origem_ocorrencia_id'];
-$locais = $con->query($sqlLocal)->fetch_array();
 
+$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
+$queryLocal = mysqli_query($con, $sqlLocal);
+$local = '';
+while ($locais = mysqli_fetch_array($queryLocal)) {
+    $local = $local . '; ' . $locais['local'];
+}
+$local = substr($local, 1);
 
 $nome = $pessoa['nome'];
 $cpf = $pessoa['cpf'];
 
-
-$local = $locais['local'];
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 $valor = $pedido['valor_total'];
 $valor_extenso = valorPorExtenso($valor);
