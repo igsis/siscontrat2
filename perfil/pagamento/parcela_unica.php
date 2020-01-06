@@ -237,8 +237,8 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                 $link13 = $server . "ateste_documentacao.php";
                 $link14 = $server . "confirmacao_servico.php";
                 $link15 = $server . "minuta.php";
-                $link16 = $server . "documento.php";
-                $link17 = $server . "documento.php";
+                $link16 = $server . "emissao_nf_integral.php";
+                $link17 = $server . "declaracao_simples.php";
                 $link18 = $server . "documento.php";
                 $link19 = $server . "documento.php";
                 $link20 = $server . "documento.php";
