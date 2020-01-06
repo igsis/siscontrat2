@@ -436,9 +436,9 @@ function geraOpcaoLocais ($tabela, $select = '')
     function retornaPeriodo($idEvento){
         $con = bancoMysqli();
         $sql_data_inicio = "SELECT data_inicio FROM ocorrencias AS oco
-                            INNER JOIN atracoes AS atr ON oco.origem_ocorrencia_id = atr.id
-                            INNER JOIN eventos AS eve on atr.evento_id = eve.id
-                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND atr.publicado = 1 AND eve.id = '$idEvento'
+                            INNER JOIN eventos AS eve on oco.origem_ocorrencia_id = eve.id
+                            INNER JOIN atracoes AS atr ON oco.atracao_id = atr.id
+                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND eve.id = '$idEvento'
                             ORDER BY data_inicio ASC LIMIT 0,1";
         $query_data_inicio = mysqli_query($con,$sql_data_inicio);
         $array_inicio = mysqli_fetch_array($query_data_inicio);
