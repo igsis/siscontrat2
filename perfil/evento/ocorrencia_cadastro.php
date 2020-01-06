@@ -87,6 +87,9 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
             var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
         }
 
+        msgHora.hide()
+        $('#cadastra').attr("disabled", true);
+
         if (dataFim != "") {
             var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
 
@@ -103,6 +106,11 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                 $('#cadastra').attr("disabled", false);
                 mudaData(false);
             }
+        } else {
+            validaHora()
+
+            let horaInicio = $('#horaInicio').change(validaHora)
+            let horaFim = $('#horaFim').change(validaHora)
         }
     }
 </script>
@@ -215,6 +223,12 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                     <input type="text" name="valor_ingresso" class="form-control" required
                                            id="valor_ingresso"
                                            placeholder="Em reais" onkeypress="return(moeda(this, '.', ',', event))"/>
+                                </div>
+                            </div>
+
+                            <div class="row" id="msgEscondeHora">
+                                <div class="form-group col-md-6">
+                                    <span style="color: red;">A hora final tem que ser maior que a hora inicial!</span>
                                 </div>
                             </div>
 
@@ -631,6 +645,27 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 </script>
 
 <script>
+    let msgHora = $('#msgEscondeHora');
+    msgHora.hide();
+
+    function validaHora() {
+        let horaInicio = $('#horaInicio').val();
+        let horaFim = $('#horaFim').val();
+
+        if (horaFim != "" && horaInicio != "") {
+            horaInicio = parseInt(horaInicio.split(":")[0].toString() + horaInicio.split(":")[1].toString());
+            horaFim = parseInt(horaFim.split(":")[0].toString() + horaFim.split(":")[1].toString());
+
+            if (horaFim < horaInicio) {
+                msgHora.show();
+                $('#cadastra').attr("disabled", true);
+            } else {
+                msgHora.hide();
+                $('#cadastra').attr("disabled", false);
+            }
+        }
+    }
+
     function validaDiaSemana() {
         var dataInicio = document.querySelector('#datepicker10').value;
         var isMsg = $('#msgEsconde');
@@ -658,6 +693,5 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         }
     }
 
-    var diaSemana = $('.semana');
-    diaSemana.change(validaDiaSemana);
+    var diaSemana = $('.semana').change(validaDiaSemana)
 </script>
