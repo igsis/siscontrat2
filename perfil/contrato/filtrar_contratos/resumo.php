@@ -318,10 +318,9 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                 <hr/>
                 <div class="row">
                     <div class="col-md-12" style="text-align:center">
-                        <form action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos"
-                              method="post">
-                            <button type="submit" class="btn btn-info" name="reabertura" style="width: 35%"
-                                    id="reabertura">
+                        <form>
+                            <button type="button" class="btn btn-info" name="reabre" style="width: 35%"
+                                    id="reabre" data-toggle="modal" data-target="#reabrir">
                                 Reabertura
                             </button>
                         </form>
@@ -477,5 +476,26 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     <?php
 }
 ?>
+<div id="reabrir" class="modal modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirmação de Reabertura</h4>
+            </div>
+            <form action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_contratos"
+                  role="form" method="post">
+                <div class="modal-body">
+                    <p>Tem certeza que deseja reabrir este evento?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" name="reabertura">Reabrir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </section>
 </div>
