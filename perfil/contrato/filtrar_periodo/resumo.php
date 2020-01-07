@@ -105,6 +105,7 @@ if (isset($_POST['salvar'])) {
     $processoMae = $_POST['processoMae'];
     $processo = $_POST['processo'];
     $justificativa = addslashes($_POST['justificativa']);
+    $valorTotal = $_POST['valorTotal'];
     $operador = $_POST['operador'] ?? NULL;
 
     //eventos
@@ -112,7 +113,7 @@ if (isset($_POST['salvar'])) {
     $suplente = $_POST['suplente'] ?? null;
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido'";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', valor_total = '$valorTotal', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido'";
 
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
@@ -202,21 +203,28 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 <div class="row">
                                     <input type="hidden" name="idAtracao[]" value="<?= $atracao['id'] ?>">
 
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-4">
                                         <label for="nome_atracao[]">Nome da atração *</label>
                                         <input type="text" name="nome_atracao[]" id="nome_atracao"
                                                value="<?= $atracao['nome_atracao'] ?>"
                                                class="form-control" required>
+                                    </div>
 
-                                        <br>
-
-                                        <label for="valor">Valor: </label>
+                                    <div class="form-group col-md-4">
+                                        <label for="valor">Valor Individual: </label>
                                         <input type="text" disabled
                                                value="<?= dinheiroParaBr($atracao['valor_individual']) ?>"
                                                class="form-control">
                                     </div>
 
-                                    <div class="form-group col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="valorTotal">Valor Total: </label>
+                                        <input type="text" value="<?= dinheiroParaBr($pedido['valor_total'])?>" onKeyPress="return(moeda(this,'.',',',event))" class="form-control" name="valorTotal" id="valorTotal">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-12">
                                         <label for="integrantes[]">Integrantes* </label>
                                         <textarea name="integrantes[]" id="integrantes" required rows="5"
                                                   class="form-control"><?= $atracao['integrantes'] ?></textarea>
