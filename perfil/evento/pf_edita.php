@@ -14,7 +14,7 @@ if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
 
 if (isset($_POST['editProponente'])) {
     $idPedido = $_SESSION['idPedido'];
-    $voltar = "<form action='?perfil=evento&p=pedido_edita' method='post'>
+    $voltar = "<form action='?perfil=evento&p=pedido_edita&label=proponente' method='post'>
                     <input type='hidden' name='idProponente' value='$idPf'>
                     <input type='hidden' name='tipoPessoa' value='$tipoPessoa'>
                         <button type='submit' name='idPedido' id='idPedido' value='$idPedido' class='btn btn-default'>Voltar</button>
