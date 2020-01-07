@@ -30,7 +30,7 @@ if (isset($_POST['busca'])) {
         $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
 
     if ($status != null && $status != 0)
-        $sqlStatus = " AND e.evento_status_id = '$status'";
+        $sqlStatus = " AND p.status_pedido_id = '$status'";
 
     if ($usuario != null && $usuario != 0)
         $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
