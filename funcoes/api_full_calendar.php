@@ -1,6 +1,5 @@
 <?php
 require_once 'funcoesConecta.php';
-// require "../funcoes/";
 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: *');

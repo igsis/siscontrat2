@@ -6,25 +6,24 @@ $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_
 ?>
 <script>
     const urlEvento = `<?=$urlEvento?>`;
-    let retornoEvento = new Object();
+    let  events = [];
+    let qtdEventos = 10;
 
     function evento() {
 
         fetch(`${urlEvento}`)
-            .then(response => response.json())
+            .then(res => res.json())
             .then(eventos => {
-                const qtdEventos = eventos.length;
+                qtdEventos = eventos.length;
 
                 for (let i = 0; i < qtdEventos; i++) {
-                    retornoEvento[i] = {
+                    events[i] = {
                         title: eventos[i].nomeEvento,
                         start: eventos[i].dataInicio + "T" + eventos[i].horaInicio,
                         end : eventos[i].dataFim + "T" + eventos[i].horaFim
                     }
                 }
-            });
-
-        return retornoEvento;
+            });  
     }
 
     evento();
@@ -127,8 +126,8 @@ $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_
 
 <script>
     // document.addEventListener('DOMContentLoaded', carregaCalendario);
-    $(document).ready(carregaCalendario());
-
+    // $(document).ready(carregaCalendario());
+    
     function carregaCalendario(){
         let data = new Date();
         let dia = data.getDate().toString();
@@ -155,13 +154,12 @@ $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_
             navLinks: true, // can click day/week names to navigate views
             businessHours: true, // display business hours
             editable: false,
-            events: [
-                retornoEvento
-            ]
-
+            events
         });
 
         calendar.setOption('locale', 'pt-br');
         calendar.render();
     }
+
+    setTimeout(carregaCalendario, 5000)
 </script>
