@@ -32,13 +32,11 @@ if (isset($_POST["enviar"])) {
                     $hoje = date("Y-m-d H:i:s",strtotime("-3 hours"));
                     $dir = '../uploadsdocs/'; //Diretório para uploads
                     $ext = strtolower(substr($nome_arquivo, -4));
-                    var_dump($f_size);
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
                         $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idEvento', '$y', '$new_name', '$hoje', '1')";
 
                         if (mysqli_query($con, $sql_insere_arquivo)) {
                             $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                            var_dump($f_size);
                             echo "<script>
                                 swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
                             </script>";
@@ -48,7 +46,6 @@ if (isset($_POST["enviar"])) {
                         }
                     } else {
                         $mensagem = mensagem("danger", "Erro no upload");
-                        var_dump($f_size);
                     }
                 }
             }

@@ -76,6 +76,7 @@ $sql = "SELECT p.numero_processo,
                         <th>Proponente</th>
                         <th>Tipo</th>
                         <th>Objeto</th>
+                        <th>Pendências</th>
                     </tr>
                     </thead>
                     <tbody>

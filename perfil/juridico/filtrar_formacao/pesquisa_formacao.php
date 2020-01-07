@@ -1,11 +1,11 @@
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Buscar por Formacao</h2>
+        <h2 class="page-header">Buscar</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3> Dados da Formação</h3>
+                        <h3 class="box-title"> Busca por Formação</h3>
                     </div>
                     <form action="?perfil=juridico&p=filtrar_formacao&sp=resultado_formacao" method="POST" ROLE="form">
                         <div class="box-body">

@@ -49,8 +49,9 @@ if(isset($_POST["enviar"])) {
         $x = $arq['sigla'];
         $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
         $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
+        var_dump($f_size);
 
-        if ($f_size > 5242880) {
+        if ($f_size > 6144000) {
             $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
         } else {
             if ($nome_arquivo != "") {
@@ -60,6 +61,7 @@ if(isset($_POST["enviar"])) {
                 $dir = '../uploadsdocs/'; //Diretório para uploads
                 $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
                 $ext = strtolower(substr($nome_arquivo,-4));
+
 
                 if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
                 {
@@ -191,7 +193,7 @@ if(isset($_POST['apagar']))
                                                     <h1 class="text-center">Envio de Arquivos</h1>
                                                 </tr>
                                                 <tr>
-                                                    <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 5MB.</h4>
+                                                    <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 6MB.</h4>
                                                 </tr>
                                                 <?php
                                                 $evento = recuperaDados('eventos', 'id', $idEvento);
