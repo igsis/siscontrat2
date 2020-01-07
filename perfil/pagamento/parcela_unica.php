@@ -186,7 +186,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
             if ($pedido['pessoa_tipo_id'] == 1) {
                 $link1 = $server . "pagamento_integral_pf.php";
                 $link2 = $server . "documento.php";
-                $link3 = $server . "documento.php";
+                $link3 = $server . "recibo_pagamento.php";
                 $link4 = $server . "ateste_documentacao.php";
                 $link5 = $server . "confirmacao_servico.php";
                 ?>
@@ -241,6 +241,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                 $link17 = $server . "declaracao_simples.php";
                 $link18 = $server . "declaracao_semFinsLucrativos.php";
                 $link19 = $server . "email_empresas.php";
+                $link20 = $server . "recibo_pagamento.php";
                 ?>
                 <div class="box">
                     <div class="box-header">
@@ -256,6 +257,11 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                             <div class="col-md-2">
                                 <form action="<?= $link12 ?>" method="post" target="_blank" role="form">
                                     <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido parcelado</button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="<?= $link20 ?>" method="post" target="_blank" role="form">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Recibo pagamento</button>
                                 </form>
                             </div>
                             <div class="col-md-2">
