@@ -5,28 +5,31 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espa
 $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_calendar.php';
 ?>
 <script>
-    const urlEvento = `<?=$urlEvento?>`;
-    let  events = [];
-    let qtdEventos = 10;
+const URL = `<?=$urlEvento?>`;
+let events = [];
 
-    function evento() {
+axios.get(URL)
+    .then(function(response) {
+        const contador = response.data.length;
 
-        fetch(`${urlEvento}`)
-            .then(res => res.json())
-            .then(eventos => {
-                qtdEventos = eventos.length;
+        for (let i = 0; i < contador; i++) {
+            title = response.data[i].nomeEvento;
+            start = response.data[i].dataInicio + "T" + response.data[i].horaInicio;
+            end = response.data[i].dataFim + "T" + response.data[i].horaFim
 
-                for (let i = 0; i < qtdEventos; i++) {
-                    events[i] = {
-                        title: eventos[i].nomeEvento,
-                        start: eventos[i].dataInicio + "T" + eventos[i].horaInicio,
-                        end : eventos[i].dataFim + "T" + eventos[i].horaFim
-                    }
-                }
-            });  
-    }
+            events[i] = {
+                title,
+                start,
+                end
+            }
+        }
 
-    evento();
+        console.log(events);
+        carregaCalendario();
+    })
+    .catch(function(error) {
+        console.warn(error)
+    })
 </script>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -127,7 +130,7 @@ $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_
 <script>
     // document.addEventListener('DOMContentLoaded', carregaCalendario);
     // $(document).ready(carregaCalendario());
-    
+
     function carregaCalendario(){
         let data = new Date();
         let dia = data.getDate().toString();
@@ -160,6 +163,4 @@ $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_
         calendar.setOption('locale', 'pt-br');
         calendar.render();
     }
-
-    setTimeout(carregaCalendario, 5000)
 </script>
