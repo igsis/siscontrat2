@@ -114,7 +114,7 @@ include "includes/menu_interno.php";
                             <div class="row ">
                                 <div class="form-group col-md-6">
                                     <label for="fiscal">Nome do Responsável Interno *</label>
-                                    <input class="form-control" type="text" name="nomeResponsavel" required>
+                                    <input class="form-control" type="text" name="nomeResponsavel" required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]" title="Apenas letras">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="fiscal">Telefone do Responsável Interno *</label>

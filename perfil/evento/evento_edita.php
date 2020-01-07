@@ -258,7 +258,7 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
                             <div class="row ">
                                 <div class="form-group col-md-6">
                                     <label for="fiscal">Nome do Responsável Interno *</label>
-                                    <input class="form-control" type="text" name="nomeResponsavel" value="<?= $evento['nome_responsavel'] ?>" required>
+                                    <input class="form-control" type="text" name="nomeResponsavel" value="<?= $evento['nome_responsavel'] ?>" required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]" title="Apenas letras">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="fiscal">Telefone do Responsável Interno *</label>
