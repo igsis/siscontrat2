@@ -130,7 +130,7 @@ if(isset($_POST['operador'])) {
                                 <th>LIQ.</th>
                             </tr>
                             </thead>
-                            <tbody>
+<!--                            <tbody>-->
                             <?php
                             if ($num_rows == 0) {
                                 ?>
@@ -140,6 +140,14 @@ if(isset($_POST['operador'])) {
                                 <?php
                             } else {
                                 while ($evento = mysqli_fetch_array($resultado)) {
+                                    $idPedido = $evento['idPedido'];
+                                    $parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->fetch_assoc();
+                                    var_dump($parcela);
+                                    if($parcela == NULL) {
+                                        $botao = "parcela_unica";
+                                    } else{
+                                        $botao = "parcelado";
+                                    }
                                     if ($evento['pessoa_tipo_id'] == 2) {
                                         $idPj = $evento['pessoa_juridica_id'];
                                         $pj = $con->query("SELECT razao_social FROM pessoa_juridicas WHERE id = '$idPj'")->fetch_assoc();
@@ -176,7 +184,7 @@ if(isset($_POST['operador'])) {
                                             </form>
                                         </td>
                                         <td>
-                                            <form method="POST" action="?perfil=pagamento&p=parcela_unica">
+                                            <form method="POST" action="?perfil=pagamento&p=<?= $botao ?>">
                                                 <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
                                             </form>
                                         </td>
