@@ -24,7 +24,7 @@ $idPf = $pedido['idPf'];
 $telefones = $con->query("SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'");
 
 $parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1");
-if($parcela != NULL){
+if($parcela == NULL){
     $valor = $pedido['valor_total'];
 } else {
     $idParcela = $_POST['idParcela'];

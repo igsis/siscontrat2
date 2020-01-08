@@ -17,6 +17,15 @@ FROM pedidos AS p
     INNER JOIN pj_enderecos pe on pj.id = pe.pessoa_juridica_id
 WHERE p.publicado = 1 AND e.publicado = 1 AND p.origem_tipo_id = 1 AND p.id = '$idPedido'")->fetch_assoc();
 
+$parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1");
+if($parcela == NULL){
+    $valor = $pedido['valor_total'];
+} else {
+    $idParcela = $_POST['idParcela'];
+    $parc = $con->query("SELECT valor FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1 AND id = '$idParcela'")->fetch_assoc();
+    $valor = $parc['valor'];
+}
+
 $idPj = $pedido['idPj'];
 $telefones = $con->query("SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'");
 
@@ -31,7 +40,7 @@ $processo = $pedido['numero_processo'];
 
 // GERANDO O WORD:
 header("Content-type: application/vnd.ms-word");
-header("Content-Disposition: attachment;Filename=$now - Processo SEI $processo - Integral.doc");
+header("Content-Disposition: attachment;Filename=$now - Processo SEI $processo - Pedido de Pagamento.doc");
 ?>
 
 <html lang="pt-br">
@@ -65,7 +74,7 @@ header("Content-Disposition: attachment;Filename=$now - Processo SEI $processo -
 <p align="justify"><strong>Evento:</strong> <?= $pedido['nome_evento'] ?><br>
     <strong>Data / Período:</strong> <?= retornaPeriodo($pedido['idEvento']) ?><br>
     <strong>Local:</strong> <?php retornaLocal($pedido['idEvento']) ?><br>
-    <strong>Valor:</strong> R$ <?= dinheiroParaBr($pedido['valor_total']) ?> ( <?= valorPorExtenso($pedido['valor_total'])?> )
+    <strong>Valor:</strong> R$ <?= dinheiroParaBr($valor) ?> ( <?= valorPorExtenso($valor)?> )
 </p>
 <p>&nbsp;</p>
 <p align="justify">Venho, mui respeitosamente, requerer que o(a) senhor(a) se digne submeter a exame à decisão do órgão competente o pedido supra.</p>

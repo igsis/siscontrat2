@@ -185,7 +185,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
 <!--                    <tbody>-->
                     <?php
                     $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/";
-                    $link2 = $server . "documento.php";
+                    $link2 = $server . "pagamento_integral_pj.php";
                     $link3 = $server . "recibo_pagamento.php";
                     $link4 = $server . "ateste_documentacao.php";
                     $link5 = $server . "confirmacao_servico.php";
@@ -198,28 +198,28 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                             <td><?= exibirDataBr($parcela['data_pagamento']) ?></td>
                             <td>
                                 <form action="<?= $link2 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idPercela" value="<?= $parcela['id'] ?>">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido parcelado
+                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido Pagamento
                                     </button>
                                 </form>
                             </td>
                             <td>
                                 <form action="<?= $link3 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idPercela" value="<?= $parcela['id'] ?>">
+                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
                                     <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Recibo Integral
                                     </button>
                                 </form>
                             </td>
                             <td>
                                 <form action="<?= $link4 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idPercela" value="<?= $parcela['id'] ?>">
+                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
                                     <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Ateste (Documentação)
                                     </button>
                                 </form>
                             </td>
                             <td>
                                 <form action="<?= $link5 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idPercela" value="<?= $parcela['id'] ?>">
+                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
                                     <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Confirmação de serviço
                                     </button>
                                 </form>
