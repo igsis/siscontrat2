@@ -1,22 +1,11 @@
 <?php
 $con = bancoMysqli();
 
-$sqlEventos = "SELECT
-                    e.id AS 'id',
-                    e.protocolo AS 'protocolo',
-                    e.nome_evento AS 'nome_evento',
-                    env.visualizado AS 'visualizado'
-            FROM eventos AS e
-            INNER JOIN pedidos AS p ON p.origem_id = e.id 
-            INNER JOIN producao_eventos AS env ON env.evento_id = e.id
-WHERE e.publicado = 1 AND e.evento_status_id = 3 AND p.status_pedido_id = 2 AND env.visualizado = 0";
+$sqlEventos = "SELECT * FROM producao_eventos WHERE visualizado = 0";
 $queryEventos = mysqli_query($con, $sqlEventos);
 $numEventos = mysqli_num_rows($queryEventos);
 
-$sqlAgendao = "SELECT *
-            FROM agendoes AS a
-            INNER JOIN producao_agendoes AS env ON env.agendao_id = a.id
-WHERE a.publicado = 1 AND a.evento_status_id = 3 AND env.visualizado = 0";
+$sqlAgendao = "SELECT * FROM producao_agendoes WHERE visualizado = 0";
 $queryAgendao = mysqli_query($con, $sqlAgendao);
 $numAgendao= mysqli_num_rows($queryAgendao);
 
