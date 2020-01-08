@@ -53,14 +53,10 @@ if ($pedido['pessoa_tipo_id'] == 2) {
     $pj = recuperaDados("pessoa_juridicas", "id", $pedido['pessoa_juridica_id']);
     $nomeProponente = $pj['razao_social'];
     $idProponente = $pj['id'];
-    echo "<td>" . $pj['razao_social'] . "</td>";
-    echo "<input type='hidden' name='idPessoa' value='" . $pj['id'] . "'>";
 } else {
     $pf = recuperaDados("pessoa_fisicas", "id", $pedido['pessoa_fisica_id']);
     $nomeProponente = $pf['nome'];
     $idProponente = $pf['id'];
-    echo "<td>" . $pf['nome'] . "</td>";
-    echo "<input type='hidden' name='idPessoa' value='" . $pf['id'] . "'>";
 }
 
 ?>
