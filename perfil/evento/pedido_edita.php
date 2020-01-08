@@ -370,7 +370,7 @@ if (isset($_GET['label'])) {
                                     <li role="presentation" class="disabled">
                                         <a class="persistant-disabled" href="#stepper-step-6" data-toggle="tab"
                                            aria-controls="stepper-step-6" role="tab" title="Valor por equipamento">
-                                            <span class="round-tab">5</span>
+                                            <span class="round-tab">6</span>
                                         </a>
                                     </li>
                                     <?php
@@ -444,14 +444,7 @@ if (isset($_GET['label'])) {
                                 </div>
                                 <!-- Anexos do pedido -->
                                 <div class="tab-pane fade <?=$lblAnexos ?? ""?>" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '5' : '4'?>">
-                                    <?php
-                                    if ($tipoPessoa == 2){
-                                        $i_a = 5;
-                                    } else{
-                                        $i_a = 4;
-                                    }
-                                    ?>
-                                    <h3><?= $i_a ?>. Anexos do pedido</h3>
+                                    <h3><?= $tipoPessoa == 2 ? '5' : '4'?>. Anexos do pedido</h3>
                                     <div class="container col-md-12">
                                         <?php include "includes/label_pedido_anexos.php" ?>
                                     </div>

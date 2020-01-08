@@ -1,6 +1,4 @@
 <?php
-$tipoPessoa = 3; // arquivos necessarios para pedidos
-
 $sqlAtracoes = "SELECT id FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'";
 $atracoes = $con->query($sqlAtracoes)->fetch_all(MYSQLI_ASSOC);
 
@@ -43,12 +41,6 @@ if ($edital) { $whereAdicional[] = "edital = '1'"; }
 
 <div class="card">
     <div class="card-body">
-        <div class="row" align="center">
-            <?php if (isset($mensagem)) {
-                echo $mensagem;
-            }; ?>
-        </div>
-
         <div class="box box-info">
             <div class="box-header with-border">
                 <h3 class="box-title">Arquivos anexados</h3>
@@ -127,9 +119,9 @@ if ($edital) { $whereAdicional[] = "edital = '1'"; }
                                     $sqlAdicional = "AND (".implode(" OR ", $whereAdicional).")";
                                 } else
                                     $sqlAdicional = "";
-                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 $sqlAdicional";
+                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1 $sqlAdicional";
                             } else {
-                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
+                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
                             }
                             $query_arquivos = mysqli_query($con,$sql_arquivos);
                             while($arq = mysqli_fetch_array($query_arquivos))
@@ -157,13 +149,13 @@ if ($edital) { $whereAdicional[] = "edital = '1'"; }
                     <br>
                     <?php
                     $num_lista = mysqli_num_rows($query_arquivos);
-                    $num_arquivos = $con->query("SELECT * FROM arquivos WHERE lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1) AND origem_id = '$idPedido' AND publicado = 1")->num_rows;
+                    $num_arquivos = $con->query("SELECT * FROM arquivos WHERE lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1) AND origem_id = '$idPedido' AND publicado = 1")->num_rows;
                     $num_total = $num_lista - $num_arquivos;
                     if($num_total != 0) {
                         ?>
                         <input type='hidden' name='idPedido' value='<?= $idPedido ?>'/>
                         <input type="hidden" name="tipoPessoa"
-                               value="<?php echo $tipoPessoa; ?>"/>
+                               value="3"/>
                         <input type="submit" class="btn btn-primary btn-lg btn-block"
                                name="enviarArquivo" value='Enviar'>
                         <?php
