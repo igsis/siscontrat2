@@ -142,9 +142,8 @@ if(isset($_POST['operador'])) {
                                 while ($evento = mysqli_fetch_array($resultado)) {
                                     $idPedido = $evento['idPedido'];
                                     $parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->fetch_assoc();
-                                    var_dump($parcela);
                                     if($parcela == NULL) {
-                                        $botao = "parcela_unica";
+                                        $botao = "integral";
                                     } else{
                                         $botao = "parcelado";
                                     }

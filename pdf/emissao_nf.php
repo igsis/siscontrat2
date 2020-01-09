@@ -18,11 +18,20 @@ INNER JOIN pagamentos pg on p.id = pg.pedido_id
 WHERE p.publicado = 1 AND e.publicado = 1 AND p.origem_tipo_id = 1 AND p.id = '$idPedido'
 ")->fetch_array();
 
+$parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1");
+if($parcela == NULL){
+    $valor = $pedido['valor_total'];
+} else {
+    $idParcela = $_POST['idParcela'];
+    $parc = $con->query("SELECT valor FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1 AND id = '$idParcela'")->fetch_assoc();
+    $valor = $parc['valor'];
+}
+
 $dataAtual = date('Y-m-d H:i:s');
 
 // GERANDO O WORD:
 header("Content-type: application/vnd.ms-word");
-header("Content-Disposition: attachment;Filename=$dataAtual - Processo SEI ".$pedido['numero_processo']." - Integral.doc");
+header("Content-Disposition: attachment;Filename=$dataAtual - Processo SEI ".$pedido['numero_processo']." - NF.doc");
 ?>
 <html lang="pt-br">
 <meta http-equiv="Content-Language" content="pt-br">
@@ -44,7 +53,7 @@ header("Content-Disposition: attachment;Filename=$dataAtual - Processo SEI ".$pe
     <strong>Município:</strong> São Paulo &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Estado:</strong> São Paulo &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>I. Est. Nº</strong>: Isento </p>
 <p>&nbsp;</p>
 <p><strong>Nota Fiscal:</strong> </p>
-<p align="justify"><strong>Valor:</strong> R$ <?= dinheiroParaBr($pedido['valor_total']) ?> ( <?= valorPorExtenso($pedido['valor_total']) ?> )</p>
+<p align="justify"><strong>Valor:</strong> R$ <?= dinheiroParaBr($valor) ?> ( <?= valorPorExtenso($valor)?> )</p>
 <p align="justify"><strong>Descrição:</strong> </p>
 <p align="justify">Pagamento referente ao evento <?= $pedido['nome_evento'] ?></p>
 <p>&nbsp;</p>

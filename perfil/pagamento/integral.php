@@ -233,15 +233,14 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
             }
             else{
                 $link11 = $server . "pagamento_integral_pj.php";
-                $link12 = $server . "documento.php";
+                $link12 = $server . "recibo_pagamento.php";
                 $link13 = $server . "ateste_documentacao.php";
                 $link14 = $server . "confirmacao_servico.php";
                 $link15 = $server . "minuta.php";
-                $link16 = $server . "emissao_nf_integral.php";
+                $link16 = $server . "emissao_nf.php";
                 $link17 = $server . "declaracao_simples.php";
                 $link18 = $server . "declaracao_semFinsLucrativos.php";
                 $link19 = $server . "email_empresas.php";
-                $link20 = $server . "recibo_pagamento.php";
                 ?>
                 <div class="box">
                     <div class="box-header">
@@ -256,11 +255,6 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                             </div>
                             <div class="col-md-2">
                                 <form action="<?= $link12 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido parcelado</button>
-                                </form>
-                            </div>
-                            <div class="col-md-2">
-                                <form action="<?= $link20 ?>" method="post" target="_blank" role="form">
                                     <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Recibo pagamento</button>
                                 </form>
                             </div>
