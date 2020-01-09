@@ -342,8 +342,18 @@ if ($foto == null) {
                             </div>
                             <div class="row">
                                 <?php
-                                if (empty($pf['cpf'])) {
-                                    anexosNaPagina(116, $idPf, "modal-passaporte", "Passaporte");
+                                if (empty($pf['cpf'])) { ?>
+                                    <div class="col-md-12">
+                                        <label for="passaporte">Passaporte: </label>
+                                        <input type="text" name="passaporte" disabled value="<?= $pf['passaporte'] ?>" class="form-control">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <?php anexosNaPagina(116, $idPf, "modal-passaporte", "Passaporte"); ?>
+                                    </div>
+                                    <?php
                                 } else {
                                     ?>
                                     <div class="form-group col-md-2">
