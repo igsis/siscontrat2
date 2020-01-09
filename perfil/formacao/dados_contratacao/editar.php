@@ -258,7 +258,7 @@ $_SESSION['idPc'] = $idPC;
     <script>
     let ano = $('#ano');
     let vigencia = $('#vigencia');
-    let botao = $('#cadastra');
+    let botao = $('#editar');
     var isMsgAno = $('#msgEscondeAno');
     isMsgAno.hide();
 
