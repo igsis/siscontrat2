@@ -160,3 +160,28 @@ if (isset($_POST['edit'])) {
         </div>
     </section>
 </div>
+
+<script>
+    let ano = $('#ano');
+    let vigencia = $('#vigencia');
+    let botao = $('#editar');
+    var isMsgAno = $('#msgEscondeAno');
+    isMsgAno.hide();
+
+    function maior() {
+        let valorvigencia = $('#vigencia option:selected');
+        valorvigencia = parseInt(valorvigencia.text())
+        if (ano.val() > valorvigencia) {
+            botao.prop('disabled', true);
+            isMsgAno.show();
+        } else {
+            botao.prop('disabled', false);
+            isMsgAno.hide();
+        }
+    }
+
+    ano.on('change', maior);
+    vigencia.on('change', maior);
+
+    $(document).ready(maior)
+</script>
