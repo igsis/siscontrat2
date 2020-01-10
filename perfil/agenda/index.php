@@ -3,13 +3,19 @@ include "includes/menu.php";
 $con = bancoMysqli();
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espacos.php';
 $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_calendar.php';
+
+$_POST(isset($_POST['buscar'])) {
+    
+}
 ?>
 <script>
 const URL = `<?=$urlEvento?>`;
 let events = [];
 
+
+
 axios.get(URL)
-    .then(function(response) {
+    .then(response => {
         const contador = response.data.length;
 
         for (let i = 0; i < contador; i++) {
@@ -27,7 +33,7 @@ axios.get(URL)
         console.log(events);
         carregaCalendario();
     })
-    .catch(function(error) {
+    .catch(error => {
         console.warn(error)
     })
 </script>
