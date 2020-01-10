@@ -153,20 +153,39 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label>
-                                        <input type="checkbox" name="domingo" id="diasemana07" value="1" class="semana">
-                                        Domingo &nbsp;
-                                        <input type="checkbox" name="segunda" id="diasemana01" value="1" class="semana">
-                                        Segunda &nbsp;
-                                        <input type="checkbox" name="terca" id="diasemana02" value="1" class="semana">
-                                        Terça &nbsp;
-                                        <input type="checkbox" name="quarta" id="diasemana03" value="1" class="semana">
-                                        Quarta &nbsp;
-                                        <input type="checkbox" name="quinta" id="diasemana04" value="1" class="semana">
-                                        Quinta &nbsp;
-                                        <input type="checkbox" name="sexta" id="diasemana05" value="1" class="semana">
-                                        Sexta &nbsp;
-                                        <input type="checkbox" name="sabado" id="diasemana06" value="1" class="semana">
-                                        Sábado &nbsp;
+                                        <input type="checkbox" name="domingo" id="diasemana07"
+                                               value="1" class="semana"> Domingo
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="segunda" id="diasemana01"
+                                               value="1" class="semana"> Segunda
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="terca" id="diasemana02"
+                                               value="1" class="semana"> Terça
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="quarta" id="diasemana03"
+                                               value="1" class="semana"> Quarta
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="quinta" id="diasemana04"
+                                               value="1" class="semana"> Quinta
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="sexta" id="diasemana05"
+                                               value="1"  class="semana"> Sexta
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="sabado" id="diasemana06"
+                                               value="1" class="semana"> Sábado
+                                        &nbsp;
                                     </label>
                                 </div>
 
