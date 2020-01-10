@@ -11,7 +11,7 @@ $statusPedido = '';
 
 if (isset($_POST['protocolo']) && $_POST['protocolo'] != null) {
     $protocolo = $_POST ['protocolo'];
-    $protocolo = " AND c.protocolo = '$protocolo'";
+    $protocolo = " AND e.protocolo = '$protocolo'";
 }
 if (isset($_POST['numprocesso']) && $_POST['numprocesso'] != null) {
     $numprocesso = $_POST ['numprocesso'];
@@ -56,7 +56,7 @@ $sql = "SELECT p.numero_processo,
             
             where p.origem_tipo_id = 1 and p.publicado = 1 and e.publicado = 1 $protocolo $numprocesso $objetoevento
                 $tipoEvento $instituicao $statusPedido";
-
+echo $sql;
 ?>
 <div class="content-wrapper">
     <section class="content">
