@@ -3,10 +3,6 @@ include "includes/menu.php";
 $con = bancoMysqli();
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espacos.php';
 $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_calendar.php';
-
-$_POST(isset($_POST['buscar'])) {
-    
-}
 ?>
 <script>
 const URL = `<?=$urlEvento?>`;
