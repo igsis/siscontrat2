@@ -541,7 +541,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                 .attr('readonly', true)
                 .val('0,00');
 
-            getLocais(10, 627);
+            getLocais(10, 189);
             getEspacos();
 
             $('#local')
