@@ -759,32 +759,12 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     })
 
     var virada = $('.virada');
-    virada.on("change", verificaVirada);
+    virada.on("click", verificaVirada);
 
     function verificaVirada() {
+        let opc = parseInt($('input[name="virada"]:checked').val())
+        if (opc) {
 
-        if ($('#viradaNao').is(':checked')) {
-            $('#horaInicio')
-                .val('');
-
-            $('#horaFim')
-                .val('');
-
-            $('#instituicao')
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#local')
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#espaco')
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#retiradaIngresso')
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#valor_ingresso')
-                .val('0,00');
-        } else {
             $('#horaInicio')
                 .val('00:00');
 
@@ -795,11 +775,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                 .val($('option:contains("Virada Cultural")').val());
 
             $('#retiradaIngresso')
-                .attr('readonly', true)
                 .val($('option:contains("INGRESSOS GRÁTIS")').val());
 
             $('#valor_ingresso')
-                .attr('readonly', true)
                 .val('0,00');
 
             getLocais(10, 189);
@@ -807,6 +785,18 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
             $('#local')
                 .val(189);
+        } else {
+            $('#instituicao')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#espaco')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#retiradaIngresso')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#valor_ingresso')
+                .val('0,00');
         }
     }
 

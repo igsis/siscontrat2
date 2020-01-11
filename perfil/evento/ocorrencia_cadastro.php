@@ -489,28 +489,9 @@ $tipoEvento = $evento['tipo_evento_id'];
     var virada = $('.virada');
 
     virada.on("change", function () {
-        if ($('#viradaNao').is(':checked')) {
-            $('#horaInicio')
-                .val('');
+        let opc = parseInt($('input[name="virada"]:checked').val())
+        if (opc) {
 
-            $('#horaFim')
-                .val('');
-
-            $('#instituicao')
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#local')
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#espaco')
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#retiradaIngresso')
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#valor_ingresso')
-                .val('0,00');
-        } else {
             $('#horaInicio')
                 .val('00:00');
 
@@ -521,11 +502,9 @@ $tipoEvento = $evento['tipo_evento_id'];
                 .val($('option:contains("Virada Cultural")').val());
 
             $('#retiradaIngresso')
-                .attr('readonly', true)
                 .val($('option:contains("INGRESSOS GRÁTIS")').val());
 
             $('#valor_ingresso')
-                .attr('readonly', true)
                 .val('0,00');
 
             getLocais(10, 189);
@@ -533,6 +512,18 @@ $tipoEvento = $evento['tipo_evento_id'];
 
             $('#local')
                 .val(189);
+        } else {
+            $('#instituicao')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#espaco')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#retiradaIngresso')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#valor_ingresso')
+                .val('0,00');
         }
     });
 
