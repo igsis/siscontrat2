@@ -25,15 +25,15 @@ if (isset($_POST['carregar'])) {
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="contratados">Quantidade de contratados</label><br/>
-                                    <input class="form-control" type="number" name="contratados"
-                                                  id="contratados">
+                                    <label for="contratados">Quantidade de contratados *</label><br/>
+                                    <input class="form-control" type="number" min="0" name="contratados"
+                                                  id="contratados" required>
                                 </div>
                                 
                                 <div class="form-group col-md-6">
-                                    <label for="tipo_exposicao">Tipo de Exposição</label> <br>
-                                    <select class="form-control" id="tipo_exposicao" name="tipo_exposicao">
-                                            <option value="0">Selecione</option>
+                                    <label for="tipo_exposicao">Tipo de Exposição *</label> <br>
+                                    <select class="form-control" id="tipo_exposicao" name="tipo_exposicao" required>
+                                            <option value="">Selecione uma opção...</option>
                                             <?php geraOpcao('tipo_exposicao') ?>
                                         </select>
                                 </div>

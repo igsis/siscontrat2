@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 $query_data = "SELECT MIN(o.data_inicio)
 FROM eventos AS e INNER JOIN atracoes AS a ON a.evento_id = e.id
@@ -7,6 +7,11 @@ INNER JOIN pedidos AS p ON p.origem_id = e.id
 WHERE p.origem_tipo_id = 1 AND p.id = '$idPedido' AND p.publicado = 1 AND a.publicado = 1 AND o.publicado = 1";
 
 $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
+
+$query_data2="SELECT count(*) FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
+INNER JOIN eventos AS e ON fe.evento_id = e.id WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
+
+$data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
 
 ?>
 <h3 class="h2">1. Detalhes de parcelas</h3>
@@ -18,7 +23,7 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
     <div class="row">
         <div class="form-group col-md-8">
             <label for="verba_id">Verba *</label>
-            <select class="form-control" id="verba_id" name="verba_id" required>
+            <select class="form-control" required id="verba_id" name="verba_id" >
                 <option value="">Selecione...</option>
                 <?php
                 geraOpcao("verbas", $pedido['verba_id'])
@@ -28,7 +33,11 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
 
         <?php
         if ($pedido['origem_tipo_id'] != 2) {
-            $readonly = 'readonly';
+            if ($tipoEvento != 2) {
+                $readonly = 'readonly';
+            } else {
+                $readonly = '';
+            }
         } else {
             $readonly = '';
         }
@@ -47,8 +56,8 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
         <div class="row">
             <div class="form-group col-md-6">
                 <label for="numero_parcelas">Número de Parcelas *</label>
-                <select class="form-control" id="numero_parcelas" name="numero_parcelas"
-                        required>
+                <select class="form-control" id="numero_parcelas" required name="numero_parcelas"
+                        >
                     <option value="">Selecione...</option>
                     <?php
 
@@ -97,13 +106,13 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
         <div class="form-group col-md-6">
             <label for="forma_pagamento">Forma de pagamento *</label><br/>
             <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
-                      rows="8"
+                      required  rows="8"
                       <?= $pedido['numero_parcelas'] != 13 ? 'readonly' : '' ?>><?= $pedido['forma_pagamento'] ?></textarea>
         </div>
         <div class="form-group col-md-6">
             <label for="justificativa">Justificativa *</label><br/>
             <textarea id="justificativa" name="justificativa" class="form-control"
-                      rows="8"><?= $pedido['justificativa'] ?></textarea>
+                      required rows="8" ><?= $pedido['justificativa'] ?></textarea>
         </div>
     </div>
     <div class="row">

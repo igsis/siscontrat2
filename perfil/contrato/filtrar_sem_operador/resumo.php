@@ -105,6 +105,7 @@ if (isset($_POST['salvar'])) {
     $processoMae = $_POST['processoMae'];
     $processo = $_POST['processo'];
     $justificativa = addslashes($_POST['justificativa']);
+    $valorTotal = $_POST['valorTotal'];
     $operador = $_POST['operador'] ?? NULL;
 
     //eventos
@@ -112,7 +113,7 @@ if (isset($_POST['salvar'])) {
     $suplente = $_POST['suplente'] ?? null;
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido'";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', valor_total = '$valorTotal', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido'";
 
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
@@ -200,21 +201,28 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 <div class="row">
                                     <input type="hidden" name="idAtracao[]" value="<?= $atracao['id'] ?>">
 
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-4">
                                         <label for="nome_atracao[]">Nome da atração *</label>
                                         <input type="text" name="nome_atracao[]" id="nome_atracao"
                                                value="<?= $atracao['nome_atracao'] ?>"
                                                class="form-control" required>
+                                    </div>
 
-                                        <br>
-
-                                        <label for="valor">Valor: </label>
+                                    <div class="form-group col-md-4">
+                                        <label for="valor">Valor Individual: </label>
                                         <input type="text" disabled
                                                value="<?= dinheiroParaBr($atracao['valor_individual']) ?>"
                                                class="form-control">
                                     </div>
 
-                                    <div class="form-group col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="valorTotal">Valor Total: </label>
+                                        <input type="text" value="<?= dinheiroParaBr($pedido['valor_total'])?>" onKeyPress="return(moeda(this,'.',',',event))" class="form-control" name="valorTotal" id="valorTotal">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-12">
                                         <label for="integrantes[]">Integrantes* </label>
                                         <textarea name="integrantes[]" id="integrantes" required rows="5"
                                                   class="form-control"><?= $atracao['integrantes'] ?></textarea>
@@ -301,10 +309,9 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                 <hr/>
                 <div class="row">
                     <div class="col-md-12" style="text-align:center">
-                        <form action="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos"
-                              method="post">
-                            <button type="submit" class="btn btn-info" name="reabertura" style="width: 35%;"
-                                    id="reabertura">
+                        <form>
+                            <button type="button" class="btn btn-info" name="reabre" style="width: 35%"
+                                    id="reabre" data-toggle="modal" data-target="#reabrir">
                                 Reabertura
                             </button>
                         </form>
@@ -460,5 +467,27 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     <?php
 }
 ?>
+
+<div id="reabrir" class="modal modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirmação de Reabertura</h4>
+            </div>
+            <form action="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos"
+                  role="form" method="post">
+                <div class="modal-body">
+                    <p>Tem certeza que deseja reabrir este evento?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" name="reabertura">Reabrir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </section>
 </div>

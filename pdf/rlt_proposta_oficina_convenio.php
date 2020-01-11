@@ -14,9 +14,13 @@ $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
-$idLocal = $ocorrencia['local_id'];
-$sqlLocal = "SELECT local FROM locais WHERE id = '$idLocal'";
-$locais = $con->query($sqlLocal)->fetch_array();
+$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
+$queryLocal = mysqli_query($con, $sqlLocal);
+$local = '';
+while ($locais = mysqli_fetch_array($queryLocal)) {
+    $local = $local . '; ' . $locais['local'];
+}
+$local = substr($local, 1);
 $idEvento = $ocorrencia['origem_ocorrencia_id'];
 
 $idNacionalidade = $pessoa['nacionalidade_id'];
@@ -74,7 +78,7 @@ header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$idPedido.doc");
 ?>
 <html>
-<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <body>
 
 <p>(A)</p>
@@ -104,7 +108,7 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
     de Cultura e Centros Culturais da Secretaria Municipal de Cultura.</p>
 <p><strong>Data / Período:</strong> <?= $periodo ?> - conforme cronograma</p>
 <p><strong>Carga Horária:</strong> <?= $cargaHoraria ?></p>
-<p><strong>Local:</strong> <?= $locais['local'] ?></p>
+<p><strong>Local:</strong> <?= $local ?></p>
 <p><strong>Valor:</strong> <?= $pedido['valor_total'] ?> (<?= valorPorExtenso($pedido['valor_total']) ?>)</p>
 <p><strong>Forma de Pagamento:</strong> <?= $pedido['forma_pagamento'] ?></p>
 <p><strong>Justificativa:</strong> <?= $pedido['justificativa'] ?></p>

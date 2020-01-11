@@ -27,21 +27,21 @@ if (isset($_POST['editProponente'])) {
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['atualizaPj'])) {
-    $razao_social = addslashes($_POST['razao_social']);
+    $razao_social = trim(addslashes($_POST['razao_social']));
     $cnpj = $_POST['cnpj'];
-    $ccm = $_POST['ccm'] ?? NULL;
-    $email = $_POST['email'];
+    $ccm = trim($_POST['ccm']) ?? NULL;
+    $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
     $cep = $_POST['cep'];
     $logradouro = addslashes($_POST['rua']);
     $numero = $_POST['numero'];
-    $complemento = $_POST['complemento'] ?? NULL;
-    $bairro = addslashes($_POST['bairro']);
-    $cidade = addslashes($_POST['cidade']);
-    $uf = $_POST['estado'];
-    $banco = $_POST['banco'] ?? NULL;
-    $agencia = $_POST['agencia'] ?? NULL;
-    $conta = $_POST['conta'] ?? NULL;
+    $complemento = trim($_POST['complemento']) ?? NULL;
+    $bairro = trim(addslashes($_POST['bairro']));
+    $cidade = trim(addslashes($_POST['cidade']));
+    $uf = trim($_POST['estado']);
+    $banco = trim($_POST['banco']) ?? NULL;
+    $agencia = trim($_POST['agencia']) ?? NULL;
+    $conta = trim($_POST['conta']) ?? NULL;
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $ultima_atualizacao = date('Y-m-d H:i:s');
 }
@@ -266,6 +266,53 @@ if (isset($pj['representante_legal1_id'])) {
 if (isset($pj['representante_legal2_id'])) {
     $representante2 = recuperaDados('representante_legais', 'id', $pj['representante_legal2_id']);
 }
+
+$idEvento = $_SESSION['idEvento'];
+$evento = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = '$idEvento'")->fetch_array();
+$atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'")->fetch_array();
+
+if (isset($_POST['selecionar'])) {
+    $tipoPessoa = 2;
+    $idPessoa = $_POST['idPj'];
+    $tipoEvento = $evento['tipo_evento_id'];
+    $valor = $evento['tipo_evento_id'] != 2 ? $atracao['valor_individual'] : "0.00";
+    $campo = "pessoa_juridica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPessoa, $valor, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
+
+if (isset($_POST['cadastra'])) {
+    $tipoPessoa = 2;
+    $tipoEvento = $evento['tipo_evento_id'];
+    $valor = $evento['tipo_evento_id'] != 2 ? $atracao['valor_individual'] : "0.00";
+    $campo = "pessoa_juridica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPj, $valor, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Proponente cadastrado. Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
+
+
 ?>
 
 <script>
@@ -290,79 +337,20 @@ if (isset($pj['representante_legal2_id'])) {
                     <form method="POST" action="?perfil=evento&p=pj_edita" role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-8">
                                     <label for="razao_social">Razão Social: *</label>
                                     <input type="text" class="form-control" id="razao_social" name="razao_social"
                                            maxlength="100" required value="<?= $pj['razao_social'] ?>">
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="form-group col-md-2">
                                     <label for="cnpj">CNPJ: *</label>
                                     <input type="text" class="form-control" id="cnpj" name="cnpj"
                                            required readonly value="<?= $pj['cnpj'] ?>">
-
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(25, $idPj, "modal-cnpj", "CNPJ");
-                                    ?>
-                                </div>
-
                                 <div class="form-group col-md-2">
                                     <label for="ccm">CCM: </label>
                                     <input type="text" class="form-control" id="ccm" name="ccm"
                                            value="<?= $pj['ccm'] ?>">
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    if ($end['uf'] == "SP") {
-                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (38) AND origem_id = '$idPj' AND publicado = 1";
-                                        $queryExistentes = mysqli_query($con, $sqlExistentes);
-                                        $cpom = 0;
-                                    } else {
-                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (28) AND origem_id = '$idPj' AND publicado = 1";
-                                        $queryExistentes = mysqli_query($con, $sqlExistentes);
-                                        $cpom = 1;
-                                    }
-
-                                    if (mysqli_num_rows($queryExistentes) == 0) {
-                                        ?>
-                                        <label>Anexo FDC - CCM ou CPOM</label><br>
-                                        <button type="button" class="btn btn-primary btn-block" id="modal"
-                                                data-toggle="modal" data-target="#modal-ccm">
-                                            Clique aqui para anexar
-                                        </button>
-                                        <?php
-                                    } elseif (mysqli_num_rows($queryExistentes) > 0 && $cpom == 0) {
-                                        $arquivo = mysqli_fetch_array($queryExistentes);
-                                        ?>
-                                        <label>FDC - CCM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
-                                        <br>
-                                        <div class='form-group' style='display: flex; align-items: center;'>
-                                            <button class='btn-sm btn-danger glyphicon glyphicon-trash' type='button'
-                                                    data-toggle='modal'
-                                                    data-target='#exclusao' data-id='<?= $arquivo['id'] ?>'
-                                                    data-nome='<?= $arquivo['arquivo'] ?>'>
-                                            </button> &nbsp;&nbsp;
-                                            <a href='../uploadsdocs/<?= $arquivo['arquivo'] ?>' target='_blank'><?=
-                                                mb_strimwidth($arquivo['arquivo'], 15, 25, '...') ?></a></div>
-                                        <?php
-
-                                    } else {
-                                        $arquivo = mysqli_fetch_array($queryExistentes);
-                                        ?>
-
-                                        <label>CPOM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
-                                        <br>
-                                        <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
-                                           target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
-
-                                        <?php
-                                    }
-                                    ?>
                                 </div>
                             </div>
                             <hr/>
@@ -375,7 +363,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
                                     <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
-                                           class="form-control"
+                                           class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -385,14 +373,14 @@ if (isset($pj['representante_legal2_id'])) {
                                     if (isset($arrayTelefones[1])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -403,7 +391,7 @@ if (isset($pj['representante_legal2_id'])) {
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
@@ -411,7 +399,7 @@ if (isset($pj['representante_legal2_id'])) {
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone2" name="telefone2">
 
                                         <?php
@@ -441,7 +429,8 @@ if (isset($pj['representante_legal2_id'])) {
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control" min="1"
+                                    <i>(se não houver, marcar 0)</i>
+                                    <input type="number" name="numero" class="form-control" min="0"
                                            placeholder="Ex.: 10"
                                            required value="<?= $end['numero'] ?>">
                                 </div>
@@ -470,73 +459,77 @@ if (isset($pj['representante_legal2_id'])) {
                                            placeholder="Ex.: SP" readonly value="<?= $end['uf'] ?>">
                                 </div>
                             </div>
-                            <hr/>
                             <?php
-                            $banco = recuperaDados("pj_bancos", "pessoa_juridica_id", $idPj);
-                            ?>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="banco">Banco:</label>
-                                    <select id="banco" name="banco" class="form-control">
-                                        <option value="">Selecione um banco...</option>
-                                        <?php
-                                        geraOpcao("bancos", $banco['banco_id']);
-                                        ?>
-                                    </select>
+                            if($atracao['valor_individual'] > 0 || $evento['tipo_evento_id'] == 2) {
+                                $banco = recuperaDados("pj_bancos", "pessoa_juridica_id", $idPj);
+                                ?>
+                                <hr/>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="banco">Banco:</label>
+                                        <select id="banco" name="banco" class="form-control">
+                                            <option value="">Selecione um banco...</option>
+                                            <?php
+                                            geraOpcao("bancos", $banco['banco_id']);
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="agencia">Agência:</label>
+                                        <input type="text" name="agencia" class="form-control"
+                                               placeholder="Digite a Agência" maxlength="12"
+                                               value="<?= $banco['agencia'] ?>">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="conta">Conta:</label>
+                                        <input type="text" name="conta" class="form-control"
+                                               placeholder="Digite a Conta" maxlength="12"
+                                               value="<?= $banco['conta'] ?>">
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="agencia">Agência:</label>
-                                    <input type="text" name="agencia" class="form-control"
-                                           placeholder="Digite a Agência" maxlength="12"
-                                           value="<?= $banco['agencia'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="conta">Conta:</label>
-                                    <input type="text" name="conta" class="form-control"
-                                           placeholder="Digite a Conta" maxlength="12"
-                                           value="<?= $banco['conta'] ?>">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <?php
-                                $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 89 AND origem_id = '$idPj' AND publicado = 1";
-                                $queryFACC = mysqli_query($con, $sqlFACC);
+                                <div class="row">
+                                    <?php
+                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 89 AND origem_id = '$idPj' AND publicado = 1";
+                                    $queryFACC = mysqli_query($con, $sqlFACC);
 
-                                $facc = "block";
+                                    $facc = "block";
 
-                                if (mysqli_num_rows($queryFACC) == 0 && $pj['representante_legal1_id'] == null) {
+                                    if (mysqli_num_rows($queryFACC) == 0 && $pj['representante_legal1_id'] == null) {
 
-                                    echo " <div class='form-group col-md-12 text-center'>
+                                        echo " <div class='form-group col-md-12 text-center'>
                                                    <label>&nbsp;</label><br> 
                                                    <h4 class='text-warning text-bold'><em>Para gerar a FACC primeiro cadastre um representante legal.</em></h4>
                                                </div>";
 
-                                    $facc = "none";
+                                        $facc = "none";
 
-                                } else if ($pj['representante_legal1_id'] != null) {
-                                    ?>
-                                    <div class="form-group col-md-3">
-                                        <label>Gerar FACC</label><br>
-                                        <a href="<?= $link_facc . "?id=" . $idPj ?>" target="_blank" type="button"
-                                           class="btn btn-primary btn-block">Clique aqui para
-                                            gerar a FACC
-                                        </a>
-                                    </div>
-                                    <div class="form-group col-md-5" style="display: <?= $facc ?>">
-                                        <label>&nbsp;</label><br>
-                                        <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                            documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                            no campo correspondente.</p>
-                                    </div>
-                                    <div class="form-group col-md-4" style="display: <?= $facc ?>">
-                                        <?php
-                                        anexosNaPagina(71, $idPj, "modal-facc", "FACC");
+                                    } else if ($pj['representante_legal1_id'] != null) {
                                         ?>
-                                    </div>
-                                    <?php
-                                }
-                                ?>
-                            </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Gerar FACC</label><br>
+                                            <a href="<?= $link_facc . "?id=" . $idPj ?>" target="_blank" type="button"
+                                               class="btn btn-primary btn-block">Clique aqui para
+                                                gerar a FACC
+                                            </a>
+                                        </div>
+                                        <div class="form-group col-md-5" style="display: <?= $facc ?>">
+                                            <label>&nbsp;</label><br>
+                                            <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                                documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                                no campo correspondente.</p>
+                                        </div>
+                                        <div class="form-group col-md-4" style="display: <?= $facc ?>">
+                                            <?php
+                                            anexosNaPagina(71, $idPj, "modal-facc", "FACC");
+                                            ?>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                                <?php
+                            }
+                            ?>
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-12">
@@ -659,7 +652,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
                                     <input type="hidden" name="pessoa_tipo_id" value="2">
                                     <input type="hidden" name="pessoa_id" value="<?= $pj['id'] ?>">
-                                    <input type="hidden" name="valor" value="<?= $atracao['valor_individual'] ?>">
+                                    <input type="hidden" name="valor" value="<?= $valor ?>">
                                     <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
                                     <button type="submit" name="cadastra" class="btn btn-info btn-block">Ir ao pedido de
                                         contratação

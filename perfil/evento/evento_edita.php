@@ -1,14 +1,14 @@
 <?php
 $con = bancoMysqli();
-$idEvento = isset($_SESSION['idEvento']) ?? null;
+$idEvento = isset($_SESSION['idEvento']) ? $_SESSION['idEvento'] : null;
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
-    $nomeEvento = addslashes($_POST['nomeEvento']);
+    $nomeEvento = trim(addslashes($_POST['nomeEvento']));
     $relacao_juridica_id = $_POST['relacaoJuridica'];
     $projeto_especial_id = $_POST['projetoEspecial'];
-    $sinopse = addslashes($_POST['sinopse']);
+    $sinopse = trim(addslashes($_POST['sinopse']));
     $tipo = $_POST['tipo'];
-    $nomeResponsavel = $_POST['nomeResponsavel'];
+    $nomeResponsavel = trim($_POST['nomeResponsavel']);
     $telResponsavel = $_POST['telResponsavel'];
     $fiscal_id = $_POST['fiscal'];
     $suplente_id = $_POST['suplente'];
@@ -28,7 +28,7 @@ if (isset($_POST['cadastra'])) {
                                  tipo_evento_id, 
                                  sinopse,   
                                  nome_responsavel,
-                                 tel_resposavel,
+                                 tel_responsavel,
                                  fiscal_id, 
                                  suplente_id, 
                                  usuario_id, 
@@ -88,7 +88,7 @@ if (isset($_POST['edita'])) {
                               projeto_especial_id = '$projeto_especial_id', 
                               tipo_evento_id = '$tipo',
                               nome_responsavel = '$nomeResponsavel',
-                              tel_resposavel = '$telResponsavel',
+                              tel_responsavel = '$telResponsavel',
                               sinopse = '$sinopse', 
                               fiscal_id = '$fiscal_id', 
                               suplente_id = '$suplente_id', 
@@ -258,11 +258,11 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
                             <div class="row ">
                                 <div class="form-group col-md-6">
                                     <label for="fiscal">Nome do Responsável Interno *</label>
-                                    <input class="form-control" type="text" name="nomeResponsavel" value="<?= $evento['nome_responsavel'] ?>" required>
+                                    <input class="form-control" type="text" name="nomeResponsavel" value="<?= $evento['nome_responsavel'] ?>" required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="fiscal">Telefone do Responsável Interno *</label>
-                                    <input class="form-control" type="text" name="telResponsavel" value="<?= $evento['tel_responsavel'] ?>" onkeyup="mascara( this, mtel );" required>
+                                    <input class="form-control" type="text" name="telResponsavel" maxlength="15" value="<?= $evento['tel_responsavel'] ?>" data-mask="(00) 00000-0000" onkeyup="mascara( this, mtel );" required>
                                 </div>
                             </div>
 

@@ -3,11 +3,7 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idPj = $_POST['idPj'];
 $tipoPessoa = 2; // arquivos necessarios para pessoa juridica
-
-$existeRepresentante2 = $con->query("SELECT representante_legal2_id FROM siscontrat.pessoa_juridicas WHERE id = '$idPj'")
-                            ->fetch_assoc()['representante_legal2_id'];
-
-$arquivosRepr2 = ($existeRepresentante2) ? "" : "AND id NOT IN (85, 86)";
+$arquivosRepresentantes = "AND list.id NOT IN (23,24,85,86)";
 
 if(isset($_POST["enviar"])) {
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
@@ -107,7 +103,7 @@ if(isset($_POST['apagar']))
                                     $sql = "SELECT * FROM lista_documentos as list
 			                        INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
                                     WHERE arq.origem_id = '$idPj' AND list.tipo_documento_id = '$tipoPessoa'
-                                    AND arq.publicado = '1' ORDER BY arq.id";
+                                    AND arq.publicado = '1' $arquivosRepresentantes ORDER BY arq.id";
                                     $query = mysqli_query($con,$sql);
                                     $linhas = mysqli_num_rows($query);
 
@@ -163,11 +159,11 @@ if(isset($_POST['apagar']))
                                                         <h1 class="text-center">Envio de Arquivos</h1>
                                                     </tr>
                                                     <tr>
-                                                        <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 60MB.</h4>
+                                                        <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 5MB.</h4>
                                                     </tr>
                                                     <?php
 
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (20, 21, 22, 28, 43, 89, 103, 104) AND tipo_documento_id = '$tipoPessoa' and publicado = 1 $arquivosRepr2";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos as list WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 $arquivosRepresentantes";
                                                     $query_arquivos = mysqli_query($con,$sql_arquivos);
                                                     while($arq = mysqli_fetch_array($query_arquivos))
                                                     {
@@ -196,10 +192,19 @@ if(isset($_POST['apagar']))
                                                 {
                                                     echo "<input type='hidden' name='volta' value='".$_POST['volta']."' />";
                                                 }
+
+                                                $num_lista = mysqli_num_rows($query_arquivos);
+                                                $num_arquivos = $con->query("SELECT * FROM arquivos WHERE lista_documento_id IN (SELECT id FROM lista_documentos as list WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 $arquivosRepresentantes) AND origem_id = '$idPj' AND publicado = 1")->num_rows;
+                                                $num_total = $num_lista - $num_arquivos;
+                                                if($num_total != 0) {
+                                                    ?>
+                                                    <input type='hidden' name='idPj' value='<?= $idPj ?>'/>
+                                                    <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa; ?>"/>
+                                                    <input type="submit" class="btn btn-primary btn-lg btn-block"
+                                                           name="enviar" value='Enviar'>
+                                                    <?php
+                                                }
                                                 ?>
-                                                <input type='hidden' name='idPj' value='<?=$idPj?>' />
-                                                <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa; ?>"  />
-                                                <input type="submit" class="btn btn-primary btn-lg btn-block" name="enviar" value='Enviar'>
                                             </form>
                                         </div>
                                     </div>

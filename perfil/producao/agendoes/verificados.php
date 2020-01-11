@@ -10,8 +10,7 @@ $con = bancoMysqli();
 
 if (isset($_POST['checarAgendao'])) {
     $idEvento = $_POST['idEvento'];
-    $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
-    $sqlView = "UPDATE producao_agendoes SET visualizado = 1 WHERE id = '$idEvento'";
+    $sqlView = "UPDATE producao_agendoes SET visualizado = 1 WHERE agendao_id = '$idEvento'";
     $queryView = mysqli_query($con, $sqlView);
     if (mysqli_query($con, $sqlView)) {
         $mensagem = mensagem("success", "Agendão marcado como visualizado!");
@@ -87,7 +86,7 @@ $queryAgendaoVerificados = mysqli_query($con, $sqlAgendaoVerificados);
                                 echo "<td>" . $local . "</td>";
                                 echo "<td>" . $espaco . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($agendaoVerif['id'], 'agendao_ocorrencias') . "</td>";
-                                echo "<td>" . $agendaoVerif['data_envio'] . "</td>";
+                                echo "<td>" . exibirDataBr($agendaoVerif['data_envio']) . "</td>";
                                 echo "<td>
                                         <form method='POST' action='?perfil=producao&p=agendoes&sp=visualizacao' role='form'>
                                         <input type='hidden' name='idEvento' value='" . $agendaoVerif['id'] . "'>

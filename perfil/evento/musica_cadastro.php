@@ -21,8 +21,8 @@ $idAtracao = $_POST['idAtracao'];
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-2">
-                                    <label for="genero">Gênero</label><br/>
-                                    <input class="form-control" type="text" name="genero" size="30">
+                                    <label for="genero">Gênero *</label><br/>
+                                    <input class="form-control" type="text" name="genero" size="30" required>
                                 </div>
 
                                 <div class="form-group col-md-2">

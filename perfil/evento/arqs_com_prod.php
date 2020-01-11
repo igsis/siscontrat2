@@ -28,11 +28,10 @@ if (isset($_POST["enviar"])) {
             } else {
                 if ($nome_arquivo != "") {
                     $nome_temporario = $file['tmp_name'];
-                    $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
-                    $hoje = date("Y-m-d H:i:s");
+                    $new_name = date("YmdHis",strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
+                    $hoje = date("Y-m-d H:i:s",strtotime("-3 hours"));
                     $dir = '../uploadsdocs/'; //Diretório para uploads
                     $ext = strtolower(substr($nome_arquivo, -4));
-
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
                         $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idEvento', '$y', '$new_name', '$hoje', '1')";
 
@@ -227,12 +226,6 @@ if (isset($_POST['apagar'])) {
                                 </div>
                             </div>
                             <!--  Fim Modal de Upload de arquivo  -->
-                        </div>
-                        <div class="box-footer">
-                            <form action="?perfil=evento&p=evento_edita" method="post">
-                                <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
-                                <button type="submit" name="Voltar" class="btn btn-default pull-left">Voltar</button>
-                            </form>
                         </div>
                     </div>
                 </div>

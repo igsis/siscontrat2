@@ -5,6 +5,42 @@ $idPedido = $_POST['idPedido'];
 $idEvento = $_SESSION['idEvento'];
 $tipoPessoa = 3; // arquivos necessarios para pedidos
 
+$sqlAtracoes = "SELECT id FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'";
+$atracoes = $con->query($sqlAtracoes)->fetch_all(MYSQLI_ASSOC);
+
+$musica = false;
+$oficina = false;
+$teatro = false;
+$edital = false;
+
+foreach ($atracoes as $atracao) {
+    $sqlAcao = "SELECT acao_id FROM acao_atracao WHERE atracao_id = '{$atracao['id']}'";
+    $acoes = $con->query($sqlAcao)->fetch_all(MYSQLI_ASSOC);
+    foreach ($acoes as $acao) {
+        switch ($acao['acao_id']) {
+            case 7:
+                $musica = true;
+                break;
+
+            case 8;
+                $oficina = true;
+                break;
+
+            case 11:
+                $teatro = true;
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+if ($musica) { $whereAdicional[] = "musica = '1'"; }
+if ($oficina) { $whereAdicional[] = "oficina = '1'"; }
+if ($teatro) { $whereAdicional[] = "teatro = '1'"; }
+if ($edital) { $whereAdicional[] = "edital = '1'"; }
+
 if(isset($_POST["enviar"])) {
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
     $query_arquivos = mysqli_query($con, $sql_arquivos);
@@ -13,8 +49,9 @@ if(isset($_POST["enviar"])) {
         $x = $arq['sigla'];
         $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
         $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
+        var_dump($f_size);
 
-        if ($f_size > 5242880) {
+        if ($f_size > 6144000) {
             $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
         } else {
             if ($nome_arquivo != "") {
@@ -24,6 +61,7 @@ if(isset($_POST["enviar"])) {
                 $dir = '../uploadsdocs/'; //Diretório para uploads
                 $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
                 $ext = strtolower(substr($nome_arquivo,-4));
+
 
                 if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
                 {
@@ -95,9 +133,10 @@ if(isset($_POST['apagar']))
                                 <div class="table-responsive list_info"><h4><strong>Update de arquivos somente em PDF!</strong></h4><br>
                             <?php
                             //lista arquivos de determinado pedido
-                            $sql = "SELECT * FROM lista_documentos as list
+                            $sql = "SELECT * 
+                                    FROM lista_documentos as list
 			                        INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
-                                    WHERE arq.origem_id = '$idPedido'
+                                    WHERE arq.origem_id = '$idPedido' AND list.tipo_documento_id = 3
                                     AND arq.publicado = '1' ORDER BY arq.id";
                             $query = mysqli_query($con,$sql);
                             $linhas = mysqli_num_rows($query);
@@ -124,7 +163,8 @@ if(isset($_POST['apagar']))
                                     echo "
                                           <td class='list_description'>
                                                     <form id='formExcliuir' method='POST'>
-                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' data-nome='" . $arquivo['arquivo'] . "' data-id='". $arquivo['id'] ."' data-pessoa='". $tipoPessoa."'>
+                                                        <button class='btn btn-danger glyphicon glyphicon-trash' type='button' data-toggle='modal' data-target='#exclusao' 
+                                                        data-nome='" . $arquivo['arquivo'] . "' data-id='". $arquivo['id'] ."' >
                                                         </button></td>
                                                     </form>";
                                     echo "</tr>";
@@ -153,12 +193,16 @@ if(isset($_POST['apagar']))
                                                     <h1 class="text-center">Envio de Arquivos</h1>
                                                 </tr>
                                                 <tr>
-                                                    <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 5MB.</h4>
+                                                    <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 6MB.</h4>
                                                 </tr>
                                                 <?php
                                                 $evento = recuperaDados('eventos', 'id', $idEvento);
                                                 if($evento['tipo_evento_id'] == 1) {
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                    if ($musica || $oficina || $teatro) {
+                                                        $sqlAdicional = "AND (".implode(" OR ", $whereAdicional).")";
+                                                    } else
+                                                        $sqlAdicional = "";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 $sqlAdicional";
                                                 } else {
                                                     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
                                                 }
@@ -178,7 +222,7 @@ if(isset($_POST['apagar']))
                                                             <td>
                                                                 <input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'>
                                                             </td>
-                                                        </tr>
+                                                         </tr>
                                                         <?php
                                                     }
                                                 }
@@ -191,10 +235,20 @@ if(isset($_POST['apagar']))
                                             {
                                                 echo "<input type='hidden' name='volta' value='".$_POST['volta']."' />";
                                             }
+
+                                            $num_lista = mysqli_num_rows($query_arquivos);
+                                            $num_arquivos = $con->query("SELECT * FROM arquivos WHERE lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1) AND origem_id = '$idPedido' AND publicado = 1")->num_rows;
+                                            $num_total = $num_lista - $num_arquivos;
+                                            if($num_total != 0) {
+                                                ?>
+                                                <input type='hidden' name='idPedido' value='<?= $idPedido ?>'/>
+                                                <input type="hidden" name="tipoPessoa"
+                                                       value="<?php echo $tipoPessoa; ?>"/>
+                                                <input type="submit" class="btn btn-primary btn-lg btn-block"
+                                                       name="enviar" value='Enviar'>
+                                                <?php
+                                            }
                                             ?>
-                                            <input type='hidden' name='idPedido' value='<?=$idPedido?>' />
-                                            <input type="hidden" name="tipoPessoa" value="<?php echo $tipoPessoa; ?>"  />
-                                            <input type="submit" class="btn btn-primary btn-lg btn-block" name="enviar" value='Enviar'>
                                         </form>
                                     </div>
                                 </div>
@@ -214,6 +268,7 @@ if(isset($_POST['apagar']))
                                                 <form action="?perfil=evento&p=pedido_anexos" method="post">
                                                     <input type="hidden" name="idArquivo" id="idArquivo" value="">
                                                     <input type="hidden" name="tipoPessoa" id="tipoPessoa" value="">
+                                                    <input type="hidden" name="idPedido" id="idPedido" value="<?=$idPedido?>">
                                                     <input type="hidden" name="apagar" id="apagar">
                                                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                                                     </button>

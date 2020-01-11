@@ -135,8 +135,8 @@ include "includes/menu_interno.php";
                             <p>Tem certeza que deseja vetar este evento?</p>
                             <input type="hidden" name="titulo" value="<?=$evento['nome_evento']?>">
                             <label for="motivo">Motivo da Vetação:</label>
-                            <select name="motivo" class="form-control">
-                                <option>Selecione o Motivo</option>
+                            <select name="motivo" class="form-control" required>
+                                <option value="">Selecione o Motivo</option>
                                 <?php
                                 $sql = "SELECT * FROM chamado_tipos WHERE id <> 4";
                                 $query = mysqli_query($con,$sql);
@@ -146,7 +146,7 @@ include "includes/menu_interno.php";
                                 ?>
                             </select>
                             <label for="justificativa">Justificativa:</label>
-                            <textarea name="justificativa" class="form-control" rows="3"></textarea>
+                            <textarea name="justificativa" id="justificativa" class="form-control" rows="3" required></textarea>
                         </div>
                         <div class="modal-footer">
                             <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">

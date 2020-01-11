@@ -1,17 +1,24 @@
 <?php
 /**
- * Conteúdo da label "#pedido" do arquivo "vizualizacao_evento.php"
+ * Conteúdo da label "#pedido" do arquivo "detalhes_gestao.php"
  */
 
 $pedido = $con->query("SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1' ")->fetch_array();
 $verba = recuperaDados('verbas', 'id', $pedido['verba_id'])['verba'];
 
 if ($pedido != null) {
+
+    if($pedido['data_kit_pagamento'] > '1970-01-02'){
+        $dataKit = exibirDataBr($pedido['data_kit_pagamento']);
+    }else{
+        $dataKit = "Não cadastrado";
+    }
+
     $dadosPedido = [
         'Verba:' => $verba,
         'Valor total:' => "R$ " . dinheiroParaBr($pedido['valor_total']),
         'Número de Parcelas:' => $pedido['numero_parcelas'],
-        'Data Kit Pagamento:' =>  exibirDataBr($pedido['data_kit_pagamento']),
+        'Data Kit Pagamento:' =>  $dataKit,
         'Forma Pagamento:' => $pedido['forma_pagamento'],
         'Observação:' => $pedido['observacao']
     ];
@@ -41,6 +48,14 @@ switch ($pedido['pessoa_tipo_id']) {
         $endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $pedido['pessoa_fisica_id']);
         $pfBancos = recuperaDados('pf_bancos', 'pessoa_fisica_id', $pedido['pessoa_fisica_id']);
         $banco = recuperaDados('bancos', 'id', $pfBancos['banco_id'])['banco'];
+
+        if($proponente['ccm'] != NULL || $proponente['ccm'] != "") {
+            $ccm = $proponente['ccm'];
+        }else{
+            $ccm = "Não cadastrado";
+        }
+
+
         $dadosPreponente = [
             'Nome' => $proponente['nome'],
             'Nome Artístico' => $proponente['nome_artistico'],
@@ -48,7 +63,7 @@ switch ($pedido['pessoa_tipo_id']) {
             'RG' => $proponente['rg'] ?? "Não Cadastrado",
             'Passaporte' => $proponente['passaporte'] ?? "Não Cadastrado",
             'CPF' => $proponente['cpf'],
-            'CCM' => $proponente['ccm'],
+            'CCM' => $ccm ,
             'Data de Nascimento' => exibirDataBr($proponente['data_nascimento']),
             'E-Mail' => $proponente['email'],
             'Telefone #1' => $telefones[0][0] ?? "Não Cadastrado",
@@ -81,10 +96,16 @@ switch ($pedido['pessoa_tipo_id']) {
         $representante1 = recuperaDados('representante_legais', 'id', $idRepresentante1);
         $representante2 = recuperaDados('representante_legais', 'id', $idRepresentante2);
 
+        if($proponente['ccm'] != NULL || $proponente['ccm'] != "") {
+            $ccm = $proponente['ccm'];
+        }else{
+            $ccm = "Não cadastrado";
+        }
+
         $dadosPreponente = [
             'Razão Social' => $proponente['razao_social'],
             'CNPJ' => $proponente['cnpj'],
-            'CCM' => $proponente['ccm']
+            'CCM' => $ccm
         ];
 
         $dadosEndereco = [
@@ -108,12 +129,17 @@ switch ($pedido['pessoa_tipo_id']) {
             'CPF' => $representante1['cpf']
         ];
 
-        $dadosRepresentante2 = [
-            'Nome' => $representante2['nome'],
-            'RG' => $representante2['rg'],
-            'CPF' => $representante2['cpf']
-        ];
-        break;
+        if($idRepresentante2 != NULL || $idRepresentante2 != ""){
+            $dadosRepresentante2 = [
+                'Nome' => $representante2['nome'],
+                'RG' => $representante2['rg'],
+                'CPF' => $representante2['cpf']
+            ];
+            break;
+        }else{
+            break;
+        }
+
 
     default:
         $tipo = "";
@@ -165,6 +191,8 @@ $parcelado = false;
                         foreach ($dadosPreponente as $campo => $dado) {
                             if (($campo == "Passaporte") && ($dado == "")) {
                                 continue;
+                            } elseif (($campo == "RG") && ($dado == "")) {
+                                continue;
                             } elseif (($campo == "CPF") && ($dado == "")) {
                                 continue;
                             } ?>
@@ -206,6 +234,9 @@ $parcelado = false;
                         </div>
                     </div>
                 </div>
+                <?php
+                    if($idRepresentante2 != NULL || $idRepresentante2 != ""){
+                ?>
                 <div class="panel box box-primary">
                     <div class="box-header with-border">
                         <h4 class="box-title">
@@ -230,6 +261,7 @@ $parcelado = false;
                         </div>
                     </div>
                 </div>
+                <?php } ?>
             </div>
         <?php } ?>
     </div>

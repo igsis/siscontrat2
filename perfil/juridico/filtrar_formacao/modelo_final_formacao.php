@@ -18,7 +18,6 @@ $finalizacao = $_POST['finalizar'];
 
 $sql = "SELECT * FROM juridicos where pedido_id = '$idFormacao'";
 $query = mysqli_query($con,$sql);
-
 $num = mysqli_num_rows($query);
 
 if ($num > 0) {

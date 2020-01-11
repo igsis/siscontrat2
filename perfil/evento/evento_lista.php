@@ -1,6 +1,8 @@
 <?php
 include "includes/menu_principal.php";
 
+$url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_chamados.php';
+
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
@@ -96,14 +98,13 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . $evento['tipo_evento'] . "</td>";
                                 echo "<td>" . $vinculo . "</td>";
                                 $disabled = '';
-                                if ($evento['status'] == "Não aprovado") {
-                                    $idEvento = $evento['idEvento'];
-                                    $nomeEvento = $evento['nome_evento'];
-                                    $sqlChamado = "SELECT u.nome_completo, c.justificativa, c.data FROM chamados AS c INNER JOIN usuarios AS u ON u.id = c.usuario_id WHERE evento_id = $idEvento";
-                                    ?>
+                                if ($evento['status'] == "Não aprovado") { ?>
                                     <td>
                                         <button type="button" class="btn-link" id="exibirMotivo"
-                                                data-toggle="modal" data-target="#exibicao" name="exibirMotivo">
+                                                data-toggle="modal" data-target="#exibicao"
+                                                data-id="<?= $evento['idEvento'] ?>"
+                                                data-name="<?= $evento['nome_evento'] ?>"
+                                                name="exibirMotivo">
                                             <p class="text-danger"><?= $evento['status'] ?></p>
                                         </button>
                                     </td>
@@ -191,7 +192,7 @@ $query = mysqli_query($con, $sql);
                         <h4 class="modal-title">Motivo do Cancelamento</h4>
                     </div>
                     <div class="modal-body">
-                        <p><strong>Nome do Evento:</strong> <?= $nomeEvento ?></p>
+                        <p><strong>Nome do Evento:</strong></p>
                         <table class="table table-striped table-bordered">
                             <thead>
                             <tr>
@@ -200,12 +201,8 @@ $query = mysqli_query($con, $sql);
                                 <th width="15%">Data</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <?php while ($chamado = mysqli_fetch_array($sqlChamado)) { ?>
-                                <td><?= $chamado['justificativa'] ?></td>
-                                <td><?= $chamado['nome_completo'] ?></td>
-                                <td><?= exibirDataBr($chamado['data']) ?></td>
-                            <?php } ?>
+                            <tbody id="conteudoModal">
+
                             </tbody>
                         </table>
                     </div>
@@ -233,6 +230,43 @@ $query = mysqli_query($con, $sql);
         });
     });
 </script>
+
+<!--<script>-->
+<!--    $('#exibirMotivo').click(function () {-->
+<!--        $('#exibicao').modal('show');-->
+<!--        let nome = $(this).attr('data-name');-->
+<!---->
+<!--        console.log(nome);-->
+<!--    })-->
+<!--</script>-->
+
+<script>
+    const url = `<?=$url?>`;
+
+    $('#exibicao').on('show.bs.modal', function (e) {
+        let nome = $(e.relatedTarget).attr('data-name');
+        let id = $(e.relatedTarget).attr('data-id');
+        $(this).find('p').html(`<strong>Nome do Evento:</strong> ${nome}`);
+
+        $('#exibicao').find('#conteudoModal').empty();
+
+        // @TODO: Melhorar esse código
+        $.getJSON(url + "?idEvento=" + id, function (data) {
+            $.each(data, function (key, value) {
+                $.each(value, function (key, valor) {
+                    $('#exibicao').find('#conteudoModal').append(`<td>${valor}</td>`);
+                    console.log(key + ": " + valor);
+                })
+            })
+        })
+
+        //let operador = <?//=$chamado['nome_completo']?>//;
+        //let data = <?//=$chamado['data']?>//;
+
+        // $(this).find('#conteudoModal').append(`<td>${motivo}</td>`);
+    })
+</script>
+
 <script type="text/javascript">
     $('#exclusao').on('show.bs.modal', function (e) {
         let evento = $(e.relatedTarget).attr('data-name');

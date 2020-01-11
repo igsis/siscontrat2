@@ -33,7 +33,7 @@ if (isset($_POST['cadastra'])) {
                           '$sinopse','$elenco','$duracao',
                           '$link','$classidicacaoIndicativa',
                           '$paisOrigem','$paisCoProducao');";
-    echo $sql;
+    //echo $sql;
     if (mysqli_query($con, $sql)) {
         $idFilme = recuperaUltimo("filmes");
         $sql = "INSERT INTO `filme_eventos` (filme_id, evento_id)
@@ -48,10 +48,9 @@ if (isset($_POST['cadastra'])) {
 if(isset($_POST['adicionar'])){
     $idFilme = $_POST['idFilme'];
 
-    $sql = "INSERT INTO `filme_eventos` (filme_id, evento_id)
-                    VALUES('$idFilme','$idEvento')";
+    $sql = "INSERT INTO `filme_eventos` (filme_id, evento_id) VALUES('$idFilme','$idEvento')";
     if(mysqli_query($con, $sql)){
-        $mensagem = mensagem("success", "Evento adicionado com sucesso ao evento.");
+        $mensagem = mensagem("success", "Filme adicionado com sucesso ao evento.");
     }else{
         $mensagem = mensagem("danger", "Erro ao adicionar o filme ao evento.");
 
@@ -59,7 +58,7 @@ if(isset($_POST['adicionar'])){
 }
 
 if (isset($_POST['edita'])) {
-    $idFilme = recuperaUltimo("filmes");
+    $idFilme = $_POST['idFilme'];
     $sql = " UPDATE `filmes`
                 SET  titulo = '$tituloFilme',
                      titulo_original = '$tituloOriginal',
@@ -80,7 +79,18 @@ if (isset($_POST['edita'])) {
     } else {
         $mensagem = mensagem("danger", "Erro ao atualizar! Tente novamente.");
     }
+}
 
+if(isset($_POST['apagar'])){
+    $idFilme = $_POST['idFilme'];
+    $sql_apaga = $con->query("UPDATE filmes SET publicado = 0 WHERE id = '$idFilme'");
+    if($sql_apaga){
+        $sql_filme_evento = $con->query("DELETE FROM filme_eventos WHERE filme_id = '$idFilme' AND evento_id = '$idEvento'");
+        $mensagem = mensagem("success", "Filme apagado com sucesso!");
+        echo "<meta http-equiv='refresh' content='3;url=?perfil=evento&p=evento_cinema_lista' />";
+    }else{
+        $mensagem = mensagem("danger", "Erro ao apagar filme");
+    }
 }
 
 if (isset($_POST['carregar'])) {
@@ -110,7 +120,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="tituloFilme">Título do filme *:</label>
-                                <input type='text' class='form-control' id='tituloFilme' name='tituloFilme' maxlength='100' value='<?= $row['titulo'] ?>'>
+                                <input type='text' class='form-control' id='tituloFilme' name='tituloFilme' maxlength='100' value='<?= $row['titulo'] ?>' readonly>
                             </div>
                             <div class="form-group">
                                 <label for="tituloOriginal">Título original:</label>
@@ -138,7 +148,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="anoProducao">Ano de produção: *</label>
-                                    <input type="text" class="form-control" id="anoProducao"  min="0" name="anoProducao" placeholder="Ex: 1995" maxlength="4" value="<?= $row['ano_producao'] ?>">
+                                    <input type="text" class="form-control" id="anoProducao"  min="1" name="anoProducao" placeholder="Ex: 1995" maxlength="4" value="<?= $row['ano_producao'] ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="genero">Gênero:</label>
@@ -166,7 +176,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="duracao">Duração (em minutos):</label>
-                                    <input type="number" class="form-control" name="duracao" min="0" id="duracao" required value="<?= $row['duracao'] ?>">
+                                    <input type="number" class="form-control" name="duracao" min="1" id="duracao" required value="<?= $row['duracao'] ?>">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="classidicacaoIndicativa" required>Classificação indicativa: *</label>
@@ -190,6 +200,8 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             <a href="?perfil=evento&p=evento_cinema_lista">
                                 <button type="button" class="btn btn-info pull-left">Voltar</button>
                             </a>
+                            <input type="hidden" name="idFilme" value="<?= $row['id'] ?>">
+                            <button type="submit" name="apagar" class="btn btn-danger pull-left"><i class="fa fa-trash"></i> Apagar</button>
                             <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>
 

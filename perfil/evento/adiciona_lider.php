@@ -30,6 +30,7 @@ if (isset($_POST['adicionar']) || $_POST['adicionaLider'] || $_POST['adicionarLi
                             <div class="form-group">
                                 <label for="nome">Nome: *</label>
                                 <input type='text' class='form-control' id='nome' name='nome' maxlength='120'
+                                       pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras"
                                        placeholder='Digite o nome' required>
                             </div>
                             <div class="row">

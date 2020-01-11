@@ -14,17 +14,17 @@ if (isset($_POST['tipoModelo'])) {
 $sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
 $mdl = $con->query($sqlModelo)->fetch_assoc();
 
+$fc = recuperaDados('formacao_contratacoes', 'id', $idEvento);
 
-$usuarios = recuperaDados('usuarios','id',$idEvento);
-$fiscal= $usuarios["nome_completo"];
-$suplente= $usuarios["nome_completo"];
-$rfSuplente= $usuarios["rf_rg"];
-$rfFiscal= $usuarios["rf_rg"];
-
+$fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id'])['nome_completo'];
+$suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'];
+$rfFiscal = recuperaDados('usuarios','id',$fc['fiscal_id'])['rf_rg'];
+$rfSuplente = recuperaDados('usuarios','id',$fc['suplente_id'])['rf_rg'];
 $mdl = str_replace("nomeFiscal", $fiscal, $mdl);
 $mdl = str_replace("rfFiscal", $rfFiscal, $mdl);
 $mdl = str_replace("nomeSuplente", $suplente, $mdl);
 $mdl = str_replace("rfSuplente", $rfSuplente, $mdl);
+
 
 
 

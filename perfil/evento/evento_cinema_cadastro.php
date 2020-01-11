@@ -79,7 +79,7 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="duracao">Duração (em minutos) *:</label>
-                                <input type="number" class="form-control" name="duracao" min="0" id="duracao" required>
+                                <input type="number" class="form-control" name="duracao" min="1" id="duracao" required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="classidicacaoIndicativa">Classificação indicativa: *</label>

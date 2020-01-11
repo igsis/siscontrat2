@@ -76,6 +76,11 @@ $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
 
                                     <br>
 
+                                    <label for="valor">Valor Total: </label>
+                                    R$ <?= dinheiroParaBr($pedido['valor_total']) ?>
+
+                                    <br>
+
                                     <label for="integrantes[]">Integrantes</label>
                                     <textarea disabled name="integrantes[]" id="integrantes" required rows="5"
                                               class="form-control"><?= $atracao['integrantes'] ?></textarea>

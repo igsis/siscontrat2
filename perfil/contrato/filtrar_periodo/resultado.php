@@ -83,35 +83,42 @@ if (isset($_POST['busca'])) {
                                 <?php
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
-                                    $idUser = $evento['operador_id'];
-                                    if($idUser != 0){
-                                        $operadorAux = "AND usuario_id = $idUser";
-                                        $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser $operadorAux";
-                                        $operador = $con->query($sqlOperador)->fetch_array();
-                                    }
-                                    if ($evento['pessoa_tipo_id'] == 1)
-                                        $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome_artistico'];
-                                    else if ($evento['pessoa_tipo_id'] == 2)
-                                        $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
+                                    ?>
+                                    <tr>
+                                        <?php
+                                        $idUser = $evento['operador_id'];
+                                        if ($idUser != 0) {
+                                            $operadorAux = "AND usuario_id = $idUser";
+                                            $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser $operadorAux";
+                                            $operador = $con->query($sqlOperador)->fetch_array();
+                                        }
+                                        if ($evento['pessoa_tipo_id'] == 1)
+                                            $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome_artistico'];
+                                        else if ($evento['pessoa_tipo_id'] == 2)
+                                            $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
 
-                                    ?>
-                                    <td>
-                                        <form method="POST" action="?perfil=contrato&p=filtrar_periodo&sp=resumo">
-                                            <input type="hidden" name="idEvento" id="idEvento" value="<?=$evento['id']?>">
-                                            <button type="submit" class="btn btn-link"><?= $evento['protocolo'] ?></button>
-                                        </form>
-                                    </td>
-                                    <td><?= $evento['numero_processo'] ?></td>
-                                    <td><?= $pessoa ?></td>
-                                    <td><?= $evento['nome_evento'] ?></td>
-                                    <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                    <td><?= $evento['status'] ?></td>
-                                    <?php
-                                    if(isset($operador['nome_completo'])){?>
-                                    <td><?= $operador['nome_completo'] ?></td>
-                                    <?php }
-                                    echo "<td> </td>";
-                                    ?>
+                                        ?>
+                                        <td>
+                                            <form method="POST" action="?perfil=contrato&p=filtrar_periodo&sp=resumo">
+                                                <input type="hidden" name="idEvento" id="idEvento"
+                                                       value="<?= $evento['id'] ?>">
+                                                <button type="submit"
+                                                        class="btn btn-link"><?= $evento['protocolo'] ?></button>
+                                            </form>
+                                        </td>
+                                        <td><?= $evento['numero_processo'] ?></td>
+                                        <td><?= $pessoa ?></td>
+                                        <td><?= $evento['nome_evento'] ?></td>
+                                        <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
+                                        <td><?= $evento['status'] ?></td>
+                                        <?php
+                                        if (isset($operador['nome_completo'])) {
+                                            ?>
+                                            <td><?= $operador['nome_completo'] ?></td>
+                                        <?php }
+                                        echo "<td> </td>";
+                                        ?>
+                                    </tr>
                                     <?php
                                 }
                             }

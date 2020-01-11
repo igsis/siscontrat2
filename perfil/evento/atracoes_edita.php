@@ -4,12 +4,12 @@ $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
-    $nome_atracao = addslashes($_POST['nome_atracao']);
-    $ficha_tecnica = addslashes($_POST['ficha_tecnica']);
-    $integrantes = addslashes($_POST['integrantes']);
+    $nome_atracao = trim(addslashes($_POST['nome_atracao']));
+    $ficha_tecnica = trim(addslashes($_POST['ficha_tecnica']));
+    $integrantes = trim(addslashes($_POST['integrantes']));
     $classificacao_indicativa_id = $_POST['classificacao_indicativa_id'];
-    $release_comunicacao = addslashes($_POST['release_comunicacao']);
-    $links = addslashes($_POST['links']);
+    $release_comunicacao = trim(addslashes($_POST['release_comunicacao']));
+    $links = trim(addslashes($_POST['links']));
     $quantidade_apresentacao = $_POST['quantidade_apresentacao'];
     $valor_individual = dinheiroDeBr($_POST['valor_individual']);
 }
@@ -17,7 +17,7 @@ if (isset($_POST['cadastra'])) {
     $sql_atracoes = "INSERT INTO atracoes(evento_id, nome_atracao, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$idEvento','$nome_atracao', '$ficha_tecnica', '$integrantes', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
     if (mysqli_query($con, $sql_atracoes)) {
         $idAtracao = recuperaUltimo("atracoes");
-        $mensagem = mensagem("success", "Cadastrado com sucesso!");
+        $mensagem = mensagem("success", "Cadastrado com sucesso! Retornando a listagem de atrações");
 
         $sql = "SELECT * FROM pedidos WHERE origem_id = '$idEvento' AND origem_tipo_id = 1 AND publicado = 1";
         $query = mysqli_query($con, $sql);
@@ -57,6 +57,8 @@ if (isset($_POST['cadastra'])) {
                 $mensagem2 = mensagem("warning", "Atração atual tem valor acima de outras atrações com os mesmos nomes realizados anteriormente!");
             }
         }
+
+        echo "<meta http-equiv='refresh' content='3;url=?perfil=evento&p=atracoes_lista' />";
     } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.") . $sql_atracoes;
     }
@@ -217,23 +219,33 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="quantidade_apresentacao">Quantidade de Apresentação *</label>
                                     <input type="number" class="form-control" id="quantidade_apresentacao"
-                                           name="quantidade_apresentacao" maxlength="2" required min="0"
+                                           name="quantidade_apresentacao" maxlength="2" required min="1"
                                            value="<?= $atracao['quantidade_apresentacao'] ?>">
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não houver
-                                        valor</i>
-                                    <input type="text" id="valor_individual" name="valor_individual"
-                                           class="form-control" required
-                                           value="<?= dinheiroParaBr($atracao['valor_individual']) ?>"
-                                           onKeyPress="return(moeda(this,'.',',',event))">
-                                </div>
+                                <?php
+                                $_SESSION['idEvento'] = $idEvento;
+                                $evento = $con->query("SELECT contratacao FROM eventos WHERE id ='$idEvento'")->fetch_array();
+                                if ($evento['contratacao'] == 1) {
+                                    ?>
+                                    <div class="form-group col-md-6">
+                                        <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não houver valor</i>
+                                        <input type="text" id="valor_individual" name="valor_individual" class="form-control" required value="<?= dinheiroParaBr($atracao['valor_individual']) ?>" onKeyPress="return(moeda(this,'.',',',event))">
+                                    </div>
+                                    <?php
+                                }
+                                else{
+                                    ?>
+                                    <input type="hidden" name="valor_individual" value="0,00">
+                                    <?php
+                                }
+                                ?>
                             </div>
                         </div>
 
                         <div class="box-footer">
                             <input type="hidden" name="idAtracao" value="<?= $atracao['id'] ?>">
                             <button type="submit" name="edita" id="cadastra" class="btn btn-info pull-right">Gravar</button>
+                            <a href="index.php?perfil=evento&p=atracoes_lista" class="btn btn-default pull-left">Voltar</a>
                         </div>
                     </form>
                 </div>

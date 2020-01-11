@@ -96,16 +96,29 @@
                             <div class="row ">
                                 <div class="form-group col-md-6">
                                     <label for="quantidade_apresentacao">Quantidade de Apresentação *</label>
-                                    <input type="number" class="form-control" min="0" id="quantidade_apresentacao"
+                                    <input type="number" class="form-control" min="1" id="quantidade_apresentacao"
                                            name="quantidade_apresentacao" maxlength="2" required>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não
-                                        houver valor</i>
-                                    <input type="text" id="valor_individual" name="valor_individual"
-                                           class="form-control" required
-                                           onKeyPress="return(moeda(this,'.',',',event))">
-                                </div>
+                                <?php
+                                $_SESSION['idEvento'] = $idEvento;
+                                $evento = $con->query("SELECT contratacao FROM eventos WHERE id ='$idEvento'")->fetch_array();
+                                if ($evento['contratacao'] == 1) {
+                                    ?>
+                                    <div class="form-group col-md-6">
+                                        <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não
+                                            houver valor</i>
+                                        <input type="text" id="valor_individual" name="valor_individual"
+                                               class="form-control" required
+                                               onKeyPress="return(moeda(this,'.',',',event))">
+                                    </div>
+                                    <?php
+                                }
+                                else{
+                                    ?>
+                                    <input type="hidden" name="valor_individual" value="0,00">
+                                    <?php
+                                }
+                                ?>
                             </div>
                         </div>
 

@@ -12,11 +12,11 @@ $mensagem = '';
 
 if (isset($_POST['cadastrar']) || isset($_POST['editar'])) {
     $idPedido = $_SESSION['idPedido'];
-    $nome = addslashes($_POST['nome']);
-    $nomeArtistico = $_POST['nomeArtistico'];
-    $email = $_POST['email'];
+    $nome = trim(addslashes($_POST['nome']));
+    $nomeArtistico = trim($_POST['nomeArtistico']);
+    $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
-    $drt = $_POST['drt'];
+    $drt = trim($_POST['drt']);
     $data = date("y-m-d h:i:s");
     $passaporte = $_POST['passaporte'] ?? NULL;
     $cpf = $_POST['cpf'] ?? NULL;
@@ -140,6 +140,32 @@ if (isset($_POST['selecionar'])) {
     $idPedido = $_POST['idPedido'];
     $idAtracao = $_POST['idAtracao'];
     $tipoDocumento = $_POST['tipoDocumento'];
+
+    $existeLider = "SELECT * FROM Lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
+
+    $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
+    if ($resultado) {
+        $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
+    } else {
+        $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido','$idAtracao','$idLider')";
+    }
+
+    if (mysqli_query($con, $sqLider)) {
+        $mensagem = mensagem("success", "Lider inserido com sucesso. Retornando ao pedido...");
+        echo "<meta http-equiv='refresh' content='2;url=index.php?perfil=evento&p=pedido_edita&lider=true' />";
+    }
+}
+
+if (isset($_POST['carregar'])){
+    $idLider = $_POST['idLider'];
+    $idPedido = $_POST['idPedido'];
+    $idAtracao = $_POST['idAtracao'];
+    $tipo = $con->query("SELECT cpf FROM pessoa_fisicas WHERE id = '$idLider'")->fetch_array();
+    if(!empty($tipo['cpf'])){
+        $tipoDocumento = 1;
+    } else{
+        $tipoDocumento = 2;
+    }
 }
 
 $lider = recuperaDados("pessoa_fisicas", "id", $idLider);
@@ -176,7 +202,7 @@ include "includes/menu_interno.php";
                     </div>
                     <div class="row" align="center">
                         <?php if (isset($resultado)) {
-                            echo $resultado;
+                            //echo $resultado;
                         }; ?>
                     </div>
                     <!-- /.box-header -->
@@ -187,6 +213,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: *</label>
                                     <input type='text' class='form-control' id='nome' name='nome' maxlength='120'
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras"
                                            value="<?= $lider['nome'] ?>" required>
                                 </div>
                                 <div class="form-group col-md-6">
@@ -217,31 +244,24 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="email">Email</label>
                                     <input type='text' class='form-control' id='email' name='email'
-                                           required maxlength="8" value="<?= $lider['email'] ?>" required>
+                                           required maxlength="60" value="<?= $lider['email'] ?>" required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="celular">Telefone #1</label>
-                                    <input type="text" class="form-control"
-                                           id='telefone' name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
-                                           required maxlength="11" value="<?= $arrayTelefones[0]['telefone']; ?>">
+                                    <input type="text" class="form-control"  onkeyup="mascara( this, mtel );" maxlength="15"  id='telefone' name="telefone[<?= $arrayTelefones[0]['id'] ?>]" required value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone">Telefone #2 </label>
                                     <?php
                                     if (isset($arrayTelefones[1])) {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
-                                               value="<?= $arrayTelefones[1]['telefone']; ?>">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]" value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone1" name="telefone1">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone1" name="telefone1">
                                         <?php
                                     }
                                     ?>
@@ -250,18 +270,13 @@ include "includes/menu_interno.php";
                                     <label for="telefone2">Telefone #3</label>
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
-                                               value="<?= $arrayTelefones[2]['telefone']; ?>">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]" value="<?= $arrayTelefones[2]['telefone']; ?>">
 
                                         <?php
                                     } else {
                                         ?>
 
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
-                                               id="telefone2" name="telefone2">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone2" name="telefone2">
 
                                         <?php
                                     }

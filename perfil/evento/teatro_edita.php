@@ -5,9 +5,9 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $idAtracao = $_POST['idAtracao'] ?? NULL;
     $idTeatro = $_POST['idTeatro'] ?? NULL;
     $estreia = $_POST ['estreia'];
-    $genero = $_POST['genero'];
-    $venda = ($_POST['venda']);
-    $descricao = addslashes($_POST['descricao']);
+    $genero = trim($_POST['genero']);
+    $venda = $_POST['venda'];
+    $descricao = trim(addslashes($_POST['descricao']));
 }
 
 if (isset($_POST['cadastra'])) {
@@ -81,9 +81,9 @@ include "includes/menu_interno.php";
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-2 text-center">
-                                    <label for="genero">Gênero</label><br/>
+                                    <label for="genero">Gênero *</label><br/>
                                     <input class='form-control' type="text" id="genero" name="genero" size="30"
-                                           value="<?= $teatro['genero'] ?>">
+                                           value="<?= $teatro['genero'] ?>" required>
                                 </div>
                                 <div class="form-group col-md-2 text-center">
                                     <label for="estreia">Estréia?</label> <br>

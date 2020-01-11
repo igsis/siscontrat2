@@ -55,7 +55,11 @@ $cep = $end['cep'];
 //pessoa fisica
 $Nome = $pf["nome"];
 $RG = $pf["rg"];
-$CPF = $pf["cpf"];
+if(!empty($pf["cpf"])){
+    $CPF = $pf["cpf"];
+} else{
+    $CPF = $pf['passaporte'];
+}
 $CCM = $pf["ccm"];
 $Telefone01 = $telefones["telefone"];
 $agencia = $bancos["agencia"];
@@ -63,7 +67,7 @@ $conta = $bancos["conta"];
 $codbanco = $bancos["banco_id"];
 $cbo = $bancos["cbo"] ?? NULL;
 $nit = $nits["nit"];
-$DataNascimento = exibirDataBr($pf["data_nascimento"]);
+$DataNascimento = date('d/m/Y', strtotime($pf["data_nascimento"]));
 
 
 // GERANDO O PDF:
@@ -75,61 +79,58 @@ $pdf->AddPage();
 $x=20;
 $l=7; //DEFINE A ALTURA DA LINHA   
    
-   $pdf->SetXY( $x , 40 );// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
+$pdf->SetXY( $x , 40 );// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
-   $pdf->SetXY(113, 40);
-   $pdf->SetFont('Arial','', 10);
-   $pdf->Cell(10,$l,utf8_decode('X'),0,0,'L');
+$pdf->SetXY(113, 40);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(10,$l,utf8_decode('X'),0,0,'L');
 
-   $pdf->SetXY($x, 40);
-   $pdf->SetFont('Arial','', 10);
-   $pdf->Cell(53,$l,utf8_decode($CPF),0,0,'L');
-   
-   $pdf->SetXY(155, 40);
-   $pdf->SetFont('Arial','', 10);
-   $pdf->Cell(53,$l,utf8_decode($CCM),0,0,'L');
-   
-   $pdf->SetXY($x, 55);
-   $pdf->SetFont('Arial','', 10);
-   $pdf->Cell(160,$l,utf8_decode($Nome),0,0,'L');
-   
-   $pdf->SetXY($x, 68);
-   $pdf->SetFont('Arial','', 10);
+$pdf->SetXY($x, 40);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(53,$l,utf8_decode($CPF),0,0,'L');
 
-   if ($complemento != null) {
-       $pdf->Cell(160,$l,utf8_decode("$rua".", "."$num"." - "."$complemento"),0,0,'L');
-   } else {
-       $pdf->Cell(160,$l,utf8_decode("$rua".", "."$num"),0,0,'L');
-   }
+$pdf->SetXY(155, 40);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(53,$l,utf8_decode($CCM),0,0,'L');
 
+$pdf->SetXY($x, 55);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(160,$l,utf8_decode($Nome),0,0,'L');
 
-   
-   $pdf->SetXY($x, 82);
-   $pdf->SetFont('Arial','', 9);
-   $pdf->Cell(68,$l,utf8_decode($bairro),0,0,'L');
-   $pdf->Cell(88,$l,utf8_decode($cidade),0,0,'L');
-   $pdf->Cell(5,$l,utf8_decode($estado),0,0,'L');
-   
-   $pdf->SetXY($x, 96);
-   $pdf->SetFont('Arial','', 10);
-   $pdf->Cell(33,$l,utf8_decode($cep),0,0,'L');
-   $pdf->Cell(57,$l,utf8_decode($Telefone01),0,0,'L');
-   $pdf->Cell(15,$l,utf8_decode($codbanco),0,0,'L');
-   $pdf->Cell(35,$l,utf8_decode($agencia),0,0,'L');
-   $pdf->Cell(37,$l,utf8_decode($conta),0,0,'L');
-   
-   $pdf->SetXY($x, 107);
-   $pdf->SetFont('Arial','', 10);
-   $pdf->Cell(87,$l,utf8_decode($nit),0,0,'L');
-   $pdf->Cell(52,$l,utf8_decode($DataNascimento),0,0,'L');
-   $pdf->Cell(33,$l,utf8_decode($cbo),0,0,'L');
-   
-   $pdf->SetXY($x, 122);
-   $pdf->SetFont('Arial','', 9);
-   $pdf->Cell(87,$l,utf8_decode($Nome),0,0,'L');
-   $pdf->Cell(50,$l,utf8_decode($RG),0,0,'L');
+$pdf->SetXY($x, 68);
+$pdf->SetFont('Arial','', 10);
+
+if ($complemento != null) {
+   $pdf->Cell(160,$l,utf8_decode("$rua".", "."$num"." - "."$complemento"),0,0,'L');
+} else {
+   $pdf->Cell(160,$l,utf8_decode("$rua".", "."$num"),0,0,'L');
+}
+
+$pdf->SetXY($x, 82);
+$pdf->SetFont('Arial','', 9);
+$pdf->Cell(68,$l,utf8_decode($bairro),0,0,'L');
+$pdf->Cell(88,$l,utf8_decode($cidade),0,0,'L');
+$pdf->Cell(5,$l,utf8_decode($estado),0,0,'L');
+
+$pdf->SetXY($x, 96);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(33,$l,utf8_decode($cep),0,0,'L');
+$pdf->Cell(57,$l,utf8_decode($Telefone01),0,0,'L');
+$pdf->Cell(15,$l,utf8_decode($codbanco),0,0,'L');
+$pdf->Cell(35,$l,utf8_decode($agencia),0,0,'L');
+$pdf->Cell(37,$l,utf8_decode($conta),0,0,'L');
+
+$pdf->SetXY($x, 107);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(87,$l,utf8_decode($nit),0,0,'L');
+$pdf->Cell(52,$l,utf8_decode($DataNascimento),0,0,'L');
+$pdf->Cell(33,$l,utf8_decode($cbo),0,0,'L');
+
+$pdf->SetXY($x, 122);
+$pdf->SetFont('Arial','', 9);
+$pdf->Cell(87,$l,utf8_decode($Nome),0,0,'L');
+$pdf->Cell(50,$l,utf8_decode($RG),0,0,'L');
 
 $pdf->Output('facc.pdf','I');
-
 
 ?>

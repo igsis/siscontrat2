@@ -49,7 +49,7 @@ if (isset($_POST['trocaPj'])) {
     $pedido = recuperaDados("pedidos", "id", $idPedido);
 }
 
-if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
+if (isset($_SESSION['idPedido']) && (isset($_POST['cadastra'])) || isset($_GET['lider'])) {
     unset($_POST['cadastra']);
     $_POST['carregar'] = 1;
     $idPedido = $_SESSION['idPedido'];
@@ -82,9 +82,9 @@ if (isset($_SESSION['idPedido']) && isset($_POST['cadastra'])) {
 if (isset($_POST['edita'])) {
     $verba_id = $_POST['verba_id'];
     $valor_total = dinheiroDeBr($_POST['valor_total']);
-    $forma_pagamento = addslashes($_POST['forma_pagamento']);
-    $justificativa = addslashes($_POST['justificativa']);
-    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $forma_pagamento = trim(addslashes($_POST['forma_pagamento']));
+    $justificativa = trim(addslashes($_POST['justificativa']));
+    $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $numero_parcelas = $_POST['numero_parcelas'] ?? NULL;
 
     $data_kit_pagamento = $_POST['data_kit_pagamento'] ?? '0000-00-00';
@@ -112,6 +112,10 @@ if (isset($_POST['edita'])) {
             $mensagem = mensagem("danger", "Erro ao gravar: " . die(mysqli_error($con)));
         }
     }
+}
+
+if(isset($_SESSION['idPedido'])) {
+    $idPedido = $_SESSION['idPedido'];
 }
 
 $pedido = recuperaDados("pedidos", "id", $idPedido);
@@ -192,6 +196,9 @@ while ($atracoes = mysqli_fetch_array($queryOficina)) {
     }
 }
 
+$evento = recuperaDados('eventos', 'id', $idEvento);
+$tipoEvento = $evento['tipo_evento_id'];
+
 if (isset($valores) && $valores > 0) {
     $valorTotal = 0;
     foreach ($valores as $valor) {
@@ -201,7 +208,7 @@ if (isset($valores) && $valores > 0) {
     $valorTotal = 0;
 }
 
-if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
+if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal) && $tipoEvento != 2) {
     if ($valorTotal > $pedido['valor_total'] || $valorTotal < $pedido['valor_total']) {
         $sqlUpdate = "UPDATE pedidos SET valor_total = '$valorTotal' WHERE id = $idPedido";
         if (mysqli_query($con, $sqlUpdate)) {
@@ -211,6 +218,100 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
             echo $sqlUpdate;
         }
     }
+}
+
+if(isset($_POST["enviarArquivo"])) {
+    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1";
+    $query_arquivos = mysqli_query($con, $sql_arquivos);
+    while ($arq = mysqli_fetch_array($query_arquivos)) {
+        $y = $arq['id'];
+        $x = $arq['sigla'];
+        $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
+        $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
+
+        if ($f_size > 5242880) {
+            $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
+        } else {
+            if ($nome_arquivo != "") {
+                $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
+                $new_name = date("YmdHis",strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
+                $hoje = date("Y-m-d H:i:s",strtotime("-3 hours"));
+                $dir = '../uploadsdocs/'; //Diretório para uploads
+                $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
+                $ext = strtolower(substr($nome_arquivo,-4));
+
+                if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                {
+                    if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
+                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPedido', '$y', '$new_name', '$hoje', '1'); ";
+                        $query = mysqli_query($con, $sql_insere_arquivo);
+
+                        if ($query) {
+                            $mensagem = mensagem("success", "Arquivo recebido com sucesso");
+                            echo "<script>
+                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
+                            </script>";
+                            gravarLog($sql_insere_arquivo);
+                        } else {
+                            $mensagem = mensagem("danger", "Erro ao gravar no banco");
+                        }
+                    } else {
+                        $mensagem = mensagem("danger", "Erro no upload");
+                    }
+                }else {
+                    echo "<script>
+                            swal('Erro no upload!', 'Anexar documentos somente no formato PDF.', 'error');                             
+                        </script>";
+                }
+            }
+        }
+    }
+}
+
+if(isset($_POST['apagarArquivo']))
+{
+    $idArquivo = $_POST['idArquivo'];
+    $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
+    if(mysqli_query($con,$sql_apagar_arquivo))
+    {
+        $arq = recuperaDados("arquivos",$idArquivo,"id");
+        $mensagem = mensagem("success", "Arquivo ".$arq['arquivo']."apagado com sucesso!");
+        gravarLog($sql_apagar_arquivo);
+    }
+    else
+    {
+        $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
+    }
+}
+
+if (isset($_GET['label'])) {
+    switch ($_GET['label']) {
+        case 'parcelas':
+            $lblParcelas = "in active";
+            break;
+
+        case 'proponente':
+            $menuParcelas = "completed";
+            $menuProponente = "active";
+            $lblProponente = "in active";
+            break;
+
+        case 'anexos':
+            if ($tipoPessoa == 2) {
+                $menuLider = "completed";
+            }
+
+            $menuParcelas = "completed";
+            $menuParecer = "completed";
+            $menuProponente = "completed";
+            $menuAnexos = "active";
+            $lblAnexos = "in active";
+            break;
+        default:
+            break;
+    }
+} else {
+    $lblParcelas = "in active";
 }
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -236,27 +337,66 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                         <div class="stepper">
                             <ul class="nav nav-tabs nav-justified" role="tablist">
                                 <?php if ($tipoPessoa == 2) { ?>
-                                    <li role="presentation" class="active">
+                                    <li role="presentation" class="<?=$menuParcelas ?? "active"?>">
                                         <a class="persistant-disabled" href="#stepper-step-1" data-toggle="tab"
                                            aria-controls="stepper-step-1" role="tab" title="Parcelas">
                                             <span class="round-tab">1</span>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="disabled">
+                                    <li role="presentation" class="<?=$menuProponente ?? "disabled"?>">
                                         <a class="persistant-disabled" href="#stepper-step-2" data-toggle="tab"
                                            aria-controls="stepper-step-2" role="tab" title="Proponente">
                                             <span class="round-tab">2</span>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="disabled">
+                                    <li role="presentation" class="<?=$menuLider ?? "disabled"?>">
                                         <a class="persistant-disabled" href="#stepper-step-3" data-toggle="tab"
                                            aria-controls="stepper-step-3" role="tab" title="Lider">
                                             <span class="round-tab">3</span>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="disabled">
+                                    <li role="presentation" class="<?=$menuParecer ?? "disabled"?>">
                                         <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
                                            aria-controls="stepper-step-4" role="tab" title="Parecer artístico">
+                                            <span class="round-tab">4</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="<?=$menuAnexos ?? "disabled"?>">
+                                        <a class="persistant-disabled" href="#stepper-step-5" data-toggle="tab"
+                                           aria-controls="stepper-step-5" role="tab" title="Anexos do pedido">
+                                            <span class="round-tab">5</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="disabled">
+                                        <a class="persistant-disabled" href="#stepper-step-6" data-toggle="tab"
+                                           aria-controls="stepper-step-6" role="tab" title="Valor por equipamento">
+                                            <span class="round-tab">6</span>
+                                        </a>
+                                    </li>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <li role="presentation" class="<?=$menuParcelas ?? "active"?>">
+                                        <a class="persistant-disabled" href="#stepper-step-1" data-toggle="tab"
+                                           aria-controls="stepper-step-1" role="tab" title="Parcelas">
+                                            <span class="round-tab">1</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="<?=$menuProponente ?? "disabled"?>">
+                                        <a class="persistant-disabled" href="#stepper-step-2" data-toggle="tab"
+                                           aria-controls="stepper-step-2" role="tab" title="Proponente">
+                                            <span class="round-tab">2</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="<?=$menuParecer ?? "disabled"?>">
+                                        <a class="persistant-disabled" href="#stepper-step-3" data-toggle="tab"
+                                           aria-controls="stepper-step-3" role="tab" title="Parecer artístico">
+                                            <span class="round-tab">3</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="<?=$menuAnexos ?? "disabled"?>">
+                                        <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
+                                           aria-controls="stepper-step-4" role="tab" title="Anexos do pedido">
                                             <span class="round-tab">4</span>
                                         </a>
                                     </li>
@@ -267,44 +407,17 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                         </a>
                                     </li>
                                     <?php
-                                } else {
-                                    ?>
-                                    <li role="presentation" class="active">
-                                        <a class="persistant-disabled" href="#stepper-step-1" data-toggle="tab"
-                                           aria-controls="stepper-step-1" role="tab" title="Parcelas">
-                                            <span class="round-tab">1</span>
-                                        </a>
-                                    </li>
-                                    <li role="presentation" class="disabled">
-                                        <a class="persistant-disabled" href="#stepper-step-2" data-toggle="tab"
-                                           aria-controls="stepper-step-2" role="tab" title="Proponente">
-                                            <span class="round-tab">2</span>
-                                        </a>
-                                    </li>
-                                    <li role="presentation" class="disabled">
-                                        <a class="persistant-disabled" href="#stepper-step-3" data-toggle="tab"
-                                           aria-controls="stepper-step-3" role="tab" title="Parecer artístico">
-                                            <span class="round-tab">3</span>
-                                        </a>
-                                    </li>
-                                    <li role="presentation" class="disabled">
-                                        <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
-                                           aria-controls="stepper-step-4" role="tab" title="Valor por equipamento">
-                                            <span class="round-tab">4</span>
-                                        </a>
-                                    </li>
-                                    <?php
                                 }
                                 ?>
                             </ul>
                             <div class="tab-content">
                                 <!-- Detalhes de Parcelas -->
-                                <div class="tab-pane fade in active" role="tabpanel" id="stepper-step-1">
+                                <div class="tab-pane fade <?=$lblParcelas ?? ""?>" role="tabpanel" id="stepper-step-1">
                                     <?php include "includes/label_pedido_parcelas.php" ?>
                                 </div>
 
                                 <!-- Cadastro de Proponente -->
-                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-2">
+                                <div class="tab-pane fade <?=$lblProponente ?? ""?>" role="tabpanel" id="stepper-step-2">
                                     <?php include "includes/label_pedido_proponente.php" ?>
                                 </div>
                                 <?php if ($tipoPessoa == 2){?>
@@ -315,15 +428,29 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
                                 <?php } ?>
                                 <!-- Parecer Artístico -->
                                 <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '4' : '3'?>">
-                                    <h3>4. Parecer artístico</h3>
+                                    <?php
+                                    if ($tipoPessoa == 2){
+                                        $par = 4;
+                                    } else{
+                                        $par = 3;
+                                    }
+                                    ?>
+                                    <h3><?= $par ?>. Parecer artístico</h3>
                                     <div class="container">
                                         <div class="row">
                                             <?php include "includes/label_pedido_parecer_artistico.php" ?>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Anexos do pedido -->
+                                <div class="tab-pane fade <?=$lblAnexos ?? ""?>" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '5' : '4'?>">
+                                    <h3><?= $tipoPessoa == 2 ? '5' : '4'?>. Anexos do pedido</h3>
+                                    <div class="container col-md-12">
+                                        <?php include "includes/label_pedido_anexos.php" ?>
+                                    </div>
+                                </div>
                                 <!-- Valor por Equipamento -->
-                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '5' : '4'?>">
+                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '6' : '5'?>">
                                     <?php include_once "includes/label_pedido_valor_equipamento.php" ?>
                                 </div>
                             </div>
@@ -506,10 +633,10 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         <?php
 
 
-        if ($data_kit == null){
+        if ($data_kit == null && $data_kit2 == 0){
         ?>
         $('.next-step').prop('disabled', true);
-        $('#mensagem-alerta').append('<div class="alert alert-danger col-md-12" role="alert">Crie uma ocorrência antes de procegguir com pedido.</div>');
+        $('#mensagem-alerta').append('<div class="alert alert-danger col-md-12" role="alert">Crie uma ocorrência antes de prosseguir com pedido.</div>');
 
         <?php
         }else{
@@ -615,8 +742,9 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal)) {
         var formPagamento = document.querySelector('#forma_pagamento');
 
         if ($('#numero_parcelas').val() != 13) {
-            $('#forma_pagamento').val('');
             $('#forma_pagamento').attr('readonly', true);
+            $('#forma_pagamento').val('');
+            //$('#forma_pagamento').val('O pagamento se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
         } else {
             $('#forma_pagamento').attr('readonly', false);
         }
