@@ -9,6 +9,8 @@ $idAtracao = $_SESSION['idOrigem'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
+$tipoEvento = $evento['tipo_evento_id'];
+
 ?>
 <script type="text/javascript">
     function desmarca() {
@@ -307,7 +309,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                         </div>
 
                         <div class="box-footer">
-                            <a href="?perfil=evento&p=atracoes_lista">
+                            <a href="?perfil=evento&p=<?=$tipoEvento == 1 ? "atracoes_lista" : "evento_cinema_lista"?>">
                                 <button type="button" class="btn btn-default" id="voltar" name="voltar">Voltar</button>
                             </a>
                             <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
