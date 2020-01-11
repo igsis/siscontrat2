@@ -24,7 +24,7 @@ else
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
     <!-- DataTables -->
   <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
   <!-- Ionicons -->
@@ -44,8 +44,8 @@ else
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="dist\js\html5shiv\html5shiv.min.js"></script>
+    <script src="dist\js\respond\respond.min.js"></script>
     <![endif]-->
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -54,14 +54,14 @@ else
     <script src="dist/js/jquery.mask.js"></script>
     <script src="dist/js/scripts.js"></script>
     <!-- AXIOS -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="dist\js\axios.js"></script>
     <!-- jQuery 3 -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+      <script src="js\jquery_2.1.1_jquery.js"></script>
       <!-- Bootstrap 3.3.7 -->
       <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
       <script src="dist/js/handlebars-v4.1.0.js"></script>
-      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+      <script src="js\sweetalert.min.js"></script>
       <!-- fullCalendar -->
       <script src="bower_components/fullcalendar/packages/core/main.js"></script>
       <script src="bower_components/fullcalendar/packages/interaction/main.js"></script>
@@ -69,7 +69,7 @@ else
       <script src="bower_components/fullcalendar/packages/timegrid/main.js"></script>
       <script src="bower_components/fullcalendar/packages/list/main.js"></script>
       <script src="bower_components/fullcalendar/packages/core/locales/pt-br.js"></script>
-      <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+      <link rel="stylesheet" href="css\smoothness_jquery-ui.css">
       <!-- Toastr -->
       <script src="plugins/toastr/toastr.min.js"></script>
       <style>

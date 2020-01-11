@@ -26,7 +26,7 @@ if (isset($_POST['carregar'])) {
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="contratados">Quantidade de contratados *</label><br/>
-                                    <input class="form-control" type="number" min="0" name="contratados"
+                                    <input class="form-control" type="number" min="1" name="contratados"
                                                   id="contratados" required>
                                 </div>
                                 

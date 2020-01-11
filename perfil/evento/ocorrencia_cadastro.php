@@ -9,6 +9,8 @@ $idAtracao = $_SESSION['idOrigem'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
+$tipoEvento = $evento['tipo_evento_id'];
+
 ?>
 <script type="text/javascript">
     function desmarca() {
@@ -197,14 +199,15 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                     Não
                                 </div>
 
-                                <div class="form-group col-md-2">
-                                    <input type="checkbox" name="libras" id="libras" value="1"> &nbsp;
-                                    <label for="libras">Libras</label>
-                                </div>
-
-                                <div class="form-group col-md-2">
-                                    <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1"> &nbsp;
-                                    <label for="libras">Audiodescrição</label>
+                                <div class="form-group col-md-4">
+                                    <label>
+                                        <input type="checkbox" name="libras" id="libras" value="1"> Libras
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1"> Audiodescrição
+                                        &nbsp;
+                                    </label>
                                 </div>
                             </div>
 
@@ -307,7 +310,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                         </div>
 
                         <div class="box-footer">
-                            <a href="?perfil=evento&p=atracoes_lista">
+                            <a href="?perfil=evento&p=<?=$tipoEvento == 1 ? "atracoes_lista" : "evento_cinema_lista"?>">
                                 <button type="button" class="btn btn-default" id="voltar" name="voltar">Voltar</button>
                             </a>
                             <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
@@ -488,62 +491,48 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
     virada.on("change", function () {
         if ($('#viradaNao').is(':checked')) {
             $('#horaInicio')
-                .attr('readonly', false)
                 .val('');
 
             $('#horaFim')
-                .attr('readonly', false)
                 .val('');
 
             $('#instituicao')
-                .attr('readonly', false)
                 .val($('option:contains("Selecione uma opção...")').val());
 
             $('#local')
-                .attr('readonly', false)
                 .val($('option:contains("Selecione uma opção...")').val());
 
             $('#espaco')
-                .attr('readonly', false)
                 .val($('option:contains("Selecione uma opção...")').val());
 
             $('#retiradaIngresso')
-                .attr('readonly', false)
                 .val($('option:contains("Selecione uma opção...")').val());
 
             $('#valor_ingresso')
-                .attr('readonly', false)
-                .val('');
+                .val('0,00');
         } else {
             $('#horaInicio')
-                .attr('readonly', true)
                 .val('00:00');
 
             $('#horaFim')
-                .attr('readonly', true)
                 .val('00:00');
 
             $('#instituicao')
-                .attr('readonly', true)
                 .val($('option:contains("Virada Cultural")').val());
 
             $('#retiradaIngresso')
                 .attr('readonly', true)
                 .val($('option:contains("INGRESSOS GRÁTIS")').val());
 
-            $('#espaco')
-                .attr('readonly', true);
-
             $('#valor_ingresso')
                 .attr('readonly', true)
                 .val('0,00');
 
-            getLocais(10, 627);
+            getLocais(10, 189);
             getEspacos();
 
             $('#local')
-                .attr('readonly', true)
-                .val(627);
+                .val(189);
         }
     });
 
@@ -661,9 +650,6 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         });
     }
 
-</script>
-
-<script>
     let msgHora = $('#msgEscondeHora');
     msgHora.hide();
 

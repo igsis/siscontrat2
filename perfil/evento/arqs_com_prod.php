@@ -227,12 +227,6 @@ if (isset($_POST['apagar'])) {
                             </div>
                             <!--  Fim Modal de Upload de arquivo  -->
                         </div>
-                        <div class="box-footer">
-                            <form action="?perfil=evento&p=evento_edita" method="post">
-                                <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
-                                <button type="submit" name="Voltar" class="btn btn-default pull-left">Voltar</button>
-                            </form>
-                        </div>
                     </div>
                 </div>
             </div>
