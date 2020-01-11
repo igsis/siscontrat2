@@ -89,6 +89,14 @@ if (isset($_POST['cadastra']) || isset($_POST['atualizaPj'])) {
             $queryTestaTroca = mysqli_query($con, $sqlTestaTroca);
             $row = mysqli_num_rows($queryTestaTroca);
             if ($row != 0) {
+                $sqlTrocaProponente = "UPDATE pedidos SET
+                    pessoa_tipo_id = '2',
+                    pessoa_juridica_id = '$idPj',
+                    pessoa_fisica_id = 'null'
+                    WHERE id = '$idPedido'";
+                if ($con->query($sqlTrocaProponente)) {
+                    $mensagem .= " Proponente inserido no Pedido.";
+                }
                 $trocaPj = "<div class='form-group col-md-3 pull-right'>
                             <form method='POST' action='?perfil=evento&p=pedido_edita' role='form'>
                                 <input type='hidden' name='idPedido' value='$idPedido'>
