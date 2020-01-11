@@ -311,65 +311,26 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         <h4 align="center">PEDIDO DE RESERVA</h4>
                     </nav>
                 </div>
-
+                
+                <?php
+                    if($pedido['pessoa_tipo_id'] == 1){ ?>
                 <div class="col-md-6">
-                    <form action="#" target="_blank" method="post">
+                <form action="#" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva CSMB
+                            Reserva Centros Culturais e Teatros 6391
                         </button>
                     </form>
                     <hr/>
 
                     <form action="#" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva CCSP
-                        </button>
-                    </form>
-                    <hr/>
-
-                    <form action="#" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Oficina
-                        </button>
-                    </form>
-                    <hr/>
-
-                    <form action="#" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva Gabinete
-                        </button>
-                    </form>
-                    <hr/>
-
-                    <form action="#" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva DPH
-                        </button>
-                    </form>
-                    <hr/>
-                </div>
-
-                <div class="col-md-6">
-                    <form action="#" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva Centros Culturais
-                        </button>
-                    </form>
-                    <hr/>
-
-                    <form action="#" target="_blank" method="post">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Casas de Cultura
                         </button>
                     </form>
                     <hr/>
-
+                    
                     <form action="#" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
@@ -393,15 +354,200 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </button>
                     </form>
                     <hr/>
-
+                    
                     <form action="#" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva DPH - Jornada do Patrimônio
+                            Programa VAI
                         </button>
                     </form>
                     <hr/>
                 </div>
+
+                
+                <div class="col-md-6">
+                        <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Centros Culturais 6354
+                        </button>
+                    </form>
+                    <hr/>
+                </div>
+
+                
+                        <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva CSMB
+                        </button>
+                    </form>
+                    <hr/>
+                
+
+                        <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva CCSP 6393
+                        </button>
+                    </form>
+                    <hr/>
+          
+
+                        <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Oficina
+                        </button>
+                    </form>
+                    <hr/>
+
+                        <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Gabinete
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva DPH
+                        </button>
+                    </form>
+                    <hr/>
+                        <?php
+                        }else if($pedido['pessoa_tipo_id'] == 2){?>
+            <div class="col-md-6">
+            <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Centros Culturais e Teatros 6354
+                        </button>
+                    </form>
+                    <hr/>
+
+                <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Centros Culturais e Teatros 6391
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva CSMB
+                        </button>
+                    </form>
+                    <hr/>
+                    
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            FEPAC
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva BMA
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Oficinas CSMB e BMA
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva CRD
+                        </button>
+                    </form>
+                    <hr/>
+                    
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Programa VAI
+                        </button>
+                    </form>
+                    <hr/>
+                </div>
+
+                
+                <div class="col-md-6">
+                        <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Gabinete
+                        </button>
+                    </form>
+                    <hr/>
+                </div>
+
+                
+                        <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva DPH
+                        </button>
+                    </form>
+                    <hr/>
+                
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Casas de Cultura
+                        </button>
+                    </form>
+                    <hr/>
+
+                        <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva CCSP 6393
+                        </button>
+                    </form>
+                    <hr/>
+          
+
+                        <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Oficina
+                        </button>
+                    </form>
+                    <hr/>
+
+                        <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Centro de Memória do Circo
+                        </button>
+                    </form>
+                    <hr/>
+
+                    <form action="#" target="_blank" method="post">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-outline-info center-block">
+                            Reserva Global
+                        </button>
+                    </form>
+                    <hr/>
+                        <?php } ?>
+                        
             </div>
             <div class="box-footer">
                 <form action="?perfil=contrato&p=filtrar_periodo&sp=resumo" method="post">

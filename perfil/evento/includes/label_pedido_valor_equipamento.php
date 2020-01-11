@@ -1,11 +1,4 @@
-<?php
-if ($tipoPessoa == 2){
-    $vpe = 5;
-} else{
-    $vpe = 4;
-}
-?>
-<h3><?= $vpe ?>. Valor por equipamento</h3>
+<h3><?= ($tipoPessoa == 2) ? "6" : "5" ?>. Valor por equipamento</h3>
 <?php
 $sqlEquipamento = "SELECT DISTINCT oco.local_id as 'local_id', local.local as 'local' 
                     FROM ocorrencias AS oco

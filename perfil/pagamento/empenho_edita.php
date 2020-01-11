@@ -115,7 +115,7 @@ $pedido = $con->query("SELECT e.protocolo, p.numero_processo FROM pedidos AS p I
                 <hr/>
 
                 <div class="col-md-12" style="align-text:center">
-                    <form action="#" method="POST">
+                    <form action="http://<?= $_SERVER['SERVER_NAME'] ?>/siscontrat2/pdf/recibo_ne.php" target="_blank" method="POST">
                         <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
                         <button type="submit" class="btn btn-success center-block" style="width: 35%">Gerar Recibo</button>
                     </form>

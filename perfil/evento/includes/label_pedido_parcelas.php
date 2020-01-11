@@ -23,7 +23,7 @@ $data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
     <div class="row">
         <div class="form-group col-md-8">
             <label for="verba_id">Verba *</label>
-            <select class="form-control" id="verba_id" name="verba_id" required>
+            <select class="form-control" required id="verba_id" name="verba_id" >
                 <option value="">Selecione...</option>
                 <?php
                 geraOpcao("verbas", $pedido['verba_id'])
@@ -56,8 +56,8 @@ $data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
         <div class="row">
             <div class="form-group col-md-6">
                 <label for="numero_parcelas">Número de Parcelas *</label>
-                <select class="form-control" id="numero_parcelas" name="numero_parcelas"
-                        required>
+                <select class="form-control" id="numero_parcelas" required name="numero_parcelas"
+                        >
                     <option value="">Selecione...</option>
                     <?php
 
@@ -106,13 +106,13 @@ $data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
         <div class="form-group col-md-6">
             <label for="forma_pagamento">Forma de pagamento *</label><br/>
             <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
-                      rows="8"
+                      required  rows="8"
                       <?= $pedido['numero_parcelas'] != 13 ? 'readonly' : '' ?>><?= $pedido['forma_pagamento'] ?></textarea>
         </div>
         <div class="form-group col-md-6">
             <label for="justificativa">Justificativa *</label><br/>
             <textarea id="justificativa" name="justificativa" class="form-control"
-                      rows="8"><?= $pedido['justificativa'] ?></textarea>
+                      required rows="8" ><?= $pedido['justificativa'] ?></textarea>
         </div>
     </div>
     <div class="row">
