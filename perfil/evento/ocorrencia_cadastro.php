@@ -199,14 +199,15 @@ $tipoEvento = $evento['tipo_evento_id'];
                                     Não
                                 </div>
 
-                                <div class="form-group col-md-2">
-                                    <input type="checkbox" name="libras" id="libras" value="1"> &nbsp;
-                                    <label for="libras">Libras</label>
-                                </div>
-
-                                <div class="form-group col-md-2">
-                                    <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1"> &nbsp;
-                                    <label for="libras">Audiodescrição</label>
+                                <div class="form-group col-md-4">
+                                    <label>
+                                        <input type="checkbox" name="libras" id="libras" value="1"> Libras
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1"> Audiodescrição
+                                        &nbsp;
+                                    </label>
                                 </div>
                             </div>
 
