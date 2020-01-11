@@ -23,7 +23,9 @@ $idAtracao = $_POST['idAtracao'];
                             <div class="row">
                                 <div class="form-group col-md-2 text-center">
                                     <label for="genero">Gênero *</label><br/>
-                                    <input class='form-control' type="text" id="genero" name="genero" size="30" required>
+                                    <input class='form-control' type="text" id="genero"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,30}"
+                                           title="Apenas letras" name="genero" maxlength="30" required>
                                 </div>
                                 <div class="form-group col-md-2 text-center">
                                     <label for="estreia">Estréia?</label> <br>
