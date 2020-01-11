@@ -171,7 +171,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         $("#diasemana06").prop("disabled", valor);
         $("#diasemana07").prop("disabled", valor);
 
-        desmarca();
+        if (valor) {
+            desmarca();
+        }
     }
 
     // $(document).ready(function () {
@@ -955,7 +957,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
 <script>
     let msgHora = $('#msgEscondeHora');
-    msgHora.hide();
+    // msgHora.hide();
 
     function validaHora() {
         let horaInicio = $('#horaInicio').val();
