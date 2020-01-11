@@ -765,62 +765,48 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
         if ($('#viradaNao').is(':checked')) {
             $('#horaInicio')
-                .attr('readonly', false)
                 .val('');
 
             $('#horaFim')
-                .attr('readonly', false)
                 .val('');
 
             $('#instituicao')
-                .attr('readonly', false)
                 .val($('option:contains("Selecione uma opção...")').val());
 
             $('#local')
-                .attr('readonly', false)
                 .val($('option:contains("Selecione uma opção...")').val());
 
             $('#espaco')
-                .attr('readonly', false)
                 .val($('option:contains("Selecione uma opção...")').val());
 
             $('#retiradaIngresso')
-                .attr('readonly', false)
                 .val($('option:contains("Selecione uma opção...")').val());
 
             $('#valor_ingresso')
-                .attr('readonly', false)
-                .val('');
+                .val('0,00');
         } else {
             $('#horaInicio')
-                .attr('readonly', true)
                 .val('00:00');
 
             $('#horaFim')
-                .attr('readonly', true)
                 .val('00:00');
 
             $('#instituicao')
-                .attr('readonly', true)
                 .val($('option:contains("Virada Cultural")').val());
 
             $('#retiradaIngresso')
                 .attr('readonly', true)
                 .val($('option:contains("INGRESSOS GRÁTIS")').val());
 
-            $('#espaco')
-                .attr('readonly', true);
-
             $('#valor_ingresso')
                 .attr('readonly', true)
                 .val('0,00');
 
-            getLocais(10, 627);
+            getLocais(10, 189);
             getEspacos();
 
             $('#local')
-                .attr('readonly', true)
-                .val(627);
+                .val(189);
         }
     }
 
