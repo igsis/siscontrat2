@@ -129,23 +129,33 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_PO
             }
         }
 
+        $mensagem .= mensagem("success", "Cadastrado com sucesso!");
+
         if (isset($_POST['atualizaPf'])) {
             $idPedido = $_POST['idPedido'];
             $sqlTestaTroca = "SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 1";
             $queryTestaTroca = mysqli_query($con, $sqlTestaTroca);
             $row = mysqli_num_rows($queryTestaTroca);
             if ($row != 0) {
+                $null = "NULL";
+                $sqlTrocaProponente = "UPDATE pedidos SET
+                    pessoa_tipo_id = '1',
+                    pessoa_juridica_id = $null,
+                    pessoa_fisica_id = '$idPf'
+                    WHERE id = '$idPedido'";
+                if ($con->query($sqlTrocaProponente)) {
+                    $mensagem = mensagem("success", "Cadastrado com sucesso! Proponente inserido no Pedido");
+                }
                 $trocaPf = "<div class='form-group col-md-3 pull-right'>
-                            <form method='POST' action='?perfil=evento&p=pedido_edita' role='form'>
-                                <input type='hidden' name='idPedido' value='$idPedido'>
-                                <input type='hidden' name='idPf' value='$idPf'>
-                                <button type='submit' name='trocaPf' class='btn btn-info btn-block'> Ir ao pedido de contratação </button>
-                            </form>
-                        </div>";
+                                <form method='POST' action='?perfil=evento&p=pedido_edita&label=proponente' role='form'>
+                                    <input type='hidden' name='idPedido' value='$idPedido'>
+                                    <input type='hidden' name='idProponente' value='$idPf'>
+                                    <input type='hidden' name='tipoPessoa' value='1'>
+                                    <button type='submit' name='carregar' class='btn btn-primary btn-block'> Ir ao pedido de contratação </button>
+                                </form>
+                            </div>";;
             }
         }
-
-        $mensagem .= mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
     } else {
         $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sql;
