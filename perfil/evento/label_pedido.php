@@ -22,7 +22,7 @@ if ($pedido != null) {
 
     $queryEquipamentos = mysqli_query($con, $equipamentoValor);
     $numRows = mysqli_num_rows($queryEquipamentos);
-    if($numRows > 0){
+    if ($numRows > 0) {
         while ($equipamento = mysqli_fetch_array($queryEquipamentos)) {
             $dadosPedido += [
                 $equipamento['local'] => "R$" . dinheiroParaBr($equipamento['valor'])
@@ -37,7 +37,7 @@ if ($pedido != null) {
 switch ($pedido['pessoa_tipo_id']) {
     case 1:
         $tipo = "Pessoa Física";
-        $sqlTelefones = "SELECT telefone FROM pf_telefones WHERE pessoa_fisica_id = '".$pedido['pessoa_fisica_id']."' AND publicado = '1'";
+        $sqlTelefones = "SELECT telefone FROM pf_telefones WHERE pessoa_fisica_id = '" . $pedido['pessoa_fisica_id'] . "' AND publicado = '1'";
         $telefones = $con->query($sqlTelefones)->fetch_all();
         $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
         $nacionalidade = recuperaDados('nacionalidades', 'id', $proponente['nacionalidade_id'])['nacionalidade'];
@@ -138,11 +138,11 @@ $parcelado = false;
                 <?php
                 if ($dadosPedido != null) {
                     foreach ($dadosPedido as $campo => $dado) { ?>
-                    <tr>
-                        <th width="40%"><?=$campo?>:</th>
-                        <td><?=$dado?></td>
-                    </tr>
-                <?php }
+                        <tr>
+                            <th width="40%"><?= $campo ?>:</th>
+                            <td><?= $dado ?></td>
+                        </tr>
+                    <?php }
                 } ?>
             </table>
         </div>
@@ -150,7 +150,7 @@ $parcelado = false;
     <!-- /.box-body -->
 </div>
 
-<h2 class="page-header">Proponente <small><?=$tipo?></small></h2>
+<h2 class="page-header">Proponente <small><?= $tipo ?></small></h2>
 
 <div class="row">
     <div class="col-md-6">
@@ -182,7 +182,8 @@ $parcelado = false;
                 <div class="panel box box-primary">
                     <div class="box-header with-border">
                         <h4 class="box-title">
-                            <a data-toggle="collapse" data-parent="#accordionRepresentante" href="#collapseRepresentante1">
+                            <a data-toggle="collapse" data-parent="#accordionRepresentante"
+                               href="#collapseRepresentante1">
                                 Representante Legal #1
                             </a>
                         </h4>
@@ -205,7 +206,8 @@ $parcelado = false;
                 <div class="panel box box-primary">
                     <div class="box-header with-border">
                         <h4 class="box-title">
-                            <a data-toggle="collapse" data-parent="#accordionRepresentante" href="#collapseRepresentante2">
+                            <a data-toggle="collapse" data-parent="#accordionRepresentante"
+                               href="#collapseRepresentante2">
                                 Representante Legal #2
                             </a>
                         </h4>
@@ -246,22 +248,28 @@ $parcelado = false;
                 </div>
             </div>
         </div>
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">Dados Bancários</h3>
-            </div>
-            <div class="box-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <?php foreach ($dadosBancarios as $campo => $dado) { ?>
-                            <tr>
-                                <th width="40%"><?= $campo ?>:</th>
-                                <td><?= $dado ?></td>
-                            </tr>
-                        <?php } ?>
-                    </table>
+        <?php
+        if ($pedido['valor_total'] != 0) {
+            ?>
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Dados Bancários</h3>
+                </div>
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <?php foreach ($dadosBancarios as $campo => $dado) { ?>
+                                <tr>
+                                    <th width="40%"><?= $campo ?>:</th>
+                                    <td><?= $dado ?></td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
+            <?php
+        }
+        ?>
     </div>
 </div>

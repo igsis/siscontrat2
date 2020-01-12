@@ -39,9 +39,17 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['atualiz
     $bairro = trim(addslashes($_POST['bairro']));
     $cidade = trim(addslashes($_POST['cidade']));
     $uf = trim($_POST['estado']);
-    $banco = trim($_POST['banco']) ?? NULL;
-    $agencia = trim($_POST['agencia']) ?? NULL;
-    $conta = trim($_POST['conta']) ?? NULL;
+
+    if(isset($_POST['bancario'])){
+        $banco = trim($_POST['banco']);
+        $agencia = trim($_POST['agencia']);
+        $conta = trim($_POST['conta']);
+    }else{
+        $banco = NULL;
+        $agencia = NULL;
+        $conta = NULL;
+    }
+
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $ultima_atualizacao = date('Y-m-d H:i:s');
 }
@@ -163,9 +171,11 @@ if (isset($_POST['edita'])) {
                     $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlBanco;
                 }
             } else {
-                $sqlBanco = "INSERT INTO pj_bancos (pessoa_juridica_id, banco_id, agencia, conta) VALUES ('$idPj', '$banco', '$agencia', '$conta')";
-                if (!mysqli_query($con, $sqlBanco)) {
-                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlBanco;
+                if($banco != NULL){
+                    $sqlBanco = "INSERT INTO pj_bancos (pessoa_juridica_id, banco_id, agencia, conta) VALUES ('$idPj', '$banco', '$agencia', '$conta')";
+                    if (!mysqli_query($con, $sqlBanco)) {
+                        $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlBanco;
+                    }
                 }
             }
 
