@@ -117,6 +117,7 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                             <?php
                             if($atracao['valor_individual'] > 0 || $evento['tipo_evento_id'] == 2){
                             ?>
+                                <input type="hidden" name="bancario">
                                 <hr/>
                                 <div class="row">
                                     <div class="form-group col-md-4">
