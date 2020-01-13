@@ -104,6 +104,6 @@ if (isset($_POST['carregar'])) {
                 </form>
             </div>
         </div>
+   </section>
 </div>
-</section>
-</div>
+
