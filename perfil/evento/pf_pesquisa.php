@@ -44,7 +44,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
         $actionCadastra = "?perfil=evento&p=pf_cadastro";
     }else{
         $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
-        $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
+        $botaoAdd = "<button class='btn btn-primary' name='adicionar' id='adicionar' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";

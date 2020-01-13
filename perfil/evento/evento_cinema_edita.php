@@ -152,7 +152,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="genero">Gênero:</label>
-                                    <input type="text" class="form-control" id="genero" name="genero" placeholder="Digite o Gênero" maxlength="20" value="<?= $row['genero'] ?>"/>
+                                    <input type="text" class="form-control" id="genero" name="genero" placeholder="Digite o Gênero" maxlength="20" value="<?= $row['genero'] ?>" pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,20}" title="Apenas letras"> 
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="bitola">Bitola:</label>

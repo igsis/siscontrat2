@@ -54,7 +54,7 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="genero">Gênero:</label>
-                                <input type="text" class="form-control" id="genero" name="genero" placeholder="Digite o Gênero" maxlength="20">
+                                <input type="text" class="form-control" id="genero" name="genero" placeholder="Digite o Gênero" maxlength="20" pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,20}" title="Apenas letras">
                             </div>
 
                             <div class="form-group col-md-2">

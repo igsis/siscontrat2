@@ -32,7 +32,7 @@ if (isset($_POST['procurar'])){
             $actionCadastra = "?perfil=evento&p=pj_cadastro";
     }else{
             $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
-            $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
+            $botaoAdd = "<button class='btn btn-primary' name='adicionar' id='adicionar' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
