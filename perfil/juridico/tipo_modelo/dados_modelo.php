@@ -13,16 +13,19 @@ $idEvento = $_SESSION['eventoId'];
 $dotacao = $_POST['dotacao'];
 $finalizacao = $_POST['finalizar'];
 
-if ($idEvento == $idEvento) {
-    if (isset($_POST['finalizar'])) {
-        $sqlUptate = "UPDATE juridicos SET pedido_id = $idEvento, amparo_legal = '$amparo', finalizacao = '$finalizacao', dotacao ='$dotacao'
+
+$sql = "SELECT * FROM juridicos where pedido_id = '$idEvento'";
+$query = mysqli_query($con, $sql);
+$num = mysqli_num_rows($query);
+
+if ($num > 0) {
+    $sqlUptate = "UPDATE juridicos SET pedido_id = $idEvento, amparo_legal = '$amparo', finalizacao = '$finalizacao', dotacao ='$dotacao'
     WHERE pedido_id = $idEvento";
-        $queryInsert = mysqli_query($con, $sqlUptate);
-    }
+    $sqlUptate = mysqli_query($con, $sqlUptate);
 } else {
     $sqlInsert = "INSERT INTO juridicos(pedido_id, amparo_legal, finalizacao, dotacao)
         VALUES ('$idEvento','$amparo','$finalizacao','$dotacao')";
-    $queryUpdate = mysqli_query($con, $sqlInsert);
+    $sqlInsert = mysqli_query($con, $sqlInsert);
 }
 ?>
 

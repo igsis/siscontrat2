@@ -171,7 +171,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         $("#diasemana06").prop("disabled", valor);
         $("#diasemana07").prop("disabled", valor);
 
-        desmarca();
+        if (valor) {
+            desmarca();
+        }
     }
 
     // $(document).ready(function () {
@@ -302,44 +304,37 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-6">
                                     <label>
                                         <input type="checkbox" name="domingo" id="diasemana07"
-                                               value="1" <?php checarOcorrencia($ocorrencia['domingo']) ?>
-                                               class="semana"> Domingo
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['domingo']) ?>> Domingo
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="segunda" id="diasemana01"
-                                               value="1" <?php checarOcorrencia($ocorrencia['segunda']) ?>
-                                               class="semana"> Segunda
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['segunda']) ?>> Segunda
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="terca" id="diasemana02"
-                                               value="1" <?php checarOcorrencia($ocorrencia['terca']) ?>
-                                               class="semana"> Terça
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['terca']) ?>> Terça
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="quarta" id="diasemana03"
-                                               value="1" <?php checarOcorrencia($ocorrencia['quarta']) ?>
-                                               class="semana"> Quarta
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['quarta']) ?>> Quarta
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="quinta" id="diasemana04"
-                                               value="1" <?php checarOcorrencia($ocorrencia['quinta']) ?>
-                                               class="semana"> Quinta
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['quinta']) ?>> Quinta
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="sexta" id="diasemana05"
-                                               value="1" <?php checarOcorrencia($ocorrencia['sexta']) ?>
-                                               class="semana"> Sexta
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['sexta']) ?>> Sexta
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="sabado" id="diasemana06"
-                                               value="1" <?php checarOcorrencia($ocorrencia['sabado']) ?>
-                                               class="semana"> Sábado
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['sabado']) ?>> Sábado
                                         &nbsp;
                                     </label>
                                 </div>
@@ -347,25 +342,23 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-2">
                                     <label for="virada">É virada?</label> &nbsp;
                                     <input type="radio" name="virada" id="viradaSim"
-                                           value="1" <?= $ocorrencia['virada'] == 1 ? "checked" : NULL ?>class="virada">
+                                           value="1" class="virada" <?= $ocorrencia['virada'] == 1 ? "checked" : "" ?>>
                                     Sim &nbsp;
                                     <input type="radio" name="virada" id="viradaNaoviradaNao"
-                                           value="0" <?= $ocorrencia['virada'] == 0 ? "checked" : NULL ?>class="virada">
+                                           value="0" class="virada" <?= $ocorrencia['virada'] == 0 ? "checked" : "" ?>>
                                     Não
                                 </div>
 
-                                <div class="form-group col-md-2">
+                                <label>
                                     <input type="checkbox" name="libras" id="libras"
-                                           value="1" <?= $ocorrencia['libras'] == 1 ? "checked" : NULL ?>> &nbsp;
-                                    <label for="libras">Libras</label>
-                                </div>
-
-                                <div class="form-group col-md-2">
-                                    <input type="checkbox" name="audiodescricao" id="audiodescricao"
-                                           value="1" <?= $ocorrencia['audiodescricao'] == 1 ? "checked" : NULL ?>>
+                                           value="1" <?= $ocorrencia['libras'] == 1 ? "checked" : NULL ?>> Libras
                                     &nbsp;
-                                    <label for="libras">Audiodescrição</label>
-                                </div>
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="audiodescricao" id="audiodescricao"
+                                           value="1" <?= $ocorrencia['audiodescricao'] == 1 ? "checked" : NULL ?>> Audiodescrição
+                                    &nbsp;
+                                </label>
                             </div>
 
                             <div class="row" id="msgEsconde" style="display: none;">
@@ -766,68 +759,44 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     })
 
     var virada = $('.virada');
-    virada.on("change", verificaVirada);
+    virada.on("click", verificaVirada);
 
     function verificaVirada() {
+        let opc = parseInt($('input[name="virada"]:checked').val())
+        if (opc) {
 
-        if ($('#viradaNao').is(':checked')) {
             $('#horaInicio')
-                .attr('readonly', false)
-                .val('');
-
-            $('#horaFim')
-                .attr('readonly', false)
-                .val('');
-
-            $('#instituicao')
-                .attr('readonly', false)
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#local')
-                .attr('readonly', false)
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#espaco')
-                .attr('readonly', false)
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#retiradaIngresso')
-                .attr('readonly', false)
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#valor_ingresso')
-                .attr('readonly', false)
-                .val('');
-        } else {
-            $('#horaInicio')
-                .attr('readonly', true)
                 .val('00:00');
 
             $('#horaFim')
-                .attr('readonly', true)
                 .val('00:00');
 
             $('#instituicao')
-                .attr('readonly', true)
                 .val($('option:contains("Virada Cultural")').val());
 
             $('#retiradaIngresso')
-                .attr('readonly', true)
                 .val($('option:contains("INGRESSOS GRÁTIS")').val());
 
-            $('#espaco')
-                .attr('readonly', true);
-
             $('#valor_ingresso')
-                .attr('readonly', true)
                 .val('0,00');
 
-            getLocais(10, 627);
+            getLocais(10, 189);
             getEspacos();
 
             $('#local')
-                .attr('readonly', true)
-                .val(627);
+                .val(189);
+        } else {
+            $('#instituicao')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#espaco')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#retiradaIngresso')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#valor_ingresso')
+                .val('0,00');
         }
     }
 
@@ -964,7 +933,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
 <script>
     let msgHora = $('#msgEscondeHora');
-    msgHora.hide();
+    // msgHora.hide();
 
     function validaHora() {
         let horaInicio = $('#horaInicio').val();

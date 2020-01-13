@@ -39,9 +39,17 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['atualiz
     $bairro = trim(addslashes($_POST['bairro']));
     $cidade = trim(addslashes($_POST['cidade']));
     $uf = trim($_POST['estado']);
-    $banco = trim($_POST['banco']) ?? NULL;
-    $agencia = trim($_POST['agencia']) ?? NULL;
-    $conta = trim($_POST['conta']) ?? NULL;
+
+    if(isset($_POST['bancario'])){
+        $banco = trim($_POST['banco']);
+        $agencia = trim($_POST['agencia']);
+        $conta = trim($_POST['conta']);
+    }else{
+        $banco = NULL;
+        $agencia = NULL;
+        $conta = NULL;
+    }
+
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $ultima_atualizacao = date('Y-m-d H:i:s');
 }
@@ -89,13 +97,23 @@ if (isset($_POST['cadastra']) || isset($_POST['atualizaPj'])) {
             $queryTestaTroca = mysqli_query($con, $sqlTestaTroca);
             $row = mysqli_num_rows($queryTestaTroca);
             if ($row != 0) {
+                $null = "NULL";
+                $sqlTrocaProponente = "UPDATE pedidos SET
+                    pessoa_tipo_id = '2',
+                    pessoa_juridica_id = '$idPj',
+                    pessoa_fisica_id = $null
+                    WHERE id = '$idPedido'";
+                if ($con->query($sqlTrocaProponente)) {
+                    $mensagem = mensagem("success", "Cadastrado com sucesso! Proponente inserido no Pedido");
+                }
                 $trocaPj = "<div class='form-group col-md-3 pull-right'>
-                            <form method='POST' action='?perfil=evento&p=pedido_edita' role='form'>
-                                <input type='hidden' name='idPedido' value='$idPedido'>
-                                <input type='hidden' name='idPj' value='$idPj'>
-                                <button type='submit' name='trocaPj' class='btn btn-info btn-block'> Ir ao pedido de contratação </button>
-                            </form>
-                        </div>";
+                                <form method='POST' action='?perfil=evento&p=pedido_edita&label=proponente' role='form'>
+                                    <input type='hidden' name='idPedido' value='$idPedido'>
+                                    <input type='hidden' name='idProponente' value='$idPj'>
+                                    <input type='hidden' name='tipoPessoa' value='2'>
+                                    <button type='submit' name='carregar' class='btn btn-primary btn-block'> Ir ao pedido de contratação </button>
+                                </form>
+                            </div>";;
             }
         }
 
@@ -155,9 +173,11 @@ if (isset($_POST['edita'])) {
                     $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlBanco;
                 }
             } else {
-                $sqlBanco = "INSERT INTO pj_bancos (pessoa_juridica_id, banco_id, agencia, conta) VALUES ('$idPj', '$banco', '$agencia', '$conta')";
-                if (!mysqli_query($con, $sqlBanco)) {
-                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlBanco;
+                if($banco != NULL){
+                    $sqlBanco = "INSERT INTO pj_bancos (pessoa_juridica_id, banco_id, agencia, conta) VALUES ('$idPj', '$banco', '$agencia', '$conta')";
+                    if (!mysqli_query($con, $sqlBanco)) {
+                        $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlBanco;
+                    }
                 }
             }
 
@@ -463,6 +483,7 @@ if (isset($_POST['cadastra'])) {
                             if($atracao['valor_individual'] > 0 || $evento['tipo_evento_id'] == 2) {
                                 $banco = recuperaDados("pj_bancos", "pessoa_juridica_id", $idPj);
                                 ?>
+                                <input type="hidden" name="bancario">
                                 <hr/>
                                 <div class="row">
                                     <div class="form-group col-md-4">
@@ -628,7 +649,7 @@ if (isset($_POST['cadastra'])) {
 
                         <div class="form-group col-md-3">
                             <?php
-                            $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1";
+                            $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
                             $queryPedidos = mysqli_query($con, $sqlPedidos);
                             $pedidos = mysqli_fetch_array($queryPedidos);
 
