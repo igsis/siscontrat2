@@ -224,7 +224,41 @@ $tipoEvento = $evento['tipo_evento_id'];
                                            placeholder="hh:mm"/>
                                 </div>
 
-                                <div class="form-group col-md-3">
+                                
+
+
+                            <?php
+                                if($tipoEvento == 2){
+                                    $filmeEvento = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $idEvento)->fetch_array();
+                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $filmeEvento['filme_id'])->fetch_array();
+                                    ?>
+                                    <script type="text/javascript">
+                                                                    
+                                   /* function somaHora(){ 
+                                        	var horaIni = $('#horaInicio').split(':'); 
+                                        	var min = <?=$filme['duracao']?>.split(':'); 
+                                            var	horasTotal = parseInt(horaIni[0], 10) + parseInt(min[0], 10); 
+                                            var minutosTotal = parseInt(horaIni[1], 10) + parseInt(horaSom[1], 10); 
+                                            	if(minutosTotal >= 60){ 
+                                            		minutosTotal -= 60; horasTotal += 1; 
+                                            	} 
+                                                alert(horasTotal + ":" + minutosTotal);
+                                    }*/
+
+
+                                    $('#horaInicio').on('change', function() {
+                                        var horainicio = Date.parse($('#horaInicio'), "hh:mm");
+                                        var min = Date.parse(<?=$filme['duracao']?>, "mm");
+                                        var horafim = Date.parse(horainicio, "hh:mm") + Date.parse(min, "mm");
+                                        //var resultado = horafim.toString("hh:mm");
+                                        alert(horafim);
+                                    });
+                                    </script>
+                                <?php }
+                            ?>
+
+
+                                 <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
                                     <input type="time" name="horaFim" class="form-control" id="horaFim" required
                                            placeholder="hh:mm"/>
