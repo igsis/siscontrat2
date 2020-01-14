@@ -13,6 +13,7 @@ $numPedidos = mysqli_num_rows($pedidos);
 
 $errosArqs = [];
 $erros = [];
+$valorTotalAtracoes = 0;
 
 $musica = false;
 $oficina = false;
@@ -28,6 +29,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
     // VERIFICA SE TEM ATRACOES CADASTRADAS
     if ($numAtracoes > 0) {
         while ($atracao = mysqli_fetch_array($atracoes)) {
+            $valorTotalAtracoes += $atracao['valor_individual'];
             if (($atracao['produtor_id'] == "") || ($atracao['produtor_id'] == NULL))
                 array_push($erros, "Produtor não cadastrado na atração <b> " . $atracao['nome_atracao'] . "</b>");
 
@@ -135,6 +137,29 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
 
                 if ($pedido['forma_pagamento'] == null)
                     array_push($erros, "Não há forma de pagamento cadastrada no pedido");
+
+                // VERIFICA O VALOR POR EQUIPAMENTO
+                $sql = "SELECT id FROM ocorrencias
+                        WHERE tipo_ocorrencia_id = '1'
+                        AND origem_ocorrencia_id = '{$evento['id']}'
+                        AND publicado = '1'";
+                $numOcorrencias = $con->query($sql)->num_rows;
+                if ($valorTotalAtracoes > 0 && $numOcorrencias > 1) {
+                    $totalCadastrado = 0;
+                    $sqlValorPorEquipamentos = "SELECT valor FROM valor_equipamentos WHERE pedido_id = '{$pedido['id']}'";
+                    $queryValorPorEquipamento = $con->query($sqlValorPorEquipamentos);
+                    if ($queryValorPorEquipamento->num_rows == 0) {
+                        array_push($erros, "Não há valores por equipamento cadastrados no pedido");
+                    } else {
+                        $valoresPorEquipamento = $queryValorPorEquipamento->fetch_all(MYSQLI_ASSOC);
+                        foreach ($valoresPorEquipamento as $valores) {
+                            $totalCadastrado += $valores['valor'];
+                        }
+                        if ($totalCadastrado != $valorTotalAtracoes) {
+                            array_push($erros, "Valor por Equipamento diferente do valor total cadastrado");
+                        }
+                    }
+                }
 
                 // VERIFICA SE OS ARQUIVOS DE PEDIDO FORAM ENVIADOS
                 if ($musica) {
