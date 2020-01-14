@@ -141,6 +141,16 @@ if ($edital) { $whereAdicional[] = "edital = '1'"; }
                                         </td>
                                     </tr>
                                     <?php
+                                } else {
+                                ?>
+                                    <div class="row">
+                                        <div class="col-md-offset-2 col-md-8">
+                                            <div class="callout callout-success text-center">
+                                                <span class="">O arquivo <b><?= $arq['documento'] ?></b> já foi enviado.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php
                                 }
                             }
                             ?>

@@ -219,8 +219,9 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
 
                                     <hr/>
                                     <div class="row">
+
                                         <div class="form-group col-md-4">
-                                            <label for="banco">Banco:</label>
+                                            <label for="banco">Banco: *</label>
                                             <select required id="banco" name="banco" class="form-control">
                                                 <option value="">Selecione um banco...</option>
                                                 <?php
