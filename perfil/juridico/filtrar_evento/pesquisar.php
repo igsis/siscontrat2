@@ -11,11 +11,11 @@ $statusPedido = '';
 
 if (isset($_POST['protocolo']) && $_POST['protocolo'] != null) {
     $protocolo = $_POST ['protocolo'];
-    $protocolo = " AND e.protocolo = '$protocolo'";
+    $protocolo = " AND e.protocolo LIKE '%$protocolo%'";
 }
 if (isset($_POST['numprocesso']) && $_POST['numprocesso'] != null) {
     $numprocesso = $_POST ['numprocesso'];
-    $numprocesso = " AND p.numero_processo = '$numprocesso'";
+    $numprocesso = " AND p.numero_processo LIKE '%$numprocesso%'";
 }
 if (isset($_POST['objetoevento']) && $_POST['objetoevento'] != null) {
     $objetoevento = $_POST ['objetoevento'];
@@ -54,9 +54,10 @@ $sql = "SELECT p.numero_processo,
             INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
             INNER JOIN tipo_eventos te on e.tipo_evento_id = te.id
             
-            where p.origem_tipo_id = 1 and p.publicado = 1 and e.publicado = 1 $protocolo $numprocesso $objetoevento
-                $tipoEvento $instituicao $statusPedido";
-echo $sql;
+            where p.origem_tipo_id = 1 
+            and p.publicado = 1 
+            and e.publicado = 1 $protocolo $numprocesso $objetoevento
+            $tipoEvento $instituicao $statusPedido";
 ?>
 <div class="content-wrapper">
     <section class="content">

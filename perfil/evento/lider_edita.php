@@ -107,8 +107,10 @@ if (isset($_POST['cadastrar'])) {
         $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
         if ($resultado) {
             $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
+            $mensagem .= mensagem("success", "Troca de lider realizada!");
         } else {
             $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido','$idAtracao','$idLider')";
+            $mensagem .= mensagem("success", "Lider inserido!");
         }
 
         if (mysqli_query($con, $sqLider)) {

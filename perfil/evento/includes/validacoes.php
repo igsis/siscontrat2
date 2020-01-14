@@ -94,7 +94,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                         $dataInicio = new DateTime($ocorrencia['data_inicio']);
                         $diff = $hoje->diff($dataInicio);
 
-                        if ($diff->days < 30) {
+                        if ($diff->days < 30 || $hoje > $dataInicio) {
                             $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
                                 O prazo para contratos é de 30 dias.<br>";
                             $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
@@ -137,13 +137,21 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                     array_push($erros, "Não há forma de pagamento cadastrada no pedido");
 
                 // VERIFICA SE OS ARQUIVOS DE PEDIDO FORAM ENVIADOS
-                if ($musica) { $whereAdicional[] = "musica = '1'"; }
-                if ($oficina) { $whereAdicional[] = "oficina = '1'"; }
-                if ($teatro) { $whereAdicional[] = "teatro = '1'"; }
-                if ($edital) { $whereAdicional[] = "edital = '1'"; }
+                if ($musica) {
+                    $whereAdicional[] = "musica = '1'";
+                }
+                if ($oficina) {
+                    $whereAdicional[] = "oficina = '1'";
+                }
+                if ($teatro) {
+                    $whereAdicional[] = "teatro = '1'";
+                }
+                if ($edital) {
+                    $whereAdicional[] = "edital = '1'";
+                }
 
                 if ($musica || $oficina || $teatro) {
-                    $sqlAdicional = "AND (".implode("OR ", $whereAdicional).")";
+                    $sqlAdicional = "AND (" . implode("OR ", $whereAdicional) . ")";
                 } else
                     $sqlAdicional = "";
 
@@ -192,7 +200,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                         $dataInicio = new DateTime($ocorrencia['data_inicio']);
                         $diff = $hoje->diff($dataInicio);
 
-                        if ($diff->days < 30) {
+                        if ($diff->days < 30 || $hoje>$dataInicio) {
                             $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
                                 O prazo para contratos é de 30 dias.<br>";
                             $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";

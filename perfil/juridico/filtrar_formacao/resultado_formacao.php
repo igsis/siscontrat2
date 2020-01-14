@@ -3,14 +3,16 @@ $con = bancoMysqli();
 $codigopedido = "";
 $numprocesso = "";
 $statuspedido = "";
+$protocolo = "";
+
 
 if (isset($_POST['codigopedido']) && $_POST['codigopedido'] != null) {
     $codigopedido = $_POST['codigopedido'];
-    $codigopedido = " AND protocolo='$codigopedido'";
+    $codigopedido = " AND protocolo LIKE '%$codigopedido%'";
 }
 if (isset($_POST['numprocesso']) && $_POST['numprocesso'] != null) {
     $numprocesso = $_POST['numprocesso'];
-    $numprocesso = "AND numero_processo='$numprocesso'";
+    $numprocesso = "AND numero_processo LIKE '%$numprocesso%'";
 }
 if (isset($_POST['statuspedido']) && $_POST['statuspedido'] != null) {
     $statuspedido = $_POST['statuspedido'];
@@ -30,10 +32,6 @@ $sql = "SELECT p.numero_processo,
         INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
         INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
         WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 $numprocesso $codigopedido $statuspedido";
-
-
-
-
 
 ?>
 <div class="content-wrapper">
