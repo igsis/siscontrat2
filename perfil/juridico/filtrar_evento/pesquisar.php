@@ -58,6 +58,7 @@ $sql = "SELECT p.numero_processo,
             and p.publicado = 1 
             and e.publicado = 1 $protocolo $numprocesso $objetoevento
             $tipoEvento $instituicao $statusPedido";
+
 ?>
 <div class="content-wrapper">
     <section class="content">
