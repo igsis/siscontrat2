@@ -387,7 +387,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                             var hora = parseInt(horainicio.split(':', 1));
                                             var minuto = parseInt(horainicio[3] + horainicio[4]);
                                             var duracao = <?=$filme['duracao']?>;
-                                            if(duracao >= 60){
+                                            while(duracao >= 60){
                                                 duracao -= 60;
                                                 hora += 1;
                                             }

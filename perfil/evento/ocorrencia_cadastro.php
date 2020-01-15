@@ -240,11 +240,14 @@ $tipoEvento = $evento['tipo_evento_id'];
                                             var hora = parseInt(horainicio.split(':', 1));
                                             var minuto = parseInt(horainicio[3] + horainicio[4]);
                                             var duracao = <?=$filme['duracao']?>;
-                                            if(duracao >= 60){
+
+                                            while(duracao >= 60){
                                                 duracao -= 60;
                                                 hora += 1;
                                             }
+
                                             var minutoFinal = minuto + duracao;
+
                                             if(minutoFinal >= 60){
                                                minutoFinal -= 60;
                                                hora += 1;
