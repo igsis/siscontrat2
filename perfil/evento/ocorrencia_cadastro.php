@@ -249,13 +249,13 @@ $tipoEvento = $evento['tipo_evento_id'];
                                                minutoFinal -= 60;
                                                hora += 1;
                                             }
-                                            if(minutoFinal == 0){
+                                            if(minutoFinal == 0 && minutoFinal != 00){
                                                 minutoFinal = minutoFinal + "0";
                                             }
                                             if(minutoFinal < 10){
                                                 minutoFinal = "0" + minutoFinal;
                                             }
-                                            if(hora == 0){
+                                            if(hora == 0 && minutoFinal != 00){
                                                 hora = hora + "0";
                                             }
                                             if(hora < 10){
