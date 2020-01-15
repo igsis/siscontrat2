@@ -152,7 +152,7 @@ if (isset($_POST['apagar'])) {
                                                             05MB.</h4>
                                                     </tr>
                                                     <?php
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and sigla = 'rg' and publicado = 1";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and sigla IN ('rg','cpf', 'drt', 'currlider') and publicado = 1";
                                                     $query_arquivos = mysqli_query($con, $sql_arquivos);
                                                     while ($arq = mysqli_fetch_array($query_arquivos)) {
                                                         $idDoc = $arq['id'];
