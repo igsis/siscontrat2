@@ -234,24 +234,28 @@ $tipoEvento = $evento['tipo_evento_id'];
                                     ?>
                                     <script type="text/javascript">
                                                                     
-                                   /* function somaHora(){ 
-                                        	var horaIni = $('#horaInicio').split(':'); 
-                                        	var min = <?=$filme['duracao']?>.split(':'); 
-                                            var	horasTotal = parseInt(horaIni[0], 10) + parseInt(min[0], 10); 
-                                            var minutosTotal = parseInt(horaIni[1], 10) + parseInt(horaSom[1], 10); 
-                                            	if(minutosTotal >= 60){ 
-                                            		minutosTotal -= 60; horasTotal += 1; 
-                                            	} 
-                                                alert(horasTotal + ":" + minutosTotal);
-                                    }*/
+                                        $('#horaInicio').on('change', function() {
+                                            var horainicio = $('#horaInicio').val();                                       
+                                            var hora = parseInt(horainicio.split(':', 1));
+                                            var minuto = parseInt(horainicio[3] + horainicio[4]);
+                                            var minutoFinal = minuto + <?=$filme['duracao']?>;
+                                            if(minutoFinal >= 60){
+                                                minutoFinal -= 60;
+                                                hora += 1;
+                                            }
+                                            if(minutoFinal == 0){
+                                                minutoFinal = minutoFinal + "0";
+                                            }
 
-
-                                    $('#horaInicio').on('change', function() {
-                                        var horainicio = Date.parse($('#horaInicio'), "hh:mm");
-                                        var min = Date.parse(<?=$filme['duracao']?>, "mm");
-                                        var horafim = Date.parse(horainicio, "hh:mm") + Date.parse(min, "mm");
-                                        //var resultado = horafim.toString("hh:mm");
-                                        alert(horafim);
+                                            var resultado = hora + ":" + minutoFinal + ":00";
+                    
+                                            
+                                            $('#horaFim').attr("readonly",true);
+                                            $('#horaFim').val(resultado);
+                                            $('#horaFim').attr("value", resultado);
+                                            
+                    
+                                            
                                     });
                                     </script>
                                 <?php }
@@ -260,7 +264,7 @@ $tipoEvento = $evento['tipo_evento_id'];
 
                                  <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
-                                    <input type="time" name="horaFim" class="form-control" id="horaFim" required
+                                    <input type="time" name="horaFim" class="form-control" id="horaFim" required value=""
                                            placeholder="hh:mm"/>
                                 </div>
 
