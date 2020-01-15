@@ -381,26 +381,31 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                     ?>
                                     <script type="text/javascript">
                                                                     
-                                        $('#horaInicio').on('change', function() {
-                                            var horainicio = $('#horaInicio').val();                                       
+                                     $('#horaInicio').on('change', function() {
+                                            var horainicio = $('#horaInicio').val();                                      
                                             var hora = parseInt(horainicio.split(':', 1));
                                             var minuto = parseInt(horainicio[3] + horainicio[4]);
-                                            var minutoFinal = minuto + <?=$filme['duracao']?>;
-                                            if(minutoFinal >= 60){
-                                                minutoFinal -= 60;
+                                            var duracao = <?=$filme['duracao']?>;
+                                            if(duracao >= 60){
+                                                duracao -= 60;
                                                 hora += 1;
+                                            }
+                                            var minutoFinal = minuto + duracao;
+                                            if(minutoFinal >= 60){
+                                               minutoFinal -= 60;
+                                               hora += 1;
                                             }
                                             if(minutoFinal == 0){
                                                 minutoFinal = minutoFinal + "0";
                                             }
-                                            
-                                            var resultado = hora + ":" + minutoFinal;
+
+                                            var resultado = hora + ":" + minutoFinal + ":00";
                     
                                             
                                             $('#horaFim').attr("readonly",true);
                                             $('#horaFim').val(resultado);
                                             $('#horaFim').attr("value", resultado);
-                                            
+                                                               
                     
                                             
                                     });

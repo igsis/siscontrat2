@@ -235,13 +235,18 @@ $tipoEvento = $evento['tipo_evento_id'];
                                     <script type="text/javascript">
                                                                     
                                         $('#horaInicio').on('change', function() {
-                                            var horainicio = $('#horaInicio').val();                                       
+                                            var horainicio = $('#horaInicio').val();                                      
                                             var hora = parseInt(horainicio.split(':', 1));
                                             var minuto = parseInt(horainicio[3] + horainicio[4]);
-                                            var minutoFinal = minuto + <?=$filme['duracao']?>;
-                                            if(minutoFinal >= 60){
-                                                minutoFinal -= 60;
+                                            var duracao = <?=$filme['duracao']?>;
+                                            if(duracao >= 60){
+                                                duracao -= 60;
                                                 hora += 1;
+                                            }
+                                            var minutoFinal = minuto + duracao;
+                                            if(minutoFinal >= 60){
+                                               minutoFinal -= 60;
+                                               hora += 1;
                                             }
                                             if(minutoFinal == 0){
                                                 minutoFinal = minutoFinal + "0";
@@ -253,8 +258,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                             $('#horaFim').attr("readonly",true);
                                             $('#horaFim').val(resultado);
                                             $('#horaFim').attr("value", resultado);
-                                            
-                    
+                                                               
                                             
                                     });
                                     </script>
