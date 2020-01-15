@@ -235,6 +235,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                     <script type="text/javascript">
                                                                     
                                         $('#horaInicio').on('change', function() {
+                                            $('#horaFim').attr("readonly",true);
                                             var horainicio = $('#horaInicio').val();                                      
                                             var hora = parseInt(horainicio.split(':', 1));
                                             var minuto = parseInt(horainicio[3] + horainicio[4]);
@@ -251,11 +252,19 @@ $tipoEvento = $evento['tipo_evento_id'];
                                             if(minutoFinal == 0){
                                                 minutoFinal = minutoFinal + "0";
                                             }
+                                            if(minutoFinal < 10){
+                                                minutoFinal = "0" + minutoFinal;
+                                            }
+                                            if(hora == 0){
+                                                hora = hora + "0";
+                                            }
+                                            if(hora < 10){
+                                                hora = "0" + hora;
+                                            }
 
                                             var resultado = hora + ":" + minutoFinal + ":00";
                     
                                             
-                                            $('#horaFim').attr("readonly",true);
                                             $('#horaFim').val(resultado);
                                             $('#horaFim').attr("value", resultado);
                                                                
