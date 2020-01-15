@@ -3,9 +3,13 @@
 $con = bancoMysqli();
 $idEvento = $_SESSION['eventoId'];
 
-if (isset($_POST['detalheEvento'])) {
-    $detalheEvento = $_POST['detalheEvento'];
-}
+
+// para inserir a informação em Dotação //
+$sql = "SELECT * FROM juridicos where pedido_id = '$idEvento'";
+$query = mysqli_query($con,$sql);
+$num = mysqli_num_rows($query);
+
+
 // dados //
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $tipo_evento = recuperaDados('tipo_eventos', 'id', $idEvento);
@@ -23,7 +27,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $idEvento);
 $produtor = recuperaDados('produtores', 'id', $idEvento);
 $usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
 $dataEvento = recuperaDados('evento_envios','id',$idEvento);
-$dotação = recuperaDados('juridicos', 'pedido_id', $idEvento);
+$dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_array();
 ?>
 
 
@@ -261,7 +265,7 @@ $dotação = recuperaDados('juridicos', 'pedido_id', $idEvento);
                     </tr>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
-                        <td><?=$dotação['dotacao']?></td>
+                        <td><?=$dotacao['dotacao']?></td>
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>

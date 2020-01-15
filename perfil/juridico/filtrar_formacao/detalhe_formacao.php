@@ -33,7 +33,7 @@ $sql = "SELECT p.numero_processo,
         INNER JOIN programas pro on fc.programa_id = pro.id
         INNER JOIN pagamentos pag on pag.pedido_id = p.id
         INNER JOIN formacao_status fs on fs.id = fc.form_status_id
-        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND p.id = $idFormacao";
+        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.id = $idFormacao";
 $query = $con->query($sql)->fetch_assoc();
 
 $usuarios = recuperaDados('usuarios', 'id', $idFormacao);
