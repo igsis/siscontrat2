@@ -60,7 +60,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastr
     $cidade = trim(addslashes($_POST['cidade']));
     $uf = trim($_POST['estado']);
     $email = trim($_POST['email']);
-    $telefones = trim($_POST['telefone']);
+    $telefones = $_POST['telefone'];
     $drt = isset($_POST['drt']) ? trim($_POST['drt']) : NULL;
     $nit = trim($_POST['nit']) ?? NULL;
     $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
