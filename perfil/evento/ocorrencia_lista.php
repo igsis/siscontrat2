@@ -71,7 +71,7 @@ if (isset($_POST['carregar'])) {
     $idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
 }
 
-$sql = "SELECT o.id, l.local,
+$sql = "SELECT o.id as idOco, l.local,
                o.atracao_id, o.instituicao_id,
                o.local_id, o.espaco_id,
                o.data_inicio, o.data_fim, 
@@ -187,18 +187,18 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
 
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_edita\" role=\"form\">
-                                    <input type='hidden' name='idOcorrencia' value='" . $ocorrencia['id'] . "'>
+                                    <input type='hidden' name='idOcorrencia' value='" . $ocorrencia['idOco'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
 
                                 echo "<td>
                                     <input type='hidden' name='idOcorrencia'>
-                                    <buttonn class='btn btn-block btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='" . $ocorrencia['id'] . "' data-tittle='Replicando ocorrência' data-message='Digite o número de vezes que deseja replicar a ocorrência: '><span class='glyphicon glyphicon-retweet'></span></buttonn>
+                                    <buttonn class='btn btn-block btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='" . $ocorrencia['idOco'] . "' data-tittle='Replicando ocorrência' data-message='Digite o número de vezes que deseja replicar a ocorrência: '><span class='glyphicon glyphicon-retweet'></span></buttonn>
                                 </td>";
 
                                 echo "<td>
-                                    <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-id='" . $ocorrencia['id'] . "' data-tittle='Apagar ocorrência' data-message='Deseja mesmo pagar está ocorrências' onClick='setarIdOcorrencia(" . $ocorrencia['id'] . ")'><span class='glyphicon glyphicon-trash'></span></button>
+                                    <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-id='" . $ocorrencia['idOco'] . "' data-tittle='Apagar ocorrência' data-message='Deseja mesmo pagar está ocorrências' onClick='setarIdOcorrencia(" . $ocorrencia['idOco'] . ")'><span class='glyphicon glyphicon-trash'></span></button>
                                   </td>";
                                 echo "</tr>";
                             }
@@ -392,6 +392,18 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
 
         if (cont > 0) {
             $("#duplicated-message").html(menssagem)
+            $.post("?pefil=evento&p=includes&sp=validacoes",
+                    {
+                        duplicado: true
+                    }
+
+            )
+            .done(() => {
+                console.log("FOI");
+            })
+            .fail(() => {
+                console.log("nao");
+            })
         }
     }
 

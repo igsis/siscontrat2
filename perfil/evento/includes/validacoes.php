@@ -5,6 +5,12 @@ $idEvento = $_SESSION['idEvento'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $tipoEvento = $evento['tipo_evento_id'];
 
+if(isset($_POST['duplicado'])){
+   $ocoDupl = true;
+}else{
+    $ocoDupl = false;
+}
+
 $sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
 $pedidos = mysqli_query($con, $sqlPedidos);
 $pedido = mysqli_fetch_array($pedidos);
@@ -358,6 +364,13 @@ if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
         array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
     }
 }
+
+    if($ocoDupl == true){
+        array_push($erros, "Há ocorrencias duplicadas");
+    }else if($ocoDupl == false){
+        
+    }
+
 
 function in_array_key($needle, $haystack)
 {
