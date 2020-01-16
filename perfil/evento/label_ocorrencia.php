@@ -12,7 +12,11 @@
             <?php
             if ($evento['tipo_evento_id'] == 1) {
                 foreach ($atracoes as $atracao) {
-                    $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE atracao_id = '" . $atracao['id'] . "' AND publicado = '1'";
+                    $sqlOcorrencia = "SELECT * FROM ocorrencias
+                                      WHERE atracao_id = '{$atracao['id']}'
+                                      AND tipo_ocorrencia_id = '1'
+                                      AND origem_ocorrencia_id = '{$evento['id']}'
+                                      AND publicado = '1'";
                     $ocorrencias = $con->query($sqlOcorrencia);
                     ?>
                     <div class="panel box box-primary">
