@@ -31,7 +31,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['atualiz
     $cnpj = $_POST['cnpj'];
     $ccm = trim($_POST['ccm']) ?? NULL;
     $email = trim($_POST['email']);
-    $telefones = $_POST['telefone'];
+    $telefones = trim($_POST['telefone']);
     $cep = $_POST['cep'];
     $logradouro = addslashes($_POST['rua']);
     $numero = $_POST['numero'];
