@@ -749,8 +749,8 @@ if (isset($_GET['label'])) {
 
         if ($('#numero_parcelas').val() != 13) {
             $('#forma_pagamento').attr('readonly', true);
-            $('#forma_pagamento').val('');
-            //$('#forma_pagamento').val('O pagamento se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
+            formPagamento.textContent = '';
+            // formPagamento.textContent = 'O pagamento se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.';
         } else {
             $('#forma_pagamento').attr('readonly', false);
         }
@@ -759,8 +759,7 @@ if (isset($_GET['label'])) {
             $('#editarParcelas').hide();
             $('#forma_pagamento').val('O pagamento se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
         }
-
-        if ($('#valor_total').val() > '0.00') {
+        if (valorPedido > '0.00') {
             if (optionSelect == "1" || optionSelect == 0) {
                 dataKit.required = true;
                 editarParcelas.style.display = "none";
@@ -771,18 +770,18 @@ if (isset($_GET['label'])) {
                 dataKit.style.display = "none";
             }
         } else {
+            //console.log(dataKit);
             $("#numero_parcelas").attr('title', 'Grave o valor do pedido para poder editar as parcelas!');
-            dataKit.style.display = 'none';
         }
     }
 
     var abrirModal = function () {
 
-        var source = document.getElementById("templateParcela").innerHTML;
-        var template = Handlebars.compile(source);
-        var html = '';
+        let source = document.querySelector("#templateParcela").innerHTML;
+        let template = Handlebars.compile(source);
+        let html = '';
 
-        var parcelasSalvas = "<?= isset($numRows) ? $numRows : ''; ?>";
+        let parcelasSalvas = "<?= isset($numRows) ? $numRows : ''; ?>";
 
         var footer = document.querySelector(".main-footer");
         footer.style.display = "none";
