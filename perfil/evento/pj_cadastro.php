@@ -121,8 +121,8 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                                 <hr/>
                                 <div class="row">
                                     <div class="form-group col-md-4">
-                                        <label for="banco">Banco: *</label>
-                                        <select id="banco" name="banco" class="form-control" required>
+                                        <label for="banco">Banco:</label>
+                                        <select id="banco" name="banco" class="form-control">
                                             <option value="">Selecione um banco...</option>
                                             <?php
                                             geraOpcao("bancos", "");
@@ -130,12 +130,12 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                                         </select>
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label for="agencia">Agência: *</label>
-                                        <input type="text" name="agencia" id="agencia" class="form-control" placeholder="Digite a Agência" maxlength="12" required>
+                                        <label for="agencia">Agência:</label>
+                                        <input type="text" name="agencia" id="agencia" class="form-control" placeholder="Digite a Agência" maxlength="12">
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label for="conta">Conta: *</label>
-                                        <input type="text" name="conta" id="conta" class="form-control" placeholder="Digite a Conta" maxlength="12" required>
+                                        <label for="conta">Conta:</label>
+                                        <input type="text" name="conta" id="conta" class="form-control" placeholder="Digite a Conta" maxlength="12">
                                     </div>
                                 </div>
                             <?php
