@@ -110,7 +110,7 @@ $query = mysqli_query($con, $sql);
                                     </td>
                                 <?php } else {
                                     if ($evento['status'] == "Aguardando")
-                                        $disabled = "disabled";
+                                    $disabled = '';
 
                                     echo "<td>" . $evento['status'] . "</td>";
                                 }

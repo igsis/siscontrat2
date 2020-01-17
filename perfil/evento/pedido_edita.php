@@ -349,28 +349,30 @@ if (isset($_GET['label'])) {
                                             <span class="round-tab">2</span>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="<?=$menuLider ?? "disabled"?>">
-                                        <a class="persistant-disabled" href="#stepper-step-3" data-toggle="tab"
-                                           aria-controls="stepper-step-3" role="tab" title="Lider">
-                                            <span class="round-tab">3</span>
-                                        </a>
-                                    </li>
+                                    <?php if ($tipoEvento != 2): ?>
+                                        <li role="presentation" class="<?= $menuLider ?? "disabled" ?>">
+                                            <a class="persistant-disabled" href="#stepper-step-3" data-toggle="tab"
+                                               aria-controls="stepper-step-3" role="tab" title="Lider">
+                                                <span class="round-tab">3</span>
+                                            </a>
+                                        </li>
+                                    <?php endif ?>
                                     <li role="presentation" class="<?=$menuParecer ?? "disabled"?>">
                                         <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
                                            aria-controls="stepper-step-4" role="tab" title="Parecer artístico">
-                                            <span class="round-tab">4</span>
+                                            <span class="round-tab"><?= ($tipoEvento == 2) ? "3" : "4" ?></span>
                                         </a>
                                     </li>
                                     <li role="presentation" class="<?=$menuAnexos ?? "disabled"?>">
                                         <a class="persistant-disabled" href="#stepper-step-5" data-toggle="tab"
                                            aria-controls="stepper-step-5" role="tab" title="Anexos do pedido">
-                                            <span class="round-tab">5</span>
+                                            <span class="round-tab"><?= ($tipoEvento == 2) ? "4" : "5" ?></span>
                                         </a>
                                     </li>
                                     <li role="presentation" class="disabled">
                                         <a class="persistant-disabled" href="#stepper-step-6" data-toggle="tab"
                                            aria-controls="stepper-step-6" role="tab" title="Valor por equipamento">
-                                            <span class="round-tab">6</span>
+                                            <span class="round-tab"><?= ($tipoEvento == 2) ? "5" : "6" ?></span>
                                         </a>
                                     </li>
                                     <?php
@@ -430,7 +432,11 @@ if (isset($_GET['label'])) {
                                 <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '4' : '3'?>">
                                     <?php
                                     if ($tipoPessoa == 2){
-                                        $par = 4;
+                                        if ($tipoEvento == 2) {
+                                            $par = 3;
+                                        } else {
+                                            $par = 4;
+                                        }
                                     } else{
                                         $par = 3;
                                     }
@@ -444,7 +450,7 @@ if (isset($_GET['label'])) {
                                 </div>
                                 <!-- Anexos do pedido -->
                                 <div class="tab-pane fade <?=$lblAnexos ?? ""?>" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '5' : '4'?>">
-                                    <h3><?= $tipoPessoa == 2 ? '5' : '4'?>. Anexos do pedido</h3>
+                                    <h3><?= $tipoPessoa == 2 && $tipoEvento == 1 ? '5' : '4'?>. Anexos do pedido</h3>
                                     <div class="container col-md-12">
                                         <?php include "includes/label_pedido_anexos.php" ?>
                                     </div>
@@ -743,8 +749,8 @@ if (isset($_GET['label'])) {
 
         if ($('#numero_parcelas').val() != 13) {
             $('#forma_pagamento').attr('readonly', true);
-            $('#forma_pagamento').val('');
-            //$('#forma_pagamento').val('O pagamento se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
+            formPagamento.textContent = '';
+            // formPagamento.textContent = 'O pagamento se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.';
         } else {
             $('#forma_pagamento').attr('readonly', false);
         }
@@ -753,8 +759,7 @@ if (isset($_GET['label'])) {
             $('#editarParcelas').hide();
             $('#forma_pagamento').val('O pagamento se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
         }
-
-        if ($('#valor_total').val() > '0.00') {
+        if (valorPedido > '0.00') {
             if (optionSelect == "1" || optionSelect == 0) {
                 dataKit.required = true;
                 editarParcelas.style.display = "none";
@@ -765,18 +770,18 @@ if (isset($_GET['label'])) {
                 dataKit.style.display = "none";
             }
         } else {
+            //console.log(dataKit);
             $("#numero_parcelas").attr('title', 'Grave o valor do pedido para poder editar as parcelas!');
-            dataKit.style.display = 'none';
         }
     }
 
     var abrirModal = function () {
 
-        var source = document.getElementById("templateParcela").innerHTML;
-        var template = Handlebars.compile(source);
-        var html = '';
+        let source = document.querySelector("#templateParcela").innerHTML;
+        let template = Handlebars.compile(source);
+        let html = '';
 
-        var parcelasSalvas = "<?= isset($numRows) ? $numRows : ''; ?>";
+        let parcelasSalvas = "<?= isset($numRows) ? $numRows : ''; ?>";
 
         var footer = document.querySelector(".main-footer");
         footer.style.display = "none";
@@ -1094,11 +1099,19 @@ if (isset($_GET['label'])) {
                         $(".botoes").html(newButtons);
                         $('#editarModal').on('click', editarModal);
 
+                        $('#forma_pagamento').val() == '';
+                        for (let conta = 1; conta <= parcelas; conta++) {
+                            let data = datas[conta].split('-');
+                            $('#forma_pagamento').append(conta + '° parcela R$ ' + valores[conta] + '. Entrega de documentos a partir de ' + data[2] + '/' + data[1] + '/' + data[0] + '.\n')
+                        }
+                        $('#forma_pagamento').append('\nO pagamento de cada parcela se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
+
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
                                 $('#modalParcelas').slideDown('slow');
                                 //window.location.href = "?perfil=evento&p=parcelas_cadastro";
                             });
+                        //acho que é aqui
                     })
                     .fail(function () {
                         swal("danger", "Erro ao gravar");
@@ -1193,8 +1206,7 @@ if (isset($_GET['label'])) {
 
             } else {
 
-                var parcelas = $("#numero_parcelas").val();
-
+                var parcelas = document.querySelector("#numero_parcelas").value;
                 var datas = new Array(1);
                 var valores = new Array(1);
 

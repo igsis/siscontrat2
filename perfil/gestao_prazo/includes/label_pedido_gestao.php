@@ -196,6 +196,7 @@ $parcelado = false;
                             } elseif (($campo == "CPF") && ($dado == "")) {
                                 continue;
                             } ?>
+                            
                             <tr>
                                 <th width="40%"><?= $campo ?>:</th>
                                 <td><?= $dado ?></td>
@@ -284,11 +285,13 @@ $parcelado = false;
                 </div>
             </div>
         </div>
-        <div class="box-header with-border">
-            <h3 class="box-title">
-               Dados Bancários</h3>
-        </div>
-        <div class="box-body">
+        <?php
+            if ($pedido['valor_total'] != 0){ ?>
+                <div class="box-header with-border">
+                <h3 class="box-title">
+                    Dados Bancários</h3>
+                </div>
+                <div class="box-body">
             <div class="table-responsive">
                 <table class="table">
                     <?php foreach($dadosBancarios as $campo => $dado) { ?>
@@ -299,7 +302,7 @@ $parcelado = false;
                     <?php }?>
                 </table>
             </div>
-        </div>
-    </div>
-</div>
-
+        </div>  
+         <?php } ?>
+      </div>
+ </div>

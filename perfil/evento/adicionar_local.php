@@ -25,7 +25,7 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_ce
                                 <div class="form-group col-md-4">
                                     <label for="cep">Instituição: *</label>
                                     <select name="instituicao" id="instituicao" class="form-control" required>
-                                        <option value="6">Espaços Abertos</option>
+                                        <option value="6">Outros</option>
                                     </select>
                                 </div>
 

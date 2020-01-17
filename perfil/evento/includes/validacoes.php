@@ -5,6 +5,12 @@ $idEvento = $_SESSION['idEvento'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $tipoEvento = $evento['tipo_evento_id'];
 
+if(isset($_POST['duplicado'])){
+   $ocoDupl = true;
+}else{
+    $ocoDupl = false;
+}
+
 $sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
 $pedidos = mysqli_query($con, $sqlPedidos);
 $pedido = mysqli_fetch_array($pedidos);
@@ -28,6 +34,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
 
     // VERIFICA SE TEM ATRACOES CADASTRADAS
     if ($numAtracoes > 0) {
+        $foraPrazo = false;
         while ($atracao = mysqli_fetch_array($atracoes)) {
             $valorTotalAtracoes += $atracao['valor_individual'];
             if (($atracao['produtor_id'] == "") || ($atracao['produtor_id'] == NULL))
@@ -97,19 +104,25 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                         $diff = $hoje->diff($dataInicio);
 
                         if ($diff->days < 30 || $hoje > $dataInicio) {
-                            $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
-                                O prazo para contratos é de 30 dias.<br>";
-                            $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
-                            $fora = 1;
+                            $foraPrazo = true;
                             break;
-                        } else {
-                            $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
-                                O prazo para contratos é de 30 dias.<br>";
-                            $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
-                            $fora = 0;
                         }
                     }
                 }
+            }
+        }
+
+        if ($numOcorrencias != 0) {
+            if ($foraPrazo) {
+                $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                                    O prazo para contratos é de 30 dias.<br>";
+                $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
+                $fora = 1;
+            } else {
+                $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                                    O prazo para contratos é de 30 dias.<br>";
+                $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
+                $fora = 0;
             }
         }
 
@@ -218,6 +231,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
             if ($numOcorrencias == 0) {
                 array_push($erros, "Não há ocorrência cadastrada para o filme <b>" . $filme['titulo'] . "</b>");
             } else {
+                $foraPrazo = false;
                 while ($ocorrencia = mysqli_fetch_array($ocorrencias)) {
                     if ($evento['contratacao'] == 1) {
                         // VERIFICA SE ESTA DENTRO DO PRAZO
@@ -230,13 +244,22 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                                 O prazo para contratos é de 30 dias.<br>";
                             $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
                             $fora = 1;
+                            $foraPrazo = true;
                             break;
-                        } else {
-                            $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
-                                O prazo para contratos é de 30 dias.<br>";
-                            $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
-                            $fora = 0;
                         }
+                    }
+                }
+                if ($numOcorrencias != 0) {
+                    if ($foraPrazo) {
+                        $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                                    O prazo para contratos é de 30 dias.<br>";
+                        $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
+                        $fora = 1;
+                    } else {
+                        $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                                    O prazo para contratos é de 30 dias.<br>";
+                        $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
+                        $fora = 0;
                     }
                 }
             }
@@ -341,6 +364,13 @@ if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
         array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
     }
 }
+
+    if($ocoDupl == true){
+        array_push($erros, "Há ocorrencias duplicadas");
+    }else if($ocoDupl == false){
+        
+    }
+
 
 function in_array_key($needle, $haystack)
 {

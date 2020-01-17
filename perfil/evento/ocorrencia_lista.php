@@ -71,8 +71,19 @@ if (isset($_POST['carregar'])) {
     $idOrigem = $_POST['idOrigem'] ?? $_POST['idOrigemModal'];
 }
 
-$sql = "SELECT o.id, o.atracao_id, l.local, o.data_inicio, o.horario_inicio, o.horario_fim 
-        FROM ocorrencias as o
+$sql = "SELECT o.id as idOco, l.local,
+               o.atracao_id, o.instituicao_id,
+               o.local_id, o.espaco_id,
+               o.data_inicio, o.data_fim, 
+               o.segunda, o.terca,
+               o.quarta, o.quinta,
+               o.sexta, o.sabado,
+               o.domingo, o.horario_inicio,
+               o.horario_fim, o.retirada_ingresso_id,
+               o.valor_ingresso, o.observacao,
+               o.periodo_id, o.subprefeitura_id,
+               o.virada, o.libras, o.audiodescricao
+         FROM ocorrencias as o
         INNER JOIN  locais as l ON o.local_id = l.id
         WHERE o.atracao_id = '$idOrigem' AND o.tipo_ocorrencia_id = '$tipo_ocorrencia_id' AND o.publicado = 1
         ORDER BY local, data_inicio, horario_inicio, horario_fim";
@@ -119,6 +130,27 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
                                 <th>Horario início</th>
                                 <th>Horario final</th>
                                 <th>Local</th>
+                                <th style='display:none'>atracao_id</th>
+                                <th style='display:none'>instituicao_id</th>
+                                <th style='display:none'>local_id</th>
+                                <th style='display:none'>espaco_id</th>
+                                <th style='display:none'>segunda</th>
+                                <th style='display:none'>terca</th>
+                                <th style='display:none'>quarta</th>
+                                <th style='display:none'>quinta</th>
+                                <th style='display:none'>sexta</th>
+                                <th style='display:none'>sabado</th>
+                                <th style='display:none'>domingo</th>
+                                <th style='display:none'>horario_incio</th>
+                                <th style='display:none'>horario_fim</th>
+                                <th style='display:none'>retirada_ingresso_id</th>
+                                <th style='display:none'>valor_ingresso</th>
+                                <th style='display:none'>observacao</th>
+                                <th style='display:none'>periodo_id</th>
+                                <th style='display:none'>subprefeitura_id</th>
+                                <th style='display:none'>virada</th>
+                                <th style='display:none'>libras</th>
+                                <th style='display:none'>audiodescricao</th>
                                 <th>Editar</th>
                                 <th>Replicar</th>
                                 <th>Apagar</th>
@@ -135,21 +167,38 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
                                 echo "<td>" . exibirHora($ocorrencia['horario_inicio']) . "</td>";
                                 echo "<td>" . exibirHora($ocorrencia['horario_fim']) . "</td>";
                                 echo "<td>" . $ocorrencia['local'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['atracao_id'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['instituicao_id'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['espaco_id'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['segunda'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['terca'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['quarta'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['sabado'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['domingo'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['horario_inicio'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['retirada_ingresso_id'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['valor_ingresso'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['observacao'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['periodo_id'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['subprefeitura_id'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['virada'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['libras'] . "</td>";
+                                echo "<td style='display:none'>" . $ocorrencia['audiodescricao'] . "</td>";
 
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_edita\" role=\"form\">
-                                    <input type='hidden' name='idOcorrencia' value='" . $ocorrencia['id'] . "'>
+                                    <input type='hidden' name='idOcorrencia' value='" . $ocorrencia['idOco'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
 
                                 echo "<td>
                                     <input type='hidden' name='idOcorrencia'>
-                                    <buttonn class='btn btn-block btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='" . $ocorrencia['id'] . "' data-tittle='Replicando ocorrência' data-message='Digite o número de vezes que deseja replicar a ocorrência: '><span class='glyphicon glyphicon-retweet'></span></buttonn>
+                                    <buttonn class='btn btn-block btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='" . $ocorrencia['idOco'] . "' data-tittle='Replicando ocorrência' data-message='Digite o número de vezes que deseja replicar a ocorrência: '><span class='glyphicon glyphicon-retweet'></span></buttonn>
                                 </td>";
 
                                 echo "<td>
-                                    <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-id='" . $ocorrencia['id'] . "' data-tittle='Apagar ocorrência' data-message='Deseja mesmo pagar está ocorrências' onClick='setarIdOcorrencia(" . $ocorrencia['id'] . ")'><span class='glyphicon glyphicon-trash'></span></button>
+                                    <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-id='" . $ocorrencia['idOco'] . "' data-tittle='Apagar ocorrência' data-message='Deseja mesmo pagar está ocorrências' onClick='setarIdOcorrencia(" . $ocorrencia['idOco'] . ")'><span class='glyphicon glyphicon-trash'></span></button>
                                   </td>";
                                 echo "</tr>";
                             }
@@ -161,6 +210,27 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
                                 <th>Horario início</th>
                                 <th>Horario final</th>
                                 <th>Local</th>
+                                <th style='display:none'>atracao_id</th>
+                                <th style='display:none'>instituicao_id</th>
+                                <th style='display:none'>local_id</th>
+                                <th style='display:none'>espaco_id</th>
+                                <th style='display:none'>segunda</th>
+                                <th style='display:none'>terca</th>
+                                <th style='display:none'>quarta</th>
+                                <th style='display:none'>quinta</th>
+                                <th style='display:none'>sexta</th>
+                                <th style='display:none'>sabado</th>
+                                <th style='display:none'>domingo</th>
+                                <th style='display:none'>horario_incio</th>
+                                <th style='display:none'>horario_fim</th>
+                                <th style='display:none'>retirada_ingresso_id</th>
+                                <th style='display:none'>valor_ingresso</th>
+                                <th style='display:none'>observacao</th>
+                                <th style='display:none'>periodo_id</th>
+                                <th style='display:none'>subprefeitura_id</th>
+                                <th style='display:none'>virada</th>
+                                <th style='display:none'>libras</th>
+                                <th style='display:none'>audiodescricao</th>
                                 <th colspan="3" width="15%"></th>
                             </tr>
                             </tfoot>
@@ -322,6 +392,18 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
 
         if (cont > 0) {
             $("#duplicated-message").html(menssagem)
+            $.post("?perfil=evento&p=includes&sp=validacoes",
+                    {
+                        duplicado: true
+                    }
+
+            )
+            .done(() => {
+                console.log("FOI");
+            })
+            .fail(() => {
+                console.log("nao");
+            })
         }
     }
 
