@@ -592,7 +592,7 @@ if ($foto == null) {
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(122, $idPf, "modal-facc", "FACC");
+                                    anexosNaPagina(46, $idPf, "modal-facc", "FACC");
                                     ?>
                                 </div>
                             </div>
