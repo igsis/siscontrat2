@@ -1099,11 +1099,19 @@ if (isset($_GET['label'])) {
                         $(".botoes").html(newButtons);
                         $('#editarModal').on('click', editarModal);
 
+                        $('#forma_pagamento').val() == '';
+                        for (let conta = 1; conta <= parcelas; conta++) {
+                            let data = datas[conta].split('-');
+                            $('#forma_pagamento').append(conta + '° parcela R$ ' + valores[conta] + '. Entrega de documentos a partir de ' + data[2] + '/' + data[1] + '/' + data[0] + '.\n')
+                        }
+                        $('#forma_pagamento').append('\nO pagamento de cada parcela se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
+
                         swal("" + parcelas + " parcelas gravadas com sucesso!", "", "success")
                             .then(() => {
                                 $('#modalParcelas').slideDown('slow');
                                 //window.location.href = "?perfil=evento&p=parcelas_cadastro";
                             });
+                        //acho que é aqui
                     })
                     .fail(function () {
                         swal("danger", "Erro ao gravar");
@@ -1198,8 +1206,7 @@ if (isset($_GET['label'])) {
 
             } else {
 
-                var parcelas = $("#numero_parcelas").val();
-
+                var parcelas = document.querySelector("#numero_parcelas").value;
                 var datas = new Array(1);
                 var valores = new Array(1);
 
