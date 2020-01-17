@@ -504,7 +504,7 @@ if (isset($_GET['label'])) {
                 </div>
                 <div class="row">
                     <h4 class="text-center"><b>Valor total do contrato</b>
-                        <p id="valor_total"><em><?= dinheiroParaBr($pedido['valor_total']) ?> </em></p></h4>
+                        <p id="valor_total" class="valorTotal"><em><?= dinheiroParaBr($pedido['valor_total']) ?> </em></p></h4>
                 </div>
                 <br>
             </div>
@@ -624,7 +624,6 @@ if (isset($_GET['label'])) {
 
 
 <script type="text/javascript">
-
     $(function () {
         $('#numero_parcelas').on('change', ocultarBotao);
 
@@ -675,10 +674,12 @@ if (isset($_GET['label'])) {
         } else {
             var parcelas = $("#numero_parcelas").val();
         }
+        var valorTotal = parseInt(document.querySelector('#valor_total').value);
 
-        var valorTotal = "<?= $pedido['valor_total'] ?>";
+    <?php if ($tipoEvento != 2){ ?>
+        valorTotal = "<?= $pedido['valor_total'] ?>";
+        <?php } ?>
         var restante = valorTotal;
-
         var arrayValor = [];
         let soma = 0;
 
@@ -777,9 +778,15 @@ if (isset($_GET['label'])) {
 
     var abrirModal = function () {
 
+        var valorTotal = document.querySelector('#valor_total').value;
+
+        document.querySelector('.valorTotal').textContent = valorTotal;
+
         let source = document.querySelector("#templateParcela").innerHTML;
         let template = Handlebars.compile(source);
         let html = '';
+
+
 
         let parcelasSalvas = "<?= isset($numRows) ? $numRows : ''; ?>";
 
