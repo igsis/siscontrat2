@@ -114,7 +114,7 @@ if (isset($_POST['edita'])) {
     }
 }
 
-if(isset($_SESSION['idPedido'])) {
+if (isset($_SESSION['idPedido'])) {
     $idPedido = $_SESSION['idPedido'];
 }
 
@@ -220,7 +220,7 @@ if ($pedido['origem_tipo_id'] != 2 && isset($valorTotal) && $tipoEvento != 2) {
     }
 }
 
-if(isset($_POST["enviarArquivo"])) {
+if (isset($_POST["enviarArquivo"])) {
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1";
     $query_arquivos = mysqli_query($con, $sql_arquivos);
     while ($arq = mysqli_fetch_array($query_arquivos)) {
@@ -234,13 +234,13 @@ if(isset($_POST["enviarArquivo"])) {
         } else {
             if ($nome_arquivo != "") {
                 $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
-                $new_name = date("YmdHis",strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
-                $hoje = date("Y-m-d H:i:s",strtotime("-3 hours"));
+                $new_name = date("YmdHis", strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
+                $hoje = date("Y-m-d H:i:s", strtotime("-3 hours"));
                 $dir = '../uploadsdocs/'; //Diretório para uploads
                 $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-                $ext = strtolower(substr($nome_arquivo,-4));
+                $ext = strtolower(substr($nome_arquivo, -4));
 
-                if(in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+                if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
                 {
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
                         $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPedido', '$y', '$new_name', '$hoje', '1'); ";
@@ -258,7 +258,7 @@ if(isset($_POST["enviarArquivo"])) {
                     } else {
                         $mensagem = mensagem("danger", "Erro no upload");
                     }
-                }else {
+                } else {
                     echo "<script>
                             swal('Erro no upload!', 'Anexar documentos somente no formato PDF.', 'error');                             
                         </script>";
@@ -268,18 +268,14 @@ if(isset($_POST["enviarArquivo"])) {
     }
 }
 
-if(isset($_POST['apagarArquivo']))
-{
+if (isset($_POST['apagarArquivo'])) {
     $idArquivo = $_POST['idArquivo'];
     $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
-    if(mysqli_query($con,$sql_apagar_arquivo))
-    {
-        $arq = recuperaDados("arquivos",$idArquivo,"id");
-        $mensagem = mensagem("success", "Arquivo ".$arq['arquivo']."apagado com sucesso!");
+    if (mysqli_query($con, $sql_apagar_arquivo)) {
+        $arq = recuperaDados("arquivos", $idArquivo, "id");
+        $mensagem = mensagem("success", "Arquivo " . $arq['arquivo'] . "apagado com sucesso!");
         gravarLog($sql_apagar_arquivo);
-    }
-    else
-    {
+    } else {
         $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
     }
 }
@@ -337,13 +333,13 @@ if (isset($_GET['label'])) {
                         <div class="stepper">
                             <ul class="nav nav-tabs nav-justified" role="tablist">
                                 <?php if ($tipoPessoa == 2) { ?>
-                                    <li role="presentation" class="<?=$menuParcelas ?? "active"?>">
+                                    <li role="presentation" class="<?= $menuParcelas ?? "active" ?>">
                                         <a class="persistant-disabled" href="#stepper-step-1" data-toggle="tab"
                                            aria-controls="stepper-step-1" role="tab" title="Parcelas">
                                             <span class="round-tab">1</span>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="<?=$menuProponente ?? "disabled"?>">
+                                    <li role="presentation" class="<?= $menuProponente ?? "disabled" ?>">
                                         <a class="persistant-disabled" href="#stepper-step-2" data-toggle="tab"
                                            aria-controls="stepper-step-2" role="tab" title="Proponente">
                                             <span class="round-tab">2</span>
@@ -357,13 +353,13 @@ if (isset($_GET['label'])) {
                                             </a>
                                         </li>
                                     <?php endif ?>
-                                    <li role="presentation" class="<?=$menuParecer ?? "disabled"?>">
+                                    <li role="presentation" class="<?= $menuParecer ?? "disabled" ?>">
                                         <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
                                            aria-controls="stepper-step-4" role="tab" title="Parecer artístico">
                                             <span class="round-tab"><?= ($tipoEvento == 2) ? "3" : "4" ?></span>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="<?=$menuAnexos ?? "disabled"?>">
+                                    <li role="presentation" class="<?= $menuAnexos ?? "disabled" ?>">
                                         <a class="persistant-disabled" href="#stepper-step-5" data-toggle="tab"
                                            aria-controls="stepper-step-5" role="tab" title="Anexos do pedido">
                                             <span class="round-tab"><?= ($tipoEvento == 2) ? "4" : "5" ?></span>
@@ -378,25 +374,25 @@ if (isset($_GET['label'])) {
                                     <?php
                                 } else {
                                     ?>
-                                    <li role="presentation" class="<?=$menuParcelas ?? "active"?>">
+                                    <li role="presentation" class="<?= $menuParcelas ?? "active" ?>">
                                         <a class="persistant-disabled" href="#stepper-step-1" data-toggle="tab"
                                            aria-controls="stepper-step-1" role="tab" title="Parcelas">
                                             <span class="round-tab">1</span>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="<?=$menuProponente ?? "disabled"?>">
+                                    <li role="presentation" class="<?= $menuProponente ?? "disabled" ?>">
                                         <a class="persistant-disabled" href="#stepper-step-2" data-toggle="tab"
                                            aria-controls="stepper-step-2" role="tab" title="Proponente">
                                             <span class="round-tab">2</span>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="<?=$menuParecer ?? "disabled"?>">
+                                    <li role="presentation" class="<?= $menuParecer ?? "disabled" ?>">
                                         <a class="persistant-disabled" href="#stepper-step-3" data-toggle="tab"
                                            aria-controls="stepper-step-3" role="tab" title="Parecer artístico">
                                             <span class="round-tab">3</span>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="<?=$menuAnexos ?? "disabled"?>">
+                                    <li role="presentation" class="<?= $menuAnexos ?? "disabled" ?>">
                                         <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
                                            aria-controls="stepper-step-4" role="tab" title="Anexos do pedido">
                                             <span class="round-tab">4</span>
@@ -414,30 +410,33 @@ if (isset($_GET['label'])) {
                             </ul>
                             <div class="tab-content">
                                 <!-- Detalhes de Parcelas -->
-                                <div class="tab-pane fade <?=$lblParcelas ?? ""?>" role="tabpanel" id="stepper-step-1">
+                                <div class="tab-pane fade <?= $lblParcelas ?? "" ?>" role="tabpanel"
+                                     id="stepper-step-1">
                                     <?php include "includes/label_pedido_parcelas.php" ?>
                                 </div>
 
                                 <!-- Cadastro de Proponente -->
-                                <div class="tab-pane fade <?=$lblProponente ?? ""?>" role="tabpanel" id="stepper-step-2">
+                                <div class="tab-pane fade <?= $lblProponente ?? "" ?>" role="tabpanel"
+                                     id="stepper-step-2">
                                     <?php include "includes/label_pedido_proponente.php" ?>
                                 </div>
-                                <?php if ($tipoPessoa == 2){?>
-                                <!-- Líderes -->
-                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
-                                    <?php include "includes/label_pedido_lideres.php" ?>
-                                </div>
+                                <?php if ($tipoPessoa == 2) { ?>
+                                    <!-- Líderes -->
+                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
+                                        <?php include "includes/label_pedido_lideres.php" ?>
+                                    </div>
                                 <?php } ?>
                                 <!-- Parecer Artístico -->
-                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '4' : '3'?>">
+                                <div class="tab-pane fade" role="tabpanel"
+                                     id="stepper-step-<?= $tipoPessoa == 2 ? '4' : '3' ?>">
                                     <?php
-                                    if ($tipoPessoa == 2){
+                                    if ($tipoPessoa == 2) {
                                         if ($tipoEvento == 2) {
                                             $par = 3;
                                         } else {
                                             $par = 4;
                                         }
-                                    } else{
+                                    } else {
                                         $par = 3;
                                     }
                                     ?>
@@ -449,14 +448,16 @@ if (isset($_GET['label'])) {
                                     </div>
                                 </div>
                                 <!-- Anexos do pedido -->
-                                <div class="tab-pane fade <?=$lblAnexos ?? ""?>" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '5' : '4'?>">
-                                    <h3><?= $tipoPessoa == 2 && $tipoEvento == 1 ? '5' : '4'?>. Anexos do pedido</h3>
+                                <div class="tab-pane fade <?= $lblAnexos ?? "" ?>" role="tabpanel"
+                                     id="stepper-step-<?= $tipoPessoa == 2 ? '5' : '4' ?>">
+                                    <h3><?= $tipoPessoa == 2 && $tipoEvento == 1 ? '5' : '4' ?>. Anexos do pedido</h3>
                                     <div class="container col-md-12">
                                         <?php include "includes/label_pedido_anexos.php" ?>
                                     </div>
                                 </div>
                                 <!-- Valor por Equipamento -->
-                                <div class="tab-pane fade" role="tabpanel" id="stepper-step-<?= $tipoPessoa == 2 ? '6' : '5'?>">
+                                <div class="tab-pane fade" role="tabpanel"
+                                     id="stepper-step-<?= $tipoPessoa == 2 ? '6' : '5' ?>">
                                     <?php include_once "includes/label_pedido_valor_equipamento.php" ?>
                                 </div>
                             </div>
@@ -504,7 +505,8 @@ if (isset($_GET['label'])) {
                 </div>
                 <div class="row">
                     <h4 class="text-center"><b>Valor total do contrato</b>
-                        <p id="valor_total" class="valorTotal"><em><?= dinheiroParaBr($pedido['valor_total']) ?> </em></p></h4>
+                        <p id="valor_total" class="valorTotal"><em><?= dinheiroParaBr($pedido['valor_total']) ?> </em>
+                        </p></h4>
                 </div>
                 <br>
             </div>
@@ -676,7 +678,7 @@ if (isset($_GET['label'])) {
         }
         var valorTotal = parseInt(document.querySelector('#valor_total').value);
 
-    <?php if ($tipoEvento != 2){ ?>
+        <?php if ($tipoEvento != 2){ ?>
         valorTotal = "<?= $pedido['valor_total'] ?>";
         <?php } ?>
         var restante = valorTotal;
@@ -785,7 +787,6 @@ if (isset($_GET['label'])) {
         let source = document.querySelector("#templateParcela").innerHTML;
         let template = Handlebars.compile(source);
         let html = '';
-
 
 
         let parcelasSalvas = "<?= isset($numRows) ? $numRows : ''; ?>";
@@ -1085,10 +1086,14 @@ if (isset($_GET['label'])) {
 
                 $('#modalParcelas').slideUp();
 
-                $.post('?perfil=evento&p=parcelas_cadastro', {
-                    parcelas: parcelas,
-                    arrayValor: arrayValor,
-                    arrayKit: arrayKit
+                $.ajax({
+                    type: 'POST',
+                    url: '?perfil=evento&p=parcelas_cadastro',
+                    data: {
+                        parcelas: parcelas,
+                        arrayValor: arrayValor,
+                        arrayKit: arrayKit
+                    }
                 })
                     .done(function () {
                         var source = document.getElementById("templateParcela").innerHTML;
@@ -1106,10 +1111,10 @@ if (isset($_GET['label'])) {
                         $(".botoes").html(newButtons);
                         $('#editarModal').on('click', editarModal);
 
-                        $('#forma_pagamento').val() == '';
+                        document.querySelector('#forma_pagamento').textContent = '';
                         for (let conta = 1; conta <= parcelas; conta++) {
-                            let data = datas[conta].split('-');
-                            $('#forma_pagamento').append(conta + '° parcela R$ ' + valores[conta] + '. Entrega de documentos a partir de ' + data[2] + '/' + data[1] + '/' + data[0] + '.\n')
+                            let data = arrayKit[conta].split('-');
+                            $('#forma_pagamento').append(conta + '° parcela R$ ' + arrayValor[conta] + '. Entrega de documentos a partir de ' + data[2] + '/' + data[1] + '/' + data[0] + '.\n')
                         }
                         $('#forma_pagamento').append('\nO pagamento de cada parcela se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
 
@@ -1118,7 +1123,6 @@ if (isset($_GET['label'])) {
                                 $('#modalParcelas').slideDown('slow');
                                 //window.location.href = "?perfil=evento&p=parcelas_cadastro";
                             });
-                        //acho que é aqui
                     })
                     .fail(function () {
                         swal("danger", "Erro ao gravar");
@@ -1353,45 +1357,48 @@ if (isset($_GET['label'])) {
         })
     });
 
-    function mostrarResultado(box,num_max,campospan){
+    function mostrarResultado(box, num_max, campospan) {
         var contagem_carac = box.length;
-        if (contagem_carac != 0){
+        if (contagem_carac != 0) {
             document.getElementById(campospan).innerHTML = contagem_carac + " caracteres digitados";
-            if (contagem_carac == 1){
+            if (contagem_carac == 1) {
                 document.getElementById(campospan).innerHTML = contagem_carac + " caracter digitado";
             }
-            if (contagem_carac < num_max){
+            if (contagem_carac < num_max) {
                 document.getElementById(campospan).innerHTML = "<font color='red'>Você não inseriu a quantidade mínima de caracteres!</font>";
             }
-        }else{
+        } else {
             document.getElementById(campospan).innerHTML = "Ainda não temos nada digitado...";
         }
     }
-    function contarCaracteres(box,valor,campospan){
+
+    function contarCaracteres(box, valor, campospan) {
         var conta = valor - box.length;
         document.getElementById(campospan).innerHTML = "Faltam " + conta + " caracteres";
-        if(box.length >= valor){
+        if (box.length >= valor) {
             document.getElementById(campospan).innerHTML = "Quantidade mínima de caracteres atingida!";
         }
     }
-    function mostrarResultado3(box,num_max,campospan){
+
+    function mostrarResultado3(box, num_max, campospan) {
         var contagem_carac = box.length;
-        if (contagem_carac != 0){
+        if (contagem_carac != 0) {
             document.getElementById(campospan).innerHTML = contagem_carac + " caracteres digitados";
-            if (contagem_carac == 1){
+            if (contagem_carac == 1) {
                 document.getElementById(campospan).innerHTML = contagem_carac + " caracter digitado";
             }
-            if (contagem_carac < num_max){
+            if (contagem_carac < num_max) {
                 document.getElementById(campospan).innerHTML = "<font color='red'>Você não inseriu a quantidade mínima de caracteres!</font>";
             }
-        }else{
+        } else {
             document.getElementById(campospan).innerHTML = "Ainda não temos nada digitado...";
         }
     }
-    function contarCaracteres3(box,valor,campospan){
+
+    function contarCaracteres3(box, valor, campospan) {
         var conta = valor - box.length;
         document.getElementById(campospan).innerHTML = "Faltam " + conta + " caracteres";
-        if(box.length >= valor){
+        if (box.length >= valor) {
             document.getElementById(campospan).innerHTML = "Quantidade mínima de caracteres atingida!";
         }
     }
