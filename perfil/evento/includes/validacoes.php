@@ -233,7 +233,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                         $dataInicio = new DateTime($ocorrencia['data_inicio']);
                         $diff = $hoje->diff($dataInicio);
 
-                        if ($diff->days < 30 || $hoje>$dataInicio) {
+                        if ($diff->days < 30 || $hoje > $dataInicio) {
                             $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
                                 O prazo para contratos é de 30 dias.<br>";
                             $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
@@ -376,37 +376,31 @@ $teste = mysqli_fetch_all($queryteste);
 $num = mysqli_num_rows($queryteste);
 
 $ocoDupl = 0;
-for($i=0;$i<$num;$i++){
-    for($x=1;$x<$num;$x++){
+for ($i = 0; $i < $num; $i++) {
+    for ($x = 1; $x < $num; $x++) {
         $cont = 0;
-        for($y=1; $y<24; $y=$y+4){
-                if(($teste[$i][$y] == $teste[$x][$y])){
-                    if($teste[$i][$y+1] == $teste[$x][$y+1]){
-                        if($teste[$i][$y+2] == $teste[$x][$y+2]){
-                            if($teste[$i][$y+3] == $teste[$x][$y+3]){
-                                if($teste[$i][$y+4] == $teste[$x][$y+4]){
-                                    echo "ENTROU";
-                                    $cont +=1;
-                                    break;
-                                }
-                            }
+        for ($y = 0; $y < 24; $y += 4) {
+            if (($teste[$i][$y] == $teste[$x][$y])) {
+                if ($teste[$i][$y + 1] == $teste[$x][$y + 1]) {
+                    if ($teste[$i][$y + 2] == $teste[$x][$y + 2]) {
+                        if ($teste[$i][$y + 3] == $teste[$x][$y + 3]) {
+                            $cont = $cont + 1;
                         }
-                    }                   
-                } 
-                
-        }
-        if($cont == 6){
-            $ecoDupl = 1;
-        break;
+                    }
+                }
+            }
+            if ($cont >= 6) {
+                $ocoDupl = 1;
+            }
         }
     }
-    if($ocoDupl != 0){
+    if ($ocoDupl == 1) {
         break;
     }
 }
 
 
-if($ocoDupl == 1){
+if ($ocoDupl == 1) {
     array_push($erros, "Há ocorrências duplicadas");
 }
 
