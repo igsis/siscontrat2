@@ -392,7 +392,7 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
 
         if (cont > 0) {
             $("#duplicated-message").html(menssagem)
-            $.post("?perfil=evento&p=includes&sp=validacoes",
+            /*$.post("?perfil=evento&p=includes&sp=validacoes",
                     {
                         duplicado: true
                     }
@@ -403,7 +403,7 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
             })
             .fail(() => {
                 console.log("nao");
-            })
+            })*/
         }
     }
 

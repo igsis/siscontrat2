@@ -5,12 +5,6 @@ $idEvento = $_SESSION['idEvento'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $tipoEvento = $evento['tipo_evento_id'];
 
-if(isset($_POST['duplicado'])){
-   $ocoDupl = true;
-}else{
-    $ocoDupl = false;
-}
-
 $sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
 $pedidos = mysqli_query($con, $sqlPedidos);
 $pedido = mysqli_fetch_array($pedidos);
@@ -365,11 +359,56 @@ if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
     }
 }
 
-    if($ocoDupl == true){
-        array_push($erros, "Há ocorrencias duplicadas");
-    }else if($ocoDupl == false){
-        
+$sqlteste = "SELECT tipo_ocorrencia_id, atracao_id, instituicao_id,
+local_id, espaco_id,
+data_inicio, data_fim, 
+segunda, terca,
+quarta, quinta,
+sexta, sabado,
+domingo, horario_inicio,
+horario_fim, retirada_ingresso_id,
+valor_ingresso, observacao,
+periodo_id, subprefeitura_id,
+virada, libras, audiodescricao FROM ocorrencias WHERE origem_ocorrencia_id = $idEvento AND publicado = 1";
+
+$queryteste = mysqli_query($con, $sqlteste);
+$teste = mysqli_fetch_all($queryteste);
+$num = mysqli_num_rows($queryteste);
+
+$ocoDupl = 0;
+for($i=0;$i<$num;$i++){
+    for($x=1;$x<$num;$x++){
+        $cont = 0;
+        for($y=1; $y<24; $y=$y+4){
+                if(($teste[$i][$y] == $teste[$x][$y])){
+                    if($teste[$i][$y+1] == $teste[$x][$y+1]){
+                        if($teste[$i][$y+2] == $teste[$x][$y+2]){
+                            if($teste[$i][$y+3] == $teste[$x][$y+3]){
+                                if($teste[$i][$y+4] == $teste[$x][$y+4]){
+                                    echo "ENTROU";
+                                    $cont +=1;
+                                    break;
+                                }
+                            }
+                        }
+                    }                   
+                } 
+                
+        }
+        if($cont == 6){
+            $ecoDupl = 1;
+        break;
+        }
     }
+    if($ocoDupl != 0){
+        break;
+    }
+}
+
+
+if($ocoDupl == 1){
+    array_push($erros, "Há ocorrências duplicadas");
+}
 
 
 function in_array_key($needle, $haystack)
