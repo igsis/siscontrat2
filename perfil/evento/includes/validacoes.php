@@ -387,7 +387,7 @@ $num = mysqli_num_rows($queryteste);
 
 $ocoDupl = 0;
 for ($i = 0; $i < $num; $i++) {
-    for ($x = 1; $x < $num; $x++) {
+    for ($x = $i+1; $x < $num; $x++) {
         $cont = 0;
         for ($y = 0; $y < 24; $y += 4) {
             if (($teste[$i][$y] === $teste[$x][$y]) 
@@ -395,16 +395,14 @@ for ($i = 0; $i < $num; $i++) {
             && ($teste[$i][$y + 2] === $teste[$x][$y + 2])
             && ($teste[$i][$y + 3] === $teste[$x][$y + 3])){
                 $cont = $cont + 1;
-            }else{
-                $cont = 0;
-            }        
-            if($cont == 6){
-                $ocoDupl = 1;
-            break;
             }
         }
+        if ($cont == 6) {
+            $ocoDupl = +1;
+            break;
+        }
     }
-    if ($ocoDupl) {
+    if ($ocoDupl!=0) {
         break;
     }
 }
