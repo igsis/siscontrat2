@@ -359,17 +359,27 @@ if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
     }
 }
 
-$sqlteste = "SELECT tipo_ocorrencia_id, atracao_id, instituicao_id,
-local_id, espaco_id,
-data_inicio, data_fim, 
-segunda, terca,
-quarta, quinta,
-sexta, sabado,
-domingo, horario_inicio,
-horario_fim, retirada_ingresso_id,
-valor_ingresso, observacao,
-periodo_id, subprefeitura_id,
-virada, libras, audiodescricao FROM ocorrencias WHERE origem_ocorrencia_id = $idEvento AND publicado = 1";
+$sqlteste = "SELECT  te.tipo_evento, oco.atracao_id, 
+i.nome, l.local, 
+e.espaco, oco.data_inicio, 
+oco.data_fim, oco.segunda, 
+oco.terca, oco.quarta, 
+oco.quinta, oco.sexta, 
+oco.sabado, oco.domingo, 
+oco.horario_inicio, oco.horario_fim, 
+ri.retirada_ingresso, oco.valor_ingresso, 
+oco.observacao, p.periodo, 
+sub.subprefeitura, virada, 
+oco.libras, oco.audiodescricao 
+FROM ocorrencias as oco
+INNER JOIN locais as l on l.id = oco.local_id
+INNER JOIN tipo_eventos as te on te.id = oco.tipo_ocorrencia_id
+INNER JOIN instituicoes as i on i.id = oco.instituicao_id
+LEFT JOIN espacos as e on e.id = oco.espaco_id
+INNER JOIN retirada_ingressos as ri on ri.id = oco.retirada_ingresso_id
+INNER JOIN periodos as p ON p.id = oco.periodo_id
+INNER JOIN subprefeituras as sub ON sub.id = oco.subprefeitura_id
+WHERE oco.origem_ocorrencia_id = '$idEvento' AND oco.publicado = 1;";
 
 $queryteste = mysqli_query($con, $sqlteste);
 $teste = mysqli_fetch_all($queryteste);
@@ -380,21 +390,21 @@ for ($i = 0; $i < $num; $i++) {
     for ($x = 1; $x < $num; $x++) {
         $cont = 0;
         for ($y = 0; $y < 24; $y += 4) {
-            if (($teste[$i][$y] == $teste[$x][$y])) {
-                if ($teste[$i][$y + 1] == $teste[$x][$y + 1]) {
-                    if ($teste[$i][$y + 2] == $teste[$x][$y + 2]) {
-                        if ($teste[$i][$y + 3] == $teste[$x][$y + 3]) {
-                            $cont = $cont + 1;
-                        }
-                    }
-                }
-            }
-            if ($cont >= 6) {
+            if (($teste[$i][$y] === $teste[$x][$y]) 
+            && ($teste[$i][$y + 1] === $teste[$x][$y + 1]) 
+            && ($teste[$i][$y + 2] === $teste[$x][$y + 2])
+            && ($teste[$i][$y + 3] === $teste[$x][$y + 3])){
+                $cont = $cont + 1;
+            }else{
+                $cont = 0;
+            }        
+            if($cont == 6){
                 $ocoDupl = 1;
+            break;
             }
         }
     }
-    if ($ocoDupl == 1) {
+    if ($ocoDupl) {
         break;
     }
 }
