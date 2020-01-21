@@ -63,13 +63,15 @@ if (isset($_POST['cadastra'])) {
         if (isset($_POST['publico'])) {
             atualizaDadosRelacionamento('evento_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
         }
-
+        
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
+
+    echo $sql;
 }
 
 if (isset($_POST['edita'])) {
