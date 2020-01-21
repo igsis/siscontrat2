@@ -637,6 +637,8 @@ if (isset($_GET['label'])) {
 
         $('#editarModal').on('click', editarModal);
 
+
+
         <?php
 
 
@@ -676,7 +678,6 @@ if (isset($_GET['label'])) {
         } else {
             var parcelas = $("#numero_parcelas").val();
         }
-        var valorTotal = parseInt(document.querySelector('#valor_total').value);
 
         <?php if ($tipoEvento != 2){ ?>
         valorTotal = "<?= $pedido['valor_total'] ?>";
@@ -684,7 +685,6 @@ if (isset($_GET['label'])) {
         var restante = valorTotal;
         var arrayValor = [];
         let soma = 0;
-
         for (var i = 1; i <= parcelas; i++) {
             arrayValor [i] = $("input[name='valor[" + i + "]']").val().replace('.', '').replace(',', '.');
 
@@ -694,16 +694,22 @@ if (isset($_GET['label'])) {
             }
             soma += parseFloat(arrayValor[i]);
             restante -= arrayValor[i];
+
         }
 
+        // Formatação de valores que serão exibidos
+        let valorRest = restante.toLocaleString('pt-br',{minimumFractionDigits: 2});
+        let somaFormatada = soma.toLocaleString('pt-br',{minimumFractionDigits: 2});
+
         if (oficina == 1) {
-            $('#modalOficina').find('#soma').html(soma.toFixed(2).replace('.', ','));
-            $('#modalOficina').find('#valor_restante').html(restante.toFixed(2).replace('.', ','));
+            document.querySelector('#soma').textContent = somaFormatada;
+            document.querySelector('#valor_restante').textContent = valorRest;
 
             if (restante != 0 || restante != '0,00') {
                 $("#salvarModalOficina").attr("disabled", true);
                 $("#editarModalOficina").attr("disabled", true);
                 $("#modalOficina").find('#msg').html("<em class='text-danger'>O valor da soma das parcelas deve ser igual ao valor total do contrato! </em>");
+
             } else {
                 $("#salvarModalOficina").attr("disabled", false);
                 $("#editarModalOficina").attr("disabled", false);
@@ -718,8 +724,8 @@ if (isset($_GET['label'])) {
             }
 
         } else {
-            $('#modalParcelas').find('#soma').html(soma.toFixed(2).replace('.', ','));
-            $('#modalParcelas').find('#valor_restante').html(restante.toFixed(2).replace('.', ','));
+            document.querySelector('#soma').textContent = somaFormatada;
+            document.querySelector('#valor_restante').textContent = valorRest;
 
             if (Math.sign(restante) != 0) {
                 $("#salvarModal").attr("disabled", true);
@@ -856,6 +862,7 @@ if (isset($_GET['label'])) {
                         var valor = valores[x].replace('.', '').replace(',', '.');
                         valorFaltando += parseFloat(valor);
                     }
+
 
 
                     $('#modalOficina').find('#valor_restante').html(valorFaltando.toFixed(2).replace('.', ','));
