@@ -264,6 +264,9 @@ $tipoEvento = $evento['tipo_evento_id'];
                                             if(hora < 10){
                                                 hora = "0" + hora;
                                             }
+                                            if(hora == 000){
+                                                hora = "00";
+                                            }
 
                                             var resultado = hora + ":" + minutoFinal + ":00";
                     
