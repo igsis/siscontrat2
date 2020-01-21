@@ -48,6 +48,18 @@ $link_facc_pf = $http . "rlt_fac_pf.php";
 
 $link_facc_pj = $http . "rlt_fac_pj.php";
 
+$link_parecer_pf = $http . "rlt_parecer_pf.php";
+
+$link_parecer_pj = $http . "rlt_parecer_pj.php";
+
+$link_normas_pf = $http. "rlt_normas_internas_teatros_pf.php";
+
+$link_normas_pj = $http. "rlt_normas_internas_teatros_pj.php";
+
+$link_centroculturaisteatro_pf_6391 = $http . "rlt_pedido_reserva_centrosculturaisteatros_pf_6391.php";
+
+$link_centroculturaisteatro_pj_6391 = $http . "rlt_pedido_reserva_centrosculturaisteatros_pj_6391.php";
+
 $idPedido = $_POST['idPedido'];
 
 $idEvento = $_SESSION['idEvento'];
@@ -63,7 +75,9 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     $link_exclusividade = $link_exclusividade_pf;
     $link_condicionamento = $link_condicionamento_pf;
     $link_facc = $link_facc_pf;
+    $link_parecer = $link_parecer_pf;
     $idPessoa = $pedido['pessoa_fisica_id'];
+    $link_normas = $link_normas_pf;
 } else if ($pedido['pessoa_tipo_id'] == 2) {
     $link_pc = $linkpj_pc;
     $link_edital = $linkpj_edital;
@@ -73,7 +87,9 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     $link_exclusividade = $link_exclusividade_pj;
     $link_condicionamento = $link_condicionamento_pj;
     $link_facc = $link_facc_pj;
+    $link_parecer = $link_parecer_pj;
     $idPessoa = $pedido['pessoa_juridica_id'];
+    $link_normas = $link_normas_pj;
 }
 
 ?>
@@ -291,7 +307,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </div>
 
                     <div class="col-md-6">
-                        <form action="#" type="submit" target="_blank" method="post">
+                        <form action="<?=$link_parecer?>" type="submit" target="_blank" method="post">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                             <button type="submit" class="btn btn-outline-info center-block">
                                 Parecer da Comissão
@@ -303,7 +319,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                 <div class="row">
                     <div class="col-md-12">
-                        <form action="#" target="_blank" method="post">
+                        <form action="<?=$link_normas?>" target="_blank" method="post">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                             <button type="submit" class="btn btn-outline-info center-block">
                                 NORMAS INTERNAS - Teatros Municipais
@@ -324,7 +340,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                 <?php
                     if($pedido['pessoa_tipo_id'] == 1){ ?>
                 <div class="col-md-6">
-                <form action="#" target="_blank" method="post">
+                <form action="<?=$link_centroculturaisteatro_pf_6391?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Centros Culturais e Teatros 6391
@@ -437,7 +453,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                <form action="#" target="_blank" method="post">
+                <form action="<?=$link_centroculturaisteatro_pj_6391?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Centros Culturais e Teatros 6391
