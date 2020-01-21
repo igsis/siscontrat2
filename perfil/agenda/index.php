@@ -8,16 +8,14 @@ $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_
 const URL = `<?=$urlEvento?>`;
 let events = [];
 
-
-
 axios.get(URL)
     .then(response => {
         const contador = response.data.length;
 
         for (let i = 0; i < contador; i++) {
-            title = response.data[i].nomeEvento;
-            start = response.data[i].dataInicio + "T" + response.data[i].horaInicio;
-            end = response.data[i].dataFim + "T" + response.data[i].horaFim
+            let title = response.data[i].nomeEvento;
+            let start = response.data[i].dataInicio + "T" + response.data[i].horaInicio;
+            let end = response.data[i].dataFim + "T" + response.data[i].horaFim;
 
             events[i] = {
                 title,
