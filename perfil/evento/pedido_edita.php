@@ -716,11 +716,11 @@ if (isset($_GET['label'])) {
 
                 var nums = "<?= isset($numRows) ? $numRows : ''; ?>";
 
-                if (nums != '') {
-                    $("#modalOficina").find('#msg').html("<em class='text-success'> Agora os valores batem! Clique em editar para continuar.");
-                } else {
-                    $("#modalOficina").find('#msg').html("<em class='text-success'> Agora os valores batem! Clique em salvar para continuar.");
-                }
+                // if (nums != '') {
+                //     $("#modalOficina").find('#msg').html("<em class='text-success'> Agora os valores batem! Clique em editar para continuar.");
+                // } else {
+                //     $("#modalOficina").find('#msg').html("<em class='text-success'> Agora os valores batem! Clique em salvar para continuar.");
+                // }
             }
 
         } else {
@@ -1106,7 +1106,9 @@ if (isset($_GET['label'])) {
                         var source = document.getElementById("templateParcela").innerHTML;
                         var template = Handlebars.compile(source);
                         var html = '';
+                        var formPagamento = document.querySelector('#forma_pagamento');
 
+                        formPagamento.textContent = '';
                         for (var count = 0; count < parcelas; count++) {
                             html += template({
                                 count: count + 1, // para sincronizar com o array vindo do banco
@@ -1118,7 +1120,6 @@ if (isset($_GET['label'])) {
                         $(".botoes").html(newButtons);
                         $('#editarModal').on('click', editarModal);
 
-                        document.querySelector('#forma_pagamento').textContent = '';
                         for (let conta = 1; conta <= parcelas; conta++) {
                             let data = arrayKit[conta].split('-');
                             $('#forma_pagamento').append(conta + '° parcela R$ ' + arrayValor[conta] + '. Entrega de documentos a partir de ' + data[2] + '/' + data[1] + '/' + data[0] + '.\n')
@@ -1196,6 +1197,7 @@ if (isset($_GET['label'])) {
                     horas: horas
                 })
                     .done(function () {
+                        document.query('#forma_pagamento').value = ' ';
                         for (var count = 0; count < parcelas; count++) {
                             html += templateOficina({
                                 count: count + 1, // para sincronizar com o array vindo do banco
@@ -1253,6 +1255,9 @@ if (isset($_GET['label'])) {
                         var source = document.getElementById("templateParcela").innerHTML;
                         var template = Handlebars.compile(source);
                         var html = '';
+                        var formPagamento = document.querySelector('#forma_pagamento');
+
+                        formPagamento.textContent = '';
 
                         for (var count = 0; count < parcelas; count++) {
                             html += template({
@@ -1262,7 +1267,6 @@ if (isset($_GET['label'])) {
                             });
                         }
 
-                        $('#forma_pagamento').val() == '';
                         for (let conta = 1; conta <= parcelas; conta++) {
                             let data = datas[conta].split('-');
                             $('#forma_pagamento').append(conta + '° parcela R$ ' + valores[conta] + '. Entrega de documentos a partir de ' + data[2] + '/' + data[1] + '/' + data[0] + '.\n')
