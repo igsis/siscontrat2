@@ -715,12 +715,6 @@ if (isset($_GET['label'])) {
                 $("#editarModalOficina").attr("disabled", false);
 
                 var nums = "<?= isset($numRows) ? $numRows : ''; ?>";
-
-                // if (nums != '') {
-                //     $("#modalOficina").find('#msg').html("<em class='text-success'> Agora os valores batem! Clique em editar para continuar.");
-                // } else {
-                //     $("#modalOficina").find('#msg').html("<em class='text-success'> Agora os valores batem! Clique em salvar para continuar.");
-                // }
             }
 
         } else {

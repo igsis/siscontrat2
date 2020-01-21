@@ -264,7 +264,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                             if(hora < 10){
                                                 hora = "0" + hora;
                                             }
-                                            if(hora == 000){
+                                            if(hora == 00){
                                                 hora = "00";
                                             }
 
@@ -583,6 +583,19 @@ $tipoEvento = $evento['tipo_evento_id'];
                 .val('0,00');
         }
     });
+
+    let retiradaIngresso = document.querySelector('#retiradaIngresso');
+
+    retiradaIngresso.addEventListener("change", () => {
+        let valorIngressos = document.querySelector('#valor_ingresso');
+        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11){
+            valorIngressos.value = '0,00';
+            valorIngressos.readOnly = true;
+        }else {
+            valorIngressos.readOnly = false;
+        }
+    });
+
 
     function getLocais(idInstituicao, selectedId) {
         fetch(`${url}?instituicao_id=${idInstituicao}`)
