@@ -307,6 +307,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right">
                                 Salvar
                             </button>
+                            
                     </form>
 
                     <form action="?perfil=contrato&p=filtrar_contratos&sp=area_impressao" method="post" role="form">
