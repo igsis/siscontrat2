@@ -27,6 +27,7 @@ if (isset($_POST['busca'])) {
     AND p.status_pedido_id != 1
     AND o.data_inicio >= '$data_inicio'
     AND o.data_fim <= '$data_fim'
+    AND e.evento_status_id != 1
     AND (
       (er.data_reabertura < ee.data_envio) 
     OR 

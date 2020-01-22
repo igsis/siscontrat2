@@ -29,7 +29,7 @@ $nivelUsuario = recuperaDados('usuario_contratos', 'usuario_id', $idUsuarioDoMen
                 <li><a href="<?= $pasta ?>pesquisa_sem_operador"><i class="fa fa-circle-o"></i>
                     <span>Filtro sem Operador</span></a>
                 </li>
-                <li><a href="<?= $pasta ?>pesquisa_operador"><i class="fa fa-circle-o"></i>
+                <li><a href="<?= $pasta ?>pesquisa_periodo"><i class="fa fa-circle-o"></i>
                     <span>Filtro Período/Operador</span></a>
                 </li>
                 <li><a href="<?= $pasta ?>sem_reenvio"><i class="fa fa-circle-o"></i>

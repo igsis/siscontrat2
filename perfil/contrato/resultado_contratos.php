@@ -48,7 +48,8 @@ if (isset($_POST['busca'])) {
     AND p.origem_tipo_id = 1
     AND p.status_pedido_id != 1
     AND p.status_pedido_id != 3
-    AND p.origem_tipo_id = 1 
+    AND p.origem_tipo_id = 1
+    AND e.evento_status_id != 1 
     AND (
       (er.data_reabertura < ee.data_envio) 
     OR 
