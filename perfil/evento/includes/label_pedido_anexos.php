@@ -102,7 +102,7 @@ if ($edital) { $whereAdicional[] = "edital = '1'"; }
                 ?>
             </div>
         </div>
-        <div class="box box-success">
+        <div id="envioArq" class="box box-success">
             <div class="box-header with-border">
                 <h3 class="box-title">Enviar Arquivos</h3>
             </div>
@@ -140,16 +140,17 @@ if ($edital) { $whereAdicional[] = "edital = '1'"; }
                                             <input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'>
                                         </td>
                                     </tr>
+<!--                                    Aparece com a Parte de envio de arquivos-->
+                                    <script>
+                                        document.querySelector('#envioArq').style.display = 'block';
+                                    </script>
                                     <?php
                                 } else {
                                 ?>
-                                    <div class="row">
-                                        <div class="col-md-offset-2 col-md-8">
-                                            <div class="callout callout-success text-center">
-                                                <span class="">O arquivo <b><?= $arq['documento'] ?></b> já foi enviado.</span>
-                                            </div>
-                                        </div>
-                                    </div>
+<!--                                    Sumir com a Parte de envio de arquivos-->
+                                    <script>
+                                        document.querySelector('#envioArq').style.display = 'none';
+                                    </script>
                                 <?php
                                 }
                             }
@@ -226,5 +227,5 @@ if ($edital) { $whereAdicional[] = "edital = '1'"; }
         $(this).find('#idArquivo').attr('value', `${id}`);
         $(this).find('#tipoPessoa').attr('value', `${pessoa}`);
 
-    })
+    });
 </script>
