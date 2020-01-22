@@ -63,13 +63,15 @@ if (isset($_POST['cadastra'])) {
         if (isset($_POST['publico'])) {
             atualizaDadosRelacionamento('evento_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
         }
-
+        
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
+
+    echo $sql;
 }
 
 if (isset($_POST['edita'])) {
@@ -167,8 +169,8 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
                                 <div class="form-group col-md-4">
                                     <label for="contratacao">Espaço em que será realizado o evento é público?</label>
                                     <br>
-                                    <label><input type="radio" name="tipoLugar" value="1"> Sim </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="tipoLugar" value="0" checked> Não </label>
+                                    <label><input type="radio" name="tipoLugar" value="1" checked> Sim </label>&nbsp;&nbsp;
+                                    <label><input type="radio" name="tipoLugar" value="0"> Não </label>
                                 </div>
 
                                 <div class="form-group col-md-4">

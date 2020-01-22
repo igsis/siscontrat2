@@ -17,7 +17,7 @@
                                 <div class="col-md-4 form-group">
                                     <label for="numprocesso">Número do Processo </label>
                                     <input type="text" class="form-control" name="numprocesso" id="numprocesso"
-                                           data-mask="9999.9999/9999999-9" minlength="19">
+                                           >
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="objetoevento">Objeto/Evento </label>

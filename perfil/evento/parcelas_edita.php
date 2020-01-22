@@ -166,7 +166,6 @@ if ($nums < $parcelas) {
         }
         $count++;
     }
-
 } else {
 
     for ($i = 1; $i <= $parcelas; $i++) {
@@ -200,7 +199,3 @@ if ($nums < $parcelas) {
         }
     }
 }
-
-
-
-

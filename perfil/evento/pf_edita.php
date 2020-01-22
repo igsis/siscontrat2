@@ -696,7 +696,7 @@ include "includes/menu_interno.php";
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="banco">Banco:</label>
-                                        <select id="banco" name="banco" class="form-control" required>
+                                        <select id="banco" name="banco" class="form-control">
                                             <option value="">Selecione um banco...</option>
                                             <?php
                                             geraOpcao("bancos", $banco['banco_id']);
@@ -704,15 +704,15 @@ include "includes/menu_interno.php";
                                         </select>
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label for="agencia">Agência: *</label>
+                                        <label for="agencia">Agência:</label>
                                         <input type="text" name="agencia" class="form-control"
-                                               placeholder="Digite a Agência" maxlength="12" required
+                                               placeholder="Digite a Agência" maxlength="12"
                                                value="<?= $banco['agencia'] ?>">
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label for="conta">Conta: *</label>
+                                        <label for="conta">Conta:</label>
                                         <input type="text" name="conta" class="form-control"
-                                               placeholder="Digite a Conta" maxlength="12" required
+                                               placeholder="Digite a Conta" maxlength="12"
                                                value="<?= $banco['conta'] ?>">
                                     </div>
                                 </div>

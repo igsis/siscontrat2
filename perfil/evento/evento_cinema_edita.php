@@ -6,19 +6,19 @@ $idEvento = $_SESSION['idEvento'];
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
-    $tituloFilme = $_POST['tituloFilme'];
-    $tituloOriginal = addslashes($_POST['tituloOriginal']);
+    $tituloFilme = trim($_POST['tituloFilme']);
+    $tituloOriginal = trim(addslashes($_POST['tituloOriginal']));
     $paisOrigem = addslashes($_POST['paisOrigem']);
     $paisCoProducao = addslashes($_POST['paisCoProducao']);
     $anoProducao = $_POST['anoProducao'];
-    $genero = addslashes($_POST['genero']);
-    $bitola = addslashes($_POST['bitola']);
-    $direcao = addslashes($_POST['direcao']);
-    $sinopse = addslashes($_POST['sinopse']);
-    $elenco = addslashes($_POST['elenco']);
+    $genero = trim(addslashes($_POST['genero']));
+    $bitola = trim(addslashes($_POST['bitola']));
+    $direcao = trim(addslashes($_POST['direcao']));
+    $sinopse = trim(addslashes($_POST['sinopse']));
+    $elenco = trim(addslashes($_POST['elenco']));
     $duracao = $_POST['duracao'];
     $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
-    $link = addslashes($_POST['link']);
+    $link = trim(addslashes($_POST['link']));
 }
 
 if (isset($_POST['cadastra'])) {
@@ -152,7 +152,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="genero">Gênero:</label>
-                                    <input type="text" class="form-control" id="genero" name="genero" placeholder="Digite o Gênero" maxlength="20" value="<?= $row['genero'] ?>"/>
+                                    <input type="text" class="form-control" id="genero" name="genero" placeholder="Digite o Gênero" maxlength="20" value="<?= $row['genero'] ?>" pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,20}" title="Apenas letras"> 
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="bitola">Bitola:</label>

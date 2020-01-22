@@ -374,6 +374,60 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                            value="<?= $ocorrencia['horario_inicio'] ?>" required placeholder="hh:mm"/>
                                 </div>
 
+                                <?php
+                                if($evento['tipo_evento_id'] == 2){
+                                    $filmeEvento = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $idEvento)->fetch_array();
+                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $filmeEvento['filme_id'])->fetch_array();
+                                    ?>
+                                    <script type="text/javascript">
+                                                                    
+                                     $('#horaInicio').on('change', function() {
+                                            $('#horaFim').attr("readonly",true);
+                                            var horainicio = $('#horaInicio').val();                                      
+                                            var hora = parseInt(horainicio.split(':', 1));
+                                            var minuto = parseInt(horainicio[3] + horainicio[4]);
+                                            var duracao = <?=$filme['duracao']?>;
+                                            while(duracao >= 60){
+                                                duracao -= 60;
+                                                hora += 1;
+                                            }
+                                            var minutoFinal = minuto + duracao;
+                                            if(minutoFinal >= 60){
+                                               minutoFinal -= 60;
+                                               hora += 1;
+                                            }
+                                            if(minutoFinal == 0 && minutoFinal != 00){
+                                                minutoFinal = minutoFinal + "0";
+                                            }
+                                            if(minutoFinal < 10){
+                                                minutoFinal = "0" + minutoFinal;
+                                            }
+                                            if(hora == 0 && minutoFinal != 00){
+                                                hora = hora + "0";
+                                            }
+                                            if(hora < 10){
+                                                hora = "0" + hora;
+                                            }
+                                            if(hora == 000){
+                                                hora = "00";
+                                            }
+
+                                            var resultado = hora + ":" + minutoFinal + ":00";
+                    
+                                            
+                                            $('#horaFim').val(resultado);
+                                            $('#horaFim').attr("value", resultado);
+                                                               
+                                                               
+                    
+                                            
+                                    });
+                                    </script>
+                                <?php }else{
+
+                                }
+                            ?>
+
                                 <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
                                     <input type="time" name="horaFim" class="form-control" id="horaFim" required
@@ -425,7 +479,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="espaco">Espaço</label>
+                                    <label for="espaco">Espaço *</label>
                                     <select class="form-control" id="espaco" name="espaco">
                                         <!-- Populando pelo js -->
                                     </select>
@@ -799,6 +853,18 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                 .val('0,00');
         }
     }
+
+    let retiradaIngresso = document.querySelector('#retiradaIngresso');
+
+    retiradaIngresso.addEventListener("change", () => {
+        let valorIngressos = document.querySelector('#valor_ingresso');
+        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11){
+            valorIngressos.value = '0,00';
+            valorIngressos.readOnly = true;
+        }else {
+            valorIngressos.readOnly = false;
+        }
+    });
 
     function getLocais(idInstituicao, selectedId) {
         fetch(`${url}?instituicao_id=${idInstituicao}`)

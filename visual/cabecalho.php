@@ -103,7 +103,7 @@ else
               background: #34bc9b;
           }
           .stepper .nav-tabs > li.active:last-child .round-tab::after {
-              content: '✔';
+              /*content: '✔';*/
               color: #fff;
               position: absolute;
               left: 0;
@@ -153,7 +153,7 @@ else
               background: #34bc9b;
           }
           .stepper .completed .round-tab::after {
-              content: '✔';
+              /*content: '✔';*/
               color: #fff;
               position: absolute;
               left: 0;

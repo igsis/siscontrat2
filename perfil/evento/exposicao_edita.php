@@ -192,6 +192,6 @@ include "includes/menu_interno.php";
                 </form>
             </div>
         </div>
+    </section>
 </div>
-</section>
-</div>
+

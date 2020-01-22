@@ -207,8 +207,8 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
                                 </div>
 
                                 <div class="form-group col-md-3">
-                                    <label for="retiradaIngresso">Retirada de Ingresso</label>
-                                    <select name="retiradaIngresso" id="retiradaIngresso" class="form-control">
+                                    <label for="retiradaIngresso">Retirada de Ingresso*</label>
+                                    <select name="retiradaIngresso" id="retiradaIngresso" class="form-control" required>
                                         <option value="">Selecione uma opção...</option>
                                         <?php
                                         geraOpcao("retirada_ingressos");
@@ -233,7 +233,7 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="instituicao">Instituição *</label>
-                                    <select class="form-control" name="instituicao" id="instituicao">
+                                    <select class="form-control" name="instituicao" id="instituicao" required>
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
@@ -244,7 +244,7 @@ $evento = recuperaDados('agendoes', 'id', $idEvento);
 
                                 <div class="form-group col-md-4">
                                     <label for="local">Local *</label>
-                                    <select class="form-control" id="local" name="local">
+                                    <select class="form-control" id="local" name="local" required>
                                         <!-- Populando pelo js -->
                                     </select>
                                 </div>
