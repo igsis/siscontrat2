@@ -7,8 +7,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Busca sem operador</h3>
                     </div>
-                    <form method="POST" action="?perfil=contrato&p=resultado_sem_operador"
-                          role="form">
+                    <form method="POST" action="?perfil=contrato&p=resultado_sem_operador" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-4 form-group">
