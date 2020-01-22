@@ -226,23 +226,18 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 <div class="row">
                                     <input type="hidden" name="idAtracao[]" value="<?= $atracao['id'] ?>">
 
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label for="nome_atracao[]">Nome da atração *</label>
                                         <input type="text" name="nome_atracao[]" id="nome_atracao"
                                                value="<?= $atracao['nome_atracao'] ?>"
                                                class="form-control" required>
                                     </div>
 
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label for="valor">Valor Individual: </label>
                                         <input type="text" disabled
                                                value="<?= dinheiroParaBr($atracao['valor_individual']) ?>"
                                                class="form-control">
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label for="valorTotal">Valor Total: </label>
-                                        <input type="text" value="<?= dinheiroParaBr($pedido['valor_total'])?>" onKeyPress="return(moeda(this,'.',',',event))" class="form-control" name="valorTotal" id="valorTotal">
                                     </div>
                                 </div>
 
@@ -273,7 +268,12 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-6">
+                            <div class="col-md-4">
+                                        <label for="valorTotal">Valor Total: </label>
+                                        <input type="text" value="<?= dinheiroParaBr($pedido['valor_total'])?>" onKeyPress="return(moeda(this,'.',',',event))" class="form-control" name="valorTotal" id="valorTotal">
+                                    </div>
+
+                                <div class="form-group col-md-4">
                                     <label for="verba">Verba </label>
                                     <select name="verba" id="verba" class="form-control">
                                         <?php
@@ -282,7 +282,8 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     </select>
                                 </div>
 
-                                <div class="form-group col-md-6">
+
+                                <div class="form-group col-md-4">
                                     <label for="processoMae">Número de processo mãe</label>
                                     <input type="text" class="form-control" name="processoMae" id="processoMae"
                                            data-mask="9999.9999/9999999-9" minlength="19"
@@ -308,8 +309,8 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="suplente">Suplente</label>
-                                    <select class="form-control" id="suplente" name="suplente">
+                                    <label for="suplente">Suplente *</label>
+                                    <select class="form-control" id="suplente" name="suplente" required>
                                         <option value="">Selecione um suplente...</option>
                                         <?php
                                         geraOpcaoUsuario("usuarios", 1, $evento['suplente_id']);
@@ -516,3 +517,18 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 </div>
 </section>
 </div>
+
+<script>
+    let suplente = $('#suplente');
+    let btn = $('#salvar');
+    function bloqueiaBtn(){
+        if(suplente.val() == ""){
+            btn.prop('disabled', true);
+        }else{
+            btn.prop('disabled', false);
+        }
+    }
+    
+    suplente.on('change', bloqueiaBtn);
+
+</script>
