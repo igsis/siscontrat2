@@ -117,6 +117,7 @@ if (isset($_POST['salvar'])) {
     $justificativa = addslashes($_POST['justificativa']);
     $operador = $_POST['operador'] ?? NULL;
     $valorTotal = $_POST['valorTotal'];
+    $valorTotal = str_replace(",",".", $valorTotal);
 
     //eventos
     $fiscal = $_POST['fiscal'];
@@ -124,7 +125,7 @@ if (isset($_POST['salvar'])) {
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
     $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', valor_total = '$valorTotal' WHERE id = '$idPedido'";
-
+    
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
         if ($operador != NULL) {
@@ -218,13 +219,21 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                             ?>
                                         </select>
                                     </div>
+                                
+                                    <?php 
+                                        $nomeStatus = $con->query("SELECT status FROM pedido_status WHERE id = " . $pedido['status_pedido_id'])->fetch_array(); 
+                                    ?>
 
                                     <div class="col-md-6 form-group">
                                         <label for="status">Status Contrato</label>
                                         <select name="status" id="status" class="form-control">
+                                        <option value="<?=$pedido['status_pedido_id']?>"><?=$nomeStatus['status']?></option>
                                             <?php
-                                            geraOpcao('pedido_status', $pedido['status_pedido_id']);
-                                            ?>
+                                            $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " ORDER BY ordem";
+                                            $queryStatus = mysqli_query($con, $sqlStatus);
+                                            while($status = mysqli_fetch_array($queryStatus)){ 
+                                                echo "<option value='" . $status['id'] .  "'>" . $status['status'] . "</option>";
+                                             }  ?>
                                         </select>
                                     </div>
                                 </div>
@@ -267,11 +276,19 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             }
                             ?>
 
+                            <?php
+                                if($pedido['numero_parcelas'] == 1 || $pedido['numero_parcelas'] == 13){
+                                    $readonly = "";
+                                }else{
+                                    $readonly = "readonly";
+                                }
+                            ?>
+
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="formaPagamento">Forma de pagamento</label>
                                     <textarea name="formaPagamento" id="formaPagamento" rows="5" required
-                                              class="form-control"><?= $pedido['forma_pagamento'] ?> </textarea>
+                                              class="form-control" <?=$readonly?> > <?= $pedido['forma_pagamento'] ?> </textarea>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="justificativa">Justificativa</label>
