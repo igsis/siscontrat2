@@ -91,14 +91,14 @@ if (isset($_POST['busca'])) {
                                 //?perfil=pesquisa&p=resumo
                                 ?>
                                 <tr>
-                                    <td><?= $evento['protocolo'] ?></td>
                                     <td>
-                                        <form action="#" method="POST">
+                                        <form action="?perfil=pesquisa&p=resumo" method="POST">
                                             <input type="hidden" name="idEvento" value="<?= $evento['id'] ?>">
                                             <button type="submit" name="carregar" id="carregar"
-                                                    class="btn btn-link"><?= $evento['numero_processo'] ?></button>
+                                                    class="btn btn-link"><?= $evento['protocolo'] ?></button>
                                         </form>
                                     </td>
+                                    <td><?= $evento['numero_processo'] ?></td>
                                     <td><?= $pessoa ?></td>
                                     <td><?= $tipo ?></td>
                                     <td><?= $evento['nome_evento'] ?></td>
