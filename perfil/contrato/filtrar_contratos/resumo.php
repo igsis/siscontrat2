@@ -307,6 +307,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right">
                                 Salvar
                             </button>
+
                     </form>
 
                     <form action="?perfil=contrato&p=filtrar_contratos&sp=area_impressao" method="post" role="form">
@@ -425,7 +426,8 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                 <tr>
                     <th>Atração</th>
                     <th>Proponente</th>
-                    <th width="5%">Ação</th>
+                    <th width="5%">Editar</th>
+                    <th width="5%">Trocar</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -439,27 +441,30 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             ?>
                             <td><?= $atracao['nome'] ?></td>
                             <td>
-                                <form method="POST"
-                                      action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_lider"
-                                      role="form">
-                                    <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
-                                    <input type='hidden' name='lider' value='<?= $idPedido ?>'>
-                                    <button type="submit" name='carregar' class="btn btn-primary"><i
-                                                class='fa fa-refresh'></i></button>
-                                </form>
                             </td>
-                            <?php
-                        } else {
-                            ?>
-                            <td></td>
                             <td>
                                 <form method="POST"
                                       action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_lider"
                                       role="form">
                                     <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
                                     <input type='hidden' name='lider' value='<?= $idPedido ?>'>
-                                    <button type="submit" name='pesquisar' class="btn btn-primary
-                                                "><i class='fa fa-plus'></i></button>
+                                    <button type="submit" class="btn btn-info btn-block"><span
+                                                class="glyphicon glyphicon-random"></span></button>
+                                </form>
+                            </td>
+                            <?php
+                        } else {
+                            ?>
+                            <td>
+                            </td>
+                            <td>
+                                <form method="POST"
+                                      action="?perfil=contrato&p=filtrar_contratos&sp=pesquisa_lider"
+                                      role="form">
+                                    <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
+                                    <input type='hidden' name='lider' value='<?= $idPedido ?>'>
+                                    <button type="submit" name="load" id="load" class="btn btn-primary btn-block"><span
+                                                class="glyphicon glyphicon-pencil"></span></button>
                                 </form>
                             </td>
                             <?php
