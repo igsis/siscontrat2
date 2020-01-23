@@ -143,7 +143,7 @@ include "includes/menu.php";
                                         </div>
                                     </td>
                                     <td>
-                                        <button class="btn-info btn">Editar</button>
+                                        <a class="btn-info btn" href="?perfil=comunicacao&p=comunicacao">Editar</a>
                                     </td>
                                 </tr>
                             </tbody>
