@@ -11,7 +11,7 @@ $sql = "SELECT e.id, e.protocolo, e.nome_evento,  er.data_reabertura, e.usuario_
         AND p.publicado = 1
         AND p.origem_tipo_id = 1
         AND e.evento_status_id != 1 
-        AND p.status_pedido_id != 3";
+        AND p.status_pedido_id != 3 GROUP BY e.id";
 
 
 $query = mysqli_query($con, $sql);
@@ -68,7 +68,7 @@ $rows = mysqli_num_rows($query);
                                     ?>
                                     <tr>
                                         <td>
-                                            <form action="?perfil=contrato&p=sem_reenvio&sp=resumo" method="POST">
+                                            <form action="?perfil=contrato&p=resumo" method="POST">
                                                 <input type="hidden" name="idEvento" id="idEvento" value="<?= $evento['id'] ?>">
                                                 <button type="submit" class="btn btn-link"><?= $evento['protocolo'] ?></button>
                                             </form>
