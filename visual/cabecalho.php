@@ -185,6 +185,63 @@ else
           .stepper .disabled .round-tab::after {
               display: none;
           }
+          #caixa-filtro{
+              margin: 0 auto;
+              width: 96%;
+              padding-left: 20px;
+              padding-bottom: 30px;
+              font-size: 12pt;
+          }
+          #topico-filtro{
+              display: flex;
+              flex-direction: column;
+
+          }
+
+          #topico-filtro span#titulo-filtro{
+              font-weight: bold;
+          }
+          .lateral{
+              display: flex;
+              flex-direction: column;
+          }
+
+          div.lateral label{
+              font-weight: normal;
+          }
+
+          #legendas-tbody{
+              font-size: 12pt;
+          }
+
+          .margin-top-20{
+              margin-top: 20px;
+          }
+
+          .margin-left-20{
+              margin-left: 20px;
+          }
+
+          .quad-legenda{
+              width: 80px;
+              text-align: center;
+          }
+
+          .quad-legenda span{
+              padding: 12px;
+              text-align: center;
+          }
+          .status-comunicacao{
+              display: flex;
+              justify-items: center;
+              align-items: flex-start;
+          }
+          .quadr{
+              width: 15px;
+              height: 15px;
+              margin-right: 10px;
+              border-radius: 2px;
+          }
 
       </style>
   </head>
