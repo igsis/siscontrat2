@@ -14,9 +14,18 @@ $nivelUsuario = recuperaDados('usuario_contratos', 'usuario_id', $idUsuarioDoMen
             <?php
             if ($nivelUsuario != null && $nivelUsuario == 1) {
                 ?>
-                <li><a href="<?= $pasta ?>admin&sp=nivel_usuario">
-                    <i class="fa fa-circle-o"></i><span>Administrativo</span></a>
-                </li>
+                <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-circle-o"></i>
+                    <span>Administrativo</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="<?= $pasta ?>admin&sp=nivel_usuario"><i class="fa fa-circle-o"></i> Usuários </a></li>
+                    <li><a href="<?= $pasta ?>admin&sp=penalidades_lista"><i class="fa fa-circle-o"></i> Penalidades </a></li>
+                </ul>
+            </li>
+
                 <?php
             }
             ?>
