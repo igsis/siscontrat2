@@ -9,7 +9,7 @@ if (isset($_POST['cadastra']) || (isset($_POST['edita']))) {
 
     if (mysqli_query($con, $sql)) {
         $mensagem = mensagem("success", "Cadastrado com sucesso");
-        $idPenalidades = recuperaUltimo('penalidades');
+        $idPenalidade = recuperaUltimo('penalidades');
     } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar. Tente novamente.");
     }
@@ -61,7 +61,7 @@ $penal = recuperaDados('penalidades', 'id', $idPenalidade);
                                     <label for="msg">Texto: *</label>
                                     <textarea id="texto" name="texto" class="form-control"
                                            required
-                                           rows="5"> <?= $penal['texto'] ?> </textarea>
+                                           rows="5"><?= $penal['texto'] ?></textarea>
                                 </div>
                             </div>
                         </div>
