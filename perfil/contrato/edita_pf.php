@@ -482,8 +482,10 @@ $atracao = mysqli_query($con, $sql);
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control" min="1"
-                                           placeholder="Digite o número" required value="<?= $endereco['numero'] ?>">
+                                    <i>(se não houver, marcar 0)</i>
+                                    <input type="number" name="numero" class="form-control" min="0"
+                                           placeholder="(se não houver número marcar 0)" required
+                                           value="<?= $endereco['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="complemento">Complemento: </label>
