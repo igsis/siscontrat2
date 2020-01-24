@@ -8,17 +8,12 @@ $resultado = "<td></td>";
 $procurar = NULL;
 $tipoDocumento = null;
 
-if (isset($_POST['lider'])) {
-    $idPedido = $_POST['lider'];
-    $idAtracao = $_POST['oficina'];
-
-    $_SESSION['idPedido'] = $idPedido;
-    $_SESSION['idAtracao'] = $idAtracao;
+if(isset($_POST['trocaLider'])){
+    $idPedido = $_POST['idPedido'];
+    $idAtracao = $_POST['idAtracao'];
 }
 
 if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
-    $idAtracao = $_SESSION['idAtracao'];
-    $idPedido = $_SESSION['idPedido'];
 
     $botaoSelecionar = "<input type='submit' name='cadastraLider' class='btn btn-primary' value='Selecionar'>";
     $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
@@ -26,7 +21,8 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                 </i>Adicionar
                             </button>";
 
-
+    $idPedido = $_POST['idPedido'];
+    $idAtracao = $_POST['idAtracao'];
     $procurar = $_POST['procurar'] ?? $_POST['passaporte'];
     $tipoDocumento = $_POST['tipoDocumento'] ?? false;
 
@@ -54,7 +50,8 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         $resultado .= "<td>" . $pessoa['email'] . "</td>";
                         $resultado .= "<td>
                                      <form action='?perfil=contrato&p=resumo' method='post'>
-                                        <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
+                                        <input type='hidden' name='idLider' value='" . $pessoa['id'] . "'>
+                                        <input type='hidden' name='idAtracao' value='$idAtracao'>
                                         <input type='hidden' name='idPedido' value='$idPedido'>
                                         $botaoSelecionar                                        
                                      </form>
@@ -69,7 +66,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=contrato&p=cadastra_pf'>
+                        <form method='post' action='?perfil=contrato&p=cadastra_lider'>
                             <input type='hidden' name='idAtracao' value='$idAtracao'>
                             <input type='hidden' name='idPedido' value='$idPedido'>
                             <input type='hidden' name='documentacao' value='$procurar'>
@@ -101,9 +98,12 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             $resultado .= "<td>" . $pessoa['passaporte'] . "</td>";
                             $resultado .= "<td>" . $pessoa['email'] . "</td>";
                             $resultado .= "<td>
-                                     <form action='?perfil=contrato&p=pf_edita' method='post'>
-                                        <input type='hidden' name='idPessoa' value='" . $pessoa['id'] . "'>
-                                        <input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>
+                            <form action='?perfil=contrato&p=resumo' method='post'>
+                            <input type='hidden' name='idLider' value='" . $pessoa['id'] . "'>
+                            <input type='hidden' name='idAtracao' value='$idAtracao'>
+                            <input type='hidden' name='idPedido' value='$idPedido'>
+                            $botaoSelecionar                                        
+                         </form>
                                      </form>
                                </td>";
                             $resultado .= "</tr>";
@@ -114,10 +114,12 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=contrato&p=cadastra_pf'>
+                        <form method='post' action='?perfil=contrato&p=cadastra_lider'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
-                            <button class=\"btn btn-primary\" name='adicionar' type='submit'>
+                            <input type='hidden' name='idAtracao' value='$idAtracao'>
+                            <input type='hidden' name='idPedido' value='$idPedido'>
+                            <button class=\"btn btn-primary\" name='adicionarLider' type='submit'>
                                 <i class=\"glyphicon glyphicon-plus\">        
                                 </i>Adicionar
                             </button>
@@ -135,21 +137,15 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
 
 ?>
 
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Main content -->
     <section class="content">
-
-        <!-- START FORM-->
-        <h2 class="page-header">Evento</h2>
-
+        <h2 class="page-header">Contrato</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Procurar pessoa fisica</h3>
+                        <h3 class="box-title">Procurar lider</h3>
                     </div>
-                    <!-- /.box-header -->
                     <div class="box-body">
                         <form action="?perfil=contrato&p=pesquisa_lider" method="post"
                               id="formulario">
@@ -182,8 +178,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         </form>
 
                         <div class="panel panel-default">
-                            <!-- Default panel contents -->
-                            <!-- Table -->
                             <table class="table">
                                 <thead>
                                 <tr>
@@ -218,7 +212,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
         <!-- END ACCORDION & CAROUSEL-->
 
     </section>
-    <!-- /.content -->
+
 </div>
 
 <script>

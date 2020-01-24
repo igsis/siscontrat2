@@ -9,13 +9,7 @@ $resultado = "<td></td>";
 $procurar = NULL;
 $tipoDocumento = null;
 
-if (isset($_POST['lider'])) {
-    $idPedido = $_POST['lider'];
-    $idAtracao = $_POST['oficina'];
-}
-
 if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
-    $idAtracao = $_POST['idAtracao'] ?? NULL;
 
     $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
     $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
@@ -52,7 +46,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                      <form action='?perfil=contrato&p=resumo' method='post'>
                                         <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
                                         <input type='hidden' name='idPedido' value='$idPedido'>
-                                        <input type='hidden' name='liderOn' value='0'>
                                         $botaoSelecionar                                        
                                      </form>
                                </td>";
@@ -67,7 +60,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                       </td>
                       <td>
                         <form method='post' action='?perfil=contrato&p=cadastra_pf'>
-                            <input type='hidden' name='idAtracao' value='$idAtracao'>
                             <input type='hidden' name='idPedido' value='$idPedido'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
@@ -131,14 +123,9 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
 }
 
 ?>
-
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Main content -->
     <section class="content">
-
-        <!-- START FORM-->
-        <h2 class="page-header">Evento</h2>
+        <h2 class="page-header">Contratos</h2>
 
         <div class="row">
             <div class="col-md-12">
@@ -146,7 +133,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                     <div class="box-header">
                         <h3 class="box-title">Procurar pessoa fisica</h3>
                     </div>
-                    <!-- /.box-header -->
                     <div class="box-body">
                         <form action="?perfil=contrato&p=pesquisa_pf" method="post"
                               id="formulario">
@@ -170,7 +156,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                         <p>&nbsp;</p>
                                         <p>&nbsp;</p>
                                         <input type="hidden" name="idPedido" value="<?= $idPedido ?? NULL ?>">
-                                        <input type="hidden" name="idAtracao" value="<?= $idAtracao ?? NULL ?>">
                                         <button class="btn btn-default" type="submit"><i
                                                     class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
@@ -179,8 +164,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         </form>
 
                         <div class="panel panel-default">
-                            <!-- Default panel contents -->
-                            <!-- Table -->
                             <table class="table">
                                 <thead>
                                 <tr>
@@ -202,20 +185,11 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                 </tbody>
                             </table>
                         </div>
-
-
                     </div>
-                    <!-- /.box-body -->
                 </div>
-                <!-- /.box -->
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
-        <!-- END ACCORDION & CAROUSEL-->
-
     </section>
-    <!-- /.content -->
 </div>
 
 <script>

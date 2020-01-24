@@ -31,37 +31,40 @@ if (isset($_POST['selecionar'])) {
     else
         $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
 
-} else if (isset($_POST['cadastraLider'])) {
-    $idPf = $_POST['idPf'];
-    $idAtracao = $_SESSION['idAtracao'];
-    $idPedido = $_SESSION['idPedido'];
+} else if (isset($_POST['carregar'])) {
+    $idLider = $_POST['idLider'];
+    $idAtracao = $_POST['idAtracao'];
+    $idPedido = $_POST['idPedido'];
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
     $idEvento = $pedido['origem_id'];
-    unset($_SESSION['idAtracao']);
-    unset($_SESSION['idPedido']);
 
-    $sql = "SELECT * FROM lideres WHERE atracao_id = '$idAtracao' AND pedido_id = '$idPedido'";
-    $query = mysqli_query($con, $sql);
-
-    $num = mysqli_num_rows($query);
-
-    if ($num > 0)
-        $sql = "UPDATE lideres SET pessoa_fisica_id = '$idPf' WHERE atracao_id = '$idAtracao' AND pedido_id = '$idPedido'"; #update
-    else
-        $sql = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido', '$idAtracao', '$idPf')"; #insert
-
-    if (mysqli_query($con, $sql)) {
-        #foi
-        $mensagem = mensagem("success", "Troca realizada com sucesso!");
-
-        gravarLog($sql);
-    } else {
-        $mensagem = mensagem("danger", "Erro ao efetuar a troca!");
+ } else if (isset($_POST['cadastraLider'])) {
+        $idLider = $_POST['idLider'];
+        $idAtracao = $_POST['idAtracao'];
+        $idPedido = $_POST['idPedido'];
+        $pedido = recuperaDados('pedidos', 'id', $idPedido);
+        $idEvento = $pedido['origem_id'];
+    
+        $sql = "SELECT * FROM lideres WHERE atracao_id = '$idAtracao' AND pedido_id = '$idPedido'";
+        $query = mysqli_query($con, $sql);
+    
+        $num = mysqli_num_rows($query);
+    
+        if ($num > 0)
+            $sql = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE atracao_id = '$idAtracao' AND pedido_id = '$idPedido'"; #update
+        else
+            $sql = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido', '$idAtracao', '$idLider')"; #insert
+    
+        if (mysqli_query($con, $sql)) {
+            #foi
+            $mensagem = mensagem("success", "Troca realizada com sucesso!");
+    
+            gravarLog($sql);
+        } else {
+            $mensagem = mensagem("danger", "Erro ao efetuar a troca!");
+        }
+    
     }
-
-} else {
-    $idEvento = $_POST['idEvento'];
-}
 
 $_SESSION['idEvento'] = $idEvento;
 
@@ -458,7 +461,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                         <thead>
                                         <tr>
                                             <th>Atração</th>
-                                            <th>Proponente</th>
+                                            <th>Lider</th>
                                             <th width="5%">Editar</th>
                                             <th width="5%">Trocar</th>
                                         </tr>
@@ -471,27 +474,20 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                                 <td><?= $atracao['nome_atracao'] ?></td>
                                                 <td><?= $atracao['nome'] ?></td>
                                                 <td>
-                                                    <form action="?perfil=contrato&p=edita_pf" method="POST">
-                                                        <input type="hidden" name="idPf" id="idPf"
-                                                               value="<?= $atracao['pessoa_fisica_id'] ?>">
-                                                        <input type='hidden' name='oficina'
-                                                               value="<?= $atracao['id'] ?>">
-                                                        <input type='hidden' name='lider' value='<?= $idPedido ?>'>
-                                                        <button type="submit" name="load" id="load"
-                                                                class="btn btn-primary btn-block"><span
+                                                    <form action="?perfil=contrato&p=edita_lider" method="POST">
+                                                        <input type="hidden" name="idLider" value="<?= $atracao['pessoa_fisica_id'] ?>">
+                                                        <input type='hidden' name='idAtracao'value="<?= $atracao['id'] ?>">
+                                                        <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
+                                                        <button type="submit" name="carregar" class="btn btn-primary btn-block"><span
                                                                     class="glyphicon glyphicon-pencil"></span></button>
                                                     </form>
                                                 </td>
                                                 <td>
-                                                    <form method="POST"
-                                                          action="?perfil=contrato&p=pesquisa_lider"
-                                                          role="form">
-                                                        <input type='hidden' name='oficina'
-                                                               value="<?= $atracao['id'] ?>">
-                                                        <input type='hidden' name='lider' value='<?= $idPedido ?>'>
-                                                        <button type="submit" class="btn btn-info btn-block"><span
-                                                                    name='carregar'
-                                                                    class="glyphicon glyphicon-random"></span></button>
+                                                    <form method="POST" action="?perfil=contrato&p=pesquisa_lider" role="form">
+                                                        <input type='hidden' name='idAtracao'value="<?= $atracao['id'] ?>">
+                                                        <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
+                                                        <button type="submit" name='trocaLider' class="btn btn-info btn-block">
+                                                        <span class="glyphicon glyphicon-random"></span></button>
                                                     </form>
                                                 </td>
                                             </tr>
@@ -546,7 +542,6 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
             </form>
         </div>
     </div>
-</div>
 </section>
 </div>
 
