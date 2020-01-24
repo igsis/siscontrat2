@@ -117,7 +117,7 @@ if (isset($_POST['salvar'])) {
     $justificativa = addslashes($_POST['justificativa']);
     $operador = $_POST['operador'] ?? NULL;
     $valorTotal = $_POST['valorTotal'];
-    $valorTotal = str_replace(",",".", $valorTotal);
+    $valorTotal = str_replace(",", ".", $valorTotal);
 
     //eventos
     $fiscal = $_POST['fiscal'];
@@ -125,7 +125,7 @@ if (isset($_POST['salvar'])) {
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
     $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', valor_total = '$valorTotal' WHERE id = '$idPedido'";
-    
+
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
         if ($operador != NULL) {
@@ -219,21 +219,21 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                             ?>
                                         </select>
                                     </div>
-                                
-                                    <?php 
-                                        $nomeStatus = $con->query("SELECT status FROM pedido_status WHERE id = " . $pedido['status_pedido_id'])->fetch_array(); 
+
+                                    <?php
+                                    $nomeStatus = $con->query("SELECT status FROM pedido_status WHERE id = " . $pedido['status_pedido_id'])->fetch_array();
                                     ?>
 
                                     <div class="col-md-6 form-group">
                                         <label for="status">Status Contrato</label>
                                         <select name="status" id="status" class="form-control">
-                                        <option value="<?=$pedido['status_pedido_id']?>"><?=$nomeStatus['status']?></option>
+                                            <option value="<?= $pedido['status_pedido_id'] ?>"><?= $nomeStatus['status'] ?></option>
                                             <?php
                                             $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " ORDER BY ordem";
                                             $queryStatus = mysqli_query($con, $sqlStatus);
-                                            while($status = mysqli_fetch_array($queryStatus)){ 
-                                                echo "<option value='" . $status['id'] .  "'>" . $status['status'] . "</option>";
-                                             }  ?>
+                                            while ($status = mysqli_fetch_array($queryStatus)) {
+                                                echo "<option value='" . $status['id'] . "'>" . $status['status'] . "</option>";
+                                            } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -277,18 +277,19 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             ?>
 
                             <?php
-                                if($pedido['numero_parcelas'] == 1 || $pedido['numero_parcelas'] == 13){
-                                    $readonly = "";
-                                }else{
-                                    $readonly = "readonly";
-                                }
+                            if ($pedido['numero_parcelas'] == 1 || $pedido['numero_parcelas'] == 13) {
+                                $readonly = "";
+                            } else {
+                                $readonly = "readonly";
+                            }
                             ?>
 
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="formaPagamento">Forma de pagamento</label>
                                     <textarea name="formaPagamento" id="formaPagamento" rows="5" required
-                                              class="form-control" <?=$readonly?> > <?= $pedido['forma_pagamento'] ?> </textarea>
+                                              class="form-control"
+                                              <?= $readonly ?>> <?= $pedido['forma_pagamento'] ?> </textarea>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="justificativa">Justificativa</label>
@@ -299,10 +300,12 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             </div>
 
                             <div class="row">
-                            <div class="col-md-4">
-                                        <label for="valorTotal">Valor Total: </label>
-                                        <input type="text" value="<?= dinheiroParaBr($pedido['valor_total'])?>" onKeyPress="return(moeda(this,'.',',',event))" class="form-control" name="valorTotal" id="valorTotal">
-                                    </div>
+                                <div class="col-md-4">
+                                    <label for="valorTotal">Valor Total: </label>
+                                    <input type="text" value="<?= dinheiroParaBr($pedido['valor_total']) ?>"
+                                           onKeyPress="return(moeda(this,'.',',',event))" class="form-control"
+                                           name="valorTotal" id="valorTotal">
+                                </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="verba">Verba </label>
@@ -350,181 +353,179 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 </div>
                             </div>
                         </div>
-
-                        <div class="box-footer">
-                            <input type="hidden" name="idEvento" class="idEvento" value="<?= $idEvento ?>">
-                            <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right">
-                                Salvar
-                            </button>
+                        <input type="hidden" name="idEvento" class="idEvento" value="<?= $idEvento ?>"
+                               style="margin: 0 10px;">
+                        <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right"style="margin: 0 10px;">
+                            Salvar
+                        </button>
+                        <br>
+                        <br>
                     </form>
-
-                    <form action="?perfil=contrato&p=area_impressao" target="_blank" method="post" role="form">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-default pull-left">Ir para a área de impressão</button>
-                    </form>
-
-                </div>
-                <hr/>
-                <div class="row">
-                    <div class="col-md-12" style="text-align:center">
-                        <form>
-                            <button type="button" class="btn btn-info" name="reabre" style="width: 35%"
-                                    id="reabre" data-toggle="modal" data-target="#reabrir">
-                                Reabertura
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-</div>
-
-<?php
-if ($pedido['pessoa_tipo_id'] == 1) {
-    ?>
-    <div class="box box-danger">
-        <div class="box-header with-border">
-            <h3 class="box-title">Proponente</h3>
-        </div>
-        <div class="box-body">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Proponente</th>
-                    <th width="5%">Editar</th>
-                    <th width="5%">Trocar</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><?= $proponente['nome'] ?></td>
-                    <td>
-                        <form action="?perfil=contrato&p=edita_pf" method="POST">
-                            <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
-                            <button type="submit" class="btn btn-primary btn-block"><span
-                                        class="glyphicon glyphicon-pencil"></span></button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="?perfil=contrato&p=tipo_pessoa"
-                              method="POST">
-                            <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-info btn-block"><span
-                                        class="glyphicon glyphicon-random"></span></button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <?php
-} else if ($pedido['pessoa_tipo_id'] == 2) {
-    $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
+                        <?php
+                        if ($pedido['pessoa_tipo_id'] == 1) {
+                            ?>
+                            <div class="box box-danger">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Proponente</h3>
+                                </div>
+                                <div class="box-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Proponente</th>
+                                            <th width="5%">Editar</th>
+                                            <th width="5%">Trocar</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td><?= $proponente['nome'] ?></td>
+                                            <td>
+                                                <form action="?perfil=contrato&p=edita_pf" method="POST">
+                                                    <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
+                                                    <button type="submit" class="btn btn-primary btn-block"><span
+                                                                class="glyphicon glyphicon-pencil"></span></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="?perfil=contrato&p=tipo_pessoa"
+                                                      method="POST">
+                                                    <input type="hidden" name="idPedido" id="idPedido"
+                                                           value="<?= $idPedido ?>">
+                                                    <button type="submit" class="btn btn-info btn-block"><span
+                                                                class="glyphicon glyphicon-random"></span></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <?php
+                        } else if ($pedido['pessoa_tipo_id'] == 2) {
+                            $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
                                             WHERE evento_id = '$idEvento' AND a.publicado = 1";
-    $query_atracao = mysqli_query($con, $sql_atracao);
-    ?>
-    <div class="box box-danger">
-        <div class="box-header with-border">
-            <h3 class="box-title">Proponente</h3>
-        </div>
-        <div class="box-body">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Proponente</th>
-                    <th width="5%">Editar</th>
-                    <th width="5%">Trocar</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><?= $proponente['razao_social'] ?></td>
-                    <td>
-                        <form action="?perfil=contrato&p=edita_pj" method="POST">
-                            <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
-                            <input type="hidden" name="idPj" id="idPj" value="<?= $idPj ?>">
-                            <button type="submit" name="load" id="load" class="btn btn-primary btn-block"><span
-                                        class="glyphicon glyphicon-pencil"></span></button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="?perfil=contrato&p=tipo_pessoa"
-                              method="POST">
-                            <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-info btn-block"><span
-                                        class="glyphicon glyphicon-random"></span></button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="box box-warning">
-        <div class="box-header with-border">
-            <h3 class="box-title">Líderes</h3>
-        </div>
-        <div class="box-body">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Atração</th>
-                    <th>Proponente</th>
-                    <th width="5%">Ação</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                while ($atracao = mysqli_fetch_array($query_atracao)) {
-                    ?>
-                    <tr>
-                        <td><?= $atracao['nome_atracao'] ?></td>
-                        <?php
-                        if ($atracao['pessoa_fisica_id'] > 0) {
+                            $query_atracao = mysqli_query($con, $sql_atracao);
                             ?>
-                            <td><?= $atracao['nome'] ?></td>
-                            <td>
-                                <form method="POST"
-                                      action="?perfil=contrato&p=pesquisa_lider"
-                                      role="form">
-                                    <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
-                                    <input type='hidden' name='lider' value='<?= $idPedido ?>'>
-                                    <button type="submit" name='carregar' class="btn btn-primary"><i
-                                                class='fa fa-refresh'></i></button>
-                                </form>
-                            </td>
-                            <?php
-                        } else {
-                            ?>
-                            <td></td>
-                            <td>
-                                <form method="POST"
-                                      action="?perfil=contrato&p=pesquisa_lider"
-                                      role="form">
-                                    <input type='hidden' name='oficina' value="<?= $atracao['id'] ?>">
-                                    <input type='hidden' name='lider' value='<?= $idPedido ?>'>
-                                    <button type="submit" name='pesquisar' class="btn btn-primary
-                                                "><i class='fa fa-plus'></i></button>
-                                </form>
-                            </td>
+                            <div class="box box-danger">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Proponente</h3>
+                                </div>
+                                <div class="box-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Proponente</th>
+                                            <th width="5%">Editar</th>
+                                            <th width="5%">Trocar</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td><?= $proponente['razao_social'] ?></td>
+                                            <td>
+                                                <form action="?perfil=contrato&p=edita_pj" method="POST">
+                                                    <input type="hidden" name="idPedido" id="idPedido"
+                                                           value="<?= $idPedido ?>">
+                                                    <input type="hidden" name="idPj" id="idPj" value="<?= $idPj ?>">
+                                                    <button type="submit" name="load" id="load"
+                                                            class="btn btn-primary btn-block"><span
+                                                                class="glyphicon glyphicon-pencil"></span></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="?perfil=contrato&p=tipo_pessoa"
+                                                      method="POST">
+                                                    <input type="hidden" name="idPedido" id="idPedido"
+                                                           value="<?= $idPedido ?>">
+                                                    <button type="submit" class="btn btn-info btn-block"><span
+                                                                class="glyphicon glyphicon-random"></span></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Líderes</h3>
+                                </div>
+                                <div class="box-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Atração</th>
+                                            <th>Proponente</th>
+                                            <th width="5%">Editar</th>
+                                            <th width="5%">Trocar</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        while ($atracao = mysqli_fetch_array($query_atracao)) {
+                                            ?>
+                                            <tr>
+                                                <td><?= $atracao['nome_atracao'] ?></td>
+                                                <td><?= $atracao['nome'] ?></td>
+                                                <td>
+                                                    <form action="?perfil=contrato&p=edita_pf" method="POST">
+                                                        <input type="hidden" name="idPf" id="idPf"
+                                                               value="<?= $atracao['pessoa_fisica_id'] ?>">
+                                                        <input type='hidden' name='oficina'
+                                                               value="<?= $atracao['id'] ?>">
+                                                        <input type='hidden' name='lider' value='<?= $idPedido ?>'>
+                                                        <button type="submit" name="load" id="load"
+                                                                class="btn btn-primary btn-block"><span
+                                                                    class="glyphicon glyphicon-pencil"></span></button>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form method="POST"
+                                                          action="?perfil=contrato&p=pesquisa_lider"
+                                                          role="form">
+                                                        <input type='hidden' name='oficina'
+                                                               value="<?= $atracao['id'] ?>">
+                                                        <input type='hidden' name='lider' value='<?= $idPedido ?>'>
+                                                        <button type="submit" class="btn btn-info btn-block"><span
+                                                                    name='carregar'
+                                                                    class="glyphicon glyphicon-random"></span></button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                             <?php
                         }
                         ?>
-                    </tr>
-                    <?php
-                }
-                ?>
-                </tbody>
-            </table>
+                    <form action="?perfil=contrato&p=area_impressao" target="_blank" method="post" role="form">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-default pull-right" style="margin: 0 10px;">Ir para a área de impressão
+                        </button>
+                        <button type="button" class="btn btn-info " name="reabre"
+                                style="margin:0 10px;width: 25%"
+                                id="reabre" data-toggle="modal" data-target="#reabrir">
+                            Reabertura
+                        </button>
+                        <a href="?perfil=contrato&p=pesquisa_contratos">
+                            <button type="button" class="btn btn-default pull-left" style="margin: 0 10px;">
+                                Voltar
+                            </button>
+                        </a>
+                    </form>
+                    <br>
+                </div>
+                <hr/>
+            </div>
         </div>
-    </div>
-    <?php
-}
-?>
+</div>
 <div id="reabrir" class="modal modal fade in" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -552,14 +553,15 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 <script>
     let suplente = $('#suplente');
     let btn = $('#salvar');
-    function bloqueiaBtn(){
-        if(suplente.val() == ""){
+
+    function bloqueiaBtn() {
+        if (suplente.val() == "") {
             btn.prop('disabled', true);
-        }else{
+        } else {
             btn.prop('disabled', false);
         }
     }
-    
+
     suplente.on('change', bloqueiaBtn);
 
 </script>

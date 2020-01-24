@@ -460,25 +460,6 @@ $atracao = mysqli_query($con, $sql);
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    if (!empty($pf['cpf'])){
-                                    anexosNaPagina(2, $idPf, "modal-rg", "RG");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(3, $idPf, "modal-cpf", "CPF");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(31, $idPf, "modal-ccm", "FDC - CCM");
-                                    }
-                                    ?>
-                                </div>
-                            </div>
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -511,28 +492,23 @@ $atracao = mysqli_query($con, $sql);
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="bairro">Bairro: *</label>
                                     <input type="text" class="form-control" name="bairro" id="bairro"
                                            placeholder="Digite o Bairro" maxlength="80" readonly
                                            value="<?= $endereco['bairro'] ?>">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="cidade">Cidade: *</label>
                                     <input type="text" class="form-control" name="cidade" id="cidade"
                                            placeholder="Digite a cidade" maxlength="50" readonly
                                            value="<?= $endereco['cidade'] ?>">
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
                                     <input type="text" class="form-control" name="estado" id="estado" maxlength="2"
                                            placeholder="Digite o estado ex: (SP)" readonly
                                            value="<?= $endereco['uf'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(4, $idPf, "modal-endereco", "Comprovante de endereço");
-                                    ?>
                                 </div>
                             </div>
                             <hr/>
@@ -608,15 +584,10 @@ $atracao = mysqli_query($con, $sql);
                                     <?php
                                 }
                                 ?>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
                                            placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    anexosNaPagina(25, $idPf, "modal-nit", "NIT");
-                                    ?>
                                 </div>
                             </div>
 
