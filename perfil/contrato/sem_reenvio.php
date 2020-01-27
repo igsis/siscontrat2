@@ -70,7 +70,7 @@ $rows = mysqli_num_rows($query);
                                         <td>
                                             <form action="?perfil=contrato&p=resumo" method="POST">
                                                 <input type="hidden" name="idEvento" id="idEvento" value="<?= $evento['id'] ?>">
-                                                <button type="submit" class="btn btn-link"><?= $evento['protocolo'] ?></button>
+                                                <button type="submit" class="btn btn-link" name="load"><?= $evento['protocolo'] ?></button>
                                             </form>
                                         </td>
                                         <td><?= $baldeProponente ?></td>
