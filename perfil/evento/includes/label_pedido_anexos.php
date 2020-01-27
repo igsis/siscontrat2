@@ -5,6 +5,7 @@ $atracoes = $con->query($sqlAtracoes)->fetch_all(MYSQLI_ASSOC);
 $musica = false;
 $oficina = false;
 $teatro = false;
+$circo = false;
 $edital = false;
 
 foreach ($atracoes as $atracao) {
@@ -14,6 +15,10 @@ foreach ($atracoes as $atracao) {
         switch ($acao['acao_id']) {
             case 7:
                 $musica = true;
+                break;
+
+            case 2:
+                $circo = true;
                 break;
 
             case 8;
@@ -32,7 +37,7 @@ foreach ($atracoes as $atracao) {
 
 if ($musica) { $whereAdicional[] = "musica = '1'"; }
 if ($oficina) { $whereAdicional[] = "oficina = '1'"; }
-if ($teatro) { $whereAdicional[] = "teatro = '1'"; }
+if ($teatro || $circo) { $whereAdicional[] = "teatro = '1'"; }
 if ($edital) { $whereAdicional[] = "edital = '1'"; }
 
 // $campo = recuperaPessoa($_REQUEST['idPessoa'],$_REQUEST['tipoPessoa']);
@@ -115,7 +120,7 @@ if ($edital) { $whereAdicional[] = "edital = '1'"; }
                             <?php
                             $evento = recuperaDados('eventos', 'id', $idEvento);
                             if($evento['tipo_evento_id'] == 1) {
-                                if ($musica || $oficina || $teatro) {
+                                if ($musica || $oficina || $teatro || $circo) {
                                     $sqlAdicional = "AND (".implode(" OR ", $whereAdicional).")";
                                 } else
                                     $sqlAdicional = "";
