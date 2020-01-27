@@ -1,5 +1,5 @@
 <?php
-/* Arquivo utilizado para include na importação do proponente caso não exista cadastro no Siscontrat */
+/** Arquivo utilizado para include na importação do proponente caso não exista cadastro no Siscontrat */
 
 /** @var array $proponenteSis
  *  variável possui os dados do proponente no banco do SisContrat
@@ -10,16 +10,33 @@
  */
 
 $camposIgnorados = ['id', 'representante_legal1_id', 'representante_legal2_id', 'ultima_atualizacao'];
-$existeDivergencia = true;
+$dataAtualizacaoCpc = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteCpc['ultima_atualizacao']);
+$dataAtualizacaoSis = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteSis['ultima_atualizacao']);
+$existeDivergencia = false;
 
-foreach ($proponenteSis as $key => $dado) {
-    if (($proponenteSis[$key] == $proponenteCpc[$key]) && (!in_array($key, $camposIgnorados))){
-        $camposIgnorados[] = $key;
+$nome = $proponenteCpc['razao_social'];
+$cnpj = $proponenteCpc['cnpj'];
+
+if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
+    foreach ($proponenteSis as $key => $dado) {
+        if (($proponenteSis[$key] != $proponenteCpc[$key]) && (!in_array($key, $camposIgnorados))) {
+            $existeDivergencia = true;
+            $msgDivergencia = "O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>.
+            Abaixo, clique na seta verde para escolher quais dados serão atualizados caso necessário e posteriormente clique no botão de gravar.";
+        } else {
+            $camposIgnorados[] = $key;
+        }
     }
+    if (!$existeDivergencia) {
+        $msgDivergencia = "O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>, porém,
+            os dados já estão atualizados. Lembre-se de conferir e baixar os arquivos vindos do CAPAC para enviá-los ao
+            SisContrat";
+    }
+} else {
+    $msgDivergencia = "O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>, porém,
+            os dados já estão atualizados. Lembre-se de conferir e baixar os arquivos vindos do CAPAC para enviá-los ao
+            SisContrat";
 }
-
-if (count($camposIgnorados) == 4) { $existeDivergencia = false; }
-
 
 ?>
 
@@ -27,13 +44,12 @@ if (count($camposIgnorados) == 4) { $existeDivergencia = false; }
     <div class="box-body">
         <div class="alert alert-warning">
             <h4><i class="icon fa fa-warning"></i> Atenção!</h4>
-            O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>.
-            Abaixo, clique na seta verde para escolher quais dados serão atualizados caso necessário e posteriormente clique no botão de gravar.
+            <?= $msgDivergencia ?>
         </div>
 
         <div class="alert alert-info">
-            <strong>Proponente:</strong> <?= $proponenteCpc['razao_social'] ?> <br>
-            <label for="">CNPJ: </label> <?= $proponenteCpc['cnpj'] ?>
+            <strong>Proponente:</strong> <?= $nome ?> <br>
+            <label for="">CNPJ: </label> <?= $cnpj ?>
         </div>
 
         <div class="col-md-6">
@@ -91,6 +107,7 @@ if (count($camposIgnorados) == 4) { $existeDivergencia = false; }
             </div>
             <div class="box-footer">
                 <input type="hidden" name="idProponenteSis" value="<?= $proponenteSis['id'] ?>">
+                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                 <button type="submit" name="importarProponenteCpc" class="btn btn-info pull-right">Gravar
                 </button>
             </div>
@@ -100,8 +117,7 @@ if (count($camposIgnorados) == 4) { $existeDivergencia = false; }
     <div class="box-body">
         <div class="alert alert-success">
             <h4><i class="icon fa fa-warning"></i> Atenção!</h4>
-            O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>.
-            Abaixo, clique na seta verde para escolher quais dados serão atualizados caso necessário e posteriormente clique no botão de gravar.
+            <?= $msgDivergencia ?>
         </div>
     </div>
 <?php } ?>
@@ -116,7 +132,7 @@ if (count($camposIgnorados) == 4) { $existeDivergencia = false; }
 
     function resetaValor(campo) {
         let campoSis = '#' + campo + "Sis";
-        let valorOriginal = $(campoSis).attr("data-valor");
+        let valorOriginal = $(campoSis).data("valor");
 
         $(campoSis).val(valorOriginal)
     }
