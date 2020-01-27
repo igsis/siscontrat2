@@ -722,7 +722,7 @@ $tipoEvento = $evento['tipo_evento_id'];
             horaInicio = parseInt(horaInicio.split(":")[0].toString() + horaInicio.split(":")[1].toString());
             horaFim = parseInt(horaFim.split(":")[0].toString() + horaFim.split(":")[1].toString());
 
-            if (horaFim < horaInicio) {
+            if (horaFim < horaInicio || horaFim == horaInicio) {
                 msgHora.show();
                 $('#cadastra').attr("disabled", true);
             } else {
