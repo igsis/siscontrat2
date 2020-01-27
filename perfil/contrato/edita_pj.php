@@ -11,6 +11,7 @@ $tipoPessoa = 2;
 
 if (isset($_POST['idPj']) || isset($_POST['idProponente'])) {
     $idPj = $_POST['idPj'] ?? $_POST['idProponente'];
+    $edita = 1;
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
@@ -628,6 +629,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 <input type="hidden" name="idPj" value="<?= $pj['id'] ?>">
                                 <input type="hidden" name="tipoPessoa" value="2">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                <input type="hidden" name="editOnly" value="<?=$edita ?? NULL ?>">
                                 <button type="submit" name="selecionarPj" class="btn btn-info btn-block">Ir ao pedido de
                                     contratação
                                 </button>
@@ -642,6 +644,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 <input type="hidden" name="idPj" value="<?= $pj['id'] ?>">
                                 <input type="hidden" name="tipoPessoa" value="2">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                <input type="hidden" name="editOnly" value="<?=$edita ?? NULL ?>">
                                 <button type="submit" name="selecionarPj" class="btn btn-info btn-block">Ir ao pedido de
                                     contratação
                                 </button>

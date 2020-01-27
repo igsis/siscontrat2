@@ -9,27 +9,34 @@ if (isset($_POST['selecionar'])) {
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
     $idEvento = $pedido['origem_id'];
     $idPf = $_POST['idPf'];
-    if ($_POST['liderOn'] != 1) {
-        $sql = "UPDATE pedidos SET pessoa_fisica_id = '$idPf', pessoa_tipo_id = 1, pessoa_juridica_id = null WHERE id = '$idPedido'";
+    if(isset($_POST['editOnly'])){
 
-        if (mysqli_query($con, $sql))
+    }else{
+        $sql = "UPDATE pedidos SET pessoa_fisica_id = '$idPf', pessoa_tipo_id = 1, pessoa_juridica_id = null WHERE id = '$idPedido'";
+        if (mysqli_query($con, $sql)){
             $mensagem = mensagem("success", "Troca efetuada com sucesso!");
-        else
-            $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
+        }else{
+            $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");   
+        }
     }
+    
 } else if (isset($_POST['selecionarPj'])) {
     $idPj = $_POST['idPj'];
     $idPedido = $_POST['idPedido'];
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
     $idEvento = $pedido['origem_id'];
 
+    if(isset($_POST['editOnly'])){
 
-    $sql = "UPDATE pedidos SET pessoa_juridica_id = '$idPj', pessoa_tipo_id = 2, pessoa_fisica_id = null WHERE id ='$idPedido'";
-
-    if (mysqli_query($con, $sql))
-        $mensagem = mensagem("success", "Troca efetuada com sucesso!");
-    else
-        $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
+    }else{
+        $sql = "UPDATE pedidos SET pessoa_juridica_id = '$idPj', pessoa_tipo_id = 2, pessoa_fisica_id = null WHERE id ='$idPedido'";
+        if (mysqli_query($con, $sql)){
+            $mensagem = mensagem("success", "Troca efetuada com sucesso!");
+        }
+        else{
+            $mensagem = mensagem("danger", "Ocorreu um erro ao trocar proponente! Tente novamente.");
+        }
+    }
 
 } else if (isset($_POST['carregar'])) {
     $idLider = $_POST['idLider'];
@@ -67,15 +74,11 @@ if (isset($_POST['selecionar'])) {
     }
 
 if(isset($_POST['load'])){
+    unset($_SESSION['idEvento']);
     $idEvento = $_POST['idEvento'];
+    $_SESSION['idEvento'] = $idEvento;
 }
 
-$evento = recuperaDados('eventos', 'id', $idEvento);
-$sql = "SELECT * FROM pedidos where origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
-$query = mysqli_query($con, $sql);
-$pedido = mysqli_fetch_array($query);
-
-$idPedido = $pedido['id'];
 if (isset($_POST['salvar'])) {
     if ($nivelUsuario == 1) { // alterar o operador e/ou o status do pedido
         $operador = $_POST['operador'];
@@ -96,6 +99,8 @@ if (isset($_POST['salvar'])) {
             }
         }
     }
+    $idEvento = $_POST['idEvento'];
+    $idPedido = $_POST['idPedido'];
 
     $idAtracao = $_POST['idAtracao'];
     $nome_atracao = $_POST['nome_atracao'];
@@ -187,10 +192,18 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     $idPj = $pedido['pessoa_juridica_id'];
 }
 
+$evento = recuperaDados('eventos', 'id', $idEvento);
+$sql = "SELECT * FROM pedidos where origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
+$query = mysqli_query($con, $sql);
+$pedido = mysqli_fetch_array($query);
+
+$idPedido = $pedido['id'];
+
 
 $contrato = recuperaDados('contratos', 'pedido_id', $pedido['id']);
 $sqlAtracao = "SELECT * FROM atracoes where evento_id = '$idEvento' AND publicado = 1";
 $queryAtracao = mysqli_query($con, $sqlAtracao);
+
 
 ?>
 
@@ -363,12 +376,12 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="pendencia">Pendências no Setor de Contratos Artísticos:</label>
-                                    <textarea name="pendencia" rows="5" class="form-control"><?=$pedido['pendencias_contatos']?></textarea>
+                                    <textarea name="pendencia" rows="5" class="form-control"><?=$pedido['pendencias_contratos']?></textarea>
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" name="idEvento" class="idEvento" value="<?= $idEvento ?>"
-                               style="margin: 0 10px;">
+                        <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right"style="margin: 0 10px;">
                             Salvar
                         </button>

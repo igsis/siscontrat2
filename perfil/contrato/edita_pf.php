@@ -10,22 +10,7 @@ $liderOn = 0;
 
 if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
     $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
-}
-
-if (isset($_POST['cadastraLider'])) {
-    $idPedido = $_POST['idPedido'];
-    $idAtracao = $_POST['idAtracao'];
-
-    $sqlDeleteLider = "DELETE FROM lideres WHERE atracao_id = '$idAtracao'";
-
-    if (mysqli_query($con, $sqlDeleteLider)) {
-        $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
-                                VALUES ('$idPedido', '$idAtracao', '$idPf')";
-        if (mysqli_query($con, $sqLider)) {
-            $mensagem = mensagem("success", "Líder selecionado com sucesso!");
-            echo "<script> swal('Lembre-se de conferir os dados', '', 'warning') </script>";
-        }
-    }
+    $edita = 1;
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider'])) {
@@ -254,6 +239,7 @@ if (isset($_POST['edita'])) {
 
 if (isset($_POST['carregar'])) {
     $idPf = $_POST['idPf'];
+    
 }
 
 $idEvento = $_SESSION['idEvento'];
@@ -694,6 +680,7 @@ $atracao = mysqli_query($con, $sql);
                             <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
                             <input type="hidden" name="idPf" value="<?= $pf['id'] ?>">
                             <input type="hidden" name="tipoPessoa" value="1">
+                            <input type="hidden" name="editOnly" value="<?=$edita ?? NULL ?>">
                             <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                             <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
                             <input type="hidden" name="liderOn" value="<?= $liderOn ?>">
