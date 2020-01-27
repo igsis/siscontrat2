@@ -280,7 +280,7 @@ if (isset($_POST['importarProponenteCpc'])) {
                             include_once "includes/include_import_proponentePj.php";
                         }
                     } else {
-                        echo "importado";
+                        echo mensagem('success', "Teste pra ver oq aparece.");
                     }
                     ?>
                 </div>
