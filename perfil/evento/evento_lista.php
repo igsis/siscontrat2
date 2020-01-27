@@ -33,7 +33,7 @@ if (isset($_POST['excluir'])) {
     mysqli_query($con, $sqlDeletaPedido);
 
     gravarLog($sqlDeletaPedido);
-    gravarLog($sqlDeletaOcorrencia);
+    //gravarLog($sqlDeletaOcorrencia); A TABELA LOG NÃO TA NA MODELAGEM
     gravarLog($sqlDeletaAtracao);
 }
 
