@@ -66,7 +66,9 @@ if (isset($_POST['selecionar'])) {
     
     }
 
-$_SESSION['idEvento'] = $idEvento;
+if(isset($_POST['load'])){
+    $idEvento = $_POST['idEvento'];
+}
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $sql = "SELECT * FROM pedidos where origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
