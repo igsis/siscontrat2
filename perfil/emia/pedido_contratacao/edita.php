@@ -43,6 +43,8 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
                    '$obs')";
         if (mysqli_query($con, $sql)) {
             $idPedido = recuperaUltimo('pedidos');
+            unset($_SESSION['idPedido']);
+            $_SESSION['idPedido'] = $idPedido;
             gravarLog($sql);
             $sqlInsert = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) 
                     SELECT p.id, ep.numero_parcelas, ep.valor, ep.data_pagamento 
