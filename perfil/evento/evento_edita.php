@@ -257,12 +257,12 @@ $fomento = recuperaDados("evento_fomento", "evento_id", $idEvento);
 
                             <div class="row ">
                                 <div class="form-group col-md-6">
-                                    <label for="fiscal">Nome do Responsável Interno *</label>
-                                    <input class="form-control" type="text" name="nomeResponsavel" value="<?= $evento['nome_responsavel'] ?>" required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras">
+                                    <label for="fiscal">Nome do Responsável Interno </label>
+                                    <input class="form-control" type="text" name="nomeResponsavel" value="<?= $evento['nome_responsavel'] ?>" pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="fiscal">Telefone do Responsável Interno *</label>
-                                    <input class="form-control" type="text" name="telResponsavel" maxlength="15" value="<?= $evento['tel_responsavel'] ?>" data-mask="(00) 00000-0000" onkeyup="mascara( this, mtel );" required>
+                                    <label for="fiscal">Telefone do Responsável Interno </label>
+                                    <input class="form-control" type="text" name="telResponsavel" maxlength="15" value="<?= $evento['tel_responsavel'] ?>" data-mask="(00) 00000-0000" onkeyup="mascara( this, mtel );">
                                 </div>
                             </div>
 
