@@ -5,6 +5,7 @@ require "funcoes/funcoesConecta.php";
 $con = bancoMysqli();
 
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_email.php';
+$url_local = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espacos.php';
 
 if (isset($_POST['cadastra'])) {
     $nome = $_POST['nome'];
@@ -52,8 +53,19 @@ if (isset($_POST['cadastra'])) {
             if (mysqli_query($con, $sql)) {
                 $usuarioNovo = recuperaDados('usuarios', 'id', $con->insert_id);
 
-                $mensagem = mensagem("success", "Usuário cadastrado com sucesso! Você está sendo redirecionado para a tela de login.");
-                $alert = "<script>
+                $instituicao = $_POST['instituicao'];
+
+                if ($instituicao == 1){
+                    $local = 2;
+                }else{
+                    $local = $_POST['local'];
+                }
+
+                $querySql = "INSERT INTO local_usuarios VALUE('{$local}','{$usuarioNovo['id']}')";
+
+                if (mysqli_query($con,$querySql)){
+                    $mensagem = mensagem("success", "Usuário cadastrado com sucesso! Você está sendo redirecionado para a tela de login.");
+                    $alert = "<script>
                         Swal.fire({
                           title: 'Usuário Cadastrado',
                          html: '<b>Usuário:</b> {$usuarioNovo['usuario']} <br> <b>Senha Inicial:</b> siscontrat2019',
@@ -67,6 +79,9 @@ if (isset($_POST['cadastra'])) {
                         });
                     </script>";
 
+                } else {
+                    $mensagem = mensagem("danger", "Erro no cadastro de usuário! Tente novamente.");
+                }
             } else {
                 $mensagem = mensagem("danger", "Erro no cadastro de usuário! Tente novamente.");
             }
@@ -136,10 +151,11 @@ if (isset($_POST['cadastra'])) {
                                 </div>
 
                                 <div class="form-group col-md-2">
-                                    <label for="tipo">É estagiário/jovem monitor? * </label> <br>
-                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="1" required> Sim
+                                    <label for="tipo">Você é um funcionario? * </label> <br>
+                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0"
+                                                  required> Sim
                                     </label>&nbsp;&nbsp;
-                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="0"> Não
+                                    <label><input type="radio" name="jovem_monitor" id="jovem_monitor" value="1"> Não
                                     </label>
                                 </div>
 
@@ -156,22 +172,42 @@ if (isset($_POST['cadastra'])) {
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="instituicao">Instituição *</label>
+                                    <select class="form-control" name="instituicao" id="instituicao" required>
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcao("instituicoes");
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="local">Local *</label>
+                                    <select class="form-control" id="local" name="local">
+                                        <!-- Populando pelo js -->
+                                    </select>
+
+                                </div>
                                 <div class="form-group col-md-4" id="divEmail">
                                     <label for="email">E-mail* </label>
                                     <input type="email" id="email" name="email" class="form-control" maxlength="100"
                                            required>
                                     <span class="help-block" id="spanHelp"></span>
                                 </div>
+                            </div>
+                            <div class="row">
+
 
                                 <div class="form-group col-md-4">
                                     <label for="tel_usuario">Telefone* </label>
                                     <input type="text" id="tel_usuario" name="tel_usuario"
-                                           class="form-control" onkeyup="mascara( this, mtel );" required maxlength="15">
+                                           class="form-control" onkeyup="mascara( this, mtel );" required
+                                           maxlength="15">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="perfil">Código* </label> <br>
                                     <input type="text" name="perfil" id="perfil" class="form-control"
-                                           maxlength="9" minlength="9" required >
+                                           maxlength="9" minlength="9" required>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Senha inicial:</label> <br>siscontrat2019
@@ -314,6 +350,32 @@ if (isset($_POST['cadastra'])) {
             }
         });
     });
+
+    const url_local = '<?= $url_local ?>'
+
+    let instituicao = document.querySelector('#instituicao');
+
+    instituicao.addEventListener('change', async e => {
+        let idInstituicao = $('#instituicao option:checked').val();
+        fetch(`${url_local}?instituicao_id=${idInstituicao}`)
+            .then(response => response.json())
+            .then(locais => {
+                $('#local option').remove();
+                $('#local').append('<option value="">Selecione uma opção...</option>');
+
+                for (const local of locais) {
+                    $('#local').append(`<option value='${local.id}'>${local.local}</option>`).focus();
+                    ;
+                }
+
+                if (idInstituicao == 1){
+                    let locais = document.querySelector('#local');
+                    locais.value = 2;
+                    document.querySelector('#local').disabled = true;
+                }
+            })
+    });
+
 </script>
 <?php echo isset($alert) ? $alert : "" ?>
 </body>
