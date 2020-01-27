@@ -11,15 +11,14 @@ $dataAtual = date("Y-m-d H:i:s");
 $conSis = bancoMysqli();
 $conCpc = bancoCapac();
 
-$sqlConsultaPedido = "SELECT * FROM capac_new.pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idCapac'";
-$pedido = $conCpc->query($sqlConsultaPedido)->fetch_assoc();
-
 //if (isset($_POST['importarEventoCpc'])) {
 //    $nomeEvento = addslashes($_POST['nomeEvento']);
 //    $relacao_juridica_id = $_POST['relacaoJuridica'];
 //    $projeto_especial_id = $_POST['projetoEspecial'];
 //    $sinopse = addslashes($_POST['sinopse']);
 //    $tipo = $_POST['tipo'];
+//    $nomeResponsavel = trim($_POST['nomeResponsavel']);
+//    $telResponsavel = $_POST['telResponsavel'];
 //    $fiscal_id = $_POST['fiscal'];
 //    $suplente_id = $_POST['suplente'];
 //    $usuario = $_SESSION['idUser'];
@@ -29,12 +28,14 @@ $pedido = $conCpc->query($sqlConsultaPedido)->fetch_assoc();
 //    $tipoLugar = $_POST['tipoLugar'];
 //    $idFomento = $_POST['tipoFomento'] ?? null;
 //
-//    /* INSERE EVENTO NO SISCONTRAT */
-//    $sqlInsertSis = "INSERT INTO siscontrat.eventos (nome_evento,
+//    /** INSERE EVENTO NO SISCONTRAT */
+//    $sqlInsertSis = "INSERT INTO eventos (nome_evento,
 //                                 relacao_juridica_id,
 //                                 projeto_especial_id,
 //                                 tipo_evento_id,
 //                                 sinopse,
+//                                 nome_responsavel,
+//                                 tel_responsavel,
 //                                 fiscal_id,
 //                                 suplente_id,
 //                                 usuario_id,
@@ -47,6 +48,8 @@ $pedido = $conCpc->query($sqlConsultaPedido)->fetch_assoc();
 //                                  '$projeto_especial_id',
 //                                  '$tipo',
 //                                  '$sinopse',
+//                                  '$nomeResponsavel',
+//                                  '$telResponsavel',
 //                                  '$fiscal_id',
 //                                  '$suplente_id',
 //                                  '$usuario',
@@ -58,16 +61,18 @@ $pedido = $conCpc->query($sqlConsultaPedido)->fetch_assoc();
 //    if(mysqli_query($conSis, $sqlInsertSis)) {
 //        $idEvento = $conSis->insert_id;
 //
-//        /* VERIFICA SE O EVENTO É FOMENTO */
+//        /** VERIFICA SE O EVENTO É FOMENTO */
 //        if ($idFomento != null) {
 //            $sqlFomentoCpc = "INSERT INTO siscontrat.evento_fomento  (evento_id, fomento_id) VALUES ('$idEvento', '$idFomento')";
 //            mysqli_query($conSis, $sqlFomentoCpc);
 //        }
 //
+//        /** INSERE OS PUBLICOS SELECIONADOS */
 //        if (isset($_POST['publico'])) {
 //            atualizaDadosRelacionamento('siscontrat.evento_publico', $idEvento, $_POST['publico'], 'evento_id', 'publico_id');
 //        }
 //
+//        /** INSERE NA TABELA "evento_importados" PARA REGISTRAR QUE O EVENTO X VEIO DO EVENTO DO CAPAC Y */
 //        $sqlInsertImportado = "INSERT INTO siscontrat.evento_importados (evento_id, evento_capac_id) VALUES ('$idEvento', '$idCapac')";
 //        if (mysqli_query($conSis, $sqlInsertImportado)) {
 //            $eventoImportado = true;
@@ -78,16 +83,23 @@ $pedido = $conCpc->query($sqlConsultaPedido)->fetch_assoc();
 //    }
 //}
 
-if ($pedido['pessoa_tipo_id'] == 1) {
-    $idProponenteCpc = $pedido['pessoa_fisica_id'];
+/** NESTA PARTE, INICIA A COMPARAÇÃO E INSERÇÃO DE PROPONENTE */
+$sqlConsultaPedido = "SELECT * FROM capac_new.pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idCapac'";
+$pedidoCpc = $conCpc->query($sqlConsultaPedido)->fetch_assoc();
+
+/** RECUPERA OS DADOS DO PROPONENTE SE PF */
+if ($pedidoCpc['pessoa_tipo_id'] == 1) {
+    $idProponenteCpc = $pedidoCpc['pessoa_fisica_id'];
     $sqlConsultaProponente = "SELECT * FROM capac_new.pessoa_fisicas WHERE id = '$idProponenteCpc'";
 
     $proponenteCpc = $conCpc->query($sqlConsultaProponente)->fetch_assoc();
 
     $sqlComparaProponente = "SELECT * FROM siscontrat.pessoa_fisicas WHERE cpf = '{$proponenteCpc['cpf']}'";
 
-} elseif ($pedido['pessoa_tipo_id'] == 2) {
-    $idProponenteCpc = $pedido['pessoa_juridica_id'];
+}
+/** RECUPERA OS DADOS DO PROPONENTE SE PJ */
+elseif ($pedidoCpc['pessoa_tipo_id'] == 2) {
+    $idProponenteCpc = $pedidoCpc['pessoa_juridica_id'];
     $sqlConsultaProponente = "SELECT * FROM capac_new.pessoa_juridicas WHERE id = '$idProponenteCpc'";
 
     $proponenteCpc = $conCpc->query($sqlConsultaProponente)->fetch_assoc();
@@ -95,6 +107,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     $sqlComparaProponente = "SELECT * FROM siscontrat.pessoa_juridicas WHERE cnpj = '{$proponenteCpc['cnpj']}'";
 }
 
+/** EXECUTA CONSULTA PARA TESTA SE O PROPONENTE JÁ EXISTE NO SISCONTRAT */
 $queryProponenteSis = $conSis->query($sqlComparaProponente);
 
 if ($queryProponenteSis->num_rows > 0) {
@@ -105,12 +118,13 @@ if ($queryProponenteSis->num_rows > 0) {
     $_POST['importarProponenteCpc'] = true;
 }
 
+/** EXECUTA A IMPORTAÇÃO DO PROPONENTE */
 if (isset($_POST['importarProponenteCpc'])) {
-    if ($pedido['pessoa_tipo_id'] == 1) {
+    if ($pedidoCpc['pessoa_tipo_id'] == 1) {
         $idProponentePj = "null";
 
         $idProponentePf = "aeoo";
-    } elseif ($pedido['pessoa_tipo_id'] == 2) {
+    } elseif ($pedidoCpc['pessoa_tipo_id'] == 2) {
         $idProponentePf = "null";
         if (!$existeProponente) {
 
@@ -166,7 +180,7 @@ if (isset($_POST['importarProponenteCpc'])) {
 
     /* INSERINDO PEDIDO */
     $sqlInsertPedido = "INSERT INTO siscontrat.pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_juridica_id, pessoa_fisica_id) VALUES 
-                        (1, '$idEvento', {$pedido['pessoa_tipo_id']}, $idProponentePj, $idProponentePf)";
+                        (1, '$idEvento', {$pedidoCpc['pessoa_tipo_id']}, $idProponentePj, $idProponentePf)";
     $conSis->query($sqlInsertPedido);
     $idPedido = $conSis->insert_id;
 
@@ -196,7 +210,7 @@ if (isset($_POST['importarProponenteCpc'])) {
                 }
             }
 
-            if ($pedido['pessoa_tipo_id'] == 2) {
+            if ($pedidoCpc['pessoa_tipo_id'] == 2) {
                 $lider = $conCpc->query("SELECT pf.* FROM capac_new.pessoa_fisicas AS pf
                                 INNER JOIN capac_new.lideres AS l ON pf.id = l.pessoa_fisica_id
                                 WHERE l.atracao_id = '{$atracao['id']}'")->fetch_assoc();
@@ -240,7 +254,7 @@ if (isset($_POST['importarProponenteCpc'])) {
                     </div>
                     <?php
                     if($existeProponente) {
-                        if ($pedido['pessoa_tipo_id'] == 1) {
+                        if ($pedidoCpc['pessoa_tipo_id'] == 1) {
                             echo "compara PF";
                         } else {
                             include_once "includes/include_import_proponentePj.php";
@@ -254,40 +268,4 @@ if (isset($_POST['importarProponenteCpc'])) {
         </div>
 
     </section>
-</div>
-<div class="modal fade" id="modalPublico" role="dialog" aria-labelledby="lblmodalPublico" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Público (Representatividade e Visibilidade Sócio-cultural)</h4>
-            </div>
-            <div class="modal-body" style="text-align: left;">
-                <table class="table table-bordered table-responsive">
-                    <thead>
-                    <tr>
-                        <th>Público</th>
-                        <th>Descrição</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    $sqlConsultaPublico = "SELECT publico, descricao FROM publicos WHERE publicado = '1' ORDER BY 1";
-                    foreach ($conSis->query($sqlConsultaPublico)->fetch_all(MYSQLI_ASSOC) as $publico) {
-                        ?>
-                        <tr>
-                            <td><?= $publico['publico'] ?></td>
-                            <td><?= $publico['descricao'] ?></td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-theme" data-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
 </div>

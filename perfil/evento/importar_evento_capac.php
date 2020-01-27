@@ -143,6 +143,17 @@ if ($eventoCpc['fomento'] == 1) {
 
                             <div class="row ">
                                 <div class="form-group col-md-6">
+                                    <label for="fiscal">Nome do Responsável Interno *</label>
+                                    <input class="form-control" type="text" name="nomeResponsavel" required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="fiscal">Telefone do Responsável Interno *</label>
+                                    <input class="form-control" type="text" name="telResponsavel" data-mask="(00) 00000-0000" maxlength="15" onkeyup="mascara( this, mtel );" required>
+                                </div>
+                            </div>
+
+                            <div class="row ">
+                                <div class="form-group col-md-6">
                                     <label for="fiscal">Fiscal *</label>
                                     <select class="form-control" id="fiscal" name="fiscal" required>
                                         <option value="">Selecione um fiscal...</option>

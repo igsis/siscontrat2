@@ -4,7 +4,7 @@ $id = $_POST['idCapac'];
 
 $bdc = bancoCapac();
 
-$sql_evento = "SELECT eventos.*, f.fomento as fomento_nome FROM eventos INNER JOIN evento_fomento ON eventos.id = evento_fomento.evento_id INNER JOIN fomentos f on evento_fomento.fomento_id = f.id WHERE eventos.id = '$id'";
+$sql_evento = "SELECT eventos.*, f.fomento as fomento_nome FROM eventos LEFT JOIN evento_fomento ON eventos.id = evento_fomento.evento_id LEFT JOIN fomentos f on evento_fomento.fomento_id = f.id WHERE eventos.id = '$id'";
 $query_evento = mysqli_query($bdc,$sql_evento);
 $evento = mysqli_fetch_array($query_evento);
 
