@@ -88,8 +88,8 @@ if (isset($_POST['salvar'])) {
 
     for ($i = 0; $i < count($idAtracao); $i++) { // altera de uma ou de todas as atracoes (nome da atracao e integrantes)
         $baldeId = $idAtracao[$i];
-        $baldeNome = $nome_atracao[$i];
-        $baldeIntegrantes = $integrantes[$i];
+        $baldeNome = addslashes($nome_atracao[$i]);
+        $baldeIntegrantes = addslashes($integrantes[$i]);
 
         $sql = "UPDATE atracoes SET 
                     nome_atracao = '$baldeNome', 
@@ -100,22 +100,26 @@ if (isset($_POST['salvar'])) {
     }
 
     //pedidos
-    $formaPagamento = $_POST['formaPagamento'];
+    $formaPagamento = addslashes($_POST['formaPagamento']);
     $verba = $_POST['verba'];
     $processoMae = $_POST['processoMae'];
     $processo = $_POST['processo'];
-    $justificativa = $_POST['justificativa'];
-    $operador = $_POST['operador'];
+    $justificativa = addslashes($_POST['justificativa']);
+    $valorTotal = $_POST['valorTotal'];
+    $operador = $_POST['operador'] ?? NULL;
 
     //eventos
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'] ?? null;
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', operador_id = '$operador' WHERE id = '$idPedido'";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', valor_total = '$valorTotal', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido'";
 
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
+        if($operador != NULL){
+            $trocaOp = $con->query("UPDATE pedidos SET operador_id = '$operador' WHERE id = $idPedido");
+        }
         gravarLog($sqlEvento);
         gravarLog($sqlPedido);
         $mensagem = mensagem("success", "Atualizações salvas com sucesso!");
@@ -197,21 +201,28 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 <div class="row">
                                     <input type="hidden" name="idAtracao[]" value="<?= $atracao['id'] ?>">
 
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-4">
                                         <label for="nome_atracao[]">Nome da atração *</label>
                                         <input type="text" name="nome_atracao[]" id="nome_atracao"
                                                value="<?= $atracao['nome_atracao'] ?>"
                                                class="form-control" required>
+                                    </div>
 
-                                        <br>
-
-                                        <label for="valor">Valor: </label>
+                                    <div class="form-group col-md-4">
+                                        <label for="valor">Valor Individual: </label>
                                         <input type="text" disabled
                                                value="<?= dinheiroParaBr($atracao['valor_individual']) ?>"
                                                class="form-control">
                                     </div>
 
-                                    <div class="form-group col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="valorTotal">Valor Total: </label>
+                                        <input type="text" value="<?= dinheiroParaBr($pedido['valor_total'])?>" onKeyPress="return(moeda(this,'.',',',event))" class="form-control" name="valorTotal" id="valorTotal">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-12">
                                         <label for="integrantes[]">Integrantes* </label>
                                         <textarea name="integrantes[]" id="integrantes" required rows="5"
                                                   class="form-control"><?= $atracao['integrantes'] ?></textarea>
@@ -295,6 +306,17 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                         <button type="submit" class="btn btn-default pull-left">Ir para a área de impressão</button>
                     </form>
                 </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-12" style="text-align:center">
+                        <form>
+                            <button type="button" class="btn btn-info" name="reabre" style="width: 35%"
+                                    id="reabre" data-toggle="modal" data-target="#reabrir">
+                                Reabertura
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 </div>
@@ -343,7 +365,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
-                                            WHERE evento_id = '$idEvento'";
+                                            WHERE evento_id = '$idEvento' AND a.publicado = 1";
     $query_atracao = mysqli_query($con, $sql_atracao);
     ?>
     <div class="box box-danger">
@@ -445,5 +467,27 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     <?php
 }
 ?>
+
+<div id="reabrir" class="modal modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirmação de Reabertura</h4>
+            </div>
+            <form action="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos"
+                  role="form" method="post">
+                <div class="modal-body">
+                    <p>Tem certeza que deseja reabrir este evento?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" name="reabertura">Reabrir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </section>
 </div>

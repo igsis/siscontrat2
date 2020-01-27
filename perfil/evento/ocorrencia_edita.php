@@ -5,7 +5,7 @@ $idEvento = $_SESSION['idEvento'];
 $idOrigem = $_SESSION['idOrigem'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$url = 'http://'.$_SERVER['HTTP_HOST'].'/siscontrat2/funcoes/api_locais_espacos.php';
+$url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espacos.php';
 
 include "includes/menu_interno.php";
 
@@ -21,23 +21,23 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $local_id = $_POST['local'];
     $espaco_id = $_POST['espaco'] ?? NULL;
     $data_inicio = $_POST['data_inicio'];
-    $data_fim   = $_POST['data_fim'] ?? NULL;
-    $segunda    = $_POST['segunda'] ?? 0;
-    $terca      = $_POST['terca']   ?? 0;
-    $quarta     = $_POST['quarta']  ?? 0;
-    $quinta     = $_POST['quinta']  ?? 0;
-    $sexta      = $_POST['sexta']   ?? 0;
-    $sabado     = $_POST['sabado']  ?? 0;
-    $domingo    = $_POST['domingo'] ?? 0;
+    $data_fim = $_POST['data_fim'] ?? NULL;
+    $segunda = $_POST['segunda'] ?? 0;
+    $terca = $_POST['terca'] ?? 0;
+    $quarta = $_POST['quarta'] ?? 0;
+    $quinta = $_POST['quinta'] ?? 0;
+    $sexta = $_POST['sexta'] ?? 0;
+    $sabado = $_POST['sabado'] ?? 0;
+    $domingo = $_POST['domingo'] ?? 0;
     $horario_inicio = $_POST['horaInicio'];
     $horario_fim = $_POST['horaFim'];
     $retirada_ingresso_id = $_POST['retiradaIngresso'];
     $valor_ingresso = dinheiroDeBr($_POST['valor_ingresso']);
-    $observacao = addslashes($_POST['observacao']) ?? NULL;
-    $idOcorrencia =  $_POST['idOcorrencia'] ?? NULL;
+    $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
+    $idOcorrencia = $_POST['idOcorrencia'] ?? NULL;
     $periodo_id = $_POST['periodo'];
     $subprefeitura_id = $_POST['subprefeitura'];
-    $virada = ($_POST['virada']);
+    $virada = $_POST['virada'];
     $libras = $_POST['libras'] ?? 0;
     $audiodescricao = $_POST['audiodescricao'] ?? 0;
 
@@ -95,9 +95,8 @@ if (isset($_POST['cadastra'])) {
                                   '$virada',
                                   '$libras',
                                   '$audiodescricao')";
-    
-    if (mysqli_query($con, $sql)) 
-    {
+
+    if (mysqli_query($con, $sql)) {
         $idOcorrencia = recuperaUltimo('ocorrencias');
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
@@ -172,7 +171,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         $("#diasemana06").prop("disabled", valor);
         $("#diasemana07").prop("disabled", valor);
 
-        desmarca();
+        if (valor) {
+            desmarca();
+        }
     }
 
     // $(document).ready(function () {
@@ -185,8 +186,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         comparaData();
         if ($('#datepicker11').val().length > 0) {
             mudaData(false);
-        }
-        else {
+        } else {
             mudaData(true);
 
             var data = document.querySelector('input[name="data_inicio"]').value;
@@ -220,31 +220,42 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
         validaDiaSemana();
     }
-
-    function comparaData(){
+    $(document).ready(comparaData)
+    function comparaData() {
         var isMsgData = $('#msgEscondeData');
         isMsgData.hide();
         var dataInicio = document.querySelector('#datepicker10').value;
         var dataFim = document.querySelector('#datepicker11').value;
 
-        if((dataInicio != "") && (dataFim != "")){
+        if (dataInicio != "") {
             var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
+        }
+
+        msgHora.hide()
+        $('#edita').attr("disabled", true);
+
+        if (dataFim != "") {
             var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
 
-            if(dataFim <= dataInicio){
-                isMsgData.show();
-                $('#edita').attr("disabled", true);
-            }else{
-                isMsgData.hide();
+            if (dataFim == "") {
                 $('#edita').attr("disabled", false);
             }
+
+            if (dataFim <= dataInicio) {
+                isMsgData.show();
+                $('#edita').attr("disabled", true);
+                mudaData(true);
+            } else {
+                isMsgData.hide();
+                $('#edita').attr("disabled", false);
+                mudaData(false);
+            }
+        } else {
+            validaHora()
+
+            let horaInicio = $('#horaInicio').change(validaHora)
+            let horaFim = $('#horaFim').change(validaHora)
         }
-
-        if(dataFim == ""){
-            $('#edita').attr("disabled", false);
-        }
-
-
     }
 </script>
 
@@ -271,7 +282,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-6">
                                     <label for="data_inicio">Data Início*</label> <br>
                                     <input type="date" name="data_inicio" class="form-control" id="datepicker10"
-                                           placeholder="DD/MM/AAAA" required value="<?= $ocorrencia['data_inicio'] ?>" onblur="validate()">
+                                           placeholder="DD/MM/AAAA" required value="<?= $ocorrencia['data_inicio'] ?>"
+                                           onblur="validate()">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="data_fim">Data Encerramento (apenas se for temporada)</label> <br>
@@ -281,8 +293,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
                             </div>
 
-                             
-                            <div class="row" id="msgEscondeData"  style="display: none;">
+
+                            <div class="row" id="msgEscondeData" style="display: none;">
                                 <div class="form-group col-md-offset-6 col-md-6">
                                     <span style="color: red;"><b>Data de encerramento deve ser maior que a data inicial</b></span>
                                 </div>
@@ -292,44 +304,61 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-6">
                                     <label>
                                         <input type="checkbox" name="domingo" id="diasemana07"
-                                               value="1" <?php checarOcorrencia($ocorrencia['domingo']) ?> class="semana"> Domingo
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['domingo']) ?>> Domingo
                                         &nbsp;
+                                    </label>
+                                    <label>
                                         <input type="checkbox" name="segunda" id="diasemana01"
-                                               value="1" <?php checarOcorrencia($ocorrencia['segunda']) ?> class="semana"> Segunda
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['segunda']) ?>> Segunda
                                         &nbsp;
+                                    </label>
+                                    <label>
                                         <input type="checkbox" name="terca" id="diasemana02"
-                                               value="1" <?php checarOcorrencia($ocorrencia['terca']) ?> class="semana"z> Terça
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['terca']) ?>> Terça
                                         &nbsp;
+                                    </label>
+                                    <label>
                                         <input type="checkbox" name="quarta" id="diasemana03"
-                                               value="1" <?php checarOcorrencia($ocorrencia['quarta']) ?> class="semana"> Quarta
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['quarta']) ?>> Quarta
                                         &nbsp;
+                                    </label>
+                                    <label>
                                         <input type="checkbox" name="quinta" id="diasemana04"
-                                               value="1" <?php checarOcorrencia($ocorrencia['quinta']) ?> class="semana"> Quinta
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['quinta']) ?>> Quinta
                                         &nbsp;
+                                    </label>
+                                    <label>
                                         <input type="checkbox" name="sexta" id="diasemana05"
-                                               value="1" <?php checarOcorrencia($ocorrencia['sexta']) ?> class="semana"> Sexta
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['sexta']) ?>> Sexta
                                         &nbsp;
+                                    </label>
+                                    <label>
                                         <input type="checkbox" name="sabado" id="diasemana06"
-                                               value="1" <?php checarOcorrencia($ocorrencia['sabado']) ?> class="semana"> Sábado
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['sabado']) ?>> Sábado
                                         &nbsp;
                                     </label>
                                 </div>
 
                                 <div class="form-group col-md-2">
                                     <label for="virada">É virada?</label> &nbsp;
-                                    <input type="radio" name="virada" id="viradaSim" value="1" <?= $ocorrencia['virada'] == 1 ? "checked" : NULL ?> class="virada"> Sim &nbsp;
-                                    <input type="radio" name="virada" id="viradaNao" value="0" <?= $ocorrencia['virada'] == 0 ? "checked" : NULL ?>  class="virada" > Não
+                                    <input type="radio" name="virada" id="viradaSim"
+                                           value="1" class="virada" <?= $ocorrencia['virada'] == 1 ? "checked" : "" ?>>
+                                    Sim &nbsp;
+                                    <input type="radio" name="virada" id="viradaNaoviradaNao"
+                                           value="0" class="virada" <?= $ocorrencia['virada'] == 0 ? "checked" : "" ?>>
+                                    Não
                                 </div>
 
-                                <div class="form-group col-md-2">
-                                    <input type="checkbox" name="libras" id="libras" value="1" <?= $ocorrencia['libras'] == 1 ? "checked" : NULL ?>> &nbsp;
-                                    <label for="libras">Libras</label>
-                                </div>
-
-                                <div class="form-group col-md-2">
-                                    <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1" <?= $ocorrencia['audiodescricao'] == 1 ? "checked" : NULL ?>> &nbsp;
-                                    <label for="libras">Audiodescrição</label>
-                                </div>
+                                <label>
+                                    <input type="checkbox" name="libras" id="libras"
+                                           value="1" <?= $ocorrencia['libras'] == 1 ? "checked" : NULL ?>> Libras
+                                    &nbsp;
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="audiodescricao" id="audiodescricao"
+                                           value="1" <?= $ocorrencia['audiodescricao'] == 1 ? "checked" : NULL ?>> Audiodescrição
+                                    &nbsp;
+                                </label>
                             </div>
 
                             <div class="row" id="msgEsconde" style="display: none;">
@@ -345,6 +374,60 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                            value="<?= $ocorrencia['horario_inicio'] ?>" required placeholder="hh:mm"/>
                                 </div>
 
+                                <?php
+                                if($evento['tipo_evento_id'] == 2){
+                                    $filmeEvento = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $idEvento)->fetch_array();
+                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $filmeEvento['filme_id'])->fetch_array();
+                                    ?>
+                                    <script type="text/javascript">
+                                                                    
+                                     $('#horaInicio').on('change', function() {
+                                            $('#horaFim').attr("readonly",true);
+                                            var horainicio = $('#horaInicio').val();                                      
+                                            var hora = parseInt(horainicio.split(':', 1));
+                                            var minuto = parseInt(horainicio[3] + horainicio[4]);
+                                            var duracao = <?=$filme['duracao']?>;
+                                            while(duracao >= 60){
+                                                duracao -= 60;
+                                                hora += 1;
+                                            }
+                                            var minutoFinal = minuto + duracao;
+                                            if(minutoFinal >= 60){
+                                               minutoFinal -= 60;
+                                               hora += 1;
+                                            }
+                                            if(minutoFinal == 0 && minutoFinal != 00){
+                                                minutoFinal = minutoFinal + "0";
+                                            }
+                                            if(minutoFinal < 10){
+                                                minutoFinal = "0" + minutoFinal;
+                                            }
+                                            if(hora == 0 && minutoFinal != 00){
+                                                hora = hora + "0";
+                                            }
+                                            if(hora < 10){
+                                                hora = "0" + hora;
+                                            }
+                                            if(hora == 000){
+                                                hora = "00";
+                                            }
+
+                                            var resultado = hora + ":" + minutoFinal + ":00";
+                    
+                                            
+                                            $('#horaFim').val(resultado);
+                                            $('#horaFim').attr("value", resultado);
+                                                               
+                                                               
+                    
+                                            
+                                    });
+                                    </script>
+                                <?php }else{
+
+                                }
+                            ?>
+
                                 <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
                                     <input type="time" name="horaFim" class="form-control" id="horaFim" required
@@ -352,8 +435,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <div class="form-group col-md-3">
-                                    <label for="retiradaIngresso">Retirada de Ingresso</label>
-                                    <select name="retiradaIngresso" id="retiradaIngresso" class="form-control">
+                                    <label for="retiradaIngresso">Retirada de Ingresso *</label>
+                                    <select name="retiradaIngresso" id="retiradaIngresso" class="form-control" required>
                                         <option value="">Selecione uma opção...</option>
                                         <?php
                                         geraOpcao("retirada_ingressos", $ocorrencia['retirada_ingresso_id']);
@@ -364,15 +447,22 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-3">
                                     <label for="valor_ingresso">Valor Ingresso*</label> <br>
                                     <input type="text" name="valor_ingresso" class="form-control"
-                                           value="<?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>" required id="valor_ingresso"
+                                           value="<?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>" required
+                                           id="valor_ingresso"
                                            placeholder="Em reais" onkeypress="return(moeda(this, '.', ',', event))"/>
+                                </div>
+                            </div>
+
+                            <div class="row" id="msgEscondeHora">
+                                <div class="form-group col-md-6">
+                                    <span style="color: red;">A hora final tem que ser maior que a hora inicial!</span>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="instituicao">Instituição *</label>
-                                    <select class="form-control" name="instituicao" id="instituicao">
+                                    <select class="form-control" name="instituicao" id="instituicao" required>
                                         <option value="">Selecione uma opção...</option>
 
                                         <?php
@@ -383,13 +473,13 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
                                 <div class="form-group col-md-4">
                                     <label for="local">Local *</label>
-                                    <select class="form-control" id="local" name="local">
+                                    <select class="form-control" id="local" name="local" required>
                                         <!-- Populando pelo js -->
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="espaco">Espaço</label>
+                                    <label for="espaco">Espaço *</label>
                                     <select class="form-control" id="espaco" name="espaco">
                                         <!-- Populando pelo js -->
                                     </select>
@@ -420,14 +510,17 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                             <div class="form-group">
                                 <label for="observacao">Observação</label><br/>
                                 <textarea name="observacao" id="observacao" class="form-control"
-                                          rows="5"><?= isset($ocorrencia['observacao']) ? $ocorrencia['observacao'] : NULL ?></textarea>
+                                          rows="1"><?= isset($ocorrencia['observacao']) ? $ocorrencia['observacao'] : NULL ?></textarea>
                             </div>
                         </div>
 
                         <div class="box-footer">
-                            <a href="?perfil=evento&p=ocorrencia_lista"><button type="button" class="btn btn-default" name="voltar">Voltar</button></a>
+                            <a href="?perfil=evento&p=ocorrencia_lista">
+                                <button type="button" class="btn btn-default" name="voltar">Voltar</button>
+                            </a>
                             <input type="hidden" name="idOcorrencia" value="<?= $idOcorrencia ?>">
-                            <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Gravar</button>
+                            <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Gravar
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -540,7 +633,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="instituicaoModal">Instituição</label>
-                            <select class="form-control" name="instituicaoModal" id="instituicaoModal" onchange="insti_local()" required>
+                            <select class="form-control" name="instituicaoModal" id="instituicaoModal"
+                                    onchange="insti_local()" required>
                                 <option value="">Selecione uma opção...</option>
                                 <?php
                                 geraOpcao("instituicoes");
@@ -692,150 +786,144 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     }
 
     let data_fim = document.querySelector("input[name='data_fim']");
-    
-    if(data_fim.value != '')
-    {
+
+    if (data_fim.value != '') {
         let dias = document.querySelectorAll("input[type='checkbox']");
-    
-        for(dia of dias)
-        {
+
+        for (dia of dias) {
             dia.disabled = false;
         }
 
     }
 
-   const url = `<?=$url?>`;
+    const url = `<?=$url?>`;
 
-   let instituicao = document.querySelector('#instituicao');
-   let local_id = <?=$ocorrencia['local_id']?>;
+    let instituicao = document.querySelector('#instituicao');
+    let local_id = <?=$ocorrencia['local_id']?>;
 
-    if(instituicao.value != ''){
+    if (instituicao.value != '') {
         getLocais(instituicao.value, local_id)
     }
 
     instituicao.addEventListener('change', async e => {
         let idInstituicao = $('#instituicao option:checked').val();
         getLocais(idInstituicao, '')
-        getEspacos('','') // Se alterar o primeiro ele limpa o local e o espaço 
+        getEspacos('', '') // Se alterar o primeiro ele limpa o local e o espaço
 
     })
 
-   var virada = $('.virada');
-   virada.on("change", verificaVirada);
-   $(document).ready(verificaVirada());
+    var virada = $('.virada');
+    virada.on("click", verificaVirada);
+
     function verificaVirada() {
+        let opc = parseInt($('input[name="virada"]:checked').val())
+        if (opc) {
 
-            if($('#viradaNao').is(':checked')){
-                $('#horaInicio')
-                    .attr('readonly', false)
+            $('#horaInicio')
+                .val('00:00');
 
-                $('#horaFim')
-                    .attr('readonly', false)
+            $('#horaFim')
+                .val('00:00');
 
-                $('#instituicao')
-                    .attr('readonly', false)
+            $('#instituicao')
+                .val($('option:contains("Virada Cultural")').val());
 
-                $('#local')
-                    .attr('readonly', false)
-                    .val($('option:contains("De acordo com a programação do evento")').val());
+            $('#retiradaIngresso')
+                .val($('option:contains("INGRESSOS GRÁTIS")').val());
 
-                $('#espaco')
-                    .attr('readonly', false)
+            $('#valor_ingresso')
+                .val('0,00');
 
-                $('#retiradaIngresso')
-                    .attr('readonly', false)
+            getLocais(10, 189);
+            getEspacos();
 
-                $('#valor_ingresso')
-                    .attr('readonly', false)
-            }else{
-                $('#horaInicio')
-                    .attr('readonly', true)
-                    .val('00:00');
+            $('#local')
+                .val(189);
+        } else {
+            $('#instituicao')
+                .val($('option:contains("Selecione uma opção...")').val());
 
-                $('#horaFim')
-                    .attr('readonly', true)
-                    .val('00:00');
+            $('#espaco')
+                .val($('option:contains("Selecione uma opção...")').val());
 
-                $('#instituicao')
-                    .attr('readonly', true)
-                    .val($('option:contains("Virada Cultural")').val());
+            $('#retiradaIngresso')
+                .val($('option:contains("Selecione uma opção...")').val());
 
-                $('#local')
-                    .attr('readonly', true)
-                    .val($('option:contains("De acordo com a programação do evento")').val());
-
-                $('#espaco')
-                    .attr('readonly', true);
-
-                $('#retiradaIngresso')
-                    .attr('readonly', true)
-                    .val($('option:contains("INGRESSOS GRÁTIS")').val());
-
-                $('#valor_ingresso')
-                    .attr('readonly', true)
-                    .val('0,00');
-
-                getLocais(10, 626);
-                getEspacos();
-            }
+            $('#valor_ingresso')
+                .val('0,00');
+        }
     }
 
-    function getLocais(idInstituicao, selectedId){
+    let retiradaIngresso = document.querySelector('#retiradaIngresso');
+
+    retiradaIngresso.addEventListener("change", () => {
+        let valorIngressos = document.querySelector('#valor_ingresso');
+        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11){
+            valorIngressos.value = '0,00';
+            valorIngressos.readOnly = true;
+        }else {
+            valorIngressos.readOnly = false;
+        }
+    });
+
+    function getLocais(idInstituicao, selectedId) {
         fetch(`${url}?instituicao_id=${idInstituicao}`)
             .then(response => response.json())
-            .then(locais => {                
+            .then(locais => {
                 $('#local option').remove();
                 $('#local').append('<option value="">Selecione uma opção...</option>');
 
                 for (const local of locais) {
-                    if(selectedId == local.id){
-                        $('#local').append(`<option value='${local.id}' selected>${local.local}</option>`).focus();;
-                    }else{
-                        $('#local').append(`<option value='${local.id}'>${local.local}</option>`).focus();;
+                    if (selectedId == local.id) {
+                        $('#local').append(`<option value='${local.id}' selected>${local.local}</option>`).focus();
+                        ;
+                    } else {
+                        $('#local').append(`<option value='${local.id}'>${local.local}</option>`).focus();
+                        ;
                     }
-                    
-                }                
+
+                }
             })
     }
-    
+
     let local = document.querySelector('#local');
     let idEspaco = <?=$ocorrencia['espaco_id']?>;
 
-    if(local_id != ''){
-       
+    if (local_id != '') {
+
         console.log(`local ${local_id} Espaco ${idEspaco}`);
         getEspacos(local_id, idEspaco)
     }
 
-    local.addEventListener('change', async e => {        
+    local.addEventListener('change', async e => {
         let idLocal = $('#local option:checked').val();
 
         getEspacos(idLocal, '')
     })
-    
-    function getEspacos(idLocal, selectedId){
+
+    function getEspacos(idLocal, selectedId) {
         fetch(`${url}?espaco_id=${idLocal}`)
-            .then(response => response.json() )
+            .then(response => response.json())
             .then(espacos => {
                 $('#espaco option').remove();
-                if(espacos.length < 1){
+                if (espacos.length < 1) {
                     $('#espaco').append('<option value="">Não há espaço para esse local</option>')
-                    .attr('required',false)
-                    .focus();
-                }else{
+                        .attr('required', false)
+                        .focus();
+                } else {
                     $('#espaco').append('<option value="">Selecione uma opção...</option>')
-                    .attr('required',true)
-                    .focus();
+                        .attr('required', true)
+                        .focus();
                 }
-                
+
                 for (const espaco of espacos) {
-                    if(selectedId == espaco.id){
+                    if (selectedId == espaco.id) {
                         $('#espaco').append(`<option value='${espaco.id}' selected>${espaco.espaco}</option>`)
-                    }else{
+                    } else {
                         $('#espaco').append(`<option value='${espaco.id}'>${espaco.espaco}</option>`)
                     }
                 }
-             
+
             })
     }
 
@@ -910,33 +998,53 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 </script>
 
 <script>
-function validaDiaSemana(){
-    var dataInicio = document.querySelector('#datepicker10').value;
-    var isMsg = $('#msgEsconde');
-    isMsg.hide();
-    if(dataInicio != ""){
-        var i = 0;
-        var counter = 0;
-        var diaSemana = $('.semana');
+    let msgHora = $('#msgEscondeHora');
+    // msgHora.hide();
 
-        for (; i < diaSemana.length; i++) {
-            if (diaSemana[i].checked) {
-                counter++;
+    function validaHora() {
+        let horaInicio = $('#horaInicio').val();
+        let horaFim = $('#horaFim').val();
+
+        if (horaFim != "" && horaInicio != "") {
+            horaInicio = parseInt(horaInicio.split(":")[0].toString() + horaInicio.split(":")[1].toString());
+            horaFim = parseInt(horaFim.split(":")[0].toString() + horaFim.split(":")[1].toString());
+
+            if (horaFim < horaInicio) {
+                msgHora.show();
+                $('#edita').attr("disabled", true);
+            } else {
+                msgHora.hide();
+                $('#edita').attr("disabled", false);
             }
         }
-
-        if (counter==0){
-            $('#cadastra').attr("disabled", true);
-            isMsg.show();
-            return false;
-        }
-
-        $('#cadastra').attr("disabled", false);
-        isMsg.hide();
-        return true;
     }
-}
 
-var diaSemana = $('.semana');
-diaSemana.change(validaDiaSemana);
+    function validaDiaSemana() {
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var isMsg = $('#msgEsconde');
+        isMsg.hide();
+        if (dataInicio != "") {
+            var i = 0;
+            var counter = 0;
+            var diaSemana = $('.semana');
+
+            for (; i < diaSemana.length; i++) {
+                if (diaSemana[i].checked) {
+                    counter++;
+                }
+            }
+
+            if (counter == 0) {
+                $('#edita').attr("disabled", true);
+                isMsg.show();
+                return false;
+            }
+
+            $('#edita').attr("disabled", false);
+            isMsg.hide();
+            return true;
+        }
+    }
+
+    var diaSemana = $('.semana').change(validaDiaSemana)
 </script>

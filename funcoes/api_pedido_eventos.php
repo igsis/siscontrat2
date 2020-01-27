@@ -33,10 +33,10 @@ if (isset($_POST['_method'])) {
         case "parecerArtistico":
             $idPedido = $_POST['idPedido'];
 
-            $topico1 = addslashes($_POST['topico1']);
-            $topico2 = addslashes($_POST['topico2']);
-            $topico3 = addslashes($_POST['topico3']);
-            $topico4 = addslashes($_POST['topico4']);
+            $topico1 = trim(addslashes($_POST['topico1']));
+            $topico2 = trim(addslashes($_POST['topico2']));
+            $topico3 = trim(addslashes($_POST['topico3']));
+            $topico4 = trim(addslashes($_POST['topico4']));
 
             $sql_cadastra = "INSERT INTO parecer_artisticos (pedido_id, topico1, topico2, topico3, topico4) VALUES ('$idPedido','$topico1','$topico2','$topico3','$topico4')
                                  ON DUPLICATE KEY UPDATE topico1 = '$topico1', topico2 = '$topico2', topico3 = '$topico3', topico4 = '$topico4'";
@@ -52,8 +52,8 @@ if (isset($_POST['_method'])) {
             $valor_total = dinheiroDeBr($_POST["valor_total"]);
             $num_parcelas = $_POST["numero_parcelas"];
             $forma_pagamento = trim(addslashes($_POST["forma_pagamento"]));
-            $justificativa = $_POST["justificativa"];
-            $observacao = $_POST["observacao"];
+            $justificativa = trim(addslashes($_POST["justificativa"]));
+            $observacao = trim(addslashes($_POST["observacao"]));
             $idPedido = $_POST["idPedido"];
             $tipoPesso = $_POST["tipoPessoa"];
             $idProponent = $_POST["idProponente"];
@@ -65,7 +65,7 @@ if (isset($_POST['_method'])) {
                 $queryParcela = "SELECT data_pagamento FROM parcelas WHERE pedido_id = ".$idPedido." AND numero_parcelas = 1";
                 $data_kit_pagamento = mysqli_fetch_row(mysqli_query($con,$queryParcela))[0];
             }
-             $query = "UPDATE pedidos SET verba_id = ".$idVerba.", numero_parcelas = ".$num_parcelas.", valor_total = ".$valor_total.", forma_pagamento = '".$forma_pagamento."', data_kit_pagamento='".$data_kit_pagamento."', justificativa ='".$justificativa."', observacao = '".$observacao."' WHERE id = ".$idPedido;
+             $query = "UPDATE pedidos SET verba_id = '$idVerba', numero_parcelas = '$num_parcelas', valor_total = '$valor_total', forma_pagamento = '$forma_pagamento', data_kit_pagamento = '$data_kit_pagamento', justificativa = '$justificativa', observacao = '$observacao' WHERE id = '$idPedido'";
             if (mysqli_query($con,$query)){
                 echo true;
             }else{

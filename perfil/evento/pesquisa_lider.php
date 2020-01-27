@@ -125,7 +125,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             $resultado .= "<td>
                                         <form action='$edita' method='post'>
                                         <input type='hidden' name='idLider' value='" . $pessoa['id'] . "'>
-                                        <input type='hiden' name='idPedido' value='{$idPedido}'>
+                                        <input type='hidden' name='idPedido' value='{$idPedido}'>
                                         <input type='hidden' name='tipoDocumento' value='{$tipoDocumento}'>
                                         <input type='hidden' name='idAtracao' value='{$idAtracao}' >
                                         <input type='submit' class='btn btn-primary' name='selecionar' value='selecionar'>
@@ -178,24 +178,25 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             </label>
                             <div class="form-group">
                                 <label for="procurar">Pesquisar:</label>
-                                <div class="input-group">
+                                <div class="form-group">
                                     <label for="cpf" id="textoDocumento">CPF *</label>
-                                    <input type="text" class="form-control" minlength=14 name="procurar"
-                                           value="<?= $procurar ?>" id="cpf" data-mask="000.000.000-00" minlength="14">
-                                    <input type="text" class="form-control" name="passaporte" id="passaporte"
-                                           value="<?= $procurar ?>" maxlength="10">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" minlength=14 name="procurar"
+                                               value="<?= $procurar ?>" id="cpf" data-mask="000.000.000-00"
+                                               minlength="14">
+                                        <input type="text" class="form-control" name="passaporte" id="passaporte"
+                                               value="<?= $procurar ?>" maxlength="10">
 
-                                    <span class="input-group-btn">
-                                        <p>&nbsp;</p>
-                                        <p>&nbsp;</p>
-                                        <input type="hidden" name="idLider" value="<?= $idLider ?? NULL ?>">
-                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?? NULL ?>">
-                                        <input type="hidden" name="idAtracao" value="<?= $idAtracao ?? NULL ?>">
+                                        <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i
                                                     class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
+                                    </div>
                                 </div>
                             </div>
+                            <input type="hidden" name="idLider" value="<?= $idLider ?? NULL ?>">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?? NULL ?>">
+                            <input type="hidden" name="idAtracao" value="<?= $idAtracao ?? NULL ?>">
                         </form>
                         <div class="panel panel-default">
                             <!-- Default panel contents -->

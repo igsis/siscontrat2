@@ -212,30 +212,42 @@ $ocorrencia = recuperaDados('agendao_ocorrencias', 'id', $idOcorrencia);
         validaDiaSemana();
     }
 
-    function comparaData(){
+    $(document).ready(comparaData)
+    function comparaData() {
         var isMsgData = $('#msgEscondeData');
         isMsgData.hide();
         var dataInicio = document.querySelector('#datepicker10').value;
         var dataFim = document.querySelector('#datepicker11').value;
 
-        if((dataInicio != "") && (dataFim != "")){
+        if (dataInicio != "") {
             var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
+        }
+
+        msgHora.hide()
+        $('#edita').attr("disabled", true);
+
+        if (dataFim != "") {
             var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
 
-            if(dataFim <= dataInicio){
-                isMsgData.show();
-                $('#edita').attr("disabled", true);
-            }else{
-                isMsgData.hide();
+            if (dataFim == "") {
                 $('#edita').attr("disabled", false);
             }
+
+            if (dataFim <= dataInicio) {
+                isMsgData.show();
+                $('#edita').attr("disabled", true);
+                mudaData(true);
+            } else {
+                isMsgData.hide();
+                $('#edita').attr("disabled", false);
+                mudaData(false);
+            }
+        } else {
+            validaHora()
+
+            let horaInicio = $('#horaInicio').change(validaHora)
+            let horaFim = $('#horaFim').change(validaHora)
         }
-
-        if(dataFim == ""){
-            $('#edita').attr("disabled", false);
-        }
-
-
     }
 </script>
 
@@ -359,6 +371,12 @@ $ocorrencia = recuperaDados('agendao_ocorrencias', 'id', $idOcorrencia);
                                 </div>
                             </div>
 
+                            <div class="row" id="msgEscondeHora">
+                                <div class="form-group col-md-6">
+                                    <span style="color: red;">A hora final tem que ser maior que a hora inicial!</span>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="instituicao">Instituição *</label>
@@ -410,7 +428,7 @@ $ocorrencia = recuperaDados('agendao_ocorrencias', 'id', $idOcorrencia);
                             <div class="form-group">
                                 <label for="observacao">Observação</label><br/>
                                 <textarea name="observacao" id="observacao" class="form-control"
-                                          rows="5"><?= isset($ocorrencia['observacao']) ? $ocorrencia['observacao'] : NULL ?></textarea>
+                                          rows="1"><?= isset($ocorrencia['observacao']) ? $ocorrencia['observacao'] : NULL ?></textarea>
                             </div>
 
                         </div>
@@ -584,6 +602,27 @@ $ocorrencia = recuperaDados('agendao_ocorrencias', 'id', $idOcorrencia);
 </script>
 
 <script>
+    let msgHora = $('#msgEscondeHora');
+    msgHora.hide();
+
+    function validaHora() {
+        let horaInicio = $('#horaInicio').val();
+        let horaFim = $('#horaFim').val();
+
+        if (horaFim != "" && horaInicio != "") {
+            horaInicio = parseInt(horaInicio.split(":")[0].toString() + horaInicio.split(":")[1].toString());
+            horaFim = parseInt(horaFim.split(":")[0].toString() + horaFim.split(":")[1].toString());
+
+            if (horaFim < horaInicio) {
+                msgHora.show();
+                $('#edita').attr("disabled", true);
+            } else {
+                msgHora.hide();
+                $('#edita').attr("disabled", false);
+            }
+        }
+    }
+
 function validaDiaSemana(){
     var dataInicio = document.querySelector('#datepicker10').value;
     var isMsg = $('#msgEsconde');

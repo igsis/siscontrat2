@@ -13,6 +13,12 @@ $numPedidos = mysqli_num_rows($pedidos);
 
 $errosArqs = [];
 $erros = [];
+$valorTotalAtracoes = 0;
+
+$musica = false;
+$oficina = false;
+$teatro = false;
+$edital = false;
 
 // CASO SEJA EVENTO ENTRA AQUI NESSA PARADA
 if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
@@ -22,7 +28,9 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
 
     // VERIFICA SE TEM ATRACOES CADASTRADAS
     if ($numAtracoes > 0) {
+        $foraPrazo = false;
         while ($atracao = mysqli_fetch_array($atracoes)) {
+            $valorTotalAtracoes += $atracao['valor_individual'];
             if (($atracao['produtor_id'] == "") || ($atracao['produtor_id'] == NULL))
                 array_push($erros, "Produtor não cadastrado na atração <b> " . $atracao['nome_atracao'] . "</b>");
 
@@ -39,24 +47,31 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
 
             // VERIFICA O TIPO DE ACAO E VE SE TEM ESPECIFICIDADE
             $idAtracao = $atracao['id'];
-            $acoes = recuperaDados('acao_atracao', 'atracao_id', $idAtracao);
-            $idAcao = $acoes['acao_id'];
+            $sqlAcao = "SELECT acao_id FROM acao_atracao WHERE atracao_id = '{$atracao['id']}'";
+            $acoes = $con->query($sqlAcao)->fetch_all(MYSQLI_ASSOC);
             $possui = true;
-            switch ($idAcao) {
-                case 11 : // teatro
-                    $tabela = 'teatro';
-                    break;
-                case 7 : // música
-                    $tabela = 'musica';
-                    break;
-                case 5 : // exposição (feira)
-                    $tabela = 'exposicoes';
-                    break;
-                case 8 : // oficina
-                    $tabela = 'oficinas';
-                    break;
-                default :
-                    $possui = false;
+
+            foreach ($acoes as $acao) {
+                $idAcao = $acao['acao_id'];
+                switch ($idAcao) {
+                    case 11 : // teatro
+                        $tabela = 'teatro';
+                        $teatro = true;
+                        break;
+                    case 7 : // música
+                        $tabela = 'musica';
+                        $musica = true;
+                        break;
+                    case 5 : // exposição (feira)
+                        $tabela = 'exposicoes';
+                        break;
+                    case 8 : // oficina
+                        $tabela = 'oficinas';
+                        $oficina = true;
+                        break;
+                    default :
+                        $possui = false;
+                }
             }
 
             // CASO POSSUA ESPECIFICIDADE REALMENTE CONFERIR SE FOI CADASTRADA ALGUMA
@@ -82,20 +97,26 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                         $dataInicio = new DateTime($ocorrencia['data_inicio']);
                         $diff = $hoje->diff($dataInicio);
 
-                        if ($diff->days < 30) {
-                            $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
-                                O prazo para contratos é de 30 dias.<br>";
-                            $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
-                            $fora = 1;
+                        if ($diff->days < 30 || $hoje > $dataInicio) {
+                            $foraPrazo = true;
                             break;
-                        } else {
-                            $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
-                                O prazo para contratos é de 30 dias.<br>";
-                            $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
-                            $fora = 0;
                         }
                     }
                 }
+            }
+        }
+
+        if ($numOcorrencias != 0) {
+            if ($foraPrazo) {
+                $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                                    O prazo para contratos é de 30 dias.<br>";
+                $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
+                $fora = 1;
+            } else {
+                $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                                    O prazo para contratos é de 30 dias.<br>";
+                $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
+                $fora = 0;
             }
         }
 
@@ -124,13 +145,55 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                 if ($pedido['forma_pagamento'] == null)
                     array_push($erros, "Não há forma de pagamento cadastrada no pedido");
 
+                // VERIFICA O VALOR POR EQUIPAMENTO
+                $sql = "SELECT id FROM ocorrencias
+                        WHERE tipo_ocorrencia_id = '1'
+                        AND origem_ocorrencia_id = '{$evento['id']}'
+                        AND publicado = '1'";
+                $numOcorrencias = $con->query($sql)->num_rows;
+                if ($valorTotalAtracoes > 0 && $numOcorrencias > 1) {
+                    $totalCadastrado = 0;
+                    $sqlValorPorEquipamentos = "SELECT valor FROM valor_equipamentos WHERE pedido_id = '{$pedido['id']}'";
+                    $queryValorPorEquipamento = $con->query($sqlValorPorEquipamentos);
+                    if ($queryValorPorEquipamento->num_rows == 0) {
+                        array_push($erros, "Não há valores por equipamento cadastrados no pedido");
+                    } else {
+                        $valoresPorEquipamento = $queryValorPorEquipamento->fetch_all(MYSQLI_ASSOC);
+                        foreach ($valoresPorEquipamento as $valores) {
+                            $totalCadastrado += $valores['valor'];
+                        }
+                        if ($totalCadastrado != $valorTotalAtracoes) {
+                            array_push($erros, "Valor por Equipamento diferente do valor total cadastrado");
+                        }
+                    }
+                }
+
                 // VERIFICA SE OS ARQUIVOS DE PEDIDO FORAM ENVIADOS
+                if ($musica) {
+                    $whereAdicional[] = "musica = '1'";
+                }
+                if ($oficina) {
+                    $whereAdicional[] = "oficina = '1'";
+                }
+                if ($teatro) {
+                    $whereAdicional[] = "teatro = '1'";
+                }
+                if ($edital) {
+                    $whereAdicional[] = "edital = '1'";
+                }
+
+                if ($musica || $oficina || $teatro) {
+                    $sqlAdicional = "AND (" . implode("OR ", $whereAdicional) . ")";
+                } else
+                    $sqlAdicional = "";
+
+
                 $idPedido = $pedido['id'];
                 $sqlArqs = "SELECT ld.id, ld.documento, a.arquivo
                             FROM lista_documentos ld
                             LEFT JOIN (SELECT * FROM arquivos 
                                        WHERE publicado = 1 AND origem_id = '$idPedido' AND publicado = 1) a ON ld.id = a.lista_documento_id
-                            WHERE ld.tipo_documento_id = 3 AND ld.publicado = 1";
+                            WHERE ld.tipo_documento_id = 3 AND ld.publicado = 1 $sqlAdicional";
 
                 $queryArqs = mysqli_query($con, $sqlArqs);
                 while ($arquivo = mysqli_fetch_array($queryArqs)) {
@@ -162,6 +225,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
             if ($numOcorrencias == 0) {
                 array_push($erros, "Não há ocorrência cadastrada para o filme <b>" . $filme['titulo'] . "</b>");
             } else {
+                $foraPrazo = false;
                 while ($ocorrencia = mysqli_fetch_array($ocorrencias)) {
                     if ($evento['contratacao'] == 1) {
                         // VERIFICA SE ESTA DENTRO DO PRAZO
@@ -169,18 +233,27 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                         $dataInicio = new DateTime($ocorrencia['data_inicio']);
                         $diff = $hoje->diff($dataInicio);
 
-                        if ($diff->days < 30) {
+                        if ($diff->days < 30 || $hoje > $dataInicio) {
                             $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
                                 O prazo para contratos é de 30 dias.<br>";
                             $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
                             $fora = 1;
+                            $foraPrazo = true;
                             break;
-                        } else {
-                            $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
-                                O prazo para contratos é de 30 dias.<br>";
-                            $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
-                            $fora = 0;
                         }
+                    }
+                }
+                if ($numOcorrencias != 0) {
+                    if ($foraPrazo) {
+                        $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                                    O prazo para contratos é de 30 dias.<br>";
+                        $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
+                        $fora = 1;
+                    } else {
+                        $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                                    O prazo para contratos é de 30 dias.<br>";
+                        $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
+                        $fora = 0;
                     }
                 }
             }
@@ -285,6 +358,60 @@ if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
         array_push($errosArqs, "Sem pedido você não poderá enviar seu evento!");
     }
 }
+
+$sqlteste = "SELECT  te.tipo_evento, oco.atracao_id, 
+i.nome, l.local, 
+e.espaco, oco.data_inicio, 
+oco.data_fim, oco.segunda, 
+oco.terca, oco.quarta, 
+oco.quinta, oco.sexta, 
+oco.sabado, oco.domingo, 
+oco.horario_inicio, oco.horario_fim, 
+ri.retirada_ingresso, oco.valor_ingresso, 
+oco.observacao, p.periodo, 
+sub.subprefeitura, virada, 
+oco.libras, oco.audiodescricao 
+FROM ocorrencias as oco
+INNER JOIN locais as l on l.id = oco.local_id
+INNER JOIN tipo_eventos as te on te.id = oco.tipo_ocorrencia_id
+INNER JOIN instituicoes as i on i.id = oco.instituicao_id
+LEFT JOIN espacos as e on e.id = oco.espaco_id
+INNER JOIN retirada_ingressos as ri on ri.id = oco.retirada_ingresso_id
+INNER JOIN periodos as p ON p.id = oco.periodo_id
+INNER JOIN subprefeituras as sub ON sub.id = oco.subprefeitura_id
+WHERE oco.origem_ocorrencia_id = '$idEvento' AND oco.publicado = 1;";
+
+$queryteste = mysqli_query($con, $sqlteste);
+$teste = mysqli_fetch_all($queryteste);
+$num = mysqli_num_rows($queryteste);
+
+$ocoDupl = 0;
+for ($i = 0; $i < $num; $i++) {
+    for ($x = $i+1; $x < $num; $x++) {
+        $cont = 0;
+        for ($y = 0; $y < 24; $y += 4) {
+            if (($teste[$i][$y] === $teste[$x][$y]) 
+            && ($teste[$i][$y + 1] === $teste[$x][$y + 1]) 
+            && ($teste[$i][$y + 2] === $teste[$x][$y + 2])
+            && ($teste[$i][$y + 3] === $teste[$x][$y + 3])){
+                $cont = $cont + 1;
+            }
+        }
+        if ($cont == 6) {
+            $ocoDupl = +1;
+            break;
+        }
+    }
+    if ($ocoDupl!=0) {
+        break;
+    }
+}
+
+
+if ($ocoDupl == 1) {
+    array_push($erros, "Há ocorrências duplicadas");
+}
+
 
 function in_array_key($needle, $haystack)
 {

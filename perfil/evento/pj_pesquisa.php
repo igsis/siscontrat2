@@ -32,7 +32,7 @@ if (isset($_POST['procurar'])){
             $actionCadastra = "?perfil=evento&p=pj_cadastro";
     }else{
             $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
-            $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
+            $botaoAdd = "<button class='btn btn-primary' name='adicionar' id='adicionar' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
@@ -117,11 +117,11 @@ if (isset($_POST['procurar'])){
                     <div class="box-body">
                         <form action="?perfil=evento&p=pj_pesquisa" method="post">
                             <div class="form-group">
-                                <label for="procurar">Pesquisar:</label>
+                                <label for="procurar">Pesquisar CNPJ:</label>
                                 <div class="input-group">
                                     <input type="hidden" name="idPedido" value="<?=$idPedido ?? NULL ?>">
                                     <input type="hidden" name="idProponente" value="<?=$idPj ?? NULL ?>">
-                                    <input type="text" class="form-control" id="cnpj" name="procurar" value="<?=$procurar?>" data-mask="00.000.000/0000-00">
+                                    <input type="text" class="form-control" id="cnpj" name="procurar" value="<?=$procurar?>" placeholder="00.000.000/0000-00" data-mask="00.000.000/0000-00">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>

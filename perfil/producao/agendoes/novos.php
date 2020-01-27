@@ -74,7 +74,7 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
                                 echo "<td>" . $local . "</td>";
                                 echo "<td>" . $espaco . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($agendaoNovo['id'], 'agendao_ocorrencias') . "</td>";
-                                echo "<td>" . $agendaoNovo['data_envio'] . "</td>";
+                                echo "<td>" . exibirDataBr($agendaoNovo['data_envio']) . "</td>";
                                 echo "<td>
                                         <form method='POST' action='?perfil=producao&p=agendoes&sp=visualizacao' role='form'>
                                         <input type='hidden' name='idEvento' value='" . $agendaoNovo['id'] . "'>

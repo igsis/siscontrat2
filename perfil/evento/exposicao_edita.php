@@ -99,14 +99,14 @@ include "includes/menu_interno.php";
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="contratados">Quantidade de contratados</label><br/>
+                                    <label for="contratados">Quantidade de contratados *</label><br/>
                                     <input class="form-control" type="number" name="contratados" id="contratados"
-                                                  value="<?= $exposicao['numero_contratados'] ?>">
+                                                  value="<?= $exposicao['numero_contratados'] ?>" required>
                                 </div>
                                 
                                 <div class="form-group col-md-6">
-                                    <label for="tipo_exposicao">Tipo de Exposição</label> <br>
-                                    <select class="form-control" id="tipo_exposicao" name="tipo_exposicao">
+                                    <label for="tipo_exposicao">Tipo de Exposição *</label> <br>
+                                    <select class="form-control" id="tipo_exposicao" name="tipo_exposicao" required>
                                             <option value="0">Selecione</option>
                                             <?php geraOpcao('tipo_exposicao', $exposicao['tipo_exposicao_id']) ?>
                                     </select>
@@ -192,6 +192,6 @@ include "includes/menu_interno.php";
                 </form>
             </div>
         </div>
+    </section>
 </div>
-</section>
-</div>
+

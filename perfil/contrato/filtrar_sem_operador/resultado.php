@@ -29,7 +29,7 @@ if (isset($_POST['busca'])) {
         $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
 
     if ($status != null && $status != 0)
-        $sqlStatus = " AND e.evento_status_id = '$status'";
+        $sqlStatus = " AND p.status_pedido_id = '$status'";
 
     if ($usuario != null && $usuario != 0)
         $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
@@ -43,17 +43,25 @@ if (isset($_POST['busca'])) {
                    p.pessoa_juridica_id, 
                    e.nome_evento,
                    p.valor_total, 
-                   e.evento_status_id, 
+                   p.status_pedido_id, 
                    e.usuario_id, 
                    ps.status
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
+    INNER JOIN evento_envios ee ON e.id = ee.evento_id 
+    LEFT JOIN evento_reaberturas er on e.id = er.evento_id
     WHERE e.publicado = 1 
     AND e.evento_status_id != 1 
+    AND p.status_pedido_id != 3
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1 
     AND p.operador_id IS NULL
+    AND (
+      (er.data_reabertura < ee.data_envio) 
+    OR 
+      (er.data_reabertura is null)
+    )
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso";
 

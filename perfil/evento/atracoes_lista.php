@@ -31,8 +31,33 @@ if (isset($_POST['apagar'])) {
                 $mensagem2 = mensagem("warning", "Lembre-se de ajustar o valor das parcelas e do equipamento!");
             }
         }
+
     } else {
         $mensagem = mensagem("danger", "Erro ao tentar executar operação na atração");
+    }
+}
+
+if (isset($_POST['cadastraProdutor'])){
+    $nome = addslashes($_POST['nome']);
+    $email = $_POST['email'];
+    $telefone1 = $_POST['telefone1'];
+    $telefone2 = $_POST['telefone2'];
+    $observacao = addslashes($_POST['observacao']);
+    $idAtracoes = $_POST['idAtracoes'];
+    $sqlInsert = "INSERT INTO `produtores`
+                      (nome, email, telefone1, telefone2, observacao)
+                      VALUES ('$nome','$email','$telefone1','$telefone2','$observacao')";
+
+    if (mysqli_query($con,$sqlInsert)){
+        $idProdutor = recuperaUltimo("produtores");
+        $sqlUpdate = "UPDATE `atracoes`
+                          SET produtor_id = '$idProdutor'
+                          WHERE id ='$idAtracoes'";
+        if(mysqli_query($con,$sqlUpdate)){
+            $mensagem = mensagem("success","Produtor cadastrado");
+        }else{
+            $mensagem = mensagem("danger","Erro ao cadastrar");
+        }
     }
 }
 

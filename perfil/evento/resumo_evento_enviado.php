@@ -2,6 +2,19 @@
 include "includes/menu_principal.php";
 $con = bancoMysqli();
 
+
+
+$idUser = $_SESSION['idUser'];
+$sessions = ['login', 'nome', 'idUser'];
+
+foreach ($_SESSION as $key => $session) {
+    if (in_array($key, $sessions)) {
+        continue;
+    } else {
+        unset($_SESSION[$key]);
+    }
+}
+
 if (isset($_POST['idEvento'])) {
     $idEvento = $_POST['idEvento'];
 } else {
@@ -10,7 +23,9 @@ if (isset($_POST['idEvento'])) {
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
-$tipoEvento = $evento ['tipo_evento_id'];
+$tipoEvento = $evento['tipo_evento_id'];
+
+$data = date("Y-m-d H:i:s",strtotime("-3 hours"));
 
 if (isset($_POST['enviar'])) {
     $fora = $_POST['fora'];
@@ -27,6 +42,11 @@ if (isset($_POST['enviar'])) {
             $sqlEvento = "UPDATE eventos SET evento_status_id = 2 WHERE id = '$idEvento'";
             if (mysqli_query($con, $sqlPedido)) {
                 mysqli_query($con, $sqlEvento);
+
+                $titulo = "Evento Fora do Prazo: ".$evento["nome_evento"];
+                $sqlChamado = "INSERT INTO chamados (evento_id, chamado_tipo_id, titulo, justificativa, usuario_id, data) VALUES
+                                                    ('$idEvento', '5', '$titulo', 'Evento Fora do Prazo', '$idUser', '$data')";
+                mysqli_query($con, $sqlChamado);
                 $mensagemPedido = mensagem("warning", "Seu pedido está aguardando aprovação!");
             }
         } else {
@@ -37,11 +57,9 @@ if (isset($_POST['enviar'])) {
                 $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3 WHERE id = '$idEvento'";
                 mysqli_query($con, $sqlEnviaEvento);
 
-                $data = date("Y-m-d H:i:s",strtotime("-3 hours"));
+
                 $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
                 $queryEnvia = mysqli_query($con, $sqlEnvia);
-                $idUser = $_SESSION['idUser'];
-                $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
                 $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
                 $queryEnvio = mysqli_query($con,$sqlEnvio);
                 $mensagem = mensagem("success", "Evento enviado com sucesso!");

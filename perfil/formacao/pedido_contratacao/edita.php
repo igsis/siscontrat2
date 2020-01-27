@@ -11,6 +11,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $justificativa = addslashes($_POST['justificativa']) ?? null;
     $observacao = addslashes($_POST['observacao']) ?? null;
     $local = $_POST['local'];
+    $processoMae = $_POST['processoMae'];
 
     if (isset($_POST['cadastra'])) {
         $idPc = $_POST['idPc'];
@@ -18,8 +19,8 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
         $idPf = $fc['pessoa_fisica_id'] ?? null;
         $_SESSION['idPF'] = $idPf;
 
-        $sql = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_fisica_id, numero_processo, verba_id, numero_parcelas, valor_total, forma_pagamento, data_kit_pagamento, justificativa, status_pedido_id, observacao)
-                         VALUES (2, '$idPc', 1, '$idPf', '$numeroProcesso', '$verba', '$numParcelas', '$valor', '$forma_pagamento', '$dataKit', '$justificativa', 2, '$observacao')";
+        $sql = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_fisica_id, numero_processo, numero_processo_mae, verba_id, numero_parcelas, valor_total, forma_pagamento, data_kit_pagamento, justificativa, status_pedido_id, observacao)
+                         VALUES (2, '$idPc', 1, '$idPf', '$numeroProcesso', '$processoMae' ,'$verba', '$numParcelas', '$valor', '$forma_pagamento', '$dataKit', '$justificativa', 2, '$observacao')";
         if (mysqli_query($con, $sql)) {
             $idPedido = recuperaUltimo('pedidos');
             gravarLog($sql);
@@ -54,7 +55,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     } else if (isset($_POST['edita'])) {
         $idPedido = $_POST['idPedido'];
 
-        $sql = "UPDATE pedidos SET verba_id = '$verba', valor_total = '$valor', data_kit_pagamento = '$dataKit', numero_processo = '$numeroProcesso', forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao', numero_parcelas = '$numParcelas' WHERE id = '$idPedido'";
+        $sql = "UPDATE pedidos SET verba_id = '$verba', valor_total = '$valor', data_kit_pagamento = '$dataKit', numero_processo = '$numeroProcesso', numero_processo_mae = '$processoMae',forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao', numero_parcelas = '$numParcelas' WHERE id = '$idPedido'";
 
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
@@ -287,17 +288,10 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-6">
                             <label for="dataKit">Data kit pagamento *</label>
                             <input type="date" name="dataKit" class="form-control" id="datepicker10"
                                    placeholder="DD/MM/AAAA" value="<?= $pedido['data_kit_pagamento'] ?>" required>
-                        </div>
-
-                        <div class="form-group col-md-3">
-                            <label for="numeroProcesso">Número do Processo *</label>
-                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
-                                   value="<?= $pedido['numero_processo'] ?>" data-mask="9999.9999/9999999-9"
-                                   minlength="19">
                         </div>
 
                         <div class="form-group col-md-6">
@@ -310,14 +304,30 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
                     <div class="row">
                         <div class="form-group col-md-6">
+                            <label for="numeroProcesso">Número do Processo *</label>
+                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
+                                   value="<?= $pedido['numero_processo'] ?>" data-mask="9999.9999/9999999-9" required
+                                   minlength="19">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="numeroProcesso">Número do Processo Mãe *</label>
+                            <input type="text" name="processoMae" id="processoMae" class="form-control"
+                                   value="<?= $pedido['numero_processo_mae'] ?>" data-mask="9999.9999/9999999-9" required
+                                   minlength="19">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
                             <label for="forma_pagamento">Forma de pagamento *</label>
-                            <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
+                            <textarea id="forma_pagamento" name="forma_pagamento" class="form-control" required
                                       rows="8"><?= $pedido['forma_pagamento'] ?? NULL ?></textarea>
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="justificativa">Justificativa *</label>
-                            <textarea id="justificativa" name="justificativa" class="form-control"
+                            <textarea id="justificativa" name="justificativa" class="form-control" required
                                       rows="8"><?= $pedido['justificativa'] ?? null ?></textarea>
                         </div>
                     </div>

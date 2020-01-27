@@ -61,9 +61,7 @@ $sql = "SELECT p.id,
                             <tbody>
                             <?php
                             if ($query = mysqli_query($con, $sql)) {
-                                while ($ec = mysqli_fetch_array($query)) {
-                                    $_SESSION['idEidPedidoC'] = $ec['id'];
-                                    ?>
+                                while ($ec = mysqli_fetch_array($query)) {?>
                                     <tr>
                                         <td>
                                             <form action="?perfil=emia&p=pagamento&sp=pagamento" method="post" role="form">

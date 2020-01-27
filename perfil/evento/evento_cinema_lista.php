@@ -97,7 +97,7 @@ $resul = mysqli_query($con, $query);
 
                                     echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_lista\" role=\"form\">
-                                    <input type='hidden' name='idOrigem' value='" . $filmes['id'] . "'>
+                                    <input type='hidden' name='idOrigem' value='" . $filmes['idFilmeEvento'] . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i> Listar ocorrência</button>
                                     </form>
                                     </td>";

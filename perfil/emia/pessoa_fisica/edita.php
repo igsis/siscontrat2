@@ -343,8 +343,18 @@ if ($foto == null) {
                             </div>
                             <div class="row">
                                 <?php
-                                if (empty($pf['cpf'])) {
-                                    anexosNaPagina(62, $idPf, "modal-passaporte", "Passaporte");
+                                if (empty($pf['cpf'])) { ?>
+                                    <div class="col-md-12">
+                                        <label for="passaporte">Passaporte: </label>
+                                        <input type="text" name="passaporte" disabled value="<?= $pf['passaporte'] ?>" class="form-control">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <?php anexosNaPagina(62, $idPf, "modal-passaporte", "Passaporte"); ?>
+                                    </div>
+                                    <?php
                                 } else {
                                     ?>
                                     <div class="form-group col-md-2">
@@ -384,17 +394,17 @@ if ($foto == null) {
                                 <div class="form-group col-md-4">
                                     <?php
                                     if (!empty($pf['cpf'])){
-                                    anexosNaPagina(2, $idPf, "modal-rg", "RG");
+                                    anexosNaPagina(1, $idPf, "modal-rg", "RG");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(3, $idPf, "modal-cpf", "CPF");
+                                    anexosNaPagina(2, $idPf, "modal-cpf", "CPF");
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(31, $idPf, "modal-ccm", "FDC - CCM");
+                                    anexosNaPagina(30, $idPf, "modal-ccm", "FDC - CCM");
                                     }
                                     ?>
                                 </div>
@@ -411,10 +421,9 @@ if ($foto == null) {
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
                                 </div>
-
                                 <div class="form-group col-md-6">
                                     <?php
-                                    anexosNaPagina(59, $idPf, "modal-foto", "Foto 3x4");
+                                    anexosNaPagina(46,$idPf,"modal-foto","Foto 3x4*");
                                     ?>
                                 </div>
                             </div>
@@ -457,7 +466,7 @@ if ($foto == null) {
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(4, $idPf, "modal-endereco", "Comprovante de endereço");
+                                    anexosNaPagina(3, $idPf, "modal-endereco", "Comprovante de endereço");
                                     ?>
                                 </div>
                             </div>
@@ -525,7 +534,7 @@ if ($foto == null) {
                                 </div>
                                 <div class="form-group col-md-3">
                                     <?php
-                                    anexosNaPagina(25, $idPf, "modal-nit", "NIT");
+                                    anexosNaPagina(27, $idPf, "modal-nit", "NIT");
                                     ?>
                                 </div>
                             </div>
@@ -583,7 +592,7 @@ if ($foto == null) {
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(51, $idPf, "modal-facc", "FACC");
+                                    anexosNaPagina(42, $idPf, "modal-facc", "FACC");
                                     ?>
                                 </div>
                             </div>

@@ -144,7 +144,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Procurar pessoa fisica</h3>
+                        <h3 class="box-title">Procurar pessoa física</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">

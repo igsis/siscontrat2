@@ -16,10 +16,9 @@ if ($pedido['pessoa_tipo_id'] == 2) {
 }
 ?>
 
-<form class="formulario-ajax" method="POST" action="../funcoes/api_pedido_eventos.php" role="form"
-      data-etapa="Parecer Artístico">
+<form class="formulario-ajax" method="POST" action="../funcoes/api_pedido_eventos.php" role="form" data-etapa="Parecer Artístico">
     <div class="row">
-        <div class="form-group col-md-11">
+        <div class="form-group col-md-11" style="width: 89%">
             <h4><strong>1º Tópico</strong></h4>
             <label for="topico1">Neste tópico deve conter o posicionamento da comissão e as informações gerais do evento
                 (nome do artista, evento, datas, valor, tempo, etc).</label><br/>
@@ -39,8 +38,9 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             ?>
         </div>
     </div>
+
     <div class="row">
-        <div class="form-group col-md-11">
+        <div class="form-group col-md-11" style="width: 89%">
             <h4><strong>2º Tópico (mínimo de 500 caracteres)</strong></h4>
             <label for="topico2">Neste tópico deve-se falar sobre o evento ou atividade especial da qual o artista/grupo
                 irá
@@ -56,8 +56,10 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             <span id="sprestante" style="font-family:Georgia;"></span>
         </div>
     </div>
+
+
     <div class="row">
-        <div class="form-group col-md-11">
+        <div class="form-group col-md-11" style="width: 89%">
             <h4><strong>3º Tópico (mínimo de 700 caracteres)</strong></h4>
             <label>Neste tópico deve-se falar sobre o currículo/biografia do artista ou grupo (na 3ª pessoa), escrever
                 um
@@ -71,8 +73,10 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             <span id="sprestante3" style="font-family:Georgia;"></span>
         </div>
     </div>
+
+
     <div class="row">
-        <div class="form-group col-md-11">
+        <div class="form-group col-md-11" style="width: 89%">
             <h4><strong>4º Tópico</strong></h4>
             <div class="row">
                 <div class="col-md-12">
@@ -107,7 +111,7 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             </div>
             <!-- /.box -->
             <div class="row">
-                <div class="col-md-12">
+                <div class="form-group col-md-12">
                     <div class="box box-default collapsed-box">
                         <div class="box-header with-border">
                             <h4 class="box-title">
@@ -141,8 +145,11 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             <textarea id="topico4" name="topico4" class="form-control" rows="5"><?= $parecer['topico4'] ?></textarea>
         </div>
     </div>
+
+
+
     <!-- /.box-body -->
-    <div class="box-footer col-md-11">
+    <div class="box-footer" style="width: 90%">
         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
         <input type="hidden" name="_method" value="parecerArtistico">
         <div class="pull-right">

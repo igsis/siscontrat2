@@ -9,6 +9,8 @@ $idAtracao = $_SESSION['idOrigem'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
+$tipoEvento = $evento['tipo_evento_id'];
+
 ?>
 <script type="text/javascript">
     function desmarca() {
@@ -87,6 +89,9 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
             var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
         }
 
+        msgHora.hide()
+        $('#cadastra').attr("disabled", true);
+
         if (dataFim != "") {
             var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
 
@@ -103,6 +108,11 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                 $('#cadastra').attr("disabled", false);
                 mudaData(false);
             }
+        } else {
+            validaHora()
+
+            let horaInicio = $('#horaInicio').change(validaHora)
+            let horaFim = $('#horaFim').change(validaHora)
         }
     }
 </script>
@@ -145,20 +155,39 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label>
-                                        <input type="checkbox" name="domingo" id="diasemana07" value="1" class="semana">
-                                        Domingo &nbsp;
-                                        <input type="checkbox" name="segunda" id="diasemana01" value="1" class="semana">
-                                        Segunda &nbsp;
-                                        <input type="checkbox" name="terca" id="diasemana02" value="1" class="semana">
-                                        Terça &nbsp;
-                                        <input type="checkbox" name="quarta" id="diasemana03" value="1" class="semana">
-                                        Quarta &nbsp;
-                                        <input type="checkbox" name="quinta" id="diasemana04" value="1" class="semana">
-                                        Quinta &nbsp;
-                                        <input type="checkbox" name="sexta" id="diasemana05" value="1" class="semana">
-                                        Sexta &nbsp;
-                                        <input type="checkbox" name="sabado" id="diasemana06" value="1" class="semana">
-                                        Sábado &nbsp;
+                                        <input type="checkbox" name="domingo" id="diasemana07"
+                                               value="1" class="semana"> Domingo
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="segunda" id="diasemana01"
+                                               value="1" class="semana"> Segunda
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="terca" id="diasemana02"
+                                               value="1" class="semana"> Terça
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="quarta" id="diasemana03"
+                                               value="1" class="semana"> Quarta
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="quinta" id="diasemana04"
+                                               value="1" class="semana"> Quinta
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="sexta" id="diasemana05"
+                                               value="1"  class="semana"> Sexta
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="sabado" id="diasemana06"
+                                               value="1" class="semana"> Sábado
+                                        &nbsp;
                                     </label>
                                 </div>
 
@@ -170,14 +199,15 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                     Não
                                 </div>
 
-                                <div class="form-group col-md-2">
-                                    <input type="checkbox" name="libras" id="libras" value="1"> &nbsp;
-                                    <label for="libras">Libras</label>
-                                </div>
-
-                                <div class="form-group col-md-2">
-                                    <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1"> &nbsp;
-                                    <label for="libras">Audiodescrição</label>
+                                <div class="form-group col-md-4">
+                                    <label>
+                                        <input type="checkbox" name="libras" id="libras" value="1"> Libras
+                                        &nbsp;
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1"> Audiodescrição
+                                        &nbsp;
+                                    </label>
                                 </div>
                             </div>
 
@@ -194,15 +224,72 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                            placeholder="hh:mm"/>
                                 </div>
 
-                                <div class="form-group col-md-3">
+                                
+
+
+                            <?php
+                                if($tipoEvento == 2){
+                                    $filmeEvento = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $idEvento)->fetch_array();
+                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $filmeEvento['filme_id'])->fetch_array();
+                                    ?>
+                                    <script type="text/javascript">
+                                                                    
+                                        $('#horaInicio').on('change', function() {
+                                            $('#horaFim').attr("readonly",true);
+                                            var horainicio = $('#horaInicio').val();                                      
+                                            var hora = parseInt(horainicio.split(':', 1));
+                                            var minuto = parseInt(horainicio[3] + horainicio[4]);
+                                            var duracao = <?=$filme['duracao']?>;
+
+                                            while(duracao >= 60){
+                                                duracao -= 60;
+                                                hora += 1;
+                                            }
+
+                                            var minutoFinal = minuto + duracao;
+
+                                            if(minutoFinal >= 60){
+                                               minutoFinal -= 60;
+                                               hora += 1;
+                                            }
+                                            if(minutoFinal == 0 && minutoFinal != 00){
+                                                minutoFinal = minutoFinal + "0";
+                                            }
+                                            if(minutoFinal < 10){
+                                                minutoFinal = "0" + minutoFinal;
+                                            }
+                                            if(hora == 0 && minutoFinal != 00){
+                                                hora = hora + "0";
+                                            }
+                                            if(hora < 10){
+                                                hora = "0" + hora;
+                                            }
+                                            if(hora == 00){
+                                                hora = "00";
+                                            }
+
+                                            var resultado = hora + ":" + minutoFinal + ":00";
+                    
+                                            
+                                            $('#horaFim').val(resultado);
+                                            $('#horaFim').attr("value", resultado);
+                                                               
+                                            
+                                    });
+                                    </script>
+                                <?php }
+                            ?>
+
+
+                                 <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
-                                    <input type="time" name="horaFim" class="form-control" id="horaFim" required
+                                    <input type="time" name="horaFim" class="form-control" id="horaFim" required value=""
                                            placeholder="hh:mm"/>
                                 </div>
 
                                 <div class="form-group col-md-3">
-                                    <label for="retiradaIngresso">Retirada de Ingresso</label>
-                                    <select name="retiradaIngresso" id="retiradaIngresso" class="form-control">
+                                    <label for="retiradaIngresso">Retirada de Ingresso *</label>
+                                    <select name="retiradaIngresso" id="retiradaIngresso" class="form-control" required>
                                         <option value="">Selecione uma opção...</option>
                                         <?php
                                         geraOpcao("retirada_ingressos");
@@ -215,6 +302,12 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                                     <input type="text" name="valor_ingresso" class="form-control" required
                                            id="valor_ingresso"
                                            placeholder="Em reais" onkeypress="return(moeda(this, '.', ',', event))"/>
+                                </div>
+                            </div>
+
+                            <div class="row" id="msgEscondeHora">
+                                <div class="form-group col-md-6">
+                                    <span style="color: red;">A hora final tem que ser maior que a hora inicial!</span>
                                 </div>
                             </div>
 
@@ -231,7 +324,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
                                 <div class="form-group col-md-4">
                                     <label for="local">Local *</label>
-                                    <select class="form-control" id="local" name="local">
+                                    <select class="form-control" id="local" name="local" required>
                                         <!-- Populando pelo js -->
                                     </select>
 
@@ -268,13 +361,13 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
                             <div class="form-group">
                                 <label for="observacao">Observação</label><br/>
-                                <textarea name="observacao" id="observacao" class="form-control" rows="5"></textarea>
+                                <textarea name="observacao" id="observacao" class="form-control" rows="1"></textarea>
                             </div>
 
                         </div>
 
                         <div class="box-footer">
-                            <a href="?perfil=evento&p=atracoes_lista">
+                            <a href="?perfil=evento&p=<?=$tipoEvento == 1 ? "atracoes_lista" : "evento_cinema_lista"?>">
                                 <button type="button" class="btn btn-default" id="voltar" name="voltar">Voltar</button>
                             </a>
                             <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
@@ -453,66 +546,56 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
     var virada = $('.virada');
 
     virada.on("change", function () {
-        if ($('#viradaNao').is(':checked')) {
+        let opc = parseInt($('input[name="virada"]:checked').val())
+        if (opc) {
+
             $('#horaInicio')
-                .attr('readonly', false)
-                .val('');
-
-            $('#horaFim')
-                .attr('readonly', false)
-                .val('');
-
-            $('#instituicao')
-                .attr('readonly', false)
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#local')
-                .attr('readonly', false)
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#espaco')
-                .attr('readonly', false)
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#retiradaIngresso')
-                .attr('readonly', false)
-                .val($('option:contains("Selecione uma opção...")').val());
-
-            $('#valor_ingresso')
-                .attr('readonly', false)
-                .val('');
-        } else {
-            $('#horaInicio')
-                .attr('readonly', true)
                 .val('00:00');
 
             $('#horaFim')
-                .attr('readonly', true)
                 .val('00:00');
 
             $('#instituicao')
-                .attr('readonly', true)
                 .val($('option:contains("Virada Cultural")').val());
 
-            $('#local')
-                .attr('readonly', true)
-                .val($('option:contains("De acordo com a programação do evento")').val());
-
             $('#retiradaIngresso')
-                .attr('readonly', true)
                 .val($('option:contains("INGRESSOS GRÁTIS")').val());
 
-            $('#espaco')
-                .attr('readonly', true);
-
             $('#valor_ingresso')
-                .attr('readonly', true)
                 .val('0,00');
 
-            getLocais(10, 626);
+            getLocais(10, 189);
             getEspacos();
+
+            $('#local')
+                .val(189);
+        } else {
+            $('#instituicao')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#espaco')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#retiradaIngresso')
+                .val($('option:contains("Selecione uma opção...")').val());
+
+            $('#valor_ingresso')
+                .val('0,00');
         }
     });
+
+    let retiradaIngresso = document.querySelector('#retiradaIngresso');
+
+    retiradaIngresso.addEventListener("change", () => {
+        let valorIngressos = document.querySelector('#valor_ingresso');
+        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11){
+            valorIngressos.value = '0,00';
+            valorIngressos.readOnly = true;
+        }else {
+            valorIngressos.readOnly = false;
+        }
+    });
+
 
     function getLocais(idInstituicao, selectedId) {
         fetch(`${url}?instituicao_id=${idInstituicao}`)
@@ -628,9 +711,27 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         });
     }
 
-</script>
+    let msgHora = $('#msgEscondeHora');
+    msgHora.hide();
 
-<script>
+    function validaHora() {
+        let horaInicio = $('#horaInicio').val();
+        let horaFim = $('#horaFim').val();
+
+        if (horaFim != "" && horaInicio != "") {
+            horaInicio = parseInt(horaInicio.split(":")[0].toString() + horaInicio.split(":")[1].toString());
+            horaFim = parseInt(horaFim.split(":")[0].toString() + horaFim.split(":")[1].toString());
+
+            if (horaFim < horaInicio) {
+                msgHora.show();
+                $('#cadastra').attr("disabled", true);
+            } else {
+                msgHora.hide();
+                $('#cadastra').attr("disabled", false);
+            }
+        }
+    }
+
     function validaDiaSemana() {
         var dataInicio = document.querySelector('#datepicker10').value;
         var isMsg = $('#msgEsconde');
@@ -658,6 +759,5 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
         }
     }
 
-    var diaSemana = $('.semana');
-    diaSemana.change(validaDiaSemana);
+    var diaSemana = $('.semana').change(validaDiaSemana)
 </script>

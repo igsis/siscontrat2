@@ -166,7 +166,7 @@ if (isset($_POST['cadastra'])) {
                                 <div class="form-group col-md-4">
                                     <label for="tel_usuario">Telefone* </label>
                                     <input type="text" id="tel_usuario" name="tel_usuario"
-                                           class="form-control" onkeyup="mascara( this, mtel );" required>
+                                           class="form-control" onkeyup="mascara( this, mtel );" required maxlength="15">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="perfil">Código* </label> <br>

@@ -9,12 +9,18 @@ $conn = bancoPDO();
 if (isset($_POST['excluir'])) {
     $pedido = $_POST['idPedido'];
     $sql = "UPDATE `pedidos` SET publicado = 0 WHERE id = '$pedido'";
+    $queryDelLider = "DELETE FROM lideres WHERE pedido_id = '$pedido'";
 
-    if(mysqli_query($con, $sql)){
-        unset($_SESSION['idPedido']);
-        $mensagem = mensagem("success", "Pedido excluido com sucesso!");
-        gravarLog($sql);
-    }else{
+    if (mysqli_query($con, $queryDelLider)) {
+        if (mysqli_query($con, $sql)) {
+            unset($_SESSION['idPedido']);
+            $mensagem = mensagem("success", "Pedido excluido com sucesso!");
+            gravarLog($queryDelLider);
+            gravarLog($sql);
+        } else {
+            $mensagem = mensagem("danger", "Erro ao excluir pedido! Tente novamente mais tarde.");
+        }
+    } else {
         $mensagem = mensagem("danger", "Erro ao excluir pedido! Tente novamente mais tarde.");
     }
 }
@@ -22,8 +28,36 @@ if (isset($_POST['excluir'])) {
 $idEvento = $_SESSION['idEvento'];
 $evento = recuperaDados("eventos", "id", $idEvento);
 $sql = "SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
-$query = mysqli_query($con,$sql);
+$query = $con->query($sql);
+$pedido = $query->fetch_assoc();
 $num = mysqli_num_rows($query);
+
+if($evento['tipo_evento_id']==1) {
+    $sql_atracao = "SELECT id, nome_atracao FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
+    $query_atracao = mysqli_query($con, $sql_atracao);
+    $nome_atracao = "";
+    while ($arr = mysqli_fetch_array($query_atracao)) {
+        $nome_atracao = $nome_atracao . $arr['nome_atracao'] . " <br> ";
+    }
+    $nome_atracao = substr($nome_atracao, 0, -3);
+} else{
+    $sql_filmes = $con->query("SELECT f.titulo FROM eventos AS eve INNER JOIN filme_eventos fe on eve.id = fe.evento_id INNER JOIN filmes f on fe.filme_id = f.id WHERE eve.id = '$idEvento'");
+    $nome_filme = "";
+    while ($arr = mysqli_fetch_array($sql_filmes)){
+        $nome_filme = $nome_filme . $arr['titulo'] . " <br> ";
+    }
+    $nome_atracao = $nome_filme = substr($nome_filme,0,-3);
+}
+
+if ($pedido['pessoa_tipo_id'] == 2) {
+    $pj = recuperaDados("pessoa_juridicas", "id", $pedido['pessoa_juridica_id']);
+    $nomeProponente = $pj['razao_social'];
+    $idProponente = $pj['id'];
+} else {
+    $pf = recuperaDados("pessoa_fisicas", "id", $pedido['pessoa_fisica_id']);
+    $nomeProponente = $pf['nome'];
+    $idProponente = $pf['id'];
+}
 
 ?>
 
@@ -53,80 +87,59 @@ $num = mysqli_num_rows($query);
                         /*
                          * Caso não haja pedido de contratação registrado
                          */
-                        if($num == 0){
+                        if ($num == 0){
                             unset($_SESSION['idPedido']);
-                        ?>
+                            ?>
                             <div class="row">
                                 <div class="form-group col-md-offset-3 col-md-3">
                                     <form method="POST" action="?perfil=evento&p=pf_pesquisa" role="form">
-                                        <button type="submit" name ="pessoa_fisica" class="btn btn-block btn-primary btn-lg">Pessoa Física</button>
+                                        <button type="submit" name="pessoa_fisica"
+                                                class="btn btn-block btn-primary btn-lg">Pessoa Física
+                                        </button>
                                     </form>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <form method="POST" action="?perfil=evento&p=pj_pesquisa" role="form">
-                                        <button type="submit" name ="pesquisar_pessoa_juridica" class="btn btn-block btn-primary btn-lg">Pessoa Jurídica</button>
+                                        <button type="submit" name="pesquisar_pessoa_juridica"
+                                                class="btn btn-block btn-primary btn-lg">Pessoa Jurídica
+                                        </button>
                                     </form>
                                 </div>
                             </div>
-                        <?php
-                        }
-                        else{
-                            /*
-                             * Caso haja pedido de contratração
-                             */
+                            <?php
+                        } else {
+                        /*
+                         * Caso haja pedido de contratração
+                         */
                         ?>
-                        <form method="POST" action="?perfil=evento&p=pedido_anexos" role="form">
-                            <table class="table table-condensed">
-                                <thead>
-                                <tr>
-                                    <th>Proponente</th>
-                                    <th>Atração</th>
-                                    <th width="15%">Anexos</th>
-                                    <th width="15%">Ação</th>
-                                    <th width="5%">Excluir</th>
-                                </tr>
-                                </thead>
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr>
+                                <th>Proponente</th>
                                 <?php
-                                echo "<body>";
-                                while ($pedido = mysqli_fetch_array($query)) {
-                                    echo "<tr>";
-                                    if($pedido['pessoa_tipo_id'] == 2){
-                                        $pj = recuperaDados("pessoa_juridicas","id",$pedido['pessoa_juridica_id']);
-                                        echo "<td>".$pj['razao_social']."</td>";
-                                        echo "<input type='hidden' name='idPessoa' value='".$pj['id']."'>";
-                                        $idProponente = $pj['id'];
-                                    }
-                                    else{
-                                        $pf = recuperaDados("pessoa_fisicas","id",$pedido['pessoa_fisica_id']);
-                                        echo "<td>".$pf['nome']."</td>";
-                                        echo "<input type='hidden' name='idPessoa' value='".$pf['id']."'>";
-                                        $idProponente = $pf['id'];
-                                    }
-
-                                    $sql_atracao = "SELECT id, nome_atracao FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
-                                    $query_atracao = mysqli_query($con,$sql_atracao);
-                                    $nome_atracao = "";
-                                    while ($arr = mysqli_fetch_array($query_atracao)) {
-                                        $nome_atracao = $nome_atracao . $arr['nome_atracao'] . " | ";
-                                    }
-                                    $nome_atracao = substr($nome_atracao, 0, -3);
-                                    echo "<td>" . $nome_atracao ."</td>";
-
-                                    echo "<td>                                    
-                                        <input type='hidden' name='idPedido' value='".$pedido['id']."'>
-                                        <input type='hidden' name='tipoPessoa' value='".$pedido['pessoa_tipo_id']."'>
-                                        <button type=\"submit\" name='carregar' class=\"btn btn-primary btn-block\">Anexos do pedido</button>
+                                if($evento['tipo_evento_id']==1){
+                                    echo "<th>Atração</th>";
+                                } else{
+                                    echo "<th>Filme</th>";
+                                }
+                                ?>
+                                <th width="15%">Ação</th>
+                                <th width="5%">Excluir</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><?=$nomeProponente?></td>
+                                    <input type="hidden" name="idPessoa" value="<?=$idProponente?>">
+                                    <td><?=$nome_atracao?></td>
+                                    <td>
+                                        <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                                            <input type="hidden" name="idPedido" value="<?=$pedido['id']?>">
+                                            <input type="hidden" name="idProponente" value="<?=$idProponente?>">
+                                            <input type="hidden" name="tipoPessoa" value="<?=$pedido['pessoa_tipo_id']?>">
+                                            <button type="submit" name='carregar' class="btn btn-primary btn-block">Editar pedido</button>
                                         </form>
-                                        </td>";
-                                    echo "<td>
-                                        <form method=\"POST\" action=\"?perfil=evento&p=pedido_edita\" role=\"form\">
-                                        <input type='hidden' name='idPedido' value='".$pedido['id']."'> 
-                                        <input type='hidden' name='idProponente' value='".$idProponente."'>
-                                        <input type='hidden' name='tipoPessoa' value='".$pedido['pessoa_tipo_id']."'>
-                                        <button type=\"submit\" name='carregar' class=\"btn btn-primary btn-block\">Editar pedido</button>
-                                        </form>
-                                        </td>";
-                                    ?>
+                                    </td>
                                     <td>
                                         <form method='POST' id='formExcliuir'>
                                             <input type="hidden" name='idPedido' value="<?= $pedido['id'] ?>">
@@ -136,12 +149,9 @@ $num = mysqli_num_rows($query);
                                                         class='glyphicon glyphicon-trash'></span></button>
                                         </form>
                                     </td>
-                                <?php
-                                    echo "</tr>";
-                                }
-                                echo "</body>";
-                                ?>
-                            </table>
+                                </tr>
+                            </tbody>
+                        </table>
                         <?php
                         }
                         ?>
@@ -187,7 +197,7 @@ $num = mysqli_num_rows($query);
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">
-        $(function () {
+    $(function () {
         $('#tblPedido').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'

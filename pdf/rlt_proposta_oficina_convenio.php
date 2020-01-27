@@ -14,9 +14,13 @@ $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
-$idLocal = $ocorrencia['local_id'];
-$sqlLocal = "SELECT local FROM locais WHERE id = '$idLocal'";
-$locais = $con->query($sqlLocal)->fetch_array();
+$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
+$queryLocal = mysqli_query($con, $sqlLocal);
+$local = '';
+while ($locais = mysqli_fetch_array($queryLocal)) {
+    $local = $local . '; ' . $locais['local'];
+}
+$local = substr($local, 1);
 $idEvento = $ocorrencia['origem_ocorrencia_id'];
 
 $idNacionalidade = $pessoa['nacionalidade_id'];
@@ -49,22 +53,32 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 $tel = substr($tel, 0, -3);
 
 $idAtracao = $ocorrencia['atracao_id'];
-$sqlCheca = "SELECT oficina FROM atracoes WHERE id = '$idAtracao'";
-$checa = $con->query($sqlCheca)->fetch_array();
+$sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
+$carga = $con->query($sqlCarga)->fetch_array();
 
-if ($checa['oficina'] == 1) {
-    $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
-    $carga = $con->query($sqlCarga)->fetch_array();
-    $carga = $carga['carga_horaria'];
-} else if ($checa['oficina'] == 0) {
-    $carga = "Não se aplica.";
+if($carga['carga_horaria'] != 0 || $carga['carga_horaria'] != NULL){
+    $cargaHoraria =  $carga['carga_horaria'] . " hora(s)";
+}else{
+    $cargaHoraria = "Não possuí.";
+}
+
+if($drt['drt'] != "" || $drt['drt'] != NULL){
+    $drt = $drt['drt'];
+}else{
+    $drt =  "Não Cadastrado.";
+}
+
+if($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL){
+    $ccm = $pessoa['ccm'];
+}else{
+    $ccm = "Não Cadastrado.";
 }
 
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$idPedido.doc");
 ?>
 <html>
-<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <body>
 
 <p>(A)</p>
@@ -75,8 +89,8 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
 <p><strong>Nacionalidade:</strong> <?= $nacionalidade['nacionalidade'] ?></p>
 <p><strong>RG:</strong> <?= $pessoa['rg'] ?></p>
 <p><strong>CPF:</strong> <?= $pessoa['cpf'] ?></p>
-<p><strong>CCM:</strong> <?= $pessoa['ccm'] ?></p>
-<p><strong>DRT:</strong> <?= $drt['drt'] ?></p>
+<p><strong>CCM:</strong> <?= $ccm ?></p>
+<p><strong>DRT:</strong> <?= $drt ?></p>
 <p>
     <strong>Endereço:</strong> <?= $endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " . $endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf'] ?>
 </p>
@@ -93,8 +107,8 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
     Contratação artística de oficinas de dança, teatro, circo, literatura e música para realização em Bibliotecas, Casas
     de Cultura e Centros Culturais da Secretaria Municipal de Cultura.</p>
 <p><strong>Data / Período:</strong> <?= $periodo ?> - conforme cronograma</p>
-<p><strong>Carga Horária:</strong> <?= $carga ?></p>
-<p><strong>Local:</strong> <?= $locais['local'] ?></p>
+<p><strong>Carga Horária:</strong> <?= $cargaHoraria ?></p>
+<p><strong>Local:</strong> <?= $local ?></p>
 <p><strong>Valor:</strong> <?= $pedido['valor_total'] ?> (<?= valorPorExtenso($pedido['valor_total']) ?>)</p>
 <p><strong>Forma de Pagamento:</strong> <?= $pedido['forma_pagamento'] ?></p>
 <p><strong>Justificativa:</strong> <?= $pedido['justificativa'] ?></p>
@@ -145,17 +159,30 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
 <?php
 $cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id']);
 while ($aux = mysqli_fetch_array($cronograma)) {
-$tipo = retornaTipo($aux['tipo_ocorrencia_id']);
-$dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
-$hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
-$local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'])->fetch_array();
-$lugar = $local['local'];
+    if ($aux['tipo_ocorrencia_id'] == 2) {
+        $testaFilme = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id = $idEvento")->fetch_array();
+        $filme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
+        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
+        $acao = $tipoAcao['acao'];
+        $labelFilme = "<p><strong> Título: </strong>" . $filme['titulo'] . "</p>" .
+            "<p><strong>Duração: </strong>" . $filme['duracao'] . " Hora(s)" . "</p>";
+    } else {
+        $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
+        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'])->fetch_array();
+        $acao = $tipoAcao['acao'];
+        $labelFilme = "";
+    }
+    $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
+    $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
+    $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'])->fetch_array();
+    $lugar = $local['local'];
 
-echo "<p><strong>Tipo:</strong> " . $tipo . "</p>";
-echo "<p><strong>Data/Período:</strong> " . $dia . "</p>";
-echo "<p><strong>Horário:</strong> " . $hour . "</p>";
-echo "<p><strong>Local:</strong> " . $lugar . "</p>";
-echo "<p>&nbsp;</p>";
+    echo $labelFilme;
+    echo "<p><strong>Ação:</strong> " . $acao . "</p>";
+    echo "<p><strong>Data/Período:</strong> " . $dia . "</p>";
+    echo "<p><strong>Horário:</strong> " . $hour . "</p>";
+    echo "<p><strong>Local:</strong> " . $lugar . "</p>";
+    echo "<p>&nbsp;</p>";
 }?>
 
 <p>&nbsp;</p>

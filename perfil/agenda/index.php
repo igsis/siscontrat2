@@ -5,29 +5,31 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espa
 $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_calendar.php';
 ?>
 <script>
-    const urlEvento = `<?=$urlEvento?>`;
-    let retornoEvento = new Object();
+const URL = `<?=$urlEvento?>`;
+let events = [];
 
-    function evento() {
+axios.get(URL)
+    .then(response => {
+        const contador = response.data.length;
 
-        fetch(`${urlEvento}`)
-            .then(response => response.json())
-            .then(eventos => {
-                const qtdEventos = eventos.length;
+        for (let i = 0; i < contador; i++) {
+            let title = response.data[i].nomeEvento;
+            let start = response.data[i].dataInicio + "T" + response.data[i].horaInicio;
+            let end = response.data[i].dataFim + "T" + response.data[i].horaFim;
 
-                for (let i = 0; i < qtdEventos; i++) {
-                    retornoEvento[i] = {
-                        title: eventos[i].nomeEvento,
-                        start: eventos[i].dataInicio + "T" + eventos[i].horaInicio,
-                        end : eventos[i].dataFim + "T" + eventos[i].horaFim
-                    }
-                }
-            });
+            events[i] = {
+                title,
+                start,
+                end
+            }
+        }
 
-        return retornoEvento;
-    }
-
-    evento();
+        console.log(events);
+        carregaCalendario();
+    })
+    .catch(error => {
+        console.warn(error)
+    })
 </script>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -127,7 +129,7 @@ $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_
 
 <script>
     // document.addEventListener('DOMContentLoaded', carregaCalendario);
-    $(document).ready(carregaCalendario());
+    // $(document).ready(carregaCalendario());
 
     function carregaCalendario(){
         let data = new Date();
@@ -155,10 +157,7 @@ $urlEvento = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_full_
             navLinks: true, // can click day/week names to navigate views
             businessHours: true, // display business hours
             editable: false,
-            events: [
-                retornoEvento
-            ]
-
+            events
         });
 
         calendar.setOption('locale', 'pt-br');

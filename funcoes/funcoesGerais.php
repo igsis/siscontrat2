@@ -1,5 +1,6 @@
 <?php
 date_default_timezone_set("Brazil/East");
+setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 
 	function habilitarErro()
 	{
@@ -191,6 +192,11 @@ date_default_timezone_set("Brazil/East");
         return $dt->format('Y-m-d');
         */
 	}
+	// retorna a data e hora atual com fuso horário
+	function dataHoraNow(){
+	    $date = date('Y-m-d H:i:s',strtotime('-3 hours'));
+	    return $date;
+    }
 	//retorna o endereço da página atual
 	function urlAtual()
 	{
@@ -309,7 +315,6 @@ function geraOpcao($tabela, $select = '')
 	{
 		//gera os options de um select
 		$sql = "SELECT * FROM $tabela ORDER BY 2";
-		echo $sql;
 		$con = bancoMysqli();
 		$query = mysqli_query($con,$sql);
 		while($option = mysqli_fetch_row($query))
@@ -432,19 +437,19 @@ function geraOpcaoLocais ($tabela, $select = '')
     function retornaPeriodo($idEvento){
         $con = bancoMysqli();
         $sql_data_inicio = "SELECT data_inicio FROM ocorrencias AS oco
-                            INNER JOIN atracoes AS atr ON oco.origem_ocorrencia_id = atr.id
-                            INNER JOIN eventos AS eve on atr.evento_id = eve.id
-                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND atr.publicado = 1 AND eve.id = '$idEvento'
+                            INNER JOIN eventos AS eve on oco.origem_ocorrencia_id = eve.id
+                            INNER JOIN atracoes AS atr ON oco.atracao_id = atr.id
+                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND eve.id = '$idEvento'
                             ORDER BY data_inicio ASC LIMIT 0,1";
         $query_data_inicio = mysqli_query($con,$sql_data_inicio);
         $array_inicio = mysqli_fetch_array($query_data_inicio);
         $data_inicio = $array_inicio['data_inicio'];
 
         $sql_data_fim = "SELECT data_fim FROM ocorrencias AS oco
-                            INNER JOIN atracoes AS atr ON oco.origem_ocorrencia_id = atr.id
-                            INNER JOIN eventos AS eve on atr.evento_id = eve.id
-                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND atr.publicado = 1 AND eve.id = '$idEvento'
-                            ORDER BY data_fim ASC LIMIT 0,1";
+                            INNER JOIN eventos AS eve on oco.origem_ocorrencia_id = eve.id
+                            INNER JOIN atracoes AS atr ON oco.atracao_id = atr.id
+                            WHERE oco.tipo_ocorrencia_id = 1 AND oco.publicado = 1 AND eve.id = '$idEvento'
+                            ORDER BY data_fim DESC LIMIT 0,1";
         $query_data_fim = mysqli_query($con,$sql_data_fim);
         $array_fim = mysqli_fetch_array($query_data_fim);
 
@@ -455,6 +460,113 @@ function geraOpcaoLocais ($tabela, $select = '')
         else{
             return "de ".exibirDataBr($data_inicio)." até ".exibirDataBr($data_fim);
         }
+    }
+
+    function retornaLocal($idEvento){
+        $con = bancoMysqli();
+        $query = $con->query("SELECT oco.local_id as 'local_id', local.local as 'local' 
+            FROM ocorrencias AS oco
+            INNER JOIN locais local ON local.id = oco.local_id 
+            WHERE oco.origem_ocorrencia_id = '$idEvento' AND local.publicado = 1 AND oco.publicado = 1 GROUP BY local ORDER BY local");
+
+        while($locais = mysqli_fetch_array($query))
+        {
+            echo $locais['local'].", ";
+        }
+    }
+
+    function testaPeriodo($idOcorrencia) {
+        $con = bancoMysqli();
+        $ocorrencia = $con->query("SELECT data_fim FROM ocorrencias WHERE id = '$idOcorrencia'")->fetch_assoc();
+
+        $data_fim = $ocorrencia['data_fim'];
+
+        if($data_fim == '0000-00-00' OR $data_fim == NULL){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    function retornaDiasPeriodo($idOcorrencia) {
+        $con = bancoMysqli();
+        $dias = [];
+
+        $ocorrencia = $con->query("SELECT data_inicio, data_fim, segunda, terca, quarta, quinta, sexta, sabado, domingo FROM ocorrencias WHERE id = '$idOcorrencia'")->fetch_assoc();
+
+        $data_inicio = new DateTime($ocorrencia['data_inicio']);
+        $data_fim = new DateTime($ocorrencia['data_fim']);
+
+        unset($ocorrencia['data_inicio']);
+        unset($ocorrencia['data_fim']);
+
+        foreach ($ocorrencia as $key => $dia) {
+            if($dia){
+                if ($key == "sabado" || $key == "domingo") {
+                    $diasExecucao[] = ($key == "sabado") ? "sábado" : "domingo";
+                } else {
+                    $diasExecucao[] = $key."-feira";
+                }
+            }
+        }
+
+        while ($data_inicio <= $data_fim) {
+            $dia = strftime('%A', $data_inicio->getTimestamp());
+
+            if (in_array($dia, $diasExecucao)) {
+                $dias[] = new DateTime($data_inicio->format('Y-m-d'));
+            }
+            $data_inicio = $data_inicio->modify('+1 day');
+        }
+
+        return $dias;
+    }
+
+    function retornaDiasOcorrencias($idEvento) {
+        $con = bancoMysqli();
+
+        $ocorrencias = $con->query("SELECT id, data_inicio, data_fim FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1-'")->fetch_all(MYSQLI_ASSOC);
+        $diasExecucao = [];
+
+        foreach ($ocorrencias as $ocorrencia) {
+            if (testaPeriodo($ocorrencia['id'])){
+                $periodo = retornaDiasPeriodo($ocorrencia['id']);
+                $diasExecucao = array_merge($diasExecucao, $periodo);
+            } else {
+                $diasExecucao[] = new DateTime($ocorrencia['data_inicio']);
+            }
+        }
+
+        sort($diasExecucao);
+
+        foreach ($diasExecucao as $key => $dia) {
+            $dias[] = $diasExecucao[$key]->format('d/m/Y');
+        }
+        return $dias;
+    }
+
+    function ocorrenciaDias($idEvento){
+        $con = bancoMysqli();
+
+        //Data início
+        $dateStart = $con->query("SELECT MIN(o.data_inicio) AS dateStart FROM ocorrencias AS o WHERE o.atracao_id IN (SELECT id FROM atracoes WHERE evento_id = '$idEvento' AND atracoes.publicado = 1) AND o.publicado = 1")->fetch_assoc()['dateStart'];
+        $dateStart = implode('-', array_reverse(explode('/', substr($dateStart, 0, 10)))).substr($dateStart, 10);
+        $dateStart = new DateTime($dateStart);
+
+        //Data fim
+        $dateEnd = $con->query("SELECT MAX(o.data_inicio) AS dateEnd FROM ocorrencias AS o WHERE o.atracao_id IN (SELECT id FROM atracoes WHERE evento_id = '$idEvento' AND atracoes.publicado = 1) AND o.publicado = 1")->fetch_assoc()['dateEnd'];
+        $dateEnd = implode('-', array_reverse(explode('/', substr($dateEnd, 0, 10)))).substr($dateEnd, 10);
+        $dateEnd = new DateTime($dateEnd);
+
+        //Gerando os dias do intervalo
+        $dateRange = array();
+        while($dateStart <= $dateEnd){
+            $dateRange[] = $dateStart->format('Y-m-d');
+            $dateStart = $dateStart->modify('+1day');
+        }
+
+        var_dump($dateRange);
     }
 
 	function recuperaModulo($pag)
@@ -647,6 +759,37 @@ function recuperaDadosPublicado($tabela, $campo, $variavelCampo)
 			if ($r) $rt = $rt . ((($i > 0) && ($i <= $fim) && ($inteiro[0] > 0) && ($z < 1)) ? ( ($i < $fim) ? ", " : " e ") : " ") . $r;
 		}
 		return($rt ? $rt : " zero");
+	}
+
+	function qtdApresentacoesPorExtenso($valor=0)
+	{
+		//retorna um valor por extenso
+		$c = array("", "cem", "duzentos", "trezentos", "quatrocentos","quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos");
+		$d = array("", "dez", "vinte", "trinta", "quarenta", "cinquenta","sessenta", "setenta", "oitenta", "noventa");
+		$d10 = array("dez", "onze", "doze", "treze", "quatorze", "quinze","dezesseis", "dezesete", "dezoito", "dezenove");
+		$u = array("", "um", "dois", "três", "quatro", "cinco", "seis","sete", "oito", "nove");
+		$z=0;
+		$valor = number_format($valor, 2, ".", ".");
+		$inteiro = explode(".", $valor);
+		for($i=0;$i<count($inteiro);$i++)
+			for($ii=strlen($inteiro[$i]);$ii<3;$ii++)
+				$inteiro[$i] = "0".$inteiro[$i];
+		$rt = "";
+		// $fim identifica onde que deve se dar junção de centenas por "e" ou por "," ;) 
+		$fim = count($inteiro) - ($inteiro[count($inteiro)-1] > 0 ? 1 : 2);
+		for ($i=0;$i<count($inteiro);$i++)
+		{
+			$valor = $inteiro[$i];
+			$rc = (($valor > 100) && ($valor < 200)) ? "cento" : $c[$valor[0]];
+			$rd = ($valor[1] < 2) ? "" : $d[$valor[1]];
+			$ru = ($valor > 0) ? (($valor[1] == 1) ? $d10[$valor[2]] : $u[$valor[2]]) : "";
+			$r = $rc.(($rc && ($rd || $ru)) ? " e " : "").$rd.(($rd && $ru) ? " e " : "").$ru;
+			$t = count($inteiro)-1-$i;
+			if ($valor == "000")$z++; elseif ($z > 0) $z--;
+			if (($t==1) && ($z>0) && ($inteiro[0] > 0)) $r .= (($z>1) ? " de " : "").$plural[$t]; 
+			if ($r) $rt = $rt . ((($i > 0) && ($i <= $fim) && ($inteiro[0] > 0) && ($z < 1)) ? ( ($i < $fim) ? ", " : " e ") : " ") . $r;
+		}
+		return($rt ? $rt : "zero");
 	}
 
 	function analisaArray($array)
@@ -1008,9 +1151,9 @@ function validaCPF($cpf)
 		return false;
 	// Calcula e confere primeiro dígito verificador
 	for ($i = 0, $j = 10, $soma = 0; $i < 9; $i++, $j--)
-		$soma += $cpf{$i} * $j;
+		$soma += $cpf[$i] * $j;
 	$resto = $soma % 11;
-	if ($cpf{9} != ($resto < 2 ? 0 : 11 - $resto))
+	if ($cpf[9] != ($resto < 2 ? 0 : 11 - $resto))
 		return false;
 	// Lista de CPFs inválidos
 	$invalidos = array(
@@ -1028,9 +1171,9 @@ function validaCPF($cpf)
 		return false;
 	// Calcula e confere segundo dígito verificador
 	for ($i = 0, $j = 11, $soma = 0; $i < 10; $i++, $j--)
-		$soma += $cpf{$i} * $j;
+		$soma += $cpf[$i] * $j;
 	$resto = $soma % 11;
-	return $cpf{10} == ($resto < 2 ? 0 : 11 - $resto);
+	return $cpf[10] == ($resto < 2 ? 0 : 11 - $resto);
 }
 
 // Função que valida o CNPJ
@@ -1043,11 +1186,11 @@ function validaCNPJ($cnpj)
 	// Valida primeiro dígito verificador
 	for ($i = 0, $j = 5, $soma = 0; $i < 12; $i++)
 	{
-		$soma += $cnpj{$i} * $j;
+		$soma += $cnpj[$i] * $j;
 		$j = ($j == 2) ? 9 : $j - 1;
 	}
 	$resto = $soma % 11;
-	if ($cnpj{12} != ($resto < 2 ? 0 : 11 - $resto))
+	if ($cnpj[12] != ($resto < 2 ? 0 : 11 - $resto))
 		return false;
 	// Lista de CNPJs inválidos
 	$invalidos = array(
@@ -1069,11 +1212,11 @@ function validaCNPJ($cnpj)
 	// Valida segundo dígito verificador
 	for ($i = 0, $j = 6, $soma = 0; $i < 13; $i++)
 	{
-		$soma += $cnpj{$i} * $j;
+		$soma += $cnpj[$i] * $j;
 		$j = ($j == 2) ? 9 : $j - 1;
 	}
 	$resto = $soma % 11;
-	return $cnpj{13} == ($resto < 2 ? 0 : 11 - $resto);
+	return $cnpj[13] == ($resto < 2 ? 0 : 11 - $resto);
 }
 
 // Função que valida e-mails
@@ -1213,6 +1356,18 @@ function listaLocais($idEvento, $tiraLinha = "")
     return $locais;
 }
 
+function listaOcorrenciasContrato($idEvento){
+    $con = bancoMysqli();
+    $cronograma = $con->query("SELECT * 
+        FROM ocorrencias o
+            INNER JOIN instituicoes i on o.instituicao_id = i.id
+            INNER JOIN locais l on o.local_id = l.id
+            LEFT JOIN espacos e on l.id = e.local_id
+        WHERE o.publicado = 1 AND o.origem_ocorrencia_id = '$idEvento';
+        ");
+    return $cronograma;
+}
+
 function retornaPeriodoNovo($id, $tabela)
 {
     //retorna o período
@@ -1320,7 +1475,7 @@ function retornaPeriodoFormacao($idVigencia){
     $data_inicio = $con->query("SELECT data_inicio FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array();
     $data_fim = $con->query("SELECT data_fim FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array();
     if($data_inicio['data_inicio'] == $data_fim['data_fim']){
-        return $data_inicio['data_inicio'];
+        return exibirDataBr($data_inicio['data_inicio']);
     }else{
         return "de ". exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim['data_fim']);
     }
@@ -1331,7 +1486,7 @@ function retornaPediodoEmia($idVigencia){
     $data_inicio = $con->query("SELECT data_inicio FROM emia_parcelas WHERE emia_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array();
     $data_fim = $con->query("SELECT data_fim FROM emia_parcelas WHERE emia_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array();
     if($data_inicio['data_inicio'] == $data_fim['data_fim']){
-        return $data_inicio['data_inicio'];
+        return exibirDataBr($data_inicio['data_inicio']);
     }else{
         return "de ". exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim['data_fim']);
     }
@@ -1390,5 +1545,21 @@ function atualizaDadosRelacionamento($tabela, $id, $post, $campo, $coluna){
     foreach ($post as $checkbox) {
         $sqlInsertRelacionamento = "INSERT INTO $tabela ($campo, $coluna) VALUES ($id, $checkbox)";
         $con->query($sqlInsertRelacionamento);
+    }
+}
+
+function geraModalDescritivo($tabela, $publicado = false) {
+    $con = bancoPDO();
+    $publicado = $publicado ? "WHERE publicado = 1" : "";
+    $sql = "SELECT * FROM $tabela ".$publicado;
+    $linhas = $con->query($sql)->fetchAll(PDO::FETCH_NUM);
+
+    foreach ($linhas as $linha) {
+        ?>
+        <tr>
+            <td width="50%"><strong><?= $linha[1] ?></strong></td>
+            <td width="50%" class="text-center"><?= $linha[2] ?></td>
+        </tr>
+        <?php
     }
 }

@@ -3,12 +3,13 @@
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
-
 $con = bancoMysqli();
 
 $idPedido = $_POST['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
+$evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
+$ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 $idEvento = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
@@ -22,7 +23,7 @@ $sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.lo
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
 
-$idAtracao = $_SESSION['idAtracao'];
+$idAtracao = $ocorrencia['atracao_id'];
 
 $atracao = recuperaDados('atracoes', 'id', $idAtracao);
 
@@ -34,7 +35,16 @@ if($carga['carga_horaria'] != 0 || $carga['carga_horaria'] != NULL){
 }else{
     $cargaHoraria = "Não possuí.";
 }
-
+$sqlTestaFilme = "SELECT filme_id FROM filme_eventos WHERE evento_id = $idEvento";
+$queryFilme = mysqli_query($con, $sqlTestaFilme);
+$row = mysqli_num_rows($queryFilme);
+if($row != 0){
+    $testaFilme = mysqli_fetch_array($queryFilme);
+    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
+    $duracao = $filme['duracao'] . " Hora(s).";
+}else{
+    $duracao = "Não se aplica.";
+}
 
 $sqlInstituicao = "SELECT i.nome FROM instituicoes AS i INNER JOIN ocorrencias AS o ON i.id = o.instituicao_id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
 $instituicao = $con->query($sqlInstituicao)->fetch_array();
@@ -108,8 +118,9 @@ if ($pedido['numero_processo_mae'] != NULL) {
         "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
         "<p><strong>Data / Período:</strong> " . retornaPeriodoNovo($idEvento,'ocorrencias') . ", totalizando " . $atracao['quantidade_apresentacao'] . " apresentações conforme proposta/cronograma.</p>" .
         "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
+        "<p><strong>Duração: </strong>" . $duracao  ."</p>".
         "<p align='justify'><strong>Local:</strong> " . $local . "</p>" .
-        "<p><strong>Valor: </strong> R$ " . $pedido['valor_total'] . " ( ". valorPorExtenso($pedido['valor_total']) . " )"  . "</p>" .
+        "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . " ( ". valorPorExtenso($pedido['valor_total']) . " )"  . "</p>" .
         "<p align='justify'><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
         "<p align='justify'><strong>Justificativa: </strong> " . $pedido['justificativa'] . "</p>" .
         "<p align='justify'>Nos termos do art. 6º do decreto 54.873/2014, fica designado como fiscal desta contratação artística o(a) servidor(a) " . $fiscal['nome_completo'] . ", RF " . $fiscal['rf_rg'] . " e, como substituto, " . $suplente['nome_completo'] . ", RF " . $suplente['rf_rg'] . ". Diante do exposto, solicitamos autorização para prosseguimento do presente." . "</p>";

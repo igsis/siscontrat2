@@ -28,6 +28,24 @@ if (isset($_POST['excluir'])) {
     }
 }
 
+function geraUserContratos()
+{
+    //gera os options de um select
+    $sql = "SELECT u.id,u.nome_completo 
+            FROM usuarios AS u 
+            INNER JOIN perfis p on u.perfil_id = p.id
+            INNER JOIN modulo_perfis mp on p.id = mp.perfil_id
+            WHERE mp.modulo_id = 6 AND p.publicado = 1 AND u.publicado = 1
+            GROUP BY u.nome_completo
+            ORDER BY u.nome_completo";
+    $con = bancoMysqli();
+    $query = mysqli_query($con,$sql);
+    while($option = mysqli_fetch_row($query))
+    {
+        echo "<option value='".$option[0]."'>".$option[1]."</option>";
+    }
+}
+
 $usuarios = "SELECT u.id, u.nome_completo, na.nivel FROM usuario_contratos uc INNER JOIN usuarios u ON u.id = uc.usuario_id INNER JOIN nivel_acessos na on uc.nivel_acesso = na.id WHERE u.publicado = 1";
 $query = mysqli_query($con, $usuarios);
 $num_rows = mysqli_num_rows($query);
@@ -95,7 +113,7 @@ $num_rows = mysqli_num_rows($query);
                                     <td>
                                         <select name="idUsuario" id="idUsuario" class="form-control" required>
                                             <?php
-                                            geraOpcao('usuarios');
+                                            geraUserContratos();
                                             ?>
                                         </select>
                                     </td>

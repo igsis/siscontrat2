@@ -24,22 +24,35 @@ $query_atracao = mysqli_query($con, $sql_atracao);
                 echo "<tr>";
                 echo "<td>" . $atracao['nome_atracao'] . "</td>";
                 if ($atracao['pessoa_fisica_id'] > 0) {
-                    echo "<td>" . $atracao['nome'] . "</td>";
                     echo "<td>
-                                            <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
-                                            <input type='hidden' name='atracao' value='" . $atracao['id'] . "'>
-                                            <input type='hidden' name='lider' value='$idPedido'>
-                                            <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-refresh'></i> Trocar</button>
-                                            </form>
-                                        </td>";
+                            <div class='col-md-7'><form method=\"POST\" action=\"?perfil=evento&p=lider_edita\" role=\"form\">
+                            <input type='hidden' name='idPedido' value='$idPedido'>
+                            <input type='hidden' name='idAtracao' value='" . $atracao['id'] . "'>
+                            <input type='hidden' name='idLider' value='" . $atracao['pessoa_fisica_id'] . "'>
+                            <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-edit\"></i> " . $atracao['nome'] . "</button>
+                            </form></div>
+                            <div class='col-md-5'><form method=\"POST\" action=\"?perfil=evento&p=lider_anexos\" role=\"form\">
+                            <input type='hidden' name='idPedido' value='$idPedido'>
+                            <input type='hidden' name='idAtracao' value='" . $atracao['id'] . "'>
+                            <input type='hidden' name='idPf' value='" . $atracao['pessoa_fisica_id'] . "'>
+                            <button type=\"submit\" name='carregar' class=\"btn btn-info\"><i class=\"fa fa-file\"></i> Anexos do Líder</button>
+                            </form></div>
+                        </td>";
+                    echo "<td>
+                            <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
+                            <input type='hidden' name='atracao' value='" . $atracao['id'] . "'>
+                            <input type='hidden' name='lider' value='$idPedido'>
+                            <button type=\"submit\" name='pesquisar' class=\"btn btn-warning\"><i class='fa fa-refresh'></i> Trocar</button>
+                            </form>
+                        </td>";
                 } else {
                     echo "<td>
-                                            <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
-                                            <input type='hidden' name='atracao' value='" . $atracao['id'] . "'>
-                                            <input type='hidden' name='lider' value='$idPedido'>
-                                            <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-plus'></i> Adicionar</button>
-                                            </form>
-                                        </td>";
+                            <form method=\"POST\" action=\"?perfil=evento&p=pesquisa_lider\" role=\"form\">
+                            <input type='hidden' name='atracao' value='" . $atracao['id'] . "'>
+                            <input type='hidden' name='lider' value='$idPedido'>
+                            <button type=\"submit\" name='pesquisar' class=\"btn btn-primary\"><i class='fa fa-plus'></i> Adicionar</button>
+                            </form>
+                        </td>";
                     echo "<td></td>";
                 }
                 echo "</tr>";

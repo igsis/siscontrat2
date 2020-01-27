@@ -5,6 +5,8 @@ $sql = "SELECT * FROM pessoa_fisicas";
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
 
+unset($_SESSION['idPf']);
+
 ?>
 
 <div class="content-wrapper">
@@ -35,6 +37,7 @@ $num_arrow = mysqli_num_rows($query);
                                 <th>CPF</th>
                                 <th>Data nascimento</th>
                                 <th>Email</th>
+                                <th width="9%">Demais anexos</th>
                                 <th width="5%">Editar</th>
                             </tr>
                             </thead>
@@ -55,6 +58,16 @@ $num_arrow = mysqli_num_rows($query);
                                         <td><?= $pf['cpf'] ?></td>
                                         <td><?= exibirDataBr($pf['data_nascimento']) ?></td>
                                         <td><?= $pf['email'] ?></td>
+                                        <td>
+                                            <form action="?perfil=formacao&p=pessoa_fisica&sp=anexos"
+                                                  method="POST">
+                                                <input type="hidden" name="idPf" id="idPf" value="<?= $pf['id'] ?>">
+                                                <button type="submit" name="carregar" id="carregar"
+                                                        class="btn btn-info btn-block">
+                                                    <i class="glyphicon glyphicon-list-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
                                         <td>
                                             <form action="?perfil=formacao&p=pessoa_fisica&sp=edita"
                                                   method="POST">
@@ -79,6 +92,7 @@ $num_arrow = mysqli_num_rows($query);
                                 <th>CPF</th>
                                 <th>Data nascimento</th>
                                 <th>Email</th>
+                                <th width="9%">Demais anexos</th>
                                 <th width="5%">Editar</th>
                             </tr>
                             </tfoot>

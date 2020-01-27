@@ -166,8 +166,8 @@ $valor = dinheiroParaBr($valor);
 
                         <div class="form-group col-md-3">
                             <label for="numParcelas">Número de parcelas</label>
-                            <input type="text" name="numParcelas" value="<?= $numParcelas ?>" readonly
-                                   class="form-control" required>
+                            <input type="text" name="numParcelas" required value="<?= $numParcelas ?>" readonly
+                                   class="form-control" >
                         </div>
 
                         <div class="form-group col-md-3">
@@ -178,15 +178,22 @@ $valor = dinheiroParaBr($valor);
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="dataKit">Data kit pagamento</label>
                             <input type="date" name="dataKit" class="form-control" id="datepicker10"
                                    placeholder="DD/MM/AAAA">
                         </div>
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="numeroProcesso">Número do Processo *</label>
-                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control" data-mask="9999.9999/9999999-9" minlength="19">
+                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
+                                   data-mask="9999.9999/9999999-9" minlength="19">
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="processoMae">Número do Processo Mãe *</label>
+                            <input type="text" name="processoMae" id="processoMae" class="form-control"
+                                   data-mask="9999.9999/9999999-9" minlength="19">
                         </div>
                     </div>
 
@@ -199,8 +206,8 @@ $valor = dinheiroParaBr($valor);
 
                         <div class="form-group col-md-6">
                             <label for="justificativa">Justificativa </label>
-                            <textarea id="justificativa" name="justificativa" class="form-control"
-                                      rows="8"></textarea>
+                            <textarea id="justificativa" name="justificativa"  class="form-control"
+                                      rows="8" ></textarea>
                         </div>
                     </div>
 

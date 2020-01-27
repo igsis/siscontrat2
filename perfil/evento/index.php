@@ -86,7 +86,7 @@ $idUsuario = $_SESSION['idUser'];
 
 
 $idUser = $_SESSION['idUser'];
-$sql = "SELECT e.id, e.nome_evento, u.nome_completo, ee.data_envio FROM eventos e 
+$sql = "SELECT e.id, e.nome_evento, u.nome_completo, ee.data_envio, e.usuario_id, e.suplente_id, e.fiscal_id FROM eventos e 
                 INNER JOIN pedidos p ON p.origem_id = e.id 
                 INNER JOIN usuarios u on e.usuario_id = u.id
                 INNER JOIN evento_envios ee on e.id = ee.evento_id
@@ -115,6 +115,11 @@ if ($linha >= 1) {
             }; ?>
         </div>
         <h2 class="page-header">Seus últimos eventos enviados</h2>
+        <p>
+            <small class="label pull-right bg-yellow-active">Suplente</small>
+            <small class="label pull-right bg-primary">Fiscal</small>
+            <small class="label pull-right bg-green-active">Usuário</small>
+        </p>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-solid">
@@ -126,8 +131,16 @@ if ($linha >= 1) {
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
                                     $locais = listaLocais($evento['id'], '1');
+
+                                    if ($evento['fiscal_id'] == $idUser)
+                                        $corRepresentativa = 'box-primary';
+                                    else if ($evento['suplente_id'] == $idUser)
+                                        $corRepresentativa = 'box-warning';
+                                    else if ($evento['usuario_id'] == $idUser)
+                                        $corRepresentativa = 'box-success';
+
                                     ?>
-                                    <div class="panel box box-primary">
+                                    <div class="panel box <?= $corRepresentativa ?>">
                                         <div class="box-header with-border">
                                             <h4 class="box-title">
                                                 <a data-toggle="collapse" data-parent="#accordionEventos"

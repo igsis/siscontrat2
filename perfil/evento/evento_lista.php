@@ -1,6 +1,8 @@
 <?php
 include "includes/menu_principal.php";
 
+$url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_chamados.php';
+
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
@@ -12,12 +14,12 @@ if (isset($_POST['excluir'])) {
     $evento = $_POST['idEvent'];
     $stmt = $conn->prepare("UPDATE eventos SET publicado = 0 WHERE id = :id");
     $stmt->execute(['id' => $evento]);
-    $mensagem = mensagem("success", "Evento excluido com sucesso!");
+    $mensagem = mensagem("success", "Evento excluído com sucesso!");
 
     $sqlDeletaAtracao = "UPDATE atracoes SET publicado = 0 WHERE evento_id = '$evento'";
     mysqli_query($con, $sqlDeletaAtracao);
 
-    $sqlAtracoesDeletadas = "SELECT * FROM atracoes WHERE publicado = 0";
+    $sqlAtracoesDeletadas = "SELECT * FROM atracoes WHERE publicado = 0 AND evento_id = '$evento'";
     $queryAtracoesDeletadas = mysqli_query($con, $sqlAtracoesDeletadas);
 
     while ($atracaoDeletada = mysqli_fetch_array($queryAtracoesDeletadas)) {
@@ -40,7 +42,7 @@ $sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status, ev.
         FROM eventos AS ev
         INNER JOIN tipo_eventos AS te on ev.tipo_evento_id = te.id
         INNER JOIN evento_status es on ev.evento_status_id = es.id
-        WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id IN (1, 2, 5)";
+        WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id IN (1, 2, 5,6)";
 $query = mysqli_query($con, $sql);
 ?>
 
@@ -87,7 +89,7 @@ $query = mysqli_query($con, $sql);
                                 if ($evento['usuario_id'] == $idUser)
                                     $vinculo = 'Usuário';
                                 else if ($evento['fiscal_id'] == $idUser)
-                                    $vinculo = 'Físcal';
+                                    $vinculo = 'Fiscal';
                                 else
                                     $vinculo = 'Suplente';
 
@@ -96,38 +98,38 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . $evento['tipo_evento'] . "</td>";
                                 echo "<td>" . $vinculo . "</td>";
                                 $disabled = '';
-                                if ($evento['status'] == "Não aprovado") {
-                                    $idEvento = $evento['idEvento'];
-                                    $nomeEvento = $evento['nome_evento'];
-                                    $sqlChamado = "SELECT u.nome_completo, c.justificativa, c.data FROM chamados AS c INNER JOIN usuarios AS u ON u.id = c.usuario_id WHERE evento_id = $idEvento";
-                                    $chamado = $con->query($sqlChamado)->fetch_array();
-                                    ?>
+                                if ($evento['status'] == "Não aprovado") { ?>
                                     <td>
                                         <button type="button" class="btn-link" id="exibirMotivo"
-                                                data-toggle="modal" data-target="#exibicao" name="exibirMotivo">
+                                                data-toggle="modal" data-target="#exibicao"
+                                                data-id="<?= $evento['idEvento'] ?>"
+                                                data-name="<?= $evento['nome_evento'] ?>"
+                                                name="exibirMotivo">
                                             <p class="text-danger"><?= $evento['status'] ?></p>
                                         </button>
                                     </td>
                                 <?php } else {
-                                        if ($evento['status'] == "Aguardando")
-                                            $disabled = "disabled";
+                                    if ($evento['status'] == "Aguardando")
+                                    $disabled = '';
 
-                                        echo "<td>" . $evento['status'] . "</td>";
+                                    echo "<td>" . $evento['status'] . "</td>";
                                 }
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
-                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\" ". $disabled . "><span class='glyphicon glyphicon-eye-open'></span></button>
+                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\" " . $disabled . "><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>
                                 </td>";
                                 ?>
                                 <td>
                                     <form method="post" id="formExcluir">
                                         <input type="hidden" name="idEvento" value="<?= $evento['idEvento'] ?>">
-                                        <button <?= $disabled ?> type="button" class="btn btn-block btn-danger" id="excluiEvento"
-                                                data-toggle="modal" data-target="#exclusao" name="excluiEvento"
-                                                data-name="<?= $evento['nome_evento'] ?>"
-                                                data-id="<?= $evento['idEvento'] ?>"><span
+                                        <button <?= $disabled ?> type="button" class="btn btn-block btn-danger"
+                                                                 id="excluiEvento"
+                                                                 data-toggle="modal" data-target="#exclusao"
+                                                                 name="excluiEvento"
+                                                                 data-name="<?= $evento['nome_evento'] ?>"
+                                                                 data-id="<?= $evento['idEvento'] ?>"><span
                                                     class="glyphicon glyphicon-trash"></span></button>
                                     </form>
                                 </td>
@@ -190,7 +192,7 @@ $query = mysqli_query($con, $sql);
                         <h4 class="modal-title">Motivo do Cancelamento</h4>
                     </div>
                     <div class="modal-body">
-                        <p><strong>Nome do Evento:</strong> <?=$nomeEvento?></p>
+                        <p><strong>Nome do Evento:</strong></p>
                         <table class="table table-striped table-bordered">
                             <thead>
                             <tr>
@@ -199,10 +201,8 @@ $query = mysqli_query($con, $sql);
                                 <th width="15%">Data</th>
                             </tr>
                             </thead>
-                            <tbody>
-                                <td><?=$chamado['justificativa']?></td>
-                                <td><?=$chamado['nome_completo']?></td>
-                                <td><?=exibirDataBr($chamado['data'])?></td>
+                            <tbody id="conteudoModal">
+
                             </tbody>
                         </table>
                     </div>
@@ -230,6 +230,43 @@ $query = mysqli_query($con, $sql);
         });
     });
 </script>
+
+<!--<script>-->
+<!--    $('#exibirMotivo').click(function () {-->
+<!--        $('#exibicao').modal('show');-->
+<!--        let nome = $(this).attr('data-name');-->
+<!---->
+<!--        console.log(nome);-->
+<!--    })-->
+<!--</script>-->
+
+<script>
+    const url = `<?=$url?>`;
+
+    $('#exibicao').on('show.bs.modal', function (e) {
+        let nome = $(e.relatedTarget).attr('data-name');
+        let id = $(e.relatedTarget).attr('data-id');
+        $(this).find('p').html(`<strong>Nome do Evento:</strong> ${nome}`);
+
+        $('#exibicao').find('#conteudoModal').empty();
+
+        // @TODO: Melhorar esse código
+        $.getJSON(url + "?idEvento=" + id, function (data) {
+            $.each(data, function (key, value) {
+                $.each(value, function (key, valor) {
+                    $('#exibicao').find('#conteudoModal').append(`<td>${valor}</td>`);
+                    console.log(key + ": " + valor);
+                })
+            })
+        })
+
+        //let operador = <?//=$chamado['nome_completo']?>//;
+        //let data = <?//=$chamado['data']?>//;
+
+        // $(this).find('#conteudoModal').append(`<td>${motivo}</td>`);
+    })
+</script>
+
 <script type="text/javascript">
     $('#exclusao').on('show.bs.modal', function (e) {
         let evento = $(e.relatedTarget).attr('data-name');

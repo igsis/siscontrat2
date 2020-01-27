@@ -14,17 +14,17 @@ if (isset($_POST['tipoModelo'])) {
 $sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
 $mdl = $con->query($sqlModelo)->fetch_assoc();
 
+$fc = recuperaDados('formacao_contratacoes', 'id', $idEvento);
 
-$usuarios = recuperaDados('usuarios','id',$idEvento);
-$fiscal= $usuarios["nome_completo"];
-$suplente= $usuarios["nome_completo"];
-$rfSuplente= $usuarios["rf_rg"];
-$rfFiscal= $usuarios["rf_rg"];
-
+$fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id'])['nome_completo'];
+$suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'];
+$rfFiscal = recuperaDados('usuarios','id',$fc['fiscal_id'])['rf_rg'];
+$rfSuplente = recuperaDados('usuarios','id',$fc['suplente_id'])['rf_rg'];
 $mdl = str_replace("nomeFiscal", $fiscal, $mdl);
 $mdl = str_replace("rfFiscal", $rfFiscal, $mdl);
 $mdl = str_replace("nomeSuplente", $suplente, $mdl);
 $mdl = str_replace("rfSuplente", $rfSuplente, $mdl);
+
 
 
 
@@ -87,7 +87,7 @@ $evento = $con->query($sql)->fetch_array();
                         </tr>
                         <tr>
                             <th width="30%">Período:</th>
-                            <td><?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?></td>
+                            <td><?= retornaPeriodoNovo($idEvento, 'ocorrencias'); ?></td>
 
                         </tr>
                         <tr>
@@ -100,11 +100,10 @@ $evento = $con->query($sql)->fetch_array();
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
-                            <td><textarea name="dotacao" rows="1" cols="85"></textarea></td>
-                        </tr>
+                            <td><textarea name="dotacao" rows="1" cols="85"></textarea></td>                        </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
-                            <td><textarea name="finalizar" rows="8" cols="85"><?= $mdl['finalizacao'] ?></textarea></td>
+                            <td><textarea name="finalizacao" rows="8" cols="85"><?= $mdl['finalizacao'] ?></textarea></td>
                         </tr>
                     </table>
                     <div class="pull-left">
@@ -114,11 +113,9 @@ $evento = $con->query($sql)->fetch_array();
                     <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left">Gravar
                     </button>
         </form>
-        <form action="?perfil=juridico&p=tipo_modelo&sp=detalhes_evento" method="post">
+        <form action="?perfil=juridico&p=tipo_modelo&sp=detalhes_evento" role="form" method="post">
             <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-            <input type="hidden" name="idModelo" value="<?= $modelo ?>">
-            <button type="submit" name="detalheEvento" class="btn btn-info pull-right">Detalhes evento
-            </button>
+            <button type="submit" class="btn btn-info pull-right">Detalhes evento</button>
         </form>
 </div>
 </div>

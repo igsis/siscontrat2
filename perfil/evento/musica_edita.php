@@ -4,9 +4,9 @@ $con = bancoMysqli();
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $idAtracao = $_POST['idAtracao'] ?? NULL;
     $idMusica = $_POST['idMusica'] ?? NULL;
-    $genero = addslashes($_POST['genero']);
-    $venda = ($_POST['venda']);
-    $descricao = addslashes($_POST['descricao']);
+    $genero = trim(addslashes($_POST['genero']));
+    $venda = $_POST['venda'];
+    $descricao = trim(addslashes($_POST['descricao']));
 }
 
 if (isset($_POST['cadastra'])) {
@@ -79,9 +79,9 @@ include "includes/menu_interno.php";
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-2">
-                                    <label for="genero">Gênero</label><br/>
+                                    <label for="genero">Gênero *</label><br/>
                                     <input type="text" class="form-control" id="genero" name="genero" size="30"
-                                           value="<?= $musica['genero'] ?>">
+                                           value="<?= $musica['genero'] ?>" required>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="venda">Venda de material?</label> <br>

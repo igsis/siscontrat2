@@ -44,7 +44,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
         $actionCadastra = "?perfil=evento&p=pf_cadastro";
     }else{
         $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
-        $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
+        $botaoAdd = "<button class='btn btn-primary' name='adicionar' id='adicionar' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
@@ -127,7 +127,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             $resultado .= "<td>" . $pessoa['email'] . "</td>";
                             $resultado .= "<td>
                                      <form action='$actionEdita' method='post'>
-                                        <input type='hidden' name='idPessoa' value='" . $pessoa['id'] . "'>
+                                        <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
                                         <input type='hidden' name='idPedido' value='$idPedido'>
                                         $botaoSelecionar
                                      </form>
@@ -172,7 +172,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Procurar pessoa fisica</h3>
+                        <h3 class="box-title">Procurar pessoa física</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">

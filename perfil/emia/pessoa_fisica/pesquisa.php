@@ -95,7 +95,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             $resultado .= "<td>" . $pessoa['email'] . "</td>";
                             $resultado .= "<td>
                                      <form action='?perfil=emia&p=pessoa_fisica&sp=edita' method='post'>
-                                        <input type='hidden' name='idPessoa' value='" . $pessoa['id'] . "'>
+                                        <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
                                         <input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>
                                      </form>
                                </td>";
@@ -107,7 +107,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
-                        <form method='post' action='?perfil=emia&p=pessoa_fisica&sp=cadastro'>
+                        <form method='post' action='?perfil=emia&p=pessoa_fisica&sp=cadastra'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             <button class=\"btn btn-primary\" name='adicionar' type='submit'>
@@ -140,7 +140,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Procurar pessoa fisica</h3>
+                        <h3 class="box-title">Procurar pessoa física</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">

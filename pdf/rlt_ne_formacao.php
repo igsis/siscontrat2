@@ -110,7 +110,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(20,$l,"Programa:",0,0,'L');
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(20,$l, utf8_decode($programa['programa']), 0,0,'L');
+$pdf->Cell(23,$l, utf8_decode($programa['programa']), 0,0,'L');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(23,$l,"Linguagem:", 0,0,'L');
 $pdf->SetFont('Arial', '', 11);

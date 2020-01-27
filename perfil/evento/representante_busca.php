@@ -101,7 +101,7 @@ if (isset($_POST['pesquisa'])) {
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Procurar pessoa fisica</h3>
+                        <h3 class="box-title">Procurar pessoa fÍsica</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">

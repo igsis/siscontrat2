@@ -16,8 +16,8 @@ if (isset($_POST['carregar']) || isset($_POST['apagar']) || isset($_POST['enviar
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['carregar']) ) {
-    $nome = addslashes($_POST['nome']) ?? null;
-    $rg = $_POST['rg'];
+    $nome = trim(addslashes($_POST['nome'])) ?? null;
+    $rg = trim($_POST['rg']);
     $cpf = $_POST['cpf'];
     $tipoRepresentante = $_POST['tipoRepresentante'];
 }
@@ -63,6 +63,9 @@ if (isset($_POST['cadastra'])) {
         $sqlPessoaJuridica = "UPDATE pessoa_juridicas SET $representante = '$idRepresentante' WHERE id = '$idPj'";
         mysqli_query($con, $sqlPessoaJuridica);
 
+        $sqlLimpaArquivosRepresentante = "UPDATE siscontrat.arquivos SET publicado = 0 WHERE origem_id = '$idPj' AND publicado = 1 AND lista_documento_id IN ('$RG', '$CPF')";
+        mysqli_query($con, $sqlLimpaArquivosRepresentante);
+
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
 
@@ -89,6 +92,9 @@ if (isset($_POST['edita']) || isset($_POST['carregar'])) {
 
             $sqlSeleciona = "UPDATE pessoa_juridicas SET $representante = '$idRepresentante' WHERE id = '$idPj'";
             mysqli_query($con, $sqlSeleciona);
+
+            $sqlLimpaArquivosRepresentante = "UPDATE siscontrat.arquivos SET publicado = 0 WHERE origem_id = '$idPj' AND lista_documento_id IN ('$RG', '$CPF')";
+            mysqli_query($con, $sqlLimpaArquivosRepresentante);
 
             echo "<script>swal('Lembre-se de conferir os dados', '', 'warning') </script>";
 
@@ -133,6 +139,11 @@ if (isset($_POST["enviar"])) {
                         VALUES ('$idPj', '$y', '$new_name', '$hoje', '1')";
 
                         if (mysqli_query($con, $sql_insere_arquivo)) {
+                            if (($y == 23) || ($y == 24)) {
+                                $idRepresentante = $pessoa_juridica['representante_legal1_id'];
+                            } else {
+                                $idRepresentante = $pessoa_juridica['representante_legal2_id'];
+                            }
                             $mensagem = mensagem("success", "Arquivo recebido com sucesso");
                             echo "<script>
                                 swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
@@ -195,6 +206,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: </label>
                                     <input type="text" class="form-control" id="nome" name="nome"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}" title="Apenas letras"
                                            maxlength="70" required value="<?= $representantes['nome'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">

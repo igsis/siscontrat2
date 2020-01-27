@@ -12,8 +12,6 @@ $sql = "SELECT  e.id AS 'idEvento',
                 e.tipo_evento_id,
                 p.id,
                 i.nome,
-                p.origem_id,
-                
                 e.protocolo,
 		        p.numero_processo,
                 p.pessoa_tipo_id,
@@ -22,7 +20,6 @@ $sql = "SELECT  e.id AS 'idEvento',
                 p.valor_total,
                 p.forma_pagamento,
                 p.justificativa,
-                l.local,
                 o.atracao_id,
                 e.fiscal_id,
                 e.suplente_id,
@@ -31,11 +28,17 @@ $sql = "SELECT  e.id AS 'idEvento',
         INNER JOIN eventos AS e ON e.id = p.origem_id
         INNER JOIN pessoa_fisicas AS pf ON pf.id = p.pessoa_fisica_id
         INNER JOIN ocorrencias AS o ON e.id = o.origem_ocorrencia_id
-        INNER JOIN locais AS l ON l.id = o.local_id
-        INNER JOIN instituicoes AS i ON o.instituicao_id = i.id
+        INNER JOIN instituicoes AS i ON o.instituicao_id = i.id 
         WHERE p.id = '$idPedido' AND p.publicado = 1 AND e.publicado = 1";
 $pedido = $con->query($sql)->fetch_assoc();
 
+$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $pedido['idEvento'] . " AND o.publicado = 1";
+$queryLocal = mysqli_query($con, $sqlLocal);
+$local = '';
+while ($locais = mysqli_fetch_array($queryLocal)) {
+    $local = $local . '; ' . $locais['local'];
+}
+$local = substr($local, 1);
 
 $fiscal = recuperaDados('usuarios', 'id', $pedido['fiscal_id'])['nome_completo'];
 $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_completo'];
@@ -89,13 +92,13 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                         ?>
 
                         <tr>
-                            <th width="30%">Objeto</th>
+                            <th width="30%">Objeto:</th>
                             <td><?= $objeto ?></td>
                         </tr>
 
                         <tr>
-                            <th width="30%">Local:</th>
-                            <td><?= $pedido['local'] ?></td>
+                            <th width="30%">Local(ais):</th>
+                            <td><?= $local ?></td>
                         </tr>
 
                         <tr>
@@ -110,27 +113,27 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
 
                         <tr>
                             <th width="30%">Período:</th>
-                            <td><?= retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias') ?></td>
+                            <td><?= retornaPeriodoNovo($pedido['idEvento'], 'ocorrencias') ?></td>
                         </tr>
 
                         <?php
                         $idAtracao = $pedido['atracao_id'];
-                        $sqlCheca = "SELECT oficina FROM atracoes WHERE id = '$idAtracao'";
-                        $checa = $con->query($sqlCheca)->fetch_array();
+                        $sqlCheca = $con->query("SELECT * FROM acao_atracao WHERE atracao_id = '$idAtracao' AND acao_id = 8");
+                        $checa = mysqli_num_rows($sqlCheca);
 
-                        if ($checa['oficina'] == 1) {
+                        if ($checa != 0) {
                             $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
                             $carga = $con->query($sqlCarga)->fetch_array();
                             echo "<tr>
                                     <th width='30%'>Carga Horária:</th>
-                                    <td>" . $carga['carga_horaria'] . "</td>
+                                    <td>" . $carga['carga_horaria'] . " Hora(s)" ."</td>
                                   </tr>";
-                        } else if ($checa['oficina'] == 0) {
+                        } else if ($checa == 0) {
                             echo "<tr>
-                                    <th width='30%'>Não se aplica.</th>
+                                    <th width='30%'>Carga Horária:</th>
+                                    <td>Não se aplica.</td>
                                     </tr>";
                         }
-
                         ?>
 
                         <tr>

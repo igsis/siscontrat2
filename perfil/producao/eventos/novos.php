@@ -8,19 +8,14 @@ $con = bancoMysqli();
 
 
 $sqlEvento = "SELECT
-                    eve.id AS 'id',
-                    eve.protocolo AS 'protocolo',
-                    eve.nome_evento AS 'nome_evento',
-                    env.data_envio AS 'data_envio',
-                    u.nome_completo as 'usuario',
-                    en.visualizado AS 'visualizado'
-            FROM eventos AS eve
-            INNER JOIN ocorrencias as o on o.id = eve.id
-            INNER JOIN evento_envios as env on env.evento_id = eve.id
-            INNER JOIN usuarios as u on u.id = eve.usuario_id
-            INNER JOIN pedidos AS ped ON ped.origem_id = eve.id
-            INNER JOIN producao_eventos AS en ON en.evento_id = eve.id 
-WHERE eve.publicado = 1 AND eve.evento_status_id = 3 AND ped.status_pedido_id = 2 AND en.visualizado = 0";
+                    e.id AS 'id',
+                    e.protocolo AS 'protocolo',
+                    e.nome_evento AS 'nome_evento',
+                    u.nome_completo as 'usuario'
+            FROM eventos AS e
+            INNER JOIN usuarios as u on u.id = e.usuario_id
+            INNER JOIN producao_eventos AS en ON en.evento_id = e.id 
+            WHERE en.visualizado = 0";
 
 $queryEvento = mysqli_query($con, $sqlEvento);
 
@@ -76,6 +71,10 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                                 $espaco = $espaco . '; ' . $espacos['espaco'];
                             }
                             $espaco = substr($espaco, 1);
+
+                            $queryData = $con->query("SELECT data_envio FROM evento_envios WHERE evento_id = " . $eventoNovo['id'])->fetch_assoc();
+                            $dataEnvio = $queryData['data_envio'];
+
                             ?>
                             <tr>
                                 <?php
@@ -84,7 +83,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                                 echo "<td>" . $local . "</td>";
                                 echo "<td>" . $espaco . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($eventoNovo['id'], 'ocorrencias') . "</td>";
-                                echo "<td>" . $eventoNovo['data_envio'] . "</td>";
+                                echo "<td>" . exibirDataBr($dataEnvio) . "</td>";
                                 echo "<td>" . $eventoNovo['usuario'] . "</td>";
                                 echo "<td>                               
                             <form method='POST' action='?perfil=producao&p=eventos&sp=visualizacao' role='form'>

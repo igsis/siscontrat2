@@ -27,6 +27,7 @@ class PDF extends FPDF
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPf = $pedido['pessoa_fisica_id'];
+$idFC = $pedido['origem_id'];
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
@@ -36,9 +37,13 @@ $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
-$idLocal = $ocorrencia['local_id'];
-$sqlLocal = "SELECT local FROM locais WHERE id = '$idLocal'";
-$locais = $con->query($sqlLocal)->fetch_array();
+$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
+$queryLocal = mysqli_query($con, $sqlLocal);
+$local = '';
+while ($locais = mysqli_fetch_array($queryLocal)) {
+    $local = $local . '; ' . $locais['local'];
+}
+$local = substr($local, 1);
 
 $ano = date('Y');
 
@@ -68,17 +73,16 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 
-$idAtracao = $_SESSION['idAtracao'];
+if ($drt['drt'] != "" || $drt['drt'] != NULL) {
+    $drt = $drt['drt'];
+} else {
+    $drt = "Não Cadastrado.";
+}
 
-$atracao = recuperaDados('atracoes', 'id', $idAtracao);
-
-$sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
-$carga = $con->query($sqlCarga)->fetch_array();
-
-if($carga['carga_horaria'] != 0 || $carga['carga_horaria'] != NULL){
-    $cargaHoraria =  $carga['carga_horaria'] . " hora(s)";
-}else{
-    $cargaHoraria = "Não possuí.";
+if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
+    $ccm = $pessoa['ccm'];
+} else {
+    $ccm = "Não Cadastrado.";
 }
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
@@ -130,7 +134,7 @@ $pdf->Cell(45, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(9, $l, utf8_decode("DRT:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(5, $l, utf8_decode($drt['drt']), 0, 0, 'L');
+$pdf->Cell(5, $l, utf8_decode($drt), 0, 0, 'L');
 
 $pdf->Ln(7);
 
@@ -146,7 +150,7 @@ $pdf->Cell(30, $l, utf8_decode($nacionalidade['nacionalidade']),0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, "CCM:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(30, $l, utf8_decode($pessoa['ccm']),0 ,0, 'L');
+$pdf->Cell(30, $l, utf8_decode($ccm),0 ,0, 'L');
 
 $pdf->Ln(7);
 
@@ -187,7 +191,7 @@ $pdf->Cell(10,10,'(B)',0,0,'L');
 $pdf->SetFont('Arial','B', 12);
 $pdf->Cell(160,10,'PROPOSTA',0,0,'C');
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(10,10,utf8_decode($evento['protocolo']),0,1,'R');
+$pdf->Cell(10,10,utf8_decode($evento['protocolo'] . " - " . $pedido['numero_processo']),0,1,'R');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -205,15 +209,9 @@ $pdf->MultiCell(50, $l, utf8_decode($periodo), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(26, $l, utf8_decode('Carga Horária:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(50, $l, utf8_decode($cargaHoraria), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(11, $l, 'Local:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(165, $l, utf8_decode($locais['local']), 0, 'L', 0);
+$pdf->MultiCell(165, $l, utf8_decode($local), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -258,7 +256,7 @@ $pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 8);
-$pdf->MultiCell(155, $l, utf8_decode($Observacao),0, 'J', 0);
+$pdf->MultiCell(155, 4, utf8_decode($Observacao),0, 'J', 0);
 
 $pdf->AddPage('','');
 
@@ -270,7 +268,7 @@ $pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 8);
-$pdf->MultiCell(155, $l, utf8_decode($penalidades['texto']),0, 'J', 0);
+$pdf->MultiCell(155, 4, utf8_decode($penalidades['texto']),0, 'J', 0);
 
 $pdf->Ln(5);
 
@@ -316,7 +314,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(180,$l,"Data: _________ / _________ / "."$ano".".",0,0,'L');
 
-$pdf->SetXY($x,262);
+$pdf->SetXY($x,235);
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(100,4,utf8_decode($pessoa['nome']),'T',1,'L');
 
@@ -328,6 +326,26 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
 
+$pdf->Ln(7);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial','', 9);
+$pdf->MultiCell(180,5,utf8_decode('Autorizo a execução do serviço.'));
+
+$pdf->Ln(4);
+
+$pdf->SetXY($x,262);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(100,4,utf8_decode('Carla Mingolla'),'T',1,'L');
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(100,4,"Chefe de Gabinete",0,1,'L');
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial','', 10);
+$pdf->Cell(100,4,"Secretaria Municipal de Cultura",0,0,'L');
+
 $pdf->AddPage('','');
 
 $pdf->SetX($x);
@@ -337,42 +355,56 @@ $pdf->Cell(180,5,"CRONOGRAMA",0,1,'C');
 $pdf->Ln(5);
 
 $pdf->SetX($x);
-$pdf->SetFont('Arial','B', 10);
-$pdf->Cell(13,$l,'Objeto:',0,0,'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(40, $l, utf8_decode($objeto), 0, 'L', 0);
 
-$cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " .$evento['id']);
-while($aux = mysqli_fetch_array($cronograma)){
-    $tipo = retornaTipo($aux['tipo_ocorrencia_id']);
+$cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id']);
+while ($aux = mysqli_fetch_array($cronograma)) {
+    if ($aux['tipo_ocorrencia_id'] == 2) {
+        $testaFilme = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $evento['id'])->fetch_array();
+        $filme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
+        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
+        $acao = $tipoAcao['acao'];
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(12, $l, utf8_decode('Título:'),0,0,'L');
+        $pdf->SetFont('Arial','',10);
+        $pdf->MultiCell(158, $l, utf8_decode($filme['titulo']));
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(16, $l, utf8_decode('Duração:'),0,0,'L');
+        $pdf->SetFont('Arial','',10);
+        $pdf->MultiCell(158, $l, utf8_decode($filme['duracao'] . " Hora(s)"));
+    } else {
+        $idAtracao = $ocorrencia['atracao_id'];
+        $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
+        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'])->fetch_array();
+        $acao = $tipoAcao['acao'];
+    }
     $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
     $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
-    $local = $con->query("SELECT local FROM locais WHERE id = ". $aux['local_id'])->fetch_array();
+    $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'])->fetch_array();
     $lugar = $local['local'];
 
     $pdf->SetX($x);
-    $pdf->SetFont('Arial','B', 10);
-    $pdf->Cell(9,$l,utf8_decode('Tipo:'),0,0,'L');
-    $pdf->SetFont('Arial','', 10);
-    $pdf->MultiCell(158,$l,utf8_decode($tipo));
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(11, $l, utf8_decode('Ação:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->MultiCell(158, $l, utf8_decode($acao));
 
     $pdf->SetX($x);
-    $pdf->SetFont('Arial','B', 10);
-    $pdf->Cell(22,$l,utf8_decode('Data/Perído:'),0,0,'L');
-    $pdf->SetFont('Arial','', 10);
-    $pdf->MultiCell(148,$l,utf8_decode($dia));
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(21, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->MultiCell(148, $l, utf8_decode($dia));
 
     $pdf->SetX($x);
-    $pdf->SetFont('Arial','B', 10);
-    $pdf->Cell(15,$l,utf8_decode('Horário:'),0,0,'L');
-    $pdf->SetFont('Arial','', 10);
-    $pdf->MultiCell(155,$l,utf8_decode($hour));
-
-    $pdf->SetX($x);
-    $pdf->SetFont('Arial','B', 10);
-    $pdf->Cell(12,$l,utf8_decode('Local:'),0,0,'L');
-    $pdf->SetFont('Arial','', 10);
-    $pdf->MultiCell(158,$l,utf8_decode($lugar));
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(15, $l, utf8_decode('Horário:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->MultiCell(155, $l, utf8_decode($hour));
 
     $pdf->Ln(5);
 }
@@ -391,5 +423,6 @@ $pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
 
 $pdf->Output();
 ?>
+
 
 

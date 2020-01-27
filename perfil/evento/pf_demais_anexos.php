@@ -173,7 +173,6 @@ if (isset($_POST['apagar'])) {
                                                         }
                                                     }
                                                     ?>
-
                                                     </tbody>
                                                 </table>
                                                 <br>
@@ -181,11 +180,19 @@ if (isset($_POST['apagar'])) {
                                                 if (isset($_POST['volta'])) {
                                                     echo "<input type='hidden' name='volta' value='" . $_POST['volta'] . "' />";
                                                 }
+
+                                                $num_lista = mysqli_num_rows($query_arquivos);
+                                                $num_arquivos = $con->query("SELECT * FROM arquivos WHERE lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1) AND origem_id = '$idPf' AND publicado = 1")->num_rows;
+                                                $num_total = $num_lista - $num_arquivos;
+                                                if($num_total != 0) {
+                                                    ?>
+                                                    <input type='hidden' name='idPf' value='<?= $idPf ?>'/>
+                                                    <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa; ?>"/>
+                                                    <input type="submit" class="btn btn-primary btn-lg btn-block"
+                                                           name="enviar" value='Enviar'>
+                                                    <?php
+                                                }
                                                 ?>
-                                                <input type='hidden' name='idPf' value='<?= $idPf ?>'/>
-                                                <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa; ?>"/>
-                                                <input type="submit" class="btn btn-primary btn-lg btn-block"
-                                                       name="enviar" value='Enviar'>
                                             </form>
                                         </div>
                                     </div>

@@ -6,19 +6,19 @@ $idEvento = $_SESSION['idEvento'];
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
-    $tituloFilme = $_POST['tituloFilme'];
-    $tituloOriginal = addslashes($_POST['tituloOriginal']);
+    $tituloFilme = trim($_POST['tituloFilme']);
+    $tituloOriginal = trim(addslashes($_POST['tituloOriginal']));
     $paisOrigem = addslashes($_POST['paisOrigem']);
     $paisCoProducao = addslashes($_POST['paisCoProducao']);
     $anoProducao = $_POST['anoProducao'];
-    $genero = addslashes($_POST['genero']);
-    $bitola = addslashes($_POST['bitola']);
-    $direcao = addslashes($_POST['direcao']);
-    $sinopse = addslashes($_POST['sinopse']);
-    $elenco = addslashes($_POST['elenco']);
+    $genero = trim(addslashes($_POST['genero']));
+    $bitola = trim(addslashes($_POST['bitola']));
+    $direcao = trim(addslashes($_POST['direcao']));
+    $sinopse = trim(addslashes($_POST['sinopse']));
+    $elenco = trim(addslashes($_POST['elenco']));
     $duracao = $_POST['duracao'];
     $classidicacaoIndicativa = $_POST['classidicacaoIndicativa'];
-    $link = addslashes($_POST['link']);
+    $link = trim(addslashes($_POST['link']));
 }
 
 if (isset($_POST['cadastra'])) {
@@ -33,6 +33,7 @@ if (isset($_POST['cadastra'])) {
                           '$sinopse','$elenco','$duracao',
                           '$link','$classidicacaoIndicativa',
                           '$paisOrigem','$paisCoProducao');";
+    //echo $sql;
     if (mysqli_query($con, $sql)) {
         $idFilme = recuperaUltimo("filmes");
         $sql = "INSERT INTO `filme_eventos` (filme_id, evento_id)
@@ -47,10 +48,9 @@ if (isset($_POST['cadastra'])) {
 if(isset($_POST['adicionar'])){
     $idFilme = $_POST['idFilme'];
 
-    $sql = "INSERT INTO `filme_eventos` (filme_id, evento_id)
-                    VALUES('$idFilme','$idEvento')";
+    $sql = "INSERT INTO `filme_eventos` (filme_id, evento_id) VALUES('$idFilme','$idEvento')";
     if(mysqli_query($con, $sql)){
-        $mensagem = mensagem("success", "Evento adicionado com sucesso ao evento.");
+        $mensagem = mensagem("success", "Filme adicionado com sucesso ao evento.");
     }else{
         $mensagem = mensagem("danger", "Erro ao adicionar o filme ao evento.");
 
@@ -58,7 +58,7 @@ if(isset($_POST['adicionar'])){
 }
 
 if (isset($_POST['edita'])) {
-    $idFilme = recuperaUltimo("filmes");
+    $idFilme = $_POST['idFilme'];
     $sql = " UPDATE `filmes`
                 SET  titulo = '$tituloFilme',
                      titulo_original = '$tituloOriginal',
@@ -79,7 +79,18 @@ if (isset($_POST['edita'])) {
     } else {
         $mensagem = mensagem("danger", "Erro ao atualizar! Tente novamente.");
     }
+}
 
+if(isset($_POST['apagar'])){
+    $idFilme = $_POST['idFilme'];
+    $sql_apaga = $con->query("UPDATE filmes SET publicado = 0 WHERE id = '$idFilme'");
+    if($sql_apaga){
+        $sql_filme_evento = $con->query("DELETE FROM filme_eventos WHERE filme_id = '$idFilme' AND evento_id = '$idEvento'");
+        $mensagem = mensagem("success", "Filme apagado com sucesso!");
+        echo "<meta http-equiv='refresh' content='3;url=?perfil=evento&p=evento_cinema_lista' />";
+    }else{
+        $mensagem = mensagem("danger", "Erro ao apagar filme");
+    }
 }
 
 if (isset($_POST['carregar'])) {
@@ -109,7 +120,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="tituloFilme">Título do filme *:</label>
-                                <input type='text' class='form-control' id='tituloFilme' name='tituloFilme' maxlength='100' required value='<?= $row['titulo'] ?>'>
+                                <input type='text' class='form-control' id='tituloFilme' name='tituloFilme' maxlength='100' value='<?= $row['titulo'] ?>' readonly>
                             </div>
                             <div class="form-group">
                                 <label for="tituloOriginal">Título original:</label>
@@ -118,8 +129,8 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label>País de origem *:</label>
-                                    <select class="form-control" name="paisOrigem" id="paisOrigem" required>
-                                        <option value="">Selecione uma opção...</option>
+                                    <select class="form-control" name="paisOrigem" id="paisOrigem"  value="">
+                                        <option  value="" >Selecione uma opção... </option>
                                         <?php
                                         geraOpcao("paises", $row['pais_origem_id']);
                                         ?>
@@ -137,11 +148,11 @@ $row = recuperaDados("filmes", "id", $idFilme);
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="anoProducao">Ano de produção: *</label>
-                                    <input type="text" class="form-control" id="anoProducao" name="anoProducao" placeholder="Ex: 1995" maxlength="4" required value="<?= $row['ano_producao'] ?>">
+                                    <input type="text" class="form-control" id="anoProducao"  min="1" name="anoProducao" placeholder="Ex: 1995" maxlength="4" value="<?= $row['ano_producao'] ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="genero">Gênero:</label>
-                                    <input type="text" class="form-control" id="genero" name="genero" placeholder="Digite o Gênero" maxlength="20" value="<?= $row['genero'] ?>"/>
+                                    <input type="text" class="form-control" id="genero" name="genero" placeholder="Digite o Gênero" maxlength="20" value="<?= $row['genero'] ?>" pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,20}" title="Apenas letras"> 
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="bitola">Bitola:</label>
@@ -150,7 +161,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             </div>
                             <div class="form-group">
                                 <label for="direcao">Direção:</label>
-                                <textarea class="form-control" name="direcao" id="direcao" rows="5"><?= $row['direcao'] ?></textarea>
+                                <textarea class="form-control" required name="direcao" id="direcao" rows="5"><?= $row['direcao'] ?></textarea>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -165,10 +176,10 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="duracao">Duração (em minutos):</label>
-                                    <input type="number" class="form-control" name="duracao" id="duracao" value="<?= $row['duracao'] ?>">
+                                    <input type="number" class="form-control" name="duracao" min="1" id="duracao" required value="<?= $row['duracao'] ?>">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="classidicacaoIndicativa">Classificação indicativa: *</label>
+                                    <label for="classidicacaoIndicativa" required>Classificação indicativa: *</label>
                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                             data-target="#modal-default"><i class="fa fa-info"></i></button>
                                     <select class="form-control" name="classidicacaoIndicativa" id="classidicacaoIndicativa">
@@ -189,6 +200,8 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             <a href="?perfil=evento&p=evento_cinema_lista">
                                 <button type="button" class="btn btn-info pull-left">Voltar</button>
                             </a>
+                            <input type="hidden" name="idFilme" value="<?= $row['id'] ?>">
+                            <button type="submit" name="apagar" class="btn btn-danger pull-left"><i class="fa fa-trash"></i> Apagar</button>
                             <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
                         </div>
 

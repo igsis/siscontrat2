@@ -3,26 +3,30 @@ $con = bancoMysqli();
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 $http = $server . "/pdf/";
 
-$link_padraoEvento = $http . "padrao_evento.php";
-$link_vocacionalEvento = $http . "vocacional_evento.php";
-$link_manifestacaojuridicaEvento = $http . "manifestacao_evento.php";
-$link_oficinaEvento = $http . "oficina_evento.php";
+$idEvento = $_SESSION['eventoId'];
+
+$link_padraoEvento = $http . "evento_padrao_evento.php";
+$link_vocacionalEvento = $http . "evento_vocacional_evento.php";
+$link_manifestacaojuridicaEvento = $http . "evento_manifestacao_evento.php";
+$link_oficinaEvento = $http . "evento_oficina_evento.php";
 
 $amparo = $_POST['amparo'];
-$idEvento = $_SESSION['eventoId'];
 $dotacao = $_POST['dotacao'];
-$finalizacao = $_POST['finalizar'];
+$finalizacao = $_POST['finalizacao'];
 
-if ($idEvento == $idEvento) {
-    if (isset($_POST['finalizar'])) {
-        $sqlUptate = "UPDATE juridicos SET pedido_id = $idEvento, amparo_legal = '$amparo', finalizacao = '$finalizacao', dotacao ='$dotacao'
+
+$sql = "SELECT * FROM juridicos where pedido_id = '$idEvento'";
+$query = mysqli_query($con, $sql);
+$num = mysqli_num_rows($query);
+
+if ($num > 0) {
+    $sqlUptate = "UPDATE juridicos SET pedido_id = $idEvento, amparo_legal = '$amparo', finalizacao = '$finalizacao', dotacao ='$dotacao'
     WHERE pedido_id = $idEvento";
-        $queryInsert = mysqli_query($con, $sqlUptate);
-    }
+    $sqlUptate = mysqli_query($con, $sqlUptate);
 } else {
     $sqlInsert = "INSERT INTO juridicos(pedido_id, amparo_legal, finalizacao, dotacao)
         VALUES ('$idEvento','$amparo','$finalizacao','$dotacao')";
-    $queryUpdate = mysqli_query($con, $sqlInsert);
+    $sqlInsert = mysqli_query($con, $sqlInsert);
 }
 ?>
 

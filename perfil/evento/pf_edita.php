@@ -14,7 +14,7 @@ if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
 
 if (isset($_POST['editProponente'])) {
     $idPedido = $_SESSION['idPedido'];
-    $voltar = "<form action='?perfil=evento&p=pedido_edita' method='post'>
+    $voltar = "<form action='?perfil=evento&p=pedido_edita&label=proponente' method='post'>
                     <input type='hidden' name='idProponente' value='$idPf'>
                     <input type='hidden' name='tipoPessoa' value='$tipoPessoa'>
                         <button type='submit' name='idPedido' id='idPedido' value='$idPedido' class='btn btn-default'>Voltar</button>
@@ -44,29 +44,29 @@ if (isset($_POST['cadastraLider'])) {
 
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
-    $nome = addslashes($_POST['nome']);
-    $nomeArtistico = addslashes($_POST['nomeArtistico']);
-    $rg = $_POST['rg'] ?? NULL;
+    $nome = trim(addslashes($_POST['nome']));
+    $nomeArtistico = trim(addslashes($_POST['nomeArtistico']));
+    $rg =  isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
-    $ccm = $_POST['ccm'] ?? NULL;
+    $ccm = isset($_POST['ccm']) ? trim($_POST['ccm']) : NULL;
     $dtNascimento = $_POST['dtNascimento'] ?? NULL;
     $nacionalidade = $_POST['nacionalidade'];
     $cep = $_POST['cep'];
-    $logradouro = addslashes($_POST['rua']);
+    $logradouro = trim(addslashes($_POST['rua']));
     $numero = $_POST['numero'];
-    $complemento = $_POST['complemento'] ?? NULL;
-    $bairro = addslashes($_POST['bairro']);
-    $cidade = addslashes($_POST['cidade']);
-    $uf = $_POST['estado'];
-    $email = $_POST['email'];
+    $complemento = trim($_POST['complemento']) ?? NULL;
+    $bairro = trim(addslashes($_POST['bairro']));
+    $cidade = trim(addslashes($_POST['cidade']));
+    $uf = trim($_POST['estado']);
+    $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
-    $drt = $_POST['drt'] ?? NULL;
-    $nit = $_POST['nit'] ?? NULL;
-    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $drt = isset($_POST['drt']) ? trim($_POST['drt']) : NULL;
+    $nit = trim($_POST['nit']) ?? NULL;
+    $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $banco = $_POST['banco'] ?? NULL;
-    $agencia = $_POST['agencia'] ?? NULL;
-    $conta = $_POST['conta'] ?? NULL;
+    $agencia = isset($_POST['agencia']) ? trim($_POST['agencia']) : NULL;
+    $conta = isset($_POST['conta']) ? trim($_POST['conta']) : NULL;
     $data = date("y-m-d h:i:s", strtotime("-3 hours"));
 }
 if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
@@ -129,24 +129,33 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_PO
             }
         }
 
+        $mensagem .= mensagem("success", "Cadastrado com sucesso!");
+
         if (isset($_POST['atualizaPf'])) {
             $idPedido = $_POST['idPedido'];
             $sqlTestaTroca = "SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 1";
             $queryTestaTroca = mysqli_query($con, $sqlTestaTroca);
             $row = mysqli_num_rows($queryTestaTroca);
             if ($row != 0) {
+                $null = "NULL";
+                $sqlTrocaProponente = "UPDATE pedidos SET
+                    pessoa_tipo_id = '1',
+                    pessoa_juridica_id = $null,
+                    pessoa_fisica_id = '$idPf'
+                    WHERE id = '$idPedido'";
+                if ($con->query($sqlTrocaProponente)) {
+                    $mensagem = mensagem("success", "Cadastrado com sucesso! Proponente inserido no Pedido");
+                }
                 $trocaPf = "<div class='form-group col-md-3 pull-right'>
-                            <form method='POST' action='?perfil=evento&p=pedido_edita' role='form'>
-                                <input type='hidden' name='idPedido' value='$idPedido'>
-                                <input type='hidden' name='idPf' value='$idPf'>
-                                <button type='submit' name='trocaPf' class='btn btn-info btn-block'> Ir ao pedido de contratação </button>
-                            </form>
-                        </div>";
+                                <form method='POST' action='?perfil=evento&p=pedido_edita&label=proponente' role='form'>
+                                    <input type='hidden' name='idPedido' value='$idPedido'>
+                                    <input type='hidden' name='idProponente' value='$idPf'>
+                                    <input type='hidden' name='tipoPessoa' value='1'>
+                                    <button type='submit' name='carregar' class='btn btn-primary btn-block'> Ir ao pedido de contratação </button>
+                                </form>
+                            </div>";;
             }
         }
-
-
-        $mensagem .= mensagem("success", "Cadastrado com sucesso!");
         //gravarLog($sql);
     } else {
         $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sql;
@@ -323,6 +332,45 @@ if (isset($valores) && $valores > 0) {
     $valorTotal = 0;
 }
 
+if (isset($_POST['selecionar'])) {
+    $tipoPessoa = 1;
+    $idPessoa = $_POST['idPf'];
+    $tipoEvento = $evento['tipo_evento_id'];
+    $campo = "pessoa_fisica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPessoa, $valorTotal, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
+
+if (isset($_POST['cadastra'])) {
+    $tipoPessoa = 1;
+    $tipoEvento = $evento['tipo_evento_id'];
+    $campo = "pessoa_fisica_id";
+
+    $sqlFirst = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, $campo, valor_total, publicado) 
+                                  VALUES (1, $idEvento, $tipoPessoa, $idPf, $valorTotal, 1)";
+    if (mysqli_query($con, $sqlFirst)) {
+        $_SESSION['idPedido'] = recuperaUltimo("pedidos");
+        $idPedido = $_SESSION['idPedido'];
+        $sqlContratado = "INSERT INTO contratos (pedido_id) VALUES ('$idPedido')";
+        if (mysqli_query($con, $sqlContratado)) {
+            $mensagem = mensagem("success", "Proponente cadastrado. Pedido Criado com sucesso.");
+        }
+    } else {
+        echo $sqlFirst;
+    }
+}
+
 
 if (isset($_POST["enviar"])) {
     $idPf = $_POST['idPessoa'];
@@ -403,8 +451,7 @@ $nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
 $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
 $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
-$sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
-$atracao = mysqli_query($con, $sql);
+$atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'")->fetch_array();
 
 include "includes/menu_interno.php";
 ?>
@@ -441,6 +488,7 @@ include "includes/menu_interno.php";
                                 <div class="col-md-6 form-group">
                                     <label for="nome">Nome: *</label>
                                     <input type="text" class="form-control" name="nome" placeholder="Digite o nome"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}" title="Apenas letras"
                                            maxlength="70" required value="<?= $pf['nome'] ?>">
                                 </div>
                                 <div class="col-md-6 form-group">
@@ -461,7 +509,7 @@ include "includes/menu_interno.php";
 
                                     <div class="form-group col-md-6">
                                     <?php
-                                    anexosNaPagina(62, $idPf, "modal-passaporte", "Passaporte");
+                                    anexosNaPagina(1, $idPf, "modal-passaporte", "Passaporte");
                                     ?>
                                     </div>
                                 <?php } else {
@@ -500,25 +548,7 @@ include "includes/menu_interno.php";
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    if (!empty($pf['cpf'])){
-                                    anexosNaPagina(1, $idPf, "modal-rg", "RG");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(2, $idPf, "modal-cpf", "CPF");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(30, $idPf, "modal-ccm", "FDC - CCM");
-                                    }
-                                    ?>
-                                </div>
-                            </div>
+
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -541,8 +571,9 @@ include "includes/menu_interno.php";
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control" min="1"
-                                           placeholder="Digite o número" required
+                                    <i>(se não houver, marcar 0)</i>
+                                    <input type="number" name="numero" class="form-control" min="0"
+                                           placeholder="(se não houver número marcar 0)" required
                                            value="<?= $endereco['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
@@ -553,28 +584,23 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="bairro">Bairro: *</label>
                                     <input type="text" class="form-control" name="bairro" id="bairro"
                                            placeholder="Digite o Bairro" maxlength="80" readonly
                                            value="<?= $endereco['bairro'] ?>">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="cidade">Cidade: *</label>
                                     <input type="text" class="form-control" name="cidade" id="cidade"
                                            placeholder="Digite a cidade" maxlength="50" readonly
                                            value="<?= $endereco['cidade'] ?>">
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
                                     <input type="text" class="form-control" name="estado" id="estado" maxlength="2"
                                            placeholder="Digite o estado ex: (SP)" readonly
                                            value="<?= $endereco['uf'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(3, $idPf, "modal-endereco", "Comprovante de endereço");
-                                    ?>
                                 </div>
                             </div>
                             <hr/>
@@ -587,7 +613,8 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
                                     <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
-                                           class="form-control"
+                                           class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                           data-mask="(00) 00000-0000"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -597,14 +624,16 @@ include "includes/menu_interno.php";
                                     if (isset($arrayTelefones[1])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -615,7 +644,8 @@ include "includes/menu_interno.php";
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               data-mask="(00) 00000-0000"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
@@ -624,7 +654,8 @@ include "includes/menu_interno.php";
                                         ?>
 
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               data-mask="(00) 00000-0000"
+                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone2" name="telefone2">
 
                                         <?php
@@ -637,90 +668,84 @@ include "includes/menu_interno.php";
                                 <?php
                                 if ($mostraDRT) {
                                     ?>
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-6">
                                         <label for="drt">DRT: </label>
                                         <input type="text" name="drt" class="form-control telefone" maxlength="15"
                                                placeholder="Digite o DRT" value="<?= $drts['drt'] ?>">
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <?php
-                                        anexosNaPagina(47, $idPf, "modal-drt", "DTR");
-                                        ?>
-                                    </div>
                                     <?php
                                 }
                                 ?>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
                                            placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    anexosNaPagina(27, $idPf, "modal-nit", "NIT");
-                                    ?>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
-                                    <textarea name="observacao" rows="3"
-                                              class="form-control"><?= $observacao['observacao'] ?></textarea>
+                                    <textarea name="observacao" rows="3" class="form-control"><?= $observacao['observacao'] ?></textarea>
                                 </div>
                             </div>
-                            <hr/>
+                            <?php
+                            if($atracao['valor_individual'] > 0 || $evento['tipo_evento_id'] == 2) {
+                                ?>
+                                <hr/>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="banco">Banco:</label>
+                                        <select id="banco" name="banco" class="form-control">
+                                            <option value="">Selecione um banco...</option>
+                                            <?php
+                                            geraOpcao("bancos", $banco['banco_id']);
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="agencia">Agência:</label>
+                                        <input type="text" name="agencia" class="form-control"
+                                               placeholder="Digite a Agência" maxlength="12"
+                                               value="<?= $banco['agencia'] ?>">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="conta">Conta:</label>
+                                        <input type="text" name="conta" class="form-control"
+                                               placeholder="Digite a Conta" maxlength="12"
+                                               value="<?= $banco['conta'] ?>">
+                                    </div>
+                                </div>
 
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="banco">Banco:</label>
-                                    <select id="banco" name="banco" class="form-control" required>
-                                        <option value="">Selecione um banco...</option>
+                                <div class="row">
+                                    <div class="form-group col-md-3">
                                         <?php
-                                        geraOpcao("bancos", $banco['banco_id']);
+                                        $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
+                                        $queryFACC = mysqli_query($con, $sqlFACC);
                                         ?>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="agencia">Agência: *</label>
-                                    <input type="text" name="agencia" class="form-control"
-                                           placeholder="Digite a Agência" maxlength="12" required
-                                           value="<?= $banco['agencia'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="conta">Conta: *</label>
-                                    <input type="text" name="conta" class="form-control"
-                                           placeholder="Digite a Conta" maxlength="12" required
-                                           value="<?= $banco['conta'] ?>">
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
-                                    $queryFACC = mysqli_query($con, $sqlFACC);
-                                    ?>
+                                        <label>Gerar FACC</label><br>
+                                        <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
+                                           class="btn btn-primary btn-block">Clique aqui para
+                                            gerar a FACC
+                                        </a>
+                                    </div>
 
-                                    <label>Gerar FACC</label><br>
-                                    <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
-                                       class="btn btn-primary btn-block">Clique aqui para
-                                        gerar a FACC
-                                    </a>
+                                    <div class="form-group col-md-5">
+                                        <label>&nbsp;</label><br>
+                                        <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                            documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                            no campo correspondente.</p>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <?php
+                                        anexosNaPagina(42, $idPf, "modal-facc", "FACC");
+                                        ?>
+                                    </div>
                                 </div>
-
-                                <div class="form-group col-md-5">
-                                    <label>&nbsp;</label><br>
-                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                        no campo correspondente.</p>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(42, $idPf, "modal-facc", "FACC");
-                                    ?>
-                                </div>
-                            </div>
+                                <?php
+                            }
+                            ?>
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
@@ -744,7 +769,7 @@ include "includes/menu_interno.php";
                     <div class="form-group col-md-3">
                         <form method="POST" action="?perfil=evento&p=pf_demais_anexos" role="form">
                             <button type="submit" name="idPf" value="<?= $pf['id'] ?>"
-                                    class="btn btn-info btn-block">Demais Anexos
+                                    class="btn btn-warning btn-block">Demais Anexos
                             </button>
                         </form>
                     </div>
@@ -805,6 +830,7 @@ modalUploadArquivoUnico("modal-ccm", "?perfil=evento&p=pf_edita", "FDC - CCM", "
 modalUploadArquivoUnico("modal-nit", "?perfil=evento&p=pf_edita", "NIT", "pis_pasep_", $idPf, "1");
 modalUploadArquivoUnico("modal-facc", "?perfil=evento&p=pf_edita", "FACC", "faq", $idPf, "1");
 modalUploadArquivoUnico("modal-drt", "?perfil=evento&p=pf_edita", "DRT", "drt", $idPf, "1");
+modalUploadArquivoUnico("modal-passaporte", "?perfil=evento&p=pf_edita", "Passaporte", "rg", $idPf, "1");
 modalUploadArquivoUnico("modal-endereco", "?perfil=evento&p=pf_edita", "Comprovante de endereço", "residencia", $idPf, "1");
 ?>
 
