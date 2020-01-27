@@ -17,8 +17,7 @@ $valorTotalAtracoes = 0;
 
 $musica = false;
 $oficina = false;
-$teatro = false;
-$circo = false;
+$artesCenicas = false;
 $edital = false;
 
 // CASO SEJA EVENTO ENTRA AQUI NESSA PARADA
@@ -57,12 +56,15 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                 switch ($idAcao) {
                     case 11: // teatro
                         $tabela = 'teatro';
-                        $teatro = true;
+                        $artesCenicas = true;
                         break;
                     case 2:
-                        $circo = true;
+                        $artesCenicas = true;
                         $possui = false;
                         break;
+                    case 3:
+                        $artesCenicas = true;
+                        $possui = false;
                     case 7: // música
                         $tabela = 'musica';
                         $musica = true;
@@ -180,14 +182,14 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                 if ($oficina) {
                     $whereAdicional[] = "oficina = '1'";
                 }
-                if ($teatro || $circo) {
+                if ($artesCenicas) {
                     $whereAdicional[] = "teatro = '1'";
                 }
                 if ($edital) {
                     $whereAdicional[] = "edital = '1'";
                 }
 
-                if ($musica || $oficina || $teatro || $circo) {
+                if ($musica || $oficina || $artesCenicas) {
                     $sqlAdicional = "AND (" . implode("OR ", $whereAdicional) . ")";
                 } else
                     $sqlAdicional = "";
