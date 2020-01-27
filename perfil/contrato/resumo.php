@@ -120,7 +120,7 @@ if (isset($_POST['salvar'])) {
     }
 
     //pedidos
-    $formaPagamento = addslashes($_POST['formaPagamento']);
+    $formaPagamento = trim(addslashes($_POST['formaPagamento']));
     $verba = $_POST['verba'];
     $processoMae = $_POST['processoMae'];
     $processo = $_POST['processo'];
@@ -308,7 +308,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     <label for="formaPagamento">Forma de pagamento</label>
                                     <textarea name="formaPagamento" id="formaPagamento" rows="5" required
                                               class="form-control"
-                                              <?= $readonly ?>> <?= $pedido['forma_pagamento'] ?> </textarea>
+                                              <?= $readonly ?>><?= $pedido['forma_pagamento'] ?></textarea>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="justificativa">Justificativa</label>

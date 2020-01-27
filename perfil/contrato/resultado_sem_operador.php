@@ -63,7 +63,8 @@ if (isset($_POST['busca'])) {
       (er.data_reabertura is null)
     )
     $sqlProjeto $sqlUsuario $sqlStatus 
-    $sqlProtocolo $sqlNomeEvento $sqlProcesso";
+    $sqlProtocolo $sqlNomeEvento $sqlProcesso
+    GROUP BY e.id";
 
     $query = mysqli_query($con, $sql);
 }

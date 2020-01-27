@@ -34,7 +34,7 @@ if (isset($_POST['busca'])) {
       (er.data_reabertura is null)
     )
     $sqlOperador
-    group by e.id";
+    GROUP BY e.id";
 
     $query = mysqli_query($con, $sql);
     $num_rows = mysqli_num_rows($query);
