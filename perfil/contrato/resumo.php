@@ -363,7 +363,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="pendencia">Pendências no Setor de Contratos Artísticos:</label>
-                                    <textarea name="pendencia" rows="5" class="form-control"><?=$pedido['pendencias_contratos']?></textarea>
+                                    <textarea name="pendencia" rows="5" class="form-control"><?=$pedido['pendencias_contatos']?></textarea>
                                 </div>
                             </div>
                         </div>
