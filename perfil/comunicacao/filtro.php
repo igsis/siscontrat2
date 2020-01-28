@@ -169,24 +169,6 @@ $agendao = mysqli_fetch_array($query2);
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>TESTE</td>
-                                <td>Qwerty Silva</td>
-                                <td>De 07/03/2020 a 22/03/2020</td>
-                                <td>
-                                    <div class="status-comunicacao">
-                                        <div class="quadr bg-aqua" data-toggle="popover" data-trigger="hover"
-                                             data-content="Editado"></div>
-                                        <div class="quadr bg-fuchsia" data-toggle="popover" data-trigger="hover"
-                                             data-content="Revisado"></div>
-                                        <div class="quadr bg-green" data-toggle="popover" data-trigger="hover"
-                                             data-content="Site"></div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a class="btn-info btn" href="?perfil=comunicacao&p=comunicacao">Editar</a>
-                                </td>
-                            </tr>
                             <?php
                             while ($evento = mysqli_fetch_array($query)) {
                                 ?>
@@ -198,7 +180,9 @@ $agendao = mysqli_fetch_array($query2);
                                         <?= $evento['nome_usuario'] ?>
                                     </td>
                                     <td>
-                                        ...
+                                        <?=
+                                            retornaPeriodo($evento['idEvento']);
+                                        ?>
                                     </td>
                                     <td>
                                         <div class="status-comunicacao">
