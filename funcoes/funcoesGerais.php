@@ -1589,13 +1589,62 @@ function comparaPjCapac($cnpj) {
                     $camposIgnorados[] = $key;
                 }
             }
-            if (!$existeDivergencia) {
-                return false;;
+            if ($existeDivergencia) {
+                foreach ($proponenteCpc as $key => $dado) {
+                    if (in_array($key, $camposIgnorados)) {
+                        unset($proponenteCpc[$key]);
+                    }
+                }
+                return $proponenteCpc;
             } else {
-
+                return false;
             }
         } else {
-            return false;;
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+function comparaPfCapac($cpf) {
+    $conSis = bancoMysqli();
+    $conCpc = bancoCapac();
+    $existeDivergencia = false;
+
+    $queryPfCpc = $conCpc->query("SELECT * FROM capac_new.pessoa_fisicas WHERE cpf = '$cpf'");
+
+    if ($queryPfCpc->num_rows > 0) {
+        $proponenteCpc = $queryPfCpc->fetch_assoc();
+        $proponenteSis = $conSis->query("SELECT * FROM siscontrat.pessoa_fisicas WHERE cpf = '$cpf'")->fetch_assoc();
+
+        $camposIgnorados = ['id', 'ultima_atualizacao'];
+        $dataAtualizacaoCpc = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteCpc['ultima_atualizacao']);
+        $dataAtualizacaoSis = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteSis['ultima_atualizacao']);
+        $existeDivergencia = false;
+
+        if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
+            foreach ($proponenteSis as $key => $dado) {
+                if (($proponenteSis[$key] != $proponenteCpc[$key]) && (!in_array($key, $camposIgnorados))) {
+                    $existeDivergencia = true;
+                    $msgDivergencia = "O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>.
+            Abaixo, clique na seta verde para escolher quais dados serão atualizados caso necessário e posteriormente clique no botão de gravar.";
+                } else {
+                    $camposIgnorados[] = $key;
+                }
+            }
+            if ($existeDivergencia) {
+                foreach ($proponenteCpc as $key => $dado) {
+                    if (in_array($key, $camposIgnorados)) {
+                        unset($proponenteCpc[$key]);
+                    }
+                }
+                return $proponenteCpc;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     } else {
         return false;
