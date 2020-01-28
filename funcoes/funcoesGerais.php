@@ -1563,3 +1563,41 @@ function geraModalDescritivo($tabela, $publicado = false) {
         <?php
     }
 }
+
+function comparaPjCapac($cnpj) {
+    $conSis = bancoMysqli();
+    $conCpc = bancoCapac();
+    $existeDivergencia = false;
+
+    $queryPjCpc = $conCpc->query("SELECT * FROM capac_new.pessoa_juridicas WHERE cnpj = '$cnpj'");
+    if ($queryPjCpc->num_rows > 0) {
+        $proponenteCpc = $queryPjCpc->fetch_assoc();
+        $proponenteSis = $conSis->query("SELECT * FROM siscontrat.pessoa_juridicas WHERE cnpj = '$cnpj'")->fetch_assoc();
+
+        $camposIgnorados = ['id', 'representante_legal1_id', 'representante_legal2_id', 'ultima_atualizacao'];
+        $dataAtualizacaoCpc = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteCpc['ultima_atualizacao']);
+        $dataAtualizacaoSis = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteSis['ultima_atualizacao']);
+        $existeDivergencia = false;
+
+        if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
+            foreach ($proponenteSis as $key => $dado) {
+                if (($proponenteSis[$key] != $proponenteCpc[$key]) && (!in_array($key, $camposIgnorados))) {
+                    $existeDivergencia = true;
+                    $msgDivergencia = "O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>.
+            Abaixo, clique na seta verde para escolher quais dados serão atualizados caso necessário e posteriormente clique no botão de gravar.";
+                } else {
+                    $camposIgnorados[] = $key;
+                }
+            }
+            if (!$existeDivergencia) {
+                return false;;
+            } else {
+
+            }
+        } else {
+            return false;;
+        }
+    } else {
+        return false;
+    }
+}

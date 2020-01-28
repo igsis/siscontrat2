@@ -29,7 +29,7 @@ if (isset($_POST['importarEventoCpc'])) {
     $idFomento = $_POST['tipoFomento'] ?? null;
 
     /** INSERE EVENTO NO SISCONTRAT */
-    $sqlInsertSis = "INSERT INTO eventos (nome_evento,
+    $sqlInsertSis = "INSERT INTO siscontrat.eventos (nome_evento,
                                  relacao_juridica_id,
                                  projeto_especial_id,
                                  tipo_evento_id,
