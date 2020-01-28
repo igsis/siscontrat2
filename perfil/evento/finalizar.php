@@ -54,7 +54,6 @@ FROM ocorrencias AS o INNER JOIN atracoes AS a ON o.atracao_id = a.id
 INNER JOIN eventos AS e ON e.id = a.evento_id
 WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 
-
     $result = mysqli_fetch_all(mysqli_query($con, $ocorrencia_atracao));
 
 } else {

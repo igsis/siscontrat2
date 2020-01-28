@@ -107,16 +107,19 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
         }
 
         if ($numOcorrencias != 0) {
-            if ($foraPrazo) {
-                $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+            foreach ($ocorrencias as $ocorrencia) {
+                $hoje = new DateTime(date("Y-m-d"));
+                if ($foraPrazo) {
+                    $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . exibirDataBr($ocorrencia['data_inicio']). ".<br>
                                     O prazo para contratos é de 30 dias.<br>";
-                $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
-                $fora = 1;
-            } else {
-                $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                    $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
+                    $fora = 1;
+                } else {
+                    $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . exibirDataBr($ocorrencia['data_inicio']) . ".<br>
                                     O prazo para contratos é de 30 dias.<br>";
-                $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
-                $fora = 0;
+                    $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
+                    $fora = 0;
+                }
             }
         }
 
@@ -387,13 +390,13 @@ $num = mysqli_num_rows($queryteste);
 
 $ocoDupl = 0;
 for ($i = 0; $i < $num; $i++) {
-    for ($x = $i+1; $x < $num; $x++) {
+    for ($x = $i + 1; $x < $num; $x++) {
         $cont = 0;
         for ($y = 0; $y < 24; $y += 4) {
-            if (($teste[$i][$y] === $teste[$x][$y]) 
-            && ($teste[$i][$y + 1] === $teste[$x][$y + 1]) 
-            && ($teste[$i][$y + 2] === $teste[$x][$y + 2])
-            && ($teste[$i][$y + 3] === $teste[$x][$y + 3])){
+            if (($teste[$i][$y] === $teste[$x][$y])
+                && ($teste[$i][$y + 1] === $teste[$x][$y + 1])
+                && ($teste[$i][$y + 2] === $teste[$x][$y + 2])
+                && ($teste[$i][$y + 3] === $teste[$x][$y + 3])) {
                 $cont = $cont + 1;
             }
         }
@@ -402,7 +405,7 @@ for ($i = 0; $i < $num; $i++) {
             break;
         }
     }
-    if ($ocoDupl!=0) {
+    if ($ocoDupl != 0) {
         break;
     }
 }
