@@ -203,35 +203,40 @@ $agendao = mysqli_fetch_array($query2);
                                     <td>
                                         <div class="status-comunicacao">
                                             <?php
-                                            $sqlStatus = "SELECT co.id
+                                            $sqlStatus = "SELECT co.id as id
                                                             FROM comunicacoes AS c
                                                             INNER JOIN eventos AS e ON c.eventos_id = e.id
                                                             INNER JOIN comunicacao_status AS co ON c.comunicacao_status_id = co.id
                                                             WHERE c.publicado = 1 AND e.id = '{$evento['idEvento']}' ";
                                             $queryS = mysqli_query($con, $sqlStatus);
-                                            $status = mysqli_fetch_array($queryS);
+                                            $status = mysqli_fetch_all($queryS, MYSQLI_ASSOC);
                                             if ($status != null) {
                                                 foreach ($status as $st) {
-                                                    if ($st == 1) {
-                                                        echo "<div class=\"quadr bg-aqua\" data-toggle=\"popover\"
+                                                    switch ($st['id']) {
+                                                        case 1:
+                                                            echo "<div class=\"quadr bg-aqua\" data-toggle=\"popover\"
                                                          data-trigger=\"hover\"
-                                                         data-content=\"Editado\"></div>";
-                                                    }
-                                                    if ($st == 2) {
-                                                        echo "<div class=\"quadr bg-fuchsia\" data-toggle=\"popover\" data-trigger=\"hover\"
+                                                         daa-content=\"Editado\"></div>";
+                                                            break;
+                                                        case 2:
+                                                            echo "<div class=\"quadr bg-fuchsia\" data-toggle=\"popover\" data-trigger=\"hover\"
                                                          data-content=\"Revisado\"></div>";
-                                                    }
-                                                    if ($st == 3) {
-                                                        echo "<div class=\"quadr bg-green\" data-toggle=\"popover\" data-trigger=\"hover\"
+                                                            break;
+                                                        case 3:
+                                                            echo "<div class=\"quadr bg-green\" data-toggle=\"popover\" data-trigger=\"hover\"
                                                          data-content=\"Site\"></div>";
-                                                    }
-                                                    if ($st == 4) {
-                                                        echo "<div class=\"quadr bg-yellow\" data-toggle=\"popover\" data-trigger=\"hover\"
+                                                            break;
+                                                        case 4:
+                                                            echo "<div class=\"quadr bg-yellow\" data-toggle=\"popover\" data-trigger=\"hover\"
                                                          data-content=\"Impresso\"></div>";
-                                                    }
-                                                    if ($st == 5) {
-                                                        echo "<div class=\"quadr bg-red\" data-toggle=\"popover\" data-trigger=\"hover\"
+                                                            break;
+                                                        case 5:
+                                                            echo "<div class=\"quadr bg-red\" data-toggle=\"popover\" data-trigger=\"hover\"
                                                          data-content=\"Foto\"></div>";
+                                                            break;
+                                                        default:
+                                                            echo '';
+                                                            break;
                                                     }
                                                 }
 
