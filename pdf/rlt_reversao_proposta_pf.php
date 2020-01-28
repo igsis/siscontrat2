@@ -406,6 +406,12 @@ while ($aux = mysqli_fetch_array($cronograma)) {
     $pdf->SetFont('Arial', '', 10);
     $pdf->MultiCell(155, $l, utf8_decode($hour));
 
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(11, $l, utf8_decode('Local:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->MultiCell(158, $l, utf8_decode($lugar));
+
     $pdf->Ln(5);
 }
 

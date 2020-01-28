@@ -443,16 +443,6 @@ $pdf->MultiCell(40, $l, utf8_decode($objeto), 0, 'L', 0);
 
 $cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id']);
 while ($aux = mysqli_fetch_array($cronograma)) {
-    $tipo = retornaTipo($aux['tipo_ocorrencia_id']);
-    $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
-    $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
-    $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'])->fetch_array();
-    $lugar = $local['local'];
-
-}
-
-$cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id']);
-while ($aux = mysqli_fetch_array($cronograma)) {
     if ($aux['tipo_ocorrencia_id'] == 2) {
         $testaFilme = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $evento['id'])->fetch_array();
         $filme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
@@ -461,16 +451,17 @@ while ($aux = mysqli_fetch_array($cronograma)) {
 
         $pdf->SetX($x);
         $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(12, $l, utf8_decode('Título:'), 0, 0, 'L');
-        $pdf->SetFont('Arial', '', 10);
+        $pdf->Cell(12, $l, utf8_decode('Título:'),0,0,'L');
+        $pdf->SetFont('Arial','',10);
         $pdf->MultiCell(158, $l, utf8_decode($filme['titulo']));
 
         $pdf->SetX($x);
         $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(16, $l, utf8_decode('Duração:'), 0, 0, 'L');
-        $pdf->SetFont('Arial', '', 10);
+        $pdf->Cell(16, $l, utf8_decode('Duração:'),0,0,'L');
+        $pdf->SetFont('Arial','',10);
         $pdf->MultiCell(158, $l, utf8_decode($filme['duracao'] . " Hora(s)"));
     } else {
+        $idAtracao = $ocorrencia['atracao_id'];
         $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
         $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'])->fetch_array();
         $acao = $tipoAcao['acao'];
@@ -497,6 +488,12 @@ while ($aux = mysqli_fetch_array($cronograma)) {
     $pdf->Cell(15, $l, utf8_decode('Horário:'), 0, 0, 'L');
     $pdf->SetFont('Arial', '', 10);
     $pdf->MultiCell(155, $l, utf8_decode($hour));
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(11, $l, utf8_decode('Local:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->MultiCell(158, $l, utf8_decode($lugar));
 
     $pdf->Ln(5);
 }
