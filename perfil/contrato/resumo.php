@@ -80,17 +80,26 @@ if(isset($_POST['load'])){
 }
 
 if (isset($_POST['salvar'])) {
+    $idPedido = $_POST['idPedido'];
     if ($nivelUsuario == 1) { // alterar o operador e/ou o status do pedido
-        $operador = $_POST['operador'];
-        $status = $_POST['status'];
+        $operador = $_POST['operador'] ?? NULL;
+        $status = $_POST['status'] ?? NULL;
 
-        $sql = "UPDATE contratos SET usuario_contrato_id = '$operador' WHERE pedido_id = '$idPedido'";
-        if (mysqli_query($con, $sql))
-            gravarLog($sql);
+        if($operador == NULL){
+            
+        }else{
+            $sql = "UPDATE contratos SET usuario_contrato_id = '$operador' WHERE pedido_id = '$idPedido'";
+            if (mysqli_query($con, $sql))
+                gravarLog($sql);
+        }
+       
+        if($status == NULL){
 
-        $sql = "UPDATE pedidos SET status_pedido_id = '$status' WHERE id = '$idPedido'";
-        if (mysqli_query($con, $sql)) {
-            gravarLog($sql);
+        }else{
+            $sql = "UPDATE pedidos SET status_pedido_id = '$status' WHERE id = '$idPedido'";
+            if (mysqli_query($con, $sql)) {
+                gravarLog($sql);
+        }
 
             if ($status == 20) {
                 $sql = "UPDATE eventos SET evento_status_id = 5 WHERE id = '$idEvento'";
@@ -124,7 +133,7 @@ if (isset($_POST['salvar'])) {
     $verba = $_POST['verba'];
     $processoMae = $_POST['processoMae'];
     $processo = $_POST['processo'];
-    $justificativa = addslashes($_POST['justificativa']);
+    $justificativa = trim(addslashes($_POST['justificativa']));
     $operador = $_POST['operador'] ?? NULL;
     $valorTotal = $_POST['valorTotal'];
     $valorTotal = str_replace(",", ".", $valorTotal);
@@ -177,6 +186,53 @@ if (isset($_POST['reabertura'])) {
     } else {
         $mensagem = mensagem("danger", "Erro ao efetuar a reabertura do evento! Tente novamente.");
     }
+}
+
+if (isset($_POST['parcelaEditada'])) {
+    $idPedido = $_POST['idPedido'];
+    $parcelas = $_POST['parcela'];
+    $idEvento = $_SESSION['idEvento'];
+    $valores = dinheiroDeBr($_POST['valor']);
+    $data_pagamentos = $_POST['data_pagamento'];
+
+    $pedido = recuperaDados('pedidos', 'id', $idPedido);
+
+    $sql = "DELETE FROM parcelas WHERE pedido_id = '$idPedido'";
+    mysqli_query($con, $sql);
+
+    $formaCompleta = "";
+
+    $i = $pedido['numero_parcelas'];
+    
+    $baldeValor = 0;
+
+    for($contador = 0; $contador < $i; $contador++){
+        $forma = $contador + 1 . "º parcela R$ " . $valores[$contador] . ". Entrega de documentos a partir de " . exibirDataBr($data_pagamentos[$contador]) . ".\n";
+        $formaCompleta = $formaCompleta . $forma;
+    }
+    $formaCompleta = $formaCompleta .  "\nO pagamento de cada parcela se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.";
+
+    $sqlForma = "UPDATE pedidos SET forma_pagamento = '$formaCompleta' WHERE id = $idPedido AND origem_tipo_id = 1";
+    mysqli_query($con, $sqlForma);
+
+    
+    for ($count = 0; $count < $i; $count++) {
+        $parcela = $parcelas[$count] ?? NULL;
+        $valor = $valores[$count] ?? NULL;
+        $baldeValor += $valor;
+        $data_pagamento = $data_pagamentos[$count] ?? NULL;
+
+        $sql = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
+
+        if (mysqli_query($con, $sql)) {
+            $mensagem = mensagem('success', 'Parcelas Atualizadas!');
+        } else {
+            $mensagem = mensagem('danger', 'Erro ao atualizar as parcelas! Tente Novamente.');
+        }
+    }
+
+    $sql = "UPDATE pedidos SET valor_total = '$baldeValor' WHERE id = '$idPedido'";
+    mysqli_query($con, $sql);
 }
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
@@ -313,7 +369,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 <div class="form-group col-md-6">
                                     <label for="justificativa">Justificativa</label>
                                     <textarea name="justificativa" id="justificativa" rows="5" required
-                                              class="form-control"><?= $pedido['justificativa'] ?> </textarea>
+                                              class="form-control"><?= $pedido['justificativa'] ?></textarea>
                                 </div>
 
                             </div>
@@ -372,6 +428,14 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 </div>
                             </div>
                             <br>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <a href="?perfil=contrato&p=edita_parcelas">
+                                        <button type="button" style="width: 35%" class="btn btn-primary center-block">Editar parcelas</button>
+                                    </a>
+                                </div>
+                            </div>
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
