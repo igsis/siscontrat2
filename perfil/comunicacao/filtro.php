@@ -213,11 +213,12 @@ $agendao = mysqli_fetch_array($query2);
                                             if ($status != null) {
                                                 foreach ($status as $st) {
                                                     switch ($st['id']) {
+
                                                         case 1:
-                                                            echo "<div class=\"quadr bg-aqua\" data-toggle=\"popover\"
-                                                         data-trigger=\"hover\"
-                                                         daa-content=\"Editado\"></div>";
+                                                            echo "<div class=\"quadr bg-aqua\" data-toggle=\"popover\" data-trigger=\"hover\"
+                                                         data-content=\"Editado\"></div>";
                                                             break;
+
                                                         case 2:
                                                             echo "<div class=\"quadr bg-fuchsia\" data-toggle=\"popover\" data-trigger=\"hover\"
                                                          data-content=\"Revisado\"></div>";
@@ -235,9 +236,10 @@ $agendao = mysqli_fetch_array($query2);
                                                          data-content=\"Foto\"></div>";
                                                             break;
                                                         default:
-                                                            echo '';
+                                                            echo "";
                                                             break;
                                                     }
+
                                                 }
 
                                             }
@@ -245,7 +247,10 @@ $agendao = mysqli_fetch_array($query2);
                                         </div>
                                     </td>
                                     <td>
-                                        <a class="btn-info btn" href="?perfil=comunicacao&p=comunicacao">Editar</a>
+                                        <form method="post" action="?perfil=comunicacao&p=comunicacao">
+                                            <input type="hidden" name="evento" value="<?= $evento['idEvento'] ?>">
+                                            <button class="btn-info btn">Editar</button>
+                                        </form>
                                     </td>
                                 </tr>
                                 <?php

@@ -1,10 +1,26 @@
 <?php
 include "includes/menu.php";
+
+$con = bancoMysqli();
+$conn = bancoPDO();
+
+$idEvento = $_POST['evento'];
+
+$sqlEvento = "SELECT * FROM eventos
+              WHERE id = '{$idEvento}' AND publicado = 1";
+
+$query = mysqli_query($con,$sqlEvento);
+
+$evento = mysqli_fetch_array($query,MYSQLI_ASSOC);
+
 ?>
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
+        <?php
+        var_dump($evento);
 
+        ?>
         <h2 class="page-header">Comunicação</h2>
 
         <div class="row">
@@ -52,7 +68,7 @@ include "includes/menu.php";
                                 <div class="col-md-8">
                                     <div class="form-group">
                                         <label for="nomeEvento">Nome do Evento:</label>
-                                        <input class="form-control" type="text" name="nomeEvento" disabled>
+                                        <input class="form-control" type="text" name="nomeEvento" value="<?= $evento['nome_evento'] ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -60,6 +76,9 @@ include "includes/menu.php";
                                         <label for="">Projeto Especial:</label>
                                         <select class="form-control" name="" id="">
                                             <option value="">Selecione um Projeto especial</option>
+                                            <?php
+                                                geraOpcao('projeto_especiais', $evento['projeto_especial_id']);
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
