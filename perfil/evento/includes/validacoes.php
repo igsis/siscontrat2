@@ -17,7 +17,7 @@ $valorTotalAtracoes = 0;
 
 $musica = false;
 $oficina = false;
-$teatro = false;
+$artesCenicas = false;
 $edital = false;
 
 // CASO SEJA EVENTO ENTRA AQUI NESSA PARADA
@@ -54,22 +54,29 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
             foreach ($acoes as $acao) {
                 $idAcao = $acao['acao_id'];
                 switch ($idAcao) {
-                    case 11 : // teatro
+                    case 11: // teatro
                         $tabela = 'teatro';
-                        $teatro = true;
+                        $artesCenicas = true;
                         break;
-                    case 7 : // música
+                    case 2:
+                        $artesCenicas = true;
+                        $possui = false;
+                        break;
+                    case 3:
+                        $artesCenicas = true;
+                        $possui = false;
+                    case 7: // música
                         $tabela = 'musica';
                         $musica = true;
                         break;
-                    case 5 : // exposição (feira)
+                    case 5: // exposição (feira)
                         $tabela = 'exposicoes';
                         break;
-                    case 8 : // oficina
+                    case 8: // oficina
                         $tabela = 'oficinas';
                         $oficina = true;
                         break;
-                    default :
+                    default:
                         $possui = false;
                 }
             }
@@ -178,14 +185,14 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                 if ($oficina) {
                     $whereAdicional[] = "oficina = '1'";
                 }
-                if ($teatro) {
+                if ($artesCenicas) {
                     $whereAdicional[] = "teatro = '1'";
                 }
                 if ($edital) {
                     $whereAdicional[] = "edital = '1'";
                 }
 
-                if ($musica || $oficina || $teatro) {
+                if ($musica || $oficina || $artesCenicas) {
                     $sqlAdicional = "AND (" . implode("OR ", $whereAdicional) . ")";
                 } else
                     $sqlAdicional = "";

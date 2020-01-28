@@ -114,11 +114,11 @@ include "includes/menu_interno.php";
                             <div class="row ">
                                 <div class="form-group col-md-6">
                                     <label for="fiscal">Nome do Responsável Interno *</label>
-                                    <input class="form-control" type="text" name="nomeResponsavel" required pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras">
+                                    <input class="form-control" type="text" name="nomeResponsavel" pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="fiscal">Telefone do Responsável Interno *</label>
-                                    <input class="form-control" type="text" name="telResponsavel" data-mask="(00) 00000-0000" maxlength="15" onkeyup="mascara( this, mtel );" required>
+                                    <input class="form-control" type="text" name="telResponsavel" data-mask="(00) 00000-0000" maxlength="15" onkeyup="mascara( this, mtel );">
                                 </div>
                             </div>
 
