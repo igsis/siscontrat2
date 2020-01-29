@@ -1,5 +1,6 @@
 <?php
 include "includes/menu.php";
+include "includes/funcoesAuxiliares.php";
 
 $con = bancoMysqli();
 $conn = bancoPDO();
@@ -16,6 +17,8 @@ $sqlSis = "SELECT       eve.id AS idEvento,
         WHERE eve.publicado = 1 AND evento_status_id between 3 AND 4 AND
         (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
 
+$query = mysqli_query($con,$sqlSis);
+
 $sqlAg = "SELECT 	ag.id AS idEvento, 
                     ag.nome_evento AS nome_evento, 
                     es.status AS status, 
@@ -25,10 +28,7 @@ $sqlAg = "SELECT 	ag.id AS idEvento,
         INNER JOIN evento_status es ON ag.evento_status_id = es.id
                 WHERE ag.publicado = 1 AND evento_status_id between 3 AND 4 AND ag.usuario_id = '$idUser'";
 
-$query = mysqli_query($con, $sqlSis);
-
 $query2 = mysqli_query($con, $sqlAg);
-$agendao = mysqli_fetch_array($query2);
 
 ?>
 
@@ -186,53 +186,42 @@ $agendao = mysqli_fetch_array($query2);
                                     </td>
                                     <td>
                                         <div class="status-comunicacao">
-                                            <?php
-                                            $sqlStatus = "SELECT co.id as id
-                                                            FROM comunicacoes AS c
-                                                            INNER JOIN eventos AS e ON c.eventos_id = e.id
-                                                            INNER JOIN comunicacao_status AS co ON c.comunicacao_status_id = co.id
-                                                            WHERE c.publicado = 1 AND e.id = '{$evento['idEvento']}' ";
-                                            $queryS = mysqli_query($con, $sqlStatus);
-                                            $status = mysqli_fetch_all($queryS, MYSQLI_ASSOC);
-                                            if ($status != null) {
-                                                foreach ($status as $st) {
-                                                    switch ($st['id']) {
-
-                                                        case 1:
-                                                            echo "<div class=\"quadr bg-aqua\" data-toggle=\"popover\" data-trigger=\"hover\"
-                                                         data-content=\"Editado\"></div>";
-                                                            break;
-
-                                                        case 2:
-                                                            echo "<div class=\"quadr bg-fuchsia\" data-toggle=\"popover\" data-trigger=\"hover\"
-                                                         data-content=\"Revisado\"></div>";
-                                                            break;
-                                                        case 3:
-                                                            echo "<div class=\"quadr bg-green\" data-toggle=\"popover\" data-trigger=\"hover\"
-                                                         data-content=\"Site\"></div>";
-                                                            break;
-                                                        case 4:
-                                                            echo "<div class=\"quadr bg-yellow\" data-toggle=\"popover\" data-trigger=\"hover\"
-                                                         data-content=\"Impresso\"></div>";
-                                                            break;
-                                                        case 5:
-                                                            echo "<div class=\"quadr bg-red\" data-toggle=\"popover\" data-trigger=\"hover\"
-                                                         data-content=\"Foto\"></div>";
-                                                            break;
-                                                        default:
-                                                            echo "";
-                                                            break;
-                                                    }
-
-                                                }
-
-                                            }
-                                            ?>
+                                            <?php geraLegendas($evento['idEvento'],'eventos','comunicacoes'); ?>
                                         </div>
                                     </td>
                                     <td>
                                         <form method="post" action="?perfil=comunicacao&p=comunicacao">
                                             <input type="hidden" name="evento" value="<?= $evento['idEvento'] ?>">
+                                            <button class="btn-info btn">Editar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                            <?php
+                            while ($agendao = mysqli_fetch_array($query2)) {
+                                ?>
+                                <tr>
+                                    <td>
+                                        <?= $agendao['nome_evento'] ?>
+                                    </td>
+                                    <td>
+                                        <?= $agendao['nome_usuario'] ?>
+                                    </td>
+                                    <td>
+                                        <?=
+                                        retornaPeriodo($agendao['idEvento']);
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <div class="status-comunicacao">
+                                            <?php geraLegendas($agendao['idEvento'],'agendoes','comunicacao_agendao'); ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <form method="post" action="?perfil=comunicacao&p=comunicacao">
+                                            <input type="hidden" name="evento" value="<?= $agendao['idEvento'] ?>">
                                             <button class="btn-info btn">Editar</button>
                                         </form>
                                     </td>
