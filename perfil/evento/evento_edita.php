@@ -71,7 +71,6 @@ if (isset($_POST['cadastra'])) {
         //gravarLog($sql);
     }
 
-    echo $sql;
 }
 
 if (isset($_POST['edita'])) {
