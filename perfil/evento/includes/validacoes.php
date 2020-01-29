@@ -105,18 +105,20 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                 }
             }
         }
-
+        foreach ($ocorrencias as $ocorrencia) {
         if ($numOcorrencias != 0) {
-            if ($foraPrazo) {
-                $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+            $hoje = new DateTime(date("Y-m-d"));
+                if ($foraPrazo) {
+                    $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . exibirDataBr($ocorrencia['data_inicio']).  ".<br>
                                     O prazo para contratos é de 30 dias.<br>";
-                $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
-                $fora = 1;
-            } else {
-                $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                    $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
+                    $fora = 1;
+                } else {
+                    $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . exibirDataBr($ocorrencia['data_inicio']). ".<br>
                                     O prazo para contratos é de 30 dias.<br>";
-                $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
-                $fora = 0;
+                    $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
+                    $fora = 0;
+                }
             }
         }
 
