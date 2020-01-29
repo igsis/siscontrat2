@@ -1564,71 +1564,41 @@ function geraModalDescritivo($tabela, $publicado = false) {
     }
 }
 
-function comparaPjCapac($cnpj) {
-    $conSis = bancoMysqli();
-    $conCpc = bancoCapac();
-    $existeDivergencia = false;
+function registroCpcAtualizado($dataAttCpc, $dataAttSis) {
+    $dataAtualizacaoCpc = DateTime::createFromFormat('Y-m-d H:i:s', $dataAttCpc);
+    $dataAtualizacaoSis = DateTime::createFromFormat('Y-m-d H:i:s', $dataAttSis);
 
-    $queryPjCpc = $conCpc->query("SELECT * FROM capac_new.pessoa_juridicas WHERE cnpj = '$cnpj'");
-    if ($queryPjCpc->num_rows > 0) {
-        $proponenteCpc = $queryPjCpc->fetch_assoc();
-        $proponenteSis = $conSis->query("SELECT * FROM siscontrat.pessoa_juridicas WHERE cnpj = '$cnpj'")->fetch_assoc();
-
-        $camposIgnorados = ['id', 'representante_legal1_id', 'representante_legal2_id', 'ultima_atualizacao'];
-        $dataAtualizacaoCpc = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteCpc['ultima_atualizacao']);
-        $dataAtualizacaoSis = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteSis['ultima_atualizacao']);
-        $existeDivergencia = false;
-
-        if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
-            foreach ($proponenteSis as $key => $dado) {
-                if (($proponenteSis[$key] != $proponenteCpc[$key]) && (!in_array($key, $camposIgnorados))) {
-                    $existeDivergencia = true;
-                    $msgDivergencia = "O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>.
-            Abaixo, clique na seta verde para escolher quais dados serão atualizados caso necessário e posteriormente clique no botão de gravar.";
-                } else {
-                    $camposIgnorados[] = $key;
-                }
-            }
-            if ($existeDivergencia) {
-                foreach ($proponenteCpc as $key => $dado) {
-                    if (in_array($key, $camposIgnorados)) {
-                        unset($proponenteCpc[$key]);
-                    }
-                }
-                return $proponenteCpc;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+    if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
+        return true;
     } else {
         return false;
     }
 }
 
-function comparaPfCapac($cpf) {
+function comparaProponenteCapac($tipoPessoa, $documento) {
     $conSis = bancoMysqli();
     $conCpc = bancoCapac();
     $existeDivergencia = false;
 
-    $queryPfCpc = $conCpc->query("SELECT * FROM capac_new.pessoa_fisicas WHERE cpf = '$cpf'");
-
-    if ($queryPfCpc->num_rows > 0) {
-        $proponenteCpc = $queryPfCpc->fetch_assoc();
-        $proponenteSis = $conSis->query("SELECT * FROM siscontrat.pessoa_fisicas WHERE cpf = '$cpf'")->fetch_assoc();
-
+    if ($tipoPessoa == 1) {
+        $tabela['tabela'] = "pessoa_fisicas";
+        $tabela['coluna'] = "cpf";
         $camposIgnorados = ['id', 'ultima_atualizacao'];
-        $dataAtualizacaoCpc = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteCpc['ultima_atualizacao']);
-        $dataAtualizacaoSis = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteSis['ultima_atualizacao']);
-        $existeDivergencia = false;
+    } else {
+        $tabela['tabela'] = "pessoa_juridicas";
+        $tabela['coluna'] = "cnpj";
+        $camposIgnorados = ['id', 'representante_legal1_id', 'representante_legal2_id', 'ultima_atualizacao'];
+    }
 
-        if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
+    $queryProponenteCpc = $conCpc->query("SELECT * FROM capac_new.{$tabela['tabela']} WHERE {$tabela['coluna']} = '$documento'");
+    if ($queryProponenteCpc->num_rows > 0) {
+        $proponenteCpc = $queryProponenteCpc->fetch_assoc();
+        $proponenteSis = $conSis->query("SELECT * FROM siscontrat.{$tabela['tabela']} WHERE {$tabela['coluna']} = '$documento'")->fetch_assoc();
+
+        if (registroCpcAtualizado($proponenteCpc['ultima_atualizacao'], $proponenteSis['ultima_atualizacao'])) {
             foreach ($proponenteSis as $key => $dado) {
                 if (($proponenteSis[$key] != $proponenteCpc[$key]) && (!in_array($key, $camposIgnorados))) {
                     $existeDivergencia = true;
-                    $msgDivergencia = "O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>.
-            Abaixo, clique na seta verde para escolher quais dados serão atualizados caso necessário e posteriormente clique no botão de gravar.";
                 } else {
                     $camposIgnorados[] = $key;
                 }
@@ -1637,9 +1607,12 @@ function comparaPfCapac($cpf) {
                 foreach ($proponenteCpc as $key => $dado) {
                     if (in_array($key, $camposIgnorados)) {
                         unset($proponenteCpc[$key]);
+                        unset($proponenteSis[$key]);
                     }
                 }
-                return $proponenteCpc;
+                $proponentes['Cpc'] = $proponenteCpc;
+                $proponentes['Sis'] = $proponenteSis;
+                return $proponentes;
             } else {
                 return false;
             }

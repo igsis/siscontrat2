@@ -9,29 +9,23 @@
  *  variável possui os dados do proponente no banco do Capac
  */
 
-$camposIgnorados = ['id', 'representante_legal1_id', 'representante_legal2_id', 'ultima_atualizacao'];
-$dataAtualizacaoCpc = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteCpc['ultima_atualizacao']);
-$dataAtualizacaoSis = DateTime::createFromFormat('Y-m-d H:i:s', $proponenteSis['ultima_atualizacao']);
-$existeDivergencia = false;
+$proponenteSis_id = $proponenteSis['id'];
 
-$nome = $proponenteCpc['razao_social'];
-$cnpj = $proponenteCpc['cnpj'];
+if ($pedidoCpc['pessoa_tipo_id'] == 1) {
+    $nome = $proponenteCpc['nome'];
+    $documento = $proponenteCpc['cpf'];
+} else {
+    $nome = $proponenteCpc['razao_social'];
+    $documento = $proponenteCpc['cnpj'];
+}
 
-if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
-    foreach ($proponenteSis as $key => $dado) {
-        if (($proponenteSis[$key] != $proponenteCpc[$key]) && (!in_array($key, $camposIgnorados))) {
-            $existeDivergencia = true;
-            $msgDivergencia = "O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>.
+$proponentes = comparaProponenteCapac($pedidoCpc['pessoa_tipo_id'], $documento);
+
+if ($proponentes) {
+    $proponenteCpc = $proponentes['Cpc'];
+    $proponenteSis = $proponentes['Sis'];
+    $msgDivergencia = "O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>.
             Abaixo, clique na seta verde para escolher quais dados serão atualizados caso necessário e posteriormente clique no botão de gravar.";
-        } else {
-            $camposIgnorados[] = $key;
-        }
-    }
-    if (!$existeDivergencia) {
-        $msgDivergencia = "O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>, porém,
-            os dados já estão atualizados. Lembre-se de conferir e baixar os arquivos vindos do CAPAC para enviá-los ao
-            SisContrat";
-    }
 } else {
     $msgDivergencia = "O proponente cadastrado no <strong>CAPAC</strong> já existe no <strong>SisContrat</strong>, porém,
             os dados já estão atualizados. Lembre-se de conferir e baixar os arquivos vindos do CAPAC para enviá-los ao
@@ -40,7 +34,7 @@ if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
 
 ?>
 
-<?php if ($existeDivergencia) { ?>
+<?php if ($proponentes) { ?>
     <div class="box-body">
         <div class="alert alert-warning">
             <h4><i class="icon fa fa-warning"></i> Atenção!</h4>
@@ -49,7 +43,7 @@ if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
 
         <div class="alert alert-info">
             <strong>Proponente:</strong> <?= $nome ?> <br>
-            <label for="">CNPJ: </label> <?= $cnpj ?>
+            <label for="">Documento: </label> <?= $documento ?>
         </div>
 
         <div class="col-md-6">
@@ -60,7 +54,6 @@ if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
                 <div class="box-body" id="camposCapac">
                     <?php foreach ($proponenteCpc as $key => $dado) {
                         $label = ucwords(preg_replace('/_/', " ", $key));
-                        if (in_array($key, $camposIgnorados)) { continue; }
                         ?>
                         <div class="form-group">
                             <label for="nomeEvento"><?= $label ?></label>
@@ -87,7 +80,6 @@ if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
                     <div class="box-body">
                         <?php foreach ($proponenteSis as $key => $dado) {
                             $label = ucwords(preg_replace('/_/', " ", $key));
-                            if (in_array($key, $camposIgnorados)) { continue; }
                             ?>
                             <div class="form-group">
                                 <label for="nomeEvento"><?= $label ?></label>
@@ -106,8 +98,10 @@ if ($dataAtualizacaoCpc > $dataAtualizacaoSis) {
                 </div>
             </div>
             <div class="box-footer">
-                <input type="hidden" name="idProponenteSis" value="<?= $proponenteSis['id'] ?>">
-                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                <input type="hidden" name="idProponenteSis" value="<?= $proponenteSis_id ?>">
+                <?php if (isset($idEvento)): ?>
+                    <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                <?php endif; ?>
                 <button type="submit" name="importarProponenteCpc" class="btn btn-info pull-right">Gravar
                 </button>
             </div>
