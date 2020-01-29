@@ -441,34 +441,33 @@ $pdf->Cell(13, $l, 'Objeto:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(40, $l, utf8_decode($objeto), 0, 'L', 0);
 
-$cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id']);
+$cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND publicado = 1");
 while ($aux = mysqli_fetch_array($cronograma)) {
     if ($aux['tipo_ocorrencia_id'] == 2) {
         $testaFilme = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $evento['id'])->fetch_array();
-        $filme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
+        $filme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $testaFilme['filme_id'] . " AND publicado = 1")->fetch_array();
         $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
         $acao = $tipoAcao['acao'];
 
         $pdf->SetX($x);
         $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(12, $l, utf8_decode('Título:'),0,0,'L');
-        $pdf->SetFont('Arial','',10);
+        $pdf->Cell(12, $l, utf8_decode('Título:'), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
         $pdf->MultiCell(158, $l, utf8_decode($filme['titulo']));
 
         $pdf->SetX($x);
         $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(16, $l, utf8_decode('Duração:'),0,0,'L');
-        $pdf->SetFont('Arial','',10);
-        $pdf->MultiCell(158, $l, utf8_decode($filme['duracao'] . " Hora(s)"));
+        $pdf->Cell(16, $l, utf8_decode('Duração:'), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->MultiCell(158, $l, utf8_decode($filme['duracao'] . " Minuto(s)"));
     } else {
-        $idAtracao = $ocorrencia['atracao_id'];
         $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
-        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'])->fetch_array();
+        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'] . " AND publicado = 1")->fetch_array();
         $acao = $tipoAcao['acao'];
     }
     $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
     $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
-    $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'])->fetch_array();
+    $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'] . " AND publicado = 1")->fetch_array();
     $lugar = $local['local'];
 
     $pdf->SetX($x);

@@ -164,22 +164,6 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                             <button type="button" class="btn btn-default">Voltar</button>
                         </a>
                     </div>
-                
-                    <div class="col-md-6">
-                        <form action="#">
-                            <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                            <button type="submit" class="btn btn-primary pull-right">Gerar Relatório</button>
-                        </form>
-                    </div>
-                </div>
-                <hr>
-
-                <div class="col-md-12">
-                        <form action="<?=$link_word?>">
-                            <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                            <button type="submit" class="btn btn-success center-block" style="width:35%">Gerar Word</button>
-                        </form>
-                </div>
             </div>
         </div>
     </section>
