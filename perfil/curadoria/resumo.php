@@ -1,6 +1,11 @@
 <?php
 $idEvento = $_POST['idEvento'];
 
+$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
+$http = $server . "/pdf/";
+
+$link_word = $http . "exporta_word_curadoria.php";
+
 $con = bancoMysqli();
 $sql = "SELECT e.nome_evento, e.tipo_evento_id, 
 p.id, i.nome, e.protocolo, 
@@ -153,9 +158,12 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                 </div>
             </div>
             <div class="box-footer">
-                <a href="?perfil=curadoria&p=buscar">
-                    <button type="button" class="btn btn-default">Voltar</button>
-                </a>
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="?perfil=curadoria&p=buscar">
+                            <button type="button" class="btn btn-default">Voltar</button>
+                        </a>
+                    </div>
             </div>
         </div>
     </section>

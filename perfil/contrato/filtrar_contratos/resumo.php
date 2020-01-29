@@ -225,7 +225,9 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
 
                                     <div class="col-md-4">
                                         <label for="valorTotal">Valor Total: </label>
-                                        <input type="text" value="<?= dinheiroParaBr($pedido['valor_total'])?>" onKeyPress="return(moeda(this,'.',',',event))" class="form-control" name="valorTotal" id="valorTotal">
+                                        <input type="text" value="<?= dinheiroParaBr($pedido['valor_total']) ?>"
+                                               onKeyPress="return(moeda(this,'.',',',event))" class="form-control"
+                                               name="valorTotal" id="valorTotal">
                                     </div>
                                 </div>
 
@@ -307,18 +309,17 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right">
                                 Salvar
                             </button>
-
                     </form>
-
-                    <form action="?perfil=contrato&p=filtrar_contratos&sp=area_impressao" method="post" role="form">
+                    <form action="?perfil=evento&p=pedido_anexos" method="post" role="form">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-default pull-left">Ir para a área de impressão</button>
+                        <button type="submit" class="btn btn-info pull-left" style="margin: 0 10px;">Abrir anexos do
+                            Pedido
+                        </button>
                     </form>
-
                 </div>
                 <hr/>
                 <div class="row">
-                    <div class="col-md-12" style="text-align:center">
+                    <div class="col-md-12" style="margin: 0 10px;">
                         <form>
                             <button type="button" class="btn btn-info" name="reabre" style="width: 35%"
                                     id="reabre" data-toggle="modal" data-target="#reabrir">
@@ -326,6 +327,10 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             </button>
                         </form>
                     </div>
+                    <form action="?perfil=contrato&p=filtrar_contratos&sp=area_impressao" method="post" role="form">
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" class="btn btn-default pull-right">Ir para a área de impressão</button>
+                    </form>
                 </div>
             </div>
         </div>
