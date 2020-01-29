@@ -47,3 +47,19 @@ function geraLegendas($idEvento,$tabela,$tabelaComunicacao){
 
     }
 }
+
+
+function gravaStatus($status,$tabela,$idEvento){
+    foreach ($status as $st){
+        if ($st != null){
+            $saveStatus = "INSERT INTO ".$tabela." (eventos_id,comunicacao_status_id,publicado)
+                                                    VALUES('$idEvento','$st')";
+            if (mysqli_query($saveStatus)){
+                return mensagem("success", "Atualizado com sucesso!");
+            }else{
+                return mensagem("danger", "Erro ao gravar! Tente novamente.");
+            }
+        }
+    }
+
+}

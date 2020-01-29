@@ -221,7 +221,7 @@ $query2 = mysqli_query($con, $sqlAg);
                                     </td>
                                     <td>
                                         <form method="post" action="?perfil=comunicacao&p=comunicacao">
-                                            <input type="hidden" name="evento" value="<?= $agendao['idEvento'] ?>">
+                                            <input type="hidden" name="agendao" value="<?= $agendao['idEvento'] ?>">
                                             <button class="btn-info btn">Editar</button>
                                         </form>
                                     </td>
