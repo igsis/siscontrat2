@@ -1,5 +1,35 @@
 <?php
 include "includes/menu.php";
+include "includes/funcoesAuxiliares.php";
+
+$con = bancoMysqli();
+$conn = bancoPDO();
+
+$idUser = $_SESSION['idUser'];
+
+$sqlSis = "SELECT       eve.id AS idEvento, 
+                        eve.nome_evento AS nome_evento, 
+                        es.status AS status, 
+                        u.nome_completo AS nome_usuario
+        FROM eventos as eve
+        LEFT JOIN usuarios u ON eve.usuario_id = u.id
+        INNER JOIN evento_status es on eve.evento_status_id = es.id
+        WHERE eve.publicado = 1 AND evento_status_id between 3 AND 4 AND
+        (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+
+$query = mysqli_query($con,$sqlSis);
+
+$sqlAg = "SELECT 	ag.id AS idEvento, 
+                    ag.nome_evento AS nome_evento, 
+                    es.status AS status, 
+                    us.nome_completo AS nome_usuario
+        FROM agendoes AS ag
+        LEFT JOIN usuarios us ON ag.usuario_id = us.id
+        INNER JOIN evento_status es ON ag.evento_status_id = es.id
+                WHERE ag.publicado = 1 AND evento_status_id between 3 AND 4 AND ag.usuario_id = '$idUser'";
+
+$query2 = mysqli_query($con, $sqlAg);
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -97,11 +127,21 @@ include "includes/menu.php";
                                         <table class="table">
                                             <tbody id="legendas-tbody">
                                             <tr>
-                                                <td><div class="quad-legenda bg-aqua"> <span> Editado </span></div></td>
-                                                <td><div class="quad-legenda bg-fuchsia"><span> Revisado </span></div></td>
-                                                <td><div class="quad-legenda bg-green"> <span> Site </span></div></td>
-                                                <td><div class="quad-legenda bg-yellow"><span> Impresso </span></div></td>
-                                                <td><div class="quad-legenda bg-red"> <span> Foto </span></div></td>
+                                                <td>
+                                                    <div class="quad-legenda bg-aqua"><span> Editado </span></div>
+                                                </td>
+                                                <td>
+                                                    <div class="quad-legenda bg-fuchsia"><span> Revisado </span></div>
+                                                </td>
+                                                <td>
+                                                    <div class="quad-legenda bg-green"><span> Site </span></div>
+                                                </td>
+                                                <td>
+                                                    <div class="quad-legenda bg-yellow"><span> Impresso </span></div>
+                                                </td>
+                                                <td>
+                                                    <div class="quad-legenda bg-red"><span> Foto </span></div>
+                                                </td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -121,7 +161,6 @@ include "includes/menu.php";
                         <table id="tblEvento" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Nome do Evento</th>
                                 <th>Enviado por</th>
                                 <th>Início/Termino</th>
@@ -130,26 +169,69 @@ include "includes/menu.php";
                             </tr>
                             </thead>
                             <tbody>
+                            <?php
+                            while ($evento = mysqli_fetch_array($query)) {
+                                ?>
                                 <tr>
-                                    <td>1</td>
-                                    <td>TESTE</td>
-                                    <td>Qwerty Silva</td>
-                                    <td>De 07/03/2020 a 22/03/2020</td>
+                                    <td>
+                                        <?= $evento['nome_evento'] ?>
+                                    </td>
+                                    <td>
+                                        <?= $evento['nome_usuario'] ?>
+                                    </td>
+                                    <td>
+                                        <?=
+                                            retornaPeriodo($evento['idEvento']);
+                                        ?>
+                                    </td>
                                     <td>
                                         <div class="status-comunicacao">
-                                            <div class="quadr bg-aqua" data-toggle="popover" data-trigger="hover" data-content="Editado"></div>
-                                            <div class="quadr bg-fuchsia" data-toggle="popover" data-trigger="hover" data-content="Revisado"></div>
-                                            <div class="quadr bg-green" data-toggle="popover" data-trigger="hover" data-content="Site"></div>
+                                            <?php geraLegendas($evento['idEvento'],'eventos','comunicacoes'); ?>
                                         </div>
                                     </td>
                                     <td>
-                                        <button class="btn-info btn">Editar</button>
+                                        <form method="post" action="?perfil=comunicacao&p=comunicacao">
+                                            <input type="hidden" name="evento" value="<?= $evento['idEvento'] ?>">
+                                            <button class="btn-info btn">Editar</button>
+                                        </form>
                                     </td>
                                 </tr>
+                                <?php
+                            }
+                            ?>
+                            <?php
+                            while ($agendao = mysqli_fetch_array($query2)) {
+                                ?>
+                                <tr>
+                                    <td>
+                                        <?= $agendao['nome_evento'] ?>
+                                    </td>
+                                    <td>
+                                        <?= $agendao['nome_usuario'] ?>
+                                    </td>
+                                    <td>
+                                        <?=
+                                        retornaPeriodo($agendao['idEvento']);
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <div class="status-comunicacao">
+                                            <?php geraLegendas($agendao['idEvento'],'agendoes','comunicacao_agendoes'); ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <form method="post" action="?perfil=comunicacao&p=comunicacao">
+                                            <input type="hidden" name="agendao" value="<?= $agendao['idEvento'] ?>">
+                                            <button class="btn-info btn">Editar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
                             </tbody>
                             <tfoot>
                             <tr>
-                                <th>ID</th>
                                 <th>Nome do Evento</th>
                                 <th>Enviado por</th>
                                 <th>Início/Termino</th>
@@ -170,7 +252,7 @@ include "includes/menu.php";
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function () {
         $('[data-toggle="popover"]').popover();
     });
 
