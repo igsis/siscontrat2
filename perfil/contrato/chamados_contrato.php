@@ -1,19 +1,21 @@
 <?php
 $con = bancoMysqli();
-if(isset($_POST['idEvento'])){
+if (isset($_POST['idEvento'])) {
     $idEvento = $_POST['idEvento'];
 }
-if(isset($_POST['idPedido'])){
+if (isset($_POST['idPedido'])) {
     $idPedido = $_POST['idPedido'];
 }
 
 
-$sql = "SELECT * FROM chamados where id = '$idEvento'";
+$sql = "select u.nome_completo, c.justificativa, u.id, c.data, es.status, e.id,e.nome_evento
+from chamados as c
+inner join usuarios as u on c.usuario_id = u.id
+inner join eventos as e on e.id = c.evento_id
+inner join evento_status as es on es.id = e.evento_status_id WHERE e.id = $idEvento";
 
 $query = mysqli_query($con, $sql);
 $num_rows = mysqli_num_rows($query);
-
-
 
 ?>
 
@@ -46,27 +48,30 @@ $num_rows = mysqli_num_rows($query);
                             </thead>
                             <tbody>
                             <?php
-                            if ($num_rows == 0) {
-                                ?>
+                            if ($num_rows == 0) { ?>
                                 <tr>
                                     <th colspan="7"><p align="center">Não foram encontrados registros</p></th>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <form method="POST" action="#">
-                                            <button type="submit" class="btn btn-link" name="load"></button>
-                                        </form>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <?php
-                            } ?>
+                            <?php } else {
+                                while ($dados = mysqli_fetch_array($query)) {
+                                    ?>
+                                    <tr>
+                                        <td><?= $dados['id'] ?></td>
+                                        <td>
+                                            <form action="?perfil=contrato&p=chamado_edita" method="post" role="form">
+                                                <input type="hidden" name="idEvento" id="idEvento" value="<?=$idEvento?>">
+                                                <input type="hidden" name="idPedido" id="idPedido" value="<?=$idPedido?>">
+                                                <button type="submit" class="btn btn-link" name="load"><?= $dados['justificativa'] ?> - <?= $dados['nome_evento'] ?></button>
+                                            </form>
+                                        </td>
+                                        <td><?= $dados['data'] ?></td>
+                                        <td><?= $dados['nome_completo'] ?></td>
+                                        <td><?= $dados['status'] ?></td>
+                                    </tr>
+                                <?php }
+                            }
+                            ?>
                             </tbody>
-
                             <tfoot>
                             <tr>
                                 <th>ID</th>
