@@ -1575,16 +1575,39 @@ function registroCpcAtualizado($dataAttCpc, $dataAttSis) {
     }
 }
 
+/**
+ * <p>Busca proponente existente no capac e retorna os dados divergentes caso a alteração seja mais recente no
+ * sistema</p>
+ * @param int $tipoPessoa
+ * <p>Indica se o proponente a ser buscado é <i>Pessoa Física (1)</i> ou <i>Pessoa Jurídica (2)</i></p>
+ *
+ * @param string $documento
+ * <p>Deve ser passado o <i><strong>CPF</strong> (caso tipoPessoa = 1)</i> ou <i><strong>CNPJ</strong> (caso tipoPessoa = 2)</i></p>
+ *
+ * @return bool|array
+ * <p>Retorna <strong><i>FALSE</i></strong> caso não haja nenhuma divergência nos dados ou a alteração no SisContrat seja mais recente</p>
+ * <p>Caso haja divergência e a atualização do CAPAC seja mais atual, retorna um array com os dados:</p>
+ * <ul>
+ * <li>Cpc => Dados do proponente no Capac</li>
+ * <li>Sis => Dados do proponente no SisContrat</li>
+ * <li>Sis => Dados do proponente no SisContrat</li>
+ * <li>nome => Nome ou Razão Social do proponente</li>
+ * <li>documento => CPF ou CNPJ do proponente</li>
+ * <li>sis_proponente_id => ID do proponente no SisContrat para atualização no BD</li>
+ * </ul>
+ */
 function comparaProponenteCapac($tipoPessoa, $documento) {
     $conSis = bancoMysqli();
     $conCpc = bancoCapac();
     $existeDivergencia = false;
 
     if ($tipoPessoa == 1) {
+        $nome = "nome";
         $tabela['tabela'] = "pessoa_fisicas";
         $tabela['coluna'] = "cpf";
         $camposIgnorados = ['id', 'ultima_atualizacao'];
     } else {
+        $nome = "razao_social";
         $tabela['tabela'] = "pessoa_juridicas";
         $tabela['coluna'] = "cnpj";
         $camposIgnorados = ['id', 'representante_legal1_id', 'representante_legal2_id', 'ultima_atualizacao'];
@@ -1604,6 +1627,9 @@ function comparaProponenteCapac($tipoPessoa, $documento) {
                 }
             }
             if ($existeDivergencia) {
+                $proponentes['sis_proponente_id'] = $proponenteSis['id'];
+                $proponentes['nome'] = $proponenteCpc[$nome];
+                $proponentes['documento'] = $documento;
                 foreach ($proponenteCpc as $key => $dado) {
                     if (in_array($key, $camposIgnorados)) {
                         unset($proponenteCpc[$key]);
@@ -1622,4 +1648,9 @@ function comparaProponenteCapac($tipoPessoa, $documento) {
     } else {
         return false;
     }
+}
+
+function exibeFormComparacaoCpc($tipoPessoa, $proponenteCpc_id, $dadosProponentes, $idEvento = null) {
+    $proponentes = $dadosProponentes;
+    include_once "../perfil/evento/includes/include_import_proponente.php";
 }
