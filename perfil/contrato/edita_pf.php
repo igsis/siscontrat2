@@ -380,7 +380,7 @@ $atracao = mysqli_query($con, $sql);
     <!-- Main content -->
     <section class="content">
         <!-- START FORM-->
-        <h2 class="page-header">Evento</h2>
+        <h2 class="page-header">Contrato</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -408,35 +408,43 @@ $atracao = mysqli_query($con, $sql);
                                 </div>
                             </div>
                             <div class="row">
+                            
                                 <?php
                                 if (empty($pf['cpf'])) {
+                                    echo "<div class='form-group col-md-6'>";
                                     anexosNaPagina(62, $idPf, "modal-passaporte", "Passaporte");
+                                    $md = 3;
+                                    $row = "</div>";
                                 } else {
                                     ?>
-                                    <div class="form-group col-md-2">
+                                    <div class='form-group col-md-4'>
                                         <label for="rg">RG: *</label>
                                         <input type="text" class="form-control" name="rg" placeholder="Digite o RG"
                                                maxlength="20" required value="<?= $pf['rg'] ?>">
                                     </div>
-                                    <div class="form-group col-md-2">
+                                    <div class="form-group col-md-4">
                                         <label for="cpf">CPF: </label>
                                         <input type="text" id="cpf" name="cpf" class="form-control"
                                                value="<?= $pf['cpf'] ?>" readonly>
                                     </div>
-                                    <div class="form-group col-md-2">
+                                    <div class="form-group col-md-4">
                                         <label for="ccm">CCM:</label>
                                         <input type="text" name="ccm" class="form-control" placeholder="Digite o CCM"
                                                maxlength="11" value="<?= $pf['ccm'] ?>">
                                     </div>
                                     <?php
+                                    $md = 6;
+                                    $row = "";
                                 }
                                 ?>
-                                <div class="form-group col-md-3">
+                                </div>
+                                <div class="row">
+                                <div class="form-group col-md-<?=$md?>">
                                     <label for="dtNascimento">Data de Nascimento: *</label>
                                     <input type="date" class="form-control" id="dtNascimento" name="dtNascimento"
                                            onkeyup="barraData(this);" value="<?= $pf['data_nascimento'] ?>"/>
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-<?=$md?>">
                                     <label for="nacionalidade">Nacionalidade: *</label>
                                     <select class="form-control" id="nacionalidade" name="nacionalidade">
                                         <option value="">Selecione uma opção...</option>
@@ -446,6 +454,7 @@ $atracao = mysqli_query($con, $sql);
                                     </select>
                                 </div>
                             </div>
+                            <?=$row?>
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-4">
