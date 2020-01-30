@@ -1,5 +1,6 @@
 <?php
 include "includes/menu.php";
+include "includes/funcoesAuxiliares.php";
 
 $con = bancoMysqli();
 $conn = bancoPDO();
@@ -8,29 +9,28 @@ $conn = bancoPDO();
 if (isset($_POST['salvar'])) {
     $tipo = $_POST['tipo'];
     $idEvento = $_POST['id'];
-//    $status = array(
-//        $_POST['Editado'],
-//        $_POST['Revisado'],
-//        $_POST['Site'],
-//        $_POST['Impresso'],
-//        $_POST['Foto']
-//    );
     $projetoEspecial = $_POST['projetoEspecial'];
     $sinopse = $_POST['sinopse'];
+    $editado = $_POST['Editado'];
+    $revisado = $_POST['Revisado'];
+    $site = $_POST['Site'];
+    $impresso = $_POST['Impresso'];
+    $foto = $_POST['Foto'];
+    $lista = array($editado,$revisado ,$site ,$impresso,$foto);
     switch ($tipo) {
         case 1:
             $saveEvento = "UPDATE eventos SET projeto_especial_id = '$projetoEspecial', sinopse = '$sinopse' WHERE id = '$idEvento'";
-            if (mysqli_query($con,$saveEvento)){
-                //$mensagem = gravaStatus($status,'comunicacoes',$idEvento);
-            }else{
+            if (mysqli_query($con, $saveEvento)) {
+                gravaStatus($lista, 'comunicacoes', $idEvento);
+            } else {
                 $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
             }
             break;
         case 2:
             $saveAgendao = "UPDATE agendoes SET projeto_especial_id = '$projetoEspecial', sinopse = '$sinopse' WHERE id = '$idEvento'";
-            if(mysqli_query($con,$saveAgendao)){
-                $mensagem = gravaStatus($status,'comunicacao_agendao',$idEvento);
-            }else{
+            if (mysqli_query($con, $saveAgendao)) {
+                $mensagem = gravaStatus($status, 'comunicacao_agendao', $idEvento);
+            } else {
                 $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
             }
             break;
@@ -39,7 +39,9 @@ if (isset($_POST['salvar'])) {
 }
 
 if (isset($_POST['evento']) || $tipo == 1) {
-    $idEvento = $_POST['evento'];
+    if (isset($_POST['evento'])) {
+        $idEvento = $_POST['evento'];
+    }
     $tipo = '1';
 // Evento
     $sqlEvento = "SELECT * FROM eventos
@@ -52,14 +54,15 @@ if (isset($_POST['evento']) || $tipo == 1) {
     $query2 = mysqli_query($con, $sqlStatus);
     $status = mysqli_fetch_all($query2, MYSQLI_ASSOC);
 
-    $sqlComu = "SELECT id FROM comunicacoes WHERE eventos_id ='{$evento['id']}' AND publicado = 1";
+    $sqlComu = "SELECT comunicacao_status_id FROM comunicacoes WHERE eventos_id ='{$evento['id']}' AND publicado = 1";
     $query3 = mysqli_query($con, $sqlComu);
-    $comu = mysqli_fetch_all($query3, MYSQLI_NUM);
+    $comu = mysqli_fetch_all($query3, MYSQLI_ASSOC);
 }
 
 if (isset($_POST['agendao']) || $tipo == 2) {
-
-    $idEvento = $_POST['agendao'];
+    if (isset($_POST['agendao'])) {
+        $idEvento = $_POST['agendao'];
+    }
     $tipo = '2';
 
     // Evento
@@ -73,7 +76,7 @@ if (isset($_POST['agendao']) || $tipo == 2) {
     $query2 = mysqli_query($con, $sqlStatus);
     $status = mysqli_fetch_all($query2, MYSQLI_ASSOC);
 
-    $sqlComu = "SELECT id FROM comunicacao_agendao WHERE eventos_id ='{$evento['id']}' AND publicado = 1";
+    $sqlComu = "SELECT comunicacao_status_id FROM comunicacao_agendao WHERE eventos_id ='{$evento['id']}' AND publicado = 1";
     $query3 = mysqli_query($con, $sqlComu);
     $comu = mysqli_fetch_all($query3, MYSQLI_ASSOC);
 
@@ -91,7 +94,6 @@ if (isset($_POST['agendao']) || $tipo == 2) {
                     <div class="box-header">
                         <h3 class="box-title">Comunicação:</h3>
                     </div>
-
                     <div class="row" align="center">
                         <?php if (isset($mensagem)) {
                             echo $mensagem;
@@ -108,7 +110,8 @@ if (isset($_POST['agendao']) || $tipo == 2) {
                                     foreach ($status as $st) {
                                         ?>
                                         <label>
-                                            <input type="checkbox" name="<?= $st['status'] ?>" value="<?= $st['id'] ?>">
+                                            <input type="checkbox" name="<?= $st['status'] ?>" value="<?= $st['id'] ?>"
+                                                   <?= in_array_r($st['id'], $comu) ? 'checked' : '' ?>>
                                             <?= $st['status'] ?>
                                         </label>
                                         <?php
@@ -148,7 +151,7 @@ if (isset($_POST['agendao']) || $tipo == 2) {
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button class="btn btn-default" onclick="window.history.back()">Voltar</button>
+                            <a class="btn btn-default" href="?perfil=comunicacao&p=filtro">Voltar</a>
                             <button class="btn btn-success">Ver ocorrencias</button>
                             <input type="hidden" name="tipo" value="<?= $tipo ?>">
                             <button type="submit" name="salvar" class="btn btn-info pull-right">Salvar</button>

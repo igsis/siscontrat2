@@ -50,16 +50,22 @@ function geraLegendas($idEvento,$tabela,$tabelaComunicacao){
 
 
 function gravaStatus($status,$tabela,$idEvento){
-    foreach ($status as $st){
-        if ($st != null){
-            $saveStatus = "INSERT INTO ".$tabela." (eventos_id,comunicacao_status_id,publicado)
-                                                    VALUES('$idEvento','$st')";
-            if (mysqli_query($saveStatus)){
-                return mensagem("success", "Atualizado com sucesso!");
+    $con = bancoMysqli();
+    for($i=0;$i<5;$i++){
+        $verifica = "SELECT * FROM ".$tabela."  WHERE eventos_id = '$idEvento' AND comunicacao_status_id = '$status[$i]' AND publicado = '1'";
+        $resultado = mysqli_query($con,$verifica);
+        $resultado = mysqli_fetch_array($resultado);
+        if (empty($resultado) && $status[$i] != null){
+            $insert = "INSERT INTO ".$tabela."(eventos_id, comunicacao_status_id,publicado) VALUES ('$idEvento','$status[$i]',1)";
+            mysqli_query($con, $insert);
+        }elseif(!empty($resultado)){
+            if ($status[$i] == null){
+                $update = "UPDATE ".$tabela." SET publicado = 0 WHERE id='$resultado[0]'";
+                mysqli_query($con, $update);
             }else{
-                return mensagem("danger", "Erro ao gravar! Tente novamente.");
+                $update = "UPDATE ".$tabela." SET publicado = 1 WHERE id='$resultado[0]";
+                mysqli_query($con, $update);
             }
         }
     }
-
 }
