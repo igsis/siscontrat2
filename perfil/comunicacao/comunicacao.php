@@ -4,37 +4,43 @@ include "includes/funcoesAuxiliares.php";
 
 $con = bancoMysqli();
 $conn = bancoPDO();
-
+$tipo = '';
 
 if (isset($_POST['salvar'])) {
     $tipo = $_POST['tipo'];
     $idEvento = $_POST['id'];
     $projetoEspecial = $_POST['projetoEspecial'];
     $sinopse = $_POST['sinopse'];
-    $editado = $_POST['Editado'];
-    $revisado = $_POST['Revisado'];
-    $site = $_POST['Site'];
-    $impresso = $_POST['Impresso'];
-    $foto = $_POST['Foto'];
+    $editado = isset($_POST['Editado']) ? $_POST['Editado'] : NULL ;
+    $revisado = isset($_POST['Revisado']) ? $_POST['Revisado'] : NULL;
+    $site = isset($_POST['Site']) ? $_POST['Site'] : NULL;
+    $impresso = isset($_POST['Impresso']) ? $_POST['Impresso'] : NULL;
+    $foto = isset($_POST['Foto']) ? $_POST['Foto'] : NULL;
     $lista = array($editado,$revisado ,$site ,$impresso,$foto);
     switch ($tipo) {
         case 1:
             $saveEvento = "UPDATE eventos SET projeto_especial_id = '$projetoEspecial', sinopse = '$sinopse' WHERE id = '$idEvento'";
             if (mysqli_query($con, $saveEvento)) {
-                gravaStatus($lista, 'comunicacoes', $idEvento);
+                 $valida = gravaStatus($lista, 'comunicacoes', $idEvento);
             } else {
-                $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+                $valida = false;
             }
             break;
         case 2:
             $saveAgendao = "UPDATE agendoes SET projeto_especial_id = '$projetoEspecial', sinopse = '$sinopse' WHERE id = '$idEvento'";
             if (mysqli_query($con, $saveAgendao)) {
-                $mensagem = gravaStatus($status, 'comunicacao_agendao', $idEvento);
+                $valida = gravaStatus($lista, 'comunicacao_agendoes', $idEvento);
             } else {
-                $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+                $valida = false;
             }
             break;
 
+    }
+
+    if ($valida){
+        $mensagem = mensagem("success","Gravado com sucesso!");
+    }else{
+        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
 }
 
@@ -76,7 +82,7 @@ if (isset($_POST['agendao']) || $tipo == 2) {
     $query2 = mysqli_query($con, $sqlStatus);
     $status = mysqli_fetch_all($query2, MYSQLI_ASSOC);
 
-    $sqlComu = "SELECT comunicacao_status_id FROM comunicacao_agendao WHERE eventos_id ='{$evento['id']}' AND publicado = 1";
+    $sqlComu = "SELECT comunicacao_status_id FROM comunicacao_agendoes WHERE eventos_id ='{$evento['id']}' AND publicado = 1";
     $query3 = mysqli_query($con, $sqlComu);
     $comu = mysqli_fetch_all($query3, MYSQLI_ASSOC);
 

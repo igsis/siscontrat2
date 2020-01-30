@@ -50,22 +50,29 @@ function geraLegendas($idEvento,$tabela,$tabelaComunicacao){
 
 
 function gravaStatus($status,$tabela,$idEvento){
+    $Valida = true;
     $con = bancoMysqli();
     for($i=0;$i<5;$i++){
-        $verifica = "SELECT * FROM ".$tabela."  WHERE eventos_id = '$idEvento' AND comunicacao_status_id = '$status[$i]' AND publicado = '1'";
-        $resultado = mysqli_query($con,$verifica);
-        $resultado = mysqli_fetch_array($resultado);
-        if (empty($resultado) && $status[$i] != null){
-            $insert = "INSERT INTO ".$tabela."(eventos_id, comunicacao_status_id,publicado) VALUES ('$idEvento','$status[$i]',1)";
-            mysqli_query($con, $insert);
-        }elseif(!empty($resultado)){
-            if ($status[$i] == null){
-                $update = "UPDATE ".$tabela." SET publicado = 0 WHERE id='$resultado[0]'";
-                mysqli_query($con, $update);
-            }else{
-                $update = "UPDATE ".$tabela." SET publicado = 1 WHERE id='$resultado[0]";
-                mysqli_query($con, $update);
+        try {
+            $verifica = "SELECT * FROM ".$tabela."  WHERE eventos_id = '$idEvento' AND comunicacao_status_id = '".($i+1)."'";
+            $resultado = mysqli_query($con,$verifica);
+            $resultado = mysqli_fetch_array($resultado);
+            if (empty($resultado) && $status[$i] != 0){
+                $insert = "INSERT INTO ".$tabela."(eventos_id, comunicacao_status_id,publicado) VALUES ('$idEvento','$status[$i]',1)";
+                mysqli_query($con, $insert);
+            }elseif(!empty($resultado)){
+                if ($status[$i] == NULL){
+                    $update = "UPDATE ".$tabela." SET publicado = 0 WHERE id='".$resultado[0]."'";
+                    mysqli_query($con, $update);
+                }else{
+                    $update = "UPDATE ".$tabela." SET publicado = 1 WHERE id='$resultado[0]";
+                    mysqli_query($con, $update);
+                }
             }
+        }catch (Exception $e){
+            $Valida =  false;
         }
     }
+
+    return $Valida;
 }

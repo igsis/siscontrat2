@@ -216,7 +216,7 @@ $query2 = mysqli_query($con, $sqlAg);
                                     </td>
                                     <td>
                                         <div class="status-comunicacao">
-                                            <?php geraLegendas($agendao['idEvento'],'agendoes','comunicacao_agendao'); ?>
+                                            <?php geraLegendas($agendao['idEvento'],'agendoes','comunicacao_agendoes'); ?>
                                         </div>
                                     </td>
                                     <td>
