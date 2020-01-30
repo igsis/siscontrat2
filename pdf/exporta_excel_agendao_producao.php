@@ -79,7 +79,7 @@ $objPHPExcel->getProperties()->setTitle("Relatório de Controle de Fotos");
 $objPHPExcel->getProperties()->setSubject("Relatório de Controle de Fotos");
 $objPHPExcel->getProperties()->setDescription("Gerado automaticamente a partir do Sistema SisContrat");
 $objPHPExcel->getProperties()->setKeywords("office 2007 openxml php");
-$objPHPExcel->getProperties()->setCategory("Inscritos");
+$objPHPExcel->getProperties()->setCategory("Agendões");
 
 //Eventos Agendão
 $proxLinha = 1;
