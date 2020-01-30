@@ -71,7 +71,7 @@ $valor = dinheiroParaBr($valor);
                     <div class="row">
                         <div class="from-group col-md-12">
                             <label for="pf">Pessoa Física: *</label>
-                            <input type="text" class="form-control" name="pessoa_fisica" id="pessoa_fisica"
+                            <input type="text" class="form-control" required name="pessoa_fisica" id="pessoa_fisica"
                                    value="<?= $pessoa_fisica ?>" disabled>
                         </div>
                     </div>
@@ -79,7 +79,7 @@ $valor = dinheiroParaBr($valor);
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="classificacao">Classificação Indicativa *</label>
-                            <input type="text" name="classificacao" value="<?= $classificacao ?>" disabled
+                            <input type="text" name="classificacao" required value="<?= $classificacao ?>" disabled
                                    class="form-control">
                             </select>
                         </div>
@@ -88,47 +88,47 @@ $valor = dinheiroParaBr($valor);
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label for="territorio">Território *</label>
-                            <input type="text" name="territorio" value="<?= $territorio ?>" disabled
+                            <input type="text" name="territorio" required value="<?= $territorio ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="coordenadoria">Coordenadoria *</label>
-                            <input type="text" name="coordenadoria" value="<?= $coordenadoria ?>" disabled
+                            <input type="text" name="coordenadoria" required value="<?= $coordenadoria ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="subprefeitura">Subprefeitura *</label>
-                            <input type="text" name="subprefeitura" value="<?= $subprefeitura ?>" disabled
+                            <input type="text" name="subprefeitura" required value="<?= $subprefeitura ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="programa">Programa *</label>
-                            <input type="text" name="programa" value="<?= $programa ?>" disabled class="form-control">
+                            <input type="text" name="programa" required value="<?= $programa ?>" disabled class="form-control">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label for="linguagem">Linguagem *</label>
-                            <input type="text" name="linguagem" value="<?= $linguagem ?>" disabled class="form-control">
+                            <input type="text" name="linguagem" required value="<?= $linguagem ?>" disabled class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="projeto">Projeto *</label>
-                            <input type="text" name="projeto" value="<?= $projeto ?>" disabled class="form-control">
+                            <input type="text" name="projeto" required value="<?= $projeto ?>" disabled class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="cargo">Cargo *</label>
-                            <input type="text" name="cargo" value="<?= $cargo ?>" disabled class="form-control">
+                            <input type="text" name="cargo" required value="<?= $cargo ?>" disabled class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="vigencia">Vigência *</label>
-                            <input type="text" name="vigencia" value="<?= $vigencia['ano'] ?>" disabled
+                            <input type="text" name="vigencia" required value="<?= $vigencia['ano'] ?>" disabled
                                    class="form-control">
                         </div>
                     </div>
@@ -137,19 +137,19 @@ $valor = dinheiroParaBr($valor);
                         <div class="form-group col-md-12">
                             <label for="observacao">Observação: </label>
                             <textarea name="observacao" id="observacao" rows="3"
-                                      class="form-control" disabled><?= $fc['observacao'] ?></textarea>
+                                      class="form-control" required disabled><?= $fc['observacao'] ?></textarea>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="fiscal">Fiscal *</label>
-                            <input type="text" name="fiscal" value="<?= $fiscal ?>" disabled class="form-control">
+                            <input type="text" name="fiscal" required value="<?= $fiscal ?>" disabled class="form-control">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="fiscal">Suplente </label>
-                            <input type="text" name="suplente" value="<?= $suplente ?>" disabled class="form-control">
+                            <input type="text" name="suplente" required value="<?= $suplente ?>" disabled class="form-control">
                         </div>
                     </div>
 
@@ -159,7 +159,7 @@ $valor = dinheiroParaBr($valor);
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="verba">Verba* </label>
-                            <select name="verba" id="verba" class="form-control">
+                            <select name="verba" id="verba" required class="form-control">
                                 <?php geraOpcao('verbas'); ?>
                             </select>
                         </div>
@@ -173,40 +173,40 @@ $valor = dinheiroParaBr($valor);
                         <div class="form-group col-md-3">
                             <label for="valor">Valor</label>
                             <input type="text" name="valor" onKeyPress="return(moeda(this,'.',',',event))"
-                                   class="form-control" value="<?= $valor ?>" readonly>
+                                   class="form-control" required value="<?= $valor ?>" readonly>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-4">
-                            <label for="dataKit">Data kit pagamento</label>
-                            <input type="date" name="dataKit" class="form-control" id="datepicker10"
+                            <label for="dataKit">Data kit pagamento: *</label>
+                            <input type="date" name="dataKit" class="form-control" required id="datepicker10"
                                    placeholder="DD/MM/AAAA">
                         </div>
 
                         <div class="form-group col-md-4">
-                            <label for="numeroProcesso">Número do Processo *</label>
-                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
+                            <label for="numeroProcesso">Número do Processo: *</label>
+                            <input type="text" name="numeroProcesso" id="numProcesso" required class="form-control"
                                    data-mask="9999.9999/9999999-9" minlength="19">
                         </div>
 
                         <div class="form-group col-md-4">
-                            <label for="processoMae">Número do Processo Mãe *</label>
-                            <input type="text" name="processoMae" id="processoMae" class="form-control"
+                            <label for="processoMae">Número do Processo Mãe: *</label>
+                            <input type="text" name="processoMae" id="processoMae" required class="form-control"
                                    data-mask="9999.9999/9999999-9" minlength="19">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="forma_pagamento">Forma de pagamento </label>
-                            <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
+                            <label for="forma_pagamento">Forma de pagamento: *</label>
+                            <textarea id="forma_pagamento" name="forma_pagamento" required class="form-control"
                                       rows="8"></textarea>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="justificativa">Justificativa </label>
-                            <textarea id="justificativa" name="justificativa"  class="form-control"
+                            <label for="justificativa">Justificativa: *</label>
+                            <textarea id="justificativa" name="justificativa" required  class="form-control"
                                       rows="8" ></textarea>
                         </div>
                     </div>
@@ -238,7 +238,7 @@ $valor = dinheiroParaBr($valor);
 
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="justificativa">Observação </label>
+                            <label for="observacao">Observação </label>
                             <textarea id="observacao" name="observacao" class="form-control"
                                       rows="8"></textarea>
                         </div>

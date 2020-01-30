@@ -181,7 +181,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     <div class="row">
                         <div class="from-group col-md-12">
                             <label for="pf">Pessoa Física: *</label>
-                            <input type="text" class="form-control" id="pessoa_fisica"
+                            <input type="text" class="form-control" id="pessoa_fisica" required
                                    value="<?= $pessoa_fisica ?>" disabled>
                         </div>
                     </div>
@@ -189,7 +189,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="classificacao">Classificação Indicativa *</label>
-                            <input type="text" name="classificacao" value="<?= $classificacao ?>" disabled
+                            <input type="text" name="classificacao" value="<?= $classificacao ?>" disabled required
                                    class="form-control">
                             </select>
                         </div>
@@ -198,47 +198,47 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label for="territorio">Território *</label>
-                            <input type="text" name="territorio" value="<?= $territorio ?>" disabled
+                            <input type="text" name="territorio" value="<?= $territorio ?>" disabled required
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="coordenadoria">Coordenadoria *</label>
-                            <input type="text" name="coordenadoria" value="<?= $coordenadoria ?>" disabled
+                            <input type="text" name="coordenadoria" value="<?= $coordenadoria ?>" disabled required
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="subprefeitura">Subprefeitura *</label>
-                            <input type="text" name="subprefeitura" value="<?= $subprefeitura ?>" disabled
+                            <input type="text" name="subprefeitura" value="<?= $subprefeitura ?>" disabled required
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="programa">Programa *</label>
-                            <input type="text" name="programa" value="<?= $programa ?>" disabled class="form-control">
+                            <input type="text" name="programa" value="<?= $programa ?>" required disabled class="form-control">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label for="linguagem">Linguagem *</label>
-                            <input type="text" name="linguagem" value="<?= $linguagem ?>" disabled class="form-control">
+                            <input type="text" name="linguagem" value="<?= $linguagem ?>" required disabled class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="projeto">Projeto *</label>
-                            <input type="text" name="projeto" value="<?= $projeto ?>" disabled class="form-control">
+                            <input type="text" name="projeto" value="<?= $projeto ?>" required disabled class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="cargo">Cargo *</label>
-                            <input type="text" name="cargo" value="<?= $cargo ?>" disabled class="form-control">
+                            <input type="text" name="cargo" value="<?= $cargo ?>" required disabled class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="vigencia">Vigência *</label>
-                            <input type="text" name="vigencia" value="<?= $vigencia['ano'] ?>" disabled
+                            <input type="text" name="vigencia" value="<?= $vigencia['ano'] ?>" required disabled
                                    class="form-control">
                         </div>
                     </div>
@@ -247,19 +247,19 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                         <div class="form-group col-md-12">
                             <label for="observacao">Observação: </label>
                             <textarea name="observacao" id="observacao" rows="3"
-                                      class="form-control" disabled><?= $fc['observacao'] ?></textarea>
+                                      class="form-control" disabled required><?= $fc['observacao'] ?></textarea>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="fiscal">Fiscal *</label>
-                            <input type="text" name="fiscal" value="<?= $fiscal ?>" disabled class="form-control">
+                            <input type="text" name="fiscal" value="<?= $fiscal ?>" disabled required class="form-control">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="fiscal">Suplente </label>
-                            <input type="text" name="suplente" value="<?= $suplente ?>" disabled class="form-control">
+                            <input type="text" name="suplente" value="<?= $suplente ?>" disabled required class="form-control">
                         </div>
                     </div>
 
@@ -268,28 +268,28 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="verba">Verba* </label>
-                            <select name="verba" id="verba" class="form-control">
+                            <label for="verba">Verba: *</label>
+                            <select name="verba" id="verba" class="form-control" required>
                                 <?php geraOpcao('verbas', $pedido['verba_id']); ?>
                             </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="numParcelas">Número de parcelas</label>
+                            <label for="numParcelas">Número de parcelas: *</label>
                             <input type="text" name="numParcelas" value="<?= $numParcelas ?>"
                                    class="form-control" required>
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="valor">Valor</label>
+                            <label for="valor">Valor: *</label>
                             <input type="text" name="valor" onKeyPress="return(moeda(this,'.',',',event))"
-                                   class="form-control" value="<?= $valor ?>" readonly>
+                                   class="form-control" value="<?= $valor ?>" readonly required>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="dataKit">Data kit pagamento *</label>
+                            <label for="dataKit">Data kit pagamento: *</label>
                             <input type="date" name="dataKit" class="form-control" id="datepicker10"
                                    placeholder="DD/MM/AAAA" value="<?= $pedido['data_kit_pagamento'] ?>" required>
                         </div>
@@ -304,14 +304,14 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="numeroProcesso">Número do Processo *</label>
+                            <label for="numeroProcesso">Número do Processo: *</label>
                             <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
                                    value="<?= $pedido['numero_processo'] ?>" data-mask="9999.9999/9999999-9" required
                                    minlength="19">
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="numeroProcesso">Número do Processo Mãe *</label>
+                            <label for="numeroProcesso">Número do Processo Mãe: *</label>
                             <input type="text" name="processoMae" id="processoMae" class="form-control"
                                    value="<?= $pedido['numero_processo_mae'] ?>" data-mask="9999.9999/9999999-9" required
                                    minlength="19">
@@ -320,13 +320,13 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="forma_pagamento">Forma de pagamento *</label>
+                            <label for="forma_pagamento">Forma de pagamento: *</label>
                             <textarea id="forma_pagamento" name="forma_pagamento" class="form-control" required
                                       rows="8"><?= $pedido['forma_pagamento'] ?? NULL ?></textarea>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="justificativa">Justificativa *</label>
+                            <label for="justificativa">Justificativa: *</label>
                             <textarea id="justificativa" name="justificativa" class="form-control" required
                                       rows="8"><?= $pedido['justificativa'] ?? null ?></textarea>
                         </div>
