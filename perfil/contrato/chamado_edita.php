@@ -14,7 +14,7 @@ from chamados as c
 inner join usuarios as u on c.usuario_id = u.id
 inner join eventos as e on e.id = c.evento_id
 inner join chamado_tipos as ct on ct.id = c.id
-inner join evento_status as es on es.id = e.evento_status_id e.publicado WHERE e.publicado = 1 AND e.id = $idEvento";
+inner join evento_status as es on es.id = e.evento_status_id WHERE e.publicado = 1 AND e.id = $idEvento";
 
 $query = mysqli_query($con, $sql);
 $dados = mysqli_fetch_array($query);

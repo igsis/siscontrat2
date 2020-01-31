@@ -3,6 +3,9 @@
 <link rel="stylesheet" href="../visual/plugins/sweetalert2/sweetalert2.css">
 <?php
 $con = bancoMysqli();
+$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
+$http = $server . "/pdf/";
+$link_todosArquivos = $http . "impressao_contrato_todosArquivos.php";
 
 if (isset($_POST['Voltar'])) {
     $idEvento = $_POST['idEvento'];
@@ -472,13 +475,9 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 </form>
                             </div>
                             <div class="col-md-3">
-                                <form action="#" method="post" role="form">
-                                    <button type="button" class="btn btn-primary" name="todosAnexos"
-                                            style="width: 100%;"
-                                            id="todosAnexos">
-                                        Baixar todos os anexos
-                                    </button>
-                                </form>
+                                <a href="<?= $link_todosArquivos . "?id=" . $idEvento ?>" target="_blank" type="button"
+                                   class="btn btn-primary btn-block"> Baixar todos os anexos
+                                </a>
                             </div>
                             <div class="col-md-3">
                                 <form action="?perfil=contrato&p=chamados_contrato" method="post" role="form">
