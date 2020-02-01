@@ -59,7 +59,7 @@ $atracao = mysqli_query($con, $sql);
     <!-- Main content -->
     <section class="content">
         <!-- START FORM-->
-        <h2 class="page-header">Evento</h2>
+        <h2 class="page-header">Contrato</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">

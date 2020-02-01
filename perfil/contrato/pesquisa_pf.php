@@ -90,9 +90,10 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             $resultado .= "<td>" . $pessoa['passaporte'] . "</td>";
                             $resultado .= "<td>" . $pessoa['email'] . "</td>";
                             $resultado .= "<td>
-                                     <form action='?perfil=contrato&p=edita_pf' method='post'>
-                                        <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
-                                        <input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>
+                                     <form action='?perfil=contrato&p=resumo' method='post'>
+                                     <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
+                                     <input type='hidden' name='idPedido' value='$idPedido'>
+                                        $botaoSelecionar
                                      </form>
                                </td>";
                             $resultado .= "</tr>";
@@ -104,12 +105,10 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                       </td>
                       <td>
                         <form method='post' action='?perfil=contrato&p=cadastra_pf'>
+                            <input type='hidden' name='idPedido' value='$idPedido'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
-                            <button class=\"btn btn-primary\" name='adicionar' type='submit'>
-                                <i class=\"glyphicon glyphicon-plus\">        
-                                </i>Adicionar
-                            </button>
+                            $botaoAdd
                         </form>
                       </td>";
 

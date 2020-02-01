@@ -6,11 +6,10 @@ $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pas
 $http = $server . "/pdf/";
 $link_facc = $http . "rlt_fac_pf.php";
 $tipoPessoa = 1;
-$liderOn = 0;
 
-if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
-    $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
-    $edita = 1;
+if (isset($_POST['selecionar']) || isset($_POST['idPf'])) {
+    $idPf = $_POST['idPf'];
+    $editaOnly = "<input type='hidden' name='editOnly' value= '1'>";
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider'])) {
@@ -82,22 +81,6 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
             $sqlNit = "INSERT INTO siscontrat.`nits` (pessoa_fisica_id, nit, publicado)  VALUES ('$idPf','$nit',1)";
             if (!mysqli_query($con, $sqlNit)) {
                 $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlNit;
-            }
-        }
-
-        if (isset($_POST['cadastraComLider'])) {
-            $liderOn = 1;
-            $idPedido = $_POST['idPedido'];
-            $idAtracao = $_POST['idAtracao'];
-
-            $sqlDeleteLider = "DELETE FROM lideres WHERE atracao_id = '$idAtracao'";
-
-            if (mysqli_query($con, $sqlDeleteLider)) {
-                $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) 
-                                VALUES ('$idPedido', '$idAtracao', '$idPf')";
-                if (mysqli_query($con, $sqLider)) {
-                    echo "<script>swal('Líder selecionado com sucesso!', '', 'success') </script>";
-                }
             }
         }
 
@@ -683,16 +666,10 @@ $atracao = mysqli_query($con, $sql);
                         $queryPedidos = mysqli_query($con, $sqlPedidos);
                         $pedidos = mysqli_fetch_array($queryPedidos);
                         ?>
-
                         <form method="POST" action="?perfil=contrato&p=resumo" role="form">
-                            <input type="hidden" name="pessoa_tipo_id" value="1">
                             <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
                             <input type="hidden" name="idPf" value="<?= $pf['id'] ?>">
-                            <input type="hidden" name="tipoPessoa" value="1">
-                            <input type="hidden" name="editOnly" value="<?=$edita ?? NULL ?>">
-                            <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                            <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
-                            <input type="hidden" name="liderOn" value="<?= $liderOn ?>">
+                            <?=$editaOnly ?? NULL?>
                             <button type="submit" name="selecionar" class="btn btn-info btn-block">Ir ao pedido de
                                 contratação
                             </button>

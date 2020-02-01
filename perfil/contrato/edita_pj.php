@@ -9,9 +9,9 @@ $link_facc = $http . "rlt_fac_pj.php";
 
 $tipoPessoa = 2;
 
-if (isset($_POST['idPj']) || isset($_POST['idProponente'])) {
-    $idPj = $_POST['idPj'] ?? $_POST['idProponente'];
-    $edita = 1;
+if (isset($_POST['adicionar']) || isset($_POST['idPj'])) {
+    $idPj = $_POST['idPj'];
+    $editaOnly = "<input type='hidden' name='editOnly' value= '1'>";
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
@@ -616,42 +616,17 @@ if (isset($pj['representante_legal2_id'])) {
 
                     <div class="form-group col-md-3">
                         <?php
-                        $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1";
+                        $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
                         $queryPedidos = mysqli_query($con, $sqlPedidos);
-                        $pedidos = mysqli_fetch_array($queryPedidos);
-
-                        if (($pedidos['pessoa_tipo_id'] == 2) && ($pedidos['pessoa_juridica_id'] == $idPj)) {
-
-                            ?>
+                        $pedidos = mysqli_fetch_array($queryPedidos);?>
                             <form method="POST" action="?perfil=contrato&p=resumo" role="form">
-                                <input type="hidden" name="pessoa_tipo_id" value="2">
                                 <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
                                 <input type="hidden" name="idPj" value="<?= $pj['id'] ?>">
-                                <input type="hidden" name="tipoPessoa" value="2">
-                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                <input type="hidden" name="editOnly" value="<?=$edita ?? NULL ?>">
+                                <?=$editaOnly ?? NULL?>                             
                                 <button type="submit" name="selecionarPj" class="btn btn-info btn-block">Ir ao pedido de
                                     contratação
                                 </button>
                             </form>
-
-                            <?php
-                        } else {
-                            ?>
-                            <form method="POST" action="?perfil=contrato&p=resumo" role="form">
-                                <input type="hidden" name="pessoa_tipo_id" value="2">
-                                <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
-                                <input type="hidden" name="idPj" value="<?= $pj['id'] ?>">
-                                <input type="hidden" name="tipoPessoa" value="2">
-                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                <input type="hidden" name="editOnly" value="<?=$edita ?? NULL ?>">
-                                <button type="submit" name="selecionarPj" class="btn btn-info btn-block">Ir ao pedido de
-                                    contratação
-                                </button>
-                            </form>
-                            <?php
-                        }
-                        ?>
                     </div>
                 </div>
             </div>
