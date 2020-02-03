@@ -9,20 +9,20 @@ $where = '';
 
 if (isset($_POST['protocolo']) && $_POST['protocolo'] != null) {
     $protocolo = $_POST['protocolo'];
-    $protocolo = " AND fc.protocolo = '$protocolo' ";
+    $protocolo = " AND fc.protocolo LIKE '$protocolo' ";
 }
 
 if (isset($_POST['numProcesso']) && $_POST['numProcesso'] != null) {
     $numProcesso = $_POST['numProcesso'];
-    $numProcesso = " AND fc.num_processo_pagto = '$numProcesso' ";
+    $numProcesso = " AND fc.num_processo_pagto LIKE '$numProcesso' ";
 }
 
 if (isset($_POST['proponente']) && $_POST['proponente'] != null) {
     $proponente = $_POST['proponente'];
-    $proponente = " AND fc.pessoa_fisica_id = '$proponente' ";
+    $proponente = " AND fc.pessoa_fisica_id LIKE '$proponente' ";
 }
 
-$sql = "SELECT fc.id, p.id as pedido_id, fc.protocolo, fc.pessoa_fisica_id, fc.num_processo_pagto FROM formacao_contratacoes fc INNER JOIN pedidos p on fc.id = p.origem_id WHERE p.origem_tipo_id = 2 AND fc.publicado = 1 $proponente $numProcesso $protocolo";
+$sql = "SELECT fc.id, p.id as pedido_id, fc.protocolo, fc.pessoa_fisica_id, p.numero_processo FROM formacao_contratacoes fc INNER JOIN pedidos p on fc.id = p.origem_id WHERE p.origem_tipo_id = 2 AND fc.publicado = 1 $proponente $numProcesso $protocolo";
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
 ?>
@@ -68,7 +68,7 @@ $num_arrow = mysqli_num_rows($query);
                             } else {
                                 while ($formacao = mysqli_fetch_array($query)) {
                                     $proponente = recuperaDados('pessoa_fisicas', 'id', $formacao['pessoa_fisica_id'])['nome'];
-                                    $pedido = recuperaDados('pedidos', 'origem_id', $formacao['pedido_id']);
+                                    $pedido = recuperaDados('pedidos', 'origem_id', $formacao['pedido_id'] . "AND origem_tipo_id = 2");
                                     $idPedido = $formacao['pedido_id'];
                                     $sqlPagamento = "SELECT * FROM pagamentos WHERE pedido_id = '$idPedido'";
                                     $pagamento = mysqli_num_rows(mysqli_query($con, $sqlPagamento));
@@ -78,7 +78,7 @@ $num_arrow = mysqli_num_rows($query);
                                         $action = "?perfil=formacao&p=pagamento&sp=empenho_edita";
                                     ?>
                                     <tr>
-                                        <td><?= $pedido['numero_processo'] ?></td>
+                                        <td><?= $formacao['numero_processo'] ?></td>
                                         <td><?= $formacao['protocolo'] ?></td>
                                         <td><?= $proponente ?></td>
                                         <td>
