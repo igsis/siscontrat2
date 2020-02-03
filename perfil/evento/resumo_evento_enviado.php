@@ -38,7 +38,7 @@ if (isset($_POST['enviar'])) {
 
     if($evento['contratacao'] == 1){
         if ($fora == 1) {
-            $sqlPedido = "UPDATE pedidos SET status_pedido_id = 1 WHERE origem_tipo_id = $tipoEvento AND origem_id = '$idEvento'";
+            $sqlPedido = "UPDATE pedidos SET status_pedido_id = 1 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
             $sqlEvento = "UPDATE eventos SET evento_status_id = 2 WHERE id = '$idEvento'";
             if (mysqli_query($con, $sqlPedido)) {
                 mysqli_query($con, $sqlEvento);
@@ -50,7 +50,7 @@ if (isset($_POST['enviar'])) {
                 $mensagemPedido = mensagem("warning", "Seu pedido está aguardando aprovação!");
             }
         } else {
-            $sqlPedido = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_tipo_id = $tipoEvento AND origem_id = '$idEvento'";
+            $sqlPedido = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
             if (mysqli_query($con, $sqlPedido)) {
                 $mensagemPedido = mensagem("success", "Pedido aprovado!");
 

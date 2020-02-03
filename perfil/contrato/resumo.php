@@ -114,26 +114,31 @@ if (isset($_POST['salvar'])) {
             }
         }
     }
+
+    
     $idEvento = $_POST['idEvento'];
     $idPedido = $_POST['idPedido'];
 
+    $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento")->fetch_array();
+
+    if($testaFilme['tipo_evento_id'] == 1){
     $idAtracao = $_POST['idAtracao'];
     $nome_atracao = $_POST['nome_atracao'];
     $integrantes = $_POST['integrantes'];
 
-    for ($i = 0; $i < count($idAtracao); $i++) { // altera de uma ou de todas as atracoes (nome da atracao e integrantes)
-        $baldeId = $idAtracao[$i];
-        $baldeNome = addslashes($nome_atracao[$i]);
-        $baldeIntegrantes = addslashes($integrantes[$i]);
+        for ($i = 0; $i < count($idAtracao); $i++) { // altera de uma ou de todas as atracoes (nome da atracao e integrantes)
+            $baldeId = $idAtracao[$i];
+            $baldeNome = addslashes($nome_atracao[$i]);
+            $baldeIntegrantes = addslashes($integrantes[$i]);
 
-        $sql = "UPDATE atracoes SET 
+            $sql = "UPDATE atracoes SET 
                     nome_atracao = '$baldeNome', 
                     integrantes = '$baldeIntegrantes' 
                     WHERE id = '$baldeId'";
 
-        mysqli_query($con, $sql);
+            mysqli_query($con, $sql);
+        }
     }
-
     //pedidos
     $formaPagamento = trim(addslashes($_POST['formaPagamento']));
     $verba = $_POST['verba'];
