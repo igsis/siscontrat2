@@ -130,45 +130,45 @@ if(isset($_POST['editar'])){
                             <div class="form-group col-md-12">
                                 <label for="parcela[]">Parcela:</label>
                                 <input type="number" readonly class="form-control" value="<?= $i ?>"
-                                       name="parcela[]" id="parcela[]">
+                                       name="parcela[]" id="parcela[<?=$i?>]">
                             </div>
                         </div>
                     <div class="row">
 
                             <div class="form-group col-md-2">
                                 <label for="valor[]">Valor:</label>
-                                <input type="text" id="valor[]" name="valor[]"
+                                <input type="text" name="valor[]"
                                        class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcelas['valor']) ?>">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label for="data_inicio">Data inicial:</label>
-                                <input type="date" name="data_inicio[]" class="form-control" id="datepicker10"
-                                       placeholder="DD/MM/AAAA" value="<?= $parcelas['data_inicio'] ?? NULL ?>">
+                                <input type="date" name="data_inicio[]" class="form-control" id="data_inicio[<?=$i?>]"
+                                       placeholder="DD/MM/AAAA" value="<?= exibirDataBr($parcelas['data_inicio']) ?? NULL ?>">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label for="data_fim">Data final: </label>
-                                <input type="date" name="data_fim[]" class="form-control" id="datepicker11"
-                                       placeholder="DD/MM/AAAA" value="<?= $parcelas['data_fim'] ?? NULL ?>">
+                                <input type="date" name="data_fim[]" class="form-control" id="data_fim[<?=$i?>]"
+                                       placeholder="DD/MM/AAAA" value="<?= exibirDataBr($parcelas['data_fim']) ?? NULL ?>">
                             </div>
 
 
                             <div class="form-group col-md-2">
                                 <label for="data_pagamento">Data pagamento: </label>
                                 <input type="date" name="data_pagamento[]" class="form-control"
-                                       id="datepicker12" placeholder="DD/MM/AAAA" value="<?= $parcelas['data_pagamento'] ?? NULL ?>">
+                                       id="data_pagamento[<?=$i?>]" placeholder="DD/MM/AAAA" value="<?= exibirDataBr($parcelas['data_pagamento']) ?? NULL ?>">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label for="carga[]">Carga horária: </label>
-                                <input type="number" name="carga[]" class="form-control" id="carga[]"
+                                <input type="number" name="carga[]" class="form-control"
                                        value="<?= $parcelas['carga_horaria'] ?? NULL ?>"  min="1">
                             </div>
 
                         <div class="form-group col-md-2">
                             <label for="mes_ref[]">Mês Referencia: *</label>
-                            <select name="mes_ref[]" id="mes_ref[]" class="form-control">
+                            <select name="mes_ref[]" id="mes_ref[<?=$i?>]" class="form-control">
                                 <?php
                                     geraOpcaoParcelas("emia_meses", $parcelas['mes_referencia_id']);
                                 ?>
@@ -176,6 +176,13 @@ if(isset($_POST['editar'])){
                         </div>
 
                         </div>
+
+                        <div class="row" id="msg">
+                                <div class="form-group col-md-12">
+                                    <span class="pull-right" style="color: red;"><b>Data de emissão precisa ser maior que a de entrega!</b></span>
+                                </div>
+                        </div>
+
                         <hr>
                         <?php
                     }
@@ -195,3 +202,29 @@ if(isset($_POST['editar'])){
     </section>
 </div>
 
+<script>
+$('#msg').hide();
+function comparaData() {
+        var isMsg = $('#msg');
+        var dataInicio = document.querySelector('#data_emissao').value;
+        var dataFim = document.querySelector('#data_entrega').value;
+
+        if (dataInicio != "" && dataFim != "") {
+            var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
+            var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
+            isMsg.hide();
+        }
+
+        $('#cadastra').attr("disabled", true);
+            
+        if (dataFim <= dataInicio) {
+            $('#cadastra').attr("disabled", true);
+            isMsg.show();
+        } else {
+            $('#cadastra').attr("disabled", false);
+            isMsg.hide();
+        }
+}
+   $('#data_emissao').on('change', comparaData);
+   $('#data_entrega').on('change', comparaData);
+</script>
