@@ -20,8 +20,8 @@ $sql = "SELECT c.id,
         INNER JOIN locais as l ON l.id = c.local_id
         INNER JOIN emia_cargos as ec ON ec.id = c.emia_cargo_id
         INNER JOIN emia_vigencias AS ev ON ev.id = c.emia_vigencia_id
-        INNER JOIN usuarios AS fiscal ON fiscal.id = c.fiscal_id
-        INNER JOIN usuarios AS suplente ON suplente.id = c.suplente_id
+        LEFT JOIN usuarios AS fiscal ON fiscal.id = c.fiscal_id
+        LEFT JOIN usuarios AS suplente ON suplente.id = c.suplente_id
         WHERE c.id = '$idEC' AND c.publicado = '1'";
 $ec = $con->query($sql)->fetch_assoc();
 ?>
@@ -79,12 +79,12 @@ $ec = $con->query($sql)->fetch_assoc();
 
                         <tr>
                             <th width="30%">Fiscal: </th>
-                            <td><?=$ec['fiscal']?></td>
+                            <td><?=$ec['fiscal'] ?? "Não Cadastrado"?></td>
                         </tr>
 
                         <tr>
                             <th width="30%">Suplente: </th>
-                            <td><?=$ec['suplente']?></td>
+                            <td><?=$ec['suplente'] ?? "Não Cadastrado"?></td>
                         </tr>
 
                         <tr>
@@ -92,7 +92,7 @@ $ec = $con->query($sql)->fetch_assoc();
                             <td><?php if($ec['num_pgt'] == null){
                                     echo "Não Cadastrado";
                                 }else{
-                                    echo $ec['protocolo'];
+                                    echo $ec['num_pgt'];
                                 }
                                 ?></td>
                         </tr>
