@@ -192,13 +192,13 @@ else
               padding-bottom: 30px;
               font-size: 12pt;
           }
-          #topico-filtro{
+          .topico-filtro{
               display: flex;
               flex-direction: column;
 
           }
 
-          #topico-filtro span#titulo-filtro{
+          .topico-filtro span#titulo-filtro{
               font-weight: bold;
           }
           .lateral{
