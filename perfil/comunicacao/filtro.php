@@ -17,7 +17,7 @@ $sqlSis = "SELECT       eve.id AS idEvento,
         WHERE eve.publicado = 1 AND evento_status_id between 3 AND 4 AND
         (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
 
-$query = mysqli_query($con,$sqlSis);
+$query = mysqli_query($con, $sqlSis);
 
 $sqlAg = "SELECT 	ag.id AS idEvento, 
                     ag.nome_evento AS nome_evento, 
@@ -48,69 +48,71 @@ $query2 = mysqli_query($con, $sqlAg);
                     <div id="caixa-filtro" class="row">
                         <div class="col-md-11 col-md-offset-1 margin-top-20">
                             <div class="row">
-                                <div id="topico-filtro" class="col-md-2">
-                                    <span id="titulo-filtro">Editado</span>
-                                    <div class="lateral">
-                                        <label>
-                                            <input type="checkbox" value="1">
-                                            Confirmado
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" value="2">
-                                            Pendente
-                                        </label>
+                                <div class="filtros">
+                                    <div id="editado" class="topico-filtro col-md-2">
+                                        <span id="titulo-filtro">Editado</span>
+                                        <div class="lateral">
+                                            <label>
+                                                <input type="checkbox" value="1">
+                                                Confirmado
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" value="2">
+                                                Pendente
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div id="topico-filtro" class="col-md-2">
-                                    <span id="titulo-filtro">Revisado</span>
-                                    <div class="lateral">
-                                        <label>
-                                            <input type="checkbox" value="3">
-                                            Confirmado
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" value="4">
-                                            Pendente
-                                        </label>
+                                    <div id="revisado" class="topico-filtro col-md-2">
+                                        <span id="titulo-filtro">Revisado</span>
+                                        <div class="lateral">
+                                            <label>
+                                                <input type="checkbox" value="1">
+                                                Confirmado
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" value="2">
+                                                Pendente
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div id="topico-filtro" class="col-md-2">
-                                    <span id="titulo-filtro">Site</span>
-                                    <div class="lateral">
-                                        <label>
-                                            <input type="checkbox" value="5">
-                                            Confirmado
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" value="6">
-                                            Pendente
-                                        </label>
+                                    <div id="site" class="topico-filtro col-md-2">
+                                        <span id="titulo-filtro">Site</span>
+                                        <div class="lateral">
+                                            <label>
+                                                <input type="checkbox" value="1">
+                                                Confirmado
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" value="2">
+                                                Pendente
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div id="topico-filtro" class="col-md-2">
-                                    <span id="titulo-filtro">Impresso</span>
-                                    <div class="lateral">
-                                        <label>
-                                            <input type="checkbox" value="7">
-                                            Confirmado
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" value="8">
-                                            Pendente
-                                        </label>
+                                    <div id="impresso" class="topico-filtro col-md-2">
+                                        <span id="titulo-filtro">Impresso</span>
+                                        <div class="lateral">
+                                            <label>
+                                                <input type="checkbox" value="1">
+                                                Confirmado
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" value="2">
+                                                Pendente
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div id="topico-filtro" class="col-md-2">
-                                    <span id="titulo-filtro">Foto</span>
-                                    <div class="lateral">
-                                        <label>
-                                            <input type="checkbox" value="9">
-                                            Confirmado
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" value="10">
-                                            Pendente
-                                        </label>
+                                    <div id="foto" class="topico-filtro col-md-2">
+                                        <span id="titulo-filtro">Foto</span>
+                                        <div class="lateral">
+                                            <label>
+                                                <input type="checkbox" value="1">
+                                                Confirmado
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" value="2">
+                                                Pendente
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -181,12 +183,12 @@ $query2 = mysqli_query($con, $sqlAg);
                                     </td>
                                     <td>
                                         <?=
-                                            retornaPeriodo($evento['idEvento']);
+                                        retornaPeriodo($evento['idEvento']);
                                         ?>
                                     </td>
                                     <td>
                                         <div class="status-comunicacao">
-                                            <?php geraLegendas($evento['idEvento'],'eventos','comunicacoes'); ?>
+                                            <?php geraLegendas($evento['idEvento'], 'eventos', 'comunicacoes'); ?>
                                         </div>
                                     </td>
                                     <td>
@@ -216,7 +218,7 @@ $query2 = mysqli_query($con, $sqlAg);
                                     </td>
                                     <td>
                                         <div class="status-comunicacao">
-                                            <?php geraLegendas($agendao['idEvento'],'agendoes','comunicacao_agendoes'); ?>
+                                            <?php geraLegendas($agendao['idEvento'], 'agendoes', 'comunicacao_agendoes'); ?>
                                         </div>
                                     </td>
                                     <td>
@@ -267,6 +269,13 @@ $query2 = mysqli_query($con, $sqlAg);
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
+
+
+    let filtros = document.querySelector('.filtros');
+
+    console.log(filtros);
+
+
 </script>
 <script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
