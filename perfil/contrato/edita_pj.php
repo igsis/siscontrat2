@@ -352,7 +352,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
                                     <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
-                                           class="form-control"
+                                           class="form-control" data-mask="(00) 00000-0000"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -362,14 +362,14 @@ if (isset($pj['representante_legal2_id'])) {
                                     if (isset($arrayTelefones[1])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -380,7 +380,7 @@ if (isset($pj['representante_legal2_id'])) {
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
@@ -388,7 +388,7 @@ if (isset($pj['representante_legal2_id'])) {
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
                                                id="telefone2" name="telefone2">
 
                                         <?php

@@ -147,7 +147,8 @@ $atracao = mysqli_query($con, $sql);
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control" placeholder="Ex.: 10" min="1"
+                                    <input type="number" name="numero" class="form-control" placeholder="Ex.: 10"
+                                           min="1"
                                            required>
                                 </div>
                                 <div class="form-group col-md-3">
@@ -183,19 +184,20 @@ $atracao = mysqli_query($con, $sql);
                                 <div class="form-group col-md-2">
                                     <label>Telefone #1: *</label>
                                     <input type="text" id="telefone" name="telefone[0]" onkeyup="mascara( this, mtel );"
-                                           class="form-control" placeholder="Digite o telefone" required maxlength="15">
+                                           class="form-control" placeholder="Digite o telefone" required maxlength="15"
+                                           data-mask="(00) 00000-0000">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Telefone #2:</label>
                                     <input type="text" id="telefone1" name="telefone[1]"
                                            onkeyup="mascara( this, mtel );" class="form-control"
-                                           placeholder="Digite o telefone" maxlength="15">
+                                           placeholder="Digite o telefone" maxlength="15" data-mask="(00) 00000-0000">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Telefone #3:</label>
                                     <input type="text" id="telefone2" name="telefone[2]"
                                            onkeyup="mascara( this, mtel );" class="form-control telefone"
-                                           placeholder="Digite o telefone" maxlength="15">
+                                           placeholder="Digite o telefone" maxlength="15" data-mask="(00) 00000-0000">
                                 </div>
                             </div>
 

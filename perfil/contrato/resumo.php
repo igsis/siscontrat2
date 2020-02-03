@@ -467,35 +467,40 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <form action="?perfil=contrato&p=detalhe_evento" method="post" role="form">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                <button type="submit" class="btn btn-primary pull-right " name="detalheEvento" style="width: 95%"> Ver detalhes do Evento </button>
-                                </form>
-                            </div>
+                                <button type="submit" class="btn btn-primary pull-right " name="detalheEvento"
+                                        style="width: 95%"> Ver detalhes do Evento
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
+                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-primary pull-right "
+                                        style="width: 95%"> Baixar todos os arquivos
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <form action="?perfil=contrato&p=chamados_contrato" method="post" role="form">
+                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-primary btn-block"> Ver chamados</button>
+                            </form>
+                        </div>
 
-                            <div class="col-md-3">
-                                <a href="<?= $link_todosArquivos . "?id=" . $idEvento ?>" target="_blank">
-                                    <button type="button" class="btn btn-primary btn-block"> Baixar todos os anexos</button>
-                                </a>
-                            </div>
-
-                            <div class="col-md-3">
-                                <form action="?perfil=contrato&p=chamados_contrato" method="post" role="form">
-                                    <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                    <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                    <button type="submit" class="btn btn-primary btn-block">  Ver chamados </button>
-                                </form>
-                            </div>
-
-                            <div class="col-md-3">
+                        <div class="col-md-3">
                             <form action="?perfil=contrato&p=anexos_pedido" method="post" role="form">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                <button type="submit" class="btn btn-primary pull-left btn-block" style="width: 95%">Abrir anexos do Pedido </button>
+                                <button type="submit" class="btn btn-primary pull-left btn-block" style="width: 95%">
+                                    Abrir anexos do Pedido
+                                </button>
                             </form>
-                            </div>
+                        </div>
                     </div>
 
-                            
-                            
+
                     <?php
                     if ($pedido['pessoa_tipo_id'] == 1) {
                         ?>

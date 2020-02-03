@@ -3,7 +3,9 @@ $con = bancoMysqli();
 
 
 $idEvento = $_SESSION['idEvento'];
-$idPedido = $_POST['idPedido'];
+if(isset($_POST['idPedido'])){
+    $idPedido = $_POST['idPedido'];
+}
 $tipoPessoa = 3; // arquivos necessarios para pedidos
 
 $sqlAtracoes = "SELECT id FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'";

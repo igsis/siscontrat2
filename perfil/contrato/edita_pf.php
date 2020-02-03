@@ -501,7 +501,7 @@ $atracao = mysqli_query($con, $sql);
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
                                     <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
-                                           class="form-control"
+                                           class="form-control" data-mask="(00) 00000-0000"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -511,14 +511,14 @@ $atracao = mysqli_query($con, $sql);
                                     if (isset($arrayTelefones[1])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -529,7 +529,7 @@ $atracao = mysqli_query($con, $sql);
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
@@ -538,7 +538,7 @@ $atracao = mysqli_query($con, $sql);
                                         ?>
 
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
                                                id="telefone2" name="telefone2">
 
                                         <?php
