@@ -66,12 +66,6 @@ $cidade = $endereco['cidade'];
 $cep = $endereco['cep'];
 $email = $pessoa["email"];
 
-if ($foto == null)
-    $fotoImg = "../visual/images/avatar_default.png";
-else
-    $fotoImg = "../uploadsdocs/$foto";
-
-
 // GERANDO O PDF:
 $pdf = new PDF('P','mm','A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -88,10 +82,6 @@ $pdf->SetFont('Arial','B', 14);
 $pdf->Cell(180,15,utf8_decode("REGISTRO DE PESSOA FÍSICA"),0,1,'C');
 
 $pdf->Ln(5);
-
-//$pdf->Image($fotoImg,160,56, );
-$pdf->SetX(160);
-$pdf->Cell( 40, 40, $pdf->Image($fotoImg, 160, $pdf->GetY(), 33.78), 0, 0, 'R', false );
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
@@ -127,7 +117,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(19,$l,utf8_decode('Endereço:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->MultiCell(70,$l,utf8_decode($rua . ', ' . $numero . ', ' . $bairro . ' - ' . $cidade));
+$pdf->MultiCell(200,$l,utf8_decode($rua . ', ' . $numero . ', ' . $bairro . ' - ' . $cidade));
 
 $count = 1;
 foreach ($telefones as $row){
@@ -135,7 +125,11 @@ foreach ($telefones as $row){
     $pdf->SetFont('Arial','B', 10);
     $pdf->Cell(20,$l,utf8_decode('Telefone ' . $count .':'),0,0,'L');
     $pdf->SetFont('Arial','', 10);
-    $pdf->Cell(87,$l,utf8_decode($row['telefone']),0,1,'L');
+    if($row['telefone'] != ""){ 
+        $pdf->Cell(87,$l,utf8_decode($row['telefone']),0,1,'L');
+    }else{
+        $pdf->Cell(87,$l,utf8_decode("Não cadastado"),0,1,'L');
+    }
     $count++;
 }
 

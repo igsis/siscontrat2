@@ -2,7 +2,7 @@
 $idEvento = $_POST['idEvento'];
 
 $con = bancoMysqli();
-$evento = $con->query("SELECT  e.protocolo, e.tipo_evento_id, e.original, e.nome_evento, e.espaco_publico, f.fomento, rj.relacao_juridica, pe.projeto_especial, e.sinopse, uf.nome_completo AS fiscal_nome, us.nome_completo AS suplente_nome, uf.nome_completo AS user_nome
+$evento = $con->query("SELECT  e.protocolo, e.tipo_evento_id, e.nome_evento, e.espaco_publico, f.fomento, rj.relacao_juridica, pe.projeto_especial, e.sinopse, uf.nome_completo AS fiscal_nome, us.nome_completo AS suplente_nome, uf.nome_completo AS user_nome
     FROM eventos AS e
     LEFT JOIN fomentos f on e.fomento = f.fomento
     INNER JOIN relacao_juridicas rj on e.relacao_juridica_id = rj.id
@@ -10,7 +10,7 @@ $evento = $con->query("SELECT  e.protocolo, e.tipo_evento_id, e.original, e.nome
     INNER JOIN usuarios uf on e.fiscal_id = uf.id
     INNER JOIN usuarios us on e.suplente_id = us.id
     INNER JOIN usuarios ur on e.usuario_id = ur.id
-    WHERE e.id = '$idEvento'
+    WHERE e.id = $idEvento
 ")->fetch_assoc();
 
 $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
@@ -28,6 +28,10 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong><?= $evento['nome_evento']; ?></strong></h3>
                         <div class="box-body">
+                                                             
+                             <div class="form-group col-md-12">
+                             <h3 align="center">Informações sobre o evento</h3>
+                            </div>
                             <div class="form-group col-md-12">
                                 <strong>Protocolo: </strong><?= $evento['protocolo'] ?>
                             </div>
@@ -59,27 +63,6 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
                             <div class="form-group col-md-4">
                                 <strong>Responsável:</strong> <?= $evento['user_nome'] ?>
                             </div>
-
-
-
-
-
-
-
-
-                            <div class="box-group" id="accordion">
-                                <div class="row">
-                                    <div class="box-body">
-                                        <div class="form-group col-md-12">
-                                            <div align="center">
-                                                <h3>Informações sobre o evento</h3>
-                                                <hr>
-                                            </div>
-
-                                        </div>
-
-
-
                                         <hr>
                                         <?php
                                         if ($evento['tipo_evento_id'] == 1) {
@@ -254,6 +237,7 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
                                                 <?php }
                                             }
                                         } else {
+                                            $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
                                             $query_filme = mysqli_query($con, $sql_filme);
                                             $contador = 1;
                                             while ($filme = mysqli_fetch_array($query_filme)) {
@@ -343,22 +327,15 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
 
                                         ?>
                                         <div class="box-footer" align="center">
-                                            <a href="?perfil=evento">
+                                            <a href="?perfil=pesquisa">
                                                 <button type="button" class="btn btn-default">Voltar</button>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
                     </div>
-                </div>
-                <!-- /.box-body -->
-
-                <!-- /.box -->
             </div>
             <!-- /.col -->
-        </div>
         <!-- /.row -->
         <!-- END ACCORDION & CAROUSEL-->
 
