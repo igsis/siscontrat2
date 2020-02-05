@@ -6,27 +6,53 @@ $idEvento = $_SESSION['eventoId'];
 
 // para inserir a informação em Dotação //
 $sql = "SELECT * FROM juridicos where pedido_id = '$idEvento'";
-$query = mysqli_query($con,$sql);
+$query = mysqli_query($con, $sql);
 $num = mysqli_num_rows($query);
 
 
 // dados //
-$evento = recuperaDados('eventos', 'id', $idEvento);
-$tipo_evento = recuperaDados('tipo_eventos', 'id', $idEvento);
-$projeto_especiais = recuperaDados('projeto_especiais', 'id', $idEvento);
-$relacao_juridica = recuperaDados('relacao_juridicas', 'id', $idEvento);
-$linguagens = recuperaDados('linguagens', 'id', $idEvento);
-$atracao = recuperaDados('atracoes', 'id', $idEvento);
-$classificacao = recuperaDados('classificacao_indicativas', 'id', $idEvento);
-$suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
-$ocorrencia = recuperaDados('ocorrencias', 'id', $idEvento);
-$retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
-$pedidos = recuperaDados('pedidos', 'id', $idEvento);
-$pagamento = recuperaDados('pagamentos', 'pedido_id', $idEvento);
-$statusPedido = recuperaDados('pedido_status', 'id', $idEvento);
-$produtor = recuperaDados('produtores', 'id', $idEvento);
-$usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
-$dataEvento = recuperaDados('evento_envios','id',$idEvento);
+$sql = "SELECT
+    p.numero_processo,
+    e.protocolo,
+    e.id,
+    e.nome_evento,
+    ev.data_envio,
+    te.tipo_evento,
+    pe.projeto_especial,
+    rj.relacao_juridica,
+    u.nome_completo,
+    u.telefone,
+    u.email,
+    a.ficha_tecnica,
+    ci.classificacao_indicativa,
+    e.sinopse,
+    a.release_comunicacao,
+    oc.horario_inicio,
+    oc.observacao,
+    i.nome,
+    i.sigla,
+    ri.retirada_ingresso,
+    pr.nome,
+    pr.email,
+    pr.telefone1
+    
+    FROM pedidos as p
+    INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
+    INNER JOIN eventos e on e.id = p.origem_id
+    INNER JOIN evento_envios ev on e.id = ev.evento_id
+    INNER JOIN tipo_eventos te on e.tipo_evento_id = te.id
+    INNER JOIN projeto_especiais pe on e.projeto_especial_id = pe.id
+    INNER JOIN relacao_juridicas rj on e.relacao_juridica_id = rj.id
+    INNER JOIN usuarios u on u.id = e.usuario_id
+    INNER JOIN atracoes a on a.evento_id = e.id
+    INNER JOIN produtores pr on a.produtor_id = pr.id
+    INNER JOIN classificacao_indicativas ci on a.classificacao_indicativa_id = ci.id
+    INNER JOIN ocorrencias oc on oc.atracao_id = a.id
+    INNER JOIN instituicoes i on oc.instituicao_id = i.id
+    INNER JOIN retirada_ingressos ri on oc.retirada_ingresso_id = ri.id
+    
+    WHERE p.publicado = 1 AND p.origem_tipo_id = 1 AND e.id = $idEvento";
+$evento = $con->query($sql)->fetch_array();
 $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_array();
 ?>
 
@@ -48,19 +74,19 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Evento enviado em:</th>
-                        <td><?= $dataEvento['data_envio'] ?></td>
+                        <td><?= $evento['data_envio'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Tipo de evento:</th>
-                        <td><?= $tipo_evento['tipo_evento'] ?></td>
+                        <td><?= $evento['tipo_evento'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Projeto especial:</th>
-                        <td><?= $projeto_especiais['projeto_especial'] ?></td>
+                        <td><?= $evento['projeto_especial'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Relação jurídica:</th>
-                        <td><?= $relacao_juridica['relacao_juridica'] ?></td>
+                        <td><?= $evento['relacao_juridica'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -68,15 +94,15 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Usuário que cadastrou o evento:</th>
-                        <td><?= $usuarios['nome_completo'] ?></td>
+                        <td><?= $evento['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $usuarios['telefone'] ?></td>
+                        <td><?= $evento['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $usuarios['email'] ?></td>
+                        <td><?= $evento['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -84,15 +110,15 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Reponsável pelo evento:</th>
-                        <td><?= $usuarios['nome_completo'] ?></td>
+                        <td><?= $evento['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $usuarios['telefone'] ?></td>
+                        <td><?= $evento['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $usuarios['email'] ?></td>
+                        <td><?= $evento['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -100,15 +126,15 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Suplente:</th>
-                        <td><?= $suplente['nome_completo'] ?></td>
+                        <td><?= $evento['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $suplente['telefone'] ?></td>
+                        <td><?= $evento['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $suplente['email'] ?></td>
+                        <td><?= $evento['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -116,15 +142,15 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Ficha técnica:</th>
-                        <td><?= $atracao['ficha_tecnica'] ?></td>
+                        <td><?= $evento['ficha_tecnica'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Faixa ou indicação etária:</th>
-                        <td><?= $classificacao['classificacao_indicativa'] ?></td>
+                        <td><?= $evento['classificacao_indicativa'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Linguagem / Expressão artística:</th>
-                        <td><?= $linguagens['linguagem'] ?></td>
+                        <td>#</td>
                     </tr>
                     <tr>
                         <?php
@@ -141,7 +167,7 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Release</th>
-                        <td><?= $atracao['release_comunicacao'] ?></td>
+                        <td><?= $evento['release_comunicacao'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -152,11 +178,8 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                 <h3>Ocorrências</h3>
                 De <?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?>
                 <br>
-                <?php
-                $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']);
-                ?>
                 <tr>
-                    <td><?= $instituicao['nome'] ?> (<?= $instituicao['sigla'] ?>)</td>
+                    <td><?= $evento['nome'] ?> (<?= $evento['sigla'] ?>)</td>
                 </tr>
                 <br>
                 <br>
@@ -170,31 +193,31 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Horário</th>
-                        <td><?= $ocorrencia['horario_inicio'] ?></td>
+                        <td><?= $evento['horario_inicio'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
-                        <td><?= $instituicao['nome'] ?></td>
+                        <td><?= $evento['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Retirada de ingressos:</th>
-                        <td><?= $retirada_ingresso['retirada_ingresso'] ?></td>
+                        <td><?= $evento['retirada_ingresso'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Observações:</th>
-                        <td><?= $ocorrencia['observacao'] ?></td>
+                        <td><?= $evento['observacao'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Produtor responsavel:</th>
-                        <td><?= $produtor['nome'] ?></td>
+                        <td><?= $evento['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $produtor['email'] ?></td>
+                        <td><?= $evento['email'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $produtor['telefone1'] ?></td>
+                        <td><?= $evento['telefone1'] ?></td>
                     </tr>
                 </table>
                 <h1>Arquivos Comunicação/Produção anexos</h1>
@@ -206,7 +229,7 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Número do processo:</th>
-                        <td><?= $pedidos['numero_processo'] ?></td>
+                        <td><?= $evento['numero_processo'] ?></td>
                     </tr>
                     <tr>
                         <?php
@@ -222,16 +245,15 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     <tr>
                         <?php
                         $pedido = "SELECT * FROM PEDIDOS WHERE id = $idEvento AND publicado = 1";
-                        $query = mysqli_query($con,$pedido);
+                        $query = mysqli_query($con, $pedido);
                         $pessoa = mysqli_num_rows($query);
 
-                        if($pessoa['pessoa_tipo_id'] == 2){
-                        $pj = recuperaDados("pessoa_juridicas","id",$pessoa['pessoa_juridica_id']);
-                        echo "<td>".$pj['razao_social']."</td>";
-                        }
-                        else{
-                        $pf = recuperaDados("pessoa_fisicas","id",$pessoa['pessoa_fisica_id']);
-                        echo "<td>".$pf['nome']."</td>";
+                        if ($pessoa['pessoa_tipo_id'] == 2) {
+                            $pj = recuperaDados("pessoa_juridicas", "id", $pessoa['pessoa_juridica_id']);
+                            echo "<td>" . $pj['razao_social'] . "</td>";
+                        } else {
+                            $pf = recuperaDados("pessoa_fisicas", "id", $pessoa['pessoa_fisica_id']);
+                            echo "<td>" . $pf['nome'] . "</td>";
                         }
                         ?>
                     </tr>
@@ -241,8 +263,8 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
-                        <td><?= $instituicao['nome'] ?> (<?= $instituicao['sigla'] ?>)</td>
-                    </tr>
+<!--                        <td><?/*= $instituicao['nome'] */?> (<?/*= $instituicao['sigla'] */?>)</td>
+-->                    </tr>
                     <tr>
                         <th width="30%">Valor</th>
                         <td><?= $pedidos['valor_total'] ?></td>
@@ -265,7 +287,7 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
-                        <td><?=$dotacao['dotacao']?></td>
+                        <td><?= $dotacao['dotacao'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>
