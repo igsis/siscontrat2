@@ -256,13 +256,12 @@ if (isset($_POST['filtrar'])) {
                     <div class="row">
                         <div class="col-md-offset-3 col-md-3">
                             <label>Data início *</label>
-                            <input type="text" name="inicio" class="form-control datepicker" id="data_inicio"
-                                   onchange="btnfiltrar()" autocomplete="off">
+                            <input type="date" name="inicio" class="form-control" id="data_inicio"
+                                   onchange="btnfiltrar()">
                         </div>
                         <div class="col-md-3">
                             <label>Data encerramento *</label>
-                            <input type="text" name="final" class="form-control datepicker" id="final"
-                                   autocomplete="off">
+                            <input type="date" name="final" class="form-control" id="final">
                             <br>
                         </div>
                     </div>

@@ -14,14 +14,14 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $local_id = $_POST['local'];
     $espaco_id = $_POST['espaco'] ?? NULL;
     $data_inicio = $_POST['data_inicio'];
-    $data_fim   = $_POST['data_fim'] ?? NULL;
-    $segunda    = $_POST['segunda'] ?? 0;
-    $terca      = $_POST['terca']   ?? 0;
-    $quarta     = $_POST['quarta']  ?? 0;
-    $quinta     = $_POST['quinta']  ?? 0;
-    $sexta      = $_POST['sexta']   ?? 0;
-    $sabado     = $_POST['sabado']  ?? 0;
-    $domingo    = $_POST['domingo'] ?? 0;
+    $data_fim = $_POST['data_fim'] ?? NULL;
+    $segunda = $_POST['segunda'] ?? 0;
+    $terca = $_POST['terca']   ?? 0;
+    $quarta = $_POST['quarta']  ?? 0;
+    $quinta = $_POST['quinta']  ?? 0;
+    $sexta = $_POST['sexta']   ?? 0;
+    $sabado = $_POST['sabado']  ?? 0;
+    $domingo = $_POST['domingo'] ?? 0;
     $horario_inicio = $_POST['horaInicio'];
     $horario_fim = $_POST['horaFim'];
     $retirada_ingresso_id = $_POST['retiradaIngresso'];
@@ -86,7 +86,7 @@ if (isset($_POST['cadastra'])) {
                                   '$virada',
                                   '$libras',
                                   '$audiodescricao')";
-
+    
     if (mysqli_query($con, $sql)) 
     {
         $idOcorrencia = recuperaUltimo('agendao_ocorrencias');
@@ -94,7 +94,6 @@ if (isset($_POST['cadastra'])) {
         //gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
-        echo $sql;
         //gravarLog($sql);
     }
 
@@ -126,7 +125,7 @@ if (isset($_POST['edita'])) {
                             libras = '$libras',
                             audiodescricao = '$audiodescricao'
                             WHERE id = '$idOcorrencia'";
-
+    
     If (mysqli_query($con, $sql)) {
         $mensagem = mensagem("success", "Gravado com sucesso!");
         //gravarLog($sql);
@@ -164,7 +163,9 @@ $ocorrencia = recuperaDados('agendao_ocorrencias', 'id', $idOcorrencia);
         $("#diasemana06").prop("disabled", valor);
         $("#diasemana07").prop("disabled", valor);
 
-        desmarca();
+        if (valor) {
+            desmarca();
+        }
     }
 
     // $(document).ready(function () {
@@ -172,12 +173,12 @@ $ocorrencia = recuperaDados('agendao_ocorrencias', 'id', $idOcorrencia);
     //     $('#datepicker11').change(validate);
     // });
 
+
     function validate() {
         comparaData();
         if ($('#datepicker11').val().length > 0) {
             mudaData(false);
-        }
-        else {
+        } else {
             mudaData(true);
 
             var data = document.querySelector('input[name="data_inicio"]').value;
@@ -211,7 +212,6 @@ $ocorrencia = recuperaDados('agendao_ocorrencias', 'id', $idOcorrencia);
 
         validaDiaSemana();
     }
-
     $(document).ready(comparaData)
     function comparaData() {
         var isMsgData = $('#msgEscondeData');

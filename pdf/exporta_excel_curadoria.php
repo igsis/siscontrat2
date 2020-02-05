@@ -101,8 +101,8 @@ while ($linha = mysqli_fetch_array($query)) {
 
     $objPHPExcel->setActiveSheetIndex(0)
         ->setCellValue($a, $linha['id'])    
-        ->setCellValue($b, $local)
-        ->setCellValue($c, $linha['protocolo'])
+        ->setCellValue($b, $linha['protocolo'])
+        ->setCellValue($c, $local)
         ->setCellValue($d, $linha['numero_processo']);
 
     $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $d)->getAlignment()->setWrapText(true);
