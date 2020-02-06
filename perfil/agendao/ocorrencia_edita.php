@@ -448,162 +448,333 @@ $ocorrencia = recuperaDados('agendao_ocorrencias', 'id', $idOcorrencia);
 
 <script>
 
+    function insti_local() {
+        const urlModal = `<?=$url?>`;
+
+        var idInstituicaoModal = $('#instituicaoModal').val();
+
+        $.post(urlModal, {
+            instituicao_id: idInstituicaoModal,
+        })
+            .done(function (data) {
+                $('#SelectLocal option').remove();
+                $('#SelectLocal').append('<option value="">Selecione uma opção...</option>');
+
+                for (let local of data) {
+                    $('#SelectLocal').append(`<option value='${local.id}'>${local.local}</option>`).focus();
+                }
+            })
+            .fail(function () {
+                swal("danger", "Erro ao gravar");
+            });
+
+    }
+
+    function cadastraLocal() {
+        var instituicao = $("#instituicoes").val();
+        var local = $("input[name='localModal']").val();
+        var cep = $("input[name='cep']").val();
+        var rua = $("input[name='rua']").val();
+        var num = $("input[name='numero']").val();
+        var complemento = $("input[name='complemento']").val();
+        var bairro = $("input[name='bairro']").val();
+        var cidade = $("input[name='cidade']").val();
+        var estado = $("input[name='estado']").val();
+        var zona = $("#zona").val();
+
+        $('#modaLocal').slideUp();
+
+        $.post('?perfil=agendao&p=index', {
+            cadastraLocal: 1,
+            instituicao: instituicao,
+            local: local,
+            cep: cep,
+            rua: rua,
+            numero: num,
+            complemento: complemento,
+            bairro: bairro,
+            cidade: cidade,
+            estado: estado,
+            zona: zona
+        })
+            .done(function (data) {
+                let res = $(data).find('#resposta').text();
+
+                if (res == 0) {
+                    swal('Esse local já existe! Procure-o na lista novamente.', '', 'warning')
+                        .then(() => {
+                            $('#modaLocal').slideDown('slow');
+                        });
+                } else if (res == 1) {
+                    swal("Solicitação de novo local enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
+                        .then(() => {
+                            $('#modaLocal').modal('hide');
+                        });
+                } else {
+                    console.log(res);
+                    swal("Erro na solicitação! Tente novamente.", "", "danger")
+                        .then(() => {
+                            $('#modaLocal').slideDown('slow');
+                        });
+                }
+
+            })
+            .fail(function () {
+                swal("danger", "Erro ao gravar");
+            });
+    }
+
+    function cadastraEspaco() {
+
+        var local = $("#SelectLocal").val();
+        var espaco = $("input[name='espaco']").val();
+
+        $('#modalEspaco').slideUp();
+
+        $.post('?perfil=agendao&p=index', {
+            cadastraEspaco: 1,
+            espaco: espaco,
+            local: local
+        })
+            .done(function (data) {
+                let res = $(data).find('#resposta').text();
+
+                if (res == 0) {
+                    swal('Esse espaço já existe! Procure-o na lista novamente.', '', 'warning')
+                        .then(() => {
+                            $('#modalEspaco').slideDown('slow');
+                        });
+                } else if (res == 1) {
+                    swal("Solicitação de novo espaço enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
+                        .then(() => {
+                            $('#modalEspaco').modal('hide');
+                        });
+                } else {
+                    swal("Erro na solicitação! Tente novamente.", "", "error")
+                        .then(() => {
+                            $('#modalEspaco').slideDown('slow');
+                        });
+                }
+            })
+            .fail(function () {
+                swal("danger", "Erro ao gravar");
+            });
+    }
+
     let data_fim = document.querySelector("input[name='data_fim']");
-    
-    if(data_fim.value != '')
-    {
+
+    if (data_fim.value != '') {
         let dias = document.querySelectorAll("input[type='checkbox']");
-    
-        for(dia of dias)
-        {
+
+        for (dia of dias) {
             dia.disabled = false;
         }
 
     }
 
-</script>
-<script>
-   const url = `<?=$url?>`;
+    const url = `<?=$url?>`;
 
-   let instituicao = document.querySelector('#instituicao');
-   let local_id = <?=$ocorrencia['local_id']?>;
+    let instituicao = document.querySelector('#instituicao');
+    let local_id = <?=$ocorrencia['local_id']?>;
 
-    if(instituicao.value != ''){
+    if (instituicao.value != '') {
         getLocais(instituicao.value, local_id)
     }
 
     instituicao.addEventListener('change', async e => {
         let idInstituicao = $('#instituicao option:checked').val();
         getLocais(idInstituicao, '')
-        getEspacos('','') // Se alterar o primeiro ele limpa o local e o espaço 
+        getEspacos('', '') // Se alterar o primeiro ele limpa o local e o espaço
 
     })
 
+    var virada = $('.virada');
+    virada.on("click", verificaVirada);
 
-   var virada = $('.virada');
-   virada.on("change", verificaVirada);
-   $(document).ready(verificaVirada());
-   function verificaVirada() {
+    function verificaVirada() {
+        let opc = parseInt($('input[name="virada"]:checked').val())
+        if (opc) {
 
-       if($('#viradaNao').is(':checked')){
-           $('#horaInicio')
-               .attr('readonly', false)
+            $('#horaInicio')
+                .val('00:00');
 
-           $('#horaFim')
-               .attr('readonly', false)
+            $('#horaFim')
+                .val('00:00');
 
-           $('#instituicao')
-               .attr('readonly', false)
+            $('#instituicao')
+                .val($('option:contains("Virada Cultural")').val());
 
-           $('#local')
-               .attr('readonly', false)
+            $('#retiradaIngresso')
+                .val($('option:contains("INGRESSOS GRÁTIS")').val());
 
-           $('#espaco')
-               .attr('readonly', false)
+            $('#valor_ingresso')
+                .val('0,00');
 
-           $('#retiradaIngresso')
-               .attr('readonly', false)
+            getLocais(10, 189);
+            getEspacos();
 
-           $('#valor_ingresso')
-               .attr('readonly', false)
+            $('#local').val(189);
+        } else {
+            $('#instituicao')
+                .val($('option:contains("Selecione uma opção...")').val());
 
-       }else{
-           $('#horaInicio')
-               .attr('readonly', true)
-               .val('00:00');
+            $('#espaco')
+                .val($('option:contains("Selecione uma opção...")').val());
 
-           $('#horaFim')
-               .attr('readonly', true)
-               .val('00:00');
+            $('#retiradaIngresso')
+                .val($('option:contains("Selecione uma opção...")').val());
 
-           $('#instituicao')
-               .attr('readonly', true)
-               .val($('option:contains("Virada Cultural")').val());
+            $('#valor_ingresso')
+                .val('0,00');
+        }
+    }
 
-           $('#local')
-               .attr('readonly', true)
-               .val($('option:contains("De acordo com a programação do evento")').val());
+    let retiradaIngresso = document.querySelector('#retiradaIngresso');
 
-           $('#espaco')
-               .attr('readonly', true);
+    retiradaIngresso.addEventListener("change", () => {
+        let valorIngressos = document.querySelector('#valor_ingresso');
+        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11){
+            valorIngressos.value = '0,00';
+            valorIngressos.readOnly = true;
+        }else {
+            valorIngressos.readOnly = false;
+        }
+    });
 
-           $('#retiradaIngresso')
-               .attr('readonly', true)
-               .val($('option:contains("INGRESSOS GRÁTIS")').val());
-
-           $('#valor_ingresso')
-               .attr('readonly', true)
-               .val('0,00');
-
-           getLocais(10, 626);
-           getEspacos();
-       }
-   }
-
-    function getLocais(idInstituicao, selectedId){
+    function getLocais(idInstituicao, selectedId) {
         fetch(`${url}?instituicao_id=${idInstituicao}`)
             .then(response => response.json())
-            .then(locais => {                
+            .then(locais => {
                 $('#local option').remove();
                 $('#local').append('<option value="">Selecione uma opção...</option>');
 
                 for (const local of locais) {
-                    if(selectedId == local.id){
-                        $('#local').append(`<option value='${local.id}' selected>${local.local}</option>`).focus();;
-                    }else{
-                        $('#local').append(`<option value='${local.id}'>${local.local}</option>`).focus();;
+                    if (selectedId == local.id) {
+                        $('#local').append(`<option value='${local.id}' selected>${local.local}</option>`).focus();
+                        ;
+                    } else {
+                        $('#local').append(`<option value='${local.id}'>${local.local}</option>`).focus();
+                        ;
                     }
-                    
-                }                
+
+                }
             })
     }
-    
+
     let local = document.querySelector('#local');
     let idEspaco = <?=$ocorrencia['espaco_id']?>;
 
-    if(local_id != ''){
-       
+    if (local_id != '') {
+
         console.log(`local ${local_id} Espaco ${idEspaco}`);
         getEspacos(local_id, idEspaco)
     }
 
-    local.addEventListener('change', async e => {        
+    local.addEventListener('change', async e => {
         let idLocal = $('#local option:checked').val();
 
         getEspacos(idLocal, '')
     })
-    
-    function getEspacos(idLocal, selectedId){
+
+    function getEspacos(idLocal, selectedId) {
         fetch(`${url}?espaco_id=${idLocal}`)
-            .then(response => response.json() )
+            .then(response => response.json())
             .then(espacos => {
                 $('#espaco option').remove();
-                if(espacos.length < 1){
+                if (espacos.length < 1) {
                     $('#espaco').append('<option value="">Não há espaço para esse local</option>')
-                    .attr('required',false)
-                    .focus();
-                }else{
+                        .attr('required', false)
+                        .focus();
+                } else {
                     $('#espaco').append('<option value="">Selecione uma opção...</option>')
-                    .attr('required',true)
-                    .focus();
+                        .attr('required', true)
+                        .focus();
                 }
-                
+
                 for (const espaco of espacos) {
-                    if(selectedId == espaco.id){
+                    if (selectedId == espaco.id) {
                         $('#espaco').append(`<option value='${espaco.id}' selected>${espaco.espaco}</option>`)
-                    }else{
+                    } else {
                         $('#espaco').append(`<option value='${espaco.id}'>${espaco.espaco}</option>`)
                     }
                 }
-             
+
             })
     }
-  
+
+    function cepPesquisa() {
+        function limpa_formulário_cep() {
+            // Limpa valores do formulário de cep.
+            $("#rua").val("");
+            $("#bairro").val("");
+            $("#cidade").val("");
+            $("#estado").val("");
+        }
+
+        //Quando o campo cep perde o foco.
+        $("#cep").blur(function () {
+            //Nova variável "cep" somente com dígitos.
+            var cep = $(this).val().replace(/\D/g, '');
+
+            //Verifica se campo cep possui valor informado.
+            if (cep != "") {
+
+                //Expressão regular para validar o CEP.
+                var validacep = /^[0-9]{8}$/;
+
+                //Valida o formato do CEP.
+                if (validacep.test(cep)) {
+
+                    //Preenche os campos com "..." enquanto consulta webservice.
+                    $("#rua").val("...");
+                    $("#bairro").val("...");
+                    $("#cidade").val("...");
+                    $("#estado").val("...");
+
+                    //Consulta o webservice viacep.com.br/
+                    $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
+
+                        if (!("erro" in dados)) {
+                            //Atualiza os campos com os valores da consulta.
+                            $("#rua").prop('readonly', true);
+                            $("#bairro").prop('readonly', true);
+                            $("#cidade").prop('readonly', true);
+                            $("#estado").prop('readonly', true);
+
+                            $("#rua").val(dados.logradouro);
+                            $("#bairro").val(dados.bairro);
+                            $("#cidade").val(dados.localidade);
+                            $("#estado").val(dados.uf);
+
+                            if (dados.logradouro == "") {
+                                alert("Por favor preencha o formulário");
+                                $("#rua").prop('readonly', false);
+                                $("#bairro").prop('readonly', false);
+                                $("#cidade").prop('readonly', false);
+                                $("#estado").prop('readonly', false);
+                            }
+                        } else {
+                            //CEP pesquisado não foi encontrado.
+                            limpa_formulário_cep();
+                            alert("CEP não encontrado.");
+                        }
+                    });
+                } else {
+                    //cep é inválido.
+                    limpa_formulário_cep();
+                    alert("Formato de CEP inválido.");
+                }
+            } else {
+                //cep sem valor, limpa formulário.
+                limpa_formulário_cep();
+            }
+        });
+    }
 </script>
 
 <script>
     let msgHora = $('#msgEscondeHora');
-    msgHora.hide();
+    // msgHora.hide();
 
     function validaHora() {
         let horaInicio = $('#horaInicio').val();
@@ -623,33 +794,32 @@ $ocorrencia = recuperaDados('agendao_ocorrencias', 'id', $idOcorrencia);
         }
     }
 
-function validaDiaSemana(){
-    var dataInicio = document.querySelector('#datepicker10').value;
-    var isMsg = $('#msgEsconde');
-    isMsg.hide();
-    if(dataInicio != ""){
-        var i = 0;
-        var counter = 0;
-        var diaSemana = $('.semana');
-
-        for (; i < diaSemana.length; i++) {
-            if (diaSemana[i].checked) {
-                counter++;
-            }
-        }
-
-        if (counter==0){
-            $('#cadastra').attr("disabled", true);
-            isMsg.show();
-            return false;
-        }
-
-        $('#cadastra').attr("disabled", false);
+    function validaDiaSemana() {
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var isMsg = $('#msgEsconde');
         isMsg.hide();
-        return true;
-    }
-}
+        if (dataInicio != "") {
+            var i = 0;
+            var counter = 0;
+            var diaSemana = $('.semana');
 
-var diaSemana = $('.semana');
-diaSemana.change(validaDiaSemana);
+            for (; i < diaSemana.length; i++) {
+                if (diaSemana[i].checked) {
+                    counter++;
+                }
+            }
+
+            if (counter == 0) {
+                $('#edita').attr("disabled", true);
+                isMsg.show();
+                return false;
+            }
+
+            $('#edita').attr("disabled", false);
+            isMsg.hide();
+            return true;
+        }
+    }
+
+    var diaSemana = $('.semana').change(validaDiaSemana)
 </script>
