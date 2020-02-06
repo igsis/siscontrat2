@@ -76,6 +76,8 @@ $link_vai_pf = $http . "rlt_programa_vai_pf.php";
 
 $link_vai_pj = $http . "rlt_programa_vai_pj.php";
 
+$link_fepac = $http . "rlt_fepac.php";
+
 $idPedido = $_POST['idPedido'];
 
 $idEvento = $_SESSION['idEvento'];
@@ -485,7 +487,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
                     
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_fepac?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             FEPAC
