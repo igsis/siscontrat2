@@ -60,6 +60,22 @@ $link_centroculturaisteatro_pf_6391 = $http . "rlt_pedido_reserva_centroscultura
 
 $link_centroculturaisteatro_pj_6391 = $http . "rlt_pedido_reserva_centrosculturaisteatros_pj_6391.php";
 
+$link_casa_cultura_pf = $http . "rlt_casa_cultura_pf.php";
+
+$link_casa_cultura_pj = $http . "rlt_casa_cultura_pj.php";
+
+$link_reserva_bma_pf = $http . "rlt_reserva_bma_pf.php";
+
+$link_reserva_bma_pj = $http . "rlt_reserva_bma_pj.php";
+
+$link_bma_csmb_pf = $http . "rlt_reserva_bma_csmb_pf.php";
+
+$link_bma_csmb_pj = $http . "rlt_reserva_bma_csmb_pj.php";
+
+$link_vai_pf = $http . "rlt_programa_vai_pf.php";
+
+$link_vai_pj = $http . "rlt_programa_vai_pj.php";
+
 $idPedido = $_POST['idPedido'];
 
 $idEvento = $_SESSION['idEvento'];
@@ -348,7 +364,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_casa_cultura_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Casas de Cultura
@@ -356,7 +372,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
                     
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_reserva_bma_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva BMA
@@ -364,7 +380,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_bma_csmb_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Oficinas CSMB e BMA
@@ -380,7 +396,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
                     
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_vai_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Programa VAI
@@ -477,7 +493,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_reserva_bma_pj?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva BMA
@@ -485,7 +501,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_bma_csmb_pj?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Oficinas CSMB e BMA
@@ -501,7 +517,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
                     
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_vai_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Programa VAI
@@ -531,7 +547,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     <hr/>
                 
 
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_casa_cultura_pj?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Casas de Cultura
