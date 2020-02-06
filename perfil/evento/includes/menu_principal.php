@@ -15,7 +15,7 @@ $pasta = "?perfil=evento&p=";
             <li><a href="<?= $pasta ?>lista_pedidos_enviados"><i class="fa fa-circle-o"></i> <span>Acompanhar pedidos enviados</span></a></li>
             <li><a href="<?= $pasta ?>lista_eventos_enviados"><i class="fa fa-circle-o"></i> <span>Acompanhar eventos enviados</span></a></li>
             <li><a href="<?= $pasta ?>buscar_capac"><i class="fa fa-circle-o"></i> <span>Buscar no CAPAC</span></a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> <span>Informações de produção</span></a></li>
+            <li><a href="http://smcsistemas.prefeitura.sp.gov.br/smcproducao/" target="_blank"><i class="fa fa-circle-o"></i> <span>Informações de produção</span></a></li>
             <li><a href="<?= $pasta ?>adicionar_local"><i class="fa fa-circle-o"></i> <span>Adição de local</span></a></li>
             <li><a href="<?= $pasta ?>adicionar_espaco"><i class="fa fa-circle-o"></i> <span>Adição de espaço</span></a></li>
             <li class="header">MAIS</li>
