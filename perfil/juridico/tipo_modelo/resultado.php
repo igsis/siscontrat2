@@ -35,8 +35,7 @@ $sql = "SELECT
     pf.nome,
     p.origem_tipo_id,
     p.origem_id,
-    e.protocolo,
-    e.id
+    e.protocolo
     
     
     
@@ -44,7 +43,7 @@ $sql = "SELECT
     INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
     INNER JOIN eventos e on e.id = p.origem_id
     
-    WHERE p.publicado = 1 AND p.origem_tipo_id = 1 AND e.id = $idEvento";
+    WHERE p.publicado = 1 AND p.origem_tipo_id AND p.origem_id = $idEvento";
 $evento = $con->query($sql)->fetch_array();
 ?>
 <div class="content-wrapper">
