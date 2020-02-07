@@ -11,21 +11,32 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 $idEvento = $pedido['origem_id'];
-$idPf = $pedido['pessoa_fisica_id'];
+$idPj = $pedido['pessoa_juridica_id'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
-
-$idAtracao = $ocorrencia['atracao_id'];
-
-$atracao = recuperaDados('atracoes', 'id', $idAtracao);
+$pessoa = recuperaDados('pessoa_juridicas', 'id', $idPj);
 
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
-if($evento['tipo_evento_id'] == 2){
-    $trechoApre = "exibição de filme";
+$sqlTestaFilme = "SELECT filme_id FROM filme_eventos WHERE evento_id = $idEvento";
+$queryFilme = mysqli_query($con, $sqlTestaFilme);
+$row = mysqli_num_rows($queryFilme);
+if($row != 0){
+    $testaFilme = mysqli_fetch_array($queryFilme);
+    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
+    $duracao = $filme['duracao'] . " Hora(s).";
 }else{
-    $trechoApre = $atracao['quantidade_apresentacao'] ." (" . qtdApresentacoesPorExtenso($atracao['quantidade_apresentacao']) . " ) apresentações";
+    $duracao = "Não se aplica.";
 }
+
+$sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
+$local = "";
+$queryLocal = mysqli_query($con, $sqlLocal);
+
+while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
+    $local = $local . $linhaLocal['local'] . ' | ';
+}
+
+$local = substr($local, 0, -3);
 
 ?>
 
@@ -56,14 +67,19 @@ if($evento['tipo_evento_id'] == 2){
     <?php
     $conteudo =
     "<p>&nbsp;</p>".
-    "<p><strong>INTERESSADO:</strong> ". $pessoa['nome'] ."  </span></p>".
+    "<p><strong>INTERESSADO:</strong> ". $pessoa['razao_social'] ."  </span></p>".
     "<p><strong>ASSUNTO:</strong> ". $objeto ."  </p>".
     "<p>&nbsp;</p>".
     "<p><strong>SMC/CAF/SCO</strong></p>".
     "<p><strong>Senhor Supervisor</strong></p>".
     "<p>&nbsp;</p>".
-    "<p>O presente processo trata da contratação de ". $objeto .", no valor de R$ ". $pedido['valor_total'] ." (". valorPorExtenso($pedido['valor_total'])." ), concernente a ". $trechoApre . ", no período de ". retornaPeriodoNovo($idEvento, 'ocorrencias') .".</p>".
-    "<p>Assim, solicito a reserva de recursos que deverá onerar 25.10.13.392.3001.4.311.33903900.00.</p>".
+    "<p><b>Objeto:</b>" . $objeto . "</p>".
+    "<p><b>Data/período:</b>" . retornaPeriodoNovo($idEvento, 'ocorrencias'). "</p>".
+    "<p><strong>Duração: </strong>" . $duracao  ."</p>".
+    "<p><b>Local:</b> " . $local . "</p>".
+    "<p><b>Valor:</b> R$ " . $pedido['valor_total'] ." (".valorPorExtenso($pedido['valor_total']). ")</p>".
+    "<p>&nbsp;</p>".
+    "<p>Diante do exposto, autorizo a reserva de recursos proveniente da nota de reserva inclusa no processo " . $pedido['numero_processo_mae'] ." - (Pessoa Jurídica) para a presente contratação.</p>".
     "<p>&nbsp;</p>".
     "<p>Após, enviar para SMC/AJ para prosseguimento.</p>".
     "<p>&nbsp;</p>".

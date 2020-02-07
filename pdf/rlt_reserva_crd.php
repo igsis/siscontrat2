@@ -11,9 +11,9 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 $idEvento = $pedido['origem_id'];
-$idPf = $pedido['pessoa_fisica_id'];
+$idPj = $pedido['pessoa_juridica_id'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
+$pessoa = recuperaDados('pessoa_juridicas', 'id', $idPj);
 
 $idAtracao = $ocorrencia['atracao_id'];
 
@@ -56,14 +56,14 @@ if($evento['tipo_evento_id'] == 2){
     <?php
     $conteudo =
     "<p>&nbsp;</p>".
-    "<p><strong>INTERESSADO:</strong> ". $pessoa['nome'] ."  </span></p>".
+    "<p><strong>INTERESSADO:</strong> ". $pessoa['razao_social'] ."  </span></p>".
     "<p><strong>ASSUNTO:</strong> ". $objeto ."  </p>".
     "<p>&nbsp;</p>".
     "<p><strong>SMC/CAF/SCO</strong></p>".
     "<p><strong>Senhor Supervisor</strong></p>".
     "<p>&nbsp;</p>".
-    "<p>O presente processo trata da contratação de ". $objeto .", no valor de R$ ". $pedido['valor_total'] ." (". valorPorExtenso($pedido['valor_total'])." ), concernente a ". $trechoApre . ", no período de ". retornaPeriodoNovo($idEvento, 'ocorrencias') .".</p>".
-    "<p>Assim, solicito a reserva de recursos que deverá onerar 25.10.13.392.3001.4.311.33903900.00.</p>".
+    "<p>O presente processo trata da contratação de ". $objeto .", no valor de R$ ". $pedido['valor_total'] ." (".valorPorExtenso($pedido['valor_total'])." ), concernente a " . $trechoApre .", no período ". retornaPeriodoNovo($idEvento, 'ocorrencias') .".</p>".
+    "<p><strong>Assim, solicito a reserva de recursos que deverá onerar a ação 6379 - Projeto Atividade (Pessoa Jurídica) da U.O. 25.10 - Fonte 00.</strong> </p>".
     "<p>&nbsp;</p>".
     "<p>Após, enviar para SMC/AJ para prosseguimento.</p>".
     "<p>&nbsp;</p>".

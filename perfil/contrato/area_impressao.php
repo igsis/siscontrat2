@@ -78,6 +78,38 @@ $link_vai_pj = $http . "rlt_programa_vai_pj.php";
 
 $link_fepac = $http . "rlt_fepac.php";
 
+$link_reserva_global_pf = $http . "rlt_reserva_global_pf.php";
+
+$link_reserva_global_pj = $http . "rlt_reserva_global_pj.php";
+
+$link_centros_culturais_6354_pf = $http . "rlt_centros_culturais_6354_pf.php";
+
+$link_centros_culturais_6354_pj = $http . "rlt_centros_culturais_6354_pj.php";
+
+$link_reserva_ccsp_6393_pf = $http . "rlt_reserva_ccsp_6393_pf.php";
+
+$link_reserva_ccsp_6393_pj = $http . "rlt_reserva_ccsp_6393_pj.php";
+
+$link_reserva_oficina_pf = $http . "rlt_reserva_oficina_pf.php";
+
+$link_reserva_oficina_pj = $http . "rlt_reserva_oficina_pj.php";
+
+$link_reserva_csmb_pf = $http . "rlt_reserva_csmb_pf.php";
+
+$link_reserva_csmb_pj = $http . "rlt_reserva_csmb_pj.php";
+
+$link_reserva_dph_pf = $http . "rlt_reserva_gabinete_dph_pf.php";
+
+$link_reserva_dph_pj = $http . "rlt_reserva_gabinete_dph_pj.php";
+
+$link_reserva_gabinete_pf = $http . "rlt_reserva_gabinete_pf.php";
+
+$link_reserva_gabinete_pj = $http . "rlt_reserva_gabinete_pj.php";
+
+$link_reserva_crd = $http . "rlt_reserva_crd.php";
+
+$link_memoria_circo = $http . "rlt_memoria_circo.php";
+
 $idPedido = $_POST['idPedido'];
 
 $idEvento = $_SESSION['idEvento'];
@@ -390,7 +422,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_reserva_global_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Global
@@ -409,7 +441,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                 
                 <div class="col-md-6">
-                        <form action="#" target="_blank" method="post">
+                        <form action="<?=$link_centros_culturais_6354_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Centros Culturais 6354
@@ -419,7 +451,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                 </div>
 
                 
-                        <form action="#" target="_blank" method="post">
+                        <form action="<?=$link_reserva_csmb_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva CSMB
@@ -428,7 +460,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     <hr/>
                 
 
-                        <form action="#" target="_blank" method="post">
+                        <form action="<?=$link_reserva_ccsp_6393_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva CCSP 6393
@@ -437,7 +469,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     <hr/>
           
 
-                        <form action="#" target="_blank" method="post">
+                        <form action="<?=$link_reserva_oficina_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Oficina
@@ -445,7 +477,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                        <form action="#" target="_blank" method="post">
+                        <form action="<?=$link_reserva_gabinete_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Gabinete
@@ -453,7 +485,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_reserva_dph_pf?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva DPH
@@ -463,7 +495,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         <?php
                         }else if($pedido['pessoa_tipo_id'] == 2){?>
             <div class="col-md-6">
-            <form action="#" target="_blank" method="post">
+            <form action="<?=$link_centros_culturais_6354_pj?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Centros Culturais e Teatros 6354
@@ -479,7 +511,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_reserva_csmb_pj?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva CSMB
@@ -511,7 +543,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_reserva_crd?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva CRD
@@ -519,7 +551,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
                     
-                    <form action="<?=$link_vai_pf?>" target="_blank" method="post">
+                    <form action="<?=$link_vai_pj?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Programa VAI
@@ -530,7 +562,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                 
                 <div class="col-md-6">
-                        <form action="#" target="_blank" method="post">
+                        <form action="<?=$link_reserva_gabinete_pj?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Gabinete
@@ -540,7 +572,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                 </div>
 
                 
-                        <form action="#" target="_blank" method="post">
+                        <form action="<?=$link_reserva_dph_pj?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva DPH
@@ -557,7 +589,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                        <form action="#" target="_blank" method="post">
+                        <form action="<?=$link_reserva_ccsp_6393_pj?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva CCSP 6393
@@ -566,7 +598,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     <hr/>
           
 
-                        <form action="#" target="_blank" method="post">
+                        <form action="<?=$link_reserva_oficina_pj?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Oficina
@@ -574,7 +606,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                        <form action="#" target="_blank" method="post">
+                        <form action="<?=$link_memoria_circo?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Centro de Memória do Circo
@@ -582,7 +614,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                    <form action="#" target="_blank" method="post">
+                    <form action="<?=$link_reserva_global_pj?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
                             Reserva Global

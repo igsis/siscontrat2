@@ -13,7 +13,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']
 $idEvento = $pedido['origem_id'];
 $idPj = $pedido['pessoa_juridica_id'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idPj);
+$pessoa = recuperaDados('pessoa_juridicas', 'id', $idPj);
 
 $idAtracao = $ocorrencia['atracao_id'];
 
@@ -21,6 +21,11 @@ $atracao = recuperaDados('atracoes', 'id', $idAtracao);
 
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
+if($evento['tipo_evento_id'] == 2){
+    $trechoApre = "exibição de filme";
+}else{
+    $trechoApre = $atracao['quantidade_apresentacao'] ." (" . qtdApresentacoesPorExtenso($atracao['quantidade_apresentacao']) . " ) apresentações";
+}
 
 ?>
 
@@ -58,7 +63,7 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
     "<p><strong>SMC/CAF/SCO</strong></p>".
     "<p><strong>Sr(a). Supervisor</strong></p>".
     "<p>&nbsp;</p>".
-    "<p>O presente processo trata da contratação de " . $objeto . ", no valor de R$ " . $pedido['valor_total'] . " ( ".valorPorExtenso($pedido['valor_total'])." ), conforme solicitação LINK, tendo sido anexados os documentos necessários e incluido o parecer técnico LINK, ratificando o caráter artístico e o valor proposto para o cachê referente a ". $atracao['quantidade_apresentacao']." ( ".qtdApresentacoesPorExtenso($atracao['quantidade_apresentacao'])." ) apresentação(ões), no período de ".retornaPeriodoNovo($idEvento, 'ocorrencias') .".</p>".
+    "<p>O presente processo trata da contratação de " . $objeto . ", no valor de R$ " . $pedido['valor_total'] . " ( ".valorPorExtenso($pedido['valor_total'])." ), conforme solicitação LINK, tendo sido anexados os documentos necessários e incluido o parecer técnico LINK, ratificando o caráter artístico e o valor proposto para o cachê referente a ". $trechoApre.", no período ".retornaPeriodoNovo($idEvento, 'ocorrencias') .".</p>".
     "<p>Autorizo a reserva que deverá onerar recursos do FEPAC, dotação 6354 (Pessoa Jurídica), mediante RESERVA COM TRANSFERÊNCIA PARA U.O. 25.10 - Fonte 08.</p>".
     "<p>&nbsp;</p>".
     "<p>&nbsp;</p>".
