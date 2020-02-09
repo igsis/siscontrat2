@@ -12,22 +12,22 @@ $num = mysqli_num_rows($query);
 
 // dados //
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$tipo_evento = recuperaDados('tipo_eventos', 'id', $idEvento);
-$projeto_especiais = recuperaDados('projeto_especiais', 'id', $idEvento);
-$relacao_juridica = recuperaDados('relacao_juridicas', 'id', $idEvento);
-$linguagens = recuperaDados('linguagens', 'id', $idEvento);
-$atracao = recuperaDados('atracoes', 'id', $idEvento);
+$tipo_evento = recuperaDados('tipo_eventos', 'id', $evento['tipo_evento_id']);
+$projeto_especiais = recuperaDados('projeto_especiais', 'id', $evento['projeto_especial_id']);
+$relacao_juridica = recuperaDados('relacao_juridicas', 'id', $evento['relacao_juridica_id']);
+$atracao = recuperaDados('atracoes', 'id', $evento['id']);
 $classificacao = recuperaDados('classificacao_indicativas', 'id', $idEvento);
 $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
-$ocorrencia = recuperaDados('ocorrencias', 'id', $idEvento);
+$ocorrencia = recuperaDados('ocorrencias', 'id', $atracao['id']);
 $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
 $pedidos = recuperaDados('pedidos', 'id', $idEvento);
-$pagamento = recuperaDados('pagamentos', 'pedido_id', $idEvento);
-$statusPedido = recuperaDados('pedido_status', 'id', $idEvento);
-$produtor = recuperaDados('produtores', 'id', $idEvento);
+$pagamento = recuperaDados('pagamentos', 'pedido_id', $pedidos['id']);
+$statusPedido = recuperaDados('pedido_status', 'id', $pedidos['status_pedido_id']);
+$produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
 $usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
-$dataEvento = recuperaDados('evento_envios','id',$idEvento);
+$dataEvento = recuperaDados('evento_envios','id',$evento['id']);
 $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_array();
+
 ?>
 
 
@@ -124,7 +124,7 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Linguagem / Expressão artística:</th>
-                        <td><?= $linguagens['linguagem'] ?></td>
+                        <td></td>
                     </tr>
                     <tr>
                         <?php
