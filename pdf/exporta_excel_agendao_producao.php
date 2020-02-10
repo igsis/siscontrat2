@@ -30,7 +30,6 @@ $sql = "SELECT
                 O.sexta AS 'sexta',
                 O.sabado AS 'sabado',
                 O.domingo AS 'domingo',
-                L.local AS 'nome_local',
                 L.logradouro AS 'logradouro',
                 L.numero AS 'numero',
                 L.complemento AS 'complemento',
@@ -97,7 +96,7 @@ $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue("J" . $proxLinha)
     ->setCellValue("K" . $proxLinha)
     ->setCellValue("L" . $proxLinha)
-    ->setCellValue("M" . $proxLinha, "")
+    ->setCellValue("M" . $proxLinha, "Agendão")
     ->setCellValue("N" . $proxLinha)
     ->setCellValue("O" . $proxLinha)
     ->setCellValue("P" . $proxLinha)
@@ -181,16 +180,6 @@ $objPHPExcel->getActiveSheet()->getStyle('A' . $proxCabecalho . ':X' . $proxCabe
 $cont = $proxCabecalho + 1;
 while ($linha = mysqli_fetch_array($query)) {
 
-    if ($linha['tipo_evento'] == 2) {
-        $filme_evento = recuperaDados("filme_eventos", "evento_id", $linha['evento_id']);
-
-        $filme = recuperaDados("filmes", "id", $filme_evento['filme_id']);
-        $classificao = recuperaDados("classificacao_indicativas", "id", $filme['classificacao_indicativa_id']);
-
-        $linha ['classificacao'] = $classificao['classificacao_indicativa'];
-    }
-
-
     $totalDias = '';
     $dias = "";
     $linha['segunda'] == 1 ? $dias .= "Segunda, " : '';
@@ -206,42 +195,6 @@ while ($linha = mysqli_fetch_array($query)) {
         $totalDias .= substr($dias, 0, -2);
     } else {
         $totalDias .= "Dias não especificados.";
-    }
-
-    //Ações
-    $sqlAcao = "SELECT * FROM acao_evento WHERE evento_id = '" . $linha['evento_id'] . "'";
-    $queryAcao = mysqli_query($con, $sqlAcao);
-    $acoes = [];
-    $i = 0;
-
-    while ($arrayAcoes = mysqli_fetch_array($queryAcao)) {
-        $idAcao = $arrayAcoes['acao_id'];
-        $sqlLinguagens = "SELECT * FROM acoes WHERE id = '$idAcao'";
-        $linguagens = $con->query($sqlLinguagens)->fetch_assoc();
-        $acoes[$i] = $linguagens['acao'];
-        $i++;
-    }
-
-    if (count($acoes) != 0) {
-        $stringAcoes = implode(", ", $acoes);
-    }
-
-    //Público
-    $sqlPublico = "SELECT * FROM evento_publico WHERE evento_id = '" . $linha['evento_id'] . "'";
-    $queryPublico = mysqli_query($con, $sqlPublico);
-    $representatividade = [];
-    $i = 0;
-
-    while ($arrayPublico = mysqli_fetch_array($queryPublico)) {
-        $idRepresentatividade = $arrayPublico['publico_id'];
-        $sqlRepresen = "SELECT * FROM publicos WHERE id = '$idRepresentatividade'";
-        $publicos = $con->query($sqlRepresen)->fetch_assoc();
-        $representatividade[$i] = $publicos['publico'];
-        $i++;
-    }
-
-    if (count($acoes) != 0) {
-        $stringPublico = implode(", ", $representatividade);
     }
 
     if ($linha['fomento'] != 0) {
@@ -280,9 +233,17 @@ while ($linha = mysqli_fetch_array($query)) {
         $linha['bairro']
     ];
 
-    $objPHPExcel->setActiveSheetIndex(0)
+    $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = $idAgendao AND ao.publicado = 1";
+    $queryLocal = mysqli_query($con, $sqlLocal);
+    $local = '';
+    while ($locais = mysqli_fetch_array($queryLocal)) {
+        $local = $local . '; ' . $locais['local'];
+    }
+    $local = substr($local, 1);
+
+    $objPHPExcel->setActiveSheetIndex(0)        
         ->setCellValue($a, $linha['instiSigla'])
-        ->setCellValue($b, $linha['nome_local'])
+        ->setCellValue($b, $local)
         ->setCellValue($c, implode(", ", $enderecoCompleto) . " - CEP: " . $linha['cep'])
         ->setCellValue($d, $linha['subprefeitura'])
         ->setCellValue($e, $linha['nome'])
@@ -332,7 +293,7 @@ $objPHPExcel->setActiveSheetIndex(0);
 ob_end_clean();
 ob_start();
 
-$nome_arquivo = date("YmdHis") . "_agendao_pesquisa.xls";
+$nome_arquivo = date("YmdHis", strtotime("-3 hours")) . "_agendao_pesquisa.xls";
 
 
 // Cabeçalho do arquivo para ele baixar(Excel2007)
