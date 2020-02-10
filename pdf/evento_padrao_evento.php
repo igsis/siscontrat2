@@ -12,10 +12,12 @@ $idEvento = $_SESSION['eventoId'];
 
 
 $evento = recuperaDados('eventos','id',$idEvento);
-$modelo_juridico = recuperaDados('juridicos','pedido_id',$idEvento);
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idEvento);
 $pedidos = recuperaDados('pedidos','id',$idEvento);
-$ocorrencias = recuperaDados('ocorrencias','id',$idEvento);
+$modelo_juridico = recuperaDados('juridicos','pedido_id',$idEvento);
+$tipo_pessoa = recuperaDados('pessoa_tipos','id',$pedidos['pessoa_tipo_id']);
+$pessoa = recuperaDados('pessoa_fisicas', 'id', $idEvento);
+$atracao = recuperaDados('atracoes','evento_id',$evento['id']);
+$ocorrencias = recuperaDados('ocorrencias','atracao_id',$atracao['id']);
 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencias['instituicao_id']);
 $finalizacao = $modelo_juridico['finalizacao'];
 $amparo = $modelo_juridico['amparo_legal'];
@@ -26,12 +28,15 @@ $nome_instituicao = $instituicao['nome'];
 $sigla = $instituicao['sigla'];
 $nome = $pessoa['nome'];
 $cpf = $pessoa['cpf'];
-$data = date("Y/m/d");
+$data = date("Y/m/d"); // pega o dia da semana , sendo obrigado pelo formato
+$hoje = date('d/m/Y'); // necessario criar uma outra variavel , pois ele não aceita o formato padrão .
 $diaSemana = diasemana($data);
 $valor = $pedidos['valor_total'];
 $pagamento = $pedidos['forma_pagamento'];
 $valor_extenso = valorPorExtenso($valor);
 $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
+
+
 ?>
 
 <html>
@@ -56,6 +61,7 @@ $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
 
 <body>
 <?php
+
 $dados =
     "<p>&nbsp;</p>" .
     "<p align='justify'>" . "$amparo" . "</p>" .
@@ -75,9 +81,8 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
-    "<p align='center'>São Paulo, ".$data. "</p>" .
+    "<p align='center'>São Paulo, ".$hoje. "</p>" .
     "<p>&nbsp;</p>"
-
 
 ?>
 <div align="center">

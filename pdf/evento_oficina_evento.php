@@ -27,6 +27,7 @@ $sigla = $instituicao['sigla'];
 $nome = $pessoa['nome'];
 $cpf = $pessoa['cpf'];
 $data = date("Y/m/d");
+$hoje = date('d/m/Y');
 $diaSemana = diasemana($data);
 $valor = $pedidos['valor_total'];
 $pagamento = $pedidos['forma_pagamento'];
@@ -75,7 +76,7 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
-    "<p align='center'>São Paulo, ".$data. "</p>" .
+    "<p align='center'>São Paulo, ".$hoje . "</p>" .
     "<p>&nbsp;</p>"
 
 
