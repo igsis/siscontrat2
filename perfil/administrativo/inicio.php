@@ -1,11 +1,11 @@
 <?php
 $con = bancoMysqli();
 
-$sqlLocais = "SELECT * FROM locais WHERE publicado = 2";
+$sqlLocais = "SELECT * FROM locais WHERE publicado = 1";
 $queryLocais = mysqli_query($con, $sqlLocais);
 $numeroLocais = mysqli_num_rows($queryLocais);
 
-$sqlEspacos = "SELECT * FROM espacos WHERE publicado = 2";
+$sqlEspacos = "SELECT * FROM espacos WHERE publicado = 1";
 $queryEspacos = mysqli_query($con, $sqlEspacos);
 $numeroEspacos = mysqli_num_rows($queryEspacos);
 

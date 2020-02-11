@@ -6,9 +6,8 @@ require_once("../funcoes/funcoesGerais.php");
 
 // conexão com banco //
 $con = bancoMysqli();
-session_start();
-
-$idEvento = $_SESSION['eventoId'];
+isset($_POST['idEvento']);
+$idEvento = $_POST['idEvento'];
 
 $evento = recuperaDados('eventos','id',$idEvento);
 $atracao = recuperaDados('atracoes','evento_id',$idEvento);

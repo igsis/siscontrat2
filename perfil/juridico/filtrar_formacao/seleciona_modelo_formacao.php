@@ -1,6 +1,7 @@
 <?php
 isset($_POST['idFormacao']);
     $idFormacao = $_POST['idFormacao'];
+
 ?>
 <div class="content-wrapper">
     <section class="content">

@@ -3,7 +3,8 @@ $con = bancoMysqli();
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 $http = $server . "/pdf/";
 
-$idEvento = $_SESSION['eventoId'];
+isset($_POST['idEvento']);
+$idEvento = $_POST['idEvento'];
 
 $link_padraoEvento = $http . "evento_padrao_evento.php";
 $link_vocacionalEvento = $http . "evento_vocacional_evento.php";
@@ -38,25 +39,29 @@ if ($num > 0) {
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-offset-4 col-md-4" align="center">
-                        <a href="<?= $link_padraoEvento ?>" target="_blank">
+                        <form action="<?= $link_padraoEvento ?>" method="post" role="form">
+                            <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO PADRÃO
                             </button>
-                        </a>
+                        </form>
                         <br>
-                        <a href="<?= $link_vocacionalEvento ?>" target='_blank'>
+                        <form action="<?= $link_vocacionalEvento ?>" method="post" role="form">
+                            <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO FORMAÇÃO
                             </button>
-                        </a>
+                        </form>
                         <br>
-                        <a href="<?= $link_manifestacaojuridicaEvento ?>" target='_blank'>
+                        <form action="<?= $link_manifestacaojuridicaEvento ?>" method="post" role="form">
+                            <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> MANIFESTAÇÃO JURÍDICA
                             </button>
-                        </a>
+                        </form>
                         <br>
-                        <a href="<?= $link_oficinaEvento ?>" target='_blank'>
+                        <form action="<?= $link_oficinaEvento ?>" method="post" role="form">
+                            <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO OFICINAS
                             </button>
-                        </a>
+                        </form>
                     </div>
                 </div>
             </div>

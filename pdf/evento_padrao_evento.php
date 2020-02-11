@@ -6,9 +6,8 @@ require_once("../funcoes/funcoesGerais.php");
 
 // conexão com banco //
 $con = bancoMysqli();
-session_start();
-
-$idEvento = $_SESSION['eventoId'];
+isset($_POST['idEvento']);
+$idEvento = $_POST['idEvento'];
 
 
 $evento = recuperaDados('eventos','id',$idEvento);
@@ -26,9 +25,9 @@ $nome_instituicao = $instituicao['nome'];
 $sigla = $instituicao['sigla'];
 $nome = $pessoa['nome'];
 $cpf = $pessoa['cpf'];
-$data = date("d-m-Y", strtotime("-3 hours"));
+$data = date("Y-m-d", strtotime("-3 hours")); // usado para realizar a conversão para que possa pegar o dia da semana
 $diaSemana = diasemana($data);
-$dataConvertida = exibirDataBr($data);
+$hoje = date("d/m/Y", strtotime("-3 hours"));
 $valor = $pedidos['valor_total'];
 $pagamento = $pedidos['forma_pagamento'];
 $valor_extenso = valorPorExtenso($valor);
@@ -66,7 +65,7 @@ $dados =
     "<p><strong>Data / Período:</strong>"."$periodo"."</p>" .
     "<p>&nbsp;</p>" .
     "<p><strong>Locais e Horários:</strong> " . "</p>" .
-    "<p>"."$nome_instituicao"."&nbsp;"."($sigla)"."<br>$dotacao$periodo"."&nbsp;"."($diaSemana)"."&nbsp;ás&nbsp;$hora_inicio</p>".
+    "<p>"."$nome_instituicao"."&nbsp;"."($sigla)"."<br>$periodo"."&nbsp;"."($diaSemana)"."&nbsp;ás&nbsp;$hora_inicio</p>".
     "<p>&nbsp;</p>" .
     "<p><strong> Valor:</strong> " . "R$ " .$valor. "  " . "($valor_extenso)" . "</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . "$pagamento" . "</p>" .
@@ -76,7 +75,7 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
-    "<p align='center'>São Paulo, ".$data. "</p>" .
+    "<p align='center'>São Paulo, ".$hoje. "</p>" .
     "<p>&nbsp;</p>"
 
 

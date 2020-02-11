@@ -85,15 +85,17 @@ $sql = "SELECT p.numero_processo,
                     <?php
                     if ($query = mysqli_query($con, $sql)) {
                         while ($evento = mysqli_fetch_array($query)) {
-                            $_SESSION['eventoId'] = $evento['id'];
                             ?>
                             <tr>
                                 <?php
                                 if (isset($evento['numero_processo'])) {
                                     ?>
                                     <td>
-                                        <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"  method="POST">
-                                            <button type="submit" class="btn btn-link"><?= $evento['numero_processo'] ?></button>
+                                        <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"
+                                              method="POST">
+                                            <input type="hidden" name=idEvento value="<?= $evento['id'] ?>">
+                                            <button type="submit"
+                                                    class="btn btn-link"><?= $evento['numero_processo'] ?></button>
                                         </form>
                                     </td>
                                     <?php
@@ -116,7 +118,22 @@ $sql = "SELECT p.numero_processo,
                                 <?php
                                 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
                                 ?>
-                                <td><?=  $objeto ?></td>
+                                <td><?= $objeto ?></td>
+                                <td>
+                                    <?php
+                                    $erros = [];
+                                    if (count($erros) == 0) { ?>
+                                        <p>Seu evento não possui pendências!</p>
+                                    <?php } else { ?>
+                                        <p>Seu evento possui pendências!</p>
+                                        <ul>
+                                            <?php foreach ($erros as $erro) {
+                                                echo "<li>$erro</li>";
+                                            }
+                                            ?>
+                                        </ul>
+                                    <?php } ?>
+                                </td>
                             </tr>
                             <?php
                         }

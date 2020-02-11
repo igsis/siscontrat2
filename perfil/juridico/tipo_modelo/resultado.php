@@ -3,12 +3,11 @@ $con = bancoMysqli();
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 $http = $server . "/pdf/";
 
-
-$idEvento = $_SESSION['eventoId'];
-
 if (isset($_POST['tipoModelo'])) {
     $modelo = $_POST['tipoModelo'];
 }
+isset($_POST['idEvento']);
+$idEvento = $_POST['idEvento'];
 
 
 $sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
