@@ -9,15 +9,19 @@ $con = bancoMysqli();
 session_start();
 
 $idEvento = $_SESSION['eventoId'];
-$instituicoes = recuperaDados('instituicoes','id',$idEvento);
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idEvento);
+
 $evento = recuperaDados('eventos','id',$idEvento);
+$atracao = recuperaDados('atracoes','evento_id',$idEvento);
+$ocorrencia = recuperaDados('ocorrencias','atracao_id',$atracao['id']);
+$instituicoes = recuperaDados('instituicoes','id',$ocorrencia['instituicao_id']);
 $pedidos = recuperaDados('pedidos','id',$idEvento);
+$pessoa = recuperaDados('pessoa_fisicas', 'id', $idEvento);
 $num_pro = $pedidos['numero_processo'];
 $nome_eve = $evento['nome_evento'];
 $nome = $pessoa['nome'];
 $nome_inst = $instituicoes['nome'];
 $data = date("Y/m/d");
+$hoje = date('d/m/Y');
 
 ?>
 
@@ -56,7 +60,7 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
-    "<p align='center'>São Paulo, " . $data . "</p>" .
+    "<p align='center'>São Paulo, " . $hoje . "</p>" .
     "<p>&nbsp;</p>"
 
 

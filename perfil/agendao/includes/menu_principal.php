@@ -12,7 +12,7 @@ $pasta = "?perfil=agendao&p=";
             <li class="header">AGENDÃO</li>
             <li><a href="<?= $pasta ?>evento_cadastro"><i class="fa fa-circle-o"></i> <span>Cadastra evento</span></a></li>
             <li><a href="<?= $pasta ?>listagem"><i class="fa fa-circle-o"></i> <span>Lista evento</span></a></li>
-            <li><a href="<?= $pasta ?>exporta_evento"><i class="fa fa-circle-o"></i> <span>Exporta Excel</span></a></li>
+            <li><a href="<?= $pasta ?>pesquisa_exporta"><i class="fa fa-circle-o"></i> <span>Exporta Excel</span></a></li>
             <li><a href="<?= $pasta ?>adicionar_local"><i class="fa fa-circle-o"></i> <span>Adição de local</span></a></li>
             <li><a href="<?= $pasta ?>adicionar_espaco"><i class="fa fa-circle-o"></i> <span>Adição de espaço</span></a></li>
             <?php

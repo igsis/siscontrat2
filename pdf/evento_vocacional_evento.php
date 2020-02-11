@@ -9,12 +9,15 @@ session_start();
 
 
 $idEvento = $_SESSION['eventoId'];
+
 $pessoa = recuperaDados('pessoa_fisicas','id',$idEvento);
 $modelo = recuperaDados('juridicos','pedido_id',$idEvento);
 $pedido = recuperaDados('pedidos','id',$idEvento);
 $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
 $evento = recuperaDados('eventos','id',$idEvento);
-$instituicao = recuperaDados('instituicoes','id',$idEvento);
+$atracao = recuperaDados('atracoes','evento_id',$evento['id']);
+$ocorrencias = recuperaDados('ocorrencias','atracao_id',$atracao['id']);
+$instituicao = recuperaDados('instituicoes', 'id', $ocorrencias['instituicao_id']);
 $nome_instituicao = $instituicao['nome'];
 $sigla = $instituicao['sigla'];
 $nome_evento = $evento['nome_evento'];
@@ -27,6 +30,7 @@ $amparo = $modelo['amparo_legal'];
 $dotacao = $modelo['dotacao'];
 $finalizacao = $modelo['finalizacao'];
 $data = date("Y/m/d");
+$hoje = date("d/m/Y");
 
 ?>
 
@@ -70,7 +74,7 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>".
     "<p>&nbsp;</p>" .
-    "<p align='center'>São Paulo, "."$data"."</p>" .
+    "<p align='center'>São Paulo, "."$hoje"."</p>" .
     "<p>&nbsp;</p>"
 
 
