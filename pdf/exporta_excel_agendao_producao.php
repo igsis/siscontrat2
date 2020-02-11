@@ -8,9 +8,8 @@ $con = bancoMysqli();
 require_once("../include/phpexcel/Classes/PHPExcel.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
-session_start();
 
-$idAgendao = $_SESSION['idAgendaoProd'];
+$idAgendao = $_POST['idAgendao'];
 $sql = "SELECT
                 agendao.id AS 'evento_id',
                 agendao.nome_evento AS 'nome',
@@ -191,7 +190,6 @@ while ($linha = mysqli_fetch_array($query)) {
     $linha['domingo'] == 1 ? $dias .= "Domingo. " : '';
 
     if ($dias != "") {
-        //echo "dias diferente de vazio " . $respectiva . $dias;
         $totalDias .= substr($dias, 0, -2);
     } else {
         $totalDias .= "Dias não especificados.";
@@ -293,7 +291,7 @@ $objPHPExcel->setActiveSheetIndex(0);
 ob_end_clean();
 ob_start();
 
-$nome_arquivo = date("YmdHis", strtotime("-3 hours")) . "_agendao_pesquisa.xls";
+$nome_arquivo = date("d-m-Y", strtotime("-3 hours")) . "_agendao_pesquisa.xls";
 
 
 // Cabeçalho do arquivo para ele baixar(Excel2007)
