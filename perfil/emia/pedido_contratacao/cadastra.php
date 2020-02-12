@@ -146,17 +146,23 @@ $valor = dinheiroParaBr($valor);
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-4">
                                 <label for="dataKit">Data kit pagamento:</label>
                                 <input type="date" name="dataKit" class="form-control" id="datepicker10"
                                        placeholder="DD/MM/AAAA" required>
                             </div>
 
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-4">
                                 <label for="numeroProcesso">Número do Processo: *</label>
                                 <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
                                        data-mask="9999.9999/9999999-9" minlength="19" required>
                             </div>
+
+                            <div class="form-group col-md-4">
+                            <label for="processoMae">Número do Processo Mãe: *</label>
+                            <input type="text" name="processoMae" id="processoMae" required class="form-control"
+                                   data-mask="9999.9999/9999999-9" minlength="19">
+                        </div>
                         </div>
 
                         <div class="row">

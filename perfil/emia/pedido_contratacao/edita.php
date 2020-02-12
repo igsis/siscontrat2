@@ -12,13 +12,15 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $forma_pagamento = addslashes($_POST['forma_pagamento']) ?? null;
     $justificativa = addslashes($_POST['justificativa']) ?? null;
     $obs = addslashes($_POST['observacao']) ?? null;
+    $processoMae = $_POST['processoMae'];
     $data_kit = $_POST['dataKit'];
     if (isset($_POST['cadastra'])) {
         $sql = "INSERT INTO pedidos (origem_tipo_id, 
                                  origem_id, 
                                  pessoa_tipo_id,  
                                  pessoa_fisica_id, 
-                                 numero_processo, 
+                                 numero_processo,
+                                 numero_processo_mae, 
                                  verba_id, 
                                  numero_parcelas, 
                                  valor_total, 
@@ -33,6 +35,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
                    '1',
                    '$pf',
                    '$num_processo',
+                   '$processoMae',
                    '$verba',
                    '$num_parcelas',
                    '$valor',
@@ -65,7 +68,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     } else if (isset($_POST['edita'])) {
         $idPedido = $_POST['idEc'];
 
-        $sql = "UPDATE pedidos SET verba_id = '$verba', valor_total = '$valor', data_kit_pagamento = '$data_kit', numero_processo = '$num_processo', forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$obs', numero_parcelas = '$num_parcelas' WHERE id = '$idPedido'";
+        $sql = "UPDATE pedidos SET verba_id = '$verba', valor_total = '$valor', data_kit_pagamento = '$data_kit', numero_processo = '$num_processo', numero_processo_mae = '$processoMae',forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$obs', numero_parcelas = '$num_parcelas' WHERE id = '$idPedido'";
 
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
@@ -132,6 +135,7 @@ $sql = "SELECT pf.nome,
                verba.verba,
                p.data_kit_pagamento,
                p.numero_processo,
+               p.numero_processo_mae,
                p.justificativa,
                p.forma_pagamento,
                p.verba_id,
@@ -275,16 +279,10 @@ $link_proposta = $http . "rlt_proposta_emia.php";
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-6">
                             <label for="dataKit">Data kit pagamento:</label>
                             <input type="date" name="dataKit" class="form-control" id="datepicker10"
                                    placeholder="DD/MM/AAAA" value="<?= $ec['data_kit_pagamento'] ?>">
-                        </div>
-
-                        <div class="form-group col-md-3">
-                            <label for="numeroProcesso">Número do Processo: *</label>
-                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
-                                   data-mask="9999.9999/9999999-9" minlength="19" value="<?= $ec['numero_processo'] ?>">
                         </div>
 
                         <div class="form-group col-md-6">
@@ -292,6 +290,20 @@ $link_proposta = $http . "rlt_proposta_emia.php";
                             <a href="?perfil=emia&p=pedido_contratacao&sp=edita_parcela">
                                 <button type="button" class="btn btn-info btn-block">Editar parcelas</button>
                             </a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="numeroProcesso">Número do Processo: *</label>
+                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
+                                   data-mask="9999.9999/9999999-9" minlength="19" value="<?= $ec['numero_processo'] ?>">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="numeroProcesso">Número do Processo Mãe: *</label>
+                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
+                                   data-mask="9999.9999/9999999-9" minlength="19" value="<?= $ec['numero_processo_mae'] ?>">
                         </div>
                     </div>
 
