@@ -65,7 +65,7 @@ $query = mysqli_query($con, $sql);
                                             <td>
                                                 <form action="?perfil=formacao&p=conclusao&sp=concluir" method="POST">
                                                     <input type="hidden" name="idPedido" value="<?=$pedido['id']?>">
-                                                    <button type="submit" class="btn btn-link"><?=$pedido['numero_processo']?></button>
+                                                    <button type="submit" class="btn btn-link" name="carregar"><?=$pedido['numero_processo']?></button>
                                                 </form>
                                             </td>
                                             <td><?=$pedido['protocolo']?></td>
