@@ -12,8 +12,7 @@ $idEvento = $_POST['idEvento'];
 
 $evento = recuperaDados('eventos','id',$idEvento);
 $modelo_juridico = recuperaDados('juridicos','pedido_id',$idEvento);
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idEvento);
-$pedidos = recuperaDados('pedidos','id',$idEvento);
+$pedidos = recuperaDados('pedidos','origem_id',$idEvento);
 $ocorrencias = recuperaDados('ocorrencias','id',$idEvento);
 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencias['instituicao_id']);
 $finalizacao = $modelo_juridico['finalizacao'];
@@ -23,8 +22,6 @@ $hora_inicio = $ocorrencias['horario_inicio'];
 $nome_evento = $evento['nome_evento'];
 $nome_instituicao = $instituicao['nome'];
 $sigla = $instituicao['sigla'];
-$nome = $pessoa['nome'];
-$cpf = $pessoa['cpf'];
 $data = date("Y-m-d", strtotime("-3 hours")); // usado para realizar a conversão para que possa pegar o dia da semana
 $diaSemana = diasemana($data);
 $hoje = date("d/m/Y", strtotime("-3 hours"));
@@ -32,6 +29,8 @@ $valor = $pedidos['valor_total'];
 $pagamento = $pedidos['forma_pagamento'];
 $valor_extenso = valorPorExtenso($valor);
 $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
+
+
 ?>
 
 <html>
@@ -56,11 +55,20 @@ $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
 
 <body>
 <?php
+if ($pedidos['pessoa_tipo_id'] == 1) {
+    $pessoa = recuperaDados("pessoa_fisicas", "id", $pedidos ['pessoa_fisica_id']);
+    $y = $pessoa['nome'];
+    $x = $pessoa['cpf'];
+} else if ($pedidos['pessoa_tipo_id'] == 2) {
+    $pessoa = recuperaDados('pessoa_juridicas', "id", $pedidos['pessoa_juridica_id']);
+    $y = $pessoa['razao_social'];
+    $x = $pessoa['cnpj'];
+}
 $dados =
     "<p>&nbsp;</p>" .
     "<p align='justify'>" . "$amparo" . "</p>" .
     "<p>&nbsp;</p>" .
-    "<p><strong>Contratado:</strong> " . "$nome" . ", CPF (" . "$cpf" . ")</p>" .
+    "<p><strong>Contratado:</strong> " . "$y" . " - (" . "$x" . ")</p>" .
     "<p><strong>Objeto:</strong> " . "$nome_evento" . "</p>" .
     "<p><strong>Data / Período:</strong>"."$periodo"."</p>" .
     "<p>&nbsp;</p>" .
