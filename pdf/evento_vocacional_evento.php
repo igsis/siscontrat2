@@ -5,14 +5,12 @@ require_once("../funcoes/funcoesGerais.php");
 
 // conexão com banco //
 $con = bancoMysqli();
-session_start();
-
-
-$idEvento = $_SESSION['eventoId'];
+isset($_POST['idEvento']);
+$idEvento = $_POST['idEvento'];
 
 $pessoa = recuperaDados('pessoa_fisicas','id',$idEvento);
 $modelo = recuperaDados('juridicos','pedido_id',$idEvento);
-$pedido = recuperaDados('pedidos','id',$idEvento);
+$pedido = recuperaDados('pedidos','origem_id',$idEvento);
 $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
 $evento = recuperaDados('eventos','id',$idEvento);
 $atracao = recuperaDados('atracoes','evento_id',$evento['id']);
@@ -24,8 +22,6 @@ $nome_evento = $evento['nome_evento'];
 $pagamento = $pedido['forma_pagamento'];
 $valor = $pedido['valor_total'];
 $valor_extenso = valorPorExtenso($valor);
-$nome = $pessoa['nome'];
-$cpf = $pessoa['cpf'];
 $amparo = $modelo['amparo_legal'];
 $dotacao = $modelo['dotacao'];
 $finalizacao = $modelo['finalizacao'];
@@ -33,7 +29,6 @@ $data = date("Y/m/d");
 $hoje = date("d/m/Y");
 
 ?>
-
 
 <html>
 <head>
@@ -57,11 +52,20 @@ $hoje = date("d/m/Y");
 
 <body>
 <?php
+if ($pedido['pessoa_tipo_id'] == 1) {
+    $pessoa = recuperaDados("pessoa_fisicas", "id", $pedido ['pessoa_fisica_id']);
+    $y = $pessoa['nome'];
+    $x = $pessoa['cpf'];
+} else if ($pedido['pessoa_tipo_id'] == 2) {
+    $pessoa = recuperaDados('pessoa_juridicas', "id", $pedido['pessoa_juridica_id']);
+    $y = $pessoa['razao_social'];
+    $x = $pessoa['cnpj'];
+}
 $dados =
     "<p>&nbsp;</p>" .
     "<p align='justify'>" . "$amparo" . "</p>" .
     "<p>&nbsp;</p>" .
-    "<p><strong>Contratado:</strong> " . "$nome" . ", CPF (" . "$cpf" . ")</p>" .
+    "<p><strong>Contratado:</strong> " . "$y" . " - (" . "$x" . ")</p>" .
     "<p><strong>Objeto:</strong> " . "$nome_evento" . "</p>" .
     "<p><strong>Data / Período:</strong>"."$periodo"."</p>" .
     "<p><strong>Locais:</strong> " ." $nome_instituicao ".""."($sigla)"." </p>" .

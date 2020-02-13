@@ -1,34 +1,37 @@
 <?php
 
 $con = bancoMysqli();
-$idEvento = $_SESSION['eventoId'];
-
+isset($_POST['idEvento']);
+$idEvento = $_POST['idEvento'];
 
 // para inserir a informação em Dotação //
 $sql = "SELECT * FROM juridicos where pedido_id = '$idEvento'";
-$query = mysqli_query($con,$sql);
+$query = mysqli_query($con, $sql);
 $num = mysqli_num_rows($query);
 
 
 // dados //
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$espaco = recuperaDados('evento_publico','evento_id',$idEvento);
-$publico = recuperaDados('publicos','id',$espaco['publico_id']);
+$espaco = recuperaDados('evento_publico', 'evento_id', $idEvento);
+$publico = recuperaDados('publicos', 'id', $espaco['publico_id']);
 $tipo_evento = recuperaDados('tipo_eventos', 'id', $evento['tipo_evento_id']);
 $projeto_especiais = recuperaDados('projeto_especiais', 'id', $evento['projeto_especial_id']);
 $relacao_juridica = recuperaDados('relacao_juridicas', 'id', $evento['relacao_juridica_id']);
-$atracao = recuperaDados('atracoes', 'id', $idEvento);
+$atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
+$acao_atracao = recuperaDados('acao_atracao', 'atracao_id', $atracao['id']);
+$acao = recuperaDados('acoes', 'id', $acao_atracao['acao_id']);
 $classificacao = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
 $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
-$ocorrencia = recuperaDados('ocorrencias', 'id', $idEvento);
+$ocorrencia = recuperaDados('ocorrencias', 'atracao_id', $atracao['id']);
 $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
-$pedidos = recuperaDados('pedidos', 'id', $idEvento);
+$pedidos = recuperaDados('pedidos', 'origem_id', $idEvento);
 $pagamento = recuperaDados('pagamentos', 'pedido_id', $pedidos['id']);
-$statusPedido = recuperaDados('pedido_status', 'id', $idEvento);
-$produtor = recuperaDados('produtores', 'id', $idEvento);
+$statusPedido = recuperaDados('pedido_status', 'id', $pedidos['status_pedido_id']);
+$produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
 $usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
-$dataEvento = recuperaDados('evento_envios','id',$idEvento);
-$dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_array();
+$dataEvento = recuperaDados('evento_envios', 'evento_id', $idEvento);
+$dotacao = recuperaDados('juridicos', 'pedido_id', $pedidos['id']);
+$tipo_pessoa = recuperaDados('pessoa_tipos', 'id', $pedidos['pessoa_tipo_id'])
 ?>
 
 
@@ -125,7 +128,7 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Linguagem / Expressão artística:</th>
-                        <td></td>
+                        <td><?= $acao['acao'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Público / Representatividade social:</th>
@@ -205,29 +208,21 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                         <td><?= $pedidos['numero_processo'] ?></td>
                     </tr>
                     <tr>
-                        <?php
-                        $tipo_pessoa = "SELECT pt.pessoa FROM
-                        pedidos as p 
-                        INNER JOIN pessoa_tipos pt on p.pessoa_tipo_id = pt.id
-                        WHERE p.publicado = 1";
-                        $tpQuerry = $con->query($tipo_pessoa)->fetch_assoc();
-                        ?>
                         <th width="30%">Tipo de pessoa</th>
-                        <td><?= $tpQuerry['pessoa'] ?></td>
+                        <td><?= $tipo_pessoa['pessoa'] ?></td>
                     </tr>
                     <tr>
                         <?php
                         $pedido = "SELECT * FROM PEDIDOS WHERE id = $idEvento AND publicado = 1";
-                        $query = mysqli_query($con,$pedido);
+                        $query = mysqli_query($con, $pedido);
                         $pessoa = mysqli_num_rows($query);
 
-                        if($pessoa['pessoa_tipo_id'] == 2){
-                        $pj = recuperaDados("pessoa_juridicas","id",$pessoa['pessoa_juridica_id']);
-                        echo "<td>".$pj['razao_social']."</td>";
-                        }
-                        else{
-                        $pf = recuperaDados("pessoa_fisicas","id",$pessoa['pessoa_fisica_id']);
-                        echo "<td>".$pf['nome']."</td>";
+                        if ($pessoa['pessoa_tipo_id'] == 2) {
+                            $pj = recuperaDados("pessoa_juridicas", "id", $pessoa['pessoa_juridica_id']);
+                            echo "<td>" . $pj['razao_social'] . "</td>";
+                        } else {
+                            $pf = recuperaDados("pessoa_fisicas", "id", $pessoa['pessoa_fisica_id']);
+                            echo "<td>" . $pf['nome'] . "</td>";
                         }
                         ?>
                     </tr>
@@ -261,11 +256,11 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
-                        <td><?=$dotacao['dotacao']?></td>
+                        <td><?= $dotacao['dotacao'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>
-                        <td></td>
+                        <td><?= $pedidos['observacao'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Último status:</th>

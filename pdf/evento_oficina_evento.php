@@ -6,9 +6,10 @@ require_once("../funcoes/funcoesGerais.php");
 
 // conexão com banco //
 $con = bancoMysqli();
-session_start();
 
-$idEvento = $_SESSION['eventoId'];
+
+isset($_POST['idEvento']);
+$idEvento = $_POST['idEvento'];
 
 
 $evento = recuperaDados('eventos','id',$idEvento);
@@ -57,11 +58,21 @@ $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
 
 <body>
 <?php
+
+if ($pedidos['pessoa_tipo_id'] == 1) {
+    $pessoa = recuperaDados("pessoa_fisicas", "id", $pedidos ['pessoa_fisica_id']);
+    $y = $pessoa['nome'];
+    $x = $pessoa['cpf'];
+} else if ($pedidos['pessoa_tipo_id'] == 2) {
+    $pessoa = recuperaDados('pessoa_juridicas', "id", $pedidos['pessoa_juridica_id']);
+    $y = $pessoa['razao_social'];
+    $x = $pessoa['cnpj'];
+}
 $dados =
     "<p>&nbsp;</p>" .
     "<p align='justify'>" . "$amparo" . "</p>" .
     "<p>&nbsp;</p>" .
-    "<p><strong>Contratado:</strong> " . "$nome" . ", CPF (" . "$cpf" . ")</p>" .
+    "<p><strong>Contratado:</strong> " . "$y" . " - (" . "$x" . ")</p>" .
     "<p><strong>Objeto:</strong> " . "$nome_evento" . "</p>" .
     "<p><strong>Data / Período:</strong>"."$periodo"."</p>" .
     "<p>&nbsp;</p>" .

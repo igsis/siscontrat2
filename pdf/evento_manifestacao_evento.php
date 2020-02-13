@@ -6,9 +6,8 @@ require_once("../funcoes/funcoesGerais.php");
 
 // conexão com banco //
 $con = bancoMysqli();
-session_start();
-
-$idEvento = $_SESSION['eventoId'];
+isset($_POST['idEvento']);
+$idEvento = $_POST['idEvento'];
 
 $evento = recuperaDados('eventos','id',$idEvento);
 $atracao = recuperaDados('atracoes','evento_id',$idEvento);
@@ -44,11 +43,19 @@ $hoje = date('d/m/Y');
 
 <body>
 <?php
+
+if ($pedidos['pessoa_tipo_id'] == 1) {
+    $pessoa = recuperaDados("pessoa_fisicas", "id", $pedidos ['pessoa_fisica_id']);
+    $y = $pessoa['nome'];
+} else if ($pedidos['pessoa_tipo_id'] == 2) {
+    $pessoa = recuperaDados('pessoa_juridicas', "id", $pedidos['pessoa_juridica_id']);
+    $y = $pessoa['razao_social'];
+}
 $dados =
     "<p align='justify'>" . "" . "</p>" .
     "<p><strong>Do processo Nº :</strong> " . "$num_pro" . "</p>" .
     "<p>&nbsp;</p>" .
-    "<p><strong>INTERESSADO:</strong> " . "$nome" . "</p>" .
+    "<p><strong>INTERESSADO:</strong> " . "$y" . "</p>" .
     "<p><strong>ASSUNTO:</strong> " . "$nome_eve" . "</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .

@@ -51,11 +51,6 @@
                             <br>
                         </div>
                     </div>
-                    <div class="row" id="msg">
-                                <div style="text-align: center;" class="form-group col-md-12">
-                                    <span style="color: red;"><b>Data de início precisa ser maior que a data final!</b></span>
-                                </div>
-                            </div>
                     <div class="box-footer">
                         <button type="submit" class="btn btn-primary btn-theme center-block" id="filtrar" name="filtrar">Filtrar</button>
                     </div>
@@ -65,29 +60,3 @@
     </section>
 </div>
 
-<script>
-$('#msg').hide();
-function comparaData() {
-        var isMsg = $('#msg');
-        var dataInicio = document.querySelector('#data_inicio').value;
-        var dataFim = document.querySelector('#final').value;
-
-        if (dataInicio != "" && dataFim != "") {
-            var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
-            var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
-            isMsg.hide();
-        }
-
-        $('#filtrar').attr("disabled", true);
-            
-        if (dataFim <= dataInicio) {
-            $('#filtrar').attr("disabled", true);
-            isMsg.show();
-        } else {
-            $('#filtrar').attr("disabled", false);
-            isMsg.hide();
-        }
-}
-   $('#data_inicio').on('change', comparaData);
-   $('#final').on('change', comparaData);
-</script>

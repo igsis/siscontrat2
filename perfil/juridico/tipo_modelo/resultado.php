@@ -3,12 +3,11 @@ $con = bancoMysqli();
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 $http = $server . "/pdf/";
 
-
-$idEvento = $_SESSION['eventoId'];
-
 if (isset($_POST['tipoModelo'])) {
     $modelo = $_POST['tipoModelo'];
 }
+isset($_POST['idEvento']);
+$idEvento = $_POST['idEvento'];
 
 
 $sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
@@ -17,33 +16,28 @@ $eve = recuperaDados('eventos', 'id', $idEvento);
 
 $fiscal = recuperaDados('usuarios', 'id', $eve['fiscal_id'])['nome_completo'];
 $suplente = recuperaDados('usuarios', 'id', $eve['suplente_id'])['nome_completo'];
-$rfFiscal = recuperaDados('usuarios','id',$eve['fiscal_id'])['rf_rg'];
-$rfSuplente = recuperaDados('usuarios','id',$eve['suplente_id'])['rf_rg'];
+$rfFiscal = recuperaDados('usuarios', 'id', $eve['fiscal_id'])['rf_rg'];
+$rfSuplente = recuperaDados('usuarios', 'id', $eve['suplente_id'])['rf_rg'];
 $mdl = str_replace("nomeFiscal", $fiscal, $mdl);
 $mdl = str_replace("rfFiscal", $rfFiscal, $mdl);
 $mdl = str_replace("nomeSuplente", $suplente, $mdl);
 $mdl = str_replace("rfSuplente", $rfSuplente, $mdl);
 
 
-
-
-$sql = "SELECT 
-    p.numero_processo,
-    p.forma_pagamento,
-    p.valor_total,
-    pf.nome,
-    p.origem_tipo_id,
-    p.origem_id,
-    e.protocolo
-    
-    
-    
-    FROM pedidos as p
-    INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
-    INNER JOIN eventos e on e.id = p.origem_id
-    
-    WHERE p.publicado = 1 AND p.origem_tipo_id AND p.origem_id = $idEvento";
+$sql = "select p.numero_processo,
+e.protocolo,
+p.valor_total,
+p.forma_pagamento,
+e.id,
+p.pessoa_tipo_id,
+p.pessoa_fisica_id,
+p.pessoa_juridica_id
+from pedidos as p
+inner join eventos as e on e.id = p.origem_id
+where e.id = $idEvento";
 $evento = $con->query($sql)->fetch_array();
+
+
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -66,15 +60,23 @@ $evento = $con->query($sql)->fetch_array();
                             <td><?= $evento['numero_processo'] ?></td>
                         </tr>
                         <tr>
+                            <?php
+                            if ($evento['pessoa_tipo_id'] == 1) {
+                                $tipo = "Física";
+                                $pessoa = recuperaDados("pessoa_fisicas", "id", $evento ['pessoa_fisica_id'])['nome'];
+                            } else if ($evento['pessoa_tipo_id'] == 2) {
+                                $tipo = "Jurídico";
+                                $pessoa = recuperaDados('pessoa_juridicas', "id", $evento['pessoa_juridica_id']);
+                                $pessoa = $pessoa['razao_social'];
+                            }
+                            ?>
                             <th width="30%">Contratado:</th>
-                            <td><?= $evento['nome'] ?></td>
+                            <td><?= $pessoa ?></td>
                         </tr>
                         <?php
-                        $sqlLocal = "SELECT 
-                    l.local
-                    from locais l 
-                    INNER JOIN ocorrencias o on l.id = o.local_id";
-                        $local = $con->query($sqlLocal)->fetch_assoc();
+                            $atracoes = recuperaDados('atracoes','evento_id',$idEvento);
+                            $ocorrencias = recuperaDados('ocorrencias','atracao_id',$atracoes['id']);
+                            $local = recuperaDados('locais','id',$ocorrencias['local_id']);
                         ?>
                         <tr>
                             <th width="30%">Local:</th>
@@ -99,10 +101,12 @@ $evento = $con->query($sql)->fetch_array();
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
-                            <td><textarea name="dotacao" rows="1" cols="85"></textarea></td>                        </tr>
+                            <td><textarea name="dotacao" rows="1" cols="85"></textarea></td>
+                        </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
-                            <td><textarea name="finalizacao" rows="8" cols="85"><?= $mdl['finalizacao'] ?></textarea></td>
+                            <td><textarea name="finalizacao" rows="8" cols="85"><?= $mdl['finalizacao'] ?></textarea>
+                            </td>
                         </tr>
                     </table>
                     <div class="pull-left">

@@ -20,7 +20,7 @@ if (isset($_POST['filtrar'])) {
         $sqlUsuario = " AND u.nome_completo = '$usuario'";
 
     if ($projeto != null)
-        $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
+        $sqlProjeto = " AND a.projeto_especial_id = '$projeto'";
 
     $sqlAgendao = "SELECT a.id, a.nome_evento, c.classificacao_indicativa,
                           s.subprefeitura, o.valor_ingresso,
@@ -34,7 +34,8 @@ if (isset($_POST['filtrar'])) {
                    INNER JOIN locais AS l ON o.local_id = l.id
                    WHERE a.publicado = 1 AND o.publicado = 1 AND a.evento_status_id = 3
                    AND o.data_inicio >= '$datainicio' AND o.data_fim <= '$datafim'
-                   $sqlUsuario $sqlProjeto $sqlLocal";
+                   $sqlUsuario $sqlProjeto $sqlLocal
+                   GROUP BY a.id";
 
     $queryAgendao = mysqli_query($con, $sqlAgendao);
 }
@@ -87,7 +88,7 @@ if (isset($_POST['filtrar'])) {
                                     <td>
                                          <form method="post" target="_blank" action="../pdf/exportar_excel_agendao.php">
                                               <input type="hidden" name="idAgendao" value="<?=$agendao['id']?>">
-                                              <button type="submit" class="btn btn-primary btn-theme btn-block">
+                                              <button type="submit" class="btn btn-success btn-theme btn-block">
                                                  <span class="glyphicon glyphicon-list-alt"></span>
                                               </button>
                                          </form>

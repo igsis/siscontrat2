@@ -10,7 +10,7 @@ require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 session_start();
 
-$idEvento = $_SESSION['idEventoProd'];
+$idEvento = $_POST['idEvento'];
 
 $sql = "SELECT
                 E.id AS 'evento_id',
@@ -192,7 +192,7 @@ while ($linha = mysqli_fetch_array($query)) {
         $filme = recuperaDados("filmes", "id", $filme_evento['filme_id']);
         $classificao = recuperaDados("classificacao_indicativas", "id", $filme['classificacao_indicativa_id']);
 
-        $linha ['classificacao'] = $classificao['classificacao_indicativa'];
+        $linha['classificacao'] = $classificao['classificacao_indicativa'];
     }
 
 
@@ -284,9 +284,17 @@ while ($linha = mysqli_fetch_array($query)) {
         $linha['bairro']
     ];
 
+    $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
+    $queryLocal = mysqli_query($con, $sqlLocal);
+    $local = '';
+    while ($locais = mysqli_fetch_array($queryLocal)) {
+        $local = $local . '; ' . $locais['local'];
+    }
+    $local = substr($local, 1);
+
     $objPHPExcel->setActiveSheetIndex(0)
         ->setCellValue($a, $linha['instiSigla'])
-        ->setCellValue($b, $linha['nome_local'])
+        ->setCellValue($b, $local)
         ->setCellValue($c, implode(", ", $enderecoCompleto) . " - CEP: " . $linha['cep'])
         ->setCellValue($d, $linha['subprefeitura'])
         ->setCellValue($e, $linha['nome'])
@@ -336,7 +344,7 @@ $objPHPExcel->setActiveSheetIndex(0);
 ob_end_clean();
 ob_start();
 
-$nome_arquivo = date("YmdHis") . "_eventos_pesquisa.xls";
+$nome_arquivo = date("d-m-Y", strtotime("-3 hours")) . "_eventos_pesquisa.xls";
 
 
 // Cabeçalho do arquivo para ele baixar(Excel2007)

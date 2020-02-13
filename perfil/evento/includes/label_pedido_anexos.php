@@ -149,10 +149,12 @@ if ($edital) { $whereAdicional[] = "edital = '1'"; }
                                     <?php
                                 } else {
                                 ?>
-<!--                                    Sumir com a Parte de envio de arquivos-->
+<!--                             REMOVIDO , POIS ESTAVA DANDO CONFLITO QUANDO ERA ANEXADO SOMENTE O ULTIMO ARQUIVO
+
+                                    Sumir com a Parte de envio de arquivos
                                     <script>
                                         document.querySelector('#envioArq').style.display = 'none';
-                                    </script>
+                                    </script>  -->
                                 <?php
                                 }
                             }

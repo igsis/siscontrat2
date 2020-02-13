@@ -36,10 +36,7 @@ $sql = "SELECT p.numero_processo,
         WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.id = $idFormacao";
 $query = $con->query($sql)->fetch_assoc();
 
-$usuarios = recuperaDados('usuarios', 'id', $idFormacao);
 
-// fiscal , suplente //
-$suplente = recuperaDados('usuarios', 'id', $idFormacao);
 
 //  local //
 $sqlLocal = "SELECT l.local FROM formacao_locais fl 
@@ -51,10 +48,16 @@ $queryLocal = mysqli_query($con, $sqlLocal);
 $f = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
 $idVigencia = $f['form_vigencia_id'];
 
+// usuarios //
+$usuarios = recuperaDados('usuarios', 'id', $f['usuario_id']);
+
+// fiscal , suplente //
+$suplente = recuperaDados('usuarios', 'id', $f['suplente_id']);
+$fiscal = recuperaDados('usuarios', 'id', $f['fiscal_id']);
+
 
 // pegando telefone de pf_telefones //
-$pedido = recuperaDados('pedidos', 'id', $idFormacao);
-$idPf = $pedido['pessoa_fisica_id'];
+$idPf = $f ['pessoa_fisica_id'];
 $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
