@@ -474,20 +474,20 @@ if (isset($_GET['label'])) {
     <!-- /.content -->
 </div>
 <!-- Modal -->
-<div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+<div class="modal fade in" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
      aria-hidden="true" data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 style="margin-top: 15px;" class="modal-title text-bold" id="exampleModalLongTitle">Editar
                     Parcelas</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="mostraFooter()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body ">
+            <div class="modal-body">
                 <div class="row">
-                    <h4 class="text-center" id="somaParcelas"><b><p id="msg"></p><b/></h4>
+                    <h4 class="text-center" id="somaParcelas"><b><p id="msg"></p></b></h4>
                 </div>
                 <form action="#" id="formParcela">
                 </form>
@@ -512,13 +512,22 @@ if (isset($_GET['label'])) {
             </div>
             <div class="modal-footer">
                 <div class="botoes">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModal">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="fecha" onclick="mostraFooter()">Fechar</button>
+                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModal" onclick="mostraFooter()">Salvar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function mostraFooter(){
+     var a = $('#footerPrincipal');
+     a.attr('style', 'display: block');
+     console.log("FOI");
+};  
+</script>
+
 <script type="text/x-handlebars-template" id="templateParcela">
     <div class='row'>
         <div class='form-group col-md-2'>
@@ -539,12 +548,9 @@ if (isset($_GET['label'])) {
         </div>
     </div>
 </script>
+
 <!-- Modal Oficinas-->
-<style>
-    .modal-lg {
-        width: 90%;
-    }
-</style>
+
 <div class="modal fade" id="modalOficina" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
      aria-hidden="true" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
@@ -552,13 +558,13 @@ if (isset($_GET['label'])) {
             <div class="modal-header">
                 <h3 style="margin-top: 15px;" class="modal-title text-bold" id="exampleModalLongTitle">Editar
                     Parcelas de Oficina</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="mostraFooter()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <h4 class="text-center" id="msg"><b><p id="msg"></p><b/></h4>
+                    <h4 class="text-center" id="msg"><b><p id="msg"></p></b></h4>
                 </div>
                 <form action="#" id="formParcela">
                 </form>
@@ -584,8 +590,8 @@ if (isset($_GET['label'])) {
             </div>
             <div class="modal-footer">
                 <div class="botoesOficina">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModalOficina">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="mostraFooter()">Fechar</button>
+                    <button type="button" class="btn btn-primary" name="salvar" id="salvarModalOficina" onclick="mostraFooter()">Salvar</button>
                 </div>
             </div>
         </div>
@@ -631,6 +637,7 @@ if (isset($_GET['label'])) {
 
         $('#abrirParcelas').on('click', abrirModal);
         $('#editarParcelas').on('click', abrirModal);
+        $('#editarParcelas').on('click', mostraFooter);
 
         $('#salvarModal').on('click', salvarModal);
         $('#salvarModalOficina').on('click', salvarModal);
@@ -804,7 +811,7 @@ if (isset($_GET['label'])) {
             var sourceOficina = document.getElementById("templateOficina").innerHTML;
             var templateOficina = Handlebars.compile(sourceOficina);
 
-            $(".botoesOficina").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModalOficina'>Editar</button>");
+            $(".botoesOficina").html("<button type='button' class='btn btn-secondary' data-dismiss='modal' onclick='mostraFooter()'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModalOficina' onclick='mostraFooter()'>Editar</button>");
 
             // var parcelasSelected = $("#numero_parcelas").val();
 
@@ -920,7 +927,7 @@ if (isset($_GET['label'])) {
 
             if (StringValores != "" && StringDatas != "") {
 
-                $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>");
+                $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal' onclick='mostraFooter()'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal' onclick='mostraFooter()'>Editar</button>");
 
                 var valores = StringValores.split("|");
                 var datas = StringDatas.split("|");
@@ -981,7 +988,7 @@ if (isset($_GET['label'])) {
 
             } else {
 
-                $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='salvar' id='salvarModal'>Salvar</button>");
+                $(".botoes").html("<button type='button' class='btn btn-secondary' data-dismiss='modal' onclick='mostraFooter()'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='salvar' id='salvarModal' onclick='mostraFooter()'>Salvar</button>");
 
                 for (var count = 1; count <= parcelasSelected; count++) {
                     html += template({
@@ -1083,7 +1090,7 @@ if (isset($_GET['label'])) {
                     arrayValor [i] = $("input[name='valor[" + i + "]']").val();
                 }
 
-                var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal'>Editar</button>";
+                var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal' onclick='mostraFooter()'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModal' onclick='mostraFooter()'>Editar</button>";
 
                 $('#modalParcelas').slideUp();
 
@@ -1178,7 +1185,7 @@ if (isset($_GET['label'])) {
                 var templateOficina = Handlebars.compile(sourceOficina);
                 var html = '';
 
-                var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModalOficina'>Editar</button>";
+                var newButtons = "<button type='button' class='btn btn-secondary' data-dismiss='modal' onclick='mostraFooter()'>Fechar</button>" + "<button type='button' class='btn btn-primary' name='editar' id='editarModalOficina' onlclick='mostraFooter()'>Editar</button>";
 
                 $('#modalOficina').slideUp();
 
