@@ -11,11 +11,7 @@ $idUser = $_SESSION['idUser'];
 $sql = "SELECT * FROM agendoes WHERE publicado = 1 AND evento_status_id = 3 AND usuario_id = '$idUser'";
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
-if ($linha >= 1) {
-    $tem = 1;
-} else {
-    $tem = 0;
-}
+
 $num_atracoes = 0;
 
 ?>
@@ -25,26 +21,16 @@ $num_atracoes = 0;
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Listagem</h3>
+                        <h4>Lista de Agendões</h4>
                     </div>
-
-                    <?php
-                    if ($tem == 0) {
-                        $mensagemEvento = mensagem("info", "Não existe eventos enviados!");
-                        echo $mensagemEvento;
-                    } else {
-
-                        ?>
-
                         <div class="row" align="center">
                             <?php if (isset($mensagem)) {
                                 echo $mensagem;
                             }; ?>
                         </div>
-
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="tblEvento" class="table table-bordered table-striped">
+                            <table id="tblAgendao" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>Nome do evento</th>
@@ -58,10 +44,17 @@ $num_atracoes = 0;
                                 echo "<tbody>";
                                 while ($evento = mysqli_fetch_array($query)) {
                                     $idEvento = $evento['id'];
-                                    $locais = listaLocais($idEvento);
+                                    $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = '$idEvento' AND ao.publicado = 1";
+                                    $queryLocal = mysqli_query($con, $sqlLocal);
+                                    $local = '';
+                                    while ($locais = mysqli_fetch_array($queryLocal)) {
+                                        $local = $local . '; ' . $locais['local'];
+                                    }
+                                    $local = substr($local, 1);
+                                
                                     echo "<tr>";
                                     echo "<td>". $evento['nome_evento']."</td>";
-                                    echo "<td>" . $locais . "</td>";
+                                    echo "<td>" . $local . "</td>";
                                     echo "<td>" . retornaPeriodoNovo($evento['id'], 'agendao_ocorrencias') . "</td>";
                                     echo "<td>
                                     <form method=\"POST\" action=\"?perfil=agendao&p=resumo_evento_enviado\" role=\"form\">
@@ -84,9 +77,6 @@ $num_atracoes = 0;
                             </table>
                         </div>
                         <!-- /.box-body -->
-                        <?php
-                        }
-                        ?>
                 </div>
                 <!-- /.box -->
             </div>
@@ -101,7 +91,7 @@ $num_atracoes = 0;
 
 <script type="text/javascript">
     $(function () {
-        $('#tblEvento').DataTable({
+        $('#tblAgendao').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },

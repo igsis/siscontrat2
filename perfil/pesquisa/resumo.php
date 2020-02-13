@@ -2,84 +2,67 @@
 $idEvento = $_POST['idEvento'];
 
 $con = bancoMysqli();
-$evento = $con->query("SELECT * 
+$evento = $con->query("SELECT  e.protocolo, e.tipo_evento_id, e.nome_evento, e.espaco_publico, f.fomento, rj.relacao_juridica, pe.projeto_especial, e.sinopse, uf.nome_completo AS fiscal_nome, us.nome_completo AS suplente_nome, uf.nome_completo AS user_nome
     FROM eventos AS e
     LEFT JOIN fomentos f on e.fomento = f.fomento
+    INNER JOIN relacao_juridicas rj on e.relacao_juridica_id = rj.id
+    INNER JOIN projeto_especiais pe on e.projeto_especial_id = pe.id
+    INNER JOIN usuarios uf on e.fiscal_id = uf.id
+    INNER JOIN usuarios us on e.suplente_id = us.id
+    INNER JOIN usuarios ur on e.usuario_id = ur.id
+    WHERE e.id = $idEvento
 ")->fetch_assoc();
+
+$sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
+
 ?>
 
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
         <!-- START ACCORDION-->
-        <h2 class="page-header">Informações do Evento</h2>
+        <a href="http://<?= $_SERVER['HTTP_HOST'] ?>/siscontrat2/pdf/resumo_evento.php?id=<?= $idEvento ?>" target="_blank"><h2 class="page-header">Informações do Evento</h2></a>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong><?= $evento['nome_evento']; ?></strong></h3>
                         <div class="box-body">
+                                                             
+                             <div class="form-group col-md-12">
+                             <h3 align="center">Informações sobre o evento</h3>
+                            </div>
                             <div class="form-group col-md-12">
                                 <strong>Protocolo: </strong><?= $evento['protocolo'] ?>
                             </div>
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-6">
                                 <strong>Espaço público: </strong><?php if ($evento['espaco_publico'] == 1) echo "Sim"; else echo "Não"; ?>
                             </div>
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-6">
                                 <strong>Fomento: </strong>
                                 <?php if ($evento['espaco_publico'] == 1) {
                                     echo $evento['fomento'];
                                 } else {
                                     echo "Não";} ?>
                             </div>
-                            <div class="box-group" id="accordion">
-                                <div class="row">
-                                    <div class="box-body">
-                                        <div class="form-group col-md-12">
-                                            <div align="center">
-                                                <h3>Informações sobre o evento</h3>
-                                                <hr>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <strong>Período: </strong><?= retornaPeriodoNovo($idEvento, 'ocorrencias'); ?>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <strong>Relação
-                                                Juridica: </strong><?= $relacao_juridica['relacao_juridica']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Projeto
-                                                Especial: </strong><?= $projeto_especial['projeto_especial']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Sinopse: </strong><?= $evento['sinopse']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <div align="center">
-                                                <h3>Informações sobre cadastramento</h3>
-                                                <hr>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Fiscal: </strong><?= $fiscal['nome_completo'] ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Suplente: </strong><?= $suplente['nome_completo']; ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Cadastramento realizado
-                                                por: </strong><?= $usuario['nome_completo'] ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Haverá contratação? </strong><?= $contratacao ?>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <strong>Status do Evento: </strong><?= $evento_status['status']; ?>
-                                        </div>
+                            <div class="form-group col-md-6">
+                                <strong>Relação jurídica:</strong> <?= $evento['relacao_juridica'] ?>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <strong>Projeto especial:</strong> <?= $evento['projeto_especial'] ?>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <strong>Sinopse:</strong> <?= $evento['sinopse'] ?>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <strong>Fiscal:</strong> <?= $evento['fiscal_nome'] ?>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <strong>Suplente:</strong> <?= $evento['suplente_nome'] ?>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <strong>Responsável:</strong> <?= $evento['user_nome'] ?>
+                            </div>
                                         <hr>
                                         <?php
                                         if ($evento['tipo_evento_id'] == 1) {
@@ -254,6 +237,7 @@ $evento = $con->query("SELECT *
                                                 <?php }
                                             }
                                         } else {
+                                            $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
                                             $query_filme = mysqli_query($con, $sql_filme);
                                             $contador = 1;
                                             while ($filme = mysqli_fetch_array($query_filme)) {
@@ -343,22 +327,15 @@ $evento = $con->query("SELECT *
 
                                         ?>
                                         <div class="box-footer" align="center">
-                                            <a href="?perfil=evento">
+                                            <a href="?perfil=pesquisa">
                                                 <button type="button" class="btn btn-default">Voltar</button>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
                     </div>
-                </div>
-                <!-- /.box-body -->
-
-                <!-- /.box -->
             </div>
             <!-- /.col -->
-        </div>
         <!-- /.row -->
         <!-- END ACCORDION & CAROUSEL-->
 

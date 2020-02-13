@@ -870,38 +870,39 @@ function recuperaDadosPublicado($tabela, $campo, $variavelCampo)
 	}
 
 	//retorna o dia da semana segundo um date(a-m-d)
-	function diaSemanaBase($data)
-	{
-		$ano =  substr("$data", 0, 4);
-		$mes =  substr("$data", 5, -3);
-		$dia =  substr("$data", 8, 9);
-		$diasemana = date("w", mktime(0,0,0,$mes,$dia,$ano) );
-		switch($diasemana)
-		{
-			case"0":
-				$diasemana = "domingo";
-			break;
-			case"1":
-				$diasemana = "segunda";
-			break;
-			case"2":
-				$diasemana = "terca";
-			break;
-			case"3":
-				$diasemana = "quarta";
-			break;
-			case"4":
-				$diasemana = "quinta";
-			break;
-			case"5":
-				$diasemana = "sexta";
-			break;
-			case"6":
-				$diasemana = "sabado";
-			break;
-		}
-		return "$diasemana";
-	}
+
+function diaSemanaBase($data)
+{
+    $ano =  substr("$data", 0, 4);
+    $mes =  substr("$data", 5, -3);
+    $dia =  substr("$data", 8, 9);
+    $diasemana = date("w", mktime(0,0,0,$mes,$dia,$ano) );
+    switch($diasemana)
+    {
+        case"0":
+            $diasemana = "domingo";
+            break;
+        case"1":
+            $diasemana = "segunda";
+            break;
+        case"2":
+            $diasemana = "terca";
+            break;
+        case"3":
+            $diasemana = "quarta";
+            break;
+        case"4":
+            $diasemana = "quinta";
+            break;
+        case"5":
+            $diasemana = "sexta";
+            break;
+        case"6":
+            $diasemana = "sabado";
+            break;
+    }
+    return "$diasemana";
+}
 
 	function soNumero($str)
 	{

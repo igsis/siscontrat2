@@ -59,7 +59,7 @@ if(isset($_POST['edita'])){
         $ehIgual = false;
     }
 
-    $sql = "UPDATE agendoes SET nome_evento = '$nomeEvento', espaco_publico = '$tipoLugar', projeto_especial_id = '$projeto_especial_id', classificacao_indicativa_id = '$classificacao', links = '$links', ficha_tecnica = '$artistas', sinopse = '$sinopse', quantidade_apresentacao = '$qtdApresentacao', fomento = '$fomento'";
+    $sql = "UPDATE agendoes SET nome_evento = '$nomeEvento', espaco_publico = '$tipoLugar', projeto_especial_id = '$projeto_especial_id', classificacao_indicativa_id = '$classificacao', links = '$links', ficha_tecnica = '$artistas', sinopse = '$sinopse', quantidade_apresentacao = '$qtdApresentacao', fomento = '$fomento' WHERE id = $idEvento";
 
     if(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com sucesso!");

@@ -319,11 +319,6 @@ if ($foto == null) {
                         <div class="row">
                             <h3 class="box-title col-sm-12 col-md-6">Pessoa física</h3>
                         </div>
-                        <div class="row" style="margin-top: 20px">
-                            <div class="col-xs-6 col-md-6 col-md-offset-5 col-xs-offset-5">
-                                <img src="<?= $fotoImg ?>" alt="<?= $foto ?>" class="img-circle img-responsive" style="max-width: 10rem;">
-                            </div>
-                        </div>
                     </div>
                     <div class="box-body">
                         <form action="?perfil=formacao&p=pessoa_fisica&sp=edita" method="post">
@@ -389,25 +384,6 @@ if ($foto == null) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    if (!empty($pf['cpf'])){
-                                    anexosNaPagina(116, $idPf, "modal-rg", "RG");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(117, $idPf, "modal-cpf", "CPF");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(118, $idPf, "modal-ccm", "FDC - CCM");
-                                    }
-                                    ?>
-                                </div>
-                            </div>
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -419,12 +395,6 @@ if ($foto == null) {
                                 <div class="form-group col-md-2">
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
-                                </div>
-
-                                <div class="form-group col-md-6">
-                                    <?php
-                                    anexosNaPagina(141, $idPf, "modal-foto", "Foto 3x4");
-                                    ?>
                                 </div>
                             </div>
                             <div class="row">
@@ -446,28 +416,23 @@ if ($foto == null) {
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="bairro">Bairro: *</label>
                                     <input type="text" class="form-control" name="bairro" id="bairro"
                                            placeholder="Digite o Bairro" maxlength="80" readonly
                                            value="<?= $endereco['bairro'] ?>">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="cidade">Cidade: *</label>
                                     <input type="text" class="form-control" name="cidade" id="cidade"
                                            placeholder="Digite a cidade" maxlength="50" readonly
                                            value="<?= $endereco['cidade'] ?>">
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
                                     <input type="text" class="form-control" name="estado" id="estado" maxlength="2"
                                            placeholder="Digite o estado ex: (SP)" readonly
                                            value="<?= $endereco['uf'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(120, $idPf, "modal-endereco", "Comprovante de endereço");
-                                    ?>
                                 </div>
                             </div>
                             <hr/>
@@ -527,15 +492,10 @@ if ($foto == null) {
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
                                            placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    anexosNaPagina(119, $idPf, "modal-nit", "NIT");
-                                    ?>
                                 </div>
                             </div>
 
@@ -592,7 +552,7 @@ if ($foto == null) {
                                 </div>
                                 <div class="form-group col-md-4">
                                     <?php
-                                    anexosNaPagina(46, $idPf, "modal-facc", "FACC");
+                                    anexosNaPagina(42, $idPf, "modal-facc", "FACC");
                                     ?>
                                 </div>
                             </div>
@@ -615,22 +575,21 @@ if ($foto == null) {
                                 </div>
                         </form>
                     </div>
+                    <hr>
+                    <form method="POST" action='?perfil=formacao&p=pessoa_fisica&sp=pf_demais_anexos'
+                          role="form">
+                        <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                        <button type="submit" class="btn btn-warning pull-left" style="width: 25%;">Demais Anexos
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-
         <?php
-        modalUploadArquivoUnico("modal-rg", "?perfil=formacao&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "6");
-        modalUploadArquivoUnico("modal-foto", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "6");
-        modalUploadArquivoUnico("modal-cpf", "?perfil=formacao&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "6");
-        modalUploadArquivoUnico("modal-ccm", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "6");
-        modalUploadArquivoUnico("modal-nit", "?perfil=formacao&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "6");
-        modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "6");
-        modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "6");
+        modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
         ?>
     </section>
 </div>
-
 <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">

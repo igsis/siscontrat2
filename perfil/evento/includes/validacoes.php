@@ -17,7 +17,7 @@ $valorTotalAtracoes = 0;
 
 $musica = false;
 $oficina = false;
-$teatro = false;
+$artesCenicas = false;
 $edital = false;
 
 // CASO SEJA EVENTO ENTRA AQUI NESSA PARADA
@@ -54,22 +54,29 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
             foreach ($acoes as $acao) {
                 $idAcao = $acao['acao_id'];
                 switch ($idAcao) {
-                    case 11 : // teatro
+                    case 11: // teatro
                         $tabela = 'teatro';
-                        $teatro = true;
+                        $artesCenicas = true;
                         break;
-                    case 7 : // música
+                    case 2:
+                        $artesCenicas = true;
+                        $possui = false;
+                        break;
+                    case 3:
+                        $artesCenicas = true;
+                        $possui = false;
+                    case 7: // música
                         $tabela = 'musica';
                         $musica = true;
                         break;
-                    case 5 : // exposição (feira)
+                    case 5: // exposição (feira)
                         $tabela = 'exposicoes';
                         break;
-                    case 8 : // oficina
+                    case 8: // oficina
                         $tabela = 'oficinas';
                         $oficina = true;
                         break;
-                    default :
+                    default:
                         $possui = false;
                 }
             }
@@ -107,16 +114,19 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
         }
 
         if ($numOcorrencias != 0) {
-            if ($foraPrazo) {
-                $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+            foreach ($ocorrencias as $ocorrencia) {
+                $hoje = new DateTime(date("Y-m-d"));
+                if ($foraPrazo) {
+                    $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . exibirDataBr($ocorrencia['data_inicio']). ".<br>
                                     O prazo para contratos é de 30 dias.<br>";
-                $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
-                $fora = 1;
-            } else {
-                $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . $dataInicio->format('d/m/Y') . ".<br>
+                    $prazo = "Você está <b class='text-red'>fora</b> do prazo de contratos.";
+                    $fora = 1;
+                } else {
+                    $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . exibirDataBr($ocorrencia['data_inicio']) . ".<br>
                                     O prazo para contratos é de 30 dias.<br>";
-                $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
-                $fora = 0;
+                    $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
+                    $fora = 0;
+                }
             }
         }
 
@@ -175,14 +185,14 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                 if ($oficina) {
                     $whereAdicional[] = "oficina = '1'";
                 }
-                if ($teatro) {
+                if ($artesCenicas) {
                     $whereAdicional[] = "teatro = '1'";
                 }
                 if ($edital) {
                     $whereAdicional[] = "edital = '1'";
                 }
 
-                if ($musica || $oficina || $teatro) {
+                if ($musica || $oficina || $artesCenicas) {
                     $sqlAdicional = "AND (" . implode("OR ", $whereAdicional) . ")";
                 } else
                     $sqlAdicional = "";
@@ -387,13 +397,13 @@ $num = mysqli_num_rows($queryteste);
 
 $ocoDupl = 0;
 for ($i = 0; $i < $num; $i++) {
-    for ($x = $i+1; $x < $num; $x++) {
+    for ($x = $i + 1; $x < $num; $x++) {
         $cont = 0;
         for ($y = 0; $y < 24; $y += 4) {
-            if (($teste[$i][$y] === $teste[$x][$y]) 
-            && ($teste[$i][$y + 1] === $teste[$x][$y + 1]) 
-            && ($teste[$i][$y + 2] === $teste[$x][$y + 2])
-            && ($teste[$i][$y + 3] === $teste[$x][$y + 3])){
+            if (($teste[$i][$y] === $teste[$x][$y])
+                && ($teste[$i][$y + 1] === $teste[$x][$y + 1])
+                && ($teste[$i][$y + 2] === $teste[$x][$y + 2])
+                && ($teste[$i][$y + 3] === $teste[$x][$y + 3])) {
                 $cont = $cont + 1;
             }
         }
@@ -402,7 +412,7 @@ for ($i = 0; $i < $num; $i++) {
             break;
         }
     }
-    if ($ocoDupl!=0) {
+    if ($ocoDupl != 0) {
         break;
     }
 }

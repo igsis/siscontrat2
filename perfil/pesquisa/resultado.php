@@ -41,7 +41,8 @@ if (isset($_POST['busca'])) {
     AND p.publicado = 1 
     AND p.status_pedido_id NOT IN (1,3,20,21)
     $sqlProjeto $sqlUsuario $sqlValorInicial
-    $sqlProtocolo $sqlNomeEvento $sqlValorFinal";
+    $sqlProtocolo $sqlNomeEvento $sqlValorFinal
+    GROUP BY e.id";
 
     $resultado = $con->query($sql);
 }

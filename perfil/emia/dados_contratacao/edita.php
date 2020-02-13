@@ -8,11 +8,11 @@ if(isset($_POST['editar'])){
     $local = $_POST['local'];
     $cargo = $_POST['cargo'];
     $vigencia = $_POST['vigencia'];
-    $cronograma = $_POST['cronograma'];
-    $obs = $_POST['observacao'];
+    $cronograma = trim(addslashes($_POST['cronograma']));
+    $obs = trim(addslashes($_POST['observacao']));
     $status = "1";
-    $fiscal = $_POST['fiscal'];
-    $suplente = $_POST['suplente'];
+    $fiscal = $_POST['fiscal'] ?? null;
+    $suplente = $_POST['suplente'] ?? null;
     $usuario = $_SESSION['idUser'];
 
     $sqlUpdate = "UPDATE emia_contratacao SET
@@ -21,6 +21,8 @@ if(isset($_POST['editar'])){
                                  emia_cargo_id = '$cargo',
                                  emia_vigencia_id = '$vigencia',
                                  observacao = '$obs',
+                                 cronograma = '$cronograma',
+                                 local_id = '$local',
                                  fiscal_id = '$fiscal',
                                  suplente_id = '$suplente'
                                 WHERE id = '$idEC'";

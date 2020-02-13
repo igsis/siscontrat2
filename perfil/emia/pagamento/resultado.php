@@ -8,17 +8,17 @@ $where = '';
 
 if (isset($_POST['protocolo']) && $_POST['protocolo'] != null) {
     $protocolo = $_POST['protocolo'];
-    $protocolo = " AND ec.protocolo = '$protocolo' ";
+    $protocolo = " AND ec.protocolo LIKE '$protocolo' ";
 }
 
 if (isset($_POST['numProcesso']) && $_POST['numProcesso'] != null) {
     $numProcesso = $_POST['numProcesso'];
-    $numProcesso = " AND p.numero_processo = '$numProcesso' ";
+    $numProcesso = " AND p.numero_processo LIKE '$numProcesso' ";
 }
 
 if (isset($_POST['proponente']) && $_POST['proponente'] != null) {
     $proponente = $_POST['proponente'];
-    $proponente = " AND ec.pessoa_fisica_id = '$proponente' ";
+    $proponente = " AND ec.pessoa_fisica_id LIKE '$proponente' ";
 }
 
 $sql = "SELECT p.id, 

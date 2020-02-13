@@ -64,6 +64,11 @@ $link = $http . "rlt_ne_formacao.php";
                                            value="<?= $pagamentos['entrega_nota_empenho'] ?>" disabled readonly>
                                 </div>
                             </div>
+                            <div class="row" id="msg">
+                                <div class="form-group col-md-12">
+                                    <span class="pull-right" style="color: red;"><b>Data de emissão precisa ser maior que a de entrega!</b></span>
+                                </div>
+                            </div>
                         </div>
                         <div class="box-footer">
                             <div class="row">

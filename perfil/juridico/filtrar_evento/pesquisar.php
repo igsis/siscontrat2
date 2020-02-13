@@ -37,28 +37,18 @@ if (isset($_POST['statusPedido']) && $_POST['statusPedido']) {
     $statusPedido = " AND p.status_pedido_id = '$statusPedido'";
 }
 
-$sql = "SELECT p.numero_processo,
-               e.protocolo,
-               pf.nome,
-               te.tipo_evento,
-               p.pessoa_tipo_id,
-               p.pessoa_fisica_id,
-               p.pessoa_juridica_id,
-               e.tipo_evento_id,
-               e.nome_evento,
-               e.id
-               
-
-            FROM pedidos as p
-            INNER JOIN eventos AS e ON e.id = p.origem_id
-            INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
-            INNER JOIN tipo_eventos te on e.tipo_evento_id = te.id
-            
-            where p.origem_tipo_id = 1 
-            and p.publicado = 1 
-            and e.publicado = 1 $protocolo $numprocesso $objetoevento
-            $tipoEvento $instituicao $statusPedido";
-
+$sql = "select p.numero_processo, 
+e.protocolo, 
+te.tipo_evento, pt.pessoa, 
+e.nome_evento, e.id, 
+e.tipo_evento_id, 
+p.pessoa_fisica_id, 
+p.pessoa_juridica_id, 
+p.pessoa_tipo_id
+ from pedidos as p inner join eventos as e on e.id = p.origem_id 
+ inner join tipo_eventos te on te.id = e.tipo_evento_id 
+ inner join pessoa_tipos pt on pt.id = p.pessoa_tipo_id 
+ WHERE p.publicado = 1 AND p.origem_tipo_id = 1";
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -85,14 +75,15 @@ $sql = "SELECT p.numero_processo,
                     <?php
                     if ($query = mysqli_query($con, $sql)) {
                         while ($evento = mysqli_fetch_array($query)) {
-                            $_SESSION['eventoId'] = $evento['id'];
                             ?>
                             <tr>
                                 <?php
                                 if (isset($evento['numero_processo'])) {
                                     ?>
                                     <td>
-                                        <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"  method="POST">
+                                        <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"
+                                              method="POST">
+                                            <input type="hidden" name=idEvento value="<?= $evento['id'] ?>">
                                             <button type="submit" class="btn btn-link"><?= $evento['numero_processo'] ?></button>
                                         </form>
                                     </td>
@@ -107,16 +98,32 @@ $sql = "SELECT p.numero_processo,
                                     $tipo = "Física";
                                     $pessoa = recuperaDados("pessoa_fisicas", "id", $evento ['pessoa_fisica_id'])['nome'];
                                 } else if ($evento['pessoa_tipo_id'] == 2) {
-                                    $tipo = "Jurídica";
-                                    $pessoa = recuperaDados("pessoa_juridicas", "id", $evento['pessoa_juridica_id']['razao_social']);
+                                    $tipo = "Jurídico";
+                                    $pessoa = recuperaDados('pessoa_juridicas', "id", $evento['pessoa_juridica_id']);
+                                    $pessoa = $pessoa['razao_social'];
                                 }
                                 ?>
-                                <td><?= $pessoa ?></td>
-                                <td><?= $tipo ?></td>
                                 <?php
                                 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
                                 ?>
-                                <td><?=  $objeto ?></td>
+                                <td><?= $pessoa ?></td>
+                                <td><?= $tipo ?></td>
+                                <td><?= $objeto ?></td>
+                                <td>
+                                    <?php
+                                    $erros = [];
+                                    if (count($erros) == 0) { ?>
+                                        <p>Seu evento não possui pendências!</p>
+                                    <?php } else { ?>
+                                        <p>Seu evento possui pendências!</p>
+                                        <ul>
+                                            <?php foreach ($erros as $erro) {
+                                                echo "<li>$erro</li>";
+                                            }
+                                            ?>
+                                        </ul>
+                                    <?php } ?>
+                                </td>
                             </tr>
                             <?php
                         }

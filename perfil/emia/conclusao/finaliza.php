@@ -1,18 +1,38 @@
 <?php
 $con = bancoMysqli();
 
-if(isset($_POST['atualizar'])){
+if(isset($_POST['carrega']) || isset($_POST['atualizar'])){
     $idPedido = $_POST['idPedido'];
-    $sql = "UPDATE pedidos SET status_pedido_id = 21 WHERE id = $idPedido";
-    if(mysqli_query($con,$sql)){
-        $mensagem = mensagem('success', 'Pedido concluído com sucesso!');
-    }else{
-        $mensagem = mensagem('danger','Erro ao concluir processo! Tente novamente.');
+}
+
+$btns_footer = "<input type='hidden' name='idPedido' value='$idPedido'>
+                <button class='btn btn-primary pull-right' type='submit' name='atualizar'>Concluir o pedido</button>
+
+                <a href='?perfil=emia&p=conclusao&sp=pesquisa'>
+                    <button type='button' class='btn btn-default'>Nova Pesquisa</button>
+                </a>";
+
+if(isset($_POST['carrega'])){
+    $testa = $con->query("SELECT status_pedido_id FROM pedidos WHERE origem_tipo_id = 3 AND id = $idPedido")->fetch_array();
+    if($testa['status_pedido_id'] == 21){
+        $btns_footer = "<a href='?perfil=emia&p=conclusao&sp=pesquisa'>
+                            <button type='button' class='btn btn-default btn-block center-block' style='width:35%'>Nova Pesquisa</button>
+                        </a>";
+        $mensagem = mensagem('warning', 'O pedido escolhido já está concluído!');
     }
 }
 
-if(isset($_POST['carrega'])){
-    $idPedido = $_POST['idPedido'];
+
+if(isset($_POST['atualizar'])){
+    $sql = "UPDATE pedidos SET status_pedido_id = 21 WHERE id = $idPedido";
+    if(mysqli_query($con,$sql)){
+        $mensagem = mensagem('success', 'Pedido concluído com sucesso!');
+        $btns_footer = "<a href='?perfil=emia&p=conclusao&sp=pesquisa'>
+                            <button type='button' class='btn btn-default btn-block center-block' style='width:35%'>Nova Pesquisa</button>
+                        </a>";
+    }else{
+        $mensagem = mensagem('danger','Erro ao concluir processo!');
+    }
 }
 
 $sql = "SELECT p.id, 
@@ -50,6 +70,7 @@ $pedido = $con->query($sql)->fetch_array();
             </div>
             <div class="box-body">
                 <div class="table-responsive">
+                <form action="?perfil=emia&p=conclusao&sp=finaliza" role="form" method="post">
                     <table class="table">
                         <tr>
                             <th width="30%">Protocolo:</th>
@@ -79,9 +100,7 @@ $pedido = $con->query($sql)->fetch_array();
                 </div>
             </div>
             <div class="box-footer">
-                <form action="?perfil=emia&p=conclusao&sp=finaliza" role="form" method="post">
-                    <input type="hidden" id="idPedido" value="<?=$idPedido?>" name="idPedido">
-                    <button type="submit" id="atualizar" name="atualizar"  class="btn btn-success pull-right">Concluir Pedido</button>
+                    <?=$btns_footer?>
                 </form>
             </div>
         </div>

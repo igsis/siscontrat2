@@ -1,8 +1,8 @@
 <?php
 
 $con = bancoMysqli();
-$idEvento = $_SESSION['eventoId'];
-
+isset($_POST['idEvento']);
+$idEvento = $_POST['idEvento'];
 
 // para inserir a informação em Dotação //
 $sql = "SELECT * FROM juridicos where pedido_id = '$idEvento'";
@@ -12,22 +12,25 @@ $num = mysqli_num_rows($query);
 
 // dados //
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$tipo_evento = recuperaDados('tipo_eventos', 'id', $idEvento);
-$projeto_especiais = recuperaDados('projeto_especiais', 'id', $idEvento);
-$relacao_juridica = recuperaDados('relacao_juridicas', 'id', $idEvento);
-$linguagens = recuperaDados('linguagens', 'id', $idEvento);
+$espaco = recuperaDados('evento_publico','evento_id',$idEvento);
+$publico = recuperaDados('publicos','id',$espaco['publico_id']);
+$tipo_evento = recuperaDados('tipo_eventos', 'id', $evento['tipo_evento_id']);
+$projeto_especiais = recuperaDados('projeto_especiais', 'id', $evento['projeto_especial_id']);
+$relacao_juridica = recuperaDados('relacao_juridicas', 'id', $evento['relacao_juridica_id']);
 $atracao = recuperaDados('atracoes', 'id', $idEvento);
-$classificacao = recuperaDados('classificacao_indicativas', 'id', $idEvento);
+$acao_atracao = recuperaDados('acao_atracao','atracao_id',$atracao['id']);
+$acao = recuperaDados('acoes','id',$acao_atracao['acao_id']);
+$classificacao = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
 $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'id', $idEvento);
 $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
 $pedidos = recuperaDados('pedidos', 'id', $idEvento);
-$pagamento = recuperaDados('pagamentos', 'pedido_id', $idEvento);
-$statusPedido = recuperaDados('pedido_status', 'id', $idEvento);
+$pagamento = recuperaDados('pagamentos', 'pedido_id', $pedidos['id']);
+$statusPedido = recuperaDados('pedido_status', 'id', $pedidos['status_pedido_id']);
 $produtor = recuperaDados('produtores', 'id', $idEvento);
 $usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
 $dataEvento = recuperaDados('evento_envios','id',$idEvento);
-$dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_array();
+$dotacao = recuperaDados('juridicos','pedido_id',$pedidos['id']);
 ?>
 
 
@@ -84,11 +87,11 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Reponsável pelo evento:</th>
-                        <td><?= $usuarios['nome_completo'] ?></td>
+                        <td><?= $evento['nome_responsavel'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $usuarios['telefone'] ?></td>
+                        <td><?= $evento['tel_responsavel'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
@@ -124,16 +127,11 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Linguagem / Expressão artística:</th>
-                        <td><?= $linguagens['linguagem'] ?></td>
+                        <td><?= $acao['acao'] ?></td>
                     </tr>
                     <tr>
-                        <?php
-                        $sqlPublico = "SELECT * 
-                        FROM publicos where id = $idEvento";
-                        $pub = $con->query($sqlPublico)->fetch_assoc();
-                        ?>
                         <th width="30%">Público / Representatividade social:</th>
-                        <td><?= $pub['publico'] ?></td>
+                        <td><?= $publico['publico'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Sinopse:</th>

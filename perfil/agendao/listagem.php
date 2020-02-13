@@ -13,7 +13,7 @@ include "includes/menu_principal.php";
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="carregar">
                     <?php
-                    include "evento_lista.php";
+                    include "evento_lista.php"; 
                     ?>
                 </div>
 

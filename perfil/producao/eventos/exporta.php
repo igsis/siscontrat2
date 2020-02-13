@@ -3,15 +3,24 @@ $con = bancoMysqli();
 
 if(isset($_POST['pesquisa'])){
 
-    $usuario = $_POST['usuario'];
-    $local = $_POST['local'];
-    $projeto = $_POST['projeto'];
-    $data_inicio = $_POST['data_inicio'];
-    $data_fim = $_POST['data_fim'] ?? "0000-00-00";
+    $datainicio = $_POST['data_inicio'] ?? NULL;
+    $datafim = $_POST['data_fim'] ?? null;
+    $local = $_POST['local'] ?? null;
+    $usuario = $_POST['usuario'] ?? null;
+    $projeto = $_POST['projeto'] ?? null;
 
-    $projetoespecial = recuperaDados('projeto_especiais', 'id', $projeto);
+    $sqlLocal = '';
+    $sqlUsuario = '';
+    $sqlProjeto = '';
 
-    $projeto = $projetoespecial['projeto_especial'];
+    if ($local != null)
+        $sqlLocal = " AND l.local = '$local'";
+
+    if ($usuario != null)
+        $sqlUsuario = " AND u.nome_completo = '$usuario'";
+
+    if ($projeto != null)
+        $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
 
     $sql = "SELECT e.id,
 	               e.nome_evento,
@@ -30,19 +39,19 @@ if(isset($_POST['pesquisa'])){
             INNER JOIN classificacao_indicativas AS ci ON ci.id = a.classificacao_indicativa_id
             INNER JOIN usuarios AS u ON e.usuario_id = u.id 
             INNER JOIN projeto_especiais AS pe ON e.projeto_especial_id = pe.id
-            WHERE e.evento_status_id = 3 AND e.publicado = 1 AND o.data_inicio = '$data_inicio' 
-              AND o.data_fim = '$data_fim' AND u.nome_completo = '$usuario' 
-              AND pe.projeto_especial = '$projeto'";
+            WHERE e.evento_status_id = 3 AND o.publicado = 1 AND e.publicado = 1 
+            AND o.data_inicio >= '$datainicio' AND o.data_fim <= '$datafim'
+            $sqlUsuario $sqlProjeto $sqlLocal GROUP BY e.id";
+                   
 
     $query = mysqli_query($con, $sql);
 }
 
 ?>
-
 <div class="content-wrapper">
     <section class="content">
         <h3 class="page-header">Produção - Exportar para Excel</h3>
-        <div class="box box-success">
+        <div class="box box-primary">
             <div class="box-header">
                 <h3 class="box-title">Resumo da pesquisa</h3>
             </div>
@@ -57,28 +66,44 @@ if(isset($_POST['pesquisa'])){
                         <th>Valor do Ingresso</th>
                         <th>Nº de Atividades</th>
                         <th>Artistas</th>
+                        <th>Exportar</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php
                     while ($evento = mysqli_fetch_array($query)) {
-                        $_SESSION['idEventoProd'] = $evento['id'];
+                        $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
+                        $queryLocal = mysqli_query($con, $sqlLocal);
+                        $local = '';
+                        while ($locais = mysqli_fetch_array($queryLocal)) {
+                            $local = $local . '; ' . $locais['local'];
+                        }
+                        $local = substr($local, 1);
+
                         if ($evento['tipo_evento_id'] == 2) {
                             $filme = recuperaDados("filmes", "id", $linha['evento_id']);
                             $classificao = recuperaDados("classificacao_indicativas", "id", $filme['classificacao_indicativa_id']);
 
-                            $evento ['classificacao_indicativa'] = $classificao['classificacao_indicativa'];
+                            $evento['classificacao_indicativa'] = $classificao['classificacao_indicativa'];
                         }
 
                         ?>
                         <tr>
                             <td><?= $evento['nome_evento'] ?></td>
-                            <td><?= $evento['local'] ?></td>
+                            <td><?= $local ?></td>
                             <td><?= $evento['classificacao_indicativa'] ?></td>
                             <td><?= $evento['subprefeitura'] ?></td>
                             <td><?= $evento['valor_ingresso'] == '0.00' ? 'Grátis' : 'R$ ' . dinheiroParaBr($evento['valor_ingresso']) ?></td>
                             <td><?= $evento['quantidade_apresentacao'] == '' ? 'Este evento é filme!' : $evento['quantidade_apresentacao'] ?></td>
                             <td><?= $evento['ficha_tecnica'] ?></td>
+                            <td>
+                                <form action="../pdf/exporta_excel_evento_producao.php" target="_blank" method="POST">
+                                    <input type="hidden" value="<?=$evento['id']?>" name="idEvento">
+                                    <button type="submit" class="btn btn-block btn-success">
+                                        <span class="glyphicon glyphicon-list-alt"></span>
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                         <?php
                     }
@@ -94,16 +119,14 @@ if(isset($_POST['pesquisa'])){
                         <th>Valor do Ingresso</th>
                         <th>Nº de Atividades</th>
                         <th>Artistas</th>
+                        <th>Exportar</th>
                     </tr>
                     </tfoot>
                 </table>
             </div>
             <div class="box-footer">
                 <a href="?perfil=producao&p=eventos&sp=pesquisa">
-                    <button type="button" class="btn btn-default">Voltar para a pesquisa</button>
-                </a>
-                <a href="../pdf/exporta_excel_evento_producao.php">
-                    <button type="button" class="btn btn-success pull-right">Exportar para Excel</button>
+                    <button type="button" class="btn btn-default btn-block center-block" style="width:30%">Voltar para a pesquisa</button>
                 </a>
             </div>
         </div>
