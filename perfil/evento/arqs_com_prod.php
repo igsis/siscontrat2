@@ -3,6 +3,8 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
 
+$lista_documento_id = $con->query("SELECT id FROM lista_documentos WHERE sigla = 'com_prod'")->fetch_assoc()['id'];
+
 if (isset($_POST["enviar"])) {
 
     foreach ($_FILES as $key => $arquivo) {
@@ -18,7 +20,7 @@ if (isset($_POST["enviar"])) {
 
     foreach ($arquivos as $file) {
         if ($file['name'] != "") {
-            $y = 107;
+            $y = $lista_documento_id;
             $x = $key;
             $nome_arquivo = isset($file['name']) ? $file['name'] : null;
             $f_size = isset($file['size']) ? $file['size'] : null;
@@ -95,7 +97,7 @@ if (isset($_POST['apagar'])) {
                                     <?php
                                     //lista arquivos de determinado pedido
                                     $sql = "SELECT * FROM arquivos as arq
-                                    WHERE arq.origem_id = '$idEvento' AND lista_documento_id = 107
+                                    WHERE arq.origem_id = '$idEvento' AND lista_documento_id = '$lista_documento_id'
                                     AND arq.publicado = '1' ORDER BY arq.id";
                                     $query = mysqli_query($con, $sql);
                                     $linhas = mysqli_num_rows($query);
