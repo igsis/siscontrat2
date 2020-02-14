@@ -1,10 +1,5 @@
 <?php
 $con = bancoMysqli();
-$codigopedido = "";
-$numprocesso = "";
-$statuspedido = "";
-$protocolo = "";
-
 
 if (isset($_POST['codigopedido']) && $_POST['codigopedido'] != null) {
     $codigopedido = $_POST['codigopedido'];
@@ -31,7 +26,7 @@ $sql = "SELECT p.numero_processo,
         INNER JOIN formacao_status fs on p.id = fs.id 
         INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
         INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
-        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 $numprocesso $codigopedido $statuspedido";
+        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 ";
 
 ?>
 <div class="content-wrapper">
