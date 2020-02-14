@@ -158,7 +158,7 @@ if (isset($_POST['agendao']) || $tipo == 2) {
                         <!-- /.box-body -->
                         <div class="box-footer">
                             <a class="btn btn-default" href="?perfil=comunicacao&p=filtro">Voltar</a>
-                            <button class="btn btn-success">Ver ocorrencias</button>
+                            <a class="btn btn-success">Ver ocorrencias</a>
                             <input type="hidden" name="tipo" value="<?= $tipo ?>">
                             <button type="submit" name="salvar" class="btn btn-info pull-right">Salvar</button>
                         </div>
