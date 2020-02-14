@@ -10,14 +10,15 @@ isset($_POST['idFormacao']);
 $idFormacao = $_POST['idFormacao'];
 
 
+
 $fc = recuperaDados('formacao_contratacoes','id',$idFormacao);
 $vigencia = $fc['form_vigencia_id'];
 $modelo = recuperaDados('juridicos', 'pedido_id', $idFormacao);
-$pessoa = recuperaDados('pessoa_fisicas','id',$idFormacao);
+$pessoa = recuperaDados('pessoa_fisicas','id',$fc['pessoa_fisica_id']);
 $linguagem = recuperaDados('linguagens', 'id', $fc['linguagem_id'])['linguagem'];
 $programa = recuperaDados('programas', 'id', $fc['programa_id'])['programa'];
 $edital = recuperaDados('programas', 'id', $fc['programa_id'])['edital'];
-$pedido = recuperaDados('pedidos','id',$idFormacao);
+$pedido = recuperaDados('pedidos','id',$fc['pedido_id']);
 $pagamento = $pedido['forma_pagamento'];
 $valorT = $pedido['valor_total'];
 $valor_extenso = valorPorExtenso($valorT);
@@ -29,10 +30,12 @@ $finalizacao = $modelo['finalizacao'];
 $fp = recuperaDados('formacao_parcelas','id',$idFormacao);
 $carga = $fp['carga_horaria'];
 $dataAtual = date("Y/m/d");
+$hoje = date("d/m/Y", strtotime("-3 hours"));
 $diaSemana = diasemana($dataAtual);
 
 //periodo
 $data = retornaPeriodoFormacao($vigencia);
+
 // local
 $sqlLocal = "SELECT l.local FROM formacao_locais fl 
 INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFormacao'";
@@ -46,7 +49,6 @@ while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
 $local = substr($local, 0, -3);
 
 ?>
-
 <html>
 <head>
     <meta http-equiv=\"Content-Type\" content=\"text/html. charset=Windows-1252\">
@@ -88,7 +90,7 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
-    "<p align='center'>São Paulo, " . "$dataAtual" . "</p>" .
+    "<p align='center'>São Paulo, " . "$hoje" . "</p>" .
     "<p>&nbsp;</p>"
 
 

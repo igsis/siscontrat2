@@ -474,7 +474,7 @@ if (isset($_GET['label'])) {
     <!-- /.content -->
 </div>
 <!-- Modal -->
-<div class="modal fade" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+<div class="modal fade in" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
      aria-hidden="true" data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -485,9 +485,9 @@ if (isset($_GET['label'])) {
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body ">
+            <div class="modal-body">
                 <div class="row">
-                    <h4 class="text-center" id="somaParcelas"><b><p id="msg"></p><b/></h4>
+                    <h4 class="text-center" id="somaParcelas"><b><p id="msg"></p></b></h4>
                 </div>
                 <form action="#" id="formParcela">
                 </form>
@@ -512,13 +512,15 @@ if (isset($_GET['label'])) {
             </div>
             <div class="modal-footer">
                 <div class="botoes">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="fecha">Fechar</button>
                     <button type="button" class="btn btn-primary" name="salvar" id="salvarModal">Salvar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
 <script type="text/x-handlebars-template" id="templateParcela">
     <div class='row'>
         <div class='form-group col-md-2'>
@@ -539,12 +541,9 @@ if (isset($_GET['label'])) {
         </div>
     </div>
 </script>
+
 <!-- Modal Oficinas-->
-<style>
-    .modal-lg {
-        width: 90%;
-    }
-</style>
+
 <div class="modal fade" id="modalOficina" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
      aria-hidden="true" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
@@ -558,7 +557,7 @@ if (isset($_GET['label'])) {
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <h4 class="text-center" id="msg"><b><p id="msg"></p><b/></h4>
+                    <h4 class="text-center" id="msg"><b><p id="msg"></p></b></h4>
                 </div>
                 <form action="#" id="formParcela">
                 </form>
@@ -791,8 +790,6 @@ if (isset($_GET['label'])) {
 
         let parcelasSalvas = "<?= isset($numRows) ? $numRows : ''; ?>";
 
-        var footer = document.querySelector(".main-footer");
-        footer.style.display = "none";
 
         var StringValores = "<?= isset($StringValores) ? $StringValores : ''; ?>";
 
@@ -902,8 +899,7 @@ if (isset($_GET['label'])) {
                     });
                 }
 
-                var footer = document.querySelector(".main-footer");
-                footer.style.display = "none";
+                
 
                 $('#editarModalOficina').on('click', salvarModal);
                 $('#modalOficina').find('#formParcela').html(html);
