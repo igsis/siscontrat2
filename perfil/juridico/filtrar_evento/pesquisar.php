@@ -1,12 +1,5 @@
 <?php
 $con = bancoMysqli();
-$protocolo = '';
-$numprocesso = '';
-$objetoevento = '';
-$usuariocadastro = '';
-$tipoEvento = '';
-$instituicao = '';
-$statusPedido = '';
 
 
 if (isset($_POST['protocolo']) && $_POST['protocolo'] != null) {
@@ -111,6 +104,7 @@ p.pessoa_tipo_id
                                 <td><?= $objeto ?></td>
                                 <td>
                                     <?php
+                                    // verifica pendencia do evento cadastrado //
                                     $erros = [];
                                     if (count($erros) == 0) { ?>
                                         <p>Seu evento não possui pendências!</p>
