@@ -15,7 +15,7 @@ $pessoa = recuperaDados('pessoa_juridicas', 'id', $idPj);
 
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
-$ano = date('y');
+$ano = date('Y');
 
 $parecer = recuperaDados("parecer_artisticos", "pedido_id", $idPedido);
 ?>
