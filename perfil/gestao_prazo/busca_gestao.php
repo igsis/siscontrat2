@@ -1,5 +1,4 @@
 <?php
-include "includes/menu_interno.php";
 $con = bancoMysqli();
 
 if (isset($_POST['aprovar'])) {

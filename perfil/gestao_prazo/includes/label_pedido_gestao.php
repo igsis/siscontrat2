@@ -55,7 +55,6 @@ switch ($pedido['pessoa_tipo_id']) {
             $ccm = "Não cadastrado";
         }
 
-
         $dadosPreponente = [
             'Nome' => $proponente['nome'],
             'Nome Artístico' => $proponente['nome_artistico'],
