@@ -94,7 +94,7 @@ $sql = "SELECT e.id, e.nome_evento, u.nome_completo, ee.data_envio, e.usuario_id
                 AND p.origem_tipo_id = 1 AND p.status_pedido_id = 2 
                 AND (e.suplente_id = '$idUsuario' OR e.fiscal_id = '$idUsuario' OR e.usuario_id = '$idUsuario') 
                 AND ee.data_envio is not null 
-                ORDER BY e.id DESC LIMIT 0,20";
+                ORDER BY e.id DESC LIMIT 0,1";
 
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);
