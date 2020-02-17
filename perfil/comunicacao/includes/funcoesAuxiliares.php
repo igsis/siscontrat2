@@ -78,13 +78,13 @@ function gravaStatus($status, $tabela, $idEvento)
     return $Valida;
 }
 
-function retornaEventosComunicacao($idUser,$tabela,$confirmados = null ,$pendentes = null)
+function retornaEventosComunicacao($idUser, $tabela, $confirmados = null, $pendentes = null)
 {
     $con = bancoMysqli();
 
     $spp = '';
 
-    if ($tabela[0] != 'agendoes'){
+    if ($tabela[0] != 'agendoes') {
         $spp = "AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser') ";
     }
     $sqlSis = "SELECT       eve.id AS idEvento, 
@@ -98,8 +98,8 @@ function retornaEventosComunicacao($idUser,$tabela,$confirmados = null ,$pendent
 
     $sqlSis .= $spp;
 
-    if ($confirmados != null || $pendentes != null){
-        $sqlSis .= filtro($tabela[1],$confirmados,$pendentes);
+    if ($confirmados != null || $pendentes != null) {
+        $sqlSis .= filtro($tabela[1], $confirmados, $pendentes);
     }
 
     return mysqli_query($con, $sqlSis);
@@ -108,16 +108,17 @@ function retornaEventosComunicacao($idUser,$tabela,$confirmados = null ,$pendent
 function montaIN($dados, $tipo = 0)
 {
     $str = '';
-    if ($tipo) {
-        $str = 'AND comunicacao_status_id IN (';
-    } else {
-        $str = 'AND comunicacao_status_id NOT IN (';
-    }
     $tamanho = sizeof($dados);
-    if ($tamanho){
+    if ($tamanho) {
+        if ($tipo) {
+            $str = 'AND comunicacao_status_id IN (';
+        } else {
+            $str = 'AND comunicacao_status_id NOT IN (';
+        }
+
         for ($i = 0; $i < $tamanho; $i++) {
             $str .= "{$dados[$i]}";
-            if ($i+1 < $tamanho) {
+            if ($i + 1 < $tamanho) {
                 $str .= ',';
             } else {
                 $str .= ')';
