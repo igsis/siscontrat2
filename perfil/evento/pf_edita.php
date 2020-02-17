@@ -676,7 +676,7 @@ include "includes/menu_interno.php";
                                     <?php
                                 }
                                 ?>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
                                            placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">

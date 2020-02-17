@@ -151,41 +151,6 @@ if (isset($_POST['edita'])) {
                                     </div>
                                 </div>
 
-                                <div class="row" id="msg<?= $i ?>">
-                                <div class="form-group col-md-12">
-                                    <span class="pull-right" style="color: red;"><b>Data de inicio precisa ser maior que a de final!</b></span>
-                                </div>
-                            </div>
-                        
-                            
-                        <script>
-                        //Impede que a data de inicio das parcelas seja maior que a final
-                            $('#msg<?= $i ?>').hide();
-                            var mostra;
-                            function comparaData<?=$i?>() {
-                                var isMsg<?= $i ?> = $('#msg<?= $i ?>');
-                                var dataInicio<?= $i ?> = document.getElementById("data_inicio<?= $i ?>").value;
-                                var dataFim<?= $i ?> = document.getElementById("data_fim<?= $i ?>").value;
-     
-                                if (dataInicio<?= $i ?> != "" && dataFim<?= $i ?> != "") {
-                                    var dataInicio<?= $i ?> = parseInt(dataInicio<?= $i ?>.split("-")[0].toString() + dataInicio<?= $i ?>.split("-")[1].toString() + dataInicio<?= $i ?>.split("-")[2].toString());
-                                    var dataFim<?= $i ?> = parseInt(dataFim<?= $i ?>.split("-")[0].toString() + dataFim<?= $i ?>.split("-")[1].toString() + dataFim<?= $i ?>.split("-")[2].toString());
-                                    isMsg<?= $i ?>.hide();
-                                }
-
-                                $('#edita').attr("disabled", true);
-          
-                                if (dataFim<?= $i ?> <= dataInicio<?= $i ?>) {
-                                    isMsg<?= $i ?>.show();
-                                } else {
-                                    isMsg<?= $i ?>.hide();
-                                }
-                            }
-                            
-                           $('#data_inicio<?= $i ?>').on('change', comparaData<?= $i ?>);
-                           $('#data_fim<?= $i ?>').on('change', comparaData<?= $i ?>);
-                            
-                    </script>
                             <?php } ?>
                         </div>
                         <div class="box-footer">
@@ -204,7 +169,3 @@ if (isset($_POST['edita'])) {
         </div>
     </section>
 </div>
-
-<script>
-
-</script>
