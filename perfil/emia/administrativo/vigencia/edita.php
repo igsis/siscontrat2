@@ -133,23 +133,23 @@ if(isset($_POST['editar'])){
                                        name="parcela[]" id="parcela[<?= $i ?>]">
                             </div>
                         </div>
-                    <div class="row">
 
+                    <div class="row">
                             <div class="form-group col-md-2">
                                 <label for="valor[]">Valor:</label>
-                                <input type="text" id="valor[<?= $i ?>]" name="valor[]"
+                                <input type="text" id="valor<?= $i ?>" name="valor[]"
                                        class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcelas['valor']) ?>">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label for="data_inicio">Data inicial:</label>
-                                <input type="date" name="data_inicio[]" class="form-control" id="data_inicio[<?= $i ?>]"
+                                <input type="date" name="data_inicio[]" class="form-control" id="data_inicio<?=$i?>"
                                        placeholder="DD/MM/AAAA" value="<?= $parcelas['data_inicio'] ?? NULL ?>">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label for="data_fim">Data final: </label>
-                                <input type="date" name="data_fim[]" class="form-control" id="data_fim[<?= $i ?>]"
+                                <input type="date" name="data_fim[]" class="form-control" id="data_fim<?= $i ?>"
                                        placeholder="DD/MM/AAAA" value="<?= $parcelas['data_fim'] ?? NULL ?>">
                             </div>
 
@@ -157,18 +157,18 @@ if(isset($_POST['editar'])){
                             <div class="form-group col-md-2">
                                 <label for="data_pagamento">Data pagamento: </label>
                                 <input type="date" name="data_pagamento[]" class="form-control"
-                                       id="data_pagamento[<?= $i ?>]" placeholder="DD/MM/AAAA" value="<?= $parcelas['data_pagamento'] ?? NULL ?>">
+                                       id="data_pagamento<?= $i ?>" placeholder="DD/MM/AAAA" value="<?= $parcelas['data_pagamento'] ?? NULL ?>">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label for="carga[]">Carga horária: </label>
-                                <input type="number" name="carga[]" class="form-control" id="carga[<?= $i ?>]"
+                                <input type="number" name="carga[]" class="form-control" id="carga<?= $i ?>"
                                        value="<?= $parcelas['carga_horaria'] ?? NULL ?>"  min="1">
                             </div>
 
                         <div class="form-group col-md-2">
                             <label for="mes_ref[]">Mês Referencia: *</label>
-                            <select name="mes_ref[]" id="mes_ref[<?= $i ?>]" class="form-control">
+                            <select name="mes_ref[]" id="mes_ref<?= $i ?>" class="form-control">
                                 <?php
                                     geraOpcaoParcelas("emia_meses", $parcelas['mes_referencia_id']);
                                 ?>
@@ -176,15 +176,45 @@ if(isset($_POST['editar'])){
                         </div>
 
                         </div>
-                        <hr>
-                        <?php
-                    }
-                    ?>
-                            <?php /*<div class="row" id="msg">
+
+                        <div class="row" id="msg<?= $i ?>">
                                 <div class="form-group col-md-12">
                                     <span class="pull-right" style="color: red;"><b>Data de inicio precisa ser maior que a de final!</b></span>
                                 </div>
-                            </div> */?>
+                            </div>
+                        <hr>
+                            
+                        <script>
+                        //Impede que a data de inicio das parcelas seja maior que a final
+                            $('#msg<?= $i ?>').hide();
+
+                            function comparaData<?=$i?>() {
+                                var isMsg<?= $i ?> = $('#msg<?= $i ?>');
+                                var dataInicio<?= $i ?> = document.getElementById("data_inicio<?= $i ?>").value;
+                                var dataFim<?= $i ?> = document.getElementById("data_fim<?= $i ?>").value;
+     
+                                if (dataInicio<?= $i ?> != "" && dataFim<?= $i ?> != "") {
+                                    var dataInicio<?= $i ?> = parseInt(dataInicio<?= $i ?>.split("-")[0].toString() + dataInicio<?= $i ?>.split("-")[1].toString() + dataInicio<?= $i ?>.split("-")[2].toString());
+                                    var dataFim<?= $i ?> = parseInt(dataFim<?= $i ?>.split("-")[0].toString() + dataFim<?= $i ?>.split("-")[1].toString() + dataFim<?= $i ?>.split("-")[2].toString());
+                                    isMsg<?= $i ?>.hide();
+                                }
+
+                                $('#editar').attr("disabled", true);
+          
+                                if (dataFim<?= $i ?> <= dataInicio<?= $i ?>) {
+                                    $('#editar').attr("disabled", true);
+                                    isMsg<?= $i ?>.show();
+                                } else {
+                                    $('#editar').attr("disabled", false);
+                                    isMsg<?= $i ?>.hide();
+                                }
+                            }
+                           $('#data_inicio<?= $i ?>').on('change', comparaData<?= $i ?>);
+                           $('#data_fim<?= $i ?>').on('change', comparaData<?= $i ?>);
+
+                    </script>
+                <?php } ?>
+                            
                 </div>
                 <div class="box-footer">
                     <a href="?perfil=emia&p=administrativo&sp=vigencia&spp=listagem">
@@ -199,37 +229,3 @@ if(isset($_POST['editar'])){
     </section>
 </div>
 
-<script>
-/*
-$('#msg').hide();
-function comparaData() {
-        var isMsg = $('#msg');
-        <?php
-            for($cont = 1; $cont < $ev['numero_parcelas'] + 1; $cont++){?>
-                var dataInicio<?=$cont?> = document.querySelector('#data_inicio[<?=$cont?>]').value;
-                var dataFim<?=$cont?> = document.querySelector('#data_fim[<?=$cont?>]').value;
-                console.log(dataInicio<?=$cont?>);
-                console.log(dataFim<?=$cont?>);
-        <?php } ?>
-        
-        
-
-        if (dataInicio != "" && dataFim != "") {
-            var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
-            var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
-            isMsg.hide();
-        }
-
-        $('#cadastra').attr("disabled", true);
-            
-        if (dataFim <= dataInicio) {
-            $('#cadastra').attr("disabled", true);
-            isMsg.show();
-        } else {
-            $('#cadastra').attr("disabled", false);
-            isMsg.hide();
-        }
-}
-   $('#data_emissao').on('change', comparaData);
-   $('#data_entrega').on('change', comparaData);*/
-</script>

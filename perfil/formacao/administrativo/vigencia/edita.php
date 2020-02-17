@@ -122,37 +122,71 @@ if (isset($_POST['edita'])) {
 
                                     <div class="form-group col-md-2">
                                         <label for="valor[]">Valor:</label>
-                                        <input type="text" id="valor[]" name="valor[]"
+                                        <input type="text" id="valor<?= $i ?>" name="valor[]"
                                                class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcela['valor']) ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_inicio">Data inicial:</label>
-                                        <input type="date" name="data_inicio[]" class="form-control" id="datepicker10"
+                                        <input type="date" name="data_inicio[]" class="form-control" id="data_inicio<?= $i ?>"
                                                placeholder="DD/MM/AAAA" value="<?= $parcela['data_inicio'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_fim">Data final: </label>
-                                        <input type="date" name="data_fim[]" class="form-control" id="datepicker11"
+                                        <input type="date" name="data_fim[]" class="form-control" id="data_fim<?= $i ?>"
                                                placeholder="DD/MM/AAAA" value="<?= $parcela['data_fim'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_pagamento">Data pagamento: </label>
                                         <input type="date" name="data_pagamento[]" class="form-control"
-                                               id="datepicker12" placeholder="DD/MM/AAAA" value="<?= $parcela['data_pagamento'] ?? NULL ?>">
+                                               id="data_pagamento<?= $i ?>" placeholder="DD/MM/AAAA" value="<?= $parcela['data_pagamento'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="carga[]">Carga horária: </label>
-                                        <input type="number" name="carga[]" class="form-control" id="carga[]"
+                                        <input type="number" name="carga[]" class="form-control" id="carga<?= $i ?>"
                                                value="<?= $parcela['carga_horaria'] ?? NULL ?>" min="1">
                                     </div>
                                 </div>
-                                <?php
+
+                                <div class="row" id="msg<?= $i ?>">
+                                <div class="form-group col-md-12">
+                                    <span class="pull-right" style="color: red;"><b>Data de inicio precisa ser maior que a de final!</b></span>
+                                </div>
+                            </div>
+                        
+                            
+                        <script>
+                        //Impede que a data de inicio das parcelas seja maior que a final
+                            $('#msg<?= $i ?>').hide();
+                            var mostra;
+                            function comparaData<?=$i?>() {
+                                var isMsg<?= $i ?> = $('#msg<?= $i ?>');
+                                var dataInicio<?= $i ?> = document.getElementById("data_inicio<?= $i ?>").value;
+                                var dataFim<?= $i ?> = document.getElementById("data_fim<?= $i ?>").value;
+     
+                                if (dataInicio<?= $i ?> != "" && dataFim<?= $i ?> != "") {
+                                    var dataInicio<?= $i ?> = parseInt(dataInicio<?= $i ?>.split("-")[0].toString() + dataInicio<?= $i ?>.split("-")[1].toString() + dataInicio<?= $i ?>.split("-")[2].toString());
+                                    var dataFim<?= $i ?> = parseInt(dataFim<?= $i ?>.split("-")[0].toString() + dataFim<?= $i ?>.split("-")[1].toString() + dataFim<?= $i ?>.split("-")[2].toString());
+                                    isMsg<?= $i ?>.hide();
+                                }
+
+                                $('#edita').attr("disabled", true);
+          
+                                if (dataFim<?= $i ?> <= dataInicio<?= $i ?>) {
+                                    isMsg<?= $i ?>.show();
+                                } else {
+                                    isMsg<?= $i ?>.hide();
+                                }
                             }
-                            ?>
+                            
+                           $('#data_inicio<?= $i ?>').on('change', comparaData<?= $i ?>);
+                           $('#data_fim<?= $i ?>').on('change', comparaData<?= $i ?>);
+                            
+                    </script>
+                            <?php } ?>
                         </div>
                         <div class="box-footer">
                             <a href="?perfil=formacao&p=administrativo&sp=vigencia&spp=index">
@@ -170,3 +204,7 @@ if (isset($_POST['edita'])) {
         </div>
     </section>
 </div>
+
+<script>
+
+</script>
