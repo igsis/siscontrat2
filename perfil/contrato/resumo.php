@@ -60,7 +60,6 @@ if (isset($_POST['selecionar'])) {
 
     $sql = "SELECT * FROM lideres WHERE atracao_id = '$idAtracao' AND pedido_id = '$idPedido'";
     $query = mysqli_query($con, $sql);
-
     $num = mysqli_num_rows($query);
 
     if ($num > 0)

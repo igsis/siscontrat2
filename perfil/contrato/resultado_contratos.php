@@ -56,8 +56,7 @@ if (isset($_POST['busca'])) {
     )
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso
-    GROUP BY e.id
-    ) LIMIT 0,1";
+    GROUP BY e.id";
 
     $query = mysqli_query($con, $sql);
     $num_rows = mysqli_num_rows($query);
