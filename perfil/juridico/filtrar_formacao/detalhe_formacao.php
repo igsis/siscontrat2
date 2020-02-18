@@ -5,37 +5,14 @@ $con = bancoMysqli();
 isset($_POST['idFormacao']);
 $idFormacao = $_POST['idFormacao'];
 
-$sql = "SELECT p.numero_processo,
-            p.forma_pagamento,
-            p.valor_total,
-            p.data_kit_pagamento,
-            p.origem_id,
-            pf.nome,
-            pf.email,
-            ci.classificacao_indicativa,
-            l.linguagem,
-            fc.protocolo,
-            fc.observacao,
-            pro.programa,
-            pro.edital,
-            fc.observacao,
-            pag.emissao_nota_empenho,
-            pag.entrega_nota_empenho,
-            fs.status,
-            fc.data_envio
-            
-
-        FROM pedidos as p
-        INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
-        INNER JOIN formacao_contratacoes fc on p.id = fc.pedido_id
-        INNER JOIN classificacao_indicativas ci on fc.classificacao = ci.id
-        INNER JOIN linguagens l on fc.linguagem_id = l.id
-        INNER JOIN programas pro on fc.programa_id = pro.id
-        INNER JOIN pagamentos pag on pag.pedido_id = p.id
-        INNER JOIN formacao_status fs on fs.id = fc.form_status_id
-        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.id = $idFormacao";
-$query = $con->query($sql)->fetch_assoc();
-
+$formacao = recuperaDados('formacao_contratacoes','id',$idFormacao);
+$pedido = recuperaDados('pedidos','id',$formacao['pedido_id']);
+$pf = recuperaDados('pessoa_fisicas','id',$formacao['pessoa_fisica_id']);
+$ci = recuperaDados('classificacao_indicativas','id',$formacao['classificacao']);
+$linguagem = recuperaDados('linguagens ','id',$formacao['linguagem_id']);
+$programa = recuperaDados('programas','id',$formacao['programa_id']);
+$pagamento = recuperaDados('pagamentos','pedido_id',$pedido['id']);
+$fcstatus = recuperaDados('formacao_status','id',$formacao['form_status_id']);
 
 
 //  local //
@@ -45,19 +22,18 @@ $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
 
 // pegando a vigencia
-$f = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
-$idVigencia = $f['form_vigencia_id'];
+$idVigencia = $formacao['form_vigencia_id'];
 
 // usuarios //
-$usuarios = recuperaDados('usuarios', 'id', $f['usuario_id']);
+$usuarios = recuperaDados('usuarios', 'id', $formacao['usuario_id']);
 
 // fiscal , suplente //
-$suplente = recuperaDados('usuarios', 'id', $f['suplente_id']);
-$fiscal = recuperaDados('usuarios', 'id', $f['fiscal_id']);
+$suplente = recuperaDados('usuarios', 'id', $formacao['suplente_id']);
+$fiscal = recuperaDados('usuarios', 'id', $formacao['fiscal_id']);
 
 
 // pegando telefone de pf_telefones //
-$idPf = $f ['pessoa_fisica_id'];
+$idPf = $formacao ['pessoa_fisica_id'];
 $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
@@ -87,7 +63,7 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Enviado em:</th>
-                        <td><?= $query['data_envio'] ?></td>
+                        <td><?= $formacao['data_envio'] ?></td>
                     </tr>
                     <tr>
                         <th></th>
@@ -95,7 +71,7 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Usuário que cadastrou a formação:</th>
-                        <td><?= $query['nome'] ?></td>
+                        <td><?= $pf ['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
@@ -103,7 +79,7 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $query['email'] ?></td>
+                        <td><?= $pf ['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -143,15 +119,15 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Ficha técnica:</th>
-                        <td><?= $query ['nome'] ?></td>
+                        <td><?= $pf ['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Faixa ou indicação etária:</th>
-                        <td><?= $query['classificacao_indicativa'] ?></td>
+                        <td><?= $ci['classificacao_indicativa'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Linguagem / Expressão artística:</th>
-                        <td><?= $query['linguagem'] ?></td>
+                        <td><?= $linguagem['linguagem'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -189,11 +165,11 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Produtor responsavel:</th>
-                        <td><?= $query['nome'] ?></td>
+                        <td><?= $pf['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $query['email'] ?></td>
+                        <td><?= $pf['email'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
@@ -205,17 +181,17 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                 <table class="table">
                     <tr>
                         <th width="30%">Protocolo:</th>
-                        <td><?= $query['protocolo'] ?></td>
+                        <td><?= $formacao['protocolo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Número do processo:</th>
-                        <td><?= $query['numero_processo'] ?></td>
+                        <td><?= $pedido['numero_processo'] ?></td>
                     </tr>
                     <tr>
                     </tr>
                     <tr>
                         <th width="30%">Objeto</th>
-                        <td><?= $query['programa'] ?>-<?= $query['linguagem'] ?>-<?= $query['edital'] ?></td>
+                        <td><?= $programa['programa'] ?>-<?= $linguagem['linguagem'] ?>-<?= $programa['edital'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
@@ -232,23 +208,23 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Valor</th>
-                        <td><?= $query['valor_total'] ?></td>
+                        <td><?= $pedido['valor_total'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Forma de Pagamento</th>
-                        <td><?= $query['forma_pagamento'] ?></td>
+                        <td><?= $pedido['forma_pagamento'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data</th>
-                        <td><?= $query['data_kit_pagamento'] ?></td>
+                        <td><?= $pedido['data_kit_pagamento'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data de Emissão da N.E:</th>
-                        <td><?= $query['emissao_nota_empenho'] ?></td>
+                        <td><?= $pagamento['emissao_nota_empenho'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data de Entrega da N.E</th>
-                        <td><?= $query['entrega_nota_empenho'] ?></td>
+                        <td><?= $pagamento['entrega_nota_empenho'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
@@ -256,11 +232,11 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>
-                        <td><?= $query['observacao'] ?></td>
+                        <td><?= $pedido['observacao'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Último status:</th>
-                        <td><?= $query['status'] ?></td>
+                        <td><?= $fcstatus['status'] ?></td>
                     </tr>
                 </table>
                 <br/>

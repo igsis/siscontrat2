@@ -67,6 +67,7 @@ $sql = "SELECT * FROM pedidos where origem_tipo_id = 1 AND origem_id = '$idEvent
 $query = mysqli_query($con, $sql);
 $pedido = mysqli_fetch_array($query);
 
+
 $idPedido = $pedido['id'];
 if (isset($_POST['salvar'])) {
     if ($nivelUsuario == 1) { // alterar o operador e/ou o status do pedido
@@ -148,6 +149,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     $proponente = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
     $idPj = $pedido['pessoa_juridica_id'];
 }
+
 
 
 $contrato = recuperaDados('contratos', 'pedido_id', $pedido['id']);

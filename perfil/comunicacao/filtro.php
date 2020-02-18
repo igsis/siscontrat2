@@ -7,29 +7,29 @@ $conn = bancoPDO();
 
 $idUser = $_SESSION['idUser'];
 
-$sqlSis = "SELECT       eve.id AS idEvento, 
-                        eve.nome_evento AS nome_evento, 
-                        es.status AS status, 
-                        u.nome_completo AS nome_usuario
-        FROM eventos as eve
-        LEFT JOIN usuarios u ON eve.usuario_id = u.id
-        INNER JOIN evento_status es on eve.evento_status_id = es.id
-        WHERE eve.publicado = 1 AND evento_status_id between 3 AND 4 AND
-        (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+if (isset($_POST['_filtros'])) {
 
-$query = mysqli_query($con, $sqlSis);
+    $confirmados = [];
+    isset($_POST['editado']) && $_POST['editado'] == 1 ? array_push($confirmados, $_POST['editado']) : '';
+    isset($_POST['revisado']) && $_POST['revisado'] == 2 ? array_push($confirmados, $_POST['revisado']) : '';
+    isset($_POST['site']) && $_POST['site'] == 3 ? array_push($confirmados, $_POST['site']) : '';
+    isset($_POST['impresso']) && $_POST['impresso'] == 4 ? array_push($confirmados, $_POST['impresso']) : '';
+    isset($_POST['foto']) && $_POST['foto'] == 5 ? array_push($confirmados, $_POST['foto']) : '';
 
-$sqlAg = "SELECT 	ag.id AS idEvento, 
-                    ag.nome_evento AS nome_evento, 
-                    es.status AS status, 
-                    us.nome_completo AS nome_usuario
-        FROM agendoes AS ag
-        LEFT JOIN usuarios us ON ag.usuario_id = us.id
-        INNER JOIN evento_status es ON ag.evento_status_id = es.id
-                WHERE ag.publicado = 1 AND evento_status_id between 3 AND 4 AND ag.usuario_id = '$idUser'";
+    $pendente = [];
+    isset($_POST['editado']) && (float)$_POST['editado'] <> 1 ? array_push($pendente, 1) : '';
+    isset($_POST['revisado']) && (float)$_POST['revisado'] <> 2 ? array_push($pendente, 2) : '';
+    isset($_POST['site']) && (float)$_POST['site'] <> 3 ? array_push($pendente, 3) : '';
+    isset($_POST['impresso']) && (float)$_POST['impresso'] <> 4 ? array_push($pendente, 4) : '';
+    isset($_POST['foto']) && (float)$_POST['foto'] <> 5 ? array_push($pendente, 5) : '';
 
-$query2 = mysqli_query($con, $sqlAg);
+    $query = retornaEventosComunicacao($idUser,['eventos','comunicacoes'],$confirmados,$pendente);
+    $query2 = retornaEventosComunicacao($idUser,['agendoes','comunicacao_agendoes'],$confirmados,$pendente);
 
+} else {
+    $query = retornaEventosComunicacao($idUser,['eventos','']);
+    $query2 = retornaEventosComunicacao($idUser,['agendoes','']);
+}
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -45,82 +45,107 @@ $query2 = mysqli_query($con, $sqlAg);
                     <div class="box-header">
                         <h3 class="box-title">Filtrar por:</h3>
                     </div>
+
                     <div id="caixa-filtro" class="row">
                         <div class="col-md-11 col-md-offset-1 margin-top-20">
-                            <div class="row">
-                                <div class="filtros">
-                                    <div id="editado" class="topico-filtro col-md-2">
-                                        <span id="titulo-filtro">Editado</span>
-                                        <div class="lateral">
-                                            <label>
-                                                <input type="checkbox" value="1">
-                                                Confirmado
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" value="2">
-                                                Pendente
-                                            </label>
+                            <form action="?perfil=comunicacao&p=filtro" method="POST">
+                                <div class="row">
+                                    <div class="filtros">
+                                        <div id="editado" class="topico-filtro col-md-2">
+                                            <span id="titulo-filtro">Editado</span>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="editado"
+                                                       id="editadoC" value="1">
+                                                <label class="form-check-label" for="editadoC">
+                                                    Confirmado
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="editado"
+                                                       id="editadoP" value="11">
+                                                <label class="form-check-label" for="editadoP">
+                                                    Pendente
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div id="revisado" class="topico-filtro col-md-2">
-                                        <span id="titulo-filtro">Revisado</span>
-                                        <div class="lateral">
-                                            <label>
-                                                <input type="checkbox" value="1">
-                                                Confirmado
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" value="2">
-                                                Pendente
-                                            </label>
+                                        <div id="revisado" class="topico-filtro col-md-2">
+                                            <span id="titulo-filtro">Revisado</span>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="revisado"
+                                                       id="revisadoC" value="2">
+                                                <label class="form-check-label" for="revisadoC">
+                                                    Confirmado
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="revisado"
+                                                       id="revisadoP" value=22">
+                                                <label class="form-check-label" for="revisadoP">
+                                                    Pendente
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div id="site" class="topico-filtro col-md-2">
-                                        <span id="titulo-filtro">Site</span>
-                                        <div class="lateral">
-                                            <label>
-                                                <input type="checkbox" value="1">
-                                                Confirmado
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" value="2">
-                                                Pendente
-                                            </label>
+                                        <div id="site" class="topico-filtro col-md-2">
+                                            <span id="titulo-filtro">Site</span>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="site" id="siteC"
+                                                       value="3">
+                                                <label class="form-check-label" for="siteC">
+                                                    Confirmado
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="site" id="siteP"
+                                                       value="33">
+                                                <label class="form-check-label" for="siteP">
+                                                    Pendente
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div id="impresso" class="topico-filtro col-md-2">
-                                        <span id="titulo-filtro">Impresso</span>
-                                        <div class="lateral">
-                                            <label>
-                                                <input type="checkbox" value="1">
-                                                Confirmado
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" value="2">
-                                                Pendente
-                                            </label>
+                                        <div id="impresso" class="topico-filtro col-md-2">
+                                            <span id="titulo-filtro">Impresso</span>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="impresso"
+                                                       id="impressoC" value="4">
+                                                <label class="form-check-label" for="impressoC">
+                                                    Confirmado
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="impresso"
+                                                       id="impressoP" value="44">
+                                                <label class="form-check-label" for="impressoP">
+                                                    Pendente
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div id="foto" class="topico-filtro col-md-2">
-                                        <span id="titulo-filtro">Foto</span>
-                                        <div class="lateral">
-                                            <label>
-                                                <input type="checkbox" value="1">
-                                                Confirmado
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" value="2">
-                                                Pendente
-                                            </label>
+                                        <div id="foto" class="topico-filtro col-md-2">
+                                            <span id="titulo-filtro">Foto</span>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="foto" id="fotoC"
+                                                       value="5">
+                                                <label class="form-check-label" for="fotoC">
+                                                    Confirmado
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="foto" id="fotoP"
+                                                       value="55">
+                                                <label class="form-check-label" for="fotoP">
+                                                    Pendente
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row margin-top-20">
-                                <div class="col-md-10">
-                                    <button type="button" class="btn btn-primary btn-lg btn-block">Filtrar</button>
+                                <div class="row margin-top-20">
+                                    <div class="col-md-10">
+                                        <button type="submit" name="_filtros" class="btn btn-primary btn-lg btn-block">
+                                            Filtrar
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                             <div class="row">
                                 <div id="legenda" class="col-md-10 margin-top-20">
                                     <div class="panel panel-default">
@@ -133,13 +158,15 @@ $query2 = mysqli_query($con, $sqlAg);
                                                     <div class="quad-legenda bg-aqua"><span> Editado </span></div>
                                                 </td>
                                                 <td>
-                                                    <div class="quad-legenda bg-fuchsia"><span> Revisado </span></div>
+                                                    <div class="quad-legenda bg-fuchsia"><span> Revisado </span>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <div class="quad-legenda bg-green"><span> Site </span></div>
                                                 </td>
                                                 <td>
-                                                    <div class="quad-legenda bg-yellow"><span> Impresso </span></div>
+                                                    <div class="quad-legenda bg-yellow"><span> Impresso </span>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <div class="quad-legenda bg-red"><span> Foto </span></div>
@@ -151,6 +178,7 @@ $query2 = mysqli_query($con, $sqlAg);
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="row" align="center">
                         <?php if (isset($mensagem)) {
@@ -182,9 +210,7 @@ $query2 = mysqli_query($con, $sqlAg);
                                         <?= $evento['nome_usuario'] ?>
                                     </td>
                                     <td>
-                                        <?=
-                                        retornaPeriodo($evento['idEvento']);
-                                        ?>
+                                        <?= retornaPeriodo($evento['idEvento']); ?>
                                     </td>
                                     <td>
                                         <div class="status-comunicacao">

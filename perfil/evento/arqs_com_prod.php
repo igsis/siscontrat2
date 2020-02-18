@@ -30,8 +30,8 @@ if (isset($_POST["enviar"])) {
             } else {
                 if ($nome_arquivo != "") {
                     $nome_temporario = $file['tmp_name'];
-                    $new_name = date("YmdHis",strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
-                    $hoje = date("Y-m-d H:i:s",strtotime("-3 hours"));
+                    $new_name = date("YmdHis", strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
+                    $hoje = date("Y-m-d H:i:s", strtotime("-3 hours"));
                     $dir = '../uploadsdocs/'; //Diretório para uploads
                     $ext = strtolower(substr($nome_arquivo, -4));
                     if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
@@ -135,68 +135,73 @@ if (isset($_POST['apagar'])) {
                                     ?>
                                 </div>
                                 <hr/>
-                                <?php
-                                if ($linhas != 10) {
-                                    ?>
-                                    <div class="row">
-                                        <div class="col-md-10 col-md-offset-1">
-                                            <br/>
-                                            <div class="center">
-                                                <form method="POST" action="?perfil=evento&p=arqs_com_prod"
-                                                      enctype="multipart/form-data">
-                                                    <table class="table text-center table-striped">
-                                                        <tbody>
-                                                        <tr>
-                                                            <h1 class="text-center">Envio de Arquivos</h1>
-                                                        </tr>
-                                                        <tr>
-                                                            <h4 class="text-center"><em>O tamanho
-                                                                    máximo do arquivo deve ser 6 MB.</em>
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <br/>
+                                        <div class="center">
+                                            <form method="POST" action="?perfil=evento&p=arqs_com_prod"
+                                                  enctype="multipart/form-data">
+                                                <table class="table text-center table-striped">
+                                                    <tbody>
+                                                    <tr>
+                                                        <h1 class="text-center">Envio de Arquivos</h1>
+                                                    </tr>
+                                                    <tr>
+                                                        <h4 class="text-center"><em>O tamanho
+                                                                máximo do arquivo deve ser 6 MB.</em>
 
-                                                                <br><br>Não envie cópias de documentos nesta página.
-                                                                Para o
-                                                                envio, vá até a área de <a
-                                                                        href="?perfil=evento&p=pedido">"Pedidos
-                                                                    de contratação"</a> e anexe direto em cada
-                                                                contratado.
+                                                            <br><br>Não envie cópias de documentos nesta página.
+                                                            Para o
+                                                            envio, vá até a área de <a
+                                                                    href="?perfil=evento&p=pedido">"Pedidos
+                                                                de contratação"</a> e anexe direto em cada
+                                                            contratado.
 
-                                                                <br><br>Em caso de envio de fotografia, considerar as
-                                                                seguintes especificações técnicas:
-                                                                <br>- formato: horizontal
-                                                                <br>- tamanho: mínimo de 300dpi”</h4>
-                                                        </tr>
-
-                                                                <?php
-                                                                for ($i = 10    ; $i > $linhas; $i--) {
-                                                                    ?>
-                                                            <tr>
-                                                                <td>
-                                                                        <input class="text-center" type='file' name='arquivo[]'><br>
-                                                                </td>
-                                                            </tr>
-                                                                    <?php
-
-                                                                }
-                                                                ?>
-
-                                                        </tbody>
-                                                    </table>
-                                                    <br>
-                                                    <?php
-                                                    if (isset($_POST['volta'])) {
-                                                        echo "<input type='hidden' name='volta' value='" . $_POST['volta'] . "' />";
-                                                    }
-                                                    ?>
-                                                    <input type='hidden' name='idEvento' value='<?= $idEvento ?>'/>
-                                                    <input type="submit" class="btn btn-primary btn-lg btn-block"
-                                                           name="enviar" value='Enviar'>
-                                                </form>
-                                            </div>
+                                                            <br><br>Em caso de envio de fotografia, considerar as
+                                                            seguintes especificações técnicas:
+                                                            <br>- formato: horizontal
+                                                            <br>- tamanho: mínimo de 300dpi”</h4>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input class="text-center" type='file' name='arquivo[]'><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input class="text-center" type='file' name='arquivo[]'><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input class="text-center" type='file' name='arquivo[]'><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input class="text-center" type='file' name='arquivo[]'><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input class="text-center" type='file' name='arquivo[]'><br>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                                <br>
+                                                <?php
+                                                if (isset($_POST['volta'])) {
+                                                    echo "<input type='hidden' name='volta' value='" . $_POST['volta'] . "' />";
+                                                }
+                                                ?>
+                                                <input type='hidden' name='idEvento' value='<?= $idEvento ?>'/>
+                                                <input type="submit" class="btn btn-primary btn-lg btn-block"
+                                                       name="enviar" value='Enviar'>
+                                            </form>
                                         </div>
                                     </div>
-                                    <?php
-                                }
-                                ?>
+                                </div>
                             </div>
                             <!--.modal-->
                             <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
@@ -246,7 +251,6 @@ if (isset($_POST['apagar'])) {
         $(this).find('#tipoPessoa').attr('value', `${pessoa}`);
 
     });
-
 
 
 </script>

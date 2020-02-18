@@ -53,14 +53,13 @@ if (isset($_POST['busca'])) {
       (er.data_reabertura < ee.data_envio) 
     OR 
       (er.data_reabertura is null)
-    )
+    ) LIMIT 0,1
     $sqlProjeto $sqlUsuario $sqlStatus 
     $sqlProtocolo $sqlNomeEvento $sqlProcesso";
 
     $query = mysqli_query($con, $sql);
     $num_rows = mysqli_num_rows($query);
 }
-
 ?>
 
 <div class="content-wrapper">
@@ -106,7 +105,7 @@ if (isset($_POST['busca'])) {
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
                                     $idUser = $evento['operador_id'];
-                                    if($idUser != 0){
+                                    if ($idUser != 0) {
                                         $operadorAux = "AND usuario_id = $idUser";
                                         $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser $operadorAux";
                                         $operador = $con->query($sqlOperador)->fetch_array();
@@ -120,8 +119,10 @@ if (isset($_POST['busca'])) {
                                     <tr>
                                         <td>
                                             <form method="POST" action="?perfil=contrato&p=filtrar_contratos&sp=resumo">
-                                                <input type="hidden" name="idEvento" id="idEvento" value="<?=$evento['id']?>">
-                                                <button type="submit" class="btn btn-link"><?= $evento['protocolo'] ?></button>
+                                                <input type="hidden" name="idEvento" id="idEvento"
+                                                       value="<?= $evento['id'] ?>">
+                                                <button type="submit"
+                                                        class="btn btn-link"><?= $evento['protocolo'] ?></button>
                                             </form>
                                         </td>
                                         <td><?= $evento['numero_processo'] ?></td>
@@ -130,8 +131,9 @@ if (isset($_POST['busca'])) {
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
-                                        if(isset($operador['nome_completo'])){?>
-                                        <td><?= $operador['nome_completo'] ?></td>
+                                        if (isset($operador['nome_completo'])) {
+                                            ?>
+                                            <td><?= $operador['nome_completo'] ?></td>
                                         <?php }
                                         echo "<td> </td>";
                                         ?>

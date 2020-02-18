@@ -74,9 +74,9 @@ $evento = $con->query($sql)->fetch_array();
                             <td><?= $pessoa ?></td>
                         </tr>
                         <?php
-                            $atracoes = recuperaDados('atracoes','evento_id',$idEvento);
-                            $ocorrencias = recuperaDados('ocorrencias','atracao_id',$atracoes['id']);
-                            $local = recuperaDados('locais','id',$ocorrencias['local_id']);
+                        $atracoes = recuperaDados('atracoes', 'evento_id', $idEvento);
+                        $ocorrencias = recuperaDados('ocorrencias', 'atracao_id', $atracoes['id']);
+                        $local = recuperaDados('locais', 'id', $ocorrencias['local_id']);
                         ?>
                         <tr>
                             <th width="30%">Local:</th>
@@ -109,9 +109,9 @@ $evento = $con->query($sql)->fetch_array();
                             </td>
                         </tr>
                     </table>
-                    <div class="pull-left">
-                        <?php // ADICIONAR ANCORA PARA VOLTAR ?>
-                    </div>
+                    <a href="?perfil=juridico&p=filtrar_evento&sp=pesquisa_evento">
+                        <button type="button" class="btn btn-default pull-left" style="margin: 0 5px;">Voltar</button>
+                    </a>
                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                     <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left">Gravar
                     </button>

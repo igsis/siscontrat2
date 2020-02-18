@@ -1,5 +1,4 @@
 <?php
-include "includes/menu.php";
 $con = bancoMysqli();
 
 $sql = "SELECT * FROM eventos WHERE evento_status_id = 2 AND publicado = 1";
@@ -7,11 +6,9 @@ $query = mysqli_query($con,$sql);
 $numEventos = mysqli_num_rows($query);
 ?>
 
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <section class="content">
         <div class="box box-widget widget-user">
-            <!-- Add the bg color to the header using any of the bg-* classes -->
             <div class="widget-user-header bg-purple-active">
                 <h3 class="widget-user-username">Módulo de Gestão de Prazos</h3>
             </div>
@@ -24,11 +21,8 @@ $numEventos = mysqli_num_rows($query);
                                 <br/>
                                 <br/>
                             </span></div>
-                        <!-- /.description-block -->
                     </div>
-                    <!-- /.col -->
                 </div>
-                <!-- /.row -->
             </div>
         </div>
         <?php
@@ -42,8 +36,6 @@ $numEventos = mysqli_num_rows($query);
                         </div>
                     </div>
                 </div>
-
         <?php }?>
-
     </section>
 </div>

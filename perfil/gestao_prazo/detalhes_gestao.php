@@ -25,7 +25,7 @@ $sqlCarregar = "SELECT
                 WHERE eve.id = '$idEvento'";
 $resumoCarregamento = $con->query($sqlCarregar)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
-include "includes/menu_interno.php";
+
 ?>
 
 <div class="content-wrapper">

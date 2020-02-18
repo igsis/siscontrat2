@@ -151,11 +151,11 @@ if (isset($_POST['selecionar'])) {
     } else {
         $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido','$idAtracao','$idLider')";
     }
-
-    if (mysqli_query($con, $sqLider)) {
+    // removido , pois quando voce buscava um lider e existia  ( se houvesse a necessidade de editar , não dava , pois ele ja mandava pro pedido ) ;
+  /*  if (mysqli_query($con, $sqLider)) {
         $mensagem = mensagem("success", "Lider inserido com sucesso. Retornando ao pedido...");
         echo "<meta http-equiv='refresh' content='2;url=index.php?perfil=evento&p=pedido_edita&lider=true' />";
-    }
+    }*/
 }
 
 if (isset($_POST['carregar'])){

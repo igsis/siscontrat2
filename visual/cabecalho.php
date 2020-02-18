@@ -206,7 +206,7 @@ else
               flex-direction: column;
           }
 
-          div.lateral label{
+          div.form-check label{
               font-weight: normal;
           }
 
