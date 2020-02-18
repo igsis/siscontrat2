@@ -53,9 +53,7 @@ if (isset($_POST['busca'])) {
       (er.data_reabertura < ee.data_envio) 
     OR 
       (er.data_reabertura is null)
-    ) LIMIT 0,1
-    $sqlProjeto $sqlUsuario $sqlStatus 
-    $sqlProtocolo $sqlNomeEvento $sqlProcesso";
+    ) LIMIT 0,1";
 
     $query = mysqli_query($con, $sql);
     $num_rows = mysqli_num_rows($query);
