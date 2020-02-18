@@ -436,7 +436,6 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     </select>
                                 </div>
                             </div>
-<<<<<<< HEAD
                             <br>
                             <hr>
                             <div class="row">
@@ -452,16 +451,11 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="pendencia">Pendências no Setor de Contratos Artísticos:</label>
-<<<<<<< HEAD
                                     <textarea name="pendencia" rows="5"
                                               class="form-control"><?= $pedido['pendencias_contratos'] ?></textarea>
-=======
                                     <textarea name="pendencia" rows="5" class="form-control"><?=$pedido['pendencias_contratos']?></textarea>
->>>>>>> parent of 5d515cf... falto 1 r
                                 </div>
                             </div>
-=======
->>>>>>> parent of 63fe894... fazendo oq eu fiz na master em contratos
                         </div>
                         <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
