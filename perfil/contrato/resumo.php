@@ -147,13 +147,14 @@ if (isset($_POST['salvar'])) {
     $operador = $_POST['operador'] ?? NULL;
     $valorTotal = $_POST['valorTotal'];
     $valorTotal = str_replace(",", ".", $valorTotal);
+    $pendencia = trim(addslashes($_POST['pendencia']));
 
     //eventos
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'] ?? null;
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', valor_total = '$valorTotal' WHERE id = '$idPedido'";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', valor_total = '$valorTotal', pendencias_contratos = '$pendencia' WHERE id = '$idPedido'";
 
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
@@ -451,8 +452,6 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="pendencia">Pendências no Setor de Contratos Artísticos:</label>
-                                    <textarea name="pendencia" rows="5"
-                                              class="form-control"><?= $pedido['pendencias_contratos'] ?></textarea>
                                     <textarea name="pendencia" rows="5" class="form-control"><?=$pedido['pendencias_contratos']?></textarea>
                                 </div>
                             </div>
