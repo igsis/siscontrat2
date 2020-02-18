@@ -148,14 +148,13 @@ if (isset($_POST['salvar'])) {
     $operador = $_POST['operador'] ?? NULL;
     $valorTotal = $_POST['valorTotal'];
     $valorTotal = str_replace(",", ".", $valorTotal);
-    $pendencia = trim(addslashes($_POST['pendencia']));
 
     //eventos
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'] ?? null;
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', valor_total = '$valorTotal', pendencias_contratos = '$pendencia' WHERE id = '$idPedido'";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', valor_total = '$valorTotal' WHERE id = '$idPedido'";
 
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
@@ -438,6 +437,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                     </select>
                                 </div>
                             </div>
+<<<<<<< HEAD
                             <br>
                             <hr>
                             <div class="row">
@@ -457,6 +457,8 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                               class="form-control"><?= $pedido['pendencias_contratos'] ?></textarea>
                                 </div>
                             </div>
+=======
+>>>>>>> parent of 63fe894... fazendo oq eu fiz na master em contratos
                         </div>
                         <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
