@@ -10,7 +10,7 @@ $con = bancoMysqli();
 //CONSULTA
 $idPedido = $_POST['idPedido'];
 
-$pedido = $con->query("SELECT e.id AS idEvento, p.numero_processo, pf.nome, pf.nome_artistico, n.nacionalidade, pf.ccm, pf.rg, pf.cpf, d.drt, pe.logradouro, pe.numero, pe.complemento, pe.bairro, pe.cidade, pe.uf, pe.cep, pf.email, n2.nit, pf.data_nascimento, pf.id AS idPf, e.nome_evento, p.valor_total
+$pedido = $con->query("SELECT e.id AS idEvento, p.numero_processo, pf.nome, pf.nome_artistico, pf.passaporte,n.nacionalidade, pf.ccm, pf.rg, pf.cpf, d.drt, pe.logradouro, pe.numero, pe.complemento, pe.bairro, pe.cidade, pe.uf, pe.cep, pf.email, n2.nit, pf.data_nascimento, pf.id AS idPf, e.nome_evento, p.valor_total
 FROM pedidos AS p 
     INNER JOIN eventos AS e ON p.origem_id = e.id 
     INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
@@ -34,6 +34,15 @@ if($parcela == NULL){
 
 $now = dataHoraNow();
 $processo = $pedido['numero_processo'];
+
+if($pedido['passaporte'] != NULL){
+    $trecho_passaporte = "<strong>Passaporte:</strong> " . $pedido['passaporte'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>DRT:</strong> . " . $pedido['drt'] . "<br>";
+    $label = "Passaporte: " . $pedido['passaporte'] . "</p>";
+}else{
+    $trecho_passaporte = "<strong>RG:</strong> " . $pedido['rg'] . " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CPF:</strong> " . $pedido['cpf'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>DRT:</strong> . " . $pedido['drt'] . "<br>";
+    $label = "RG: " . $pedido['rg'] . " <br/>
+	          CPF:" . $pedido['cpf'] . "</p>";
+}
 
 // GERANDO O WORD:
 header("Content-type: application/vnd.ms-word");
@@ -59,7 +68,7 @@ header("Content-Disposition: attachment;Filename=$now - Processo SEI $processo -
 <p style="text-align: justify;"><strong>Nome:</strong> <?= $pedido['nome'] ?><br>
     <strong>Nome Artístico:</strong> <?= $pedido['nome_artistico'] ?><br>
     <strong>Nacionalidade:</strong> <?= $pedido['nacionalidade'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CCM:</strong> <?= $pedido['ccm'] ?><br>
-    <strong>RG:</strong> <?= $pedido['rg'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CPF:</strong> <?= $pedido['cpf'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>DRT:</strong> <?= $pedido['drt'] ?><br>
+    <?= $trecho_passaporte ?>
     <strong>Endereço:</strong> <?= $pedido['logradouro'].", ".$pedido['numero']." ".$pedido['complemento']." ".$pedido['bairro']." - ".$pedido['cidade']." - ".$pedido['uf']." CEP: ".$pedido['cep'] ?><br>
     <strong>Telefone:</strong>
     <?php
@@ -86,7 +95,6 @@ Nestes termos, encaminho para deferimento.</p>
 <p>&nbsp;</p>
 <p>________________________________________________<br>
     <?= $pedido['nome'] ?><br/>
-	RG: <?= $pedido['rg'] ?> <br/>
-	CPF: <?= $pedido['cpf'] ?></p>
+	<?= $label ?>
 </body>
 </html>

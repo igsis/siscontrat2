@@ -214,13 +214,13 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                                     </button>
                                 </form>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <form action="<?= $link4 ?>" method="post" target="_blank" role="form">
                                     <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Ateste (Documentação)
                                     </button>
                                 </form>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <form action="<?= $link5 ?>" method="post" target="_blank" role="form">
                                     <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Confirmação de serviço
                                     </button>

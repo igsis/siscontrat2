@@ -15,7 +15,7 @@ $idPf = $pedido['pessoa_fisica_id'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 

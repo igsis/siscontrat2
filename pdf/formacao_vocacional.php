@@ -45,6 +45,12 @@ while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
 
 $local = substr($local, 0, -3);
 
+if($pessoa['passaporte' != NULL]){
+    $cpf_passaporte = "Passaporte (" . $pessoa['passaporte'] . ")</p>";
+}else{
+    $cpf_passaporte = "CPF (" . $cpf . ")</p>";
+}
+
 ?>
 
 <html>
@@ -71,7 +77,7 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p align='justify'>" . "$amparo" . "</p>" .
     "<p>&nbsp;</p>" .
-    "<p><strong>Contratado:</strong> " . "$nome" . ", CPF (" . "$cpf" . ")</p>" .
+    "<p><strong>Contratado:</strong> " . "$nome" . ", $cpf_passaporte" .
     "<p><strong>Objeto:</strong> " . "$programa" . " " . "$linguagem" . " " . "$edital" . "</p>" .
     "<p><strong>Data / Período:</strong>" . "$data" . "</p>" .
     "<p><strong>Locais:</strong> " . "  " . "$local" . "</p>" .

@@ -55,7 +55,12 @@ $hoje = date("d/m/Y");
 if ($pedido['pessoa_tipo_id'] == 1) {
     $pessoa = recuperaDados("pessoa_fisicas", "id", $pedido ['pessoa_fisica_id']);
     $y = $pessoa['nome'];
-    $x = $pessoa['cpf'];
+    if($pessoa['passaporte'] != NULL){
+        $x = $pessoa['passaporte'];
+    }else{
+        $x = $pessoa['cpf'];
+    }
+    
 } else if ($pedido['pessoa_tipo_id'] == 2) {
     $pessoa = recuperaDados('pessoa_juridicas', "id", $pedido['pessoa_juridica_id']);
     $y = $pessoa['razao_social'];

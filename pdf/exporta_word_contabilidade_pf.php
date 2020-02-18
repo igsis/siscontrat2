@@ -26,7 +26,12 @@ while ($locais = mysqli_fetch_array($queryLocal)) {
 $local = substr($local, 1);
 
 $nome = $pessoa['nome'];
-$cpf = $pessoa['cpf'];
+
+if($pessoa['passaporte'] != NULL){
+    $cpf_passaporte = "Passaporte: " . $pessoa['passaporte'];
+}else{
+    $cpf_passaporte = "CPF: " . $pessoa['cpf'];    
+}
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 $valor = $pedido['valor_total'];
@@ -55,10 +60,10 @@ echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">";
 echo "<body>";
 
 echo "<p align='justify'><b>CONTRATANTE:</b> " . "SMC" . "</p>";
-echo "<p align='justify'><b>CONTRATADO(S):</b> Contratação de <b>" . "$nome" . "</b>, CPF " . "$cpf" . " e demais integrantes relacionados na declaração de exclusividade.</p>";
-echo "<p align='justify'><b>EVENTO/SERV:</b> Apresentação do " . "$objeto" . ", conforme segue:<br>
-" . "$local" . " <br></p>";
-echo "<p align='justify'><b>DATA/PERÍODO: </b>" . "$periodo" . ".</p>";
+echo "<p align='justify'><b>CONTRATADO(S):</b> Contratação de <b>" . $nome . "</b>, " . $cpf_passaporte . " e demais integrantes relacionados na declaração de exclusividade.</p>";
+echo "<p align='justify'><b>EVENTO/SERV:</b> Apresentação do " . $objeto . ", conforme segue:<br>
+" . $local . " <br></p>";
+echo "<p align='justify'><b>DATA/PERÍODO: </b>" . $periodo . ".</p>";
 echo "<p align='justify'><b>VALOR TOTAL DA CONTRATAÇÃO:</b> " . "R$ $valor" . "  " . "($valor_extenso )" . "<br> Quaisquer despesas aqui não ressalvadas, bem como direitos autorais, serão de responsabilidade do(a) contratado(a).</p>";
 echo "<p align='justify'><b>CONDIÇÕES DE PAGAMENTO: </b>" . "$forma_pag" . ".</p>";
 echo "<p align='justify'>O pagamento será efetuado por crédito em conta corrente no BANCO DO BRASIL, em  conformidade com o Decreto 51.197/2010, publicado no DOC de 23.01.2010.<br/>

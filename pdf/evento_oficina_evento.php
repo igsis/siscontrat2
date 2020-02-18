@@ -62,7 +62,12 @@ $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
 if ($pedidos['pessoa_tipo_id'] == 1) {
     $pessoa = recuperaDados("pessoa_fisicas", "id", $pedidos ['pessoa_fisica_id']);
     $y = $pessoa['nome'];
-    $x = $pessoa['cpf'];
+    if($pessoa['passaporte'] != NULL){
+        $x = $pessoa['passaporte'];
+    }else{
+        $x = $pessoa['cpf'];
+    }
+    
 } else if ($pedidos['pessoa_tipo_id'] == 2) {
     $pessoa = recuperaDados('pessoa_juridicas', "id", $pedidos['pessoa_juridica_id']);
     $y = $pessoa['razao_social'];

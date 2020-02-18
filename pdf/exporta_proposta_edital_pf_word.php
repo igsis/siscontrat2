@@ -78,6 +78,13 @@ if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
     $ccm = "Não Cadastrado.";
 }
 
+if($pessoa['passaporte'] != NULL){
+    $rg_cpf_passaporte = "<p><strong>Passaporte:</strong> " . $pessoa['passaporte'] . "</p>";
+}else{
+    $rg_cpf_passaporte = "<p><strong>RG:</strong> " . $pessoa['rg'] . "</p>" .
+                         "<p><strong>CPF:</strong> " . $pessoa['cpf'] . "</p>";
+}
+
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=proposta_edital_pf_$idPedido.doc");
 echo "<html>";
@@ -91,8 +98,7 @@ echo
     "<p><strong>Nome:</strong> " . $pessoa['nome'] . "</p>" .
     "<p><strong>Nome Artístico:</strong> " . $pessoa['nome_artistico'] . "</p>" .
     "<p><strong>Nacionalidade:</strong> " . $nacionalidade['nacionalidade'] . "</p>" .
-    "<p><strong>RG:</strong> " . $pessoa['rg'] . "</p>" .
-    "<p><strong>CPF:</strong> " . $pessoa['cpf'] . "</p>" .
+    $rg_cpf_passaporte .
     "<p><strong>CCM:</strong> " . $ccm . "</p>" .
     "<p><strong>DRT:</strong> " . $drt . "</p>" .
     "<p><strong>Endereço:</strong> " . $endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " . $endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf'] . "</p>" .
