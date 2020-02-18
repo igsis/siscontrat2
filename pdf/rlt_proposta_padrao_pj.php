@@ -31,7 +31,7 @@ $pessoa = recuperaDados('pessoa_juridicas', 'id', $idPj);
 $idRepresentante = $pessoa['representante_legal1_id'];
 $representante = recuperaDados('representante_legais', 'id', $idRepresentante);
 
-$sqlTelefone = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
+$sqlTelefone = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 

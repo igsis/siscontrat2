@@ -36,7 +36,7 @@ if ($drt['drt'] != "" || $drt['drt'] != NULL) {
     $drt = "Não Cadastrado.";
 }
 
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
