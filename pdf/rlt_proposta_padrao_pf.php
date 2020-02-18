@@ -151,7 +151,6 @@ if($pessoa['passaporte'] != NULL){
     $pdf->Cell(21, $l, utf8_decode('Passaporte:'), 0, 0, 'L');
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(50, $l, utf8_decode($pessoa['passaporte']), 0, 0, 'L');
-    $pdf->SetFont('Arial', 'B', 10);
     
 }else{
     $pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
