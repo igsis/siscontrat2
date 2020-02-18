@@ -110,10 +110,6 @@ $link_reserva_crd = $http . "rlt_reserva_crd.php";
 
 $link_memoria_circo = $http . "rlt_memoria_circo.php";
 
-$link_hip_hop_pf = $http . "rlt_hip_hop_pf.php";
-
-$link_hip_hop_pj = $http . "rlt_hip_hop_pj.php";
-
 $idPedido = $_POST['idPedido'];
 
 $idEvento = $_SESSION['idEvento'];
@@ -496,15 +492,6 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </button>
                     </form>
                     <hr/>
-
-                    <div class="col-md-12">
-                        <form action="<?=$link_hip_hop_pf?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block btn-block" style="width:35%">
-                                Mês do Hip-Hop
-                            </button>
-                        </form>
-                    </div>
                         <?php
                         }else if($pedido['pessoa_tipo_id'] == 2){?>
             <div class="col-md-6">
@@ -634,13 +621,6 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </button>
                     </form>
                     <hr/>
-
-                    <form action="<?=$link_hip_hop_pj?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Mês do Hip-Hop
-                        </button>
-                    </form>
                         <?php } ?>
                         
             </div>
