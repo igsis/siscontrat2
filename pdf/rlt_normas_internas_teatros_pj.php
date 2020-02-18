@@ -35,7 +35,7 @@ if($pessoa['representante_legal2_id'] != NULL){
     $rep2 = recuperaDados('representante_legais', 'id', $pessoa['representante_legal2_id']);
 }
 
-$ano = date('y');
+$ano = date('Y');
 
 // GERANDO O PDF:
 $pdf = new PDF('P','mm','A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4

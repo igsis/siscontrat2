@@ -124,9 +124,8 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                 } else {
                     $mensagem = "Hoje é dia " . $hoje->format('d/m/Y') . ". O seu evento se inicia em " . exibirDataBr($ocorrencia['data_inicio']) . ".<br>
                                     O prazo para contratos é de 30 dias.<br>";
-                    $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
-                    $fora = 0;
-                }
+                $prazo = "Você está <b class='text-green'>dentro</b> do prazo de contratos.";
+                $fora = 0;
             }
         }
 

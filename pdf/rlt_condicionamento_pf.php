@@ -32,6 +32,14 @@ $ano = date('Y', strtotime('-3 Hours'));
 $dataAtual = date('d/m/Y', strtotime('-3 Hours'));
 
 
+if($pessoa['passaporte'] != NULL){
+    $trecho_rg_cpf_passaporte = " Passaporte: " . $pessoa['passaporte'];
+    $label = "<p align='justify'>Passaporte: " . $pessoa['passaporte'] . "</p>";
+}else{
+    $trecho_rg_cpf_passaporte = " CPF: " . $pessoa['cpf'];
+    $label = "<p align='justify'>CPF: " . $pessoa['cpf'] . "</p>";
+}
+
 // GERANDO O WORD:
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=$dataAtual - Processo SEI " . $pedido['numero_processo'] . " - Condicionamento.doc");
@@ -44,7 +52,7 @@ header("Content-Disposition: attachment;Filename=$dataAtual - Processo SEI " . $
 
 <p align="center">DECLARAÇÃO</p>
 <br>
-<p align='justify'>DECLARO para os devidos fins, que eu <?=$pessoa['nome']?>, CPF <?=$pessoa['cpf']?>, sediada na <?=$enderecos['logradouro']?>, <?=$enderecos['numero']?>/ <?=$enderecos['complemento']?> - <?=$enderecos['bairro']?> - <?=$enderecos['cidade']?> / <?=$enderecos['uf']?>,
+<p align='justify'>DECLARO para os devidos fins, que eu <?=$pessoa['nome']?>, <?=$trecho_rg_cpf_passaporte?>, sediada na <?=$enderecos['logradouro']?>, <?=$enderecos['numero']?>/ <?=$enderecos['complemento']?> - <?=$enderecos['bairro']?> - <?=$enderecos['cidade']?> / <?=$enderecos['uf']?>,
     estou ciente e de acordo que o pagamento dos serviços a serem prestados, referente a <?=$objeto?>, <?=$periodo?>, no local(ais) <?=$local?>,
     ficará condicionado à apresentação do documento, abaixo listado, regularizado: </p>
 <br>
@@ -52,7 +60,7 @@ header("Content-Disposition: attachment;Filename=$dataAtual - Processo SEI " . $
 <br>
 <strong align='justify'>__________________________________________________________________ </strong>
 <p align='justify'><?=$pessoa['nome']?></p>
-<p align='justify'>CPF: <?=$pessoa['cpf']?></p>
+<?=$label?>
 <p>&nbsp;</p>
 </body>
 </html>

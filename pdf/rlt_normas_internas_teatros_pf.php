@@ -28,7 +28,7 @@ $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
-$ano = date('y');   
+$ano = date('Y');   
 
 // GERANDO O PDF:
 $pdf = new PDF('P','mm','A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
@@ -128,13 +128,15 @@ $pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');
-
-   
+if($pessoa['passaporte'] != NULL){
+   $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+}else{
+   $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+   $pdf->SetX($x);
+   $pdf->SetFont('Arial', '', 10);
+   $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');    
+}
 
 $pdf->Output();
 

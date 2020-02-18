@@ -72,6 +72,13 @@ if ($pedido['numero_processo_mae'] != NULL) {
     $processoMae = NULL;
 }
 
+if($pessoa['passaporte'] != NULL){
+    $cpf_passaporte = "<strong>Passaporte: </strong> " . $pessoa['passaporte'] . "<br />";
+}else{
+    $cpf_passaporte = "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />";    
+}
+
+
 ?>
 
 <html>
@@ -111,7 +118,7 @@ if ($pedido['numero_processo_mae'] != NULL) {
         "<p><strong>Setor  solicitante:</strong> " . $instituicao['nome'] . "</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Nome:</strong> " . $pessoa['nome'] . " <br />" .
-        "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />" .
+        $cpf_passaporte .
         "<strong>Telefone:</strong> " . $tel . "<br />" .
         "<strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
         "<p>&nbsp;</p>" .
