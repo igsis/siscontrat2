@@ -8,7 +8,7 @@ require_once("../funcoes/funcoesGerais.php");
 //CONEXÃO COM BANCO DE DADOS
 $con = bancoMysqli();
 
-session_start();
+session_start(['name' => 'sis']);
 
 class PDF extends FPDF
 {

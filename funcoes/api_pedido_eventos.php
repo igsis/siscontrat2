@@ -4,7 +4,7 @@ require_once 'funcoesGerais.php';
 $con = bancoMysqli();
 
 if (isset($_POST['_method'])) {
-    session_start();
+    session_start(['name' => 'sis']);
     switch ($_POST['_method']) {
         case "valorPorEquipamento":
             $valoresEquipamentos = $_POST['valorEquipamento'];

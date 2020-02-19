@@ -9,7 +9,7 @@
    $con = bancoMysqli();
    
 // logo da instituição 
-session_start();
+session_start(['name' => 'sis']);
 
 
   

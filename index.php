@@ -22,7 +22,7 @@ if(isset($_POST['login']))
 			if($user['senha'] == md5($_POST['senha']))
 			{
 				// compara as senhas
-				session_start();
+				session_start(['name' => 'sis']);
 				$_SESSION['login_s'] = $user['usuario'];
 				$_SESSION['nome_s'] = $user['nome_completo'];
 				$_SESSION['usuario_id_s'] = $user['id'];

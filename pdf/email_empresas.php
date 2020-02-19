@@ -35,7 +35,7 @@ switch ($modeloEmail) {
 }
 
 $dataAtual = dataHoraNow();
-session_start();
+session_start(['name' => 'sis']);
 
 // GERANDO O WORD:
 header("Content-type: application/vnd.ms-word");

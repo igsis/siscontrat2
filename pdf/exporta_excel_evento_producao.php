@@ -8,7 +8,7 @@ $con = bancoMysqli();
 require_once("../include/phpexcel/Classes/PHPExcel.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
-session_start();
+session_start(['name' => 'sis']);
 
 $idEvento = $_POST['idEvento'];
 
