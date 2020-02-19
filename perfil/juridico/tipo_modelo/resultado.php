@@ -66,8 +66,7 @@ $evento = $con->query($sql)->fetch_array();
                                 $pessoa = recuperaDados("pessoa_fisicas", "id", $evento ['pessoa_fisica_id'])['nome'];
                             } else if ($evento['pessoa_tipo_id'] == 2) {
                                 $tipo = "Jurídico";
-                                $pessoa = recuperaDados('pessoa_juridicas', "id", $evento['pessoa_juridica_id']);
-                                $pessoa = $pessoa['razao_social'];
+                                $pessoa = recuperaDados('pessoa_juridicas', "id", $evento['pessoa_juridica_id']['razao_social']);
                             }
                             ?>
                             <th width="30%">Contratado:</th>
