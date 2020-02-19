@@ -1,8 +1,8 @@
 <?php
 include "includes/menu.php";
 
+
 $con = bancoMysqli();
-$conn = bancoPDO();
 
 $ocorrencias_rept = false;
 
@@ -95,6 +95,8 @@ WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 
 
     $result = mysqli_fetch_all(mysqli_query($con, $ocorrencia_filmes));
+
+
 }
 
 $quant = count($result);
@@ -206,37 +208,75 @@ include "../perfil/evento/includes/validacoes.php";
     </section>
 </div>
 <script>
-    let btnAlterRelease = document.querySelector('');
-    let btnAlterFicha = document.querySelector('#alterFicha');
+    var idAtracao = '';
+    var cont = '';
+    //Ficha técnica
+    const linhasBtnFicha = document.querySelectorAll('.linha-btnFicha');
+    linhasBtnFicha.forEach((linha) => {
+        let btn = linha.querySelector('.btnModal');
+        let pai = linha.parentNode;
+        let conteudo = pai.querySelector('.row .col-md-12 span');
+        btn.addEventListener("click", function (event) {
+            $('#modal-ficha-tecnica').modal('show');
+            idAtracao = linha.querySelector('#idAtr');
+            document.querySelector('#atracao_id').value = idAtracao.value;
+            cont = conteudo;
+            document.querySelector('#txtFicha_tecnica').value = conteudo.textContent;
 
-    $('#alterRelease').click(function(event) {
-        event.preventDefault();
-
-        $.ajax({
-            type: 'POST',
-            url: 'includes/ajax.php',
-            data: {
-                 $('#release_comunicacao').val()
-            }
-        })
-        .done(function () {
-
-        }).fail(function () {
-            swal("danger", "Erro ao gravar");
         });
-
-
-
     });
 
-    btnAlterFicha.addEventListener('click', (event) => {
-        event.preventDefault();
+    var idAtracao2 = '';
+    //Release
+    let linhasBtnRelease = document.querySelectorAll('.linha-btnRelease');
+    linhasBtnRelease.forEach((linha) => {
+        let btn = linha.querySelector('.btnModal');
+        let pai = linha.parentNode;
+        let conteudo = pai.querySelector('.row .col-md-12 span');
+        btn.addEventListener("click", function (event) {
+            $('#modal-release').modal('show');
 
-        let ficha = document.querySelector('#ficha_tecnica').value;
-
-        $.post('/includes/ajax.php','ficha='+ficha, function (data) {
-            console.log(data);
+            idAtracao2 = linha.querySelector('#id');
+            document.querySelector('#idAtr2').value = idAtracao2.value;
+            cont = conteudo;
+            document.querySelector('#release_comunicacao').value = conteudo.textContent;
         });
+    });
 
-    })
+    $('#alterFicha').click(function (event) {
+        event.preventDefault();
+        let txtFicha = $('#txtFicha_tecnica').val();
+        let id = $('#idAtr').val();
+        $.post("http://<?= $_SERVER['HTTP_HOST'] ?>/siscontrat2/perfil/comunicacao/includes/ajax.php",
+            {ficha: txtFicha, id: id}, function (data, status) {
+                if (data) {
+                    cont.textContent = txtFicha;
+                    $('#modal-ficha-tecnica').modal("toggle");
+                    setTimeout(swal("Alteração realizada com sucesso", "", "success"),  1500);
+                } else {
+                    swal('Erro ao realizar alteração', '', 'error')
+                }
+            }).fail(function () {
+            swal('Erro ao realizar alteração', '', 'error');
+        })
+    });
+
+    $('#alterRelease').click(function (event) {
+        event.preventDefault();
+        let txtRelease = $('#release_comunicacao').val();
+        let id = $('#idAtr2').val();
+        $.post("http://<?= $_SERVER['HTTP_HOST'] ?>/siscontrat2/perfil/comunicacao/includes/ajax.php",
+            {release: txtRelease, id: id}, function (data, status) {
+                if (data) {
+                    cont.textContent = txtRelease;
+                    $('#modal-release').modal("toggle");
+                    setTimeout(swal("Alteração realizada com sucesso", "", "success"),  1500);
+                } else {
+                    swal('Erro ao realizar alteração', '', 'error')
+                }
+            }).fail(function () {
+            swal('Erro ao realizar alteração', '', 'error');
+        })
+    });
+
 </script>

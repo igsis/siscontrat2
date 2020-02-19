@@ -94,13 +94,13 @@ if ($evento['tipo_evento_id'] == 2) {
                                             <td>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <?= $atracao['ficha_tecnica'] ?>
+                                                        <span> <?= $atracao['ficha_tecnica'] ?> </span>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row linha-btnFicha">
+                                                    <input type="hidden" id="idAtr" value="<?= $atracao['id'] ?>">
                                                     <div class="col-md-2 col-md-offset-5">
-                                                        <button class="btn btn-success btn-small" data-toggle="modal"
-                                                                data-target="#modal-ficha-tecnica">Editar ficha tecnica
+                                                        <button class="btn btn-success btn-small btnModal">Editar ficha tecnica
                                                         </button>
                                                     </div>
                                                 </div>
@@ -119,13 +119,13 @@ if ($evento['tipo_evento_id'] == 2) {
                                             <td>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <?= $atracao['release_comunicacao'] ?>
+                                                       <span> <?= $atracao['release_comunicacao'] ?> </span>
                                                     </div>
-                                                    <div class="row">
+                                                    <div class="row linha-btnRelease">
+                                                        <input type="hidden" id="id" value="<?= $atracao['id'] ?>">
                                                         <div class="col-md-2 col-md-offset-5" style="margin-top: 15px;">
-                                                            <button class="btn btn-success btn-small"
-                                                                    data-toggle="modal" data-target="#modal-release">
-                                                                Editar Realease
+                                                            <button class="btn btn-success btn-small btnModal">
+                                                                Editar Release
                                                             </button>
                                                         </div>
                                                     </div>
@@ -197,13 +197,14 @@ if ($evento['tipo_evento_id'] == 2) {
                             <p align="justify"><span
                                         style="color: gray; "><strong><i>Texto de exemplo:</strong><br/>A cantora e compositora paulistana lançou, em 2007, o seu primeiro disco, "Amor e Caos". Dois anos depois, lançou "Hein?", disco produzido por Liminha e que contou com "Esconderijo", canção composta por Ana, eleita entre as melhores do ano pela revista Rolling Stone e que alcançou repercussão nacional por integrar a trilha sonora da novela "Viver a Vida" de Manoel Carlos, na Rede Globo. Ainda em 2009, grava, a convite do cantor e compositor Nando Reis, a bela canção "Pra Você Guardei o Amor". Em 2012, Ana lança o terceiro disco de inéditas, "Volta", com versões para Led Zeppelin ("Rock'n'Roll") e Edith Piaf ("La Vie en Rose"), além das inéditas autorais "Urubu Rei" (que ganhou clipe dirigido por Vera Egito) e "Será Que Você Me Ama?". Em 2013, veio o primeiro DVD, "Coração Inevitável", registrando o show que contou com a direção e iluminação de Ney Matogrosso.</span></i>
                             </p>
-                            <textarea id="release_comunicacao" name="release_comunicacao" class="form-control"
+                            <input type="hidden" id="idAtr2">
+                            <textarea id="release_comunicacao" name="txtReleaseComunicacao" class="form-control"
                                       rows="5" required><?= $atracao['release_comunicacao'] ?></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
-                        <button type="submit" id="alterRelease" class="btn btn-primary">Alterar</button>
+                        <button type="submit" id="alterRelease" name="release" class="btn btn-primary">Alterar</button>
                     </div>
                 </form>
             </div>
@@ -230,14 +231,15 @@ if ($evento['tipo_evento_id'] == 2) {
                                 <p align="justify"><span
                                             style="color: gray; "><strong><i>Elenco de exemplo:</strong><br/>Lúcio Silva (guitarra e vocal)<br/>Fabio Sá (baixo)<br/>Marco da Costa (bateria)<br/>Eloá Faria (figurinista)<br/>Leonardo Kuero (técnico de som)</span></i>
                                 </p>
-                                <textarea id="ficha_tecnica" name="ficha_tecnica" class="form-control" rows="8"
+                                <input type="hidden" id="atracao_id">
+                                <textarea id="txtFicha_tecnica" name="txtFichaTecnica" class="form-control" rows="8"
                                           required><?= $atracao['ficha_tecnica'] ?></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
-                        <button type="submit" id="alterFicha" class="btn btn-primary">Alterar</button>
+                        <button type="submit" id="alterFicha" name="ficha" class="btn btn-primary">Alterar</button>
                     </div>
                 </form>
             </div>
