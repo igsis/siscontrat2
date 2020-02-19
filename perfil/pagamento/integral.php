@@ -185,7 +185,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
             $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/";
             if ($pedido['pessoa_tipo_id'] == 1) {
                 $link1 = $server . "pagamento_integral_pf.php";
-                $link2 = $server . "documento.php";
+                $link2 = $server . "pagamento_parcelado_pf.php";
                 $link3 = $server . "recibo_pagamento.php";
                 $link4 = $server . "ateste_documentacao.php";
                 $link5 = $server . "confirmacao_servico.php";
