@@ -57,13 +57,19 @@ $query = mysqli_query($con, $sql);
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
                                 $idEvento = $evento['idEvento'];
-                                $locais = listaLocais($idEvento);
+                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['idEvento'] ." AND o.publicado = 1";
+                                $queryLocal = mysqli_query($con, $sqlLocal);
+                                $local = '';
+                                while ($locais = mysqli_fetch_array($queryLocal)) {
+                                    $local = $local . '; ' . $locais['local'];
+                                }
+                                $local = substr($local, 1);
 
                                 // $locais = listaLocais($evento['idAtracao']);
                                 echo "<tr>";
                                 echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
-                                echo "<td>" . $locais. "</td>";
+                                echo "<td>" . $local . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</td>";
                                 echo "<td>" . $evento['status'] . "</td>";
                                 echo "<td>
