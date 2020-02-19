@@ -106,15 +106,15 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                         </tr>
                         <tr>
                             <th width="30%">Amparo:</th>
-                            <td><textarea name="amparo" rows="6" cols="85"><?= $mdl['amparo'] ?></textarea></td>
+                            <td><textarea name="amparo" rows="6" cols="85" class="form-control"><?= $mdl['amparo'] ?></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
-                            <td><textarea name="dotacao" rows="1" cols="85" required></textarea></td>
+                            <td><textarea name="dotacao" rows="1" cols="85" required class="form-control"></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
-                            <td><textarea name="finalizar" rows="8" cols="85"><?= $mdl['finalizacao'] ?></textarea></td>
+                            <td><textarea name="finalizar" rows="8" cols="85" class="form-control"><?= $mdl['finalizacao'] ?></textarea></td>
                         </tr>
                     </table>
                     <div class="pull-left">

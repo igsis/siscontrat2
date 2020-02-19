@@ -9,29 +9,31 @@
                     </div>
                     <form action="?perfil=juridico&p=filtrar_formacao&sp=resultado_formacao" method="POST" ROLE="form">
                         <div class="box-body">
+                            <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <label for="protocolo">Código do pedido</label>
+                                    <label for="protocolo">Protocolo</label>
                                     <input type="text" class="form-control" name="codigopedido" id="codigopedido">
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="numprocesso">Número do Processo </label>
-                                    <input type="text" class="form-control" name="numprocesso" id="numprocesso"
-                                    >
+                                    <input type="text" class="form-control" name="numprocesso" id="numprocesso">
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label for="statuspedido">Status pedido</label>
+                                    <label for="statuspedido">Status do pedido</label>
                                     <select name="statuspedido" id="statuspedido" class="form-control">
-                                        <option value="">Status pedido</option>
-                                        <?php
-                                        geraOpcao("pedido_status");
-                                        ?>
+                                        <option value="">Selecione uma opção...</option>
+                                            <?php
+                                                geraOpcao("pedido_status");
+                                            ?>
                                     </select>
                                 </div>
-                                <div class="box-footer">
-                                <button type="submit" name="busca" id="busca" class="btn btn-primary pull-left">
-                                    Pesquisar
-                                </button>
+                            </div>
+                                
                         </div>
+                        <div class="box-footer">
+                            <button type="submit" name="busca" id="busca" class="btn btn-primary pull-right">
+                                Pesquisar
+                            </button>
                     </form>
                 </div>
             </div>

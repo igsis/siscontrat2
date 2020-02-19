@@ -63,7 +63,7 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Enviado em:</th>
-                        <td><?= $formacao['data_envio'] ?></td>
+                        <td><?= exibirDataHoraBr($formacao['data_envio']) ?></td>
                     </tr>
                     <tr>
                         <th></th>

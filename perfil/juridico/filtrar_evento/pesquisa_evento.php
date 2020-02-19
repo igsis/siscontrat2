@@ -29,15 +29,14 @@
                                     <label for="usuariocadastro">Fical,suplente ou usuário que cadastrou o evento</label>
                                     <select name="usuariocadastro" id="usuariocadastro" class="form-control">
 
-                                        <option value="0">Selecione uma opção...</option>
+                                        <option value="">Selecione uma opção...</option>
                                         <?php
                                         geraOpcao('usuarios');
                                         ?>
                                     </select>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label for="tipoevento">Tipo de
-                                        Evento </label>
+                                    <label for="tipoevento">Tipo de Evento </label>
                                     <select name="tipoevento" id="tipoevento" class="form-control">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
@@ -56,10 +55,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4 form-group">
+                                <div class="col-md-12 form-group">
                                     <label for="statuspedido">Status pedido</label>
                                     <select name="statuspedido" id="statuspedido" class="form-control">
-                                        <option value="">Status pedido</option>
+                                        <option value="">Selecione uma opção...</option>
                                         <?php
                                         geraOpcao("pedido_status");
                                         ?>

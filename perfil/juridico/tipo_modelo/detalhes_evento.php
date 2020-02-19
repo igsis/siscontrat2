@@ -31,7 +31,20 @@ $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
 $usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
 $dataEvento = recuperaDados('evento_envios', 'evento_id', $idEvento);
 $dotacao = recuperaDados('juridicos', 'pedido_id', $pedidos['id']);
-$tipo_pessoa = recuperaDados('pessoa_tipos', 'id', $pedidos['pessoa_tipo_id'])
+$tipo_pessoa = recuperaDados('pessoa_tipos', 'id', $pedidos['pessoa_tipo_id']);
+
+if($evento['nome_responsavel'] != ""){
+    $nome_resp = $evento['nome_responsavel'];
+}else{
+    $nome_resp = "Não cadastrado";
+}
+
+if($evento['tel_responsavel'] != "") {
+    $tel_resp = $evento['tel_responsavel'];
+}else{
+    $tel_resp = "Não cadastrado";
+}
+
 ?>
 
 
@@ -52,7 +65,7 @@ $tipo_pessoa = recuperaDados('pessoa_tipos', 'id', $pedidos['pessoa_tipo_id'])
                     </tr>
                     <tr>
                         <th width="30%">Evento enviado em:</th>
-                        <td><?= $dataEvento['data_envio'] ?></td>
+                        <td><?= exibirDataHoraBr($dataEvento['data_envio']) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Tipo de evento:</th>
@@ -88,11 +101,11 @@ $tipo_pessoa = recuperaDados('pessoa_tipos', 'id', $pedidos['pessoa_tipo_id'])
                     </tr>
                     <tr>
                         <th width="30%">Reponsável pelo evento:</th>
-                        <td><?= $evento['nome_responsavel'] ?></td>
+                        <td><?= $nome_resp ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $evento['tel_responsavel'] ?></td>
+                        <td><?= $tel_resp ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>

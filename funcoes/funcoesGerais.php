@@ -170,7 +170,7 @@ setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 	function exibirDataHoraBr($data)
 	{
 		$timestamp = strtotime($data);
-		return date('d/m/y - H:i:s', $timestamp);
+		return date('d/m/Y - H:i:s', $timestamp);
 	}
 	//retorna hora H:i de um datetime
 	function exibirHora($data)

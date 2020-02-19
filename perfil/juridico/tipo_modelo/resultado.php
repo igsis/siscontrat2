@@ -96,18 +96,20 @@ $evento = $con->query($sql)->fetch_array();
                         </tr>
                         <tr>
                             <th width="30%">Amparo:</th>
-                            <td><textarea name="amparo" rows="6" cols="85"><?= $mdl['amparo'] ?></textarea></td>
+                            <td><textarea class="form-control" name="amparo" rows="6" cols="85"><?= $mdl['amparo'] ?></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
-                            <td><textarea name="dotacao" rows="1" cols="85"></textarea></td>
+                            <td><textarea class="form-control" name="dotacao" rows="1" cols="85"></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
-                            <td><textarea name="finalizacao" rows="8" cols="85"><?= $mdl['finalizacao'] ?></textarea>
+                            <td><textarea class="form-control" name="finalizacao" rows="8" cols="85"><?= $mdl['finalizacao'] ?></textarea>
                             </td>
                         </tr>
                     </table>
+                    </div>
+                    <div class="box-footer">
                     <a href="?perfil=juridico&p=filtrar_evento&sp=pesquisa_evento">
                         <button type="button" class="btn btn-default pull-left" style="margin: 0 5px;">Voltar</button>
                     </a>
@@ -119,7 +121,9 @@ $evento = $con->query($sql)->fetch_array();
             <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
             <button type="submit" class="btn btn-info pull-right">Detalhes evento</button>
         </form>
-</div>
+                    </div>
+
+
 </div>
 
 </section>

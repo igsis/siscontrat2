@@ -92,8 +92,7 @@ p.pessoa_tipo_id
                                     $pessoa = recuperaDados("pessoa_fisicas", "id", $evento ['pessoa_fisica_id'])['nome'];
                                 } else if ($evento['pessoa_tipo_id'] == 2) {
                                     $tipo = "Jurídico";
-                                    $pessoa = recuperaDados('pessoa_juridicas', "id", $evento['pessoa_juridica_id']);
-                                    $pessoa = $pessoa['razao_social'];
+                                    $pessoa = recuperaDados('pessoa_juridicas', "id", $evento['pessoa_juridica_id'])['razao_social'];
                                 }
                                 ?>
                                 <?php
@@ -124,11 +123,20 @@ p.pessoa_tipo_id
                     }
                     ?>
                     </tbody>
-
+                    <tfoot>
+                    <tr>
+                        <th>Processo</th>
+                        <th>Protocolo</th>
+                        <th>Proponente</th>
+                        <th>Tipo</th>
+                        <th>Objeto</th>
+                        <th>Pendências</th>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
             <div class="box-footer">
-                <a href="#">
+                <a href="?perfil=juridico&p=filtrar_evento&sp=pesquisa_evento">
                     <button type="button" class="btn btn-default">Voltar a pesquisa</button>
                 </a>
             </div>

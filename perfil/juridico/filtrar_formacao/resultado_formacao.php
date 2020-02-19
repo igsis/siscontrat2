@@ -79,6 +79,14 @@ $sql = "SELECT p.numero_processo,
                     }
                     ?>
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Processo</th>
+                        <th>Protocolo</th>
+                        <th>Proponente</th>
+                        <th>Status</th>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
             <div class="box-footer">
