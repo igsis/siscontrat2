@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $idPedido = $_SESSION['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);

@@ -23,9 +23,9 @@ if(isset($_POST['login']))
 			{
 				// compara as senhas
 				session_start();
-				$_SESSION['login'] = $user['usuario'];
-				$_SESSION['nome'] = $user['nome_completo'];
-				$_SESSION['idUser'] = $user['id'];
+				$_SESSION['login_s'] = $user['usuario'];
+				$_SESSION['nome_s'] = $user['nome_completo'];
+				$_SESSION['usuario_id_s'] = $user['id'];
 				$log = "Fez login.";
 				//gravarLog($log);
 				header("Location: visual/index.php");

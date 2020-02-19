@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 
 $_SESSION['idEvento'] = $_POST['idEvento'];
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 $idEvento = $_SESSION['idEvento'];
 

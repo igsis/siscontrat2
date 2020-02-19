@@ -1,7 +1,7 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $usuario = recuperaDados('usuarios', 'id', $idUser);
 
 if (isset($_POST['atualizar'])) {

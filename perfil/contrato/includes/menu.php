@@ -1,6 +1,6 @@
 <?php
 $pasta = "?perfil=contrato&p=";
-$idUsuarioDoMenu = $_SESSION['idUser'];
+$idUsuarioDoMenu = $_SESSION['usuario_id_s'];
 $nivelUsuario = recuperaDados('usuario_contratos', 'usuario_id', $idUsuarioDoMenu)['nivel_acesso'];
 ?>
 <aside class="main-sidebar">

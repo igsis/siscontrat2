@@ -3,7 +3,7 @@ if (isset($_POST['reabertura'])) {
     $con = bancoMysqli();
     $idEvento = $_SESSION['idEvento'];
     $now = date('Y-m-d H:i:s', strtotime("-3 Hours"));
-    $idUsuario = $_SESSION['idUser'];
+    $idUsuario = $_SESSION['usuario_id_s'];
     $sql = "INSERT INTO evento_reaberturas (evento_id, data_reabertura, usuario_reabertura_id) VALUES ('$idEvento', '$now', '$idUsuario')";
     $sqlStatus = "UPDATE eventos SET evento_status_id = 1 WHERE id = '$idEvento'";
 

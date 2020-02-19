@@ -37,7 +37,7 @@ if (isset($_POST['excluir'])) {
     gravarLog($sqlDeletaAtracao);
 }
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status, ev.usuario_id, ev.usuario_id, ev.fiscal_id, ev.suplente_id 
         FROM eventos AS ev
         INNER JOIN tipo_eventos AS te on ev.tipo_evento_id = te.id

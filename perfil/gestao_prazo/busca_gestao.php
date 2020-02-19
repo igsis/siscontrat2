@@ -9,7 +9,7 @@ if (isset($_POST['aprovar'])) {
         $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data')";
         mysqli_query($con, $sqlEnvia);
-        $idUser = $_SESSION['idUser'];
+        $idUser = $_SESSION['usuario_id_s'];
         $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
         mysqli_query($con, $sqlEnvio);
         $mensagem = mensagem("success", "Evento aprovado com sucesso!");
@@ -36,7 +36,7 @@ if (isset($_POST['vetar'])) {
         $motivo = $_POST['motivo'];
         $justificativa = $_POST['justificativa'];
         $titulo = "Motivo da Não Aprovação: " . $_POST['titulo'];
-        $idUser = $_SESSION['idUser'];
+        $idUser = $_SESSION['usuario_id_s'];
         $data = $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
         $sqlChamado = "INSERT INTO chamados (evento_id, 
                                              chamado_tipo_id, 

@@ -5,7 +5,7 @@ include "includes/funcoesAuxiliares.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 if (isset($_POST['_filtros'])) {
 

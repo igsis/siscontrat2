@@ -1,5 +1,5 @@
 <?php
-$idUsuario = $_SESSION['idUser'];
+$idUsuario = $_SESSION['usuario_id_s'];
 
 $con = bancoMysqli();
 $sql_user = "SELECT perfil_id from usuarios WHERE id = '$idUsuario'";

@@ -278,7 +278,7 @@ setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 	{
 		//grava na tabela log os inserts e updates
 		$logTratado = addslashes($log);
-		$idUser = $_SESSION['idUser'];
+		$idUser = $_SESSION['usuario_id_s'];
 		$ip = $_SERVER["REMOTE_ADDR"];
 		$data = date('Y-m-d H:i:s');
 		$sql = "INSERT INTO `log` (`id`, `idUsuario`, `enderecoIP`, `dataLog`, `descricao`)

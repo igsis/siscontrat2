@@ -82,10 +82,10 @@ unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
 
-$idUsuario = $_SESSION['idUser'];
+$idUsuario = $_SESSION['usuario_id_s'];
 
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $sql = "SELECT e.id, e.nome_evento, u.nome_completo, ee.data_envio, e.usuario_id, e.suplente_id, e.fiscal_id FROM eventos e 
                 INNER JOIN pedidos p ON p.origem_id = e.id 
                 INNER JOIN usuarios u on e.usuario_id = u.id
