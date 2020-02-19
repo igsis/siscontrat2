@@ -6,6 +6,8 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 $tipo = '';
 
+
+
 if (isset($_POST['salvar'])) {
     $tipo = $_POST['tipo'];
     $idEvento = $_POST['id'];
@@ -158,7 +160,7 @@ if (isset($_POST['agendao']) || $tipo == 2) {
                         <!-- /.box-body -->
                         <div class="box-footer">
                             <a class="btn btn-default" href="?perfil=comunicacao&p=filtro">Voltar</a>
-                            <a class="btn btn-success">Ver ocorrencias</a>
+                            <a class="btn btn-success" href="<?= "?perfil=comunicacao&p=visualizar_ocorrencias&id={$evento['id']}" ?>">Ver ocorrencias</a>
                             <input type="hidden" name="tipo" value="<?= $tipo ?>">
                             <button type="submit" name="salvar" class="btn btn-info pull-right">Salvar</button>
                         </div>
