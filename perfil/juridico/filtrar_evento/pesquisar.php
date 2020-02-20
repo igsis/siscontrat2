@@ -2,33 +2,40 @@
 $con = bancoMysqli();
 
 
-if (isset($_POST['protocolo']) && $_POST['protocolo'] != null) {
-    $protocolo = $_POST ['protocolo'];
-    $protocolo = " AND e.protocolo LIKE '%$protocolo%'";
+if (isset($_POST['busca'])) {
+
+    $protocolo = $_POST ['protocolo'] ?? NULL;
+    $numprocesso = $_POST ['numprocesso'] ?? NULL;
+    $objeto = $_POST['objetoevento'] ?? NULL;
+    $statusPedido = $_POST['statusPedido'] ?? NULL;
+    $tipoEvento = $_POST['tipoEvento'] ?? NULL;
+    $usuariocadastro = $_POST['usuariocadastro'] ?? NULL;
+    $instituicao = $_POST['instituicao'] ?? NULL;
+
+    $sqlInstituicao = '';
+    $sqlTipo = '';
+    $sqlObejto = '';
+    $sqlProtocolo = '';
+    $sqlProcesso = '';
+    $sqlStatus = '';
+    $sqlUsuario = '';
+
+    if ($instituicao != NULL)
+        $sqlInstituicao = " AND instituicao_id = '$instituicao'";
+    if ($numprocesso != NULL)
+        $sqlProcesso = " AND p.numero_processo LIKE '%$numprocesso%'";
+    if ($protocolo != NULL)
+        $sqlProtocolo = " AND e.protocolo LIKE '%$protocolo%'";
+    if ($statusPedido != NULL)
+        $sqlStatus = " AND p.status_pedido_id = '$statusPedido'";
+    if ($tipoEvento != NULL)
+        $sqlTipo = "AND e.tipo_evento_id = '$tipoEvento'";
+    if ($objeto != NULL)
+        $sqlObejto = " AND e.nome_evento LIKE '%$objeto%'";
+    if ($usuariocadastro != NULL)
+        $sqlUsuario = " AND fiscal_id = '$usuariocadastro' OR suplente_id = '$usuariocadastro' OR usuario_id = '$usuariocadastro'";
 }
-if (isset($_POST['numprocesso']) && $_POST['numprocesso'] != null) {
-    $numprocesso = $_POST ['numprocesso'];
-    $numprocesso = " AND p.numero_processo LIKE '%$numprocesso%'";
-}
-if (isset($_POST['objetoevento']) && $_POST['objetoevento'] != null) {
-    $objetoevento = $_POST ['objetoevento'];
-}
-if (isset($_POST['usuariocadastro']) && $_POST['usuariocadastro'] != null) {
-    $usuariocadastro = $_POST ['usuariocadastro'];
-    $usuariocadastro = " AND e.usuario_id = '$usuariocadastro'";
-}
-if (isset($_POST['tipoEvento']) && $_POST['tipoEvento'] != null) {
-    $tipoEvento = $_POST ['tipoEvento'];
-    $tipoEvento = "AND e.tipo_evento_id = '$tipoEvento'";
-}
-if (isset($_POST['instituicao']) && $_POST['instituicao'] != null) {
-    $instituicao = $_POST ['instituicao'];
-    $instituicao = "AND o.instituicao_id = '$instituicao'";
-}
-if (isset($_POST['statusPedido']) && $_POST['statusPedido']) {
-    $statusPedido = $_POST['statusPedido'];
-    $statusPedido = " AND p.status_pedido_id = '$statusPedido'";
-}
+
 
 $sql = "select p.numero_processo, 
 e.protocolo, 
@@ -37,11 +44,15 @@ e.nome_evento, e.id,
 e.tipo_evento_id, 
 p.pessoa_fisica_id, 
 p.pessoa_juridica_id, 
-p.pessoa_tipo_id
- from pedidos as p inner join eventos as e on e.id = p.origem_id 
+p.pessoa_tipo_id,
+e.id
+ from pedidos as p 
+ inner join eventos as e on e.id = p.origem_id 
  inner join tipo_eventos te on te.id = e.tipo_evento_id 
  inner join pessoa_tipos pt on pt.id = p.pessoa_tipo_id 
- WHERE p.publicado = 1 AND p.origem_tipo_id = 1";
+ WHERE p.publicado = 1 AND p.origem_tipo_id = 1 $sqlProtocolo $sqlProcesso $sqlStatus $sqlTipo $sqlObejto $sqlUsuario 
+ GROUP BY e.id";
+
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -77,7 +88,8 @@ p.pessoa_tipo_id
                                         <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"
                                               method="POST">
                                             <input type="hidden" name=idEvento value="<?= $evento['id'] ?>">
-                                            <button type="submit" class="btn btn-link"><?= $evento['numero_processo'] ?></button>
+                                            <button type="submit"
+                                                    class="btn btn-link"><?= $evento['numero_processo'] ?></button>
                                         </form>
                                     </td>
                                     <?php

@@ -25,7 +25,7 @@ $sql = "SELECT p.numero_processo,
             
 
         FROM pedidos as p 
-        INNER JOIN formacao_status fs on p.id = fs.id 
+        INNER JOIN formacao_status fs on p.origem_id = fs.id 
         INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
         INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
         WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 AND fc.id = $idFormacao";
@@ -126,6 +126,7 @@ $queryLocal = mysqli_query($con, $sqlLocal);
         </form>
         <form action="?perfil=juridico&p=filtrar_formacao&sp=detalhe_formacao" method="post">
             <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
+            <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
             <button type="submit" class="btn btn-info pull-right">Detalhes Formação
             </button>
         </form>

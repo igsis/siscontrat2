@@ -100,6 +100,17 @@ $dados =
 <div align="center">
     <div id="dados" class="texto"><?php echo $dados; ?></div>
 </div>
+<br>
+<div align="center">
+    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+        COPIAR TODO O TEXTO
+        <i class="fa fa-copy"></i>
+    </button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="http://sei.prefeitura.sp.gov.br" target="_blank">
+        <button class="btn btn-primary">CLIQUE AQUI PARA ACESSAR O <img src="../visual/images/logo_sei.jpg"></button>
+    </a>
+</div>
 
 </body>
 </html>

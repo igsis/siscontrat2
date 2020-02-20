@@ -4,15 +4,19 @@ $con = bancoMysqli();
 
 isset($_POST['idFormacao']);
 $idFormacao = $_POST['idFormacao'];
+isset($_POST['tipoModelo']);
+$modelo = $_POST['tipoModelo'];
 
-$formacao = recuperaDados('formacao_contratacoes','id',$idFormacao);
-$pedido = recuperaDados('pedidos','id',$formacao['pedido_id']);
-$pf = recuperaDados('pessoa_fisicas','id',$formacao['pessoa_fisica_id']);
-$ci = recuperaDados('classificacao_indicativas','id',$formacao['classificacao']);
-$linguagem = recuperaDados('linguagens ','id',$formacao['linguagem_id']);
-$programa = recuperaDados('programas','id',$formacao['programa_id']);
-$pagamento = recuperaDados('pagamentos','pedido_id',$pedido['id']);
-$fcstatus = recuperaDados('formacao_status','id',$formacao['form_status_id']);
+
+$formacao = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
+$pedido = recuperaDados('pedidos', 'id', $formacao['pedido_id']);
+var_dump($pedido);
+$pf = recuperaDados('pessoa_fisicas', 'id', $formacao['pessoa_fisica_id']);
+$ci = recuperaDados('classificacao_indicativas', 'id', $formacao['classificacao']);
+$linguagem = recuperaDados('linguagens ', 'id', $formacao['linguagem_id']);
+$programa = recuperaDados('programas', 'id', $formacao['programa_id']);
+$pagamento = recuperaDados('pagamentos', 'pedido_id', $pedido['id']);
+$fcstatus = recuperaDados('formacao_status', 'id', $formacao['form_status_id']);
 
 
 //  local //
@@ -44,7 +48,7 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 $tel = substr($tel, 0, -3);
 ////
 
-$fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
+$fcHora = recuperaDados('formacao_parcelas', 'id', $idFormacao);
 
 ?>
 
@@ -66,20 +70,16 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                         <td><?= exibirDataHoraBr($formacao['data_envio']) ?></td>
                     </tr>
                     <tr>
-                        <th></th>
-                        <td></td>
-                    </tr>
-                    <tr>
                         <th width="30%">Usuário que cadastrou a formação:</th>
-                        <td><?= $pf ['nome'] ?></td>
+                        <td><?= $usuarios ['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $tel ?> </td>
+                        <td><?= $usuarios['telefone'] ?> </td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $pf ['email'] ?></td>
+                        <td><?= $usuarios ['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -212,19 +212,19 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Forma de Pagamento</th>
-                        <td><?= $pedido['forma_pagamento'] ?></td>
+                        <td><?=$pedido['forma_pagamento'] ?></td>
                     </tr>
                     <tr>
-                        <th width="30%">Data</th>
-                        <td><?= $pedido['data_kit_pagamento'] ?></td>
+                        <th width="30%">Data/Período</th>
+                        <td><?= retornaPeriodoFormacao($idVigencia) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data de Emissão da N.E:</th>
-                        <td><?= $pagamento['emissao_nota_empenho'] ?></td>
+                        <td><?= exibirDataBr($pagamento['emissao_nota_empenho']) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data de Entrega da N.E</th>
-                        <td><?= $pagamento['entrega_nota_empenho'] ?></td>
+                        <td><?= exibirDataBr($pagamento['entrega_nota_empenho']) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
@@ -241,9 +241,12 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                 </table>
                 <br/>
                 <div class="pull-left">
-                    <a href="?perfil=juridico">
-                        <button type="button" class="btn btn-default">Voltar a pesquisa</button>
-                    </a>
+                    <form action="?perfil=juridico&p=filtrar_formacao&sp=resumo_formacao" method="post">
+                        <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
+                        <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
+                        <button type="submit" class="btn btn-info pull-right">Voltar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
