@@ -454,7 +454,8 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="banco">Banco</label>
-                                    <select name="banco" id="banco" class="form-control" required>
+                                    <select name="banco" id="banco" class="form-control">
+                                    <option value="">Selecione um banco...</option>
                                         <?php
                                         geraOpcao('bancos', $banco['banco_id']);
                                         ?>
@@ -464,13 +465,13 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
                                 <div class="form-group col-md-4">
                                     <label for="agencia">Agência</label>
                                     <input type="text" id="agencia" name="agencia" class="form-control"
-                                           value="<?= $banco['agencia'] ?>" required>
+                                           value="<?= $banco['agencia'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="conta">Conta</label>
                                     <input type="text" id="conta" name="conta" class="form-control"
-                                           value="<?= $banco['conta'] ?>" required>
+                                           value="<?= $banco['conta'] ?>">
                                 </div>
                             </div>
                                 <div class="box-footer">

@@ -62,11 +62,11 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label for="status">Status do pedido: </label>
+                            <label for="status">Status do evento: </label>
                             <select class="form-control" name="status" id="status">
                                 <option value="">Selecione um status...</option>
                                 <?php
-                                geraOpcao("pedido_status", "");
+                                geraOpcao("evento_status", "");
                                 ?>
                             </select>
                         </div>
@@ -76,7 +76,7 @@
                 <a href="?perfil=contabilidade">
                     <button type="button" class="btn btn-default pull-left">Voltar</button>
                 </a>
-                <button type="submit" class="btn btn-primary pull-right" name="carrega">Pesquisar</button>
+                <button type="submit" class="btn btn-primary pull-right" name="buscar">Pesquisar</button>
                 </form>
             </div>
         </div>
