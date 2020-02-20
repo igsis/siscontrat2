@@ -268,73 +268,6 @@ if (isset($valores) && $valores > 0) {
     $valorTotal = 0;
 }
 
-
-if (isset($_POST["enviar"])) {
-    $idPf = $_POST['idPessoa'];
-    $tipoPessoa = $_POST['tipoPessoa'];
-
-    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
-    $query_arquivos = mysqli_query($con, $sql_arquivos);
-
-    while ($arq = mysqli_fetch_array($query_arquivos)) {
-        $y = $arq['id'];
-        $x = $arq['sigla'];
-        $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
-        $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
-
-        if ($f_size > 5242880) {
-            $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
-
-        } else {
-            if ($nome_arquivo != "") {
-                $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
-                $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
-                $hoje = date("Y-m-d H:i:s");
-                $dir = '../uploadsdocs/'; //Diretório para uploads
-                $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-                $ext = strtolower(substr($nome_arquivo, -4));
-
-                if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
-                {
-                    if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPf', '$y', '$new_name', '$hoje', '1'); ";
-                        $query = mysqli_query($con, $sql_insere_arquivo);
-
-                        if ($query) {
-                            $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                            echo "<script>
-                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
-                            </script>";
-                            gravarLog($sql_insere_arquivo);
-                        } else {
-                            $mensagem = mensagem("danger", "Erro ao gravar no banco");
-                        }
-                    } else {
-                        $mensagem = mensagem("danger", "Erro no upload");
-                    }
-                } else {
-                    echo "<script>
-                            swal(\"Erro no upload! Anexar documentos somente no formato PDF.\", \"\", \"error\");                             
-                        </script>";
-                }
-            }
-        }
-    }
-}
-
-if (isset($_POST['apagar'])) {
-    $idArquivo = $_POST['idArquivo'];
-    $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
-    if (mysqli_query($con, $sql_apagar_arquivo)) {
-        $arq = recuperaDados("arquivos", $idArquivo, "id");
-        $mensagem = mensagem("success", "Arquivo " . $arq['arquivo'] . "apagado com sucesso!");
-        gravarLog($sql_apagar_arquivo);
-    } else {
-        $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
-    }
-}
-
-
 $sqlTelefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 
@@ -556,11 +489,7 @@ $atracao = mysqli_query($con, $sql);
                                         <input type="text" name="drt" class="form-control telefone" maxlength="15"
                                                placeholder="Digite o DRT" value="<?= $drts['drt'] ?>">
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <?php
-                                        anexosNaPagina(60, $idPf, "modal-drt", "DTR");
-                                        ?>
-                                    </div>
+                                    
                                     <?php
                                 }
                                 ?>
@@ -604,31 +533,6 @@ $atracao = mysqli_query($con, $sql);
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
-                                    $queryFACC = mysqli_query($con, $sqlFACC);
-                                    ?>
-
-                                    <label>Gerar FACC</label><br>
-                                    <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
-                                       class="btn btn-primary btn-block">Clique aqui para
-                                        gerar a FACC
-                                    </a>
-                                </div>
-
-                                <div class="form-group col-md-5">
-                                    <label>&nbsp;</label><br>
-                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                        no campo correspondente.</p>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(51, $idPf, "modal-facc", "FACC");
-                                    ?>
-                                </div>
                             </div>
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
@@ -682,46 +586,9 @@ $atracao = mysqli_query($con, $sql);
     </div>
 </div>
 
-<?php
-modalUploadArquivoUnico("modal-rg", "?perfil=contrato&p=edita_pf", "RG", "rg", $idPf, "1");
-modalUploadArquivoUnico("modal-cpf", "?perfil=contrato&p=edita_pf", "CPF", "cpf", $idPf, "1");
-modalUploadArquivoUnico("modal-ccm", "?perfil=contrato&p=edita_pf", "FDC - CCM", "ccm", $idPf, "1");
-modalUploadArquivoUnico("modal-nit", "?perfil=contrato&p=edita_pf", "NIT", "pis_pasep_", $idPf, "1");
-modalUploadArquivoUnico("modal-facc", "?perfil=contrato&p=edita_pf", "faq", "faq", $idPf, "1");
-modalUploadArquivoUnico("modal-drt", "?perfil=contrato&p=edita_pf", "DRT", "drt", $idPf, "1");
-modalUploadArquivoUnico("modal-endereco", "?perfil=contrato&p=edita_pf", "Comprovante de endereço", "residencia", $idPf, "1");
-?>
-
 </section>
 <!-- /.content -->
 </div>
-
-<!--.modal-->
-<div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Confirmação de Exclusão</h4>
-            </div>
-            <div class="modal-body text-center">
-                <p>Tem certeza que deseja excluir este arquivo?</p>
-            </div>
-            <div class="modal-footer">
-                <form action="?perfil=contrato&p=edita_pf" method="post">
-                    <input type="hidden" name="idArquivo" id="idArquivo" value="">
-                    <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
-                    <input type="hidden" name="apagar" id="apagar">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
-                    </button>
-                    <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Apagar">
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!--  Fim Modal de Upload de arquivo  -->
 
 <script type="text/javascript">
     $('#exclusao').on('show.bs.modal', function (e) {

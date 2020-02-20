@@ -155,70 +155,6 @@ if (isset($_POST['edita'])) {
     }
 }
 
-if (isset($_POST["enviar"])) {
-    $idPj = $_POST['idPessoa'];
-    $tipoPessoa = $_POST['tipoPessoa'];
-
-    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
-    $query_arquivos = mysqli_query($con, $sql_arquivos);
-
-    while ($arq = mysqli_fetch_array($query_arquivos)) {
-        $y = $arq['id'];
-        $x = $arq['sigla'];
-        $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
-        $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
-
-        if ($f_size > 5242880) {
-            $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
-
-        } else {
-            if ($nome_arquivo != "") {
-                $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
-                $new_name = date("YmdHis") . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
-                $hoje = date("Y-m-d H:i:s");
-                $dir = '../uploadsdocs/'; //Diretório para uploads
-                $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-                $ext = strtolower(substr($nome_arquivo, -4));
-
-                if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
-                {
-                    if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPj', '$y', '$new_name', '$hoje', '1'); ";
-                        $query = mysqli_query($con, $sql_insere_arquivo);
-
-                        if ($query) {
-                            $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                            echo "<script>
-                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
-                            </script>";
-                            gravarLog($sql_insere_arquivo);
-                        } else {
-                            $mensagem = mensagem("danger", "Erro ao gravar no banco");
-                        }
-                    } else {
-                        $mensagem = mensagem("danger", "Erro no upload");
-                    }
-                } else {
-                    echo "<script>
-                            swal('Erro no upload! Anexar documentos somente no formato PDF.', '', 'error');                             
-                        </script>";
-                }
-            }
-        }
-    }
-}
-
-if (isset($_POST['apagar'])) {
-    $idArquivo = $_POST['idArquivo'];
-    $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
-    if (mysqli_query($con, $sql_apagar_arquivo)) {
-        $arq = recuperaDados("arquivos", $idArquivo, "id");
-        $mensagem = mensagem("success", "Arquivo " . $arq['arquivo'] . "apagado com sucesso!");
-        gravarLog($sql_apagar_arquivo);
-    } else {
-        $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
-    }
-}
 
 if (isset($_POST['load'])) {
     $idPj = $_POST['idPj'];
@@ -275,72 +211,21 @@ if (isset($pj['representante_legal2_id'])) {
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-6">
                                     <label for="cnpj">CNPJ: *</label>
                                     <input type="text" class="form-control" id="cnpj" name="cnpj"
                                            required readonly value="<?= $pj['cnpj'] ?>">
 
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(22, $idPj, "modal-cnpj", "CNPJ");
-                                    ?>
-                                </div>
-
-                                <div class="form-group col-md-2">
+                                
+                                <div class="form-group col-md-6">
                                     <label for="ccm">CCM: </label>
                                     <input type="text" class="form-control" id="ccm" name="ccm"
                                            value="<?= $pj['ccm'] ?>">
                                 </div>
 
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    if ($end['uf'] == "SP") {
-                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (43) AND origem_id = '$idPj' AND publicado = 1";
-                                        $queryExistentes = mysqli_query($con, $sqlExistentes);
-                                        $cpom = 0;
-                                    } else {
-                                        $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = (28) AND origem_id = '$idPj' AND publicado = 1";
-                                        $queryExistentes = mysqli_query($con, $sqlExistentes);
-                                        $cpom = 1;
-                                    }
-
-                                    if (mysqli_num_rows($queryExistentes) == 0) {
-                                        ?>
-                                        <label>Anexo FDC - CCM ou CPOM</label><br>
-                                        <button type="button" class="btn btn-primary btn-block" id="modal"
-                                                data-toggle="modal" data-target="#modal-ccm">
-                                            Clique aqui para anexar
-                                        </button>
-                                        <?php
-                                    } elseif (mysqli_num_rows($queryExistentes) > 0 && $cpom == 0) {
-                                        $arquivo = mysqli_fetch_array($queryExistentes);
-                                        ?>
-                                        <label>FDC - CCM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
-                                        <br>
-                                        <div class='form-group' style='display: flex; align-items: center;'>
-                                            <button class='btn-sm btn-danger glyphicon glyphicon-trash' type='button'
-                                                    data-toggle='modal'
-                                                    data-target='#exclusao' data-id='<?= $arquivo['id'] ?>'
-                                                    data-nome='<?= $arquivo['arquivo'] ?>'>
-                                            </button> &nbsp;&nbsp;
-                                            <a href='../uploadsdocs/<?= $arquivo['arquivo'] ?>' target='_blank'><?=
-                                                mb_strimwidth($arquivo['arquivo'], 15, 25, '...') ?></a></div>
-                                        <?php
-
-                                    } else {
-                                        $arquivo = mysqli_fetch_array($queryExistentes);
-                                        ?>
-
-                                        <label>CPOM anexado no dia: <?= exibirDataBr($arquivo['data']) ?></label>
-                                        <br>
-                                        <a class="link" href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
-                                           target='_blank'><?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
-
-                                        <?php
-                                    }
-                                    ?>
-                                </div>
+                                
+                                
                             </div>
                             <hr/>
                             <div class="row">
@@ -398,7 +283,7 @@ if (isset($pj['representante_legal2_id'])) {
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="cep">CEP: *</label>
                                     <input type="text" class="form-control" name="cep" id="cep" maxlength="9"
                                            placeholder="Digite o CEP" required data-mask="00000-000"
@@ -474,46 +359,7 @@ if (isset($pj['representante_legal2_id'])) {
                                            value="<?= $banco['conta'] ?>">
                                 </div>
                             </div>
-                            <div class="row">
-                                <?php
-                                $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 89 AND origem_id = '$idPj' AND publicado = 1";
-                                $queryFACC = mysqli_query($con, $sqlFACC);
-
-                                $facc = "block";
-
-                                if (mysqli_num_rows($queryFACC) == 0 && $pj['representante_legal1_id'] == null) {
-
-                                    echo " <div class='form-group col-md-12 text-center'>
-                                                   <label>&nbsp;</label><br> 
-                                                   <h4 class='text-warning text-bold'><em>Para gerar a FACC primeiro cadastre um representante legal.</em></h4>
-                                               </div>";
-
-                                    $facc = "none";
-
-                                } else if ($pj['representante_legal1_id'] != null) {
-                                    ?>
-                                    <div class="form-group col-md-3">
-                                        <label>Gerar FACC</label><br>
-                                        <a href="<?= $link_facc . "?id=" . $idPj ?>" target="_blank" type="button"
-                                           class="btn btn-primary btn-block">Clique aqui para
-                                            gerar a FACC
-                                        </a>
-                                    </div>
-                                    <div class="form-group col-md-5" style="display: <?= $facc ?>">
-                                        <label>&nbsp;</label><br>
-                                        <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                            documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                            no campo correspondente.</p>
-                                    </div>
-                                    <div class="form-group col-md-4" style="display: <?= $facc ?>">
-                                        <?php
-                                        anexosNaPagina(89, $idPj, "modal-facc", "FACC");
-                                        ?>
-                                    </div>
-                                    <?php
-                                }
-                                ?>
-                            </div>
+                        
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-12">
@@ -634,55 +480,9 @@ if (isset($pj['representante_legal2_id'])) {
         </div>
     </div>
 </div>
-<?php
-modalUploadArquivoUnico("modal-cnpj", "?perfil=contrato&p=edita_pj", "CNPJ", "cartao_cnp", $idPj, "2");
-modalUploadArquivoUnico("modal-facc", "?perfil=contrato&p=edita_pj", "facc", "facc", $idPj, "2");
-?>
+
 
 </section>
-</div>
-
-<div class="modal fade" id="modal-ccm">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Upload de FCD - CCM ou CPOM</h4>
-            </div>
-            <div class="modal-body">
-                <p align='center'><strong>Arquivo somente em PDF e até 05 MB.</strong></p>
-                <form method="POST" action="?perfil=contrato&p=edita_pj"
-                      enctype="multipart/form-data">
-                    <br/>
-                    <div align='center'>
-                        <?php
-                        if ($end['uf'] == "SP") {
-                        ?>
-                        <label>FDC - CCM</label>
-                        <input type='file' id="ccm" name='arquivo[ccm]'>
-                    </div>
-                    <?php
-                    } else {
-                        ?>
-                        <div align='center'>
-                            <label>CPOM</label>
-                            <input type='file' id="cpom" name='arquivo[cpom]'>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                    <br/>
-                    <input type="hidden" name="idPessoa" value="<?= $idPj ?>"/>
-                    <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>"/>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" name="enviar" class="btn btn-success">Enviar</button>
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
-            </div>
-            </form>
-        </div>
-    </div>
 </div>
 
 <div class="modal fade" id="modal-representante-edita" role="dialog">
@@ -733,34 +533,6 @@ modalUploadArquivoUnico("modal-facc", "?perfil=contrato&p=edita_pj", "facc", "fa
         </div>
     </div>
 </div>
-
-
-<!--.modal-->
-<div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Confirmação de Exclusão</h4>
-            </div>
-            <div class="modal-body text-center">
-                <p>Tem certeza que deseja excluir este arquivo?</p>
-            </div>
-            <div class="modal-footer">
-                <form action="?perfil=evento&p=pj_edita" method="post">
-                    <input type="hidden" name="idArquivo" id="idArquivo" value="">
-                    <input type="hidden" name="idPj" id="idPj" value="<?= $idPj ?>">
-                    <input type="hidden" name="apagar" id="apagar">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
-                    </button>
-                    <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Apagar">
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!--  Fim Modal de Upload de arquivo  -->
 
 <script type="text/javascript">
     $('#exclusao').on('show.bs.modal', function (e) {
