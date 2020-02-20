@@ -205,10 +205,9 @@ if (isset($_POST['carregar'])) {
 
 if (isset($_POST["enviar"])) {
     $idPf = $_POST['idPessoa'];
-    $tipoPessoa = 6;
+    $tipoPessoa = 1;
 
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
-
     $query_arquivos = mysqli_query($con, $sql_arquivos);
 
     while ($arq = mysqli_fetch_array($query_arquivos)) {
