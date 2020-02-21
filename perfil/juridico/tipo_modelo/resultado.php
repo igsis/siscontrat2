@@ -34,7 +34,7 @@ p.pessoa_fisica_id,
 p.pessoa_juridica_id
 from pedidos as p
 inner join eventos as e on e.id = p.origem_id
-where e.id = $idEvento";
+ AND e.publicado = 1 AND p.publicado = 1 where e.id = $idEvento";
 $evento = $con->query($sql)->fetch_array();
 
 
@@ -63,14 +63,18 @@ $evento = $con->query($sql)->fetch_array();
                             <?php
                             if ($evento['pessoa_tipo_id'] == 1) {
                                 $tipo = "Física";
-                                $pessoa = recuperaDados("pessoa_fisicas", "id", $evento ['pessoa_fisica_id'])['nome'];
+                                $pessoa = recuperaDados("pessoa_fisicas", "id", $evento ['pessoa_fisica_id']);
+                                $nome = $pessoa['nome']
+                                ?>
+                                <th width="30%">Contratado:</th>
+                                <td><?= $nome ?></td><?php
                             } else if ($evento['pessoa_tipo_id'] == 2) {
                                 $tipo = "Jurídico";
-                                $pessoa = recuperaDados('pessoa_juridicas', "id", $evento['pessoa_juridica_id']['razao_social']);
-                            }
-                            ?>
-                            <th width="30%">Contratado:</th>
-                            <td><?= $pessoa ?></td>
+                                $pessoa = recuperaDados('pessoa_juridicas', "id", $evento['pessoa_juridica_id']);
+                                $nome = $pessoa['razao_social']; ?>
+                                <th width="30%">Contratado:</th>
+                                <td><?= $nome ?></td>
+                            <?php } ?>
                         </tr>
                         <?php
                         $atracoes = recuperaDados('atracoes', 'evento_id', $idEvento);
@@ -96,7 +100,8 @@ $evento = $con->query($sql)->fetch_array();
                         </tr>
                         <tr>
                             <th width="30%">Amparo:</th>
-                            <td><textarea class="form-control" name="amparo" rows="6" cols="85"><?= $mdl['amparo'] ?></textarea></td>
+                            <td><textarea class="form-control" name="amparo" rows="6"
+                                          cols="85"><?= $mdl['amparo'] ?></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
@@ -104,12 +109,13 @@ $evento = $con->query($sql)->fetch_array();
                         </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
-                            <td><textarea class="form-control" name="finalizacao" rows="8" cols="85"><?= $mdl['finalizacao'] ?></textarea>
+                            <td><textarea class="form-control" name="finalizacao" rows="8"
+                                          cols="85"><?= $mdl['finalizacao'] ?></textarea>
                             </td>
                         </tr>
                     </table>
-                    </div>
-                    <div class="box-footer">
+                </div>
+                <div class="box-footer">
                     <a href="?perfil=juridico&p=filtrar_evento&sp=pesquisa_evento">
                         <button type="button" class="btn btn-default pull-left" style="margin: 0 5px;">Voltar</button>
                     </a>
@@ -121,7 +127,7 @@ $evento = $con->query($sql)->fetch_array();
             <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
             <button type="submit" class="btn btn-info pull-right">Detalhes evento</button>
         </form>
-                    </div>
+</div>
 
 
 </div>

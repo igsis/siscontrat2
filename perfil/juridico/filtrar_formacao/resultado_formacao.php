@@ -15,7 +15,7 @@ if (isset($_POST['busca'])) {
     if ($numprocesso != NULL)
         $sqlnumProcesso = "AND numero_processo LIKE '%$numprocesso%'";
     if ($statuspedido != NULL)
-        $sqlStatus = "AND formacao_status =$statuspedido'";
+        $sqlStatus = "AND ps.id =$statuspedido";
 }
 
 $sql = "select fc.protocolo,p.numero_processo, pf.nome, fc.id,ps.status

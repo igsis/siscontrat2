@@ -56,7 +56,6 @@ $sql = "SELECT p.numero_processo,
             
             where p.origem_tipo_id = 1 and p.publicado = 1 and e.publicado = 1 $protocolo $numprocesso $objetoevento
                 $tipoEvento $instituicao $statusPedido";
-
 ?>
 <div class="content-wrapper">
     <section class="content">

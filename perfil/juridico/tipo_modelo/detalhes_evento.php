@@ -24,7 +24,7 @@ $classificacao = recuperaDados('classificacao_indicativas', 'id', $atracao['clas
 $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'atracao_id', $atracao['id']);
 $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
-$pedidos = recuperaDados('pedidos', 'origem_id', $idEvento);
+$pedidos = recuperaDados('pedidos', 'origem_id', $evento['id']);
 $pagamento = recuperaDados('pagamentos', 'pedido_id', $pedidos['id']);
 $statusPedido = recuperaDados('pedido_status', 'id', $pedidos['status_pedido_id']);
 $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
@@ -33,15 +33,15 @@ $dataEvento = recuperaDados('evento_envios', 'evento_id', $idEvento);
 $dotacao = recuperaDados('juridicos', 'pedido_id', $pedidos['id']);
 $tipo_pessoa = recuperaDados('pessoa_tipos', 'id', $pedidos['pessoa_tipo_id']);
 
-if($evento['nome_responsavel'] != ""){
+if ($evento['nome_responsavel'] != "") {
     $nome_resp = $evento['nome_responsavel'];
-}else{
+} else {
     $nome_resp = "Não cadastrado";
 }
 
-if($evento['tel_responsavel'] != "") {
+if ($evento['tel_responsavel'] != "") {
     $tel_resp = $evento['tel_responsavel'];
-}else{
+} else {
     $tel_resp = "Não cadastrado";
 }
 
@@ -222,22 +222,14 @@ if($evento['tel_responsavel'] != "") {
                     </tr>
                     <tr>
                         <th width="30%">Tipo de pessoa</th>
-                        <td><?= $tipo_pessoa['pessoa'] ?></td>
-                    </tr>
-                    <tr>
-                        <?php
-                        $pedido = "SELECT * FROM PEDIDOS WHERE id = $idEvento AND publicado = 1";
-                        $query = mysqli_query($con, $pedido);
-                        $pessoa = mysqli_num_rows($query);
-
-                        if ($pessoa['pessoa_tipo_id'] == 2) {
-                            $pj = recuperaDados("pessoa_juridicas", "id", $pessoa['pessoa_juridica_id']);
-                            echo "<td>" . $pj['razao_social'] . "</td>";
-                        } else {
-                            $pf = recuperaDados("pessoa_fisicas", "id", $pessoa['pessoa_fisica_id']);
-                            echo "<td>" . $pf['nome'] . "</td>";
-                        }
-                        ?>
+                        <td>
+                            <?php if ($tipo_pessoa == 1) {
+                                echo "Física";
+                            } else if ($tipo_pessoa == 2) {
+                                echo "Jurídica";
+                            }
+                            ?>
+                        </td>
                     </tr>
                     <tr>
                         <th width="30%">Objeto</th>
