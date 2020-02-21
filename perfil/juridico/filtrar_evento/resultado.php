@@ -147,7 +147,7 @@ e.id
                 </table>
             </div>
             <div class="box-footer">
-                <a href="?perfil=juridico&p=filtrar_evento&sp=pesquisa_evento">
+                <a href="?perfil=juridico&p=filtrar_evento&sp=busca_evento">
                     <button type="button" class="btn btn-default">Voltar a pesquisa</button>
                 </a>
             </div>
