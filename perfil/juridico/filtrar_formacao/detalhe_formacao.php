@@ -10,7 +10,6 @@ $modelo = $_POST['tipoModelo'];
 
 $formacao = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
 $pedido = recuperaDados('pedidos', 'id', $formacao['pedido_id']);
-var_dump($pedido);
 $pf = recuperaDados('pessoa_fisicas', 'id', $formacao['pessoa_fisica_id']);
 $ci = recuperaDados('classificacao_indicativas', 'id', $formacao['classificacao']);
 $linguagem = recuperaDados('linguagens ', 'id', $formacao['linguagem_id']);

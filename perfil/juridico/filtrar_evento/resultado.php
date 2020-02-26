@@ -10,18 +10,18 @@ if (isset($_POST['busca'])) {
     $statusPedido = $_POST['statuspedido'] ?? NULL;
     $tipoEvento = $_POST['tipoevento'] ?? NULL;
     $usuariocadastro = $_POST['usuariocadastro'] ?? NULL;
-    $instituicao = $_POST['instituicao'] ?? NULL;
+    $projeto = $_POST['projeto'] ?? NULL;
 
-    $sqlInstituicao = '';
     $sqlTipo = '';
     $sqlObejto = '';
     $sqlProtocolo = '';
     $sqlProcesso = '';
     $sqlStatus = '';
     $sqlUsuario = '';
+    $sqlProjeto = '';
 
-    if ($instituicao != NULL)
-        $sqlInstituicao = " AND instituicao_id = '$instituicao'";
+    if($projeto != NULL )
+        $sqlProjeto = "AND e.projeto_especial_id = '$projeto";
     if ($numprocesso != NULL)
         $sqlProcesso = " AND p.numero_processo LIKE '%$numprocesso%'";
     if ($protocolo != NULL)
@@ -50,7 +50,7 @@ e.id
  inner join eventos as e on e.id = p.origem_id 
  inner join tipo_eventos te on te.id = e.tipo_evento_id 
  inner join pessoa_tipos pt on pt.id = p.pessoa_tipo_id 
- WHERE p.publicado = 1 AND p.origem_tipo_id = 1 $sqlStatus $sqlInstituicao $sqlTipo $sqlObejto $sqlUsuario $sqlProtocolo $sqlProcesso
+ WHERE p.publicado = 1 AND p.origem_tipo_id = 1 $sqlStatus $sqlProjeto $sqlTipo $sqlObejto $sqlUsuario $sqlProtocolo $sqlProcesso
  GROUP BY e.id";
 ?>
 <div class="content-wrapper">

@@ -15,7 +15,6 @@ $sql = "SELECT eve.id AS idEvento, eve.protocolo, eve.nome_evento, es.status
         WHERE publicado = 1 AND evento_status_id between 3 AND 4 AND contratacao = 0  
         AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
 $query = mysqli_query($con, $sql);
-
 ?>
 
 <!-- Content Wrapper. Contains page content -->

@@ -1,6 +1,6 @@
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Buscar</h2>
+        <h2 class="page-header">Busca</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
@@ -15,18 +15,28 @@
                                     <input type="text" class="form-control" name="protocolo" id="protocolo">
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label for="numprocesso">Número do Processo </label>
+                                    <label for="numprocesso">Número de processo </label>
                                     <input type="text" class="form-control" name="numprocesso" id="numprocesso"
-                                           >
+                                    >
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label for="objetoevento">Objeto/Evento </label>
+                                    <label for="objetoevento">Nome do evento</label>
                                     <input type="text" class="form-control" name="objetoevento" id="objetoevento">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <label for="usuariocadastro">Fical,suplente ou usuário que cadastrou o evento</label>
+                                    <label for="projeto">Projeto especial</label>
+                                    <select name="projeto" id="projeto" class="form-control">
+                                        <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcao('projeto_especiais');
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="usuariocadastro">Fical, suplente ou usuário que cadastrou o
+                                        evento</label>
                                     <select name="usuariocadastro" id="usuariocadastro" class="form-control">
 
                                         <option value="">Selecione uma opção...</option>
@@ -36,27 +46,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label for="tipoevento">Tipo de Evento </label>
-                                    <select name="tipoevento" id="tipoevento" class="form-control">
-                                        <option value="">Selecione uma opção...</option>
-                                        <?php
-                                        geraOpcao('tipo_eventos');
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="instituicao">Instituição</label>
-                                    <select name="instituicao" id="instituicao" class="form-control">
-                                        <option value="">Selecione uma opção...</option>
-                                        <?php
-                                        geraOpcao('instituicoes');
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 form-group">
-                                    <label for="statuspedido">Status pedido</label>
+                                    <label for="statuspedido">Pedido status</label>
                                     <select name="statuspedido" id="statuspedido" class="form-control">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
@@ -65,11 +55,11 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="box-footer">
-                                <button type="submit" name="busca" id="busca" class="btn btn-primary pull-right">
-                                    Buscar
-                                </button>
-                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" name="busca" id="busca" class="btn btn-primary pull-right">
+                                Buscar
+                            </button>
                         </div>
                     </form>
                 </div>

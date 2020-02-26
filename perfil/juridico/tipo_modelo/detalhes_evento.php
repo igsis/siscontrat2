@@ -11,40 +11,69 @@ $num = mysqli_num_rows($query);
 
 
 // dados //
-$evento = recuperaDados('eventos', 'id', $idEvento);
-$espaco = recuperaDados('evento_publico', 'evento_id', $idEvento);
-$publico = recuperaDados('publicos', 'id', $espaco['publico_id']);
-$tipo_evento = recuperaDados('tipo_eventos', 'id', $evento['tipo_evento_id']);
-$projeto_especiais = recuperaDados('projeto_especiais', 'id', $evento['projeto_especial_id']);
-$relacao_juridica = recuperaDados('relacao_juridicas', 'id', $evento['relacao_juridica_id']);
+$sql = "select p.numero_processo,
+e.protocolo,
+p.valor_total,
+p.forma_pagamento,
+e.id,
+ee.data_envio,
+e.nome_evento,
+e.nome_responsavel,
+e.tel_responsavel,
+p.pessoa_tipo_id,
+p.pessoa_fisica_id,
+p.numero_processo,
+p.valor_total,
+p.forma_pagamento,
+p.observacao,
+p.pessoa_juridica_id,
+te.tipo_evento,
+pe.projeto_especial,
+rj.relacao_juridica,
+u.nome_completo,
+u.email,
+u.telefone,
+e.suplente_id,
+e.sinopse,
+a.ficha_tecnica,
+a.integrantes,
+a.release_comunicacao,
+ci.classificacao_indicativa,
+p.id,
+p.status_pedido_id
+
+from pedidos as p
+inner join eventos as e on e.id = p.origem_id
+inner join atracoes as a on a.evento_id = e.id
+inner join classificacao_indicativas as ci on ci.id = a.classificacao_indicativa_id
+inner join evento_envios as ee on e.id = ee.evento_id
+inner join tipo_eventos as te on e.tipo_evento_id = te.id
+inner join projeto_especiais as pe on pe.id = e.projeto_especial_id
+inner join relacao_juridicas as rj on rj.id = e.relacao_juridica_id
+inner join usuarios as u on u.id = e.usuario_id
+
+ AND e.publicado = 1 AND p.publicado = 1 where e.id = $idEvento";
+$evento = $con->query($sql)->fetch_array();
+
+
+if ($evento ['pessoa_tipo_id'] == 1) {
+    $pessoa = "Física";
+} else if ($evento ['pessoa_tipo_id'] == 2 ) {
+    $pessoa = "Jurídica";
+}
+
+$suplente = recuperaDados('usuarios','id',$evento['suplente_id']);
 $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
 $acao_atracao = recuperaDados('acao_atracao', 'atracao_id', $atracao['id']);
 $acao = recuperaDados('acoes', 'id', $acao_atracao['acao_id']);
-$classificacao = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
-$suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
+$espaco = recuperaDados('evento_publico', 'evento_id', $idEvento);
+$publico = recuperaDados('publicos', 'id', $espaco['publico_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'atracao_id', $atracao['id']);
 $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
-$pedidos = recuperaDados('pedidos', 'origem_id', $evento['id']);
-$pagamento = recuperaDados('pagamentos', 'pedido_id', $pedidos['id']);
-$statusPedido = recuperaDados('pedido_status', 'id', $pedidos['status_pedido_id']);
 $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
-$usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
-$dataEvento = recuperaDados('evento_envios', 'evento_id', $idEvento);
-$dotacao = recuperaDados('juridicos', 'pedido_id', $pedidos['id']);
-$tipo_pessoa = recuperaDados('pessoa_tipos', 'id', $pedidos['pessoa_tipo_id']);
-
-if ($evento['nome_responsavel'] != "") {
-    $nome_resp = $evento['nome_responsavel'];
-} else {
-    $nome_resp = "Não cadastrado";
-}
-
-if ($evento['tel_responsavel'] != "") {
-    $tel_resp = $evento['tel_responsavel'];
-} else {
-    $tel_resp = "Não cadastrado";
-}
-
+$pagamento = recuperaDados('pagamentos', 'pedido_id', $evento['id']);
+$dotacao = recuperaDados('juridicos', 'pedido_id', $evento['id']);
+$statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']);
 ?>
 
 
@@ -65,19 +94,19 @@ if ($evento['tel_responsavel'] != "") {
                     </tr>
                     <tr>
                         <th width="30%">Evento enviado em:</th>
-                        <td><?= exibirDataHoraBr($dataEvento['data_envio']) ?></td>
+                        <td><?= exibirDataHoraBr($evento['data_envio']) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Tipo de evento:</th>
-                        <td><?= $tipo_evento['tipo_evento'] ?></td>
+                        <td><?= $evento['tipo_evento'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Projeto especial:</th>
-                        <td><?= $projeto_especiais['projeto_especial'] ?></td>
+                        <td><?= $evento['projeto_especial'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Relação jurídica:</th>
-                        <td><?= $relacao_juridica['relacao_juridica'] ?></td>
+                        <td><?= $evento['relacao_juridica'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -85,15 +114,15 @@ if ($evento['tel_responsavel'] != "") {
                     </tr>
                     <tr>
                         <th width="30%">Usuário que cadastrou o evento:</th>
-                        <td><?= $usuarios['nome_completo'] ?></td>
+                        <td><?= $evento['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $usuarios['telefone'] ?></td>
+                        <td><?= $evento['telefone'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $usuarios['email'] ?></td>
+                        <td><?= $evento['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -101,15 +130,11 @@ if ($evento['tel_responsavel'] != "") {
                     </tr>
                     <tr>
                         <th width="30%">Reponsável pelo evento:</th>
-                        <td><?= $nome_resp ?></td>
+                        <td><?= $evento['nome_responsavel'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $tel_resp ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Email:</th>
-                        <td><?= $usuarios['email'] ?></td>
+                        <td><?= $evento['tel_responsavel'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -133,11 +158,11 @@ if ($evento['tel_responsavel'] != "") {
                     </tr>
                     <tr>
                         <th width="30%">Ficha técnica:</th>
-                        <td><?= $atracao['ficha_tecnica'] ?></td>
+                            <td><?= $evento['ficha_tecnica'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Faixa ou indicação etária:</th>
-                        <td><?= $classificacao['classificacao_indicativa'] ?></td>
+                        <td><?= $evento['classificacao_indicativa'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Linguagem / Expressão artística:</th>
@@ -218,18 +243,11 @@ if ($evento['tel_responsavel'] != "") {
                     </tr>
                     <tr>
                         <th width="30%">Número do processo:</th>
-                        <td><?= $pedidos['numero_processo'] ?></td>
+                        <td><?= $evento['numero_processo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Tipo de pessoa</th>
-                        <td>
-                            <?php if ($tipo_pessoa == 1) {
-                                echo "Física";
-                            } else if ($tipo_pessoa == 2) {
-                                echo "Jurídica";
-                            }
-                            ?>
-                        </td>
+                        <td><?= $pessoa ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Objeto</th>
@@ -241,11 +259,11 @@ if ($evento['tel_responsavel'] != "") {
                     </tr>
                     <tr>
                         <th width="30%">Valor</th>
-                        <td><?= $pedidos['valor_total'] ?></td>
+                        <td><?= $evento['valor_total'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Forma de Pagamento</th>
-                        <td><?= $pedidos['forma_pagamento'] ?></td>
+                        <td><?= $evento['forma_pagamento'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data</th>
@@ -265,7 +283,7 @@ if ($evento['tel_responsavel'] != "") {
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>
-                        <td><?= $pedidos['observacao'] ?></td>
+                        <td><?= $evento['observacao'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Último status:</th>

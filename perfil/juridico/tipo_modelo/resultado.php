@@ -116,24 +116,21 @@ $evento = $con->query($sql)->fetch_array();
                     </table>
                 </div>
                 <div class="box-footer">
-                    <a href="?perfil=juridico&p=filtrar_evento&sp=pesquisa_evento">
-                        <button type="button" class="btn btn-default pull-left" style="margin: 0 5px;">Voltar</button>
-                    </a>
                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                    <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left">Gravar
+                    <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left"
+                            style="margin: 0 5px;width:8%; ">Gravar
                     </button>
+                </div>
         </form>
-        <form action="?perfil=juridico&p=tipo_modelo&sp=detalhes_evento" role="form" method="post">
-            <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-            <button type="submit" class="btn btn-info pull-right">Detalhes evento</button>
-        </form>
+        <div class="box-footer">
+            <form action="?perfil=juridico&p=tipo_modelo&sp=detalhes_evento" role="form" method="post">
+                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                <button type="submit" class="btn btn-info pull-right">Detalhes evento</button>
+            </form>
+        </div>
+    </section>
 </div>
 
-
-</div>
-
-</section>
-</div>
 
 <script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>

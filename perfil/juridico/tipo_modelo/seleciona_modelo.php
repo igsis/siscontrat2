@@ -1,6 +1,9 @@
 <?php
+
+
 isset($_POST['idEvento']);
 $idEvento = $_POST['idEvento'];
+
 ?>
 
 <div class="content-wrapper">
