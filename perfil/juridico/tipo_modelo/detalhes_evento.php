@@ -19,6 +19,7 @@ e.id,
 ee.data_envio,
 e.nome_evento,
 e.nome_responsavel,
+e.tipo_evento_id,
 e.tel_responsavel,
 p.pessoa_tipo_id,
 p.pessoa_fisica_id,
@@ -42,6 +43,7 @@ ci.classificacao_indicativa,
 p.id,
 p.status_pedido_id
 
+
 from pedidos as p
 inner join eventos as e on e.id = p.origem_id
 inner join atracoes as a on a.evento_id = e.id
@@ -58,11 +60,23 @@ $evento = $con->query($sql)->fetch_array();
 
 if ($evento ['pessoa_tipo_id'] == 1) {
     $pessoa = "Física";
-} else if ($evento ['pessoa_tipo_id'] == 2 ) {
+} else if ($evento ['pessoa_tipo_id'] == 2) {
     $pessoa = "Jurídica";
 }
 
-$suplente = recuperaDados('usuarios','id',$evento['suplente_id']);
+if ($evento['nome_responsavel'] != "") {
+    $nomeResp = $evento['nome_responsavel'];
+} else {
+    $nomeResp = "Não cadastrado";
+}
+
+if ($evento['tel_responsavel'] != "") {
+    $telResp = $evento['tel_responsavel'];
+} else {
+    $telResp = "Não cadastrado";
+}
+
+$suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
 $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
 $acao_atracao = recuperaDados('acao_atracao', 'atracao_id', $atracao['id']);
 $acao = recuperaDados('acoes', 'id', $acao_atracao['acao_id']);
@@ -74,6 +88,7 @@ $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
 $pagamento = recuperaDados('pagamentos', 'pedido_id', $evento['id']);
 $dotacao = recuperaDados('juridicos', 'pedido_id', $evento['id']);
 $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']);
+$objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 ?>
 
 
@@ -130,11 +145,11 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                     </tr>
                     <tr>
                         <th width="30%">Reponsável pelo evento:</th>
-                        <td><?= $evento['nome_responsavel'] ?></td>
+                        <td><?= $nomeResp ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $evento['tel_responsavel'] ?></td>
+                        <td><?= $telResp ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -158,7 +173,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                     </tr>
                     <tr>
                         <th width="30%">Ficha técnica:</th>
-                            <td><?= $evento['ficha_tecnica'] ?></td>
+                        <td><?= $evento['ficha_tecnica'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Faixa ou indicação etária:</th>
@@ -251,7 +266,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                     </tr>
                     <tr>
                         <th width="30%">Objeto</th>
-                        <td><?= $evento['nome_evento'] ?></td>
+                        <td><?=$objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento']; ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Local</th>

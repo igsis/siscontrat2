@@ -56,8 +56,7 @@ e.id
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h3>Buscar por evento</h3>
-        </div>
+            <h3>Buscar por evento</h3></div>
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">Resultado da pesquisa</h3>

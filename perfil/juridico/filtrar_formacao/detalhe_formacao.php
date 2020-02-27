@@ -133,7 +133,6 @@ $fcHora = recuperaDados('formacao_parcelas', 'id', $idFormacao);
                     </tr>
                 </table>
                 <h1>Especificidades</h1>
-                <h3>Ocorrências</h3>
                 <br>
                 <tr>
                     <td></td>
@@ -141,9 +140,6 @@ $fcHora = recuperaDados('formacao_parcelas', 'id', $idFormacao);
                 <br>
                 <br>
                 <table class="table">
-                    <tr>
-                        <th width="30%">Evento de temporada</th>
-                    </tr>
                     <tr>
                         <th width="30%">Data</th>
                         <td><?= retornaPeriodoFormacao($idVigencia) ?></td>
@@ -174,7 +170,6 @@ $fcHora = recuperaDados('formacao_parcelas', 'id', $idFormacao);
                         <td><?= $tel ?></td>
                     </tr>
                 </table>
-                <h1>Arquivos Comunicação/Produção anexos</h1>
                 <h3>Pedidos de contratação</h3>
                 <table class="table">
                     <tr>

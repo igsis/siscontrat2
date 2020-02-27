@@ -27,7 +27,7 @@ $sqlEvento = "SELECT
 
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 
-if ($evento['tipo_evento_id'] == 1) {
+if ($evento['tipo_evento_id'] == 1 ) {
     $ocorrencia_atracao = "SELECT  	o.tipo_ocorrencia_id,
 			o.origem_ocorrencia_id,
 			o.instituicao_id,local_id,
