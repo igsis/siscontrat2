@@ -15,8 +15,7 @@ $ci = recuperaDados('classificacao_indicativas', 'id', $formacao['classificacao'
 $linguagem = recuperaDados('linguagens ', 'id', $formacao['linguagem_id']);
 $programa = recuperaDados('programas', 'id', $formacao['programa_id']);
 $pagamento = recuperaDados('pagamentos', 'pedido_id', $pedido['id']);
-$fcstatus = recuperaDados('formacao_status', 'id', $formacao['form_status_id']);
-
+$status = recuperaDados('pedido_status', 'id', $pedido['status_pedido_id']);
 
 //  local //
 $sqlLocal = "SELECT l.local FROM formacao_locais fl 
@@ -235,7 +234,7 @@ $fcHora = recuperaDados('formacao_parcelas', 'id', $idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Último status:</th>
-                        <td><?= $fcstatus['status'] ?></td>
+                        <td><?= $status['status'] ?></td>
                     </tr>
                 </table>
                 <br/>
