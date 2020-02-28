@@ -30,7 +30,7 @@ if (isset($_POST['cadastraLocal'])) {
         echo "<div id='resposta'>0</div>";
     } else {
         $sql = "INSERT INTO locais (instituicao_id, local, logradouro, numero, complemento, bairro, cidade, uf, cep, zona_id, publicado)
-                VALUES ('$idInstituicao', '$local', '$rua', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$zona', 1)";
+                VALUES ('$idInstituicao', '$local', '$rua', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$zona', 2)";
 
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
@@ -63,7 +63,7 @@ if (isset($_POST['cadastraEspaco'])) {
     } else {
 
         $sql = "INSERT INTO espacos (local_id ,espaco, publicado)
-                VALUES ('$idLocal', '$espaco', 1)";
+                VALUES ('$idLocal', '$espaco', 2)";
 
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
