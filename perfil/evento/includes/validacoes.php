@@ -225,7 +225,6 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
 }else if ($evento['tipo_evento_id'] == 2 && $pedidos != NULL) {
         $tipoPessoa = $pedido['pessoa_tipo_id'];
         $sqlFilme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao, fe.id as 'idFilmeEvento' FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
-        echo $sqlFilme;
         $filmes = mysqli_query($con, $sqlFilme);
         $numFilmes = mysqli_num_rows($filmes);
 
