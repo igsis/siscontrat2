@@ -155,9 +155,13 @@
                 <?php }
             } else {
                 foreach ($filmes as $filme){
-                    $idFilme = $filme['idFilmeEvento'];
-                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1 AND oco.tipo_ocorrencia_id = 2 AND oco.atracao_id = '$idFilme'";
+                    $idFilme = $filme['id'];
+                    $idFilmeEvento = $filme['idFilmeEvento'];
+                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco 
+                                      INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id 
+                                      WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1 AND oco.tipo_ocorrencia_id = 2 AND fe.evento_id = $idEvento AND oco.atracao_id = $idFilmeEvento";
                     $ocorrencias = $con->query($sqlOcorrencia);
+                    $numOco = $ocorrencias->num_rows;
                     ?>
                     <div class="panel box box-primary">
                         <div class="box-header with-border">
@@ -173,7 +177,7 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <?php
-                                        if ($ocorrencias->num_rows > 0) {
+                                        if ($numOco > 0) {
                                             $i = 1;
                                             foreach ($ocorrencias as $ocorrencia) {
                                                 $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
