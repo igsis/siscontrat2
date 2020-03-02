@@ -113,7 +113,7 @@ if(isset($_POST['operador'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblResultado" class="table table-bordered table-striped">
+                        <table id="tblResultado" style="text-align: left;font-size: 100%;" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>Processo</th>
