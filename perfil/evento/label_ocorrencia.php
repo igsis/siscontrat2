@@ -181,7 +181,7 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <?php
-                                        if ($numOco < $numFilmes && $numOco != 0) {
+                                        if ($numOco != 0) {
                                             $i = 1;
                                             foreach ($ocorrencias as $ocorrencia) {
                                                 $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
