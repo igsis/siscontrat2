@@ -18,7 +18,8 @@ $pagamento = recuperaDados('pagamentos', 'pedido_id', $pedido['id']);
 $status = recuperaDados('pedido_status', 'id', $pedido['status_pedido_id']);
 
 //  local //
-$sqlLocal = "SELECT l.local FROM formacao_locais fl 
+$sqlLocal = "SELECT l.local 
+FROM formacao_locais fl 
 INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFormacao'";
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
@@ -151,7 +152,6 @@ $fcHora = recuperaDados('formacao_parcelas', 'id', $idFormacao);
                             while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
                                 $local = $local . $linhaLocal['local'] . ' - ';
                             }
-
                             $local = substr($local, 0, -3);
                             echo $local;
                             ?>

@@ -89,6 +89,8 @@ $pagamento = recuperaDados('pagamentos', 'pedido_id', $evento['id']);
 $dotacao = recuperaDados('juridicos', 'pedido_id', $evento['id']);
 $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']);
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
+$instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']);
+
 ?>
 
 
@@ -202,52 +204,7 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
                 </table>
                 <h1>Especificidades</h1>
                 <h3>Ocorrências</h3>
-                De <?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?>
-                <br>
-                <?php
-                $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']);
-                ?>
-                <tr>
-                    <td><?= $instituicao['nome'] ?> (<?= $instituicao['sigla'] ?>)</td>
-                </tr>
-                <br>
-                <br>
-                <table class="table">
-                    <tr>
-                        <th width="30%">Evento de temporada</th>
-                    </tr>
-                    <tr>
-                        <th width="30%">Data</th>
-                        <td><?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Horário</th>
-                        <td><?= $ocorrencia['horario_inicio'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Local</th>
-                        <td><?= $instituicao['nome'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Retirada de ingressos:</th>
-                        <td><?= $retirada_ingresso['retirada_ingresso'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Observações:</th>
-                        <td><?= $ocorrencia['observacao'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Produtor responsavel:</th>
-                        <td><?= $produtor['nome'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Email:</th>
-                        <td><?= $produtor['email'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Telefone:</th>
-                        <td><?= $produtor['telefone1'] ?></td>
-                    </tr>
+               
                 </table>
                 <h1>Arquivos Comunicação/Produção anexos</h1>
                 <h3>Pedidos de contratação</h3>

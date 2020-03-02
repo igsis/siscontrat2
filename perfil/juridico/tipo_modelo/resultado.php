@@ -14,6 +14,19 @@ $sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
 $mdl = $con->query($sqlModelo)->fetch_assoc();
 $eve = recuperaDados('eventos', 'id', $idEvento);
 
+$sqlLocal = "SELECT e.id,l.local FROM eventos as e
+             INNER JOIN ocorrencias as o on o.origem_ocorrencia_id = e.id
+             INNER JOIN locais as l on o.local_id = l.id
+             WHERE e.publicado = 1 AND e.id = '$idEvento'";
+$queryLocal = mysqli_query($con, $sqlLocal);
+$local = '';
+while ($locais = mysqli_fetch_array($queryLocal)) {
+    $local = $local . ' - ' . $locais['local'];
+}
+$local = substr($local, 1);
+
+
+
 $fiscal = recuperaDados('usuarios', 'id', $eve['fiscal_id'])['nome_completo'];
 $suplente = recuperaDados('usuarios', 'id', $eve['suplente_id'])['nome_completo'];
 $rfFiscal = recuperaDados('usuarios', 'id', $eve['fiscal_id'])['rf_rg'];
@@ -79,11 +92,10 @@ $evento = $con->query($sql)->fetch_array();
                         <?php
                         $atracoes = recuperaDados('atracoes', 'evento_id', $idEvento);
                         $ocorrencias = recuperaDados('ocorrencias', 'atracao_id', $atracoes['id']);
-                        $local = recuperaDados('locais', 'id', $ocorrencias['local_id']);
-                        ?>
+                                                ?>
                         <tr>
                             <th width="30%">Local:</th>
-                            <td><?= $local['local'] ?></td>
+                            <td><?= $local ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Valor:</th>
