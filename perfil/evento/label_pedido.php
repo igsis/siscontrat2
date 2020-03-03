@@ -218,6 +218,9 @@ $parcelado = false;
                         </div>
                     </div>
                 </div>
+                <?php
+                    if($idRepresentante2 != NULL || $idRepresentante2 != ""){
+                ?>
                 <div class="panel box box-primary">
                     <div class="box-header with-border">
                         <h4 class="box-title">
@@ -242,6 +245,7 @@ $parcelado = false;
                         </div>
                     </div>
                 </div>
+                <?php } ?>
             </div>
         <?php } ?>
     </div>

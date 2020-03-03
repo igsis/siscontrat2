@@ -81,6 +81,12 @@ if (isset($_POST['selecionar'])) {
 if (isset($_POST['load'])) {
     unset($_SESSION['idEvento']);
     $idEvento = $_POST['idEvento'];
+    $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento")->fetch_array();
+    if($testaFilme['tipo_evento_id'] == 2){
+        $escondeLider = 1;
+    }else{
+        $escondeLider = 0;
+    }
     $_SESSION['idEvento'] = $idEvento;
 }
 
@@ -124,7 +130,7 @@ if (isset($_POST['salvar'])) {
     $idAtracao = $_POST['idAtracao'];
     $nome_atracao = $_POST['nome_atracao'];
     $integrantes = $_POST['integrantes'];
-
+    $escondeLider = 0;
         for ($i = 0; $i < count($idAtracao); $i++) { // altera de uma ou de todas as atracoes (nome da atracao e integrantes)
             $baldeId = $idAtracao[$i];
             $baldeNome = addslashes($nome_atracao[$i]);
@@ -137,6 +143,8 @@ if (isset($_POST['salvar'])) {
 
             mysqli_query($con, $sql);
         }
+    }else{
+        $escondeLider = 1;
     }
     //pedidos
     $formaPagamento = trim(addslashes($_POST['formaPagamento']));
@@ -592,11 +600,13 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 </table>
                             </div>
                         </div>
-                        <div class="box box-warning">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Líderes</h3>
-                            </div>
-                            <div class="box-body">
+                        <?php
+                            if($escondeLider == 0){?>
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Líderes</h3>
+                                </div>
+                                <div class="box-body">
                                 <table class="table table-bordered">
                                     <thead>
                                     <tr>
@@ -642,9 +652,9 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                 </table>
                             </div>
                         </div>
-                        <?php
-                    }
-                    ?>
+                            <?php } //if esconde lider
+                                } //if pessoa_tipo == 2 ?>
+
                     <form action="?perfil=contrato&p=area_impressao" target="_blank" method="post" role="form">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-default pull-right" style="margin: 0 10px;">Ir para a área
