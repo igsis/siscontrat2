@@ -207,7 +207,7 @@ $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']
                 <?php
 
                 if ($evento['tipo_evento_id'] == 1) {
-                $sqlOcorrenciaAtracao = "SELECT o.periodo_id,o.local_id,o.horario_fim,o.virada,o.data_inicio,o.data_fim,retirada_ingresso_id,o.instituicao_id,espaco_id,o.observacao,o.horario_inicio
+                $sqlOcorrenciaAtracao = "SELECT o.atracao_id,o.periodo_id,o.local_id,o.horario_fim,o.virada,o.data_inicio,o.data_fim,retirada_ingresso_id,o.instituicao_id,espaco_id,o.observacao,o.horario_inicio
                 FROM ocorrencias  as o
                 INNER JOIN atracoes as a on a.id = o.atracao_id
                 INNER JOIN eventos as e on e.id = a.evento_id
@@ -228,10 +228,11 @@ $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']
                             $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
                             $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
                             $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
+                            $nomeAtracao = recuperaDados('atracoes','id',$ocorrencia['atracao_id'])['nome_atracao'];
                             ?>
                             <tr>
-                                <th>Atração - <?= $i ?></th>
-                                <td></td>
+                                <th>Atração: </th>
+                                <td><?= $nomeAtracao ?></td>
                             </tr>
                             <tr>
                                 <th>Ocorrência #<?= $i ?></th>
