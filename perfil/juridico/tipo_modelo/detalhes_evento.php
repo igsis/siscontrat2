@@ -204,88 +204,359 @@ $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']
                 </table>
                 <h1>Especificidades</h1>
                 <h3>Ocorrências</h3>
-               
+                <?php
+
+                if ($evento['tipo_evento_id'] == 1) {
+                $sqlOcorrenciaAtracao = "SELECT o.periodo_id,o.local_id,o.horario_fim,o.virada,o.data_inicio,o.data_fim,retirada_ingresso_id,o.instituicao_id,espaco_id,o.observacao,o.horario_inicio
+                FROM ocorrencias  as o
+                INNER JOIN atracoes as a on a.id = o.atracao_id
+                INNER JOIN eventos as e on e.id = a.evento_id
+                INNER JOIN produtores as pro on pro.id = a.produtor_id
+                INNER JOIN locais as l on l.id = o.local_id
+                INNER JOIN periodos as p on p.id = o.periodo_id
+                WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
+                $ocorrencias = $con->query($sqlOcorrenciaAtracao);
+                ?>
                 </table>
-                <h1>Arquivos Comunicação/Produção anexos</h1>
-                <h3>Pedidos de contratação</h3>
                 <table class="table">
-                    <tr>
-                        <th width="30%">Protocolo:</th>
-                        <td><?= $evento['protocolo'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Número do processo:</th>
-                        <td><?= $evento['numero_processo'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Tipo de pessoa</th>
-                        <td><?= $pessoa ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Objeto</th>
-                        <td><?=$objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento']; ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Local</th>
-                        <td><?= $instituicao['nome'] ?> (<?= $instituicao['sigla'] ?>)</td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Valor</th>
-                        <td><?= $evento['valor_total'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Forma de Pagamento</th>
-                        <td><?= $evento['forma_pagamento'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Data</th>
-                        <td><?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Data de Emissão da N.E:</th>
-                        <td><?= $pagamento['emissao_nota_empenho'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Data de Entrega da N.E</th>
-                        <td><?= $pagamento['entrega_nota_empenho'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Dotação Orçamentária:</th>
-                        <td><?= $dotacao['dotacao'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Observação:</th>
-                        <td><?= $evento['observacao'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Último status:</th>
-                        <td><?= $statusPedido['status'] ?></td>
-                    </tr>
-                </table>
-                <br/>
-                <div class="pull-left">
-                    <a href="?perfil=juridico">
-                        <button type="button" class="btn btn-default">Voltar a pesquisa</button>
-                    </a>
-                </div>
+                    <?php
+                    if ($ocorrencias->num_rows > 0) {
+                        $i = 1;
+                        foreach ($ocorrencias as $ocorrencia) {
+                            $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
+                            $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
+                            $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
+                            $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                            $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
+                            ?>
+                            <tr>
+                                <th>Atração - <?= $i ?></th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Ocorrência #<?= $i ?></th>
+                            </tr>
+                            <tr>
+                                <th width="30 % ">Data de Inicio:</th>
+                                <td><?= exibirDataBr($ocorrencia['data_inicio']) ?></td>
+                            </tr>
+                            <?php
+                            if ($ocorrencia['virada'] != 1) {
+                                ?>
+                                <tr>
+                                    <th width="30 % ">Data de Encerramento:</th>
+                                    <td><?= $ocorrencia['data_fim'] == null ? "Não é Temporada" : exibirDataBr($ocorrencia['data_fim']) ?></td>
+                                </tr>
+
+                                <tr>
+                                    <th width="30 % ">Hora de Início:</th>
+                                    <td><?= date("H:i", strtotime($ocorrencia['horario_inicio'])) ?></td>
+                                </tr>
+                                <tr>
+                                    <th width="30 % ">Hora de Encerramento:</th>
+                                    <td><?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?></td>
+                                </tr>
+
+                                <?php
+                            }
+                            ?>
+                            <tr>
+                                <th width="30 % ">Período:</th>
+                                <td><?= $periodo['periodo'] ?></td>
+                            </tr>
+
+                            <tr>
+                                <th width="30 % ">Retirada de Ingresso:</th>
+                                <td><?= $retiradaIngresso ?></td>
+                            </tr>
+                            <?php
+                            if ($ocorrencia['retirada_ingresso_id'] != 2) {
+                                ?>
+                                <?php
+                            }
+                            ?>
+                            <?php
+                            if ($ocorrencia['instituicao_id'] != 10) {
+                                ?>
+                                <tr>
+                                    <th width="30 % ">Instituição:</th>
+                                    <td><?= $instituicao ?></td>
+                                </tr>
+                                <?php
+                            } else {
+                                ?>
+                                <tr>
+                                    <th width="30 % ">É virada?</th>
+                                    <td>Sim</td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                            <tr>
+                                <th width="30 % ">Local:</th>
+                                <td><?= $local['local'] ?></td>
+                            </tr>
+                            <?php if ($ocorrencia['espaco_id'] != 0) { ?>
+                                <tr>
+                                    <th width="30 % ">Espaço:</th>
+                                    <td><?= $espaco ?></td>
+                                </tr>
+                            <?php } ?>
+                            <tr>
+                                <th width="30% ">Observação:</th>
+                                <td><?= $ocorrencia['observacao'] ?></td>
+                            </tr>
+                            <tr>
+                                <th width="30%">Produtor:</th>
+                                <td><?= $produtor['nome'] ?> </td>
+                            </tr>
+                            <tr>
+                                <th width="30%">Email:</th>
+                                <td><?= $produtor['email'] ?> </td>
+                            </tr>
+                            <tr>
+                                <th width="30%">Telefone 1:</th>
+                                <td><?= $produtor['telefone1'] ?> </td>
+                            </tr>
+                            <?php
+                            if ($produtor['telefone2'] != null) { ?>
+                                <tr>
+                                    <th width="30%">Telefone #2:</th>
+                                    <td><?= $produtor['telefone2'] ?></td>
+                                </tr>
+                            <?php } else { ?>
+                                <td>Não possui</td>
+                            <?php } ?>
+                            <tr>
+                                <td>
+                                    <br>
+                                </td>
+                            </tr>
+                            <?php
+                            $i++;
+                        }
+                    }
+                    } else { ?>
+                    <?php
+                    $sqlOcorrenciaFilme = "SELECT * FROM ocorrencias AS o 
+                        INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
+                        INNER JOIN eventos AS e ON fe.evento_id = e.id 
+                        WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
+                    $ocorrencias = $con->query($sqlOcorrenciaFilme);
+                    ?>
+                    <table class="table">
+                        <?php
+                        if ($ocorrencias->num_rows > 0) {
+                            $i = 1;
+                            foreach ($ocorrencias as $ocoFilme) {
+                                $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocoFilme['retirada_ingresso_id'])['retirada_ingresso'];
+                                $instituicao = recuperaDados('instituicoes', 'id', $ocoFilme['instituicao_id'])['nome'];
+                                $local = recuperaDados('locais', 'id', $ocoFilme['local_id'])['local'];
+                                $espaco = recuperaDados('espacos', 'id', $ocoFilme['espaco_id'])['espaco'];
+                                $subPrefeitura = recuperaDados('subprefeituras', 'id', $ocoFilme['subprefeitura_id']);
+                                $periodo = recuperaDados('periodos', 'id', $ocoFilme['periodo_id']);
+                                ?>
+                                <tr>
+                                    <th class="text - center bg - primary" colspan="2">Ocorrência #<?= $i ?></th>
+                                </tr>
+                                <tr>
+                                    <th width="30 % ">Data de Inicio:</th>
+                                    <td><?= exibirDataBr($ocoFilme['data_inicio']) ?></td>
+                                </tr>
+                                <?php
+                                if ($ocoFilme['virada'] != 1) {
+                                    ?>
+                                    <tr>
+                                        <th width="30 % ">Data de Encerramento:</th>
+                                        <td><?= $ocoFilme['data_fim'] == null ? "Não é Temporada" : exibirDataBr($ocoFilme['data_fim']) ?></td>
+                                    </tr>
+
+                                    <tr>
+                                        <th width="30 % ">Hora de Início:</th>
+                                        <td><?= date("H:i", strtotime($ocoFilme['horario_inicio'])) ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th width="30 % ">Hora de Encerramento:</th>
+                                        <td><?= date("H:i", strtotime($ocoFilme['horario_fim'])) ?></td>
+                                    </tr>
+
+                                    <?php
+                                }
+                                ?>
+                                <tr>
+                                    <th width="30 % ">Período:</th>
+                                    <td><?= $periodo['periodo'] ?></td>
+                                </tr>
+
+                                <tr>
+                                    <th width="30 % ">Retirada de Ingresso:</th>
+                                    <td><?= $retiradaIngresso ?></td>
+                                </tr>
+                                <?php
+                                if ($ocoFilme['retirada_ingresso_id'] != 2) {
+                                    ?>
+                                    <?php
+                                }
+                                ?>
+                                <?php
+                                if ($ocoFilme['instituicao_id'] != 10) {
+                                    ?>
+                                    <tr>
+                                        <th width="30 % ">Instituição:</th>
+                                        <td><?= $instituicao ?></td>
+                                    </tr>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <tr>
+                                        <th width="30 % ">É virada?</th>
+                                        <td>Sim</td>
+                                    </tr>
+                                    <?php
+                                }
+                                ?>
+                                <tr>
+                                    <th width="30 % ">Local:</th>
+                                    <td><?= $local ?></td>
+                                </tr>
+                                <?php if ($ocoFilme['espaco_id'] != 0) { ?>
+                                    <tr>
+                                        <th width="30 % ">Espaço:</th>
+                                        <td><?= $espaco ?></td>
+                                    </tr>
+                                <?php } ?>
+                                <tr>
+                                    <th width="30% ">Observação:</th>
+                                    <td><?= $ocoFilme['observacao'] ?></td>
+                                </tr>
+                                <tr>
+                                    <th width="30%">Produtor:</th>
+                                    <td><?= $produtor['nome'] ?> </td>
+                                </tr>
+                                <tr>
+                                    <th width="30%">Email:</th>
+                                    <td><?= $produtor['email'] ?> </td>
+                                </tr>
+                                <tr>
+                                    <th width="30%">Telefone 1:</th>
+                                    <td><?= $produtor['telefone1'] ?> </td>
+                                </tr>
+                                <?php
+                                if ($produtor['telefone2'] != null) { ?>
+                                    <tr>
+                                        <th width="30%">Telefone #2:</th>
+                                        <td><?= $produtor['telefone2'] ?></td>
+                                    </tr>
+                                <?php } else { ?>
+                                    <td>Não possui</td>
+                                <?php } ?>
+                                <tr>
+                                    <td>
+                                        <br>
+                                    </td>
+                                </tr>
+                                <?php
+                                $i++;
+                            }
+                        }
+                        }
+                        ?>
+                    </table>
+                    <h1>Arquivos Comunicação/Produção anexos</h1>
+                    <h3>Pedidos de contratação</h3>
+                    <table class="table">
+                        <tr>
+                            <th width="30 % ">Protocolo:</th>
+                            <td><?= $evento['protocolo'] ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30 % ">Número do processo:</th>
+                            <td><?= $evento['numero_processo'] ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30 % ">Tipo de pessoa</th>
+                            <td><?= $pessoa ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30 % ">Objeto</th>
+                            <td><?= $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento']; ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30 % ">Valor</th>
+                            <td><?= $evento['valor_total'] ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30 % ">Forma de Pagamento</th>
+                            <td><?= $evento['forma_pagamento'] ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30 % ">Data</th>
+                            <td><?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30 % ">Data de Emissão da N.E:</th>
+                            <td><?= $pagamento['emissao_nota_empenho'] ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30 % ">Data de Entrega da N.E</th>
+                            <td><?= $pagamento['entrega_nota_empenho'] ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30 % ">Dotação Orçamentária:</th>
+                            <td><?= $dotacao['dotacao'] ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30 % ">Observação:</th>
+                            <td><?= $evento['observacao'] ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30 % ">Último status:</th>
+                            <td><?= $statusPedido['status'] ?></td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <div class="pull - left">
+                        <a href=" ? perfil = juridico">
+                            <button type="button" class="btn btn -default">Voltar a pesquisa</button>
+                        </a>
+                    </div>
             </div>
         </div>
     </section>
 </div>
 
-<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script defer src=" ../visual / bower_components / datatables . net / js / jquery . dataTables . min . js"></script>
+<script defer
+        src=" ../visual / bower_components / datatables . net - bs / js / dataTables . bootstrap . min . js"></script>
 
-<script type="text/javascript">
+<script type="text / javascript">
     $(function () {
         $('#tblFormacao').DataTable({
             "language": {
                 "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
             },
             "responsive": true,
-            "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+            "dom": " < 'row'<'col-sm-6'l ><'col-sm-6 text-right'f >> " +
+                " < 'row'<'col-sm-12'tr >> " +
+                " < 'row'<'col-sm-5'i ><'col-sm-7 text-right'p >> ",
         });
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>

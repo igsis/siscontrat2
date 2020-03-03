@@ -50,7 +50,8 @@ if ($evento['tipo_evento_id'] == 1 ) {
 			o.virada,
 			o.libras,
 			o.audiodescricao
-FROM ocorrencias AS o INNER JOIN atracoes AS a ON o.atracao_id = a.id
+FROM ocorrencias AS o 
+INNER JOIN atracoes AS a ON o.atracao_id = a.id
 INNER JOIN eventos AS e ON e.id = a.evento_id
 WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 
@@ -79,7 +80,8 @@ WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 			o.virada,
 			o.libras,
 			o.audiodescricao
-FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
+FROM ocorrencias AS o 
+INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
 INNER JOIN eventos AS e ON fe.evento_id = e.id 
 WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 
