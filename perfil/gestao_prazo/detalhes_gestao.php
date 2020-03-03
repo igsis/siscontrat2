@@ -134,7 +134,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                         <div class="modal-body">
                             <p>Tem certeza que deseja vetar este evento?</p>
                             <input type="hidden" name="titulo" value="<?=$evento['nome_evento']?>">
-                            <label for="motivo">Motivo da Vetação:</label>
+                            <label for="motivo">Motivo da Vetação: *</label>
                             <select name="motivo" class="form-control" required>
                                 <option value="">Selecione o Motivo</option>
                                 <?php
