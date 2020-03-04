@@ -210,7 +210,7 @@ if (isset($_POST['_filtros'])) {
                                         <?= $evento['nome_usuario'] ?>
                                     </td>
                                     <td>
-                                        <?= retornaPeriodo($evento['idEvento']); ?>
+                                        <?= retornaPeriodoNovo($evento['idEvento'], 'ocorrencias'); ?>
                                     </td>
                                     <td>
                                         <div class="status-comunicacao">
