@@ -263,11 +263,15 @@ include "includes/validacoes.php";
                     <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                     <input type="hidden" name="fora" value="<?= $fora ?? 0 ?>">
                     <?php 
+                        
+
+
                         if(count($erros) != 0 || count($errosArqs) != 0 || $ocorrencias_rept == true){
                             $disabled =  "disabled";
                         }else{
                             $disabled = "";
                         }
+                        
                     ?>
                     
                     <?php

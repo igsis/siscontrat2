@@ -115,7 +115,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                     }
                 }
             }
-
+    
             if ($numOcorrencias != 0) {
                 foreach ($ocorrencias as $ocorrencia) {
                     $hoje = new DateTime(date("Y-m-d"));
@@ -132,7 +132,7 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                     }
                 }
             }
-
+        }
             //PARTE DOS CONTRATOS SE FOR EVENTO
             if ($evento['contratacao'] == 1) {
                 if ($numPedidos == 0) {
@@ -217,7 +217,6 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                 }
 
             }
-        }
     } else {
         array_push($erros, "Não possui atrações cadastradas!");
     }   
