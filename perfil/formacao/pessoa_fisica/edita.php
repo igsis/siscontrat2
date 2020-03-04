@@ -533,10 +533,9 @@ if ($foto == null) {
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 122 AND origem_id = '$idPf' AND publicado = 1";
+                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 42 AND origem_id = '$idPf' AND publicado = 1 group by id";
                                     $queryFACC = mysqli_query($con, $sqlFACC);
                                     ?>
-
                                     <label>Gerar FACC</label><br>
                                     <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
                                        class="btn btn-primary btn-block">Clique aqui para

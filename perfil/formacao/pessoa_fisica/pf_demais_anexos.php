@@ -154,6 +154,7 @@ if (isset($_POST['apagar'])) {
                                                     </tr>
                                                     <?php
                                                     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                    echo $sql_arquivos;
                                                     $query_arquivos = mysqli_query($con, $sql_arquivos);
                                                     while ($arq = mysqli_fetch_array($query_arquivos)) {
                                                         $idDoc = $arq['id'];

@@ -11,7 +11,7 @@ $idEvento = $_POST['idEvento'];
 
 
 $sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
-$mdl = $con->query($sqlModelo)->fetch_assoc();
+$mdl = $con->query($sqlModelo)->fetch_array();
 $eve = recuperaDados('eventos', 'id', $idEvento);
 
 $sqlLocal = "SELECT e.id,l.local FROM eventos as e

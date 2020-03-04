@@ -207,7 +207,10 @@ $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']
                 <?php
 
                 if ($evento['tipo_evento_id'] == 1) {
-                $sqlOcorrenciaAtracao = "SELECT o.atracao_id,o.periodo_id,o.local_id,o.horario_fim,o.virada,o.data_inicio,o.data_fim,retirada_ingresso_id,o.instituicao_id,espaco_id,o.observacao,o.horario_inicio
+                $sqlOcorrenciaAtracao = "SELECT a.produtor_id,pro.nome,pro.email,pro.telefone1,
+                pro.telefone2,o.atracao_id,o.periodo_id,o.local_id,o.horario_fim,
+                o.virada,o.data_inicio,o.data_fim,retirada_ingresso_id,
+                o.instituicao_id,espaco_id,o.observacao,o.horario_inicio
                 FROM ocorrencias  as o
                 INNER JOIN atracoes as a on a.id = o.atracao_id
                 INNER JOIN eventos as e on e.id = a.evento_id
@@ -228,10 +231,11 @@ $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']
                             $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
                             $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
                             $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
-                            $nomeAtracao = recuperaDados('atracoes','id',$ocorrencia['atracao_id'])['nome_atracao'];
+                            $nomeAtracao = recuperaDados('atracoes', 'id', $ocorrencia['atracao_id'])['nome_atracao'];
+                            $produtor = recuperaDados('produtores', 'id', $ocorrencia['produtor_id'])['nome'];
                             ?>
                             <tr>
-                                <th>Atração: </th>
+                                <th>Atração:</th>
                                 <td><?= $nomeAtracao ?></td>
                             </tr>
                             <tr>
@@ -309,21 +313,21 @@ $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']
                             </tr>
                             <tr>
                                 <th width="30%">Produtor:</th>
-                                <td><?= $produtor['nome'] ?> </td>
+                                <td><?= $ocorrencia['nome'] ?> </td>
                             </tr>
                             <tr>
                                 <th width="30%">Email:</th>
-                                <td><?= $produtor['email'] ?> </td>
+                                <td><?= $ocorrencia['email'] ?> </td>
                             </tr>
                             <tr>
                                 <th width="30%">Telefone 1:</th>
-                                <td><?= $produtor['telefone1'] ?> </td>
+                                <td><?= $ocorrencia['telefone1'] ?> </td>
                             </tr>
                             <?php
-                            if ($produtor['telefone2'] != null) { ?>
+                            if ($ocorrencia['telefone2'] != null) { ?>
                                 <tr>
-                                    <th width="30%">Telefone #2:</th>
-                                    <td><?= $produtor['telefone2'] ?></td>
+                                    <th width="30%">Telefone 2:</th>
+                                    <td><?= $ocorrencia['telefone2'] ?></td>
                                 </tr>
                             <?php } else { ?>
                                 <td>Não possui</td>
@@ -542,6 +546,9 @@ $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']
                 " < 'row'<'col-sm-5'i ><'col-sm-7 text-right'p >> ",
         });
     });
+
+
+
 
 
 
