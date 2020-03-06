@@ -216,7 +216,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                             </div>
                             <div class="col-md-3">
                                 <form action="<?= $link4 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Ateste (Documentação)
+                                    <button type="submit" class="btn btn-primary btn-block" style="width:70%" name="idPedido" value="<?= $idPedido ?>">Ateste (Documentação)
                                     </button>
                                 </form>
                             </div>
@@ -230,8 +230,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                     </div>
                 </div>
                 <?php
-            }
-            else{
+            } else{
                 $link11 = $server . "pagamento_integral_pj.php";
                 $link12 = $server . "recibo_pagamento.php";
                 $link13 = $server . "ateste_documentacao.php";
@@ -246,76 +245,89 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                     <div class="box-header">
                         <h2 class="box-title">Modelos de impressão</h2>
                     </div>
+
                     <div class="box-body">
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <form action="<?= $link11 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido Integral</button>
+                                    <button type="submit" class="btn btn-primary btn-block" style="width:240px" name="idPedido" value="<?= $idPedido ?>">Pedido Integral</button>
                                 </form>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <form action="<?= $link12 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Recibo pagamento</button>
+                                    <button type="submit" class="btn btn-primary btn-block" style="width:240px" name="idPedido" value="<?= $idPedido ?>">Recibo pagamento</button>
                                 </form>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <form action="<?= $link13 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Ateste (Documentação)</button>
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" style="width:240px" value="<?= $idPedido ?>">Ateste (Documentação)</button>
                                 </form>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <form action="<?= $link14 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Confirmação de serviço</button>
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" style="width:240px" value="<?= $idPedido ?>">Confirmação de serviço</button>
                                 </form>
                             </div>
-                            <div class="col-md-2">
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-3">
                                 <form action="<?= $link15 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Minuta acima de R$ 176 mil</button>
+                                    <button type="submit" class="btn btn-primary btn-block" style="width:240px" name="idPedido" value="<?= $idPedido ?>">Minuta acima de R$ 176 mil</button>
                                 </form>
                             </div>
                             <div class="col-md-3">
                                 <form action="<?= $link16 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Instruções para emissão de NF</button>
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" style="width:240px" value="<?= $idPedido ?>">Instruções para emissão de NF</button>
                                 </form>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <form action="<?= $link17 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Declaração Simples</button>
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" style="width:230px" value="<?= $idPedido ?>">Declaração Simples</button>
                                 </form>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <form action="<?= $link18 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Declaração de associação sem fins lucrativos</button>
+                                    <button type="submit" class="btn btn-primary btn-block pull-right" name="idPedido" style="width:81%; font-size:95%" value="<?= $idPedido ?>">Declaração de associação sem fins lucrativos</button>
                                 </form>
                             </div>
                         </div>
+
+                        <hr>
+
                         <div class="row">
                             <div class="col-md-3">
                                 <form action="<?= $link19 ?>?modelo=empresas" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email Empresas</button>
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" style="width:240px" value="<?= $idPedido ?>">Email Empresas</button>
                                 </form>
                             </div>
                             <div class="col-md-3">
                                 <form action="<?= $link19 ?>?modelo=cooperativas" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email Cooperativas
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" style="width:240px" value="<?= $idPedido ?>">Email Cooperativas
                                     </button>
                                 </form>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <form action="<?= $link19 ?>?modelo=associacoes" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email Associações e institutos
+                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" style="width:240px" value="<?= $idPedido ?>">Email Associações e institutos
                                     </button>
                                 </form>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <form action="<?= $link19 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email Empresas com Minuta de Contrato
+                                    <button type="submit" class="btn btn-primary btn-block pull-right" name="idPedido" style="width:78%; font-size:95%" value="<?= $idPedido ?>">Email Empresas com Minuta de Contrato
                                     </button>
                                 </form>
                             </div>
                         </div>
+
                     </div>
-                </div>
+                    <div class="box-footer">
+                    </div>
+                 </div>
+                
             <?php
             }
         }
