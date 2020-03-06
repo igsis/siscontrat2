@@ -27,7 +27,7 @@ if (isset($_POST['geral'])){
     if ($usuario != null && $usuario != 0)
         $sqlUsuario = " AND e.fiscal_id = '$usuario' OR e.suplente_id = '$usuario' OR e.usuario_id = '$usuario'";
     if ($operador_id != null && $operador_id != 0)
-        $sqlOperador = " AND e.evento_operador_id = '$operador_id'";
+        $sqlOperador = " AND p.operador_id = '$operador_id'";
 
     $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento
     FROM eventos e 
@@ -35,6 +35,7 @@ if (isset($_POST['geral'])){
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
     LEFT JOIN usuario_pagamentos up on p.operador_pagamento_id = up.usuario_id
     LEFT JOIN usuarios u on up.usuario_id = u.id
+    INNER JOIN evento_envios ee ON e.id = ee.evento_id 
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1
@@ -43,6 +44,7 @@ if (isset($_POST['geral'])){
     $sqlProjeto $sqlUsuario $sqlOperador
     $sqlProtocolo $sqlNomeEvento $sqlProcesso
     GROUP BY e.id";
+    
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
 }
@@ -57,6 +59,7 @@ if(isset($_POST['periodo'])){
     FROM eventos AS e 
     INNER JOIN ocorrencias o on o.origem_ocorrencia_id = e.id
     INNER JOIN pedidos p on e.id = p.origem_id 
+    INNER JOIN evento_envios ee ON e.id = ee.evento_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
     LEFT JOIN usuario_pagamentos up on p.operador_pagamento_id = up.usuario_id
     LEFT JOIN usuarios u on up.usuario_id = u.id
@@ -87,6 +90,7 @@ if(isset($_POST['operador'])) {
     $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
+    INNER JOIN evento_envios ee ON e.id = ee.evento_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
     LEFT JOIN usuario_pagamentos up on p.operador_pagamento_id = up.usuario_id
     LEFT JOIN usuarios u on up.usuario_id = u.id
