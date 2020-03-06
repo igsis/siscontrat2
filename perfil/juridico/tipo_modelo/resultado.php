@@ -26,7 +26,6 @@ while ($locais = mysqli_fetch_array($queryLocal)) {
 $local = substr($local, 1);
 
 
-
 $fiscal = recuperaDados('usuarios', 'id', $eve['fiscal_id'])['nome_completo'];
 $suplente = recuperaDados('usuarios', 'id', $eve['suplente_id'])['nome_completo'];
 $rfFiscal = recuperaDados('usuarios', 'id', $eve['fiscal_id'])['rf_rg'];
@@ -47,7 +46,11 @@ p.pessoa_fisica_id,
 p.pessoa_juridica_id
 from pedidos as p
 inner join eventos as e on e.id = p.origem_id
- AND e.publicado = 1 AND p.publicado = 1 where e.id = $idEvento";
+ AND e.publicado = 1
+AND p.status_pedido_id != 1
+AND p.status_pedido_id != 3
+AND e.evento_status_id != 1 
+AND p.publicado = 1 where e.id = $idEvento";
 $evento = $con->query($sql)->fetch_array();
 
 
@@ -92,7 +95,7 @@ $evento = $con->query($sql)->fetch_array();
                         <?php
                         $atracoes = recuperaDados('atracoes', 'evento_id', $idEvento);
                         $ocorrencias = recuperaDados('ocorrencias', 'atracao_id', $atracoes['id']);
-                                                ?>
+                        ?>
                         <tr>
                             <th width="30%">Local:</th>
                             <td><?= $local ?></td>

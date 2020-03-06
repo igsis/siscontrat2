@@ -341,7 +341,7 @@ $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']
                             $i++;
                         }
                     }
-                    } else { ?>
+                    } else if ($evento['tipo_evento_id'] == 2) { ?>
                     <?php
                     $sqlOcorrenciaFilme = "SELECT * FROM ocorrencias AS o 
                         INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
@@ -546,6 +546,7 @@ $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']
                 " < 'row'<'col-sm-5'i ><'col-sm-7 text-right'p >> ",
         });
     });
+
 
 
 
