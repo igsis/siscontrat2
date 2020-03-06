@@ -131,7 +131,7 @@ if($pedido['pessoa_tipo_id'] == 1) {
     $pdf->SetFont('Arial', 'B', 11);
     $pdf->Cell(12, $l, utf8_decode('CCM:'), 0, 0, 'L');
     $pdf->SetFont('Arial', '', 11);
-    $pdf->Cell(150, $l, utf8_decode($pf['ccm']), 0, 1, 'L');
+    $pdf->Cell(150, $l, utf8_decode($pf['ccm'] ? "" : "Não cadastrado"), 0, 1, 'L');
 }
 else{
     $idPj = $pedido['pessoa_juridica_id'];
@@ -157,7 +157,7 @@ else{
     $pdf->SetFont('Arial','B', 11);
     $pdf->Cell(12,$l,utf8_decode('CCM:'),0,0,'L');
     $pdf->SetFont('Arial','', 11);
-    $pdf->Cell(150,$l,utf8_decode($pj['ccm']),0,1,'L');
+    $pdf->Cell(150,$l,utf8_decode($pj['ccm'] ? "" : "Não cadastrado"),0,1,'L');
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial','B', 11);

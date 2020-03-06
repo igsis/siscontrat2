@@ -82,6 +82,13 @@ if(isset($_POST['operador'])) {
     $data_inicio = $_POST['data_inicio'] ?? NULL;
     $data_fim = $_POST['data_fim'] ?? NULL;
     $operador_id = $_POST['operador_id'] ?? NULL;
+
+    if($data_fim != NULL || $data_fim != NULL){
+        $sqlDatas = " AND p.data_kit_pagamento between '$data_inicio' AND '$data_fim'";
+    }else{
+        $sqlDatas = "";
+    }
+
     if ($operador_id != null && $operador_id != 0) {
         $sqlOperador = " AND operador_pagamento_id = '$operador_id'";
     } else{
@@ -99,7 +106,8 @@ if(isset($_POST['operador'])) {
     AND p.origem_tipo_id = 1
     AND e.evento_status_id = 3
     AND p.status_pedido_id NOT IN (1,3,20,21)
-    AND p.data_kit_pagamento between '$data_inicio' AND '$data_fim' $sqlOperador";
+    $sqlOperador $sqlDatas
+    GROUP BY e.id";
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
 }
@@ -118,7 +126,7 @@ if(isset($_POST['operador'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblResultado" style="text-align: left;font-size: 100%;" class="table table-bordered table-striped">
+                        <table id="tblResultado" style="text-align: left;font-size: 90%;" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>Processo</th>
