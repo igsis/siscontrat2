@@ -36,18 +36,12 @@ u.email,
 u.telefone,
 e.suplente_id,
 e.sinopse,
-a.ficha_tecnica,
-a.integrantes,
-a.release_comunicacao,
-ci.classificacao_indicativa,
 p.id,
 p.status_pedido_id
 
 
 from pedidos as p
 inner join eventos as e on e.id = p.origem_id
-inner join atracoes as a on a.evento_id = e.id
-inner join classificacao_indicativas as ci on ci.id = a.classificacao_indicativa_id
 inner join evento_envios as ee on e.id = ee.evento_id
 inner join tipo_eventos as te on e.tipo_evento_id = te.id
 inner join projeto_especiais as pe on pe.id = e.projeto_especial_id
@@ -56,6 +50,8 @@ inner join usuarios as u on u.id = e.usuario_id
 
  AND e.publicado = 1 AND p.publicado = 1 where e.id = $idEvento";
 $evento = $con->query($sql)->fetch_array();
+
+
 
 
 if ($evento ['pessoa_tipo_id'] == 1) {
@@ -75,11 +71,8 @@ if ($evento['tel_responsavel'] != "") {
 } else {
     $telResp = "Não cadastrado";
 }
-
-$suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
 $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
-$acao_atracao = recuperaDados('acao_atracao', 'atracao_id', $atracao['id']);
-$acao = recuperaDados('acoes', 'id', $acao_atracao['acao_id']);
+$suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
 $espaco = recuperaDados('evento_publico', 'evento_id', $idEvento);
 $publico = recuperaDados('publicos', 'id', $espaco['publico_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'atracao_id', $atracao['id']);
@@ -90,6 +83,9 @@ $dotacao = recuperaDados('juridicos', 'pedido_id', $evento['id']);
 $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']);
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']);
+$filme_eve = recuperaDados('filme_eventos','id',$idEvento);
+$filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
+
 
 ?>
 
@@ -174,16 +170,43 @@ $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']
                         <td></td>
                     </tr>
                     <tr>
+                        <?php
+                        if ($evento['tipo_evento_id'] == 1){
+                            $faixa = $atracao['ficha_tecnica'];
+                        } else if ($evento['tipo_evento_id'] == 2) {
+                            $faixa = "Não possui";
+                        }
+                        ?>
                         <th width="30%">Ficha técnica:</th>
-                        <td><?= $evento['ficha_tecnica'] ?></td>
+                        <td>
+                            <?= $faixa ?>
+                        </td>
                     </tr>
                     <tr>
+                        <?php
+                        if ($evento['tipo_evento_id'] == 1){
+                            $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
+                            $classificacao = recuperaDados('classificacao_indicativas','id',$atracao['classificacao_indicativa_id'])['classificacao_indicativa'];
+                        } else if ($evento['tipo_evento_id'] == 2) {
+                            $filme_eve = recuperaDados('filme_eventos','id',$idEvento);
+                            $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
+                            $classificacao = recuperaDados('classificacao_indicativas','id',$filme['classificacao_indicativa_id'])['classificacao_indicativa'];
+                        }
+                        ?>
                         <th width="30%">Faixa ou indicação etária:</th>
-                        <td><?= $evento['classificacao_indicativa'] ?></td>
+                        <td><?= $classificacao ?></td>
                     </tr>
                     <tr>
+                        <?php
+                        if ($evento['tipo_evento_id'] == 1){
+                            $acao_atracao = recuperaDados('acao_atracao', 'atracao_id', $atracao['id']);
+                            $acao = recuperaDados('acoes', 'id', $acao_atracao['acao_id'])['acao'];
+                        } else if ($evento['tipo_evento_id'] == 2) {
+                            $acao = "Não possui";
+                        }
+                        ?>
                         <th width="30%">Linguagem / Expressão artística:</th>
-                        <td><?= $acao['acao'] ?></td>
+                        <td><?= $acao ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Público / Representatividade social:</th>
@@ -546,6 +569,7 @@ $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']
                 " < 'row'<'col-sm-5'i ><'col-sm-7 text-right'p >> ",
         });
     });
+
 
 
 

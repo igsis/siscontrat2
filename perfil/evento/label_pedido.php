@@ -11,11 +11,10 @@ if ($pedido != null) {
         'Verba' => $verba,
         'Valor Total' => "R$" . dinheiroParaBr($pedido['valor_total']),
         'Número de Parcelas' => $pedido['numero_parcelas'],
-        'Data Kit Pagamento' => exibirDataBr($pedido['data_kit_pagamento']),
+        'Data Kit Pagamento' => retornaDataSemHora($pedido['data_kit_pagamento']),
         'Forma de Pagamento' => $pedido['forma_pagamento'],
         'Observação' => $pedido['observacao']
     ];
-
     $idPedido = $pedido['id'];
     $equipamentoValor = "SELECT local.local, valor.valor FROM valor_equipamentos valor
                          INNER JOIN locais local ON local.id = valor.local_id WHERE pedido_id = '$idPedido'";
