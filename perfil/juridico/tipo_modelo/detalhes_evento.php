@@ -202,7 +202,7 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                             $acao_atracao = recuperaDados('acao_atracao', 'atracao_id', $atracao['id']);
                             $acao = recuperaDados('acoes', 'id', $acao_atracao['acao_id'])['acao'];
                         } else if ($evento['tipo_evento_id'] == 2) {
-                            $acao = "Não possui";
+                            $acao = recuperaDados('acoes', 'id', 1);
                         }
                         ?>
                         <th width="30%">Linguagem / Expressão artística:</th>
