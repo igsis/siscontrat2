@@ -35,7 +35,7 @@ if(isset($_POST['cadastrar'])){
             $con->query("UPDATE pedido_etapas SET data_pagamento = '$now' WHERE pedido_id = '$idPedido'");
         }
         if($existeEtapa == NULL){
-            $con->query("INSERT INTO pedido_etapas (pedido_id,data_pagamento) VALUES ('$idPedido','$now')");
+            //$con->query("INSERT INTO pedido_etapas (pedido_id,data_pagamento) VALUES ('$idPedido','$now')");
         }
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
     } else{
@@ -198,31 +198,31 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                         <div class="row">
                             <div class="col-md-2">
                                 <form action="<?= $link1 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido Integral
+                                    <button type="submit" class="btn btn-primary btn-block" style="width:175px" name="idPedido" value="<?= $idPedido ?>">Pedido Integral
                                     </button>
                                 </form>
                             </div>
                             <div class="col-md-2">
                                 <form action="<?= $link2 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido parcelado
+                                    <button type="submit" class="btn btn-primary btn-block" style="width:175px" name="idPedido" value="<?= $idPedido ?>">Pedido parcelado
                                     </button>
                                 </form>
                             </div>
                             <div class="col-md-2">
                                 <form action="<?= $link3 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Recibo Integral
+                                    <button type="submit" class="btn btn-primary btn-block" style="width:175px" name="idPedido" value="<?= $idPedido ?>">Recibo Integral
                                     </button>
                                 </form>
                             </div>
                             <div class="col-md-3">
                                 <form action="<?= $link4 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" style="width:70%" name="idPedido" value="<?= $idPedido ?>">Ateste (Documentação)
+                                    <button type="submit" class="btn btn-primary pull-left btn-block" style="width:250px" name="idPedido" value="<?= $idPedido ?>">Ateste (Documentação)
                                     </button>
                                 </form>
                             </div>
                             <div class="col-md-3">
                                 <form action="<?= $link5 ?>" method="post" target="_blank" role="form">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Confirmação de serviço
+                                    <button type="submit" class="btn btn-primary pull-right btn-block" name="idPedido" style="width:253px" value="<?= $idPedido ?>">Confirmação de serviço
                                     </button>
                                 </form>
                             </div>

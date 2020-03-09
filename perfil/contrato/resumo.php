@@ -32,6 +32,12 @@ if (isset($_POST['selecionar'])) {
     $idPedido = $_POST['idPedido'];
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
     $idEvento = $pedido['origem_id'];
+    $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento")->fetch_array();
+    if($testaFilme['tipo_evento_id'] == 2){
+        $escondeLider = 1;
+    }else{
+        $escondeLider = 0;
+    }
 
     if (isset($_POST['editOnly'])) {
 

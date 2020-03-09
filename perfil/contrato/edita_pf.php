@@ -549,11 +549,10 @@ $atracao = mysqli_query($con, $sql);
             <!-- /.box -->
         </div>
         <!-- /.col -->
-</div>
 <!-- /.row -->
 <div class="row">
     <div class="col-md-12">
-        <div class="box box-default">
+    <div class="box box-default">
             <div class="box-body">
                 <div class="row">
                     <div class="form-group col-md-3">
@@ -584,23 +583,12 @@ $atracao = mysqli_query($con, $sql);
             <!-- /. box-body -->
         </div>
     </div>
+    
 </div>
 
 </section>
 <!-- /.content -->
 </div>
-
-<script type="text/javascript">
-    $('#exclusao').on('show.bs.modal', function (e) {
-        let nome = $(e.relatedTarget).attr('data-nome');
-        let id = $(e.relatedTarget).attr('data-id');
-
-        $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
-        $(this).find('#idArquivo').attr('value', `${id}`);
-
-    })
-</script>
-
 
 
 
