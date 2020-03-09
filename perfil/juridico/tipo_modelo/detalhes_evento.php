@@ -7,12 +7,6 @@ $idEvento = $_POST['idEvento'];
 isset($_POST['tipoModelo']);
 $modelo = $_POST['tipoModelo'];
 
-// para inserir a informação em Dotação //
-$sql = "SELECT * FROM juridicos where pedido_id = '$idEvento'";
-$query = mysqli_query($con, $sql);
-$num = mysqli_num_rows($query);
-
-
 // dados //
 $sql = "select p.numero_processo,
 e.protocolo,
