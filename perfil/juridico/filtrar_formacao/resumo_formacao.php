@@ -110,7 +110,7 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
-                            <td><textarea name="dotacao" rows="1" cols="85" required class="form-control"></textarea></td>
+                            <td><textarea name="dotacao" rows="1" cols="85" class="form-control"></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
