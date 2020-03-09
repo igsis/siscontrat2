@@ -49,7 +49,6 @@ inner join eventos as e on e.id = p.origem_id
  AND e.publicado = 1
 AND p.status_pedido_id != 1
 AND p.status_pedido_id != 3
-AND e.evento_status_id != 1 
 AND p.publicado = 1 where e.id = $idEvento";
 $evento = $con->query($sql)->fetch_array();
 
@@ -140,6 +139,7 @@ $evento = $con->query($sql)->fetch_array();
         <div class="box-footer">
             <form action="?perfil=juridico&p=tipo_modelo&sp=detalhes_evento" role="form" method="post">
                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
                 <button type="submit" class="btn btn-info pull-right">Detalhes evento</button>
             </form>
         </div>

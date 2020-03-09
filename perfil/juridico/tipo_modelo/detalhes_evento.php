@@ -4,6 +4,9 @@ $con = bancoMysqli();
 isset($_POST['idEvento']);
 $idEvento = $_POST['idEvento'];
 
+isset($_POST['tipoModelo']);
+$modelo = $_POST['tipoModelo'];
+
 // para inserir a informação em Dotação //
 $sql = "SELECT * FROM juridicos where pedido_id = '$idEvento'";
 $query = mysqli_query($con, $sql);
@@ -52,8 +55,6 @@ inner join usuarios as u on u.id = e.usuario_id
 $evento = $con->query($sql)->fetch_array();
 
 
-
-
 if ($evento ['pessoa_tipo_id'] == 1) {
     $pessoa = "Física";
 } else if ($evento ['pessoa_tipo_id'] == 2) {
@@ -71,20 +72,15 @@ if ($evento['tel_responsavel'] != "") {
 } else {
     $telResp = "Não cadastrado";
 }
+
 $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
 $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
 $espaco = recuperaDados('evento_publico', 'evento_id', $idEvento);
 $publico = recuperaDados('publicos', 'id', $espaco['publico_id']);
-$ocorrencia = recuperaDados('ocorrencias', 'atracao_id', $atracao['id']);
-$retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
 $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
 $pagamento = recuperaDados('pagamentos', 'pedido_id', $evento['id']);
 $dotacao = recuperaDados('juridicos', 'pedido_id', $evento['id']);
 $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']);
-$objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
-$instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id']);
-$filme_eve = recuperaDados('filme_eventos','id',$idEvento);
-$filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
 
 
 ?>
@@ -171,7 +167,7 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                     </tr>
                     <tr>
                         <?php
-                        if ($evento['tipo_evento_id'] == 1){
+                        if ($evento['tipo_evento_id'] == 1) {
                             $faixa = $atracao['ficha_tecnica'];
                         } else if ($evento['tipo_evento_id'] == 2) {
                             $faixa = "Não possui";
@@ -184,13 +180,13 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                     </tr>
                     <tr>
                         <?php
-                        if ($evento['tipo_evento_id'] == 1){
+                        if ($evento['tipo_evento_id'] == 1) {
                             $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
-                            $classificacao = recuperaDados('classificacao_indicativas','id',$atracao['classificacao_indicativa_id'])['classificacao_indicativa'];
+                            $classificacao = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id'])['classificacao_indicativa'];
                         } else if ($evento['tipo_evento_id'] == 2) {
-                            $filme_eve = recuperaDados('filme_eventos','id',$idEvento);
-                            $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
-                            $classificacao = recuperaDados('classificacao_indicativas','id',$filme['classificacao_indicativa_id'])['classificacao_indicativa'];
+                            $filme_eve = recuperaDados('filme_eventos', 'id', $idEvento);
+                            $filme = recuperaDados('filmes', 'id', $filme_eve['filme_id']);
+                            $classificacao = recuperaDados('classificacao_indicativas', 'id', $filme['classificacao_indicativa_id'])['classificacao_indicativa'];
                         }
                         ?>
                         <th width="30%">Faixa ou indicação etária:</th>
@@ -198,15 +194,15 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                     </tr>
                     <tr>
                         <?php
-                        if ($evento['tipo_evento_id'] == 1){
+                        if ($evento['tipo_evento_id'] == 1) {
                             $acao_atracao = recuperaDados('acao_atracao', 'atracao_id', $atracao['id']);
-                            $acao = recuperaDados('acoes', 'id', $acao_atracao['acao_id'])['acao'];
+                            $acao = recuperaDados('acoes', 'id', $acao_atracao['acao_id']);
                         } else if ($evento['tipo_evento_id'] == 2) {
                             $acao = recuperaDados('acoes', 'id', 1);
                         }
                         ?>
                         <th width="30%">Linguagem / Expressão artística:</th>
-                        <td><?= $acao ?></td>
+                        <td><?= $acao['acao'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Público / Representatividade social:</th>
@@ -233,7 +229,7 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                 $sqlOcorrenciaAtracao = "SELECT a.produtor_id,pro.nome,pro.email,pro.telefone1,
                 pro.telefone2,o.atracao_id,o.periodo_id,o.local_id,o.horario_fim,
                 o.virada,o.data_inicio,o.data_fim,retirada_ingresso_id,
-                o.instituicao_id,espaco_id,o.observacao,o.horario_inicio
+                o.instituicao_id,espaco_id,o.observacao,o.horario_inicio,e.id
                 FROM ocorrencias  as o
                 INNER JOIN atracoes as a on a.id = o.atracao_id
                 INNER JOIN eventos as e on e.id = a.evento_id
@@ -249,6 +245,7 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                     if ($ocorrencias->num_rows > 0) {
                         $i = 1;
                         foreach ($ocorrencias as $ocorrencia) {
+                            $atracao = recuperaDados('atracoes', 'evento_id', $idEvento);
                             $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
                             $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
                             $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
@@ -366,10 +363,15 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                     }
                     } else if ($evento['tipo_evento_id'] == 2) { ?>
                     <?php
-                    $sqlOcorrenciaFilme = "SELECT * FROM ocorrencias AS o 
-                        INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
-                        INNER JOIN eventos AS e ON fe.evento_id = e.id 
-                        WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
+                    $sqlOcorrenciaFilme = "SELECT o.atracao_id,o.periodo_id,o.local_id,o.horario_fim,
+                    o.virada,o.data_inicio,o.data_fim,retirada_ingresso_id,o.subprefeitura_id,a.nome_atracao,
+                    o.instituicao_id,espaco_id,o.observacao,o.horario_inicio
+                    FROM ocorrencias  as o
+                    INNER JOIN atracoes as a on a.id = o.atracao_id
+                    INNER JOIN eventos as e on e.id = a.evento_id
+                    INNER JOIN locais as l on l.id = o.local_id
+                    INNER JOIN periodos as p on p.id = o.periodo_id
+                    WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
                     $ocorrencias = $con->query($sqlOcorrenciaFilme);
                     ?>
                     <table class="table">
@@ -380,31 +382,34 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                                 $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocoFilme['retirada_ingresso_id'])['retirada_ingresso'];
                                 $instituicao = recuperaDados('instituicoes', 'id', $ocoFilme['instituicao_id'])['nome'];
                                 $local = recuperaDados('locais', 'id', $ocoFilme['local_id'])['local'];
-                                $espaco = recuperaDados('espacos', 'id', $ocoFilme['espaco_id'])['espaco'];
-                                $subPrefeitura = recuperaDados('subprefeituras', 'id', $ocoFilme['subprefeitura_id']);
                                 $periodo = recuperaDados('periodos', 'id', $ocoFilme['periodo_id']);
                                 ?>
+                                <tr>
+                                    <th width="30%">Atração</th>
+                                    <td><?= $ocoFilme['nome_atracao'] ?></td>
+                                </tr>
+
                                 <tr>
                                     <th class="text - center bg - primary" colspan="2">Ocorrência #<?= $i ?></th>
                                 </tr>
                                 <tr>
-                                    <th width="30 % ">Data de Inicio:</th>
+                                    <th width="30%">Data de Inicio:</th>
                                     <td><?= exibirDataBr($ocoFilme['data_inicio']) ?></td>
                                 </tr>
                                 <?php
                                 if ($ocoFilme['virada'] != 1) {
                                     ?>
                                     <tr>
-                                        <th width="30 % ">Data de Encerramento:</th>
+                                        <th width="30%">Data de Encerramento:</th>
                                         <td><?= $ocoFilme['data_fim'] == null ? "Não é Temporada" : exibirDataBr($ocoFilme['data_fim']) ?></td>
                                     </tr>
 
                                     <tr>
-                                        <th width="30 % ">Hora de Início:</th>
+                                        <th width="30%">Hora de Início:</th>
                                         <td><?= date("H:i", strtotime($ocoFilme['horario_inicio'])) ?></td>
                                     </tr>
                                     <tr>
-                                        <th width="30 % ">Hora de Encerramento:</th>
+                                        <th width="30%">Hora de Encerramento:</th>
                                         <td><?= date("H:i", strtotime($ocoFilme['horario_fim'])) ?></td>
                                     </tr>
 
@@ -412,12 +417,12 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                                 }
                                 ?>
                                 <tr>
-                                    <th width="30 % ">Período:</th>
+                                    <th width="30%">Período:</th>
                                     <td><?= $periodo['periodo'] ?></td>
                                 </tr>
 
                                 <tr>
-                                    <th width="30 % ">Retirada de Ingresso:</th>
+                                    <th width="30%">Retirada de Ingresso:</th>
                                     <td><?= $retiradaIngresso ?></td>
                                 </tr>
                                 <?php
@@ -430,21 +435,21 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                                 if ($ocoFilme['instituicao_id'] != 10) {
                                     ?>
                                     <tr>
-                                        <th width="30 % ">Instituição:</th>
+                                        <th width="30%">Instituição:</th>
                                         <td><?= $instituicao ?></td>
                                     </tr>
                                     <?php
                                 } else {
                                     ?>
                                     <tr>
-                                        <th width="30 % ">É virada?</th>
+                                        <th width="30%">É virada?</th>
                                         <td>Sim</td>
                                     </tr>
                                     <?php
                                 }
                                 ?>
                                 <tr>
-                                    <th width="30 % ">Local:</th>
+                                    <th width="30%">Local:</th>
                                     <td><?= $local ?></td>
                                 </tr>
                                 <?php if ($ocoFilme['espaco_id'] != 0) { ?>
@@ -457,27 +462,6 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                                     <th width="30% ">Observação:</th>
                                     <td><?= $ocoFilme['observacao'] ?></td>
                                 </tr>
-                                <tr>
-                                    <th width="30%">Produtor:</th>
-                                    <td><?= $produtor['nome'] ?> </td>
-                                </tr>
-                                <tr>
-                                    <th width="30%">Email:</th>
-                                    <td><?= $produtor['email'] ?> </td>
-                                </tr>
-                                <tr>
-                                    <th width="30%">Telefone 1:</th>
-                                    <td><?= $produtor['telefone1'] ?> </td>
-                                </tr>
-                                <?php
-                                if ($produtor['telefone2'] != null) { ?>
-                                    <tr>
-                                        <th width="30%">Telefone #2:</th>
-                                        <td><?= $produtor['telefone2'] ?></td>
-                                    </tr>
-                                <?php } else { ?>
-                                    <td>Não possui</td>
-                                <?php } ?>
                                 <tr>
                                     <td>
                                         <br>
@@ -494,60 +478,62 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
                     <h3>Pedidos de contratação</h3>
                     <table class="table">
                         <tr>
-                            <th width="30 % ">Protocolo:</th>
+                            <th width="30%">Protocolo:</th>
                             <td><?= $evento['protocolo'] ?></td>
                         </tr>
                         <tr>
-                            <th width="30 % ">Número do processo:</th>
+                            <th width="30%">Número do processo:</th>
                             <td><?= $evento['numero_processo'] ?></td>
                         </tr>
                         <tr>
-                            <th width="30 % ">Tipo de pessoa</th>
+                            <th width="30%">Tipo de pessoa</th>
                             <td><?= $pessoa ?></td>
                         </tr>
                         <tr>
-                            <th width="30 % ">Objeto</th>
+                            <th width="30%">Objeto:</th>
                             <td><?= $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento']; ?></td>
                         </tr>
                         <tr>
-                            <th width="30 % ">Valor</th>
+                            <th width="30%">Valor:</th>
                             <td><?= $evento['valor_total'] ?></td>
                         </tr>
                         <tr>
-                            <th width="30 % ">Forma de Pagamento</th>
+                            <th width="30%">Forma de Pagamento:</th>
                             <td><?= $evento['forma_pagamento'] ?></td>
                         </tr>
                         <tr>
-                            <th width="30 % ">Data</th>
+                            <th width="30%">Data:</th>
                             <td><?= retornaPeriodoNovo($idEvento, 'ocorrencias') ?></td>
                         </tr>
                         <tr>
-                            <th width="30 % ">Data de Emissão da N.E:</th>
+                            <th width="30%">Data de Emissão da N.E:</th>
                             <td><?= $pagamento['emissao_nota_empenho'] ?></td>
                         </tr>
                         <tr>
-                            <th width="30 % ">Data de Entrega da N.E</th>
+                            <th width="30%">Data de Entrega da N.E:</th>
                             <td><?= $pagamento['entrega_nota_empenho'] ?></td>
                         </tr>
                         <tr>
-                            <th width="30 % ">Dotação Orçamentária:</th>
+                            <th width="30%">Dotação Orçamentária:</th>
                             <td><?= $dotacao['dotacao'] ?></td>
                         </tr>
                         <tr>
-                            <th width="30 % ">Observação:</th>
+                            <th width="30%">Observação:</th>
                             <td><?= $evento['observacao'] ?></td>
                         </tr>
                         <tr>
-                            <th width="30 % ">Último status:</th>
+                            <th width="30%">Último status:</th>
                             <td><?= $statusPedido['status'] ?></td>
                         </tr>
                     </table>
                     <br/>
-                    <div class="pull - left">
-                        <a href=" ? perfil = juridico">
-                            <button type="button" class="btn btn -default">Voltar a pesquisa</button>
-                        </a>
-                    </div>
+                    <form action="?perfil=juridico&p=tipo_modelo&sp=resultado" method="POST" target="_blank">
+                        <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
+                        <input type="hidden" value="<?= $modelo ?>" name="tipoModelo">
+                        <button type="submit" class="btn btn-default">Voltar
+                        </button>
+
+                    </form>
             </div>
         </div>
     </section>
@@ -571,25 +557,7 @@ $filme = recuperaDados('filmes','id',$filme_eve['filme_id']);
     });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</script>
 
 
 </script>
