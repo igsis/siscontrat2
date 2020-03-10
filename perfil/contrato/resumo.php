@@ -35,9 +35,9 @@ if (isset($_POST['selecionar'])) {
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
     $idEvento = $pedido['origem_id'];
     $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento")->fetch_array();
-    if($testaFilme['tipo_evento_id'] == 2){
+    if ($testaFilme['tipo_evento_id'] == 2) {
         $escondeLider = 1;
-    }else{
+    } else {
         $escondeLider = 0;
     }
 
@@ -90,9 +90,9 @@ if (isset($_POST['load'])) {
     unset($_SESSION['idEvento']);
     $idEvento = $_POST['idEvento'];
     $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento")->fetch_array();
-    if($testaFilme['tipo_evento_id'] == 2){
+    if ($testaFilme['tipo_evento_id'] == 2) {
         $escondeLider = 1;
-    }else{
+    } else {
         $escondeLider = 0;
     }
     $_SESSION['idEvento'] = $idEvento;
@@ -128,17 +128,17 @@ if (isset($_POST['salvar'])) {
         }
     }
 
-    
+
     $idEvento = $_POST['idEvento'];
     $idPedido = $_POST['idPedido'];
 
     $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento")->fetch_array();
 
-    if($testaFilme['tipo_evento_id'] == 1){
-    $idAtracao = $_POST['idAtracao'];
-    $nome_atracao = $_POST['nome_atracao'];
-    $integrantes = $_POST['integrantes'];
-    $escondeLider = 0;
+    if ($testaFilme['tipo_evento_id'] == 1) {
+        $idAtracao = $_POST['idAtracao'];
+        $nome_atracao = $_POST['nome_atracao'];
+        $integrantes = $_POST['integrantes'];
+        $escondeLider = 0;
         for ($i = 0; $i < count($idAtracao); $i++) { // altera de uma ou de todas as atracoes (nome da atracao e integrantes)
             $baldeId = $idAtracao[$i];
             $baldeNome = addslashes($nome_atracao[$i]);
@@ -151,7 +151,7 @@ if (isset($_POST['salvar'])) {
 
             mysqli_query($con, $sql);
         }
-    }else{
+    } else {
         $escondeLider = 1;
     }
     //pedidos
@@ -468,7 +468,8 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="pendencia">Pendências no Setor de Contratos Artísticos:</label>
-                                    <textarea name="pendencia" rows="5" class="form-control"><?=$pedido['pendencias_contratos']?></textarea>
+                                    <textarea name="pendencia" rows="5"
+                                              class="form-control"><?= $pedido['pendencias_contratos'] ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -542,7 +543,8 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                         <td>
                                             <form action="?perfil=contrato&p=edita_pf" method="POST">
                                                 <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
-                                                <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
+                                                <input type="hidden" name="idPedido" id="idPedido"
+                                                       value="<?= $idPedido ?>">
                                                 <button type="submit" class="btn btn-primary btn-block"><span
                                                             class="glyphicon glyphicon-pencil"></span></button>
                                             </form>
@@ -590,6 +592,8 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                                 <input type="hidden" name="idPedido" id="idPedido"
                                                        value="<?= $idPedido ?>">
                                                 <input type="hidden" name="idPj" id="idPj" value="<?= $idPj ?>">
+                                                <input type="hidden" name="idEvento" id="idEvento"
+                                                       value="<?= $idEvento ?>">
                                                 <button type="submit" name="load" id="load"
                                                         class="btn btn-primary btn-block"><span
                                                             class="glyphicon glyphicon-pencil"></span></button>
@@ -610,59 +614,62 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             </div>
                         </div>
                         <?php
-                            if($escondeLider == 0){?>
+                        if ($escondeLider == 0) {
+                            ?>
                             <div class="box box-warning">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Líderes</h3>
                                 </div>
                                 <div class="box-body">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th>Atração</th>
-                                        <th>Lider</th>
-                                        <th width="5%">Editar</th>
-                                        <th width="5%">Trocar</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    while ($atracao = mysqli_fetch_array($query_atracao)) {
-                                        ?>
+                                    <table class="table table-bordered">
+                                        <thead>
                                         <tr>
-                                            <td><?= $atracao['nome_atracao'] ?></td>
-                                            <td><?= $atracao['nome'] ?></td>
-                                            <td>
-                                                <form action="?perfil=contrato&p=edita_lider" method="POST">
-                                                    <input type="hidden" name="idLider"
-                                                           value="<?= $atracao['pessoa_fisica_id'] ?>">
-                                                    <input type='hidden' name='idAtracao' value="<?= $atracao['id'] ?>">
-                                                    <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
-                                                    <button type="submit" name="carregar"
-                                                            class="btn btn-primary btn-block"><span
-                                                                class="glyphicon glyphicon-pencil"></span></button>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form method="POST" action="?perfil=contrato&p=pesquisa_lider"
-                                                      role="form">
-                                                    <input type='hidden' name='idAtracao' value="<?= $atracao['id'] ?>">
-                                                    <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
-                                                    <button type="submit" name='trocaLider'
-                                                            class="btn btn-info btn-block">
-                                                        <span class="glyphicon glyphicon-random"></span></button>
-                                                </form>
-                                            </td>
+                                            <th>Atração</th>
+                                            <th>Lider</th>
+                                            <th width="5%">Editar</th>
+                                            <th width="5%">Trocar</th>
                                         </tr>
+                                        </thead>
+                                        <tbody>
                                         <?php
-                                    }
-                                    ?>
-                                    </tbody>
-                                </table>
+                                        while ($atracao = mysqli_fetch_array($query_atracao)) {
+                                            ?>
+                                            <tr>
+                                                <td><?= $atracao['nome_atracao'] ?></td>
+                                                <td><?= $atracao['nome'] ?></td>
+                                                <td>
+                                                    <form action="?perfil=contrato&p=edita_lider" method="POST">
+                                                        <input type="hidden" name="idLider"
+                                                               value="<?= $atracao['pessoa_fisica_id'] ?>">
+                                                        <input type='hidden' name='idAtracao'
+                                                               value="<?= $atracao['id'] ?>">
+                                                        <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
+                                                        <button type="submit" name="carregar"
+                                                                class="btn btn-primary btn-block"><span
+                                                                    class="glyphicon glyphicon-pencil"></span></button>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form method="POST" action="?perfil=contrato&p=pesquisa_lider"
+                                                          role="form">
+                                                        <input type='hidden' name='idAtracao'
+                                                               value="<?= $atracao['id'] ?>">
+                                                        <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
+                                                        <button type="submit" name='trocaLider'
+                                                                class="btn btn-info btn-block">
+                                                            <span class="glyphicon glyphicon-random"></span></button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
-                            <?php } //if esconde lider
-                                } //if pessoa_tipo == 2 ?>
+                        <?php } //if esconde lider
+                    } //if pessoa_tipo == 2 ?>
 
                     <form action="?perfil=contrato&p=area_impressao" target="_blank" method="post" role="form">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">

@@ -11,6 +11,8 @@ $tipoPessoa = 2;
 
 isset($_POST['idPedido']);
 $idPedido = $_POST['idPedido'];
+isset($_POST['idEvento']);
+$idEvento = $_POST['idEvento'];
 
 if (isset($_POST['adicionar']) || isset($_POST['idPj'])) {
     $idPj = $_POST['idPj'];
@@ -395,8 +397,11 @@ if (isset($pj['representante_legal2_id'])) {
                                 <form method="POST" action="?perfil=contrato&p=resumo" role="form">
                                     <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
                                     <input type="hidden" name="idPj" value="<?= $pj['id'] ?>">
+                                    <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                                     <?= $editaOnly ?? NULL ?>
-                                    <button type="submit" name="selecionarpj" class="btn btn-block" style="margin: 0 5px;">Voltar</button>
+                                    <button type="submit" name="selecionarpj" class="btn btn-info"
+                                            style="margin: 0 5px;">Voltar
+                                    </button>
                                 </form>
                             </div>
                             <div class="form-group col-md-3">
