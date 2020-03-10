@@ -7,10 +7,12 @@ $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 $http = $server . "/pdf/";
 $link_todosArquivos = $http . "impressao_contrato_todosArquivos.php";
 
+
 if (isset($_POST['Voltar'])) {
     $idEvento = $_POST['idEvento'];
     $idPedido = $_POST['idPedido'];
 }
+
 if (isset($_POST['selecionar'])) {
     $idPedido = $_POST['idPedido'];
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -540,6 +542,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                                         <td>
                                             <form action="?perfil=contrato&p=edita_pf" method="POST">
                                                 <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
+                                                <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
                                                 <button type="submit" class="btn btn-primary btn-block"><span
                                                             class="glyphicon glyphicon-pencil"></span></button>
                                             </form>
@@ -672,7 +675,7 @@ $queryAtracao = mysqli_query($con, $sqlAtracao);
                             Reabertura
                         </button>
                         <a href="?perfil=contrato&p=pesquisa_contratos">
-                            <button type="button" class="btn btn-default pull-left" style="margin: 0 10px;">
+                            <button type="button" class="btn btn-info pull-left" style="margin: 0 10px;">
                                 Voltar
                             </button>
                         </a>

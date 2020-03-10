@@ -12,6 +12,9 @@ if (isset($_POST['selecionar']) || isset($_POST['idPf'])) {
     $editaOnly = "<input type='hidden' name='editOnly' value= '1'>";
 }
 
+isset($_POST['idPedido']);
+$idPedido = $_POST['idPedido'];
+
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider'])) {
     $nome = addslashes($_POST['nome']);
     $nomeArtistico = addslashes($_POST['nomeArtistico']);
@@ -222,7 +225,7 @@ if (isset($_POST['edita'])) {
 
 if (isset($_POST['carregar'])) {
     $idPf = $_POST['idPf'];
-    
+
 }
 
 $idEvento = $_SESSION['idEvento'];
@@ -324,7 +327,7 @@ $atracao = mysqli_query($con, $sql);
                                 </div>
                             </div>
                             <div class="row">
-                            
+
                                 <?php
                                 if (empty($pf['cpf'])) {
                                     echo "<div class='form-group col-md-6'>";
@@ -353,14 +356,14 @@ $atracao = mysqli_query($con, $sql);
                                     $row = "";
                                 }
                                 ?>
-                                </div>
-                                <div class="row">
-                                <div class="form-group col-md-<?=$md?>">
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-<?= $md ?>">
                                     <label for="dtNascimento">Data de Nascimento: *</label>
                                     <input type="date" class="form-control" id="dtNascimento" name="dtNascimento"
                                            onkeyup="barraData(this);" value="<?= $pf['data_nascimento'] ?>"/>
                                 </div>
-                                <div class="form-group col-md-<?=$md?>">
+                                <div class="form-group col-md-<?= $md ?>">
                                     <label for="nacionalidade">Nacionalidade: *</label>
                                     <select class="form-control" id="nacionalidade" name="nacionalidade">
                                         <option value="">Selecione uma opção...</option>
@@ -370,7 +373,7 @@ $atracao = mysqli_query($con, $sql);
                                     </select>
                                 </div>
                             </div>
-                            <?=$row?>
+                            <?= $row ?>
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -489,7 +492,7 @@ $atracao = mysqli_query($con, $sql);
                                         <input type="text" name="drt" class="form-control telefone" maxlength="15"
                                                placeholder="Digite o DRT" value="<?= $drts['drt'] ?>">
                                     </div>
-                                    
+
                                     <?php
                                 }
                                 ?>
@@ -532,16 +535,13 @@ $atracao = mysqli_query($con, $sql);
                                            value="<?= $banco['conta'] ?>">
                                 </div>
                             </div>
-
-                            </div>
-                            <div class="box-footer">
-                                <input type="hidden" name="idPf" value="<?= $idPf ?>">
-                                <button type="submit" name="edita" class="btn btn-info pull-right">Salvar</button>
-                                <a href="?perfil=contrato&p=pesquisa_contratos">
-                                    <button type='button' class='btn btn-default'>Voltar</button>
-                                <a>
+                            <br>
+                            <br>
+                            <br>
+                            <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <button type="submit" name="edita" class="btn btn-info pull-left" style="margin:  0 5px;">Salvar</button>
                         </form>
-
                     </div>
                 </div>
                 <!-- /.box-body -->
@@ -549,45 +549,46 @@ $atracao = mysqli_query($con, $sql);
             <!-- /.box -->
         </div>
         <!-- /.col -->
-<!-- /.row -->
-<div class="row">
-    <div class="col-md-12">
-    <div class="box box-default">
-            <div class="box-body">
-                <div class="row">
-                    <div class="form-group col-md-3">
-                        <form method="POST" action="?perfil=contrato&p=demais_anexos_pf"
-                              role="form">
-                            <button type="submit" name="idPf" value="<?= $pf['id'] ?>"
-                                    class="btn btn-info btn-block">Demais Anexos
-                            </button>
-                        </form>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-default">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="form-group col-md-3 pull-right">
+                                <form method="POST" action="?perfil=contrato&p=demais_anexos_pf"
+                                      role="form">
+                                    <button type="submit" name="idPf" value="<?= $pf['id'] ?>"
+                                            class="btn btn-info btn-block">Demais Anexos
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <?php
+                                $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
+                                $queryPedidos = mysqli_query($con, $sqlPedidos);
+                                $pedidos = mysqli_fetch_array($queryPedidos);
+                                ?>
+                                <form method="POST" action="?perfil=contrato&p=resumo" role="form">
+                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
+                                    <input type="hidden" name="idPf" value="<?= $pf['id'] ?>">
+                                    <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                    <?= $editaOnly ?? NULL ?>
+                                    <button type="submit" name="Voltar" class="btn btn-info" pull-left" style="margin:  0 5px;">
+                                        Voltar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group col-md-3 pull-right">
-                        <?php
-                        $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
-                        $queryPedidos = mysqli_query($con, $sqlPedidos);
-                        $pedidos = mysqli_fetch_array($queryPedidos);
-                        ?>
-                        <form method="POST" action="?perfil=contrato&p=resumo" role="form">
-                            <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
-                            <input type="hidden" name="idPf" value="<?= $pf['id'] ?>">
-                            <?=$editaOnly ?? NULL?>
-                            <button type="submit" name="selecionar" class="btn btn-info btn-block">Ir ao pedido de
-                                contratação
-                            </button>
-                        </form>
-                    </div>
+                    <!-- /. box-body -->
                 </div>
             </div>
-            <!-- /. box-body -->
-        </div>
-    </div>
-    
-</div>
 
-</section>
-<!-- /.content -->
+        </div>
+
+    </section>
+    <!-- /.content -->
 </div>
 
 
