@@ -84,7 +84,7 @@ e.id
                                     ?>
                                     <td>
                                         <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"
-                                              method="POST">
+                                              method="POST" target="_blank">
                                             <input type="hidden" name=idEvento value="<?= $evento['id'] ?>">
                                             <button type="submit"
                                                     class="btn btn-link"><?= $evento['numero_processo'] ?></button>

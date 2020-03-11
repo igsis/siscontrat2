@@ -1,7 +1,8 @@
 <?php
 include "includes/menu_interno.php";
 
-$ocorrencias_rept = false;
+
+/*$ocorrencias_rept = false;*/
 
 $sqlEvento = "SELECT
                eve.nome_evento AS 'Nome do Evento',
@@ -88,9 +89,9 @@ WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 
     $result = mysqli_fetch_all(mysqli_query($con, $ocorrencia_filmes));
 }
-
 $quant = count($result);
-$contad = 0;
+
+/*$contad = 0;
 for ($i = 0; $i < $quant; $i++) {
     for ($j = 1; $j < $quant; $j++) {
         for ($k = 0; $k < $quant; $k++) {
@@ -103,7 +104,7 @@ for ($i = 0; $i < $quant; $i++) {
             }
         }
     }
-}
+}*/
 
 
 include "includes/validacoes.php";
@@ -266,12 +267,11 @@ include "includes/validacoes.php";
                         
 
 
-                        if(count($erros) != 0 || count($errosArqs) != 0 || $ocorrencias_rept == true){
+                        if(count($erros) != 0 || count($errosArqs) != 0/* || $ocorrencias_rept == true*/){
                             $disabled =  "disabled";
                         }else{
                             $disabled = "";
                         }
-                        
                     ?>
                     
                     <?php

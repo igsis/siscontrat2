@@ -21,9 +21,9 @@ $sqlLocal = "SELECT e.id,l.local FROM eventos as e
 $queryLocal = mysqli_query($con, $sqlLocal);
 $local = '';
 while ($locais = mysqli_fetch_array($queryLocal)) {
-    $local = $local . ' - ' . $locais['local'];
+    $local = $local . $locais['local'] . ' - ';
 }
-$local = substr($local, 1);
+$local = substr($local, 0, -3);
 
 
 $fiscal = recuperaDados('usuarios', 'id', $eve['fiscal_id'])['nome_completo'];

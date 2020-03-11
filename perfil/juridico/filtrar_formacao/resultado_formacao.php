@@ -57,7 +57,7 @@ $sql = "select fc.protocolo,p.numero_processo, pf.nome, fc.id,ps.status
                                     ?>
                                     <td>
                                         <form action="?perfil=juridico&p=filtrar_formacao&sp=seleciona_modelo_formacao"
-                                              role="form" method="POST">
+                                              role="form" method="POST" target="_blank">
                                             <input type="hidden" value="<?= $formacao['id'] ?>" name="idFormacao">
                                             <button type="submit"
                                                     class="btn btn-link"><?= $formacao['numero_processo'] ?></button>
