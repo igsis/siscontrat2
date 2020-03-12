@@ -36,8 +36,8 @@ $data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
             if ($tipoEvento != 2) {
                 $readonly = 'readonly';
             } else {
-                $readonly = '';
-            }
+                $readonly = ''; ?>
+        <?php }
         } else {
             $readonly = '';
         }
@@ -50,6 +50,13 @@ $data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
                    <?= $readonly ?>>
         </div>
     </div>
+
+    <div class="row" id="msg">
+        <div class="form-group col-md-12">
+            <span style="color: red;" class="pull-right"><b>Valor máximo permitido 999.999,99</b></span>
+        </div>
+    </div>
+
     <?php
     if (isset($oficina)) {
         ?>
@@ -128,8 +135,27 @@ $data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
     <input type="hidden" name="data_kit" id="dataKit">
     <ul class="list-inline pull-right">
         <li>
-            <button type="submit" class="btn btn-primary next-step">Proxima etapa <span
+            <button type="submit" class="btn btn-primary next-step" id="next">Proxima etapa <span
                         aria-hidden="true">&rarr;</span></button>
         </li>
     </ul>
 </form>
+
+<script>
+    $('#msg').hide();
+
+    function limitaValor(){
+        var msg = $('#msg');
+        var maxLength = $('#valor_total').val().length;
+        var btn = $('#next');
+        btn.attr('disabled', true);
+        if (maxLength > 10) {
+            msg.show();
+            btn.attr('disabled', true);
+        }else{
+            msg.hide();
+            btn.attr('disabled', false);
+        };
+    }
+$('#valor_total').keyup(limitaValor);
+</script>
