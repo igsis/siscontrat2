@@ -21,9 +21,9 @@ $sqlLocal = "SELECT e.id,l.local FROM eventos as e
 $queryLocal = mysqli_query($con, $sqlLocal);
 $local = '';
 while ($locais = mysqli_fetch_array($queryLocal)) {
-    $local = $local . $locais['local'] . ' - ';
+    $local = $local . " - " . $locais['local'];
 }
-$local = substr($local, 0, -3);
+$local = substr($local, 3);
 
 
 $fiscal = recuperaDados('usuarios', 'id', $eve['fiscal_id'])['nome_completo'];
@@ -101,7 +101,7 @@ $evento = $con->query($sql)->fetch_array();
                         </tr>
                         <tr>
                             <th width="30%">Valor:</th>
-                            <td><?= $evento['valor_total'] ?></td>
+                            <td><?= "R$" . $evento['valor_total'] ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Período:</th>

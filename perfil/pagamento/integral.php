@@ -35,7 +35,7 @@ if(isset($_POST['cadastrar'])){
             $con->query("UPDATE pedido_etapas SET data_pagamento = '$now' WHERE pedido_id = '$idPedido'");
         }
         if($existeEtapa == NULL){
-            //$con->query("INSERT INTO pedido_etapas (pedido_id,data_pagamento) VALUES ('$idPedido','$now')");
+            $con->query("INSERT INTO pedido_etapas (pedido_id,data_pagamento) VALUES ('$idPedido','$now')");
         }
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
     } else{
@@ -183,7 +183,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
         <?php
         if ($botao){
             $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/";
-            if ($pedido['pessoa_tipo_id'] == 1) {
+            if ($pedido['pessoa_tipo_id'] == 1 && $pedido['pessoa_tipo_id'] != NULL) {
                 $link1 = $server . "pagamento_integral_pf.php";
                 $link2 = $server . "pagamento_parcelado_pf.php";
                 $link3 = $server . "recibo_pagamento.php";
@@ -230,7 +230,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                     </div>
                 </div>
                 <?php
-            } else{
+            } else if($pedido['pessoa_tipo_id'] == 2 && $pedido['pessoa_tipo_id'] != NULL){
                 $link11 = $server . "pagamento_integral_pj.php";
                 $link12 = $server . "recibo_pagamento.php";
                 $link13 = $server . "ateste_documentacao.php";

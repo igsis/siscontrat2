@@ -12,9 +12,7 @@
             <?php
             if ($evento['tipo_evento_id'] == 1) {
                 foreach ($atracoes as $atracao) {
-                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco 
-                                      INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id 
-                                      WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1 AND oco.tipo_ocorrencia_id = 2 AND fe.evento_id = $idEvento AND oco.atracao_id = $idFilmeEvento";
+                    $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE atracao_id = '" . $atracao['id'] . "' AND publicado = '1' AND tipo_ocorrencia_id = '1'";
                     $ocorrencias = $con->query($sqlOcorrencia);
                     $numOco = $ocorrencias->num_rows;
                     ?>
