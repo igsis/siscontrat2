@@ -26,10 +26,11 @@ $telefones = $con->query("SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$
 $parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1");
 
 
-if($parcela == NULL){
+$parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1")->fetch_array();
+if($parcela['id'] == NULL){
     $valor = $pedido['valor_total'];
 } else {
-    $idParcela = $_POST['idParcela'];
+    $idParcela = $parcela['id'];
     $parc = $con->query("SELECT valor FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1 AND id = '$idParcela'")->fetch_assoc();
     $valor = $parc['valor'];
 }
