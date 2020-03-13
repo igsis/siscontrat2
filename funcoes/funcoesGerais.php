@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_set("Brazil/East");
+date_default_timezone_set('GMT');
 setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 
 	function habilitarErro()
