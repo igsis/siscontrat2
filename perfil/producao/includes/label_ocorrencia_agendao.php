@@ -41,7 +41,7 @@
                                 </tr>
                                 <tr>
                                     <th width="30%"> Data de Encerramento:</th>
-                                    <td><?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada" ?></td>
+                                    <td><?= $ocorrencia['data_fim'] == "0000-00-00" ? "Não é Temporada" : exibirDataBr($ocorrencia['data_fim']) ?></td>
                                 </tr>
                                 <tr>
                                     <th width="30%"> Hora de Início:</th>

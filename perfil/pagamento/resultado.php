@@ -71,7 +71,7 @@ if(isset($_POST['periodo'])){
     AND e.evento_status_id = 3
     AND p.status_pedido_id NOT IN (1,3,20,21)
     AND o.data_inicio between '$data_inicio' AND '$data_fim'
-    GROUP BY e.nome_evento";
+    GROUP BY e.id";
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
 }
@@ -175,7 +175,7 @@ if(isset($_POST['operador'])) {
                                         <td><?= $evento['protocolo'] ?></td>
                                         <td><?= $proponente ?></td>
                                         <td><?= $evento['nome_evento'] ?></td>
-                                        <td><?= retornaPeriodo($evento['id']) ?></td>
+                                        <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <td><?= $evento['nome_completo'] ? strstr($evento['nome_completo'],' ', true) : NULL ?></td>

@@ -36,8 +36,8 @@ $data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
             if ($tipoEvento != 2) {
                 $readonly = 'readonly';
             } else {
-                $readonly = ''; ?>
-        <?php }
+                $readonly = '';
+            }
         } else {
             $readonly = '';
         }
