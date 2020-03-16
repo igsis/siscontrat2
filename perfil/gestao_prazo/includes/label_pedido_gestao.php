@@ -20,7 +20,7 @@ if ($pedido != null) {
         'Número de Parcelas:' => $pedido['numero_parcelas'],
         'Data Kit Pagamento:' =>  $dataKit,
         'Forma Pagamento:' => $pedido['forma_pagamento'],
-        'Observação:' => $pedido['observacao']
+        'Observação:' => $pedido['observacao'] == null ? "Não cadastrado" : $pedido['observacao']
     ];
     $idPedido = $pedido['id'];
     $equipamentoValor = "SELECT local.local, valor.valor FROM valor_equipamentos valor
@@ -57,7 +57,7 @@ switch ($pedido['pessoa_tipo_id']) {
 
         $dadosPreponente = [
             'Nome' => $proponente['nome'],
-            'Nome Artístico' => $proponente['nome_artistico'],
+            'Nome Artístico' => $proponente['nome_artistico'] == null ? "Não cadastrado" : $proponente['nome_artistico'],
             'Nacionalidade' => $nacionalidade,
             'RG' => $proponente['rg'] ?? "Não Cadastrado",
             'Passaporte' => $proponente['passaporte'] ?? "Não Cadastrado",

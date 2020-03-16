@@ -44,7 +44,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Sinopse:</th>
-                                            <td><?= $filme['sinopse'] ?></td>
+                                            <td><?= $filme['sinopse'] == null ? "Não cadastrado" : $filme['sinopse'] ?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Duração(mins):</th>
@@ -138,7 +138,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                                 <td><?= $produtor['telefone2'] ?></td>
                                             </tr>
                                         <?php }
-                                        if($produtor['observacao'] != "" || $produtor != NULL){
+                                        if($produtor['observacao'] != "" && $produtor != NULL){
                                             $obs = $produtor['observacao'];
                                         }else{
                                             $obs = "Não cadastado";

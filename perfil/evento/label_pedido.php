@@ -11,9 +11,9 @@ if ($pedido != null) {
         'Verba' => $verba,
         'Valor Total' => "R$" . dinheiroParaBr($pedido['valor_total']),
         'Número de Parcelas' => $pedido['numero_parcelas'],
-        'Data Kit Pagamento' => retornaDataSemHora($pedido['data_kit_pagamento']),
+        'Data Kit Pagamento' => exibirDataBr($pedido['data_kit_pagamento']),
         'Forma de Pagamento' => $pedido['forma_pagamento'],
-        'Observação' => $pedido['observacao']
+        'Observação' => $pedido['observacao'] ? "" : "Não cadastrado"
     ];
     $idPedido = $pedido['id'];
     $equipamentoValor = "SELECT local.local, valor.valor FROM valor_equipamentos valor
@@ -52,7 +52,7 @@ switch ($pedido['pessoa_tipo_id']) {
 
         $dadosProponente = [
             'Nome' => $proponente['nome'],
-            'Nome Artístico' => $proponente['nome_artistico'],
+            'Nome Artístico' => $proponente['nome_artistico'] == null ? "" : "Não cadastrado",
             'Nacionalidade' => $nacionalidade,
             'RG' => $proponente['rg'],
             'Passaporte' => $proponente['passaporte'],

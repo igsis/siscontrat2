@@ -60,7 +60,7 @@ header("Content-Disposition: attachment;Filename=$now - Processo SEI $processo -
 </strong></p>
 <p>&nbsp;</p>
 <p align="justify"><strong>Nome da empresa:</strong> <?= $pedido['razao_social'] ?><br>
-    <strong>CCM:</strong> <?= $pedido['ccm'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CNPJ:</strong> <?= $pedido['cnpj'] ?><br>
+    <strong>CCM:</strong> <?= $pedido['ccm'] == null ? "Não cadastado" : $pedido['ccm'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CNPJ:</strong> <?= $pedido['cnpj'] ?><br>
     <strong>Endereço:</strong> <?= $pedido['logradouro'].", ".$pedido['numero']." ".$pedido['complemento']." ".$pedido['bairro']." - ".$pedido['cidade']." - ".$pedido['uf']." CEP: ".$pedido['cep'] ?><br>
     <strong>Telefone:</strong>
     <?php

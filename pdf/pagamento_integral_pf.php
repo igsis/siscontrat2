@@ -67,7 +67,7 @@ header("Content-Disposition: attachment;Filename=$now - Processo SEI $processo -
 <p>&nbsp;</p>
 <p style="text-align: justify;"><strong>Nome:</strong> <?= $pedido['nome'] ?><br>
     <strong>Nome Artístico:</strong> <?= $pedido['nome_artistico'] ?><br>
-    <strong>Nacionalidade:</strong> <?= $pedido['nacionalidade'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CCM:</strong> <?= $pedido['ccm'] ?><br>
+    <strong>Nacionalidade:</strong> <?= $pedido['nacionalidade'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CCM:</strong> <?= $pedido['ccm'] == null ? "Não cadastado" : $pedido['ccm'] ?><br>
     <?= $trecho_passaporte ?>
     <strong>Endereço:</strong> <?= $pedido['logradouro'].", ".$pedido['numero']." ".$pedido['complemento']." ".$pedido['bairro']." - ".$pedido['cidade']." - ".$pedido['uf']." CEP: ".$pedido['cep'] ?><br>
     <strong>Telefone:</strong>

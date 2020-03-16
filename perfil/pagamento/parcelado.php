@@ -150,7 +150,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label>Período:</label> <?= retornaPeriodo($pedido['id']) ?>
+                        <label>Período:</label> <?= retornaPeriodoNovo($pedido['id'], 'ocorrencias') ?>
                     </div>
                 </div>
                 <div class="row">

@@ -82,7 +82,7 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Valor do Ingresso:</th>
-                                                        <td><?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
+                                                        <td><?= "R$" . dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -128,7 +128,7 @@
                                                 <?php } ?>
                                                 <tr>
                                                     <th width="30%">Observação:</th>
-                                                    <td><?= $ocorrencia['observacao'] ?></td>
+                                                    <td><?= $ocorrencia['observacao'] == null ? "Não cadastrado" : $ocorrencia['observacao']?></td>
                                                 </tr>
                                                 <?php
                                                 $i++;
@@ -226,7 +226,7 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Valor do Ingresso:</th>
-                                                        <td><?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
+                                                        <td><?= "R$" . dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -272,7 +272,7 @@
                                                 <?php } ?>
                                                 <tr>
                                                     <th width="30%">Observação:</th>
-                                                    <td><?= $ocorrencia['observacao'] ?></td>
+                                                    <td><?= $ocorrencia['observacao'] == null ? "Não cadastrado" : $ocorrencia['observacao'] ?></td>
                                                 </tr>
                                                 <?php
                                                 $i++;

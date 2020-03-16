@@ -77,7 +77,7 @@
                                 </tr>
                                 <tr>
                                     <th width="30%"> Valor do Ingresso:</th>
-                                    <td><?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
+                                    <td><?= "R$" . dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
                                 </tr>
                                 <tr>
                                     <th width="30%"> Local:</th>

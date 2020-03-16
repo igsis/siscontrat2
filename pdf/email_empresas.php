@@ -15,7 +15,7 @@ $pedido = $con->query("SELECT e.id AS idEvento, p.numero_processo, e.nome_evento
     INNER JOIN representante_legais rl on pj.representante_legal1_id = rl.id
     WHERE p.publicado = 1 AND p.id = '$idPedido'")->fetch_assoc();
 
-$periodo = retornaPeriodo($pedido['idEvento']);
+$periodo = retornaPeriodoNovo($pedido['idEvento'], 'ocorrencias');
 
 $modeloEmail = $_GET['modelo'];
 

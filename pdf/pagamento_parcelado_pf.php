@@ -69,7 +69,7 @@ header("Content-Disposition: attachment;Filename=$now - Processo SEI $processo -
     </strong></p>
 <p>&nbsp;</p>
 <p><strong>Nome:</strong> <?= $pedido['nome'] ?><br>
-    <strong>CCM:</strong> <?= $pedido['ccm'] ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CPF: <?=$pedido['cpf']?> </strong><br>
+    <strong>CCM:</strong> <?= $pedido['ccm'] == null ? "Não cadastado" : $pedido['ccm'] ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CPF: <?=$pedido['cpf']?> </strong><br>
     <strong>Endereço:</strong> <?= $pedido['logradouro'].", ".$pedido['numero']." ".$pedido['complemento']." ".$pedido['bairro']." - ".$pedido['cidade']." - ".$pedido['uf']." CEP: ".$pedido['cep'] ?><br>
     <strong>Telefone:</strong>
     <?php
