@@ -237,7 +237,7 @@ $fcHora = recuperaDados('formacao_parcelas', 'id', $idFormacao);
                     <form action="?perfil=juridico&p=filtrar_formacao&sp=resumo_formacao" method="post">
                         <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
                         <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
-                        <button type="submit" class="btn btn-info pull-right">Voltar
+                        <button type="submit" class="btn btn-default pull-right">Voltar
                         </button>
                     </form>
                 </div>

@@ -316,7 +316,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                                 </form>
                             </div>
                             <div class="col-md-4">
-                                <form action="<?= $link19 ?>" method="post" target="_blank" role="form">
+                                <form action="<?= $link19 ?>?modelo=''" method="post" target="_blank" role="form">
                                     <button type="submit" class="btn btn-primary btn-block pull-right" name="idPedido" style="width:78%; font-size:95%" value="<?= $idPedido ?>">Email Empresas com Minuta de Contrato
                                     </button>
                                 </form>

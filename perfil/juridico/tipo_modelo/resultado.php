@@ -10,8 +10,7 @@ isset($_POST['idEvento']);
 $idEvento = $_POST['idEvento'];
 
 
-$sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
-$mdl = $con->query($sqlModelo)->fetch_array();
+$mdl = recuperaDados('modelo_juridicos', 'id', $modelo);
 $eve = recuperaDados('eventos', 'id', $idEvento);
 
 $sqlLocal = "SELECT e.id,l.local FROM eventos as e
@@ -132,7 +131,7 @@ $evento = $con->query($sql)->fetch_array();
                 <div class="box-footer">
                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                     <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left"
-                            style="margin: 0 5px;width:8%; ">Gravar
+                            style="margin: 0 5px;">Gravar
                     </button>
                 </div>
         </form>

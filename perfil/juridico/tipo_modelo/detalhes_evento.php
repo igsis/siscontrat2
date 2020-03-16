@@ -1,11 +1,17 @@
 <?php
 
+
 $con = bancoMysqli();
 isset($_POST['idEvento']);
 $idEvento = $_POST['idEvento'];
 
 isset($_POST['tipoModelo']);
 $modelo = $_POST['tipoModelo'];
+
+
+// ARQUIVOS DE ANEXOS COMUNICAÇÃO/PRODUÇÃO //
+$lista_documento_id = $con->query("SELECT id FROM lista_documentos WHERE sigla = 'com_prod'")->fetch_assoc()['id'];
+
 
 // dados //
 $sql = "select p.numero_processo,
@@ -166,7 +172,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                         <th width="30%">Sinopse:</th>
                         <td><?= $evento['sinopse'] ?></td>
                     </tr>
-                    
+
                     <tr>
                         <th><br/></th>
                         <td></td>
@@ -182,20 +188,20 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                                    INNER JOIN produtores AS p ON a.produtor_id = p.id
                                                    WHERE a.evento_id = $idEvento AND e.publicado = 1 AND a.publicado = 1");
                         $a = 1;
-                        while($atracao = mysqli_fetch_array($sqlAtracao)){ 
+                        while ($atracao = mysqli_fetch_array($sqlAtracao)) {
                             $acoes = $con->query("SELECT a.acao FROM acoes AS a INNER JOIN acao_atracao AS at ON at.acao_id = a.id WHERE at.atracao_id = " . $atracao['id'])->fetch_array();
                             ?>
                             <tr>
-                                <th width="30%">Atração #<?=$a?>: <?=$atracao['nome_atracao']?></th>
+                                <th width="30%">Atração #<?= $a ?>: <?= $atracao['nome_atracao'] ?></th>
                             </tr>
 
                             <tr>
                                 <th width="30%">Ficha Técnica:</th>
-                                <td><?=$atracao['ficha_tecnica']?></td>
+                                <td><?= $atracao['ficha_tecnica'] ?></td>
                             </tr>
 
                             <th width="30%">Linguagem / Expressão artística:</th>
-                                <td><?= $acoes['acao'] ?></td>
+                            <td><?= $acoes['acao'] ?></td>
                             </tr>
 
                             <tr>
@@ -205,10 +211,10 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
 
                             <tr>
 
-                            <th width="30%">Release:</th>
+                                <th width="30%">Release:</th>
                                 <td><?= $atracao['release_comunicacao'] ?></td>
                             </tr>
-                            
+
                             <tr>
                                 <th><br/></th>
                                 <td></td>
@@ -226,7 +232,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                 <th width="30%">Telefone 1:</th>
                                 <td><?= $atracao['telefone1'] ?> </td>
                             </tr>
-                                
+
                             <tr>
                                 <th width="30%">Telefone 2:</th>
                                 <td><?= $atracao['telefone2'] ? "" : "Não cadastrado" ?></td>
@@ -236,30 +242,31 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                 <th><br/></th>
                                 <td></td>
                             </tr>
-                            
-                        <?php $a++;
+
+                            <?php $a++;
                         }
-                    }else if ($evento['tipo_evento_id'] == 2) {
+                    } else if ($evento['tipo_evento_id'] == 2) {
                         $sqlFilmes = $con->query("SELECT f.titulo, f.ano_producao, f.genero, f.direcao, f.duracao, c.classificacao_indicativa
                                                  FROM filme_eventos AS fe
                                                  INNER JOIN filmes AS f ON fe.filme_id = f.id
                                                  INNER JOIN eventos AS e ON e.id = fe.evento_id
                                                  INNER JOIN classificacao_indicativas AS c ON c.id = f.classificacao_indicativa_id
                                                  WHERE fe.evento_id = $idEvento AND f.publicado = 1 AND e.publicado = 1");
-                        $acoes = $con->query("SELECT acao FROM acoes WHERE id = 1 AND publicado = 1")->fetch_array();                         
+                        $acoes = $con->query("SELECT acao FROM acoes WHERE id = 1 AND publicado = 1")->fetch_array();
                         $f = 1;
-                        while($filmes = mysqli_fetch_array($sqlFilmes)){?>
+                        while ($filmes = mysqli_fetch_array($sqlFilmes)) {
+                            ?>
                             <tr>
-                                <th width="30%">Filme #<?=$f?>: <?=$filmes['titulo']?></th>
+                                <th width="30%">Filme #<?= $f ?>: <?= $filmes['titulo'] ?></th>
                             </tr>
 
                             <tr>
                                 <th width="30%">Gênero:</th>
-                                <td><?=$filmes['genero']?></td>
+                                <td><?= $filmes['genero'] ?></td>
                             </tr>
 
                             <th width="30%">Linguagem / Expressão artística:</th>
-                                <td><?= $acoes['acao'] ?></td>
+                            <td><?= $acoes['acao'] ?></td>
                             </tr>
 
                             <tr>
@@ -269,7 +276,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
 
                             <tr>
 
-                            <th width="30%">Ano de produção:</th>
+                                <th width="30%">Ano de produção:</th>
                                 <td><?= $filmes['ano_producao'] ?></td>
                             </tr>
 
@@ -282,24 +289,25 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                 <th width="30%">Duração:</th>
                                 <td><?= $filmes['duracao'] ?> </td>
                             </tr>
-                            
+
                             <tr>
                                 <th><br/></th>
                                 <td></td>
                             </tr>
 
-                            
-                    <?php $f++; }
-                    }?>
-                    
-                    
+
+                            <?php $f++;
+                        }
+                    } ?>
+
+
                 </table>
                 <h1>Especificidades</h1>
                 <h3>Ocorrências</h3>
                 <?php
 
                 if ($evento['tipo_evento_id'] == 1) {
-                    $i = 1;
+                $i = 1;
                 $sqlOcorrenciaAtracao = "SELECT a.produtor_id,pro.nome,pro.email,pro.telefone1,
                 pro.telefone2,o.atracao_id,o.periodo_id,o.local_id,o.horario_fim,
                 o.virada,o.data_inicio,o.data_fim,retirada_ingresso_id,
@@ -371,15 +379,16 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             <tr>
                                 <th width="30%">Valor do Ingresso:</th>
                                 <?php
-                                    if ($ocorrencia['retirada_ingresso_id'] != 2) {?>
+                                if ($ocorrencia['retirada_ingresso_id'] != 2) { ?>
 
-                                        <td><?= "R$" . dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
+                                    <td><?= "R$" . dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
 
-                              <?php }else{?>
+                                <?php } else {
+                                    ?>
 
-                                        <td><?= "Ingresso Gratuito" ?></td>
+                                    <td><?= "Ingresso Gratuito" ?></td>
 
-                              <?php } ?>
+                                <?php } ?>
                             </tr>
 
                             <?php
@@ -413,7 +422,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                 <th width="30% ">Observação:</th>
                                 <td><?= $ocorrencia['observacao'] ? "" : "Não cadastrado" ?></td>
                             </tr>
-                            
+
                             <tr>
                                 <td>
                                     <br>
@@ -423,38 +432,38 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             $i++;
                         }
                     }
-               }else if ($evento['tipo_evento_id'] == 2) {?>
-                   <table class="table">
-                        <?php
-                            $sqlFilme = $con->query("SELECT f.id, f.titulo, fe.id as 'idFilmeEvento' FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1");                        
+                    } else if ($evento['tipo_evento_id'] == 2) { ?>
+                        <table class="table">
+                            <?php
+                            $sqlFilme = $con->query("SELECT f.id, f.titulo, fe.id as 'idFilmeEvento' FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1");
                             $i = 1;
-                                while($filmes = mysqli_fetch_array($sqlFilme)){                                              
-                                    $sqlOcorrenciaFilme = $con->query("SELECT * FROM ocorrencias oco 
+                            while ($filmes = mysqli_fetch_array($sqlFilme)) {
+                                $sqlOcorrenciaFilme = $con->query("SELECT * FROM ocorrencias oco 
                                                                        INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id 
                                                                        WHERE fe.filme_id = " . $filmes['id'] . " AND oco.publicado = 1 AND oco.tipo_ocorrencia_id = 2 AND fe.evento_id = $idEvento AND oco.atracao_id = " . $filmes['idFilmeEvento']);
-                                    while($oco = mysqli_fetch_array($sqlOcorrenciaFilme)){
-                                        $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $oco['retirada_ingresso_id'])['retirada_ingresso'];
-                                        $espaco = recuperaDados('espacos', 'id', $oco['espaco_id'])['espaco'];
-                                        $instituicao = recuperaDados('instituicoes', 'id', $oco['instituicao_id'])['nome'];
-                                        $local = recuperaDados('locais', 'id', $oco['local_id'])['local'];
-                                        $periodo = recuperaDados('periodos', 'id', $oco['periodo_id']); ?>
+                                while ($oco = mysqli_fetch_array($sqlOcorrenciaFilme)) {
+                                    $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $oco['retirada_ingresso_id'])['retirada_ingresso'];
+                                    $espaco = recuperaDados('espacos', 'id', $oco['espaco_id'])['espaco'];
+                                    $instituicao = recuperaDados('instituicoes', 'id', $oco['instituicao_id'])['nome'];
+                                    $local = recuperaDados('locais', 'id', $oco['local_id'])['local'];
+                                    $periodo = recuperaDados('periodos', 'id', $oco['periodo_id']); ?>
 
-                                        <tr>
-                                            <th width="30%">Filme: </th>
-                                            <td><?= $filmes['titulo'] ?></td>
-                                        </tr>
+                                    <tr>
+                                        <th width="30%">Filme:</th>
+                                        <td><?= $filmes['titulo'] ?></td>
+                                    </tr>
 
-                                        <tr>
-                                            <th width="30%">Ocorrência #<?= $i ?></th>
-                                        </tr>
+                                    <tr>
+                                        <th width="30%">Ocorrência #<?= $i ?></th>
+                                    </tr>
 
-                                        <tr>
-                                            <th width="30%">Data de Inicio:</th>
-                                            <td><?= exibirDataBr($oco['data_inicio']) ?></td>
-                                        </tr>
+                                    <tr>
+                                        <th width="30%">Data de Inicio:</th>
+                                        <td><?= exibirDataBr($oco['data_inicio']) ?></td>
+                                    </tr>
 
-                                        <?php
-                                        if ($oco['virada'] != 1) {?>
+                                    <?php
+                                    if ($oco['virada'] != 1) { ?>
                                         <tr>
                                             <th width="30%">Data de Encerramento:</th>
                                             <td><?= $oco['data_fim'] == "0000-00-00" ? "Não é Temporada" : exibirDataBr($oco['data_fim']) ?></td>
@@ -470,76 +479,113 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                             <td><?= date("H:i", strtotime($oco['horario_fim'])) ?></td>
                                         </tr>
 
-                                  <?php } ?>
+                                    <?php } ?>
 
-                                        <tr>
-                                            <th width="30%">Valor do Ingresso:</th>
-                                            <?php
-                                                if ($oco['retirada_ingresso_id'] != 2) {?>
+                                    <tr>
+                                        <th width="30%">Valor do Ingresso:</th>
+                                        <?php
+                                        if ($oco['retirada_ingresso_id'] != 2) { ?>
 
-                                                <td><?= "R$" . dinheiroParaBr($oco['valor_ingresso']) ?></td>
+                                            <td><?= "R$" . dinheiroParaBr($oco['valor_ingresso']) ?></td>
 
-                                            <?php }else{?>
+                                        <?php } else {
+                                            ?>
 
-                                                <td><?= "Ingresso Gratuito" ?></td>
+                                            <td><?= "Ingresso Gratuito" ?></td>
 
-                                            <?php } ?>
-                                        </tr>
-
-                                        <tr>
-                                            <th width="30%">Período:</th>
-                                            <td><?= $periodo['periodo'] ?></td>
-                                        </tr>
-
-                                        <tr>
-                                            <th width="30%">Retirada de Ingresso:</th>
-                                            <td><?= $retiradaIngresso ?></td>
-                                        </tr>
-
-                                        <?php if ($oco['instituicao_id'] != 10) { ?>
-                                            
-                                                <tr>
-                                                    <th width="30%">Instituição:</th>
-                                                    <td><?= $instituicao ?></td>
-                                                </tr>
-                                        <?php } else { ?>
-
-                                                <tr>
-                                                    <th width="30%">É virada?</th>
-                                                    <td>Sim</td>
-                                                </tr>
                                         <?php } ?>
+                                    </tr>
+
+                                    <tr>
+                                        <th width="30%">Período:</th>
+                                        <td><?= $periodo['periodo'] ?></td>
+                                    </tr>
+
+                                    <tr>
+                                        <th width="30%">Retirada de Ingresso:</th>
+                                        <td><?= $retiradaIngresso ?></td>
+                                    </tr>
+
+                                    <?php if ($oco['instituicao_id'] != 10) { ?>
 
                                         <tr>
-                                            <th width="30%">Local:</th>
-                                            <td><?= $local ?></td>
+                                            <th width="30%">Instituição:</th>
+                                            <td><?= $instituicao ?></td>
                                         </tr>
+                                    <?php } else { ?>
 
-                                        <?php if ($oco['espaco_id'] != 0) { ?>
-                                                <tr>
-                                                    <th width="30 % ">Espaço:</th>
-                                                    <td><?= $espaco ?></td>
-                                                </tr>
-                                        <?php } ?>
+                                        <tr>
+                                            <th width="30%">É virada?</th>
+                                            <td>Sim</td>
+                                        </tr>
+                                    <?php } ?>
 
-                                <tr>
-                                    <th width="30% ">Observação:</th>
-                                    <td><?= $oco['observacao'] ? ""  : "Não cadastrado" ?></td>
-                                </tr>
+                                    <tr>
+                                        <th width="30%">Local:</th>
+                                        <td><?= $local ?></td>
+                                    </tr>
 
-                                <tr>
-                                    <td>
-                                        <br>
-                                    </td>
-                                </tr>
+                                    <?php if ($oco['espaco_id'] != 0) { ?>
+                                        <tr>
+                                            <th width="30 % ">Espaço:</th>
+                                            <td><?= $espaco ?></td>
+                                        </tr>
+                                    <?php } ?>
 
-                                    <?php $i++; }
-                                } ?>
-                                </table>
-                
-            <?php } ?>
-                    
+                                    <tr>
+                                        <th width="30% ">Observação:</th>
+                                        <td><?= $oco['observacao'] ? "" : "Não cadastrado" ?></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <br>
+                                        </td>
+                                    </tr>
+
+                                    <?php $i++;
+                                }
+                            } ?>
+                        </table>
+
+                    <?php } ?>
+
                     <h1>Arquivos Comunicação/Produção anexos</h1>
+                    <?php
+                    //lista arquivos de arquivo comunicação/produção//
+                    $sql = "SELECT * FROM arquivos as arq
+                                    WHERE arq.origem_id = '$idEvento' AND lista_documento_id = '$lista_documento_id'
+                                    AND arq.publicado = '1' ORDER BY arq.id";
+                    echo $sql;
+                    $query = mysqli_query($con, $sql);
+                    $linhas = mysqli_num_rows($query);
+
+                    if ($linhas > 0) {
+                        echo "
+                                    <table class='table table-striped'>
+                                        <thead>
+                                            <tr class='bg-info text-bold'>
+                                                <td>Nome do documento</td>
+                                                <td>Data de envio</td>
+                                                <td width='15%'></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>";
+                        while ($arquivo = mysqli_fetch_array($query)) {
+                            echo "<tr>";
+                            echo "<td class='list_description'><a href='../uploadsdocs/" . $arquivo['arquivo'] . "' target='_blank'>" . mb_strimwidth($arquivo['arquivo'], 15, 25, "...") . "</a></td>";
+                            echo "<td class='list_description'>(" . exibirDataBr($arquivo['data']) . ")</td>";
+                            echo "</tr>";
+                        }
+                        echo "
+                                        </tbody>
+                                        </table>";
+                    } else {
+                        echo "<p>Não há listas disponíveis no momento.<p/><br/>";
+                    }
+                    ?>
+                    <br>
+                    <br>
                     <h3>Pedidos de contratação</h3>
                     <table class="table">
                         <tr>
@@ -576,15 +622,15 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                         </tr>
                         <tr>
                             <th width="30%">Data de Entrega da N.E:</th>
-                            <td><?= $pagamento['entrega_nota_empenho'] ? "" : "Não cadastrado"  ?></td>
+                            <td><?= $pagamento['entrega_nota_empenho'] ? "" : "Não cadastrado" ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária:</th>
-                            <td><?= $dotacao['dotacao'] ? "" : "Não cadastrado"  ?></td>
+                            <td><?= $dotacao['dotacao'] ? "" : "Não cadastrado" ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Observação:</th>
-                            <td><?= $evento['observacao'] ? "" : "Não cadastrado"  ?></td>
+                            <td><?= $evento['observacao'] ? "" : "Não cadastrado" ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Último status do Pedido:</th>
@@ -595,12 +641,12 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
             </div>
             <div class="box-footer">
                 <form action="?perfil=juridico&p=tipo_modelo&sp=resultado" method="POST">
-                        <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
-                        <input type="hidden" value="<?= $modelo ?>" name="tipoModelo">
-                        <button type="submit" class="btn btn-default">Voltar
-                        </button>
+                    <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
+                    <input type="hidden" value="<?= $modelo ?>" name="tipoModelo">
+                    <button type="submit" class="btn btn-default">Voltar
+                    </button>
 
-                    </form>
+                </form>
             </div>
         </div>
     </section>

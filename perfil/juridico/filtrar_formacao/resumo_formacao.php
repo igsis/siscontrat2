@@ -117,9 +117,6 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                             <td><textarea name="finalizar" rows="8" cols="85" class="form-control"><?= $mdl['finalizacao'] ?></textarea></td>
                         </tr>
                     </table>
-                    <div class="pull-left">
-                        <?php // ADICIONAR ANCORA PARA VOLTAR ?>
-                    </div>
                     <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
                     <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left">Gravar
                     </button>

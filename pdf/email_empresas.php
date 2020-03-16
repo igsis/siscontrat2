@@ -17,8 +17,8 @@ $pedido = $con->query("SELECT e.id AS idEvento, p.numero_processo, e.nome_evento
 
 $periodo = retornaPeriodoNovo($pedido['idEvento'], 'ocorrencias');
 
-$modeloEmail = $_GET['modelo'];
 
+$modeloEmail = $_GET['modelo'];
 switch ($modeloEmail) {
     case 'empresas':
         $item4 = "<p align=\"justify\">d) Declaração do Simples Nacional (para ser assinada pelo(a) representante legal, somente em caso de Empresa optante pelo Simples Nacional).</p>";
