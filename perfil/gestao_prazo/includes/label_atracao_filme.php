@@ -114,7 +114,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Links:</th>
-                                            <td><?= $atracao['links'] ?></td>
+                                            <td><?= $atracao['links'] == NULL ? "Não cadastrado" : $atracao['links'] ?></td>
                                         </tr>
                                         <tr>
                                             <th class="text-center bg-primary" colspan="2">Dados do Produtor</th>

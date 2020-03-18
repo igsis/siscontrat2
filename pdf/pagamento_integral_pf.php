@@ -36,10 +36,10 @@ $now = dataHoraNow();
 $processo = $pedido['numero_processo'];
 
 if($pedido['passaporte'] != NULL){
-    $trecho_passaporte = "<strong>Passaporte:</strong> " . $pedido['passaporte'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>DRT:</strong> . " . $pedido['drt'] . "<br>";
+    $trecho_passaporte = "<strong>Passaporte:</strong> " . $pedido['passaporte'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>DRT:</strong> . " . $pedido['drt'] == NULL ? "Não cadastrado" : $pedido['drt'] . "<br>";
     $label = "Passaporte: " . $pedido['passaporte'] . "</p>";
 }else{
-    $trecho_passaporte = "<strong>RG:</strong> " . $pedido['rg'] . " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CPF:</strong> " . $pedido['cpf'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>DRT:</strong> . " . $pedido['drt'] . "<br>";
+    $trecho_passaporte = "<strong>RG:</strong> " . $pedido['rg'] . " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CPF:</strong> " . $pedido['cpf'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>DRT:</strong> . " . $pedido['drt'] == NULL ? "Não cadastrado" : $pedido['drt'] . "<br>";
     $label = "RG: " . $pedido['rg'] . " <br/>
 	          CPF:" . $pedido['cpf'] . "</p>";
 }
@@ -66,7 +66,7 @@ header("Content-Disposition: attachment;Filename=$now - Processo SEI $processo -
 </strong></p>
 <p>&nbsp;</p>
 <p style="text-align: justify;"><strong>Nome:</strong> <?= $pedido['nome'] ?><br>
-    <strong>Nome Artístico:</strong> <?= $pedido['nome_artistico'] ?><br>
+    <strong>Nome Artístico:</strong> <?= $pedido['nome_artistico'] == NULL ? "Não cadastrado" : $pedido['nome_artistico']?><br>
     <strong>Nacionalidade:</strong> <?= $pedido['nacionalidade'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CCM:</strong> <?= $pedido['ccm'] == null ? "Não cadastado" : $pedido['ccm'] ?><br>
     <?= $trecho_passaporte ?>
     <strong>Endereço:</strong> <?= $pedido['logradouro'].", ".$pedido['numero']." ".$pedido['complemento']." ".$pedido['bairro']." - ".$pedido['cidade']." - ".$pedido['uf']." CEP: ".$pedido['cep'] ?><br>

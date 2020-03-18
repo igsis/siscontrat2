@@ -34,12 +34,6 @@ if (isset($_POST['selecionar'])) {
     $idPedido = $_POST['idPedido'];
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
     $idEvento = $pedido['origem_id'];
-    $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento")->fetch_array();
-    if ($testaFilme['tipo_evento_id'] == 2) {
-        $escondeLider = 1;
-    } else {
-        $escondeLider = 0;
-    }
 
     if (isset($_POST['editOnly'])) {
 
@@ -89,12 +83,6 @@ if (isset($_POST['selecionar'])) {
 if (isset($_POST['load'])) {
     unset($_SESSION['idEvento']);
     $idEvento = $_POST['idEvento'];
-    $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento")->fetch_array();
-    if ($testaFilme['tipo_evento_id'] == 2) {
-        $escondeLider = 1;
-    } else {
-        $escondeLider = 0;
-    }
     $_SESSION['idEvento'] = $idEvento;
 }
 
@@ -138,7 +126,6 @@ if (isset($_POST['salvar'])) {
         $idAtracao = $_POST['idAtracao'];
         $nome_atracao = $_POST['nome_atracao'];
         $integrantes = $_POST['integrantes'];
-        $escondeLider = 0;
         for ($i = 0; $i < count($idAtracao); $i++) { // altera de uma ou de todas as atracoes (nome da atracao e integrantes)
             $baldeId = $idAtracao[$i];
             $baldeNome = addslashes($nome_atracao[$i]);
@@ -151,8 +138,6 @@ if (isset($_POST['salvar'])) {
 
             mysqli_query($con, $sql);
         }
-    } else {
-        $escondeLider = 1;
     }
     //pedidos
     $formaPagamento = trim(addslashes($_POST['formaPagamento']));
@@ -286,6 +271,12 @@ $contrato = recuperaDados('contratos', 'pedido_id', $pedido['id']);
 $sqlAtracao = "SELECT * FROM atracoes where evento_id = '$idEvento' AND publicado = 1";
 $queryAtracao = mysqli_query($con, $sqlAtracao);
 
+$testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento")->fetch_array();
+    if ($testaFilme['tipo_evento_id'] == 2) {
+        $escondeLider = 1;
+    } else {
+        $escondeLider = 0;
+    }
 
 ?>
 

@@ -40,10 +40,10 @@ $processo = $pedido['numero_processo'];
 
 
 if($pedido['passaporte'] != NULL){
-    $trecho_passaporte = "<strong>Passaporte:</strong> " . $pedido['passaporte'] . "&nbsp;&nbsp;&nbsp;&nbsp;<strong>DRT:</strong> . " . $pedido['drt'] . "<br>";
+    $trecho_passaporte = "<strong>Passaporte:</strong> " . $pedido['passaporte'] . "&nbsp;&nbsp;&nbsp;&nbsp;<strong>DRT:</strong> . " . $pedido['drt'] == NULL ? "Não cadastrado" : $pedido['drt'] . "<br>";
     $label = "Passaporte: " . $pedido['passaporte'] . "</p>";
 }else{
-    $trecho_passaporte = "<strong>RG:</strong> " . $pedido['rg'] . " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CPF:</strong> " . $pedido['cpf'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>DRT:</strong> . " . $pedido['drt'] . "<br>";
+    $trecho_passaporte = "<strong>RG:</strong> " . $pedido['rg'] . " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CPF:</strong> " . $pedido['cpf'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>DRT:</strong> . " . $pedido['drt'] == NULL ? "Não cadastrado" : $pedido['drt'] . "<br>";
     $label = "RG: " . $pedido['rg'] . " <br/>
 	          CPF:" . $pedido['cpf'] . "</p>";
 }
