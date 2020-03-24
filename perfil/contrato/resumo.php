@@ -664,7 +664,7 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
 
                     <form action="?perfil=contrato&p=area_impressao" target="_blank" method="post" role="form">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-default pull-right" style="margin: 0 10px;">Ir para a área
+                        <button type="submit" class="btn btn-info pull-right" style="margin: 0 10px;">Ir para a área
                             de impressão
                         </button>
                         <button type="button" class="btn btn-info " name="reabre"
