@@ -231,11 +231,11 @@ $tipoEvento = $evento['tipo_evento_id'];
                                 if($tipoEvento == 2){
                                     $filmeEvento = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $idEvento)->fetch_array();
                                     $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $filmeEvento['filme_id'])->fetch_array();
+                                    $readonly = "readonly";
                                     ?>
                                     <script type="text/javascript">
                                                                     
                                         $('#horaInicio').on('change', function() {
-                                            $('#horaFim').attr("readonly",true);
                                             var horainicio = $('#horaInicio').val();                                      
                                             var hora = parseInt(horainicio.split(':', 1));
                                             var minuto = parseInt(horainicio[3] + horainicio[4]);
@@ -277,14 +277,16 @@ $tipoEvento = $evento['tipo_evento_id'];
                                             
                                     });
                                     </script>
-                                <?php }
+                                <?php } else{
+                                    $readonly = "";
+                                }
                             ?>
 
 
                                  <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
                                     <input type="time" name="horaFim" class="form-control" id="horaFim" required value=""
-                                           placeholder="hh:mm"/>
+                                           placeholder="hh:mm" <?= $readonly ?>/>
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -321,17 +323,21 @@ $tipoEvento = $evento['tipo_evento_id'];
                                         ?>
                                     </select>
                                 </div>
-
                                 <div class="form-group col-md-4">
+                                    <a href="?perfil=evento&p=adicionar_local>">
+                                        <button type="button" class="fa fa-plus btn-success pull-right"></button>
+                                    </a>
                                     <label for="local">Local *</label>
                                     <select class="form-control" id="local" name="local" required>
                                         <!-- Populando pelo js -->
                                     </select>
-
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="espaco">Espaço</label>
+                                    <a href="?perfil=evento&p=adicionar_espaco>">
+                                        <button type="button" class="fa fa-plus btn-success pull-right"></button>
+                                    </a>
+                                    <label for="espaco">Espaço *</label>
                                     <select class="form-control" id="espaco" name="espaco">
                                         <!-- Populando pelo js -->
                                     </select>

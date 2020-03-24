@@ -70,6 +70,7 @@ if (isset($_POST['cadastra'])) {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
+
 }
 
 if (isset($_POST['edita'])) {

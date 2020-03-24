@@ -50,7 +50,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(180,$l,utf8_decode("Secretaria Municipal de Cultura"),0,1,'L');
 
-$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela'";
+$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela' AND publicado = 1";
 $query = mysqli_query($con,$sqlParcelas);
 while($parcela = mysqli_fetch_array($query))
 {
@@ -123,7 +123,7 @@ $pdf->Cell(18, $l, utf8_decode("Endereço:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(160, $l, utf8_decode($endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " .$endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf']), 0, 'L', 0);
 
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 

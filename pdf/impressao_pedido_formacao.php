@@ -14,7 +14,7 @@ $idPf = $pedido['pessoa_fisica_id'];
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
@@ -49,6 +49,12 @@ while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
 }
 
 $local = substr($local, 0, -3);
+
+if($pessoa['passaporte'] != NULL){
+    $cpf_passaporte = "<strong>Passaporte: </strong> " . $pessoa['passaporte'] . "<br />";
+}else{
+    $cpf_passaporte = "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />";    
+}
 
 ?>
 <html>
@@ -87,7 +93,7 @@ $local = substr($local, 0, -3);
         "<p><strong>Setor  solicitante:</strong> Supervisão de Formação Cultural</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Nome:</strong> " . $pessoa['nome'] . " <br />" .
-        "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />" .
+        $cpf_passaporte .
         "<strong>Telefone:</strong> " . $tel . "<br />" .
         "<strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
         "<p>&nbsp;</p>" .

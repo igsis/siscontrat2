@@ -39,25 +39,25 @@ if ($num > 0) {
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-offset-4 col-md-4" align="center">
-                        <form action="<?= $link_padraoEvento ?>" method="post" role="form">
+                        <form action="<?= $link_padraoEvento ?>" method="post" role="form" target="_blank">
                             <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO PADRÃO
                             </button>
                         </form>
                         <br>
-                        <form action="<?= $link_vocacionalEvento ?>" method="post" role="form">
+                        <form action="<?= $link_vocacionalEvento ?>" method="post" role="form" target="_blank">
                             <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO FORMAÇÃO
                             </button>
                         </form>
                         <br>
-                        <form action="<?= $link_manifestacaojuridicaEvento ?>" method="post" role="form">
+                        <form action="<?= $link_manifestacaojuridicaEvento ?>" method="post" role="form" target="_blank">
                             <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> MANIFESTAÇÃO JURÍDICA
                             </button>
                         </form>
                         <br>
-                        <form action="<?= $link_oficinaEvento ?>" method="post" role="form">
+                        <form action="<?= $link_oficinaEvento ?>" method="post" role="form" target="_blank">
                             <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO OFICINAS
                             </button>

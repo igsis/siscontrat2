@@ -1,33 +1,30 @@
 <?php
 $con = bancoMysqli();
 
-if (isset($_POST['codigopedido']) && $_POST['codigopedido'] != null) {
-    $codigopedido = $_POST['codigopedido'];
-    $codigopedido = " AND protocolo LIKE '%$codigopedido%'";
+if (isset($_POST['busca'])) {
+    $codigopedido = $_POST['codigopedido'] ?? NULL;
+    $numprocesso = $_POST['numprocesso'] ?? NULL;
+    $statuspedido = $_POST['statuspedido'] ?? NULL;
+
+    $sqlCodigo = '';
+    $sqlnumProcesso = '';
+    $sqlStatus = '';
+
+    if ($codigopedido != NULL)
+        $sqlCodigo = " AND protocolo LIKE '%$codigopedido%'";
+    if ($numprocesso != NULL)
+        $sqlnumProcesso = "AND numero_processo LIKE '%$numprocesso%'";
+    if ($statuspedido != NULL)
+        $sqlStatus = "AND ps.id =$statuspedido";
 }
-if (isset($_POST['numprocesso']) && $_POST['numprocesso'] != null) {
-    $numprocesso = $_POST['numprocesso'];
-    $numprocesso = "AND numero_processo LIKE '%$numprocesso%'";
-}
-if (isset($_POST['statuspedido']) && $_POST['statuspedido'] != null) {
-    $statuspedido = $_POST['statuspedido'];
-    $statuspedido = "AND formacao_status =$statuspedido'";
-}
 
-
-$sql = "SELECT p.numero_processo,
-            fc.protocolo, 
-            pf.nome, 
-            fs.status,
-            fc.id
-            
-
-        FROM pedidos as p 
-        INNER JOIN formacao_status fs on p.id = fs.id 
-        INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
-        INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
-        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 ";
-
+$sql = "select fc.protocolo,p.numero_processo, pf.nome, fc.id,ps.status
+        from formacao_contratacoes as fc
+        INNER JOIN pedidos as p on p.origem_id = fc.id
+        INNER JOIN pedido_status as ps on p.status_pedido_id = ps.id
+        INNER JOIN formacao_status as fs on fc.form_status_id = fs.id
+        INNER JOIN pessoa_fisicas as pf on p.pessoa_fisica_id = pf.id
+        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 $sqlCodigo $sqlnumProcesso $sqlStatus";
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -50,18 +47,20 @@ $sql = "SELECT p.numero_processo,
                     </thead>
                     <tbody>
                     <?php
-                    if($query = mysqli_query($con,$sql)){
-                        while ($formacao = mysqli_fetch_array($query)){
+                    if ($query = mysqli_query($con, $sql)) {
+                        while ($formacao = mysqli_fetch_array($query)) {
                             $_SESSION['formacaoId'] = $formacao['id'];
                             ?>
                             <tr>
                                 <?php
-                                if(isset($formacao['numero_processo'])){
+                                if (isset($formacao['numero_processo'])) {
                                     ?>
                                     <td>
-                                        <form action="?perfil=juridico&p=filtrar_formacao&sp=seleciona_modelo_formacao" role="form"  method="POST">
-                                            <input type="hidden" value="<?= $formacao['id']?>" name="idFormacao">
-                                            <button type="submit" class="btn btn-link"><?= $formacao['numero_processo'] ?></button>
+                                        <form action="?perfil=juridico&p=filtrar_formacao&sp=seleciona_modelo_formacao"
+                                              role="form" method="POST" target="_blank">
+                                            <input type="hidden" value="<?= $formacao['id'] ?>" name="idFormacao">
+                                            <button type="submit"
+                                                    class="btn btn-link"><?= $formacao['numero_processo'] ?></button>
                                         </form>
                                     </td>
                                     <?php
@@ -69,9 +68,9 @@ $sql = "SELECT p.numero_processo,
                                     echo "<td> Não possui </td>";
                                 }
                                 ?>
-                                <td><?=$formacao['protocolo']?></td>
-                                <td><?=$formacao['nome']?></td>
-                                <td><?=$formacao['status']?></td>
+                                <td><?= $formacao['protocolo'] ?></td>
+                                <td><?= $formacao['nome'] ?></td>
+                                <td><?= $formacao['status'] ?></td>
 
                             </tr>
                             <?php
@@ -79,6 +78,14 @@ $sql = "SELECT p.numero_processo,
                     }
                     ?>
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Processo</th>
+                        <th>Protocolo</th>
+                        <th>Proponente</th>
+                        <th>Status</th>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
             <div class="box-footer">

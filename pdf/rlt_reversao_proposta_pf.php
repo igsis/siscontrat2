@@ -33,7 +33,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id']);
 
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
@@ -124,13 +124,22 @@ $pdf->MultiCell(120, $l, utf8_decode($pessoa['nome_artistico']), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(50, $l, utf8_decode($pessoa['rg']), 0, 0, 'L');
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(45, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
+
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(21, $l, utf8_decode('Passaporte:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(50, $l, utf8_decode($pessoa['passaporte']), 0, 0, 'L');
+    
+}else{
+    $pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(50, $l, utf8_decode($pessoa['rg']), 0, 0, 'L');
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(45, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');  
+}
+
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(9, $l, utf8_decode("DRT:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
@@ -238,11 +247,15 @@ $pdf->Cell(100,4,utf8_decode($pessoa['nome']),'T',1,'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+}else{
+    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');    
+}
 
 $pdf->AddPage('','');
 
@@ -320,11 +333,15 @@ $pdf->Cell(100,4,utf8_decode($pessoa['nome']),'T',1,'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+}else{
+    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');    
+}
 
 $pdf->Ln(7);
 
@@ -420,11 +437,15 @@ $pdf->Cell(100,4,utf8_decode($pessoa['nome']),'T',1,'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+}else{
+    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');    
+}
 
 $pdf->Output();
 ?>

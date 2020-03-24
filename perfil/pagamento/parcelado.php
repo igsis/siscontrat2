@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
 
+$link_api = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_docs_pagamentos.php';
+
 $idPedido = $_POST['idPedido'];
 $botao = false;
 
@@ -148,7 +150,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label>Período:</label> <?= retornaPeriodo($pedido['id']) ?>
+                        <label>Período:</label> <?= retornaPeriodoNovo($pedido['id'], 'ocorrencias') ?>
                     </div>
                 </div>
                 <div class="row">
@@ -176,24 +178,11 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                         <th>Nº Parcela</th>
                         <th>Valor</th>
                         <th>Data de pagamento</th>
+                        <th>Documentos</th>
                     </tr>
                     </thead>
 <!--                    <tbody>-->
                     <?php
-                    $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/";
-                    if ($pedido['pessoa_tipo_id'] == 2) {
-                        $link1 = $server . "pagamento_integral_pj.php";
-                    } else{
-                        $link1 = $server . "pagamento_integral_pf.php";
-                    }
-                    $link2 = $server . "recibo_pagamento.php";
-                    $link3 = $server . "ateste_documentacao.php";
-                    $link4 = $server . "confirmacao_servico.php";
-                    $link5 = $server . "declaracao_simples.php";
-                    $link6 = $server . "ateste_documentacao.php";
-                    $link7 = $server . "emissao_nf.php";
-                    $link8 = $server . "email_empresas.php?modelo=empresas";
-                    $link9 = $server . "minuta.php";
                     $sqlParcela = $con->query("SELECT id, numero_parcelas, valor, data_pagamento FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1 GROUP BY numero_parcelas ORDER BY numero_parcelas");
                     while($parcela = mysqli_fetch_array($sqlParcela)){
                         ?>
@@ -201,69 +190,14 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                             <td><?= $parcela['numero_parcelas'] ?></td>
                             <td><?= dinheiroParaBr($parcela['valor']) ?></td>
                             <td><?= exibirDataBr($parcela['data_pagamento']) ?></td>
-                            <td>
-                                <form action="<?= $link1 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido Pagamento
-                                    </button>
-                                </form>
+                            <td width="15%">
+                                <button type="button" class="btn btn-primary btn-block" id="exibirDocumentos"
+                                                data-toggle="modal" data-target="#modalDocumento"
+                                                data-id="<?= $parcela['id'] ?>"
+                                                name="exibirDocumentos"><span class="glyphicon glyphicon-paperclip"></span>
+                                            
+                                </button>
                             </td>
-                            <td>
-                                <form action="<?= $link2 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Recibo</button>
-                                </form>
-                            </td>
-                            <td>
-                                <form action="<?= $link3 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Ateste</button>
-                                </form>
-                            </td>
-                            <td>
-                                <form action="<?= $link4 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Confirmação serviço
-                                    </button>
-                                </form>
-                            </td>
-                            <?php
-                            if ($pedido['pessoa_tipo_id'] == 2) {
-                                ?>
-                                <td>
-                                    <form action="<?= $link5 ?>" method="post" target="_blank" role="form">
-                                        <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Declaração</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form action="<?= $link6 ?>" method="post" target="_blank" role="form">
-                                        <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Documentação</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form action="<?= $link7 ?>" method="post" target="_blank" role="form">
-                                        <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Nota Fiscal</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form action="<?= $link8 ?>" method="post" target="_blank" role="form">
-                                        <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email Kit</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form action="<?= $link9 ?>" method="post" target="_blank" role="form">
-                                        <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email NE</button>
-                                    </form>
-                                </td>
-                                <?php
-                            }
-                            ?>
-                        </tr>
                         <?php
                     }
                     ?>
@@ -282,3 +216,38 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
 
     </section>
 </div>
+
+<div id="modalDocumento" class="modal modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Lista de Documentos</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered">
+                    <tbody id="conteudoModal">
+                            
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const link = `<?=$link_api?>`;
+    const tipo = `<?=$pedido['pessoa_tipo_id']?>`;
+    const idPedido = `<?=$idPedido?>`;
+    $('#modalDocumento').on('show.bs.modal', function (e) {
+        $('#modalDocumento').find('#conteudoModal').empty();
+        let id = $(e.relatedTarget).attr('data-id');
+       $.ajax({
+            method: "GET",
+            url: link + "?idParcela=" + id + "&tipo=" + tipo + "&idPedido=" + idPedido
+       })
+       .done(function (content){
+        $('#modalDocumento').find('#conteudoModal').append(`<tr><td>${content}</td></tr>`);
+       });
+    })
+</script>

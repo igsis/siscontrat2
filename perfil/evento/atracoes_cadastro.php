@@ -109,7 +109,7 @@
                                             houver valor</i>
                                         <input type="text" id="valor_individual" name="valor_individual"
                                                class="form-control" required
-                                               onKeyPress="return(moeda(this,'.',',',event))">
+                                               onkeypress="return(moeda(this, '.', ',', event))">
                                     </div>
                                     <?php
                                 }
@@ -119,6 +119,11 @@
                                     <?php
                                 }
                                 ?>
+                            </div>
+                            <div class="row" id="msg">
+                                <div class="col-md-12">
+                                    <span style="color: red;" class="pull-right"><b>Valor máximo permitido 999.999,99</b></span>
+                                </div>
                             </div>
                         </div>
 
@@ -171,6 +176,26 @@
         </div>
     </div>
 </div>
+
+<script>
+$('#msg').hide();
+
+function limitaValor(){
+    var msg = $('#msg');
+    var maxLength = $('#valor_individual').val().length;
+    var btn = $('#cadastra');
+    btn.attr('disabled', true);
+    if (maxLength > 10) {
+        msg.show();
+        btn.attr('disabled', true);
+    }else{
+        msg.hide();
+        btn.attr('disabled', false);
+    };
+}
+
+$('#valor_individual').keyup(limitaValor);
+</script>
 
 <script>
     function desabilitaCheckBox(acoes) {

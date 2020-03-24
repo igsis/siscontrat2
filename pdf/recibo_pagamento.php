@@ -14,7 +14,7 @@ $pedido = $con->query("SELECT p.numero_processo, p.valor_total, e.nome_evento, p
     WHERE p.publicado = 1 AND e.publicado = 1 AND p.origem_tipo_id = 1 AND p.id = '$idPedido'
 ")->fetch_assoc();
 
-$periodo = retornaPeriodo($pedido['idEvento']);
+$periodo = retornaPeriodoNovo($pedido['idEvento'], 'ocorrencias');
 
 $dataAtual = dataHoraNow();
 
@@ -47,7 +47,7 @@ if($pedido['pessoa_tipo_id'] == 1){
     $telefones = $con->query("SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'");
     ?>
     <p align="justify"><strong>Nome:</strong> <?= $pf['nome'] ?></p>
-    <p><strong>Nacionalidade:</strong> <?= $pf['nacionalidade'] ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CCM:</strong> <?= $pf['ccm'] ?></p>
+    <p><strong>Nacionalidade:</strong> <?= $pf['nacionalidade'] ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CCM:</strong> <?= $pf['ccm'] == null ? "Não cadastrado" : $pf['ccm']?></p>
     <p><strong>RG:</strong> <?= $pf['rg'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CPF:</strong> <?= $pf['cpf'] ?></p>
     <p><strong>Endereço:</strong> <?= $pf['logradouro'].", ".$pf['numero']." ".$pf['complemento']." ".$pf['bairro']." - ".$pf['cidade']." - ".$pf['uf']." CEP: ".$pf['cep'] ?></p>
     <p><strong>Telefone:</strong>
@@ -69,7 +69,7 @@ if($pedido['pessoa_tipo_id'] == 1){
     $telefones = $con->query("SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'");
     ?>
     <p align="justify"><strong>Nome da empresa:</strong> <?= $pj['razao_social'] ?></p>
-    <p><strong>CCM:</strong> <?= $pj['ccm'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CNPJ:</strong> <?= $pj['cnpj'] ?></p>
+    <p><strong>CCM:</strong> <?= $pj['ccm'] == null ? "Não cadastrado" : $pj['ccm'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CNPJ:</strong> <?= $pj['cnpj'] ?></p>
     <p><strong>Endereço:</strong> <?= $pj['logradouro'].", ".$pj['numero']." ".$pj['complemento']." ".$pj['bairro']." - ".$pj['cidade']." - ".$pj['uf']." CEP: ".$pj['cep'] ?></p>
     <p><strong>Telefone:</strong>
         <?php while ($telefone = mysqli_fetch_array($telefones)){

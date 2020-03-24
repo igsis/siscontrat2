@@ -220,7 +220,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
         validaDiaSemana();
     }
+
     $(document).ready(comparaData)
+
     function comparaData() {
         var isMsgData = $('#msgEscondeData');
         isMsgData.hide();
@@ -304,37 +306,44 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-6">
                                     <label>
                                         <input type="checkbox" name="domingo" id="diasemana07"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['domingo']) ?>> Domingo
+                                               value="1"
+                                               class="semana" <?php checarOcorrencia($ocorrencia['domingo']) ?>> Domingo
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="segunda" id="diasemana01"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['segunda']) ?>> Segunda
+                                               value="1"
+                                               class="semana" <?php checarOcorrencia($ocorrencia['segunda']) ?>> Segunda
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="terca" id="diasemana02"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['terca']) ?>> Terça
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['terca']) ?>>
+                                        Terça
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="quarta" id="diasemana03"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['quarta']) ?>> Quarta
+                                               value="1"
+                                               class="semana" <?php checarOcorrencia($ocorrencia['quarta']) ?>> Quarta
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="quinta" id="diasemana04"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['quinta']) ?>> Quinta
+                                               value="1"
+                                               class="semana" <?php checarOcorrencia($ocorrencia['quinta']) ?>> Quinta
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="sexta" id="diasemana05"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['sexta']) ?>> Sexta
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['sexta']) ?>>
+                                        Sexta
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="sabado" id="diasemana06"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['sabado']) ?>> Sábado
+                                               value="1"
+                                               class="semana" <?php checarOcorrencia($ocorrencia['sabado']) ?>> Sábado
                                         &nbsp;
                                     </label>
                                 </div>
@@ -356,7 +365,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </label>
                                 <label>
                                     <input type="checkbox" name="audiodescricao" id="audiodescricao"
-                                           value="1" <?= $ocorrencia['audiodescricao'] == 1 ? "checked" : NULL ?>> Audiodescrição
+                                           value="1" <?= $ocorrencia['audiodescricao'] == 1 ? "checked" : NULL ?>>
+                                    Audiodescrição
                                     &nbsp;
                                 </label>
                             </div>
@@ -375,63 +385,62 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <?php
-                                if($evento['tipo_evento_id'] == 2){
+                                if ($evento['tipo_evento_id'] == 2) {
                                     $filmeEvento = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $idEvento)->fetch_array();
                                     $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $filmeEvento['filme_id'])->fetch_array();
+                                    $readonly = "readonly";
                                     ?>
                                     <script type="text/javascript">
-                                                                    
-                                     $('#horaInicio').on('change', function() {
-                                            $('#horaFim').attr("readonly",true);
-                                            var horainicio = $('#horaInicio').val();                                      
+
+                                        $('#horaInicio').on('change', function () {
+                                            var horainicio = $('#horaInicio').val();
                                             var hora = parseInt(horainicio.split(':', 1));
                                             var minuto = parseInt(horainicio[3] + horainicio[4]);
                                             var duracao = <?=$filme['duracao']?>;
-                                            while(duracao >= 60){
+                                            while (duracao >= 60) {
                                                 duracao -= 60;
                                                 hora += 1;
                                             }
                                             var minutoFinal = minuto + duracao;
-                                            if(minutoFinal >= 60){
-                                               minutoFinal -= 60;
-                                               hora += 1;
+                                            if (minutoFinal >= 60) {
+                                                minutoFinal -= 60;
+                                                hora += 1;
                                             }
-                                            if(minutoFinal == 0 && minutoFinal != 00){
+                                            if (minutoFinal == 0 && minutoFinal != 00) {
                                                 minutoFinal = minutoFinal + "0";
                                             }
-                                            if(minutoFinal < 10){
+                                            if (minutoFinal < 10) {
                                                 minutoFinal = "0" + minutoFinal;
                                             }
-                                            if(hora == 0 && minutoFinal != 00){
+                                            if (hora == 0 && minutoFinal != 00) {
                                                 hora = hora + "0";
                                             }
-                                            if(hora < 10){
+                                            if (hora < 10) {
                                                 hora = "0" + hora;
                                             }
-                                            if(hora == 000){
+                                            if (hora == 000) {
                                                 hora = "00";
                                             }
 
                                             var resultado = hora + ":" + minutoFinal + ":00";
-                    
-                                            
+
+
                                             $('#horaFim').val(resultado);
                                             $('#horaFim').attr("value", resultado);
-                                                               
-                                                               
-                    
-                                            
-                                    });
-                                    </script>
-                                <?php }else{
 
+
+                                        });
+                                    </script>
+                                <?php } else {
+                                    $readonly = "";
                                 }
-                            ?>
+                                ?>
 
                                 <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
                                     <input type="time" name="horaFim" class="form-control" id="horaFim" required
-                                           value="<?= $ocorrencia['horario_fim'] ?>" placeholder="hh:mm"/>
+                                           value="<?= $ocorrencia['horario_fim'] ?>"
+                                           placeholder="hh:mm" <?= $readonly ?>/>
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -461,7 +470,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="instituicao">Instituição *</label>
+                                    <label for="instituicao">Instituição * </label>
                                     <select class="form-control" name="instituicao" id="instituicao" required>
                                         <option value="">Selecione uma opção...</option>
 
@@ -472,6 +481,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <div class="form-group col-md-4">
+                                    <a href="?perfil=evento&p=adicionar_local">
+                                        <button type="button" class="fa fa-plus btn-success pull-right"></button>
+                                    </a>
                                     <label for="local">Local *</label>
                                     <select class="form-control" id="local" name="local" required>
                                         <!-- Populando pelo js -->
@@ -479,6 +491,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <div class="form-group col-md-4">
+                                    <a href="?perfil=evento&p=adicionar_espaco">
+                                        <button type="button" class="fa fa-plus btn-success pull-right"></button>
+                                    </a>
                                     <label for="espaco">Espaço *</label>
                                     <select class="form-control" id="espaco" name="espaco">
                                         <!-- Populando pelo js -->
@@ -858,10 +873,10 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
     retiradaIngresso.addEventListener("change", () => {
         let valorIngressos = document.querySelector('#valor_ingresso');
-        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11){
+        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11) {
             valorIngressos.value = '0,00';
             valorIngressos.readOnly = true;
-        }else {
+        } else {
             valorIngressos.readOnly = false;
         }
     });
@@ -999,6 +1014,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
 <script>
     let msgHora = $('#msgEscondeHora');
+
     // msgHora.hide();
 
     function validaHora() {

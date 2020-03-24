@@ -8,10 +8,7 @@ require_once("../funcoes/funcoesGerais.php");
 
 $con = bancoMysqli();
 
-
-class PDF extends FPDF
-{
-}
+class PDF extends FPDF{}
 
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -21,6 +18,13 @@ $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
 $ano = date('Y');
 
+if($pessoa['passaporte'] != NULL){
+    $trecho_rg_cpf_passaporte = ", Passaporte: " . $pessoa['passaporte'];
+    $trecho_texto = "do Passaporte original";
+}else{
+    $trecho_rg_cpf_passaporte = ", RG: " . $pessoa['rg'] . ", CPF: " . $pessoa['cpf'];
+    $trecho_texto = "de RG e CPF originais";
+}
 
 // GERANDO O PDF:
 $pdf = new PDF('P','mm','A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
@@ -41,7 +45,7 @@ $pdf->Ln(3);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 11);
-$pdf->MultiCell(167,$l,utf8_decode("Eu, ".$pessoa['nome'].", RG ".$pessoa['rg'].", CPF ".$pessoa['cpf'].", declaro para os devidos fins que não possuo conta no Banco do Brasil."));
+$pdf->MultiCell(167,$l,utf8_decode("Eu, ".$pessoa['nome'] . $trecho_rg_cpf_passaporte .", declaro para os devidos fins que não possuo conta no Banco do Brasil."));
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 11);
@@ -49,7 +53,7 @@ $pdf->MultiCell(167,$l,utf8_decode("Por se tratar de uma contratação de nature
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 11);
-$pdf->MultiCell(167,$l,utf8_decode("Estou ciente que o pagamento pode ser retirado no guichê do caixa, em qualquer agência do Bando do Brasil S.A, mediante a apresentação de RG e CPF originais, ficando disponível pelo período de 30 dias após a realização do crédito."));
+$pdf->MultiCell(167,$l,utf8_decode("Estou ciente que o pagamento pode ser retirado no guichê do caixa, em qualquer agência do Bando do Brasil S.A, mediante a apresentação " . $trecho_texto . ", ficando disponível pelo período de 30 dias após a realização do crédito."));
 
 $pdf->Ln(7);
 
@@ -63,11 +67,15 @@ $pdf->Cell(100,4,utf8_decode($pessoa['nome']),'T',1,'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+}else{
+    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');    
+}
 
 
 $pdf->Output();

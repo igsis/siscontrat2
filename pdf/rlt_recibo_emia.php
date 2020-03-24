@@ -80,7 +80,7 @@ $pdf->Cell(20, $l, utf8_decode("Endereço:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 11);
 $pdf->MultiCell(160, $l, utf8_decode($endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " .$endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf']), 0, 'L', 0);
 
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
@@ -102,7 +102,7 @@ $pdf->Cell(13, $l, 'Email:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 11);
 $pdf->MultiCell(168, $l, utf8_decode($pessoa['email']), 0, 'L',0);
 
-$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela'";
+$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela' AND publicado = 1";
 $query = mysqli_query($con,$sqlParcelas);
 while($parcela = mysqli_fetch_array($query))
 {

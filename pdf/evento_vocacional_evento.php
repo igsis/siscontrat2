@@ -55,7 +55,12 @@ $hoje = date("d/m/Y");
 if ($pedido['pessoa_tipo_id'] == 1) {
     $pessoa = recuperaDados("pessoa_fisicas", "id", $pedido ['pessoa_fisica_id']);
     $y = $pessoa['nome'];
-    $x = $pessoa['cpf'];
+    if($pessoa['passaporte'] != NULL){
+        $x = $pessoa['passaporte'];
+    }else{
+        $x = $pessoa['cpf'];
+    }
+    
 } else if ($pedido['pessoa_tipo_id'] == 2) {
     $pessoa = recuperaDados('pessoa_juridicas', "id", $pedido['pessoa_juridica_id']);
     $y = $pessoa['razao_social'];
@@ -86,7 +91,17 @@ $dados =
 <div align="center">
     <div id="dados" class="texto"><?php echo $dados; ?></div>
 </div>
-
+<br>
+<div align="center">
+    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+        COPIAR TODO O TEXTO
+        <i class="fa fa-copy"></i>
+    </button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="http://sei.prefeitura.sp.gov.br" target="_blank">
+        <button class="btn btn-primary">CLIQUE AQUI PARA ACESSAR O <img src="../visual/images/logo_sei.jpg"></button>
+    </a>
+</div>
 </body>
 </html>
 

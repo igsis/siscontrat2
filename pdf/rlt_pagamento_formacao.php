@@ -52,7 +52,7 @@ $pdf->Cell(180,$l,utf8_decode("Secretaria Municipal de Cultura"),0,1,'L');
 
 $idVigencia = $contratacao['form_vigencia_id'];
 
-$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela'";
+$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela' AND publicado = 1";
 $query = mysqli_query($con,$sqlParcelas);
 while($parcela = mysqli_fetch_array($query))
 {
@@ -67,7 +67,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(16, $l, utf8_decode("Assunto:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(140,$l,utf8_decode("Pedido de Pagamento de R$ ". $valorParcela . " ( " . valorPorExtenso($valorParcela) . " )"),0,'L',0);
+$pdf->MultiCell(140,$l,utf8_decode("Pedido de Pagamento de R$ ". $valorParcela . " (" . valorPorExtenso($valorParcela) . " )"),0,'L',0);
 
 $pdf->Ln(2);
 
@@ -126,13 +126,20 @@ $pdf->Ln(7);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(50, $l, utf8_decode($pessoa['rg']), 0, 0, 'L');
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(5, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(21, $l, utf8_decode('Passaporte:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(50, $l, utf8_decode($pessoa['passaporte']), 0, 0, 'L');
+    
+}else{
+    $pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(50, $l, utf8_decode($pessoa['rg']), 0, 0, 'L');
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(45, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');  
+}
 
 $pdf->Ln(7);
 
@@ -152,7 +159,7 @@ $pdf->MultiCell(160, $l, utf8_decode($endereco['logradouro'] . ", " . $endereco[
 
 $pdf->Ln(7);
 
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
@@ -168,7 +175,7 @@ $pdf->Cell(21, $l, 'Telefone(s):', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(95, $l, utf8_decode($tel), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
+$pdf->Cell(12, $l, 'Email:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(168, $l, utf8_decode($pessoa['email']), 0, 0, 'L');
 
@@ -193,7 +200,12 @@ $pdf->Cell(100,$l,utf8_decode($pessoa['nome']),'T',1,'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,$l,"RG: ".$pessoa['rg'],0,0,'L');
+
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+}else{
+    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+}
 
 $pdf->Output();
 ?>

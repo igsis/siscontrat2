@@ -143,17 +143,17 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(13,$l,utf8_decode('Banco:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(30,$l,utf8_decode($banco),0,1,'L');
+$pdf->Cell(30,$l,utf8_decode($banco ? "" : "Não cadastrado"),0,1,'L');
 $pdf->SetFont('Arial','B', 10);
 $pdf->SetX($x);
 $pdf->Cell(16,$l,utf8_decode('Agência:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(40,$l,utf8_decode($agencia),0,1,'L');
+$pdf->Cell(40,$l,utf8_decode($agencia ? "" : "Não cadastrado"),0,1,'L');
 $pdf->SetFont('Arial','B', 10);
 $pdf->SetX($x);
 $pdf->Cell(12,$l,utf8_decode('Conta:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(45,$l,utf8_decode($conta),0,1,'L');
+$pdf->Cell(45,$l,utf8_decode($conta ? "" : "Não cadastrado"),0,1,'L');
 $pdf->Output();
 ?>
 

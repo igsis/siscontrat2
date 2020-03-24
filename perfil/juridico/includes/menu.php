@@ -7,7 +7,7 @@ $pasta = "?perfil=juridico&p=";
         <ul class="sidebar-menu" data-widget="tree">
             <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">JURÍDICO</li>
-            <li><a href="<?= $pasta ?>filtrar_evento&sp=pesquisa_evento">
+            <li><a href="<?= $pasta ?>filtrar_evento&sp=busca_evento">
                     <i class="fa fa-circle-o"></i><span>Buscar por Evento</span>
                 </a></li>
             <li><a href="<?= $pasta ?>filtrar_formacao&sp=pesquisa_formacao"><i class="fa fa-circle-o"></i>

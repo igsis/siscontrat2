@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 $conn = bancoPDO();
 $idPf = $_POST['idPf'];
-1; // arquivos necessarios para pessoa fisica
+
 
 if (isset($_POST["enviar"])) {
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = 1 and publicado = 1";

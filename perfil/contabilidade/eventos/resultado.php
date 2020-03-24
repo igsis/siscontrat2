@@ -1,61 +1,66 @@
 <?php
 $con = bancoMysqli();
 
-$protocolo = '';
-$numProcesso = '';
-$usuario = '';
-$status = '';
-$where = '';
+$sqlProtocolo = '';
+$sqlProcesso = '';
+$sqlUsuario = '';
+$sqlInstituicao = '';
+$sqlRelacao = '';
+$sqlTipo = '';
+$sqlStatus = '';
 
-if (isset($_POST['protocolo']) && $_POST['protocolo'] != null) {
-    $protocolo = $_POST['protocolo'];
-    $protocolo = " AND p.protocolo = '$protocolo' ";
+if(isset($_POST['buscar'])){
+    $protocolo = $_POST['protocolo'] ?? NULL;
+    $numProcesso = $_POST['num_processo']  ?? NULL;
+    $usuario = $_POST['usuario'] ?? NULL;
+    $tipo_evento = $_POST['tipo_evento'] ?? NULL;
+    $instituicao = $_POST['instituicao'] ?? NULL;
+    $rel_jur = $_POST['rel_jur'] ?? NULL;
+    $status = $_POST['status'] ?? NULL;
 }
 
-if (isset($_POST['numProcesso']) && $_POST['numProcesso'] != null) {
-    $numProcesso = $_POST['num_processo'];
-    $numProcesso = " AND fc.num_processo_pagto = '$numProcesso' ";
+if ($protocolo != null) {
+    $sqlProtocolo = " AND e.protocolo LIKE '%$protocolo%' ";
 }
 
-if (isset($_POST['usuario']) && $_POST['usuario'] != null) {
-    $usuario = $_POST['usuario'];
-    $usuario = " AND usuario_id = '$usuario' ";
+if ($numProcesso != null) {
+    $sqlProcesso = " AND p.numero_processo LIKE '%$numProcesso%' ";
 }
 
-if (isset($_POST['tipo_evento']) && $_POST['tipo_evento'] != null) {
-    $tipo_evento = $_POST['tipo_evento'];
-    $tipo_evento = " AND tipo_evento_id = '$tipo_evento' ";
+if ($usuario != null) {
+    $sqlUsuario = " AND u.nome_completo LIKE '%$usuario%'";
 }
 
-if (isset($_POST['instituicao']) && $_POST['instituicao'] != null) {
-    $instituicao = $_POST['instituicao'];
-    $instituicao = " AND instituicao_id = '$instituicao' ";
+if ($tipo_evento != null) {
+    $sqlTipo = " AND e.tipo_evento_id = '$tipo_evento'";
 }
 
-if (isset($_POST['rel_jur']) && $_POST['rel_jur'] != null) {
-    $rel_jur = $_POST['rel_jur'];
-    $rel_jur = " AND relacao_juridica_id = '$rel_jur' ";
+if ($instituicao != null) {
+    $sqlInstituicao = " AND o.instituicao_id = '$instituicao'";
 }
 
-if (isset($_POST['status']) && $_POST['status'] != null) {
-    $status = $_POST['status'];
-    $status = " AND p.status_pedido_id = '$status' ";
+if ($rel_jur != null) {
+    $sqlRelacao = " AND e.relacao_juridica_id = '$rel_jur'";
 }
 
-$sql = "SELECT e.nome_evento,
-               e.tipo_evento_id,
-               p.id,
-               p.numero_processo,
-               p.pessoa_tipo_id,
-               p.pessoa_fisica_id,
-               p.pessoa_juridica_id,
-               e.protocolo, 
-               st.status
-               FROM pedidos AS p 
-               INNER JOIN eventos AS e ON e.id = p.origem_id
-               INNER JOIN pessoa_fisicas AS pf ON p.pessoa_fisica_id = pf.id
-               INNER JOIN pedido_status AS st ON p.status_pedido_id = st.id
-               WHERE p.origem_tipo_id = 1 AND p.publicado = 1 AND e.publicado = 1 $status $numProcesso $protocolo";
+if ($status != null) {
+    $sqlStatus = " AND p.status_pedido_id = '$status'";
+}
+
+$sql = "SELECT p.numero_processo, e.protocolo,
+               p.pessoa_tipo_id, p.pessoa_fisica_id,
+               p.pessoa_juridica_id, e.nome_evento, 
+               e.tipo_evento_id, st.status, p.id
+        FROM pedidos AS p 
+        INNER JOIN eventos AS e ON e.id = p.origem_id 
+        INNER JOIN evento_status AS st ON e.evento_status_id = st.id 
+        INNER JOIN usuarios AS u ON u.id = e.usuario_id 
+        INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id 
+        WHERE p.origem_tipo_id = 1 AND p.publicado = 1 AND e.publicado = 1
+        $sqlProtocolo $sqlProcesso $sqlUsuario $sqlTipo $sqlInstituicao $sqlRelacao $sqlStatus
+        GROUP BY e.id";
+               
+               
 ?>
 
 <div class="content-wrapper">
@@ -95,7 +100,7 @@ $sql = "SELECT e.nome_evento,
                                             <input type="hidden" name="idPedido" id="idPedido"
                                                    value="<?= $pedido['id'] ?>">
                                             <button type="submit"
-                                                    class="btn btn-primary"><?= $pedido['numero_processo'] ?></button>
+                                                    class="btn btn-primary btn-block"><?= $pedido['numero_processo'] ?></button>
                                         </form>
                                     </td>
                                     <?php

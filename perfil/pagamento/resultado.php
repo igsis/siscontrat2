@@ -25,9 +25,9 @@ if (isset($_POST['geral'])){
     if ($projeto != null && $projeto != 0)
         $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
     if ($usuario != null && $usuario != 0)
-        $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
+        $sqlUsuario = " AND e.fiscal_id = '$usuario' OR e.suplente_id = '$usuario' OR e.usuario_id = '$usuario'";
     if ($operador_id != null && $operador_id != 0)
-        $sqlOperador = "$ AND e.evento_operador_id = '$operador_id'";
+        $sqlOperador = " AND p.operador_id = '$operador_id'";
 
     $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento
     FROM eventos e 
@@ -35,13 +35,16 @@ if (isset($_POST['geral'])){
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
     LEFT JOIN usuario_pagamentos up on p.operador_pagamento_id = up.usuario_id
     LEFT JOIN usuarios u on up.usuario_id = u.id
+    INNER JOIN evento_envios ee ON e.id = ee.evento_id 
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1
     AND e.evento_status_id = 3
     AND p.status_pedido_id NOT IN (1,3,20,21)
     $sqlProjeto $sqlUsuario $sqlOperador
-    $sqlProtocolo $sqlNomeEvento $sqlProcesso";
+    $sqlProtocolo $sqlNomeEvento $sqlProcesso
+    GROUP BY e.id";
+    
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
 }
@@ -49,25 +52,26 @@ if (isset($_POST['geral'])){
 
 /* ************** periodo ************** */
 if(isset($_POST['periodo'])){
-    $data_inicio = $_POST['data_inicio'];
-    $data_fim = $_POST['data_fim'];
+    $data_inicio = $_POST['data_inicio'] ?? NULL;
+    $data_fim = $_POST['data_fim'] ?? NULL;
     // a data de início da ocorrência precisa estar entre a data_inicio e data_fim
     $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento 
-    FROM ocorrencias AS o 
-    INNER JOIN eventos e on o.origem_ocorrencia_id = e.id
+    FROM eventos AS e 
+    INNER JOIN ocorrencias o on o.origem_ocorrencia_id = e.id
     INNER JOIN pedidos p on e.id = p.origem_id 
+    INNER JOIN evento_envios ee ON e.id = ee.evento_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
     LEFT JOIN usuario_pagamentos up on p.operador_pagamento_id = up.usuario_id
     LEFT JOIN usuarios u on up.usuario_id = u.id
     WHERE e.publicado = 1 
     AND o.publicado = 1
     AND p.publicado = 1 
-    AND o.tipo_ocorrencia_id = 1
+    AND o.tipo_ocorrencia_id != 3
     AND p.origem_tipo_id = 1
     AND e.evento_status_id = 3
     AND p.status_pedido_id NOT IN (1,3,20,21)
     AND o.data_inicio between '$data_inicio' AND '$data_fim'
-    GROUP BY e.nome_evento";
+    GROUP BY e.id";
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
 }
@@ -75,9 +79,16 @@ if(isset($_POST['periodo'])){
 
 /* ************** operador ************** */
 if(isset($_POST['operador'])) {
-    $data_inicio = $_POST['data_inicio'];
-    $data_fim = $_POST['data_fim'];
+    $data_inicio = $_POST['data_inicio'] ?? NULL;
+    $data_fim = $_POST['data_fim'] ?? NULL;
     $operador_id = $_POST['operador_id'] ?? NULL;
+
+    if($data_fim != NULL || $data_fim != NULL){
+        $sqlDatas = " AND p.data_kit_pagamento between '$data_inicio' AND '$data_fim'";
+    }else{
+        $sqlDatas = "";
+    }
+
     if ($operador_id != null && $operador_id != 0) {
         $sqlOperador = " AND operador_pagamento_id = '$operador_id'";
     } else{
@@ -86,6 +97,7 @@ if(isset($_POST['operador'])) {
     $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
+    INNER JOIN evento_envios ee ON e.id = ee.evento_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
     LEFT JOIN usuario_pagamentos up on p.operador_pagamento_id = up.usuario_id
     LEFT JOIN usuarios u on up.usuario_id = u.id
@@ -94,7 +106,8 @@ if(isset($_POST['operador'])) {
     AND p.origem_tipo_id = 1
     AND e.evento_status_id = 3
     AND p.status_pedido_id NOT IN (1,3,20,21)
-    AND p.data_kit_pagamento between '$data_inicio' AND '$data_fim' $sqlOperador";
+    $sqlOperador $sqlDatas
+    GROUP BY e.id";
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
 }
@@ -113,7 +126,7 @@ if(isset($_POST['operador'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblResultado" class="table table-bordered table-striped">
+                        <table id="tblResultado" style="text-align: left;font-size: 90%;" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>Processo</th>
@@ -162,7 +175,7 @@ if(isset($_POST['operador'])) {
                                         <td><?= $evento['protocolo'] ?></td>
                                         <td><?= $proponente ?></td>
                                         <td><?= $evento['nome_evento'] ?></td>
-                                        <td><?= retornaPeriodo($evento['id']) ?></td>
+                                        <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <td><?= $evento['nome_completo'] ? strstr($evento['nome_completo'],' ', true) : NULL ?></td>

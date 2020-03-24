@@ -26,11 +26,10 @@ $sql = "SELECT  e.id AS 'idEvento',
                 p.observacao
         FROM pedidos AS p
         INNER JOIN eventos AS e ON e.id = p.origem_id
-        INNER JOIN pessoa_fisicas AS pf ON pf.id = p.pessoa_fisica_id
         INNER JOIN ocorrencias AS o ON e.id = o.origem_ocorrencia_id
         INNER JOIN instituicoes AS i ON o.instituicao_id = i.id 
         WHERE p.id = '$idPedido' AND p.publicado = 1 AND e.publicado = 1";
-$pedido = $con->query($sql)->fetch_assoc();
+$pedido = $con->query($sql)->fetch_array();
 
 $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $pedido['idEvento'] . " AND o.publicado = 1";
 $queryLocal = mysqli_query($con, $sqlLocal);

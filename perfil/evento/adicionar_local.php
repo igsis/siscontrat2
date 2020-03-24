@@ -70,13 +70,13 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_ce
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-5">
                                     <label for="rua">Rua: *</label>
                                     <input type="text" class="form-control" name="rua" id="rua"
                                            placeholder="Digite a rua" maxlength="200" readonly>
                                 </div>
-                                <div class="form-group col-md-1">
-                                    <label for="numero">Número: *</label>
+                                <div class="form-group col-md-2">
+                                    <label for="numero">Número:*</label>
                                     <input type="number" name="numero" class="form-control" placeholder="Ex.: 10"
                                            required min="0">
                                 </div>

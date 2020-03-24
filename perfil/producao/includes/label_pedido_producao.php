@@ -20,7 +20,7 @@ if ($pedido != null) {
         'Número de Parcelas:' => $pedido['numero_parcelas'],
         'Data Kit Pagamento:' =>  $dataKit,
         'Forma Pagamento:' => $pedido['forma_pagamento'],
-        'Observação:' => $pedido['observacao']
+        'Observação:' => $pedido['observacao'] == null ? "Não cadastado" : $pedido['observacao']
     ];
     $idPedido = $pedido['id'];
     $equipamentoValor = "SELECT local.local, valor.valor FROM valor_equipamentos valor
@@ -58,7 +58,7 @@ switch ($pedido['pessoa_tipo_id']) {
 
         $dadosPreponente = [
             'Nome' => $proponente['nome'],
-            'Nome Artístico' => $proponente['nome_artistico'],
+            'Nome Artístico' => $proponente['nome_artistico'] == null ? "Não cadastrado" : $proponente['nome_artistico'],
             'Nacionalidade' => $nacionalidade,
             'RG' => $proponente['rg'] ?? "Não Cadastrado",
             'Passaporte' => $proponente['passaporte'] ?? "Não Cadastrado",
@@ -66,8 +66,8 @@ switch ($pedido['pessoa_tipo_id']) {
             'CCM' => $ccm ,
             'Data de Nascimento' => exibirDataBr($proponente['data_nascimento']),
             'E-Mail' => $proponente['email'],
-            'Telefone #1' => $telefones[0][0] ?? "Não Cadastrado",
-            'Telefone #2' => $telefones[1][0] ?? "Não Cadastrado",
+            'Telefone #1' => $telefones[0][0],
+            'Telefone #2' => $telefones[1][0] == NULL ? "Não Cadastrado" : $telefones[1][0],
             'Telefone #3' => $telefones[2][0] ?? "Não Cadastrado"
         ];
         $dadosEndereco = [

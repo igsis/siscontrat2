@@ -42,7 +42,7 @@ switch ($mes){
 
 }
 
-$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela'";
+$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela' AND publicado = 1";
 $query = mysqli_query($con,$sqlParcelas);
 while($parcela = mysqli_fetch_array($query))
 {

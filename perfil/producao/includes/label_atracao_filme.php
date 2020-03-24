@@ -22,7 +22,7 @@ if ($evento['tipo_evento_id'] == 2) {
                             <h4 class="box-title">
                                 <a data-toggle="collapse" data-parent="#accordionAtracao"
                                    href="#collapse<?= $filme['idFilmeEvento'] ?>">
-                                    Resumo do Filme: <?= $filme['titulo'] ?> <?= $filme['idFilmeEvento'] ?>
+                                    Resumo do Filme: <?= $filme['titulo'] ?>
                                 </a>
                             </h4>
                         </div>
@@ -44,7 +44,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Sinopse:</th>
-                                            <td><?= $filme['sinopse'] ?></td>
+                                            <td><?= $filme['sinopse'] == null ? "Não cadastrado" : $filme['sinopse']?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Duração(mins):</th>
@@ -114,7 +114,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Links:</th>
-                                            <td><?= $atracao['links'] ?></td>
+                                            <td><?= $atracao['links'] == null ? "Não cadastrado" : $atracao['links']?></td>
                                         </tr>
                                         <tr>
                                             <th class="text-center bg-primary" colspan="2">Dados do Produtor</th>
@@ -138,7 +138,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                                 <td><?= $produtor['telefone2'] ?></td>
                                             </tr>
                                         <?php }
-                                        if($produtor['observacao'] != "" || $produtor != NULL){
+                                        if($produtor['observacao'] != "" && $produtor != NULL){
                                             $obs = $produtor['observacao'];
                                         }else{
                                             $obs = "Não cadastado";
@@ -146,7 +146,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         ?>
                                         <tr>
                                             <th width="30%">Observação:</th>
-                                            <td><?= $obs?></td>
+                                            <td><?= $obs ?></td>
                                         </tr>
                                     </table>
                                 </div>

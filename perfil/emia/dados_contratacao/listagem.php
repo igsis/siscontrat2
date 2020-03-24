@@ -44,7 +44,7 @@ if (isset($_POST['cadastrar'])) {
     if (mysqli_query($con, $sqlInsert)) {
         $mensagem = mensagem('success', 'Cadastrado com Sucesso!');
         $idContrat = recuperaUltimo('emia_contratacao');
-        $protocolo = geraProtocolo($idContrat);
+        $protocolo = geraProtocolo($idContrat) . "-M";
         $sqlProtocolo = "UPDATE emia_contratacao SET protocolo = '$protocolo' WHERE id = '$idContrat'";
         $queryProtocolo = mysqli_query($con,$sqlProtocolo);
     } else {

@@ -27,7 +27,7 @@ $programa = recuperaDados('programas', 'id', $idPrograma);
 
 $idVigencia = $contratacao['form_vigencia_id'];
 
-$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela'";
+$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela' AND publicado = 1";
 $query = mysqli_query($con, $sqlParcelas);
 while ($parcela = mysqli_fetch_array($query)) {
     if ($parcela['valor'] > 0) {
@@ -38,7 +38,7 @@ while ($parcela = mysqli_fetch_array($query)) {
 
 <html>
 <head>
-    <meta http-equiv=\"Content-Type\" content=\"text/html. charset=Windows-1252\">
+    <meta http-equiv=\"Content-Type\" content=\"text/html. charset=utf-8\">
 
     <style>
 

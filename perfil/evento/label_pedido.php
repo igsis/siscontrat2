@@ -13,9 +13,8 @@ if ($pedido != null) {
         'Número de Parcelas' => $pedido['numero_parcelas'],
         'Data Kit Pagamento' => exibirDataBr($pedido['data_kit_pagamento']),
         'Forma de Pagamento' => $pedido['forma_pagamento'],
-        'Observação' => $pedido['observacao']
+        'Observação' => $pedido['observacao'] ? "" : "Não cadastrado"
     ];
-
     $idPedido = $pedido['id'];
     $equipamentoValor = "SELECT local.local, valor.valor FROM valor_equipamentos valor
                          INNER JOIN locais local ON local.id = valor.local_id WHERE pedido_id = '$idPedido'";
@@ -53,7 +52,7 @@ switch ($pedido['pessoa_tipo_id']) {
 
         $dadosProponente = [
             'Nome' => $proponente['nome'],
-            'Nome Artístico' => $proponente['nome_artistico'],
+            'Nome Artístico' => $proponente['nome_artistico'] == null ? "" : "Não cadastrado",
             'Nacionalidade' => $nacionalidade,
             'RG' => $proponente['rg'],
             'Passaporte' => $proponente['passaporte'],
@@ -61,9 +60,9 @@ switch ($pedido['pessoa_tipo_id']) {
             'CCM' => $ccm,
             'Data de Nascimento' => exibirDataBr($proponente['data_nascimento']),
             'E-mail' => $proponente['email'],
-            'Telefone #1' => $telefones[0][0] ?? "Não Cadastrado",
-            'Telefone #2' => $telefones[1][0] ?? "Não Cadastrado",
-            'Telefone #3' => $telefones[2][0] ?? "Não Cadastrado",
+            'Telefone #1' => $telefones[0][0],
+            'Telefone #2' => $telefones[1][0] == NULL ? "Não Cadastrado" : $telefones[1][0],
+            'Telefone #3' => $telefones[2][0] ?? "Não Cadastrado"
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
@@ -218,6 +217,9 @@ $parcelado = false;
                         </div>
                     </div>
                 </div>
+                <?php
+                    if($idRepresentante2 != NULL || $idRepresentante2 != ""){
+                ?>
                 <div class="panel box box-primary">
                     <div class="box-header with-border">
                         <h4 class="box-title">
@@ -242,6 +244,7 @@ $parcelado = false;
                         </div>
                     </div>
                 </div>
+                <?php } ?>
             </div>
         <?php } ?>
     </div>

@@ -14,6 +14,7 @@
                 foreach ($atracoes as $atracao) {
                     $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE atracao_id = '" . $atracao['id'] . "' AND publicado = '1' AND tipo_ocorrencia_id = '1'";
                     $ocorrencias = $con->query($sqlOcorrencia);
+                    $numOco = $ocorrencias->num_rows;
                     ?>
                     <div class="panel box box-primary">
                         <div class="box-header with-border">
@@ -29,7 +30,7 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <?php
-                                        if ($ocorrencias->num_rows > 0) {
+                                        if ($numOco > 0) {
                                             $i = 1;
                                             foreach ($ocorrencias as $ocorrencia) {
                                                 $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
@@ -81,7 +82,7 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Valor do Ingresso:</th>
-                                                        <td><?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
+                                                        <td><?= "R$" . dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -127,7 +128,7 @@
                                                 <?php } ?>
                                                 <tr>
                                                     <th width="30%">Observação:</th>
-                                                    <td><?= $ocorrencia['observacao'] ?></td>
+                                                    <td><?= $ocorrencia['observacao'] == null ? "Não cadastrado" : $ocorrencia['observacao']?></td>
                                                 </tr>
                                                 <?php
                                                 $i++;
@@ -196,7 +197,7 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Data de Encerramento:</th>
-                                                        <td><?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada" ?></td>
+                                                        <td><?= $ocorrencia['data_fim'] == "0000-00-00" ? "Não é Temporada" : exibirDataBr($ocorrencia['data_fim']) ?></td>
                                                     </tr>
 
                                                     <tr>
@@ -225,7 +226,7 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Valor do Ingresso:</th>
-                                                        <td><?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
+                                                        <td><?= "R$" . dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -271,7 +272,7 @@
                                                 <?php } ?>
                                                 <tr>
                                                     <th width="30%">Observação:</th>
-                                                    <td><?= $ocorrencia['observacao'] ?></td>
+                                                    <td><?= $ocorrencia['observacao'] == null ? "Não cadastrado" : $ocorrencia['observacao'] ?></td>
                                                 </tr>
                                                 <?php
                                                 $i++;

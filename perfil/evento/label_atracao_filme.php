@@ -4,6 +4,8 @@
  */
 
 if ($evento['tipo_evento_id'] == 2) {
+    $sqlFilme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao, fe.id as 'idFilmeEvento' FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
+    $filmes = mysqli_query($con, $sqlFilme);
     ?>
 
     <div class="box box-solid">
@@ -39,7 +41,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Sinopse:</th>
-                                            <td><?= $filme['sinopse'] ?></td>
+                                            <td><?= $filme['sinopse'] == NULL ? "Não cadastrado" : $filme['sinopse']?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Duração:</th>
@@ -107,7 +109,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Links:</th>
-                                            <td><?= $atracao['links'] ?></td>
+                                            <td><?= $atracao['links'] == null ? "Não cadastrado" : $atracao['links']?></td>
                                         </tr>
                                         <tr>
                                             <th class="text-center bg-primary" colspan="2">Dados do Produtor</th>
@@ -133,7 +135,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         <?php } ?>
                                         <tr>
                                             <th width="30%">Observação:</th>
-                                            <td><?= $produtor['observacao'] ?></td>
+                                            <td><?= $produtor['observacao'] == null ? "Não cadastrado" : $produtor['observacao']?></td>
                                         </tr>
                                     </table>
                                 </div>
