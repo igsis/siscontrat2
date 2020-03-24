@@ -66,7 +66,7 @@ $usuario = recuperaDados('usuarios', 'id', $idUser);
                         }; ?>
                     </div>
 
-                    <form method="POST" action="?perfil=usuario/minha_conta" role="form">
+                    <form method="POST" action="http://<?=$_SERVER['HTTP_HOST']?>/siscontrat/inicio/edita" role="form">
                         <div class="box-body">
 
                             <div class="row">
