@@ -4,7 +4,7 @@ $pasta = "?perfil=pagamento&p=";
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu" data-widget="tree">
-            <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
+            <li><a href="http://<?=$_SERVER['HTTP_HOST']?>/siscontrat/inicio"><i class="fa fa-home"></i><span>Home</span></a></li>
 
             <li class="header">PAGAMENTOS</li>
 

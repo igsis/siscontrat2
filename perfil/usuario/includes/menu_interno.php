@@ -4,7 +4,7 @@
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
-            <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
+            <li><a href="http://<?=$_SERVER['HTTP_HOST']?>/siscontrat/inicio"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">MAIS</li>
             <li><a href="?perfil=usuario/minha_conta"><i class="fa fa-user"></i><span>Minha Conta</span></a></li>
             <li><a href="http://smcsistemas.prefeitura.sp.gov.br/manual/siscontrat/" target="_blank"><i class="fa fa-question "></i><span>Ajuda</span></a></li>
