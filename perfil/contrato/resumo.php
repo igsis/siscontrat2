@@ -474,7 +474,7 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
                         <br>
                     </form>
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <form action="?perfil=contrato&p=detalhe_evento" method="post" role="form">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
@@ -483,7 +483,7 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
                                 </button>
                             </form>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
@@ -492,7 +492,7 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
                                 </button>
                             </form>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <form action="?perfil=contrato&p=chamados_contrato" method="post" role="form">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
@@ -500,7 +500,7 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
                             </form>
                         </div>
 
-                        <div class="col-md-3">
+                       <!-- <div class="col-md-3">
                             <form action="?perfil=contrato&p=anexos_pedido" method="post" role="form">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
@@ -508,7 +508,7 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
                                     Abrir anexos do Pedido
                                 </button>
                             </form>
-                        </div>
+                        </div> -->
                     </div>
 
 
