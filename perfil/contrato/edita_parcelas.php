@@ -4,6 +4,7 @@ $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
 $pedido = $con->query("SELECT id, numero_parcelas FROM pedidos WHERE origem_id = $idEvento AND origem_tipo_id = 1 AND publicado = 1")->fetch_array();
 $idPedido = $pedido['id'];
+
 ?>
 
 <div class="content-wrapper">
@@ -56,6 +57,14 @@ $idPedido = $pedido['id'];
                             </button>
                         </div>
                     </form>
+                    
+                    <div class="box-footer">
+                    <form action="?perfil=contrato&p=resumo" method="post">
+                            <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
+                            <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
+                            <button type="submit" name="Voltar" class="btn btn-default pull-left">Voltar</button>
+                    </form>
+                    </div>
                 </div>
             </div>
         </div>
