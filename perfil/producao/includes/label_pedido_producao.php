@@ -67,8 +67,8 @@ switch ($pedido['pessoa_tipo_id']) {
             'Data de Nascimento' => exibirDataBr($proponente['data_nascimento']),
             'E-Mail' => $proponente['email'],
             'Telefone #1' => $telefones[0][0],
-            'Telefone #2' => $telefones[1][0] == NULL ? "Não Cadastrado" : $telefones[1][0],
-            'Telefone #3' => $telefones[2][0] ?? "Não Cadastrado"
+            'Telefone #2' => $telefones[1][0] ? "" : "Não Cadastrado",
+            'Telefone #3' => $telefones[2][0] ? "" : "Não Cadastrado"
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],

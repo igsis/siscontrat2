@@ -7,6 +7,10 @@ $idEvento = $_SESSION['idEvento'];
 $_SESSION['idOrigem'] = $_POST['idOrigem'];
 $idAtracao = $_SESSION['idOrigem'];
 
+if(isset($_POST['idFilme'])){
+    $idFilme = $_POST['idFilme'];
+}
+
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
 $tipoEvento = $evento['tipo_evento_id'];
@@ -229,8 +233,7 @@ $tipoEvento = $evento['tipo_evento_id'];
 
                             <?php
                                 if($tipoEvento == 2){
-                                    $filmeEvento = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $idEvento)->fetch_array();
-                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $filmeEvento['filme_id'])->fetch_array();
+                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = $idFilme")->fetch_array();
                                     $readonly = "readonly";
                                     ?>
                                     <script type="text/javascript">

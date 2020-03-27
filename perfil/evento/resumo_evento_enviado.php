@@ -116,7 +116,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                 <h3>Informações sobre o evento</h3>
                                                 <hr>
                                             </div>
-                                            <strong>Protocolo: </strong><?= $evento['protocolo'] ?>
+                                            <strong>Protocolo: </strong><?= $evento['protocolo'] == null ? "Não possuí" : $evento['protocolo'] ?>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <strong>Nome do Evento: </strong><?= $evento ['nome_evento']; ?>
@@ -169,7 +169,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                 $classificacao_indicativa = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
 
                                                 $idAtracao = $atracao['id'];
-                                                $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = 1";
+                                                $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND atracao_id = $idAtracao AND publicado = 1";
 
                                                 ?>
                                                 <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
@@ -268,7 +268,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                     ?>
                                                     <hr>
                                                     <div class="form-group col-md-12">
-                                                        <strong>Observação:</strong><?= $produtor['observacao']; ?>
+                                                        <strong>Observação:</strong><?= $produtor['observacao'] == null ? "Não cadastrado" : $produtor['observacao']; ?>
                                                     </div>
                                                 <?php } ?>
                                                 <?php
