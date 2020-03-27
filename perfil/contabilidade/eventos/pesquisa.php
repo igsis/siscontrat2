@@ -10,67 +10,56 @@
             <div class="box-body">
                 <form action="?perfil=contabilidade&p=eventos&sp=resultado" role="form" method="POST">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4 form-group">
                             <label for="protocolo">Protocolo: </label>
                             <input class="form-control" type="text" name="protocolo" id="protocolo">
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4 form-group">
                             <label for="num_processo">Numero do Processo: </label>
-                            <input class="form-control" type="text" name="num_processo" id="num_processo" data-mask="9999.9999/9999999-9">
+                            <input class="form-control" type="text" name="num_processo" id="num_processo" >
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                            <label for="evento">Nome do evento</label>
+                            <input type="text" class="form-control" name="evento" id="evento">
                         </div>
                     </div>
 
                     <div class="row">
-                        <br>
-                        <div class="col-md-6">
-                            <label for="usuario">Inserido por: </label>
-                            <input class="form-control" type="text" name="usuario" id="usuario">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="tipo_evento">Tipo do Evento: </label>
-                            <select class="form-control" name="tipo_evento" id="tipo_evento">
-                                <option value="">Selecione um tipo...</option>
-                                <?php
-                                geraOpcao("tipo_eventos", "");
-                                ?>
+                        <div class="col-md-4 form-group">
+                            <label for="projeto">Projeto especial</label>
+                            <select name="projeto" id="projeto" class="form-control">
+                                    <option value="">Selecione uma opção...</option>
+                                        <?php
+                                        geraOpcao('projeto_especiais');
+                                        ?>
                             </select>
                         </div>
+
+                        <div class="col-md-4 form-group">
+                            <label for="usuario">Fiscal, suplente ou usuário que cadastrou o evento</label>
+                            <select name="usuario" id="usuario" class="form-control">
+                                <option value="">Selecione uma opção...</option>
+                                    <?php
+                                    geraOpcao('usuarios');
+                                    ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                            <label for="status">Pedido status</label>
+                            <select name="status" id="status" class="form-control">
+                                <option value="">Selecione uma opção...</option>
+                                    <?php
+                                    geraOpcao('evento_status');
+                                    ?>
+                            </select>
+                        </div>
+
+                        
                     </div>
 
-                    <div class="row">
-                        <br>
-                        <div class="col-md-4">
-                            <label for="instituicao">Instituição: </label>
-                            <select class="form-control" name="instituicao" id="instituicao">
-                                <option value="">Selecione uma instituição...</option>
-                                <?php
-                                geraOpcao("instituicoes", "");
-                                ?>
-                            </select>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label for="rel_jur">Tipo de Relação Jurídica: </label>
-                            <select class="form-control" name="rel_jur" id="rel_jur">
-                                <option value="">Selecione uma relacao juridica...</option>
-                                <?php
-                                geraOpcao("relacao_juridicas", "");
-                                ?>
-                            </select>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label for="status">Status do evento: </label>
-                            <select class="form-control" name="status" id="status">
-                                <option value="">Selecione um status...</option>
-                                <?php
-                                geraOpcao("evento_status", "");
-                                ?>
-                            </select>
-                        </div>
-                    </div>
             </div>
             <div class="box-footer">
                 <a href="?perfil=contabilidade">
