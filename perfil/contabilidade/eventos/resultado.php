@@ -56,10 +56,10 @@ $sql = "SELECT p.numero_processo, e.protocolo,
         INNER JOIN evento_status AS st ON e.evento_status_id = st.id 
         INNER JOIN usuarios AS u ON u.id = e.usuario_id 
         INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id 
-        WHERE p.origem_tipo_id = 1 AND p.publicado = 1 AND e.publicado = 1
+        WHERE p.origem_tipo_id = 1 AND p.publicado = 1 AND st.id = 3 AND e.publicado = 1
         $sqlProtocolo $sqlProcesso $sqlUsuario $sqlTipo $sqlInstituicao $sqlRelacao $sqlStatus
         GROUP BY e.id";
-               
+
                
 ?>
 

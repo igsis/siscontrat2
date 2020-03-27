@@ -21,7 +21,7 @@ if (isset($_POST['busca'])) {
     $sqlProjeto = '';
 
     if($projeto != NULL )
-        $sqlProjeto = "AND e.projeto_especial_id = '$projeto";
+        $sqlProjeto = "AND e.projeto_especial_id = '$projeto'";
     if ($numprocesso != NULL)
         $sqlProcesso = " AND p.numero_processo LIKE '%$numprocesso%'";
     if ($protocolo != NULL)
@@ -45,13 +45,15 @@ e.tipo_evento_id,
 p.pessoa_fisica_id, 
 p.pessoa_juridica_id, 
 p.pessoa_tipo_id,
-e.id
+e.id,
+e.projeto_especial_id
  from pedidos as p 
  inner join eventos as e on e.id = p.origem_id 
  inner join tipo_eventos te on te.id = e.tipo_evento_id 
  inner join pessoa_tipos pt on pt.id = p.pessoa_tipo_id 
  WHERE p.publicado = 1 AND p.origem_tipo_id = 1 $sqlStatus $sqlProjeto $sqlTipo $sqlObejto $sqlUsuario $sqlProtocolo $sqlProcesso
  GROUP BY e.id";
+
 ?>
 <div class="content-wrapper">
     <section class="content">
