@@ -475,7 +475,7 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
                     </form>
                     <div class="row">
                         <div class="col-md-4">
-                            <form action="?perfil=contrato&p=detalhe_evento" method="post" role="form">
+                            <form action="?perfil=contrato&p=detalhe_evento" method="post" role="form" target="_blank">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                                 <button type="submit" class="btn btn-primary pull-right " name="detalheEvento"

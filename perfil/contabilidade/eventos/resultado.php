@@ -67,7 +67,7 @@ $sql = "SELECT p.numero_processo, e.nome_evento, e.protocolo,
         WHERE p.origem_tipo_id = 1 AND p.publicado = 1 AND e.publicado = 1
         $sqlProtocolo $sqlProcesso $sqlNomeEvento $sqlUsuario $sqlProjeto $sqlStatus
         GROUP BY e.id";
-               
+
                
 ?>
 
