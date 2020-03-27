@@ -47,7 +47,7 @@ $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
                                 <input type="hidden" value="<?= $equipamento['local_id'] ?>">
                                 <td>
                                     <input type="text" class="form-control" name="valorEquipamento[]"
-                                           value="<?= dinheiroParaBr($arrayValorEquipamento['valor']) ?>" onkeyup="somaValorEquipamento()"
+                                           value="<?= isset($arrayValorEquipamento['valor']) ? dinheiroParaBr($arrayValorEquipamento['valor']) : ""?>" onkeyup="somaValorEquipamento()"
                                            onkeypress="return(moeda(this, '.', ',', event));">
                                     <input type="hidden" value="<?= $equipamento['local_id'] ?>" name="equipamentos[]">
                                 </td>
