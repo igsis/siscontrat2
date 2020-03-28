@@ -15,7 +15,7 @@ include "includes/menu.php";
                 <div class="row">
                     <div class="col-md-12 border-right">
                         <div class="description-block">
-                            <span class="description-header">Gerencia a comunicação da instituição e prepara as informações a serem enviadas para o SPCultura.<br/><br/></span>
+                            <span class="description-header">TEXTO AQUI DO MODULO DE COMUNICAÇÃO.<br/><br/></span>
                         </div>
                         <!-- /.description-block -->
                     </div>
