@@ -14,7 +14,7 @@ if(isset($_POST['pesquisa'])){
     $sqlProjeto = '';
 
     if ($local != null)
-        $sqlLocal = " AND l.local = '$local'";
+        $sqlLocal = " AND l.id = '$local'";
 
     if ($usuario != null)
         $sqlUsuario = " AND u.nome_completo = '$usuario'";
@@ -42,8 +42,6 @@ if(isset($_POST['pesquisa'])){
             WHERE e.evento_status_id = 3 AND o.publicado = 1 AND e.publicado = 1 
             AND o.data_inicio >= '$datainicio' AND o.data_fim <= '$datafim'
             $sqlUsuario $sqlProjeto $sqlLocal GROUP BY e.id";
-                   
-
     $query = mysqli_query($con, $sql);
 }
 
