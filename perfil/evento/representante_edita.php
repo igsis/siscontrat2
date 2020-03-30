@@ -115,7 +115,7 @@ if (isset($_POST["enviar"])) {
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
     $query_arquivos = mysqli_query($con, $sql_arquivos);
 
-    while ($arq = mysqli_fetch_array($query_arquivos)) {
+    while ($arq = mysqli_fetch_assoc($query_arquivos)) {
         $y = $arq['id'];
         $x = $arq['sigla'];
         $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
@@ -251,8 +251,8 @@ include "includes/menu_interno.php";
             </div>
         </div>
         <?php
-        modalUploadArquivoUnico("modal-$siglaRG", "?perfil=evento&p=representante_edita", $nomeRg, $siglaRG, $idPj, $tipoRepresentante);
-        modalUploadArquivoUnico("modal-$siglaCPF", "?perfil=evento&p=representante_edita", $nomeCpf, $siglaCPF, $idPj, $tipoRepresentante);
+        modalUploadArquivoUnico("modal-$siglaRG", "?perfil=evento&p=representante_edita", $nomeRg, $siglaRG, $idRepresentante, $tipoRepresentante);
+        modalUploadArquivoUnico("modal-$siglaCPF", "?perfil=evento&p=representante_edita", $nomeCpf, $siglaCPF, $idRepresentante, $tipoRepresentante);
         ?>
 
     </section>
