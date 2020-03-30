@@ -78,7 +78,7 @@ $dados =
     "<p><strong>Data / Período:</strong>"."$periodo"."</p>" .
     "<p>&nbsp;</p>" .
     "<p><strong>Locais e Horários:</strong> " . "</p>" .
-    "<p>"."$nome_instituicao"."&nbsp;"."($sigla)"."<br>$periodo"."&nbsp;"."($diaSemana)"."&nbsp;às&nbsp;$hora_inicio</p>".
+    "<p>"."$nome_instituicao"."&nbsp;"."($sigla)"."<br>$periodo"."&nbsp;"."($diaSemana)"."&nbsp;ás&nbsp;$hora_inicio</p>".
     "<p>&nbsp;</p>" .
     "<p><strong> Valor:</strong> " . "R$ " .$valor. "  " . "($valor_extenso)" . "</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . "$pagamento" . "</p>" .
