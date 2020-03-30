@@ -66,7 +66,7 @@ echo "<p align='justify'><b>EVENTO/SERV:</b> Apresentação do " . $objeto . ", 
 echo "<p align='justify'><b>DATA/PERÍODO: </b>" . $periodo . ".</p>";
 echo "<p align='justify'><b>VALOR TOTAL DA CONTRATAÇÃO:</b> " . "R$ $valor" . "  " . "($valor_extenso )" . "<br> Quaisquer despesas aqui não ressalvadas, bem como direitos autorais, serão de responsabilidade do(a) contratado(a).</p>";
 echo "<p align='justify'><b>CONDIÇÕES DE PAGAMENTO: </b>" . "$forma_pag" . ".</p>";
-echo "<p align='justify'>O pagamento será efetuado por crédito em conta corrente no BANCO DO BRASIL, em  conformidade com o Decreto 51.197/2010, publicado no DOC de 23.01.2010.<br/>
+echo "<p align='justify'>O pagamento será efetuado por crédito em conta corrente no BANCO DO BRASIL, em  conformidade com o Decreto 51.197/2010, publicado no DOC de 23/01/2010.<br/>
 De acordo com a Portaria nº 5/2012 de SF, haverá compensação financeira, se houver atraso no pagamento do valor devido, por culpa exclusiva do Contratante, dependendo de requerimento a ser formalizado pelo Contratado.</p>";
 echo "<p align='justify'><b>FISCALIZAÇÃO DO CONTRATO NA SMC: </b>Servidor " . "$fiscalNome" . " - RF " . "$fiscalRF" . " como fiscal do contrato e Sr(a) " . "$suplenteNome" . " - RF " . "$suplenteRF" . " como substituto(a).<br> 
 <b> De acordo com a Portaria nº 5/2012 de SF, haverá compensação financeira, se houver atraso no pagamento do valor devido, por culpa exclusiva do Contratante, dependendo de requerimento a ser formalizado pelo Contratado.</b> </p>";

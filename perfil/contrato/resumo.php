@@ -444,6 +444,9 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
                                     </select>
                                 </div>
                             </div>
+                            
+                            <?php
+                            if($pedido['numero_parcelas'] != 1){?>
                             <br>
                             <hr>
                             <div class="row">
@@ -455,6 +458,8 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
                                     </a>
                                 </div>
                             </div>
+                        <?php } ?>
+
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
