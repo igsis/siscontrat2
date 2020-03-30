@@ -56,6 +56,13 @@ $idPedido = $pedido['id'];
                             </button>
                         </div>
                     </form>
+                    <div class="box-footer">
+                    <form action="?perfil=contrato&p=resumo" method="post">
+                            <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
+                            <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
+                            <button type="submit" name="Voltar" class="btn btn-default pull-left">Voltar</button>
+                    </form>
+                    </div>
                 </div>
             </div>
         </div>
