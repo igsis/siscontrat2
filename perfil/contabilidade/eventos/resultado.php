@@ -17,9 +17,6 @@ if(isset($_POST['buscar'])){
     $projeto = $_POST['projeto'] ?? NULL;
     $usuario = $_POST['usuario'] ?? NULL;
     $status = $_POST['status'] ?? NULL;
-    /*$tipo_evento = $_POST['tipo_evento'] ?? NULL;
-    $rel_jur = $_POST['rel_jur'] ?? NULL;*/
-    
 }
 
 if ($protocolo != null) {
@@ -43,17 +40,8 @@ if ($usuario != null && $usuario != 0){
 }
 
 if ($status != null) {
-    $sqlStatus = " AND e.evento_status_id = '$status'";
+    $sqlStatus = " AND p.status_pedido_id = '$status'";
 }
-
-/*if ($tipo_evento != null) {
-    $sqlTipo = " AND e.tipo_evento_id = '$tipo_evento'";
-}
-
-if ($rel_jur != null) {
-    $sqlRelacao = " AND e.relacao_juridica_id = '$rel_jur'";
-}*/
-
 
 $sql = "SELECT p.numero_processo, e.nome_evento, e.protocolo,
                p.pessoa_tipo_id, p.pessoa_fisica_id,
@@ -65,6 +53,7 @@ $sql = "SELECT p.numero_processo, e.nome_evento, e.protocolo,
         INNER JOIN usuarios AS u ON u.id = e.usuario_id
         INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id 
         WHERE p.origem_tipo_id = 1 AND p.publicado = 1 AND e.publicado = 1
+        AND e.evento_status_id = 3 AND p.status_pedido_id NOT IN (1,3,20,21)
         $sqlProtocolo $sqlProcesso $sqlNomeEvento $sqlUsuario $sqlProjeto $sqlStatus
         GROUP BY e.id";
 
@@ -108,7 +97,7 @@ $sql = "SELECT p.numero_processo, e.nome_evento, e.protocolo,
                                             <input type="hidden" name="idPedido" id="idPedido"
                                                    value="<?= $pedido['id'] ?>">
                                             <button type="submit"
-                                                    class="btn btn-primary btn-block"><?= $pedido['numero_processo'] ?></button>
+                                                    class="btn btn-primary btn-block" name="carrega"><?= $pedido['numero_processo'] ?></button>
                                         </form>
                                     </td>
                                     <?php
