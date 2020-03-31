@@ -8,7 +8,7 @@ $tipoEvento = $evento['tipo_evento_id'];
 $sqlPedidos = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
 $pedidos = mysqli_query($con, $sqlPedidos);
 $pedido = mysqli_fetch_array($pedidos);
-$tipoPessoa = $pedido['pessoa_tipo_id'];
+$tipoPessoa = $pedido['pessoa_tipo_id'] ?? null;
 $numPedidos = mysqli_num_rows($pedidos);
 
 $errosArqs = [];
