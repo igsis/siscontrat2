@@ -398,7 +398,7 @@ $atracao = mysqli_query($con, $sql);
                                     <label for="numero">Número: *</label>
                                     <i>(se não houver, marcar 0)</i>
                                     <input type="number" name="numero" class="form-control" min="0"
-                                           placeholder="(se não houver número marcar 0)" required
+                                           required
                                            value="<?= $endereco['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">

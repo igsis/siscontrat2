@@ -306,7 +306,8 @@ if (isset($pj['representante_legal2_id'])) {
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control" min="1"
+                                    <i>(se não houver, marcar 0)</i>
+                                    <input type="number" name="numero" class="form-control" min="0"
                                            placeholder="Ex.: 10"
                                            required value="<?= $end['numero'] ?>">
                                 </div>
@@ -419,6 +420,7 @@ if (isset($pj['representante_legal2_id'])) {
                                     <form method="POST" action="?perfil=contrato&p=representante_busca"
                                           role="form">
                                         <input type="hidden" name="tipoRepresentante" value="1">
+                                        <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                         <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                                 class="btn btn-info btn-block">Representante 01
                                         </button>
@@ -428,6 +430,7 @@ if (isset($pj['representante_legal2_id'])) {
                                     <form method="POST" action="?perfil=contrato&p=representante_busca"
                                           role="form">
                                         <input type="hidden" name="tipoRepresentante" value="2">
+                                        <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                         <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                                 class="btn btn-info btn-block">Representante 02
                                         </button>

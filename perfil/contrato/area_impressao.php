@@ -8,15 +8,15 @@ $linkpf_pc = $http . "impressao_pedido_pf.php";
 
 $linkpj_pc = $http . "impressao_pedido_pj.php";
 
-$linkpf_edital = $http . "exporta_proposta_edital_pf_word.php";
+$linkpf_edital = $http . "exporta_proposta_edital_pf_word.php?penal=";
 
-$linkpj_edital = $http . "exporta_proposta_edital_pj_word.php";
+$linkpj_edital = $http . "exporta_proposta_edital_pj_word.php?penal=";
 
 $link_emia = $http . "rlt_proposta_emia.php";
 
-$link_proposta_padrao_pf = $http . "rlt_proposta_padrao_pf.php";
+$link_proposta_padrao_pf = $http . "rlt_proposta_padrao_pf.php?penal=";
 
-$link_proposta_padrao_pj = $http . "rlt_proposta_padrao_pj.php";
+$link_proposta_padrao_pj = $http . "rlt_proposta_padrao_pj.php?penal=";
 
 $link_reserva_vocacional = $http . "impressao_reserva_vocacional.php";
 
@@ -24,11 +24,11 @@ $link_reserva_sme = $http . "impressao_reserva_sme.php";
 
 $link_reserva_pia = $http . "impressao_reserva_pia.php";
 
-$link_proposta_convenio = $http . "rlt_proposta_oficina_convenio.php";
+$link_proposta_convenio = $http . "rlt_proposta_oficina_convenio.php?penal=";
 
-$link_reversao_pf = $http . "rlt_reversao_proposta_pf.php";
+$link_reversao_pf = $http . "rlt_reversao_proposta_pf.php?penal=";
 
-$link_reversao_pj = $http . "rlt_reversao_proposta_pj.php";
+$link_reversao_pj = $http . "rlt_reversao_proposta_pj.php?penal=";
 
 $link_direitos = $http . "rlt_direitos_conexos.php";
 
@@ -185,7 +185,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     <?php
                     if ($pedido['pessoa_tipo_id'] == 2) { ?>
                         <div class="col-md-6">
-                            <form action="<?= $link_edital ?>" target="_blank" method="post">
+                            <form action="<?= $link_edital . "23" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Editais
@@ -193,7 +193,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form action="<?= $link_reversao ?>" target="_blank" method="post">
+                            <form action="<?= $link_reversao . "13" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Contratações gerais - Reversão de Bilheteria
@@ -203,7 +203,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </div>
 
                         <div class="col-md-6">
-                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                            <form action="<?= $link_proposta_padrao . "13" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Contratações gerais - Com cachê
@@ -214,7 +214,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     <?php } else if ($pedido['pessoa_tipo_id'] == 1) {
                         ?>
                         <div class="col-md-6">
-                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                            <form action="<?= $link_proposta_padrao . "20" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Vocacional
@@ -222,7 +222,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form action="<?= $link_edital ?>" target="_blank" method="post">
+                            <form action="<?= $link_edital . "23" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Editais
@@ -238,7 +238,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form action="<?= $link_proposta_convenio ?>" target="_blank" method="post">
+                            <form action="<?= $link_proposta_convenio . "13" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Proposta Oficinas / Convênio MINC
@@ -249,7 +249,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
 
                         <div class="col-md-6">
-                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                            <form action="<?= $link_proposta_padrao . "21" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     PIÁ
