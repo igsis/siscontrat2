@@ -5,7 +5,7 @@ $con = bancoMysqli();
 
 
 $idUser = $_SESSION['usuario_id_s'];
-$sessions = ['login', 'nome', 'idUser'];
+$sessions = ['login_s', 'nome_s', 'usuario_id_s', 'perfil_s'];
 
 foreach ($_SESSION as $key => $session) {
     if (in_array($key, $sessions)) {
