@@ -23,6 +23,10 @@ if (isset($_POST['_filtros'])) {
     isset($_POST['impresso']) && (float)$_POST['impresso'] <> 4 ? array_push($pendente, 4) : '';
     isset($_POST['foto']) && (float)$_POST['foto'] <> 5 ? array_push($pendente, 5) : '';
 
+
+    $confirmados = verificaArray($confirmados);
+    $pendente = verificaArray($pendente);
+
     $query = retornaEventosComunicacao($idUser,['eventos','comunicacoes'],$confirmados,$pendente);
     $query2 = retornaEventosComunicacao($idUser,['agendoes','comunicacao_agendoes'],$confirmados,$pendente);
 

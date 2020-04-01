@@ -78,6 +78,20 @@ function gravaStatus($status, $tabela, $idEvento)
     return $Valida;
 }
 
+function verificaArray($array){
+    $cont = 0;
+
+    foreach ($array as $ar){
+        if ($ar == 'string')
+            $cont =+1;
+    }
+    if ($cont > 0)
+        $array = null;
+
+    return $array;
+}
+
+
 function retornaEventosComunicacao($idUser, $tabela, $confirmados = null, $pendentes = null)
 {
     $con = bancoMysqli();
