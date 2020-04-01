@@ -9,11 +9,20 @@ $parecer = recuperaDados("parecer_artisticos", "pedido_id", $idPedido);
 
 if ($pedido['pessoa_tipo_id'] == 2) {
     $pj = recuperaDados("pessoa_juridicas", "id", $pedido['pessoa_juridica_id']);
-    $t1 = "Esta comissão ratifica o pedido de contratação de XXXXXXX LÍDERES XXXXXXXXX por intermédio da " . $pj['razao_social'] . ", para apresentação artística no evento “" . retornaObjeto($idPedido) . "”, que ocorrerá " . retornaPeriodo($_SESSION['idEvento']) . " no valor de R$ " . $pedido['valor_total'] . " (" . valorPorExtenso($pedido['valor_total']) . ").";
+    $sqlLideres = "SELECT pf.nome FROM lideres AS l
+                    INNER JOIN pessoa_fisicas pf on l.pessoa_fisica_id = pf.id                    
+                    WHERE l.pedido_id = '$idPedido'";
+    $queryLideres = $con->query($sqlLideres)->fetch_all(MYSQLI_ASSOC);
+    foreach ($queryLideres as $lider) {
+        $lideres[] = $lider['nome'];
+    }
+    $lideres = isset($lideres) ? implode(", ", $lideres) : "...";
+    $t1 = "Esta comissão ratifica o pedido de contratação de XXXXXXX LÍDERES $lideres por intermédio da " . $pj['razao_social'] . ", para apresentação artística no evento “" . retornaObjeto($idPedido) . "”, que ocorrerá " . retornaPeriodo($_SESSION['idEvento']) . " no valor de R$ " . $pedido['valor_total'] . " (" . valorPorExtenso($pedido['valor_total']) . ").";
 } else {
     $pf = recuperaDados("pessoa_fisicas", "id", $pedido['pessoa_fisica_id']);
     $t1 = "Esta comissão ratifica o pedido de contratação de " . $pf['nome'] . ", para apresentação artística no evento “" . retornaObjeto($idPedido) . "”, que ocorrerá " . retornaPeriodo($_SESSION['idEvento']) . " no valor de R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " ).";
 }
+
 ?>
 
 <form class="formulario-ajax" method="POST" action="../funcoes/api_pedido_eventos.php" role="form" data-etapa="Parecer Artístico">

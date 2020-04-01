@@ -288,7 +288,7 @@ include "includes/menu_interno.php";
                                     <div class="form-group col-md-3">
                                         <label for="drt">DRT: <i>(Somente para artes cênicas)</i></label>
                                         <input type="text" class="form-control" id='drt' name='drt'
-                                               maxlength="15" value="<?= $drt['drt'] ?>">
+                                               maxlength="15" value="<?= $drt['drt'] ?? "" ?>">
                                     </div>
                                 </div>
                             </div>
