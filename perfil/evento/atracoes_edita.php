@@ -229,7 +229,7 @@ include "includes/menu_interno.php";
                                     ?>
                                     <div class="form-group col-md-6">
                                         <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não houver valor</i>
-                                        <input type="text" id="valor_individual" name="valor_individual" onkeypress="return(moeda(this, '.', ',', event))" class="form-control" required value="<?= dinheiroParaBr($atracao['valor_individual']) ?>">
+                                        <input type="text" id="valor_individual" name="valor_individual" class="form-control" required value="<?= dinheiroParaBr($atracao['valor_individual']) ?>">
                                     </div>
                                     <?php
                                 }
@@ -374,6 +374,7 @@ $('#valor_individual').keyup(limitaValor);
 
     $(document).ready(function () {
         validaAcoes();
+        $('#valor_individual').mask('00.000,00',{reverse: true})
     })
 
 </script>
