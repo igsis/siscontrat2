@@ -406,19 +406,19 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                                 minutoFinal -= 60;
                                                 hora += 1;
                                             }
-                                            if (minutoFinal == 0 && minutoFinal != 00) {
+                                            if (minutoFinal == 0 && minutoFinal != "00") {
                                                 minutoFinal = minutoFinal + "0";
                                             }
                                             if (minutoFinal < 10) {
                                                 minutoFinal = "0" + minutoFinal;
                                             }
-                                            if (hora == 0 && minutoFinal != 00) {
+                                            if (hora == 0 && minutoFinal != "00") {
                                                 hora = hora + "0";
                                             }
                                             if (hora < 10) {
                                                 hora = "0" + hora;
                                             }
-                                            if (hora == 000) {
+                                            if (hora == "00") {
                                                 hora = "00";
                                             }
 
@@ -457,8 +457,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                     <label for="valor_ingresso">Valor Ingresso*</label> <br>
                                     <input type="text" name="valor_ingresso" class="form-control"
                                            value="<?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>" required
-                                           id="valor_ingresso"
-                                           placeholder="Em reais" onkeypress="return(moeda(this, '.', ',', event))"/>
+                                           id="valor_ingresso" maxlength="5"
+                                           placeholder="Em reais">
                                 </div>
                             </div>
 
@@ -686,6 +686,10 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
 
 <script>
+
+    $(document).ready(function () {
+        $('#valor_ingresso').mask('00,00',{reverse: true})
+    });
 
     function insti_local() {
         const urlModal = `<?=$url?>`;
