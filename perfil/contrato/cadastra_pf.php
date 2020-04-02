@@ -16,6 +16,7 @@ if (isset($_POST['adicionar']) || isset($_POST['adicionarLider'])) {
 }
 
 $idEvento = $_SESSION['idEvento'];
+$idPedido = $_POST['idPedido'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
@@ -256,6 +257,7 @@ $atracao = mysqli_query($con, $sql);
                                     </div>
                                 </div>
                                 <div class="box-footer">
+                                    <input type='hidden' name='idPedido' value='<?=$idPedido?>'>
                                     <?= $botoesFooter ?>
                                 </div>
                         </form>

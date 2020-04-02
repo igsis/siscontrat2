@@ -354,20 +354,20 @@ if (isset($_GET['label'])) {
                                         </li>
                                     <?php } ?>
                                     <li role="presentation" class="<?= $menuParecer ?? "disabled" ?>">
-                                        <a class="persistant-disabled" href="<?= ($tipoEvento != 2) ? "#stepper-step-3" : "#stepper-step-4" ?>" data-toggle="tab"
-                                           aria-controls="<?= ($tipoEvento != 2) ? "stepper-step-3" : "stepper-step-4" ?>" role="tab" title="Parecer artístico">
+                                        <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
+                                           aria-controls="stepper-step-4" role="tab" title="Parecer artístico">
                                             <span class="round-tab"><?= ($tipoEvento != 2) ? "4" : "3" ?></span>
                                         </a>
                                     </li>
                                     <li role="presentation" class="<?= $menuAnexos ?? "disabled" ?>">
-                                        <a class="persistant-disabled" href="<?= ($tipoEvento != 2) ? "#stepper-step-4" : "#stepper-step-5" ?>" data-toggle="tab"
-                                           aria-controls="<?= ($tipoEvento != 2) ? "stepper-step-4" : "stepper-step-5" ?>" role="tab" title="Anexos do pedido">
+                                        <a class="persistant-disabled" href="#stepper-step-5" data-toggle="tab"
+                                           aria-controls="stepper-step-5" role="tab" title="Anexos do pedido">
                                             <span class="round-tab"><?= ($tipoEvento != 2) ? "5" : "4" ?></span>
                                         </a>
                                     </li>
                                     <li role="presentation" class="disabled">
-                                        <a class="persistant-disabled" href="<?= ($tipoEvento != 2) ? "#stepper-step-5" : "#stepper-step-6" ?>" data-toggle="tab"
-                                           aria-controls="<?= ($tipoEvento != 2) ? "#stepper-step-5" : "#stepper-step-6" ?>" role="tab" title="Valor por equipamento">
+                                        <a class="persistant-disabled" href="#stepper-step-6" data-toggle="tab"
+                                           aria-controls="stepper-step-6" role="tab" title="Valor por equipamento">
                                             <span class="round-tab"><?= ($tipoEvento == 2) ? "6" : "5" ?></span>
                                         </a>
                                     </li>

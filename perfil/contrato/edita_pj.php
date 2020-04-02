@@ -9,10 +9,6 @@ $link_facc = $http . "rlt_fac_pj.php";
 
 $tipoPessoa = 2;
 
-isset($_POST['idPedido']);
-$idPedido = $_POST['idPedido'];
-
-
 if (isset($_POST['adicionar']) || isset($_POST['idPj'])) {
     $idPj = $_POST['idPj'];
     $editaOnly = "<input type='hidden' name='editOnly' value= '1'>";
@@ -36,6 +32,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $conta = $_POST['conta'] ?? NULL;
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $ultima_atualizacao = date('Y-m-d H:i:s');
+    $idPedido = $_POST['idPedido'];
 }
 
 if (isset($_POST['cadastra'])) {
@@ -374,7 +371,7 @@ if (isset($pj['representante_legal2_id'])) {
                             </div>
                             <div class="box-footer">
                                 <button type="submit" name="edita" value="<?= $pj['id'] ?>"
-                                        class="btn btn-info pull-left">Atualizar
+                                        class="btn btn-primary pull-right">Salvar
                                 </button>
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
 

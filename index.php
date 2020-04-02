@@ -21,15 +21,19 @@ if(isset($_POST['login']))
 			$user = mysqli_fetch_array($query);
 			if($user['senha'] == md5($_POST['senha']))
 			{
-				// compara as senhas
-				session_start(['name' => 'sis']);
-				$_SESSION['login_s'] = $user['usuario'];
-				$_SESSION['nome_s'] = $user['nome_completo'];
-				$_SESSION['usuario_id_s'] = $user['id'];
-				$log = "Fez login.";
-				//gravarLog($log);
-				header("Location: visual/index.php");
-				gravarLog($sql);
+                $data = date('Y-m-d H:i:s');
+                $queryLogin = "UPDATE `usuarios` SET ultimo_acesso = '{$data}' WHERE id = '{$user['id']}'";
+                if(mysqli_query($con,$queryLogin)){
+                    // compara as senhas
+                    session_start(['name' => 'sis']);
+                    $_SESSION['login_s'] = $user['usuario'];
+                    $_SESSION['nome_s'] = $user['nome_completo'];
+                    $_SESSION['usuario_id_s'] = $user['id'];
+                    $log = "Fez login.";
+                    //gravarLog($log);
+                    header("Location: visual/index.php");
+                    gravarLog($sql);
+                }
 			}
 			else
 			{

@@ -42,7 +42,9 @@ if ($zip->open($nome_arquivo, ZipArchive::CREATE) === true) {
             $zip->addFile($file, "evento/" . $file2);
         }
         // arquivivos produção
-        $sql_com_prod = "SELECT arq.* FROM arquivos AS arq INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='8'";
+        $sql_com_prod = "SELECT arq.* FROM arquivos AS arq 
+        INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
+        WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='8'";
         $query_com_prod = mysqli_query($con, $sql_com_prod);
         while ($arquivo = mysqli_fetch_array($query_com_prod)) {
             $file = $path . $arquivo['arquivo'];
@@ -74,8 +76,6 @@ if ($zip->open($nome_arquivo, ZipArchive::CREATE) === true) {
             $zip->addFile($file, "pj/" . $file2);
         }
     }
-
-
     $zip->close();
 }
 
