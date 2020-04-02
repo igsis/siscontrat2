@@ -1,6 +1,7 @@
 <?php
 $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
+$idPedido = $_POST['idPedido'];
 
 $sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'";
 $atracao = mysqli_query($con, $sql);
@@ -152,6 +153,7 @@ $atracao = mysqli_query($con, $sql);
                             </div>
 
                             <div class="box-footer">
+                                <input type='hidden' name='idPedido' value="<?= $idPedido ?>">
                                 <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
                                     Cadastrar
                                 </button>

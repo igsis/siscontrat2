@@ -12,12 +12,12 @@
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label for="protocolo">Protocolo</label>
-                                    <input type="text" name="protocolo" id="protocolo" class="form-control">
+                                    <input type="text" name="protocolo" id="protocolo" class="form-control" data-mask="99999999.99999-S">
                                 </div>
 
                                 <div class="col-md-4 form-group">
                                     <label for="num_processo">Número de processo</label>
-                                    <input type="text" class="form-control" name="num_processo" id="num_processo">
+                                    <input type="text" class="form-control" name="num_processo" id="num_processo" data-mask="9999.9999/9999999-9">
                                 </div>
 
                                 <div class="col-md-4 form-group">
