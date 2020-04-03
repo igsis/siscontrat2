@@ -1030,8 +1030,13 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             horaFim = parseInt(horaFim.split(":")[0].toString() + horaFim.split(":")[1].toString());
 
             if (horaFim < horaInicio) {
-                msgHora.show();
-                $('#edita').attr("disabled", true);
+                if (horaFim != 1200){
+                    msgHora.show();
+                    $('#edita').attr("disabled", true);
+                }else{
+                    msgHora.hide();
+                    $('#edita').attr("disabled", false);
+                }
             } else {
                 msgHora.hide();
                 $('#edita').attr("disabled", false);
