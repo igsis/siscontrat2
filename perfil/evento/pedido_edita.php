@@ -680,7 +680,10 @@ if (isset($_GET['label'])) {
 
         <?php if ($tipoEvento != 2){ ?>
         valorTotal = "<?= $pedido['valor_total'] ?>";
-        <?php } ?>
+        <?php } else { ?>
+            valorTotal = $("#valor_total").val().replace('.', '').replace(',', '.');
+       <?php } ?>
+        console.log(valorTotal);
         var restante = valorTotal;
         var arrayValor = [];
         let soma = 0;
