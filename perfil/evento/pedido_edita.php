@@ -1317,6 +1317,7 @@ if (isset($_GET['label'])) {
             $('#gravarValorEquipamento').attr("disabled", false);
         } else {
             //  VALOR DIGITADO MENOR QUE O VALOR TOTAL DO EVENTO
+            valorDif = valorDif.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
             $('#valorFaltante').html(valorDif);
             $('#gravarValorEquipamento').attr("disabled", true);
         }
