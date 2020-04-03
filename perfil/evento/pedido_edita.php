@@ -680,7 +680,10 @@ if (isset($_GET['label'])) {
 
         <?php if ($tipoEvento != 2){ ?>
         valorTotal = "<?= $pedido['valor_total'] ?>";
-        <?php } ?>
+        <?php } else { ?>
+            valorTotal = $("#valor_total").val().replace('.', '').replace(',', '.');
+       <?php } ?>
+        console.log(valorTotal);
         var restante = valorTotal;
         var arrayValor = [];
         let soma = 0;
@@ -1317,6 +1320,7 @@ if (isset($_GET['label'])) {
             $('#gravarValorEquipamento').attr("disabled", false);
         } else {
             //  VALOR DIGITADO MENOR QUE O VALOR TOTAL DO EVENTO
+            valorDif = valorDif.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
             $('#valorFaltante').html(valorDif);
             $('#gravarValorEquipamento').attr("disabled", true);
         }
