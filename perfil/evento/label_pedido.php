@@ -68,15 +68,15 @@ switch ($pedido['pessoa_tipo_id']) {
             'CEP' => $endereco['cep'],
             'Logradouro' => $endereco['logradouro'],
             'Número' => $endereco['numero'],
-            'Complemento' => $endereco['complemento'],
+            'Complemento' => $endereco['complemento'] ? "" : "Não cadastrado",
             'Bairro' => $endereco['bairro'],
             'Cidade' => $endereco['cidade'],
             'Estado' => $endereco['uf']
         ];
         $dadosBancarios = [
-            'Banco' => $banco,
-            'Agência' => $pfBancos['agencia'],
-            'Conta' => $pfBancos['conta']
+            'Banco' => $banco == null ?  "Não Cadastrado" : $banco,
+            'Agência' => $pfBancos['agencia'] ? "" : "Não Cadastrado",
+            'Conta' => $pfBancos['conta'] ? "" : "Não Cadastrado"
         ];
         break;
 
