@@ -17,10 +17,10 @@ if ($pedido['pessoa_tipo_id'] == 2) {
         $lideres[] = $lider['nome'];
     }
     $lideres = isset($lideres) ? implode(", ", $lideres) : "...";
-    $t1 = "Esta comissão ratifica o pedido de contratação de XXXXXXX LÍDERES $lideres por intermédio da " . $pj['razao_social'] . ", para apresentação artística no evento “" . retornaObjeto($idPedido) . "”, que ocorrerá " . retornaPeriodo($_SESSION['idEvento']) . " no valor de R$ " . $pedido['valor_total'] . " (" . valorPorExtenso($pedido['valor_total']) . ").";
+    $t1 = "Esta comissão ratifica o pedido de contratação de XXXXXXX LÍDERES $lideres por intermédio da " . $pj['razao_social'] . ", para apresentação artística no evento “" . retornaObjeto($idPedido) . "”, que ocorrerá " . retornaPeriodoNovo($_SESSION['idEvento']) . " no valor de R$ " . $pedido['valor_total'] . " (" . valorPorExtenso($pedido['valor_total']) . ").";
 } else {
     $pf = recuperaDados("pessoa_fisicas", "id", $pedido['pessoa_fisica_id']);
-    $t1 = "Esta comissão ratifica o pedido de contratação de " . $pf['nome'] . ", para apresentação artística no evento “" . retornaObjeto($idPedido) . "”, que ocorrerá " . retornaPeriodo($_SESSION['idEvento']) . " no valor de R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " ).";
+    $t1 = "Esta comissão ratifica o pedido de contratação de " . $pf['nome'] . ", para apresentação artística no evento “" . retornaObjeto($idPedido) . "”, que ocorrerá " . retornaPeriodoNovo($_SESSION['idEvento']) . " no valor de R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " ).";
 }
 
 ?>
