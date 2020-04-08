@@ -87,12 +87,6 @@ if (isset($_POST['busca'])) {
                                     ?>
                                     <tr>
                                         <?php
-                                        $idUser = $evento['operador_id'];
-                                        if ($idUser != 0) {
-                                            $operadorAux = "AND usuario_id = $idUser";
-                                            $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUser $operadorAux";
-                                            $operador = $con->query($sqlOperador)->fetch_array();
-                                        }
                                         if ($evento['pessoa_tipo_id'] == 1)
                                             $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome'];
                                         else if ($evento['pessoa_tipo_id'] == 2)
@@ -113,12 +107,13 @@ if (isset($_POST['busca'])) {
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
-                                        if (isset($operador['nome_completo'])) {
-                                            ?>
-                                            <td><?= $operador['nome_completo'] ?></td>
-                                        <?php }
-                                        echo "<td> </td>";
+                                            if($evento['operador_id'] != NULL){
+                                                $operador = recuperaDados('usuarios', 'id', $evento['operador_id'])['nome_completo'];
+                                            }else{
+                                                $operador = "";
+                                            }
                                         ?>
+                                        <td><?= $operador ?></td>
                                     </tr>
                                     <?php
                                 }

@@ -42,7 +42,14 @@ switch ($pedido['pessoa_tipo_id']) {
         $tipo = "Pessoa Física";
         $idPf = $pedido['pessoa_fisica_id'];
         $sqlTelefones = "SELECT telefone FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = '1'";
-        $telefones = $con->query($sqlTelefones)->fetch_all();
+        $tel = "";
+        $telefones = $con->query($sqlTelefones);
+        while ($linhaTel = mysqli_fetch_array($telefones)) {
+            if($linhaTel['telefone'] != ""){
+                $tel = $tel . $linhaTel['telefone'] . ' | ';
+            }
+        }
+        $tel = substr($tel, 0, -3);
         $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
         $nacionalidade = recuperaDados('nacionalidades', 'id', $proponente['nacionalidade_id'])['nacionalidade'];
         $endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $pedido['pessoa_fisica_id']);
@@ -66,9 +73,7 @@ switch ($pedido['pessoa_tipo_id']) {
             'CCM' => $ccm ,
             'Data de Nascimento' => exibirDataBr($proponente['data_nascimento']),
             'E-Mail' => $proponente['email'],
-            'Telefone #1' => $telefones[0][0],
-            'Telefone #2' => $telefones[1][0] ? "" : "Não Cadastrado",
-            'Telefone #3' => $telefones[2][0] ? "" : "Não Cadastrado"
+            'Telefone(s)' => $tel
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
