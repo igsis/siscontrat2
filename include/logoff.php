@@ -1,6 +1,4 @@
 <?php
-	session_start();
-	session_destroy();
-	echo "Sessão destruída!";
-	header("Location: ../index.php"); 
+    $location = "http://{$_SERVER['HTTP_HOST']}/siscontrat/inicio/logout";
+	header("Location: $location");
 ?>

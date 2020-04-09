@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 
 $_SESSION['idEvento'] = $_POST['idEvento'];
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 $idEvento = $_SESSION['idEvento'];
 
@@ -28,7 +28,7 @@ $sqlEvento = "SELECT
 
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$view = recuperaDados('producao_eventos', 'id', $idEvento);
+$view = recuperaDados('producao_eventos', 'evento_id', $idEvento);
 
 ?>
 

@@ -9,7 +9,7 @@ if (isset($_POST['cadastra'])) {
     $numEmpenho = $_POST['numEmpenho'];
     $data_entrega = $_POST['data_entrega'];
     $data_emissao = $_POST['data_emissao'];
-    $idUser = $_SESSION['idUser'];
+    $idUser = $_SESSION['usuario_id_s'];
 
     $sql = "INSERT INTO pagamentos (pedido_id, nota_empenho, emissao_nota_empenho, entrega_nota_empenho, usuario_pagamento_id) 
                                 VALUES ('$idPedido', '$numEmpenho', '$data_emissao', '$data_entrega', '$idUser')";

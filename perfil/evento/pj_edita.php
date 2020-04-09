@@ -480,7 +480,7 @@ if (isset($_POST['cadastra'])) {
                                 </div>
                             </div>
                             <?php
-                            if($atracao['valor_individual'] > 0 || $evento['tipo_evento_id'] == 2) {
+                            if($evento['tipo_evento_id'] == 2 || $atracao['valor_individual'] > 0) {
                                 $banco = recuperaDados("pj_bancos", "pessoa_juridica_id", $idPj);
                                 ?>
                                 <input type="hidden" name="bancario">

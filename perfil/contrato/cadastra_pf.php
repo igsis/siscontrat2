@@ -16,6 +16,7 @@ if (isset($_POST['adicionar']) || isset($_POST['adicionarLider'])) {
 }
 
 $idEvento = $_SESSION['idEvento'];
+$idPedido = $_POST['idPedido'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
@@ -147,8 +148,9 @@ $atracao = mysqli_query($con, $sql);
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
+                                    <i>(se não houver, marcar 0)</i>
                                     <input type="number" name="numero" class="form-control" placeholder="Ex.: 10"
-                                           min="1"
+                                           min="0"
                                            required>
                                 </div>
                                 <div class="form-group col-md-3">
@@ -255,6 +257,7 @@ $atracao = mysqli_query($con, $sql);
                                     </div>
                                 </div>
                                 <div class="box-footer">
+                                    <input type='hidden' name='idPedido' value='<?=$idPedido?>'>
                                     <?= $botoesFooter ?>
                                 </div>
                         </form>

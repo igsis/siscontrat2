@@ -7,7 +7,7 @@ $pasta = "?perfil=administrativo&p=";
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
-            <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
+            <li><a href="http://<?=$_SERVER['HTTP_HOST']?>/siscontrat/inicio"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">MÓDULO ADMINISTRATIVO</li>
             <li><a href="<?= $pasta ?>instituicao&sp=solicitacoes_local_espaco"><i class="fa fa-circle-o text-fuchsia"></i><span>Aprovar solicitações</span></a></li>
             <li><a href="<?= $pasta ?>atualizacoes&sp=atualizacoes_lista"><i class="fa fa-circle-o text-aqua"></i><span>Atualizações</span></a></li>

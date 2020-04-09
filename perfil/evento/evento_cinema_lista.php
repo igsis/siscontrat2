@@ -98,6 +98,7 @@ $resul = mysqli_query($con, $query);
                                     echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_lista\" role=\"form\">
                                     <input type='hidden' name='idOrigem' value='" . $filmes['idFilmeEvento'] . "'>
+                                    <input type='hidden' name='idFilme' value='" . $filmes['id'] .  "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-primary\"><i class=\"fa fa-pencil-square-o\"></i> Listar ocorrência</button>
                                     </form>
                                     </td>";
@@ -106,6 +107,7 @@ $resul = mysqli_query($con, $query);
                                     echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_cadastro\" role=\"form\">
                                     <input type='hidden' name='idOrigem' value='" . $filmes['idFilmeEvento'] . "'>
+                                    <input type='hidden' name='idFilme' value='" . $filmes['id'] .  "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><i class=\"fa fa-plus\"></i> Ocorrência</button>
                                     </form>
                                     </td>";
@@ -117,7 +119,7 @@ $resul = mysqli_query($con, $query);
                                 </form>
                                 </td>";
                                 echo "<td>
-                                <buttonn class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' 
+                                <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' 
                                     data-ocorrencia-id='" . $filmes['id'] . "' data-tittle='Apagar Filme' 
                                     data-message='Deseja mesmo excluir o filme do evento?' 
                                     onclick ='passarId(" . $filmes['idFilmeEvento'] . ")'>

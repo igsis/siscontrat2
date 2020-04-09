@@ -8,7 +8,7 @@ unset($_SESSION['idPf']);
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $sql = "SELECT eve.id AS id, eve.protocolo, ped.numero_processo, ped.pessoa_tipo_id, ped.pessoa_juridica_id, ped.pessoa_fisica_id, eve.nome_evento, ped.valor_total, pst.status 
         FROM eventos AS eve
         INNER JOIN pedidos AS ped ON eve.id = ped.origem_id

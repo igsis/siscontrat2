@@ -9,11 +9,20 @@ $parecer = recuperaDados("parecer_artisticos", "pedido_id", $idPedido);
 
 if ($pedido['pessoa_tipo_id'] == 2) {
     $pj = recuperaDados("pessoa_juridicas", "id", $pedido['pessoa_juridica_id']);
-    $t1 = "Esta comissão ratifica o pedido de contratação de XXXXXXX LÍDERES XXXXXXXXX por intermédio da " . $pj['razao_social'] . ", para apresentação artística no evento “" . retornaObjeto($idPedido) . "”, que ocorrerá " . retornaPeriodo($_SESSION['idEvento']) . " no valor de R$ " . $pedido['valor_total'] . " (" . valorPorExtenso($pedido['valor_total']) . ").";
+    $sqlLideres = "SELECT pf.nome FROM lideres AS l
+                    INNER JOIN pessoa_fisicas pf on l.pessoa_fisica_id = pf.id                    
+                    WHERE l.pedido_id = '$idPedido'";
+    $queryLideres = $con->query($sqlLideres)->fetch_all(MYSQLI_ASSOC);
+    foreach ($queryLideres as $lider) {
+        $lideres[] = $lider['nome'];
+    }
+    $lideres = isset($lideres) ? implode(", ", $lideres) : "...";
+    $t1 = "Esta comissão ratifica o pedido de contratação de XXXXXXX LÍDERES $lideres por intermédio da " . $pj['razao_social'] . ", para apresentação artística no evento “" . retornaObjeto($idPedido) . "”, que ocorrerá " . retornaPeriodoNovo($_SESSION['idEvento']) . " no valor de R$ " . $pedido['valor_total'] . " (" . valorPorExtenso($pedido['valor_total']) . ").";
 } else {
     $pf = recuperaDados("pessoa_fisicas", "id", $pedido['pessoa_fisica_id']);
-    $t1 = "Esta comissão ratifica o pedido de contratação de " . $pf['nome'] . ", para apresentação artística no evento “" . retornaObjeto($idPedido) . "”, que ocorrerá " . retornaPeriodo($_SESSION['idEvento']) . " no valor de R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " ).";
+    $t1 = "Esta comissão ratifica o pedido de contratação de " . $pf['nome'] . ", para apresentação artística no evento “" . retornaObjeto($idPedido) . "”, que ocorrerá " . retornaPeriodoNovo($_SESSION['idEvento']) . " no valor de R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " ).";
 }
+
 ?>
 
 <form class="formulario-ajax" method="POST" action="../funcoes/api_pedido_eventos.php" role="form" data-etapa="Parecer Artístico">
@@ -25,7 +34,7 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             <span style="color: gray; "><i><b>Texto de exemplo:</b></i><br/>
             <i>Esta comissão ratifica o pedido de contratação de Nome do artista ou grupo (nome artístico) por intermédio da Nome da empresa representante, para apresentação artística no evento “Nome do evento ou atividade especial”, que ocorrerá no dia datas ou período quando for temporada no valor de R$ XXX (valor por extenso).</i></span>
             <?php
-            if ($parecer['topico1'] == NULL) {
+            if ($parecer == NULL) {
                 ?>
                 <textarea name="topico1" id="topico1" class="form-control" rows="3"><?php echo $t1; ?></textarea>
                 <?php
@@ -50,7 +59,7 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             <span style="color: gray; "><i><b>Texto de exemplo:</b></i><br/>
             <i>Em sua nona edição, o projeto Virada Cultural, da Secretaria Municipal de Cultura, consolida a Cidade de São Paulo como o principal pólo gerador de arte e cultura do País proporcionando, não só aos munícipes como também aos visitantes de outros Estados e de outras nacionalidades, o acesso gratuito ao que há de melhor na produção cultural atual existente no Brasil e no exterior. A Virada Cultural da Cidade de São Paulo, através de apresentações artísticas em logradouros públicos e equipamentos oficiais dentre outros espaços culturais conquistou, nesses nove anos de existência, o reconhecimento da mídia e do público, solidificando-se como um dos eventos nacionais mais conhecidos e divulgados do Brasil, assim como no exterior.</i></span>
             <textarea id="topico2" name="topico2" class="form-control" rows="5"
-                      onkeyup="mostrarResultado(this.value,500,'spcontando');contarCaracteres(this.value,500,'sprestante')"><?php echo $parecer["topico2"]; ?></textarea>
+                      onkeyup="mostrarResultado(this.value,500,'spcontando');contarCaracteres(this.value,500,'sprestante')"><?php echo $parecer["topico2"] ?? ""; ?></textarea>
             <span id="spcontando"
                   style="font-family:Georgia;">Comece a digitar para ativar a contagem de caracteres.</span><br/>
             <span id="sprestante" style="font-family:Georgia;"></span>
@@ -67,7 +76,7 @@ if ($pedido['pessoa_tipo_id'] == 2) {
                 é a
                 melhor escolha de artista para o evento.</label>
             <textarea id="topico3" name="topico3" class="form-control" rows="5"
-                      onkeyup="mostrarResultado3(this.value,700,'spcontando3');contarCaracteres3(this.value,700,'sprestante3')"><?php echo $parecer["topico3"]; ?></textarea>
+                      onkeyup="mostrarResultado3(this.value,700,'spcontando3');contarCaracteres3(this.value,700,'sprestante3')"><?php echo $parecer["topico3"] ?? ""; ?></textarea>
             <span id="spcontando3"
                   style="font-family:Georgia;">Comece a digitar para ativar a contagem de caracteres.</span><br/>
             <span id="sprestante3" style="font-family:Georgia;"></span>
@@ -142,7 +151,7 @@ if ($pedido['pessoa_tipo_id'] == 2) {
                 </div>
             </div>
             <!-- /.box -->
-            <textarea id="topico4" name="topico4" class="form-control" rows="5"><?= $parecer['topico4'] ?></textarea>
+            <textarea id="topico4" name="topico4" class="form-control" rows="5"><?= $parecer['topico4'] ?? "" ?></textarea>
         </div>
     </div>
 

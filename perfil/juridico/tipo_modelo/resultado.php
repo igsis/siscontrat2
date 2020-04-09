@@ -130,7 +130,7 @@ $evento = $con->query($sql)->fetch_array();
                 </div>
                 <div class="box-footer">
                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                    <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left"
+                    <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-right"
                             style="margin: 0 5px;">Gravar
                     </button>
                 </div>

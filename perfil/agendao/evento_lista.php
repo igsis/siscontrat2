@@ -13,7 +13,7 @@
         $mensagem = mensagem("success", "Evento excluido com sucesso!");
     }
     
-    $idUser = $_SESSION['idUser'];
+    $idUser = $_SESSION['usuario_id_s'];
     $sql = "SELECT ev.id AS idEvento, ev.nome_evento FROM agendoes AS ev
             WHERE publicado = 1 AND usuario_id = '$idUser' AND evento_status_id = 1";
     

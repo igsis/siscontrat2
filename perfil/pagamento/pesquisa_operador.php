@@ -31,7 +31,7 @@ unset($_SESSION['idPedido']);
                                     <select name="operador_id" id="operador" class="form-control">
                                         <option value="0">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao('usuarios u INNER JOIN usuario_pagamentos up on up.usuario_id = u.id');
+                                        geraOpcao('usuarios AS u INNER JOIN usuario_contratos AS c ON c.usuario_id = u.id');
                                         ?>
                                     </select>
                                 </div>

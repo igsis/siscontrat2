@@ -7,7 +7,7 @@ unset($_SESSION['idPf']);
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $sql = "SELECT * FROM agendoes WHERE publicado = 1 AND evento_status_id = 3 AND usuario_id = '$idUser'";
 $query = mysqli_query($con, $sql);
 $linha = mysqli_num_rows($query);

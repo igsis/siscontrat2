@@ -1,10 +1,6 @@
 <?php
-$idPedido = $_POST['idPedido'];
 
-$server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/";
-$http = $server . "/pdf/";
-$linkpf = $http . "exporta_word_contabilidade_pf.php";
-$linkpj = $http . "exporta_word_contabilidade_pj.php";
+$idPedido = $_POST['idPedido'];
 
 $con = bancoMysqli();
 $sql = "SELECT  e.id AS 'idEvento',
@@ -42,6 +38,43 @@ $local = substr($local, 1);
 $fiscal = recuperaDados('usuarios', 'id', $pedido['fiscal_id'])['nome_completo'];
 $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_completo'];
 
+$btnWord = "";
+
+if(isset($_POST['gravar'])){
+    $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/";
+    $http = $server . "/pdf/";
+
+    //confere qual link correto baseado no tipo da pessoa
+    if($pedido['pessoa_tipo_id'] == 1){
+        $link = $http . "exporta_word_contabilidade_pf.php";
+    }else{
+        $link = $http . "exporta_word_contabilidade_pj.php";
+    }
+
+    $cadastra = $con->query("UPDATE pedidos SET status_pedido_id = 17 WHERE id = '$idPedido'");
+    if($cadastra){
+        $existeEtapa = $con->query("SELECT pedido_id, data_contabilidade FROM pedido_etapas WHERE pedido_id = '$idPedido'")->fetch_assoc();
+        $hoje = dataHoraNow();
+        if($existeEtapa != NULL && $existeEtapa['data_contabilidade'] == NULL){
+            $con->query("UPDATE pedido_etapas SET data_contabilidade = '$hoje' WHERE pedido_id = '$idPedido'");
+        }
+        if($existeEtapa == NULL){
+            $con->query("INSERT INTO pedido_etapas (pedido_id,data_contabilidade) VALUES ('$idPedido','$hoje')");
+        }
+        $mensagem = mensagem("success", "Cadastrado com sucesso!");
+
+        $btnWord = "<hr>
+                    <div class='col-md-12'>
+                        <form action='$link' method='POST' target='_blank'>
+                            <input type='hidden' value='" .  $pedido['id'] . "' id='idPedido' name='idPedido'>
+                            <button style='width:25%' type='submit' class='btn btn-success btn-block center-block'>Gerar Word</button>
+                        </form>
+                    </div>";
+    } else{
+        $mensagem = mensagem("danger", "Erro ao cadastrar.");
+    }
+}
+
 ?>
 
 <div class="content-wrapper">
@@ -52,6 +85,9 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">Detalhes do pedido selecionado</h3>
+            </div>
+            <div class="row" align="center">
+                <?= $mensagem ?? NULL; ?>
             </div>
             <div class="box-body">
                 <div class="table-responsive">
@@ -74,10 +110,8 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                         <?php
                         if ($pedido['pessoa_tipo_id'] == 1) {
                             $pessoa = recuperaDados("pessoa_fisicas", 'id', $pedido['pessoa_fisica_id'])['nome'];
-                            $link = $linkpf;
                         } else if ($pedido['pessoa_tipo_id'] == 2) {
                             $pessoa = recuperaDados("pessoa_juridicas", 'id', $pedido['pessoa_juridica_id'])['razao_social'];
-                            $link = $linkpj;
                         }
                         ?>
 
@@ -102,7 +136,7 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
 
                         <tr>
                             <th width="30%">Valor:</th>
-                            <td><?= $pedido['valor_total'] ?></td>
+                            <td><?= "R$". dinheiroParaBr($pedido['valor_total']) ?></td>
                         </tr>
 
                         <tr>
@@ -152,7 +186,7 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
 
                         <tr>
                             <th width="30%">Observação:</th>
-                            <td><?= $pedido['observacao'] ?></td>
+                            <td><?= $pedido['observacao'] == NULL ? "Não cadastrado" : $pedido['observacao'] ?></td>
                         </tr>
 
                         <?php
@@ -170,13 +204,14 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
                 </div>
             </div>
             <div class="box-footer">
-                <form action="<?= $link ?>" role="form" target="_blank" method="POST">
+                <form action="?perfil=contabilidade&p=eventos&sp=detalhes" role="form" method="POST">
                     <a href="?perfil=contabilidade&p=eventos&sp=pesquisa">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
                     <input type="hidden" value="<?= $pedido['id'] ?>" id="idPedido" name="idPedido">
-                    <button type="submit" class="btn btn-success pull-right">Gerar Word</button>
+                    <button type="submit" name="gravar" class="btn btn-primary pull-right">Gravar</button>
                 </form>
+                <?= $btnWord ?>
             </div>
         </div>
     </section>

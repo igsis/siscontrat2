@@ -37,10 +37,10 @@ if (isset($_POST['editar'])) {
 
     if (mysqli_query($con, $sqlUpdate)) {
 
-        $existeLider = "SELECT * FROM Lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
-
-        $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
-        if ($resultado) {
+        $existeLider = "SELECT * FROM lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
+        $queryExiste = mysqli_query($con, $existeLider);
+        $resultado = mysqli_num_rows($queryExiste);
+        if ($resultado > 0) {
             $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
         } else {
             $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido','$idAtracao','$idLider')";
@@ -102,14 +102,14 @@ if (isset($_POST['cadastrar'])) {
 
     if (mysqli_query($con, $sqlInsert)) {
         $idLider = recuperaUltimo("pessoa_fisicas");
-        $existeLider = "SELECT * FROM Lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
-
-        $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
-        if ($resultado) {
+        $existeLider = "SELECT * FROM lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
+        $queryExiste = mysqli_query($con, $existeLider);
+        $resultado = mysqli_num_rows($queryExiste);
+        if ($resultado > 0) {
             $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
             $mensagem .= mensagem("success", "Troca de lider realizada!");
         } else {
-            $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido','$idAtracao','$idLider')";
+            $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUES ('$idPedido','$idAtracao','$idLider')";
             $mensagem .= mensagem("success", "Lider inserido!");
         }
 
@@ -143,10 +143,10 @@ if (isset($_POST['selecionar'])) {
     $idAtracao = $_POST['idAtracao'];
     $tipoDocumento = $_POST['tipoDocumento'];
 
-    $existeLider = "SELECT * FROM Lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
-
-    $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
-    if ($resultado) {
+    $existeLider = "SELECT * FROM lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
+    $queryExiste = mysqli_query($con, $existeLider);
+    $resultado = mysqli_num_rows($queryExiste);
+    if ($resultado > 0) {
         $sqLider = "UPDATE lideres SET pessoa_fisica_id = '$idLider' WHERE pedido_id = '$idPedido' AND atracao_id ='$idAtracao'";
     } else {
         $sqLider = "INSERT INTO lideres (pedido_id, atracao_id, pessoa_fisica_id) VALUE ('$idPedido','$idAtracao','$idLider')";
@@ -288,7 +288,7 @@ include "includes/menu_interno.php";
                                     <div class="form-group col-md-3">
                                         <label for="drt">DRT: <i>(Somente para artes cênicas)</i></label>
                                         <input type="text" class="form-control" id='drt' name='drt'
-                                               maxlength="15" value="<?= $drt['drt'] ?>">
+                                               maxlength="15" value="<?= $drt['drt'] ?? "" ?>">
                                     </div>
                                 </div>
                             </div>

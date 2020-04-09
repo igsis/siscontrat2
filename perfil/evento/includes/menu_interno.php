@@ -12,7 +12,7 @@ $pasta = "?perfil=evento&p=";
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu" data-widget="tree">
-            <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
+            <li><a href="http://<?=$_SERVER['HTTP_HOST']?>/siscontrat/inicio"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">EVENTO</li>
 
             <?php if($eventoNovo) { ?>
@@ -52,10 +52,9 @@ $pasta = "?perfil=evento&p=";
             include "../perfil/includes/menu_mais.php";
             ?>
             <!--
-            <li class="header">MAIS</li>
-            <li><a href="?perfil=usuario/minha_conta"><i class="fa fa-user"></i><span>Minha Conta</span></a></li>
-            <li><a href="http://smcsistemas.prefeitura.sp.gov.br/manual/siscontrat/" target="_blank"><i class="fa fa-question "></i><span>Ajuda</span></a></li>
-            <li><a href="../include/logoff.php"><i class="fa fa-sign-out"></i><span>Sair</span></a></li>
+            <?php
+            include "../perfil/includes/menu_mais.php";
+            ?>
             -->
         </ul>
     </section>

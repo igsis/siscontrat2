@@ -3,7 +3,7 @@
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu" data-widget="tree">
-            <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
+            <li><a href="http://<?=$_SERVER['HTTP_HOST']?>/siscontrat/inicio"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">COMUNICAÇÃO</li>
             <li><a href="?perfil=comunicacao&p=filtro"><i class="fa fa-circle-o"></i> <span>Filtrar</span></a></li>
 <!--            <li><a href="?perfil=comunicacao&p=exportar_csv"><i class="fa fa-circle-o"></i> <span>Gerar Arquivo .csv</span></a></li>-->

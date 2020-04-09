@@ -37,6 +37,8 @@ $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND 
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
+$idPenal = $_GET['penal'];
+
 $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
 $queryLocal = mysqli_query($con, $sqlLocal);
 $local = '';
@@ -63,7 +65,7 @@ Entenda-se como natureza eventual aquela originária de até duas prestações d
 - Contratados Pessoa Jurídica não podem utilizar conta de pessoa física para o recebimento.
 - Contratação de Pessoa Física: sempre informar Número do NIT ou PIS/PASEP.";
 
-$sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 13";
+$sqlPenalidade = "SELECT texto FROM penalidades WHERE id = $idPenal";
 $penalidades = $con->query($sqlPenalidade)->fetch_array();
 
 $sqlDRT = "SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf";
@@ -120,7 +122,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(27, $l, utf8_decode("Nome Artístico:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($pessoa['nome_artistico']), 0, 'L', 0);
+$pdf->MultiCell(120, $l, utf8_decode($pessoa['nome_artistico'] == NULL ? "Não cadastrado" : $pessoa['nome_artistico']), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);

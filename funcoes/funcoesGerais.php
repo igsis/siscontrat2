@@ -278,7 +278,7 @@ setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 	{
 		//grava na tabela log os inserts e updates
 		$logTratado = addslashes($log);
-		$idUser = $_SESSION['idUser'];
+		$idUser = $_SESSION['usuario_id_s'];
 		$ip = $_SERVER["REMOTE_ADDR"];
 		$data = date('Y-m-d H:i:s');
 		$sql = "INSERT INTO `log` (`id`, `idUsuario`, `enderecoIP`, `dataLog`, `descricao`)
@@ -443,7 +443,7 @@ function geraOpcaoLocais ($tabela, $select = '')
                             ORDER BY data_inicio ASC LIMIT 0,1";
         $query_data_inicio = mysqli_query($con,$sql_data_inicio);
         $array_inicio = mysqli_fetch_array($query_data_inicio);
-        $data_inicio = $array_inicio['data_inicio'];
+        $data_inicio = $array_inicio['data_inicio'] ?? "";
 
         $sql_data_fim = "SELECT data_fim FROM ocorrencias AS oco
                             INNER JOIN eventos AS eve on oco.origem_ocorrencia_id = eve.id
@@ -453,7 +453,7 @@ function geraOpcaoLocais ($tabela, $select = '')
         $query_data_fim = mysqli_query($con,$sql_data_fim);
         $array_fim = mysqli_fetch_array($query_data_fim);
 
-        $data_fim = $array_fim['data_fim'];
+        $data_fim = $array_fim['data_fim'] ?? "";
         if($data_fim == '0000-00-00' OR $data_fim == NULL){
             return "dia ".exibirDataBr($data_inicio);
         }

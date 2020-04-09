@@ -4,7 +4,7 @@ require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
-session_start();
+session_start(['name' => 'sis']);
 
 $idPedido = $_POST['idPedido'];
 

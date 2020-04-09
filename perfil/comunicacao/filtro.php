@@ -5,7 +5,7 @@ include "includes/funcoesAuxiliares.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 if (isset($_POST['_filtros'])) {
 
@@ -22,6 +22,10 @@ if (isset($_POST['_filtros'])) {
     isset($_POST['site']) && (float)$_POST['site'] <> 3 ? array_push($pendente, 3) : '';
     isset($_POST['impresso']) && (float)$_POST['impresso'] <> 4 ? array_push($pendente, 4) : '';
     isset($_POST['foto']) && (float)$_POST['foto'] <> 5 ? array_push($pendente, 5) : '';
+
+
+    $confirmados = verificaArray($confirmados);
+    $pendente = verificaArray($pendente);
 
     $query = retornaEventosComunicacao($idUser,['eventos','comunicacoes'],$confirmados,$pendente);
     $query2 = retornaEventosComunicacao($idUser,['agendoes','comunicacao_agendoes'],$confirmados,$pendente);

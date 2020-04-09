@@ -1,15 +1,11 @@
 <?php
 ini_set('session.gc_maxlifetime', 60*60); // 60 minutos
-session_start();
+session_start(['name' => 'sis']);
 date_default_timezone_set('GMT');
-if(!isset ($_SESSION['login']) == true) //verifica se há uma sessão, se não, volta para área de login
+if(!isset ($_SESSION['login_s'])) //verifica se há uma sessão, se não, volta para área de login
 {
-    unset($_SESSION['login']);
-    header('location:../index.php');
-}
-else
-{
-    $logado = $_SESSION['login'];
+    $location = "http://{$_SERVER['HTTP_HOST']}/siscontrat/inicio/logout";
+    header("Location: $location");
 }
 
 ?>

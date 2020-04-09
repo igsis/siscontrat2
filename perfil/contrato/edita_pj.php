@@ -9,10 +9,6 @@ $link_facc = $http . "rlt_fac_pj.php";
 
 $tipoPessoa = 2;
 
-isset($_POST['idPedido']);
-$idPedido = $_POST['idPedido'];
-
-
 if (isset($_POST['adicionar']) || isset($_POST['idPj'])) {
     $idPj = $_POST['idPj'];
     $editaOnly = "<input type='hidden' name='editOnly' value= '1'>";
@@ -36,6 +32,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $conta = $_POST['conta'] ?? NULL;
     $observacao = addslashes($_POST['observacao']) ?? NULL;
     $ultima_atualizacao = date('Y-m-d H:i:s');
+    $idPedido = $_POST['idPedido'];
 }
 
 if (isset($_POST['cadastra'])) {
@@ -306,7 +303,8 @@ if (isset($pj['representante_legal2_id'])) {
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" class="form-control" min="1"
+                                    <i>(se não houver, marcar 0)</i>
+                                    <input type="number" name="numero" class="form-control" min="0"
                                            placeholder="Ex.: 10"
                                            required value="<?= $end['numero'] ?>">
                                 </div>
@@ -373,7 +371,7 @@ if (isset($pj['representante_legal2_id'])) {
                             </div>
                             <div class="box-footer">
                                 <button type="submit" name="edita" value="<?= $pj['id'] ?>"
-                                        class="btn btn-info pull-left">Atualizar
+                                        class="btn btn-primary pull-right">Salvar
                                 </button>
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
 
@@ -419,6 +417,7 @@ if (isset($pj['representante_legal2_id'])) {
                                     <form method="POST" action="?perfil=contrato&p=representante_busca"
                                           role="form">
                                         <input type="hidden" name="tipoRepresentante" value="1">
+                                        <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                         <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                                 class="btn btn-info btn-block">Representante 01
                                         </button>
@@ -428,6 +427,7 @@ if (isset($pj['representante_legal2_id'])) {
                                     <form method="POST" action="?perfil=contrato&p=representante_busca"
                                           role="form">
                                         <input type="hidden" name="tipoRepresentante" value="2">
+                                        <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                                         <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                                 class="btn btn-info btn-block">Representante 02
                                         </button>

@@ -3,19 +3,19 @@ $con = bancoMysqli();
 
 $sqlProtocolo = '';
 $sqlProcesso = '';
+$sqlNomeEvento = '';
+$sqlProjeto = '';
 $sqlUsuario = '';
-$sqlInstituicao = '';
-$sqlRelacao = '';
-$sqlTipo = '';
 $sqlStatus = '';
+//$sqlRelacao = '';
+//$sqlTipo = '';
 
 if(isset($_POST['buscar'])){
     $protocolo = $_POST['protocolo'] ?? NULL;
     $numProcesso = $_POST['num_processo']  ?? NULL;
+    $nomeEvento = $_POST['evento'] ?? NULL;
+    $projeto = $_POST['projeto'] ?? NULL;
     $usuario = $_POST['usuario'] ?? NULL;
-    $tipo_evento = $_POST['tipo_evento'] ?? NULL;
-    $instituicao = $_POST['instituicao'] ?? NULL;
-    $rel_jur = $_POST['rel_jur'] ?? NULL;
     $status = $_POST['status'] ?? NULL;
 }
 
@@ -27,39 +27,36 @@ if ($numProcesso != null) {
     $sqlProcesso = " AND p.numero_processo LIKE '%$numProcesso%' ";
 }
 
-if ($usuario != null) {
-    $sqlUsuario = " AND u.nome_completo LIKE '%$usuario%'";
+if ($nomeEvento != null){
+    $sqlNomeEvento = " AND e.nome_evento LIKE '%$nomeEvento%'";
 }
 
-if ($tipo_evento != null) {
-    $sqlTipo = " AND e.tipo_evento_id = '$tipo_evento'";
+if ($projeto != null && $projeto != 0){
+    $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
 }
 
-if ($instituicao != null) {
-    $sqlInstituicao = " AND o.instituicao_id = '$instituicao'";
-}
-
-if ($rel_jur != null) {
-    $sqlRelacao = " AND e.relacao_juridica_id = '$rel_jur'";
+if ($usuario != null && $usuario != 0){
+    $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
 }
 
 if ($status != null) {
     $sqlStatus = " AND p.status_pedido_id = '$status'";
 }
 
-$sql = "SELECT p.numero_processo, e.protocolo,
+$sql = "SELECT p.numero_processo, e.nome_evento, e.protocolo,
                p.pessoa_tipo_id, p.pessoa_fisica_id,
                p.pessoa_juridica_id, e.nome_evento, 
                e.tipo_evento_id, st.status, p.id
         FROM pedidos AS p 
         INNER JOIN eventos AS e ON e.id = p.origem_id 
-        INNER JOIN evento_status AS st ON e.evento_status_id = st.id 
-        INNER JOIN usuarios AS u ON u.id = e.usuario_id 
+        INNER JOIN evento_status AS st ON e.evento_status_id = st.id
+        INNER JOIN usuarios AS u ON u.id = e.usuario_id
         INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id 
         WHERE p.origem_tipo_id = 1 AND p.publicado = 1 AND e.publicado = 1
-        $sqlProtocolo $sqlProcesso $sqlUsuario $sqlTipo $sqlInstituicao $sqlRelacao $sqlStatus
+        AND e.evento_status_id = 3 AND p.status_pedido_id NOT IN (1,3,20,21)
+        $sqlProtocolo $sqlProcesso $sqlNomeEvento $sqlUsuario $sqlProjeto $sqlStatus
         GROUP BY e.id";
-               
+
                
 ?>
 
@@ -100,7 +97,7 @@ $sql = "SELECT p.numero_processo, e.protocolo,
                                             <input type="hidden" name="idPedido" id="idPedido"
                                                    value="<?= $pedido['id'] ?>">
                                             <button type="submit"
-                                                    class="btn btn-primary btn-block"><?= $pedido['numero_processo'] ?></button>
+                                                    class="btn btn-primary btn-block" name="carrega"><?= $pedido['numero_processo'] ?></button>
                                         </form>
                                     </td>
                                     <?php

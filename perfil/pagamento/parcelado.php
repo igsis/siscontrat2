@@ -79,7 +79,7 @@ if ($pedido['pessoa_tipo_id'] == 2) {
     $proponente = $con->query("SELECT nome FROM pessoa_fisicas WHERE id = '$idPf'")->fetch_assoc()['nome'];
 }
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idUser'")->fetch_array();
 ?>
 <div class="content-wrapper">

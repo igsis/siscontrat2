@@ -12,8 +12,7 @@ if (isset($_POST['selecionar']) || isset($_POST['idPf'])) {
     $editaOnly = "<input type='hidden' name='editOnly' value= '1'>";
 }
 
-isset($_POST['idPedido']);
-$idPedido = $_POST['idPedido'];
+
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider'])) {
     $nome = addslashes($_POST['nome']);
@@ -40,6 +39,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastr
     $agencia = $_POST['agencia'] ?? NULL;
     $conta = $_POST['conta'] ?? NULL;
     $data = date("y-m-d h:i:s");
+    $idPedido = $_POST['idPedido'];
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider'])) {
@@ -398,7 +398,7 @@ $atracao = mysqli_query($con, $sql);
                                     <label for="numero">Número: *</label>
                                     <i>(se não houver, marcar 0)</i>
                                     <input type="number" name="numero" class="form-control" min="0"
-                                           placeholder="(se não houver número marcar 0)" required
+                                           required
                                            value="<?= $endereco['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
@@ -574,7 +574,7 @@ $atracao = mysqli_query($con, $sql);
                                     <input type="hidden" name="idPf" value="<?= $pf['id'] ?>">
                                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                                     <?= $editaOnly ?? NULL ?>
-                                    <button type="submit" name="Voltar" class="btn btn-info btn-block" pull-left" style="margin:  0 5px;">
+                                    <button type="submit" name="Voltar" class="btn btn-right pull-right">
                                         Voltar
                                     </button>
                                 </form>

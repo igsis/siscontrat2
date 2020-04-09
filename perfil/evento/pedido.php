@@ -49,14 +49,16 @@ if($evento['tipo_evento_id']==1) {
     $nome_atracao = $nome_filme = substr($nome_filme,0,-3);
 }
 
-if ($pedido['pessoa_tipo_id'] == 2) {
-    $pj = recuperaDados("pessoa_juridicas", "id", $pedido['pessoa_juridica_id']);
-    $nomeProponente = $pj['razao_social'];
-    $idProponente = $pj['id'];
-} else {
-    $pf = recuperaDados("pessoa_fisicas", "id", $pedido['pessoa_fisica_id']);
-    $nomeProponente = $pf['nome'];
-    $idProponente = $pf['id'];
+if ($pedido != null) {
+    if ($pedido['pessoa_tipo_id'] == 2) {
+        $pj = recuperaDados("pessoa_juridicas", "id", $pedido['pessoa_juridica_id']);
+        $nomeProponente = $pj['razao_social'];
+        $idProponente = $pj['id'];
+    } else {
+        $pf = recuperaDados("pessoa_fisicas", "id", $pedido['pessoa_fisica_id']);
+        $nomeProponente = $pf['nome'];
+        $idProponente = $pf['id'];
+    }
 }
 
 ?>

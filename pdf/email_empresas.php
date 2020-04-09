@@ -35,7 +35,7 @@ switch ($modeloEmail) {
 }
 
 $dataAtual = dataHoraNow();
-session_start();
+session_start(['name' => 'sis']);
 
 // GERANDO O WORD:
 header("Content-type: application/vnd.ms-word");
@@ -60,7 +60,7 @@ header("Content-Disposition: attachment;Filename=$dataAtual - Processo SEI ".$pe
 <p>&nbsp;</p>
 <p align="justify">Atenciosamente,</p>
 <br>
-<p><?=$_SESSION['nome']?><br>
+<p><?=$_SESSION['nome_s']?><br>
     SMC / Pagamentos Artísticos<br>
     Tel: (11) 3397-0191</p>
 </body>

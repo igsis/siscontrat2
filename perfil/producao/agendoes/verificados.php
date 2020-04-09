@@ -4,7 +4,7 @@ unset($_SESSION['idEvento']);
 unset($_SESSION['idPf']);
 unset($_SESSION['idPj']);
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 $con = bancoMysqli();
 

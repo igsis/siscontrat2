@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 if (isset($_POST['cadastra'])) {
     $programa = addslashes($_POST['programa']);
