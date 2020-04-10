@@ -159,6 +159,7 @@ if (isset($_POST['edita'])) {
 
 if (isset($_POST['load'])) {
     $idPj = $_POST['idPj'];
+    $idPedido = $_POST['idPedido'];
 }
 
 $sqlTelefones = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
