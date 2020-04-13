@@ -62,7 +62,7 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="email">E-mail</label>
+                                    <label for="email">E-mail: *</label>
                                     <input type='email' class='form-control' id='email' name='email' maxlength='60' placeholder='Digite o e-mail' value='<?= $row['email']?>' required>
                                 </div>
                                 <div class="form-group col-md-3">

@@ -609,7 +609,8 @@ if (isset($_POST['cadastra'])) {
                                     class="btn btn-info btn-block" id="modal" data-toggle="modal"
                                     data-target="#modal-representante-edita" data-tipo="1"
                                     data-id="<?= $representante1['id'] ?>" data-nome="<?= $representante1['nome'] ?>">
-                                Representante 01
+                                Representante 01 <br>
+                                <?= $representante1['nome'] ?>
                             </button>
                         </div>
                         <div class="form-group col-md-3">
@@ -617,7 +618,8 @@ if (isset($_POST['cadastra'])) {
                                     class="btn btn-info btn-block" id="modal" data-toggle="modal"
                                     data-target="#modal-representante-edita" data-tipo="2"
                                     data-id="<?= $representante2['id'] ?>" data-nome="<?= $representante2['nome'] ?>">
-                                Representante 02
+                                Representante 02 <br>
+                                <?= $representante2['nome'] ?>
                             </button>
                         </div>
                         <?php
@@ -629,7 +631,8 @@ if (isset($_POST['cadastra'])) {
                                     id="modal" data-toggle="modal" data-target="#modal-representante-edita"
                                     data-tipo="1"
                                     data-id="<?= $representante1['id'] ?>" data-nome="<?= $representante1['nome'] ?>">
-                                Representante 01
+                                Representante 01 <br>
+                                <?= $representante1['nome'] ?>
                             </button>
                         </div>
                         <div class="form-group col-md-3">

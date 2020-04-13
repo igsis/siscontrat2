@@ -14,6 +14,7 @@ $idEvento = $_POST['idEvento'];
 
 $sql = "SELECT
                 E.id AS 'evento_id',
+                A.id AS 'atracao_id',
                 E.tipo_evento_id AS 'tipo_evento',
                 E.nome_evento AS 'nome',
                 E.espaco_publico AS 'espaco_publico',
@@ -213,21 +214,26 @@ while ($linha = mysqli_fetch_array($query)) {
     }
 
     //Ações
-    $sqlAcao = "SELECT * FROM acao_evento WHERE evento_id = '" . $linha['evento_id'] . "'";
-    $queryAcao = mysqli_query($con, $sqlAcao);
-    $acoes = [];
-    $i = 0;
+    if ($linha['tipo_evento'] == 1) {
+        $sqlAcao = "SELECT * FROM acao_atracao WHERE atracao_id = '" . $linha['atracao_id'] . "'";
+        $queryAcao = mysqli_query($con, $sqlAcao);
+        $acoes = [];
+        $i = 0;
 
-    while ($arrayAcoes = mysqli_fetch_array($queryAcao)) {
-        $idAcao = $arrayAcoes['acao_id'];
-        $sqlLinguagens = "SELECT * FROM acoes WHERE id = '$idAcao'";
-        $linguagens = $con->query($sqlLinguagens)->fetch_assoc();
-        $acoes[$i] = $linguagens['acao'];
-        $i++;
-    }
+        while ($arrayAcoes = mysqli_fetch_array($queryAcao)) {
+            $idAcao = $arrayAcoes['acao_id'];
+            $sqlLinguagens = "SELECT * FROM acoes WHERE id = '$idAcao'";
+            $linguagens = $con->query($sqlLinguagens)->fetch_assoc();
+            $acoes[$i] = $linguagens['acao'];
+            $i++;
+        }
 
-    if (count($acoes) != 0) {
-        $stringAcoes = implode(", ", $acoes);
+        if (count($acoes) != 0) {
+            $stringAcoes = implode(", ", $acoes);
+        }
+    } else {
+        $acao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
+        $stringAcoes = $acao['acao'];
     }
 
     //Público
@@ -284,7 +290,7 @@ while ($linha = mysqli_fetch_array($query)) {
         $linha['bairro']
     ];
 
-    $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
+    $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $linha['evento_id'] . " AND o.publicado = 1";
     $queryLocal = mysqli_query($con, $sqlLocal);
     $local = '';
     while ($locais = mysqli_fetch_array($queryLocal)) {

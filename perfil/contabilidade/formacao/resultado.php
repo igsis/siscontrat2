@@ -90,7 +90,7 @@ $sql = "SELECT
             </div>
             <div class="box-footer">
                 <a href="?perfil=contabilidade&p=formacao&sp=pesquisa">
-                    <button type="button" class="btn btn-default">Voltar a pesquisa</button>
+                    <button type="button" class="btn btn-default">Voltar</button>
                 </a>
             </div>
         </div>

@@ -31,17 +31,17 @@ $pessoa = recuperaDados('pessoa_juridicas', 'id', $idPj);
 $idRepresentante = $pessoa['representante_legal1_id'];
 $representante = recuperaDados('representante_legais', 'id', $idRepresentante);
 
-$sqlTelefone = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj' AND publicado = 1'";
+$sqlTelefone = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
-
-$endereco = recuperaDados('pj_enderecos', 'pessoa_juridica_id', $idPj);
 
 while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
     $tel = $tel . $linhaTel['telefone'] . ' | ';
 }
 
 $tel = substr($tel, 0, -3);
+
+$endereco = recuperaDados('pj_enderecos', 'pessoa_juridica_id', $idPj);
 
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
