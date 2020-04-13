@@ -1369,7 +1369,7 @@ function listaOcorrenciasContrato($idEvento){
     return $cronograma;
 }
 
-function retornaPeriodoNovo($id, $tabela)
+function retornaPeriodoNovo($id, $tabela = "ocorrencias")
 {
     //retorna o período
     $con = bancoMysqli();

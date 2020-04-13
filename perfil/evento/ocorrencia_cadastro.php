@@ -255,19 +255,19 @@ $tipoEvento = $evento['tipo_evento_id'];
                                                minutoFinal -= 60;
                                                hora += 1;
                                             }
-                                            if(minutoFinal == 0 && minutoFinal != 00){
+                                            if(minutoFinal == 0 && minutoFinal != '00'){
                                                 minutoFinal = minutoFinal + "0";
                                             }
                                             if(minutoFinal < 10){
                                                 minutoFinal = "0" + minutoFinal;
                                             }
-                                            if(hora == 0 && minutoFinal != 00){
+                                            if(hora == 0 && minutoFinal != '00'){
                                                 hora = hora + "0";
                                             }
                                             if(hora < 10){
                                                 hora = "0" + hora;
                                             }
-                                            if(hora == 00){
+                                            if(hora == '00'){
                                                 hora = "00";
                                             }
 
@@ -305,8 +305,8 @@ $tipoEvento = $evento['tipo_evento_id'];
                                 <div class="form-group col-md-3">
                                     <label for="valor_ingresso">Valor Ingresso*</label> <br>
                                     <input type="text" name="valor_ingresso" class="form-control" required
-                                           id="valor_ingresso"
-                                           placeholder="Em reais" onkeypress="return(moeda(this, '.', ',', event))"/>
+                                           id="valor_ingresso" maxlength="5"
+                                           placeholder="Em reais" >
                                 </div>
                             </div>
 
@@ -327,7 +327,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <a href="?perfil=evento&p=adicionar_local>">
+                                    <a href="?perfil=evento&p=adicionar_local">
                                         <button type="button" class="fa fa-plus btn-success pull-right"></button>
                                     </a>
                                     <label for="local">Local *</label>
@@ -337,7 +337,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <a href="?perfil=evento&p=adicionar_espaco>">
+                                    <a href="?perfil=evento&p=adicionar_espaco">
                                         <button type="button" class="fa fa-plus btn-success pull-right"></button>
                                     </a>
                                     <label for="espaco">Espaço *</label>
@@ -392,6 +392,10 @@ $tipoEvento = $evento['tipo_evento_id'];
 </div>
 
 <script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#valor_ingresso').mask('00,00',{reverse: true})
+    });
 
     function insti_local() {
         const urlModal = `<?=$url?>`;

@@ -671,7 +671,7 @@ include "includes/menu_interno.php";
                                     <div class="form-group col-md-6">
                                         <label for="drt">DRT: </label>
                                         <input type="text" name="drt" class="form-control telefone" maxlength="15"
-                                               placeholder="Digite o DRT" value="<?= $drts['drt'] ?>">
+                                               placeholder="Digite o DRT" value="<?= $drts['drt'] ?? "" ?>">
                                     </div>
                                     <?php
                                 }
@@ -679,14 +679,14 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-12">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
-                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
+                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?? "" ?>">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
-                                    <textarea name="observacao" rows="3" class="form-control"><?= $observacao['observacao'] ?></textarea>
+                                    <textarea name="observacao" rows="3" class="form-control"><?= $observacao['observacao'] ?? "" ?></textarea>
                                 </div>
                             </div>
                             <?php

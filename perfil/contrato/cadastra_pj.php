@@ -1,6 +1,7 @@
 <?php
 $con = bancoMysqli();
 $idEvento = $_SESSION['idEvento'];
+$idPedido = $_POST['idPedido'];
 
 $sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'";
 $atracao = mysqli_query($con, $sql);
@@ -89,7 +90,8 @@ $atracao = mysqli_query($con, $sql);
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
-                                    <input type="number" name="numero" min="1" class="form-control"
+                                    <i>(se não houver, marcar 0)</i>
+                                    <input type="number" name="numero" min="0" class="form-control"
                                            placeholder="Ex.: 10"
                                            required>
                                 </div>
@@ -151,6 +153,7 @@ $atracao = mysqli_query($con, $sql);
                             </div>
 
                             <div class="box-footer">
+                                <input type='hidden' name='idPedido' value="<?= $idPedido ?>">
                                 <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
                                     Cadastrar
                                 </button>

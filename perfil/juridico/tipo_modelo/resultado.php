@@ -129,7 +129,9 @@ $evento = $con->query($sql)->fetch_array();
                     </table>
                 </div>
                 <div class="box-footer">
+                <form action="perfil=juridico&p=tipo_modelo&sp=dados_modelo" role="form" method="post">
                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                    <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
                     <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-right"
                             style="margin: 0 5px;">Gravar
                     </button>

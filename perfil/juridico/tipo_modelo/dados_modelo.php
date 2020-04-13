@@ -6,6 +6,10 @@ $http = $server . "/pdf/";
 isset($_POST['idEvento']);
 $idEvento = $_POST['idEvento'];
 
+isset($_POST['tipoModelo']);
+$modelo = $_POST['tipoModelo'];
+
+
 $link_padraoEvento = $http . "evento_padrao_evento.php";
 $link_vocacionalEvento = $http . "evento_vocacional_evento.php";
 $link_manifestacaojuridicaEvento = $http . "evento_manifestacao_evento.php";
@@ -64,6 +68,11 @@ if ($num > 0) {
                         </form>
                     </div>
                 </div>
+                <form action="?perfil=juridico&p=tipo_modelo&sp=resultado" method="post" role="form">
+                            <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
+                            <input type="hidden" value="<?= $modelo ?>" name="tipoModelo">
+                            <button type="submit" class="btn btn-default pull-left"> Voltar </button>
+                </form>
             </div>
         </div>
     </section>

@@ -58,7 +58,7 @@ $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
                     ?>
                     <tr>
                         <td width="50%">Valor Total: R$ <?= dinheiroParaBr($pedido['valor_total']) ?></td>
-                        <td width="50%">Valor Faltante: R$ <span id="valorFaltante"></span></td>
+                        <td width="50%">Valor Faltante: <span id="valorFaltante"></span></td>
                     </tr>
                     </tbody>
                 </table>

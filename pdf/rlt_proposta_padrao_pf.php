@@ -29,6 +29,7 @@ $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id']);
 $sqlDRT = "SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf";
+$idPenal = $_GET['penal'];
 $drt = $con->query($sqlDRT)->fetch_array();
 if ($drt['drt'] != "" || $drt['drt'] != NULL) {
     $drt = $drt['drt'];
@@ -77,7 +78,7 @@ Entenda-se como natureza eventual aquela originária de até duas prestações d
 - Contratados Pessoa Jurídica não podem utilizar conta de pessoa física para o recebimento.
 - Contratação de Pessoa Física: sempre informar Número do NIT ou PIS/PASEP.";
 
-$sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 13";
+$sqlPenalidade = "SELECT texto FROM penalidades WHERE id = $idPenal";
 $penalidades = $con->query($sqlPenalidade)->fetch_array();
 
 if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
@@ -142,7 +143,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(27, $l, utf8_decode("Nome Artístico:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($pessoa['nome_artistico']), 0, 'L', 0);
+$pdf->MultiCell(120, $l, utf8_decode($pessoa['nome_artistico'] ==  null ? "Não cadastrado" : $pessoa['nome_artistico']), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -317,7 +318,7 @@ $pdf->MultiCell(180, 5, utf8_decode('1) No caso de pagamento do cachê por rever
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 9);
-$pdf->MultiCell(180, 5, utf8_decode('2) O pagamento do cachê corresponderá à reversão integral da renda obtida na bilheteria a/o ontratada/o, deduzidos os impostos e taxas pertinentes.'));
+$pdf->MultiCell(180, 5, utf8_decode('2) O pagamento do cachê corresponderá à reversão integral da renda obtida na bilheteria a/o contratada/o, deduzidos os impostos e taxas pertinentes.'));
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 9);

@@ -157,7 +157,6 @@ if (isset($_POST['salvar'])) {
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
     $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', valor_total = '$valorTotal', pendencias_contratos = '$pendencia' WHERE id = '$idPedido'";
 
-
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
         if ($operador != NULL) {
             $trocaOp = $con->query("UPDATE pedidos SET operador_id = '$operador' WHERE id = $idPedido");
@@ -173,7 +172,7 @@ if (isset($_POST['salvar'])) {
 if (isset($_POST['reabertura'])) {
     $idEvento = $_POST['idEvento'];
     $now = date('Y-m-d H:i:s', strtotime("-3 Hours"));
-    $idUsuario = $_SESSION['idUser'];
+    $idUsuario = $_SESSION['usuario_id_s'];
     $sql = "INSERT INTO evento_reaberturas (evento_id, data_reabertura, usuario_reabertura_id) VALUES ('$idEvento', '$now', '$idUsuario')";
     $sqlStatus = "UPDATE eventos SET evento_status_id = 1 WHERE id = '$idEvento'";
 
@@ -465,7 +464,7 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
                                 <div class="col-md-12">
                                     <label for="pendencia">Pendências no Setor de Contratos Artísticos:</label>
                                     <textarea name="pendencia" rows="5"
-                                              class="form-control"><?= $pedido['pendencias_contratos'] ?></textarea>
+                                              class="form-control"><?=$pedido['pendencias_contratos']?></textarea>
                                 </div>
                             </div>
                         </div>

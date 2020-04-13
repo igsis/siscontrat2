@@ -69,6 +69,8 @@ if (isset($_POST['enviar'])) {
     }else{
         $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3 WHERE id = '$idEvento'";
         mysqli_query($con, $sqlEnviaEvento);
+        $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
+        $con->query($sqlEnvia);
         $mensagem = mensagem("success", "Evento enviado com sucesso!");
     }
 }

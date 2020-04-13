@@ -95,7 +95,7 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
 <p align='center'><strong>CONTRATADO</strong></p>
 <p><i>(Quando se tratar de grupo, o líder do grupo)</i></p>
 <p><strong>Nome:</strong> <?= $pessoa['nome'] ?></p>
-<p><strong>Nome Artístico:</strong> <?= $pessoa['nome_artistico'] ?></p>
+<p><strong>Nome Artístico:</strong> <?= $pessoa['nome_artistico'] == NULL ? "Não cadastrado" : $pessoa['nome_artistico'] ?></p>
 <p><strong>Nacionalidade:</strong> <?= $nacionalidade['nacionalidade'] ?></p>
 <?=$rg_cpf_passaporte?>
 <p><strong>CCM:</strong> <?= $ccm ?></p>
@@ -105,7 +105,7 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
 </p>
 <p><strong>Telefone:</strong> <?= $tel ?></p>
 <p><strong>E-mail:</strong> <?= $pessoa['email'] ?></p>
-<p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> <?= $nit['nit'] ?></p>
+<p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> <?= $nit['nit'] == NULL ? "Não cadastrado" : $nit['nit'] ?></p>
 
 <br style='page-break-before: always'>
 <p>(B)</p>
