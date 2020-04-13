@@ -13,7 +13,8 @@ if (isset($_POST['busca'])) {
 
     $sql = "SELECT e.id, e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
     p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, 
-    p.valor_total, e.evento_status_id, p.operador_id, ps.status
+    p.valor_total, e.evento_status_id, p.operador_id, ps.status,
+    p.pendencias_contratos
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
@@ -69,6 +70,10 @@ if (isset($_POST['busca'])) {
                                 <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
+                                <th>Local(ais)</th>
+                                <th>Instituição(ões)</th>
+                                <th>Período</th>
+                                <th>Pendências</th>
                                 <th>Status</th>
                                 <th>Operador</th>
                             </tr>
@@ -87,6 +92,36 @@ if (isset($_POST['busca'])) {
                                     ?>
                                     <tr>
                                         <?php
+                                        //Locais
+                                        $sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
+                                        $local = "";
+                                        $queryLocal = mysqli_query($con, $sqlLocal);
+
+                                        while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
+                                            $local = $local . $linhaLocal['local'] . ' | ';
+                                        }
+
+                                        $local = substr($local, 0, -3);
+
+                                        //Proponente
+                                        if ($evento['pessoa_tipo_id'] == 1){
+                                            $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome'];
+                                        }
+                                        else if ($evento['pessoa_tipo_id'] == 2){
+                                            $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
+                                        }
+
+                                        //Instituições
+                                        $sqlInst = "SELECT i.nome FROM instituicoes AS i INNER JOIN ocorrencias AS o ON o.instituicao_id = i.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
+                                        $inst = "";
+                                        $queryInst = mysqli_query($con, $sqlInst);
+
+                                        while ($linhaInst = mysqli_fetch_array($queryInst)) {
+                                            $inst = $inst . $linhaInst['nome'] . '; ';
+                                        }
+
+                                        $inst = substr($inst, 0);
+
                                         if ($evento['pessoa_tipo_id'] == 1)
                                             $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome'];
                                         else if ($evento['pessoa_tipo_id'] == 2)
@@ -105,12 +140,16 @@ if (isset($_POST['busca'])) {
                                         <td><?= $pessoa ?></td>
                                         <td><?= $evento['nome_evento'] ?></td>
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
+                                        <td><?= $local ?></td>
+                                        <td><?= $inst ?></td>
+                                        <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias")?></td>
+                                        <td><?= $evento['pendencias_contratos'] ? "" : "Não possui" ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
                                             if($evento['operador_id'] != NULL){
                                                 $operador = recuperaDados('usuarios', 'id', $evento['operador_id'])['nome_completo'];
                                             }else{
-                                                $operador = "";
+                                                $operador = "Não possui";
                                             }
                                         ?>
                                         <td><?= $operador ?></td>
@@ -128,6 +167,10 @@ if (isset($_POST['busca'])) {
                                 <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
+                                <th>Local(ais)</th>
+                                <th>Instituição(ões)</th>
+                                <th>Período</th>
+                                <th>Pendências</th>
                                 <th>Status</th>
                                 <th>Operador</th>
                             </tr>

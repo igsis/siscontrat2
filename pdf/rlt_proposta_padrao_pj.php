@@ -105,25 +105,27 @@ if ($checa != 0) {
 }
 
 //líder
-$lider = $con->query("SELECT pessoa_fisica_id FROM lideres WHERE pedido_id = $idPedido")->fetch_array();
-$dadosLider = recuperaDados('pessoa_fisicas', 'id', $lider['pessoa_fisica_id']);
-$drtLider = $con->query('SELECT drt FROM drts WHERE pessoa_fisica_id = ' . $lider['pessoa_fisica_id'])->fetch_array();
+if($evento['tipo_evento_id'] == 1){
+    $lider = $con->query("SELECT pessoa_fisica_id FROM lideres WHERE pedido_id = $idPedido")->fetch_array();
+    $dadosLider = recuperaDados("pessoa_fisicas", "id", $lider['pessoa_fisica_id']);
+    $drtLider = $con->query('SELECT drt FROM drts WHERE pessoa_fisica_id = ' . $lider['pessoa_fisica_id'])->fetch_array();
 
-if($drtLider['drt'] != NULL || $drtLider['drt'] != ''){
-    $drtLider = $drtLider['drt'];
-}else{
-    $drtLider = "Não cadastrado.";
+    if($drtLider['drt'] != NULL || $drtLider['drt'] != ''){
+        $drtLider = $drtLider['drt'];
+    }else{
+        $drtLider = "Não cadastrado.";
+    }
+
+    $telefoneLider = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = " . $lider['pessoa_fisica_id'];
+    $telLider = "";
+    $queryTelefoneLider = mysqli_query($con, $telefoneLider);
+
+    while ($linhaTelLider = mysqli_fetch_array($queryTelefoneLider)) {
+        $telLider = $telLider . $linhaTelLider['telefone'] . ' | ';
+    }
+
+    $telLider = substr($telLider, 0, -3);
 }
-
-$telefoneLider = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = " . $lider['pessoa_fisica_id'];
-$telLider = "";
-$queryTelefoneLider = mysqli_query($con, $telefoneLider);
-
-while ($linhaTelLider = mysqli_fetch_array($queryTelefoneLider)) {
-    $telLider = $telLider . $linhaTelLider['telefone'] . ' | ';
-}
-
-$telLider = substr($telLider, 0, -3);
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();

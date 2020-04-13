@@ -107,9 +107,8 @@
                                     <div class="form-group col-md-6">
                                         <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não
                                             houver valor</i>
-                                        <input type="text" id="valor_individual" maxlength="8" name="valor_individual"
-                                               class="form-control" required
-                                               >
+                                        <input type="text" id="valor_individual" name="valor_individual"
+                                               class="form-control" required>
                                     </div>
                                     <?php
                                 }
@@ -178,26 +177,6 @@
 </div>
 
 <script>
-$('#msg').hide();
-
-function limitaValor(){
-    var msg = $('#msg');
-    var maxLength = $('#valor_individual').val().length;
-    var btn = $('#cadastra');
-    btn.attr('disabled', true);
-    if (maxLength > 10) {
-        msg.show();
-        btn.attr('disabled', true);
-    }else{
-        msg.hide();
-        btn.attr('disabled', false);
-    };
-}
-
-$('#valor_individual').keyup(limitaValor);
-</script>
-
-<script>
     function desabilitaCheckBox(acoes) {
         if (acoes[8].checked) {
             for (let x = 0; x < acoes.length; x++) {
@@ -249,6 +228,24 @@ $('#valor_individual').keyup(limitaValor);
     }
 
     $('.acoes').on('change', validaAcoes);
+
+    $('#msg').hide();
+
+    function limitaValor(){
+        var msg = $('#msg');
+        var maxLength = $('#valor_individual').val().length;
+        var btn = $('#cadastra');
+        btn.attr('disabled', true);
+        if (maxLength > 10) {
+            msg.show();
+            btn.attr('disabled', true);
+        }else{
+            msg.hide();
+            validaAcoes();
+        };
+    }
+
+    $('#valor_individual').keyup(limitaValor);
 
     $(document).ready(function () {
         validaAcoes();

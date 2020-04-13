@@ -98,7 +98,7 @@ echo
     "<p align='center'><strong>CONTRATADO</strong></p>" .
     "<p><i>(Quando se tratar de grupo, o líder do grupo)</i></p>" .
     "<p><strong>Nome:</strong> " . $pessoa['nome'] . "</p>" .
-    "<p><strong>Nome Artístico:</strong> " . $pessoa['nome_artistico'] . "</p>" .
+    "<p><strong>Nome Artístico:</strong> " . $pessoa['nome_artistico'] == NULL ? "Não cadastrado" : $pessoa['nome_artistico'] . "</p>" .
     "<p><strong>Nacionalidade:</strong> " . $nacionalidade['nacionalidade'] . "</p>" .
     $rg_cpf_passaporte .
     "<p><strong>CCM:</strong> " . $ccm . "</p>" .
@@ -106,7 +106,7 @@ echo
     "<p><strong>Endereço:</strong> " . $endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " . $endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf'] . "</p>" .
     "<p><strong>Telefone:</strong> " . $tel . "</p>" .
     "<p><strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
-    "<p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> " . $nit['nit'] . "</p>" .
+    "<p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> " . $nit['nit'] == NULL ? "Não cadastrado" : $nit['nit'] . "</p>" .
     "<p>&nbsp;</p>" .
     "<p>(B)</p>" .
     "<p align='center'><strong>PROPOSTA</strong></p>" .

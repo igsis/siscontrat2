@@ -143,7 +143,7 @@ $sql = "SELECT p.numero_processo, e.nome_evento, e.protocolo,
             </div>
             <div class="box-footer">
                 <a href="?perfil=contabilidade&p=eventos&sp=pesquisa">
-                    <button type="button" class="btn btn-default">Voltar a pesquisa</button>
+                    <button type="button" class="btn btn-default">Voltar</button>
                 </a>
             </div>
         </div>
