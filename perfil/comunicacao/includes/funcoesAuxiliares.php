@@ -99,16 +99,23 @@ function retornaEventosComunicacao($idUser, $tabela, $confirmados = null, $pende
     $spp = '';
 
     if ($tabela[0] != 'agendoes') {
-        $spp = "AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser') ";
+        $spp = "AND lo.instituicao_id = 
+                (SELECT ins.id FROM instituicoes ins 
+                        INNER JOIN locais l ON ins.id = l.instituicao_id
+                        INNER JOIN local_usuarios lous ON l.id = lous.local_id
+                        INNER JOIN usuarios us ON lous.usuario_id = us.id
+                    WHERE us.id = '{$idUser}')";
     }
-    $sqlSis = "SELECT       eve.id AS idEvento, 
-                        eve.nome_evento AS nome_evento, 
-                        es.status AS status, 
-                        u.nome_completo AS nome_usuario
-        FROM {$tabela[0]} as eve
-        LEFT JOIN usuarios u ON eve.usuario_id = u.id
-        INNER JOIN evento_status es on eve.evento_status_id = es.id
-        WHERE eve.publicado = 1 AND evento_status_id between 3 AND 4 ";
+    $sqlSis = "SELECT   eve.id AS idEvento, 
+                          eve.nome_evento AS nome_evento, 
+                          es.status AS status, 
+                          u.nome_completo AS nome_usuario
+                FROM {$tabela[0]} as eve
+                INNER JOIN usuarios u ON eve.usuario_id = u.id
+                INNER JOIN evento_status es on eve.evento_status_id = es.id
+                INNER JOIN local_usuarios ls ON eve.usuario_id = ls.usuario_id
+                INNER JOIN locais lo ON lo.id = ls.local_id
+                WHERE eve.publicado = 1 AND evento_status_id IN  (3,4) ";
 
     $sqlSis .= $spp;
 
