@@ -48,7 +48,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']
 
 $idPenal = $_GET['penal'];
 
-$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
+$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
 $queryLocal = mysqli_query($con, $sqlLocal);
 $local = '';
 while ($locais = mysqli_fetch_array($queryLocal)) {
@@ -105,14 +105,14 @@ if ($checa != 0) {
 }
 
 //líder
-if($evento['tipo_evento_id'] == 1){
+if ($evento['tipo_evento_id'] == 1) {
     $lider = $con->query("SELECT pessoa_fisica_id FROM lideres WHERE pedido_id = $idPedido")->fetch_array();
     $dadosLider = recuperaDados("pessoa_fisicas", "id", $lider['pessoa_fisica_id']);
     $drtLider = $con->query('SELECT drt FROM drts WHERE pessoa_fisica_id = ' . $lider['pessoa_fisica_id'])->fetch_array();
 
-    if($drtLider['drt'] != NULL || $drtLider['drt'] != ''){
+    if ($drtLider['drt'] != NULL || $drtLider['drt'] != '') {
         $drtLider = $drtLider['drt'];
-    }else{
+    } else {
         $drtLider = "Não cadastrado.";
     }
 
@@ -151,42 +151,44 @@ $pdf->MultiCell(200, $l, utf8_decode("(Quando se tratar de grupo, o líder do gr
 
 $pdf->Ln(5);
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(12, $l, 'Nome:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($dadosLider['nome']), 0, 'L', 0);
+if ($evento['tipo_evento_id'] == 1) {
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(12, $l, 'Nome:', 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->MultiCell(40, $l, utf8_decode($dadosLider['nome']), 0, 'L', 0);
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(27, $l, utf8_decode("Nome Artístico:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($dadosLider['nome_artistico']), 0, 'L', 0);
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(27, $l, utf8_decode("Nome Artístico:"), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->MultiCell(120, $l, utf8_decode($dadosLider['nome_artistico']), 0, 'L', 0);
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(45, $l, utf8_decode($dadosLider['cpf']), 0, 0, 'L');
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, utf8_decode("DRT:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(5, $l, utf8_decode($drtLider), 0, 0, 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(45, $l, utf8_decode($dadosLider['cpf']), 0, 0, 'L');
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(9, $l, utf8_decode("DRT:"), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(5, $l, utf8_decode($drtLider), 0, 0, 'L');
 
-$pdf->Ln(7);
+    $pdf->Ln(7);
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(21, $l, 'Telefone(s):', '0', '0', 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($telLider), 0, 'L', 0);
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(21, $l, 'Telefone(s):', '0', '0', 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->MultiCell(168, $l, utf8_decode($telLider), 0, 'L', 0);
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($dadosLider['email']), 0, 'L', 0);
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->MultiCell(168, $l, utf8_decode($dadosLider['email']), 0, 'L', 0);
 
+}
 
 $pdf->SetX($x);
 $pdf->Cell(180, 5, '', 'B', 1, 'C');
@@ -421,13 +423,55 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(13, $l, 'Objeto:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($objeto), 0, 'L', 0);
+$pdf->MultiCell(100, $l, utf8_decode($objeto), 0, 'L', 0);
 
-$cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND publicado = 1");
-while ($aux = mysqli_fetch_array($cronograma)) {
-    if ($aux['tipo_ocorrencia_id'] == 2) {
-        $testaFilme = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $evento['id'])->fetch_array();
+
+if ($evento['tipo_evento_id'] == 1) {
+    $cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND tipo_ocorrencia_id = 1 AND publicado = 1");
+    while ($aux = mysqli_fetch_array($cronograma)) {
+        $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
+        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'] . " AND publicado = 1")->fetch_array();
+        $acao = $tipoAcao['acao'];
+
+        $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
+        $hour = exibirHora($aux['horario_inicio']) . "h - " . exibirHora($aux['horario_fim']) . "h";
+        $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'] . " AND publicado = 1")->fetch_array();
+        $lugar = $local['local'];
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(11, $l, utf8_decode('Ação:'), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->MultiCell(158, $l, utf8_decode($acao));
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(21, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->MultiCell(148, $l, utf8_decode($dia));
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(15, $l, utf8_decode('Horário:'), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->MultiCell(155, $l, utf8_decode($hour));
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(11, $l, utf8_decode('Local:'), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->MultiCell(158, $l, utf8_decode($lugar));
+
+        $pdf->Ln(5);
+    }
+
+} elseif ($evento['tipo_evento_id'] == 2) {
+    $cronograma = $con->query("SELECT * FROM ocorrencias oco 
+                                      INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id 
+                                      WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1 AND oco.tipo_ocorrencia_id = 2 AND fe.evento_id = $idEvento AND oco.atracao_id = $idFilmeEvento");
+    while ($aux = mysqli_fetch_array($cronograma)) {
         $filme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $testaFilme['filme_id'] . " AND publicado = 1")->fetch_array();
+
         $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
         $acao = $tipoAcao['acao'];
 
@@ -442,41 +486,7 @@ while ($aux = mysqli_fetch_array($cronograma)) {
         $pdf->Cell(16, $l, utf8_decode('Duração:'), 0, 0, 'L');
         $pdf->SetFont('Arial', '', 10);
         $pdf->MultiCell(158, $l, utf8_decode($filme['duracao'] . " Minuto(s)"));
-    } else {
-        $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
-        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'] . " AND publicado = 1")->fetch_array();
-        $acao = $tipoAcao['acao'];
     }
-    $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
-    $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
-    $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'] . " AND publicado = 1")->fetch_array();
-    $lugar = $local['local'];
-
-    $pdf->SetX($x);
-    $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(11, $l, utf8_decode('Ação:'), 0, 0, 'L');
-    $pdf->SetFont('Arial', '', 10);
-    $pdf->MultiCell(158, $l, utf8_decode($acao));
-
-    $pdf->SetX($x);
-    $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(21, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
-    $pdf->SetFont('Arial', '', 10);
-    $pdf->MultiCell(148, $l, utf8_decode($dia));
-
-    $pdf->SetX($x);
-    $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(15, $l, utf8_decode('Horário:'), 0, 0, 'L');
-    $pdf->SetFont('Arial', '', 10);
-    $pdf->MultiCell(155, $l, utf8_decode($hour));
-
-    $pdf->SetX($x);
-    $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(11, $l, utf8_decode('Local:'), 0, 0, 'L');
-    $pdf->SetFont('Arial', '', 10);
-    $pdf->MultiCell(158, $l, utf8_decode($lugar));
-
-    $pdf->Ln(5);
 }
 
 $pdf->SetXY($x, 262);
