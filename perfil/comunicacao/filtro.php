@@ -303,9 +303,7 @@ if (isset($_POST['_filtros'])) {
 
     let filtros = document.querySelector('.filtros');
 
-    console.log(filtros);
-
-
+    // console.log(filtros);
 </script>
 <script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
