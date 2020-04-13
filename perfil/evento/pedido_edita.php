@@ -476,7 +476,7 @@ if (isset($_GET['label'])) {
 <!-- Modal -->
 <div class="modal fade in" id="modalParcelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
      aria-hidden="true" data-keyboard="false">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 style="margin-top: 15px;" class="modal-title text-bold" id="exampleModalLongTitle">Editar

@@ -43,7 +43,7 @@ $row = mysqli_num_rows($queryFilme);
 if($row != 0){
     $testaFilme = mysqli_fetch_array($queryFilme);
     $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
-    $duracao = $filme['duracao'] . " Hora(s).";
+    $duracao = $filme['duracao'] . " Minuto(s).";
 }else{
     $duracao = "Não se aplica.";
 }
