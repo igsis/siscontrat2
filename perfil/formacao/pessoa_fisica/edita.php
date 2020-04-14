@@ -205,10 +205,9 @@ if (isset($_POST['carregar'])) {
 
 if (isset($_POST["enviar"])) {
     $idPf = $_POST['idPessoa'];
-    $tipoPessoa = 6;
+    $tipoPessoa = 1;
 
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
-
     $query_arquivos = mysqli_query($con, $sql_arquivos);
 
     while ($arq = mysqli_fetch_array($query_arquivos)) {
@@ -510,7 +509,8 @@ if ($foto == null) {
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="banco">Banco</label>
-                                    <select name="banco" id="banco" class="form-control" required>
+                                    <select name="banco" id="banco" class="form-control">
+                                    <option value="">Selecione um banco...</option>
                                         <?php
                                         geraOpcao('bancos', $banco['banco_id']);
                                         ?>
@@ -520,23 +520,22 @@ if ($foto == null) {
                                 <div class="form-group col-md-4">
                                     <label for="agencia">Agência</label>
                                     <input type="text" id="agencia" name="agencia" class="form-control"
-                                           value="<?= $banco['agencia'] ?>" required>
+                                           value="<?= $banco['agencia'] ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="conta">Conta</label>
                                     <input type="text" id="conta" name="conta" class="form-control"
-                                           value="<?= $banco['conta'] ?>" required>
+                                           value="<?= $banco['conta'] ?>">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 122 AND origem_id = '$idPf' AND publicado = 1";
+                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 42 AND origem_id = '$idPf' AND publicado = 1 group by id";
                                     $queryFACC = mysqli_query($con, $sqlFACC);
                                     ?>
-
                                     <label>Gerar FACC</label><br>
                                     <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
                                        class="btn btn-primary btn-block">Clique aqui para

@@ -76,15 +76,16 @@ if($pedido['pessoa_tipo_id'] == 2) {
     $pj = $con->query("SELECT razao_social, rl1.nome r1_nome, rl1.cpf r1_cpf, rl1.rg r1_rg, rl2.nome r2_nome, rl2.cpf r2_cpf, rl2.rg r2_rg
         FROM pessoa_juridicas pj 
             INNER JOIN representante_legais rl1 on pj.representante_legal1_id = rl1.id 
-            INNER JOIN representante_legais rl2 on pj.representante_legal2_id = rl2.id 
+            LEFT JOIN representante_legais rl2 on pj.representante_legal2_id = rl2.id 
         WHERE pj.id = '$idPj'")->fetch_assoc();
-    $pdf->SetX($x);
-    $pdf->SetFont('Arial', '', 11);
-    $pdf->Cell(170, $l, utf8_decode($pj['razao_social']), 0, 1, 'L');
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial', 'B', 11);
     $pdf->Cell(170, $l, utf8_decode('Razão Social'), 0, 1, 'L');
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', 11);
+    $pdf->Cell(170, $l, utf8_decode($pj['razao_social']), 0, 1, 'L');
 
     $pdf->Ln();
     $pdf->Ln();

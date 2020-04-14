@@ -29,6 +29,7 @@ $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id']);
 $sqlDRT = "SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf";
+$idPenal = $_GET['penal'];
 $drt = $con->query($sqlDRT)->fetch_array();
 if ($drt['drt'] != "" || $drt['drt'] != NULL) {
     $drt = $drt['drt'];
@@ -36,7 +37,7 @@ if ($drt['drt'] != "" || $drt['drt'] != NULL) {
     $drt = "Não Cadastrado.";
 }
 
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
@@ -77,7 +78,7 @@ Entenda-se como natureza eventual aquela originária de até duas prestações d
 - Contratados Pessoa Jurídica não podem utilizar conta de pessoa física para o recebimento.
 - Contratação de Pessoa Física: sempre informar Número do NIT ou PIS/PASEP.";
 
-$sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 13";
+$sqlPenalidade = "SELECT texto FROM penalidades WHERE id = $idPenal";
 $penalidades = $con->query($sqlPenalidade)->fetch_array();
 
 if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
@@ -142,17 +143,26 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(27, $l, utf8_decode("Nome Artístico:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($pessoa['nome_artistico']), 0, 'L', 0);
+$pdf->MultiCell(120, $l, utf8_decode($pessoa['nome_artistico'] ==  null ? "Não cadastrado" : $pessoa['nome_artistico']), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(50, $l, utf8_decode($pessoa['rg']), 0, 0, 'L');
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(45, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
+
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(21, $l, utf8_decode('Passaporte:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(50, $l, utf8_decode($pessoa['passaporte']), 0, 0, 'L');
+    
+}else{
+    $pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(50, $l, utf8_decode($pessoa['rg']), 0, 0, 'L');
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(45, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');  
+}
+
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(9, $l, utf8_decode("DRT:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
@@ -258,11 +268,15 @@ $pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+}else{
+    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');    
+}
 
 $pdf->AddPage('', '');
 
@@ -304,7 +318,7 @@ $pdf->MultiCell(180, 5, utf8_decode('1) No caso de pagamento do cachê por rever
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 9);
-$pdf->MultiCell(180, 5, utf8_decode('2) O pagamento do cachê corresponderá à reversão integral da renda obtida na bilheteria a/o ontratada/o, deduzidos os impostos e taxas pertinentes.'));
+$pdf->MultiCell(180, 5, utf8_decode('2) O pagamento do cachê corresponderá à reversão integral da renda obtida na bilheteria a/o contratada/o, deduzidos os impostos e taxas pertinentes.'));
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 9);
@@ -340,11 +354,15 @@ $pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+}else{
+    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');    
+}
 
 $pdf->AddPage('', '');
 
@@ -385,7 +403,7 @@ while ($aux = mysqli_fetch_array($cronograma)) {
         $acao = $tipoAcao['acao'];
     }
     $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
-    $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
+    $hour = exibirHora($aux['horario_inicio']) . "h - " . exibirHora($aux['horario_fim']) . "h";
     $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'] . " AND publicado = 1")->fetch_array();
     $lugar = $local['local'];
 
@@ -422,11 +440,15 @@ $pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+}else{
+    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');    
+}
 
 $pdf->Output();
 ?>

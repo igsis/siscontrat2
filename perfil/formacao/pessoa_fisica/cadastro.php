@@ -186,6 +186,7 @@ if (isset($_POST['adicionar'])) {
                                 <div class="form-group col-md-4">
                                     <label for="banco">Banco</label>
                                     <select name="banco" id="banco" class="form-control">
+                                    <option value="">Selecione um banco...</option>
                                         <?php
                                         geraOpcao('bancos');
                                         ?>

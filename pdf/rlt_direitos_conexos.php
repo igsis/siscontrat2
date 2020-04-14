@@ -35,7 +35,7 @@ $instituicao = $con->query($sqlInstituicao)->fetch_array();
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=rlt_direitos_conexos.doc");
 echo "<html>";
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1252\">";
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">";
 echo "<body>";
 
 echo

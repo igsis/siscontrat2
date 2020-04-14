@@ -1,4 +1,4 @@
-<footer class="main-footer">
+<footer class="main-footer" id="footerPrincipal">
     <div class="pull-right hidden-xs" align="right">
         <strong><?= date('Y') ?> &copy; SISCONTRAT</strong><br/>
         STI - Sistemas de Informação - <b>Version</b> 2.0

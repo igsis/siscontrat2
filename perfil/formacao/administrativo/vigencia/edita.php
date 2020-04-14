@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 if (isset($_POST['cadastra'])) {
     $ano = $_POST['ano'];
@@ -122,37 +122,36 @@ if (isset($_POST['edita'])) {
 
                                     <div class="form-group col-md-2">
                                         <label for="valor[]">Valor:</label>
-                                        <input type="text" id="valor[]" name="valor[]"
+                                        <input type="text" id="valor<?= $i ?>" name="valor[]"
                                                class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcela['valor']) ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_inicio">Data inicial:</label>
-                                        <input type="date" name="data_inicio[]" class="form-control" id="datepicker10"
+                                        <input type="date" name="data_inicio[]" class="form-control" id="data_inicio<?= $i ?>"
                                                placeholder="DD/MM/AAAA" value="<?= $parcela['data_inicio'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_fim">Data final: </label>
-                                        <input type="date" name="data_fim[]" class="form-control" id="datepicker11"
+                                        <input type="date" name="data_fim[]" class="form-control" id="data_fim<?= $i ?>"
                                                placeholder="DD/MM/AAAA" value="<?= $parcela['data_fim'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_pagamento">Data pagamento: </label>
                                         <input type="date" name="data_pagamento[]" class="form-control"
-                                               id="datepicker12" placeholder="DD/MM/AAAA" value="<?= $parcela['data_pagamento'] ?? NULL ?>">
+                                               id="data_pagamento<?= $i ?>" placeholder="DD/MM/AAAA" value="<?= $parcela['data_pagamento'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="carga[]">Carga horária: </label>
-                                        <input type="number" name="carga[]" class="form-control" id="carga[]"
+                                        <input type="number" name="carga[]" class="form-control" id="carga<?= $i ?>"
                                                value="<?= $parcela['carga_horaria'] ?? NULL ?>" min="1">
                                     </div>
                                 </div>
-                                <?php
-                            }
-                            ?>
+
+                            <?php } ?>
                         </div>
                         <div class="box-footer">
                             <a href="?perfil=formacao&p=administrativo&sp=vigencia&spp=index">

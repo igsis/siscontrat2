@@ -2,7 +2,7 @@
 $con = bancoMysqli();
 
 $_SESSION['idEvento'] = $_POST['idEvento'];
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 $idEvento = $_SESSION['idEvento'];
 
@@ -28,7 +28,7 @@ $sqlEvento = "SELECT
 
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$view = recuperaDados('producao_eventos', 'id', $idEvento);
+$view = recuperaDados('producao_eventos', 'evento_id', $idEvento);
 
 ?>
 
@@ -44,9 +44,7 @@ $view = recuperaDados('producao_eventos', 'id', $idEvento);
         <div class="box-body">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs pull-right">
-                    <?php if ($evento['contratacao'] == 1) { ?>
-                        <li><a href="#pedido" data-toggle="tab"> Pedido de Contratação </a></li>
-                    <?php } ?>
+                   
                     <li><a href="#ocorrencia" data-toggle="tab"> Ocorrência </a></li>
                     <li>
                         <a href="#atracao" data-toggle="tab">

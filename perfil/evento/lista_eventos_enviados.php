@@ -8,14 +8,13 @@ unset($_SESSION['idPf']);
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $sql = "SELECT eve.id AS idEvento, eve.protocolo, eve.nome_evento, es.status
         FROM eventos as eve
         INNER JOIN evento_status es on eve.evento_status_id = es.id
         WHERE publicado = 1 AND evento_status_id between 3 AND 4 AND contratacao = 0  
         AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
 $query = mysqli_query($con, $sql);
-
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -57,13 +56,19 @@ $query = mysqli_query($con, $sql);
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
                                 $idEvento = $evento['idEvento'];
-                                $locais = listaLocais($idEvento);
+                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['idEvento'] ." AND o.publicado = 1";
+                                $queryLocal = mysqli_query($con, $sqlLocal);
+                                $local = '';
+                                while ($locais = mysqli_fetch_array($queryLocal)) {
+                                    $local = $local . '; ' . $locais['local'];
+                                }
+                                $local = substr($local, 1);
 
                                 // $locais = listaLocais($evento['idAtracao']);
                                 echo "<tr>";
                                 echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
-                                echo "<td>" . $locais. "</td>";
+                                echo "<td>" . $local . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</td>";
                                 echo "<td>" . $evento['status'] . "</td>";
                                 echo "<td>

@@ -14,7 +14,7 @@ if(isset($_POST['pesquisa'])){
     $sqlProjeto = '';
 
     if ($local != null)
-        $sqlLocal = " AND l.local = '$local'";
+        $sqlLocal = " AND l.id = '$local'";
 
     if ($usuario != null)
         $sqlUsuario = " AND u.nome_completo = '$usuario'";
@@ -25,25 +25,18 @@ if(isset($_POST['pesquisa'])){
     $sql = "SELECT e.id,
 	               e.nome_evento,
                    e.tipo_evento_id,
-	               l.local,
-                   ci.classificacao_indicativa,
                    s.subprefeitura,
                    o.valor_ingresso,
                    a.quantidade_apresentacao,
                    a.ficha_tecnica
             FROM eventos AS e
             INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
-            INNER JOIN locais AS l ON l.id = o.local_id
-            INNER JOIN atracoes a on e.id = a.evento_id    
+            LEFT JOIN atracoes a on e.id = a.evento_id
 	        INNER JOIN subprefeituras AS s ON s.id = o.subprefeitura_id
-            INNER JOIN classificacao_indicativas AS ci ON ci.id = a.classificacao_indicativa_id
             INNER JOIN usuarios AS u ON e.usuario_id = u.id 
             INNER JOIN projeto_especiais AS pe ON e.projeto_especial_id = pe.id
             WHERE e.evento_status_id = 3 AND o.publicado = 1 AND e.publicado = 1 
-            AND o.data_inicio >= '$datainicio' AND o.data_fim <= '$datafim'
             $sqlUsuario $sqlProjeto $sqlLocal GROUP BY e.id";
-                   
-
     $query = mysqli_query($con, $sql);
 }
 
@@ -61,7 +54,7 @@ if(isset($_POST['pesquisa'])){
                     <tr>
                         <th>Nome do Evento</th>
                         <th>Local do Evento</th>
-                        <th>Classificação Indicativa</th>
+                        <th>Classificação(ões) Indicativa(s)</th>
                         <th>Subprefeitura</th>
                         <th>Valor do Ingresso</th>
                         <th>Nº de Atividades</th>
@@ -81,17 +74,32 @@ if(isset($_POST['pesquisa'])){
                         $local = substr($local, 1);
 
                         if ($evento['tipo_evento_id'] == 2) {
-                            $filme = recuperaDados("filmes", "id", $linha['evento_id']);
-                            $classificao = recuperaDados("classificacao_indicativas", "id", $filme['classificacao_indicativa_id']);
+                            $sqlClassificacao = "SELECT c.classificacao_indicativa FROM classificacao_indicativas AS c 
+                                                 INNER JOIN filmes AS f ON f.classificacao_indicativa_id = c.id  
+                                                 INNER JOIN filme_eventos AS fe ON f.id = fe.filme_id  
+                                                 WHERE fe.evento_id = " . $evento['id'] . " AND f.publicado = 1";
+                            $queryClassificacao = mysqli_query($con, $sqlClassificacao);
+                            $classificao = '';
+                            while ($classificoes = mysqli_fetch_array($queryClassificacao)) {
+                                $classificao = $classificao . '; ' . $classificoes['classificacao_indicativa'];
+                            }
+                            $classificao = substr($classificao, 1);
 
-                            $evento['classificacao_indicativa'] = $classificao['classificacao_indicativa'];
+                        }else{
+                            $sqlClassificacao = "SELECT c.classificacao_indicativa FROM classificacao_indicativas c INNER JOIN atracoes a ON a.classificacao_indicativa_id = c.id WHERE a.evento_id = " . $evento['id'] ." AND a.publicado = 1";
+                            $queryClassificacao = mysqli_query($con, $sqlClassificacao);
+                            $classificao = '';
+                            while ($classificoes = mysqli_fetch_array($queryClassificacao)) {
+                                $classificao = $classificao . '; ' . $classificoes['classificacao_indicativa'];
+                            }
+                            $classificao = substr($classificao, 1);
                         }
 
                         ?>
                         <tr>
                             <td><?= $evento['nome_evento'] ?></td>
                             <td><?= $local ?></td>
-                            <td><?= $evento['classificacao_indicativa'] ?></td>
+                            <td><?= $classificao ?></td>
                             <td><?= $evento['subprefeitura'] ?></td>
                             <td><?= $evento['valor_ingresso'] == '0.00' ? 'Grátis' : 'R$ ' . dinheiroParaBr($evento['valor_ingresso']) ?></td>
                             <td><?= $evento['quantidade_apresentacao'] == '' ? 'Este evento é filme!' : $evento['quantidade_apresentacao'] ?></td>
@@ -114,7 +122,7 @@ if(isset($_POST['pesquisa'])){
                     <tr>
                         <th>Nome do Evento</th>
                         <th>Local do Evento</th>
-                        <th>Classificação Indicativa</th>
+                        <th>Classificação(ões) Indicativa(s)</th>
                         <th>Subprefeitura</th>
                         <th>Valor do Ingresso</th>
                         <th>Nº de Atividades</th>

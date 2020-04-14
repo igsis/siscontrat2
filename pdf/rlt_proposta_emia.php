@@ -32,7 +32,7 @@ $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id']);
 
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 

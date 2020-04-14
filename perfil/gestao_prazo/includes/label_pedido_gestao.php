@@ -20,7 +20,7 @@ if ($pedido != null) {
         'Número de Parcelas:' => $pedido['numero_parcelas'],
         'Data Kit Pagamento:' =>  $dataKit,
         'Forma Pagamento:' => $pedido['forma_pagamento'],
-        'Observação:' => $pedido['observacao']
+        'Observação:' => $pedido['observacao'] == null ? "Não cadastrado" : $pedido['observacao']
     ];
     $idPedido = $pedido['id'];
     $equipamentoValor = "SELECT local.local, valor.valor FROM valor_equipamentos valor
@@ -42,7 +42,14 @@ switch ($pedido['pessoa_tipo_id']) {
         $tipo = "Pessoa Física";
         $idPf = $pedido['pessoa_fisica_id'];
         $sqlTelefones = "SELECT telefone FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = '1'";
-        $telefones = $con->query($sqlTelefones)->fetch_all();
+        $tel = "";
+        $telefones = $con->query($sqlTelefones);
+        while ($linhaTel = mysqli_fetch_array($telefones)) {
+            if($linhaTel['telefone'] != ""){
+                $tel = $tel . $linhaTel['telefone'] . ' | ';
+            }
+        }
+        $tel = substr($tel, 0, -3);
         $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
         $nacionalidade = recuperaDados('nacionalidades', 'id', $proponente['nacionalidade_id'])['nacionalidade'];
         $endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $pedido['pessoa_fisica_id']);
@@ -55,10 +62,9 @@ switch ($pedido['pessoa_tipo_id']) {
             $ccm = "Não cadastrado";
         }
 
-
         $dadosPreponente = [
             'Nome' => $proponente['nome'],
-            'Nome Artístico' => $proponente['nome_artistico'],
+            'Nome Artístico' => $proponente['nome_artistico'] == null ? "Não cadastrado" : $proponente['nome_artistico'],
             'Nacionalidade' => $nacionalidade,
             'RG' => $proponente['rg'] ?? "Não Cadastrado",
             'Passaporte' => $proponente['passaporte'] ?? "Não Cadastrado",
@@ -66,9 +72,7 @@ switch ($pedido['pessoa_tipo_id']) {
             'CCM' => $ccm ,
             'Data de Nascimento' => exibirDataBr($proponente['data_nascimento']),
             'E-Mail' => $proponente['email'],
-            'Telefone #1' => $telefones[0][0] ?? "Não Cadastrado",
-            'Telefone #2' => $telefones[1][0] ?? "Não Cadastrado",
-            'Telefone #3' => $telefones[2][0] ?? "Não Cadastrado"
+            'Telefone(s)' => $tel,
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],

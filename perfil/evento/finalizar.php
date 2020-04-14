@@ -1,7 +1,8 @@
 <?php
 include "includes/menu_interno.php";
 
-$ocorrencias_rept = false;
+
+/*$ocorrencias_rept = false;*/
 
 $sqlEvento = "SELECT
                eve.nome_evento AS 'Nome do Evento',
@@ -27,7 +28,7 @@ $sqlEvento = "SELECT
 
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 
-if ($evento['tipo_evento_id'] == 1) {
+if ($evento['tipo_evento_id'] == 1 ) {
     $ocorrencia_atracao = "SELECT  	o.tipo_ocorrencia_id,
 			o.origem_ocorrencia_id,
 			o.instituicao_id,local_id,
@@ -50,7 +51,8 @@ if ($evento['tipo_evento_id'] == 1) {
 			o.virada,
 			o.libras,
 			o.audiodescricao
-FROM ocorrencias AS o INNER JOIN atracoes AS a ON o.atracao_id = a.id
+FROM ocorrencias AS o 
+INNER JOIN atracoes AS a ON o.atracao_id = a.id
 INNER JOIN eventos AS e ON e.id = a.evento_id
 WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 
@@ -79,16 +81,17 @@ WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 			o.virada,
 			o.libras,
 			o.audiodescricao
-FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
+FROM ocorrencias AS o 
+INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
 INNER JOIN eventos AS e ON fe.evento_id = e.id 
 WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 
 
     $result = mysqli_fetch_all(mysqli_query($con, $ocorrencia_filmes));
 }
-
 $quant = count($result);
-$contad = 0;
+
+/*$contad = 0;
 for ($i = 0; $i < $quant; $i++) {
     for ($j = 1; $j < $quant; $j++) {
         for ($k = 0; $k < $quant; $k++) {
@@ -101,7 +104,7 @@ for ($i = 0; $i < $quant; $i++) {
             }
         }
     }
-}
+}*/
 
 
 include "includes/validacoes.php";
@@ -260,18 +263,27 @@ include "includes/validacoes.php";
                 <form action="?perfil=evento&p=resumo_evento_enviado" method="post">
                     <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                     <input type="hidden" name="fora" value="<?= $fora ?? 0 ?>">
+                    <?php 
+                        
+
+
+                        if(count($erros) != 0 || count($errosArqs) != 0/* || $ocorrencias_rept == true*/){
+                            $disabled =  "disabled";
+                        }else{
+                            $disabled = "";
+                        }
+                    ?>
+                    
                     <?php
                     if ($evento['tipo_evento_id'] == 1) {
                         ?>
-                        <button class="btn btn-success" name="enviar" type="submit"
-                                <?= count($erros) != 0 || count($errosArqs) != 0 || !$ocorrencias_rept ? "disabled" : "" ?>>
+                        <button class="btn btn-success" name="enviar" type="submit" <?=$disabled?>>                                
                             Enviar Evento
                         </button>
                         <?php
                     } else {
                         ?>
-                        <button class="btn btn-success" name="enviar" type="submit"
-                                <?= count($erros) != 0 || count($errosArqs) != 0 || !$ocorrencias_rept ? "disabled" : "" ?>>
+                        <button class="btn btn-success" name="enviar" type="submit" <?=$disabled?>>
                             Enviar Evento
                         </button>
                         <?php

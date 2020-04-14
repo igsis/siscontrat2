@@ -25,7 +25,7 @@ $sql = "SELECT p.numero_processo,
             
 
         FROM pedidos as p 
-        INNER JOIN formacao_status fs on p.id = fs.id 
+        INNER JOIN formacao_status fs on p.origem_id = fs.id 
         INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
         INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
         WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 AND fc.id = $idFormacao";
@@ -106,26 +106,24 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                         </tr>
                         <tr>
                             <th width="30%">Amparo:</th>
-                            <td><textarea name="amparo" rows="6" cols="85"><?= $mdl['amparo'] ?></textarea></td>
+                            <td><textarea name="amparo" rows="6" cols="85" class="form-control"><?= $mdl['amparo'] ?></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
-                            <td><textarea name="dotacao" rows="1" cols="85" required></textarea></td>
+                            <td><textarea name="dotacao" rows="1" cols="85" class="form-control"></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
-                            <td><textarea name="finalizar" rows="8" cols="85"><?= $mdl['finalizacao'] ?></textarea></td>
+                            <td><textarea name="finalizar" rows="8" cols="85" class="form-control"><?= $mdl['finalizacao'] ?></textarea></td>
                         </tr>
                     </table>
-                    <div class="pull-left">
-                        <?php // ADICIONAR ANCORA PARA VOLTAR ?>
-                    </div>
                     <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
                     <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left">Gravar
                     </button>
         </form>
         <form action="?perfil=juridico&p=filtrar_formacao&sp=detalhe_formacao" method="post">
             <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
+            <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
             <button type="submit" class="btn btn-info pull-right">Detalhes Formação
             </button>
         </form>

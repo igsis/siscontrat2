@@ -18,7 +18,7 @@ if (isset($_POST['cadastra'])) {
     $observacao = $_POST['observacao'];
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'];
-    $usuario = $_SESSION['idUser'];
+    $usuario = $_SESSION['usuario_id_s'];
     $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
     $regiao = $_POST['regiao'];
 

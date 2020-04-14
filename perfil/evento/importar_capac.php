@@ -1,6 +1,6 @@
 <?php
 $idCapac = $_POST['idCapac'];
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 $con = bancoMysqli();
 $conn = bancoCapac();

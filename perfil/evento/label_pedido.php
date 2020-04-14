@@ -13,9 +13,8 @@ if ($pedido != null) {
         'Número de Parcelas' => $pedido['numero_parcelas'],
         'Data Kit Pagamento' => exibirDataBr($pedido['data_kit_pagamento']),
         'Forma de Pagamento' => $pedido['forma_pagamento'],
-        'Observação' => $pedido['observacao']
+        'Observação' => $pedido['observacao'] == null ? "Não cadastrado" : $pedido['observacao']
     ];
-
     $idPedido = $pedido['id'];
     $equipamentoValor = "SELECT local.local, valor.valor FROM valor_equipamentos valor
                          INNER JOIN locais local ON local.id = valor.local_id WHERE pedido_id = '$idPedido'";
@@ -38,7 +37,14 @@ switch ($pedido['pessoa_tipo_id']) {
     case 1:
         $tipo = "Pessoa Física";
         $sqlTelefones = "SELECT telefone FROM pf_telefones WHERE pessoa_fisica_id = '" . $pedido['pessoa_fisica_id'] . "' AND publicado = '1'";
-        $telefones = $con->query($sqlTelefones)->fetch_all();
+        $tel = "";
+        $telefones = $con->query($sqlTelefones);
+        while ($linhaTel = mysqli_fetch_array($telefones)) {
+            if($linhaTel['telefone'] != ""){
+                $tel = $tel . $linhaTel['telefone'] . ' | ';
+            }
+        }
+        $tel = substr($tel, 0, -3);
         $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
         $nacionalidade = recuperaDados('nacionalidades', 'id', $proponente['nacionalidade_id'])['nacionalidade'];
         $endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $pedido['pessoa_fisica_id']);
@@ -47,13 +53,13 @@ switch ($pedido['pessoa_tipo_id']) {
 
         if($proponente['ccm'] != NULL || $proponente['ccm'] != "") {
             $ccm = $proponente['ccm'];
-        }else{
+        }else {
             $ccm = "Não cadastrado";
         }
 
         $dadosProponente = [
             'Nome' => $proponente['nome'],
-            'Nome Artístico' => $proponente['nome_artistico'],
+            'Nome Artístico' => $proponente['nome_artistico'] == null ? "Não cadastrado" : $proponente['nome_artistico'],
             'Nacionalidade' => $nacionalidade,
             'RG' => $proponente['rg'],
             'Passaporte' => $proponente['passaporte'],
@@ -61,23 +67,21 @@ switch ($pedido['pessoa_tipo_id']) {
             'CCM' => $ccm,
             'Data de Nascimento' => exibirDataBr($proponente['data_nascimento']),
             'E-mail' => $proponente['email'],
-            'Telefone #1' => $telefones[0][0] ?? "Não Cadastrado",
-            'Telefone #2' => $telefones[1][0] ?? "Não Cadastrado",
-            'Telefone #3' => $telefones[2][0] ?? "Não Cadastrado",
+            'Telefone(s)' => $tel,
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
             'Logradouro' => $endereco['logradouro'],
             'Número' => $endereco['numero'],
-            'Complemento' => $endereco['complemento'],
+            'Complemento' => $endereco['complemento'] ? "" : "Não cadastrado",
             'Bairro' => $endereco['bairro'],
             'Cidade' => $endereco['cidade'],
             'Estado' => $endereco['uf']
         ];
         $dadosBancarios = [
-            'Banco' => $banco,
-            'Agência' => $pfBancos['agencia'],
-            'Conta' => $pfBancos['conta']
+            'Banco' => $banco == null ?  "Não Cadastrado" : $banco,
+            'Agência' => $pfBancos['agencia'] ? "" : "Não Cadastrado",
+            'Conta' => $pfBancos['conta'] ? "" : "Não Cadastrado"
         ];
         break;
 
@@ -218,6 +222,9 @@ $parcelado = false;
                         </div>
                     </div>
                 </div>
+                <?php
+                    if($idRepresentante2 != NULL || $idRepresentante2 != ""){
+                ?>
                 <div class="panel box box-primary">
                     <div class="box-header with-border">
                         <h4 class="box-title">
@@ -242,6 +249,7 @@ $parcelado = false;
                         </div>
                     </div>
                 </div>
+                <?php } ?>
             </div>
         <?php } ?>
     </div>

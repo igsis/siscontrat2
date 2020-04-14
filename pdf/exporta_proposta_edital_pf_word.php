@@ -78,6 +78,15 @@ if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
     $ccm = "Não Cadastrado.";
 }
 
+if($pessoa['passaporte'] != NULL){
+    $rg_cpf_passaporte = "<p><strong>Passaporte:</strong> " . $pessoa['passaporte'] . "</p>";
+    $label = "<p>Passaporte: " . $pessoa['passaporte'] . "</p>";
+}else{
+    $rg_cpf_passaporte = "<p><strong>RG:</strong> " . $pessoa['rg'] . "</p>
+                          <p><strong>CPF:</strong> " . $pessoa['cpf'] . "<p>";
+    $label = "<p>RG: " . $pessoa['rg'] . "</p>";
+}
+
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=proposta_edital_pf_$idPedido.doc");
 echo "<html>";
@@ -89,16 +98,15 @@ echo
     "<p align='center'><strong>CONTRATADO</strong></p>" .
     "<p><i>(Quando se tratar de grupo, o líder do grupo)</i></p>" .
     "<p><strong>Nome:</strong> " . $pessoa['nome'] . "</p>" .
-    "<p><strong>Nome Artístico:</strong> " . $pessoa['nome_artistico'] . "</p>" .
+    "<p><strong>Nome Artístico:</strong> " . $pessoa['nome_artistico'] == NULL ? "Não cadastrado" : $pessoa['nome_artistico'] . "</p>" .
     "<p><strong>Nacionalidade:</strong> " . $nacionalidade['nacionalidade'] . "</p>" .
-    "<p><strong>RG:</strong> " . $pessoa['rg'] . "</p>" .
-    "<p><strong>CPF:</strong> " . $pessoa['cpf'] . "</p>" .
+    $rg_cpf_passaporte .
     "<p><strong>CCM:</strong> " . $ccm . "</p>" .
     "<p><strong>DRT:</strong> " . $drt . "</p>" .
     "<p><strong>Endereço:</strong> " . $endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " . $endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf'] . "</p>" .
     "<p><strong>Telefone:</strong> " . $tel . "</p>" .
     "<p><strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
-    "<p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> " . $nit['nit'] . "</p>" .
+    "<p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> " . $nit['nit'] == NULL ? "Não cadastrado" : $nit['nit'] . "</p>" .
     "<p>&nbsp;</p>" .
     "<p>(B)</p>" .
     "<p align='center'><strong>PROPOSTA</strong></p>" .
@@ -107,7 +115,7 @@ echo
     "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
     "<p><strong>Data / Período:</strong> " . $periodo . " - conforme cronograma</p>" .
     "<p><strong>Carga Horária:</strong> " . $carga . "</p>" .
-    "<p><strong>Local:</strong> " . $locail . "</p>" .
+    "<p><strong>Local:</strong> " . $local . "</p>" .
     "<p><strong>Valor:</strong> " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . ")</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
     "<p><strong>Justificativa:</strong> " . $pedido['justificativa'] . "</p>" .
@@ -115,7 +123,7 @@ echo
     "<p>&nbsp;</p>" .
     "<p>___________________________</p>" .
     "<p>" . $pessoa['nome'] . "</p>" .
-    "<p>RG: " . $pessoa['rg'] . "</p>" .
+    $label .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
     "<p>(C)</p>" .
@@ -135,7 +143,7 @@ echo
     "<p>&nbsp;</p>" .
     "<p>___________________________</p>" .
     "<p>" . $pessoa['nome'] . "</p>" .
-    "<p>RG: " . $pessoa['rg'] . "</p>" .
+    $label .
     "<p>&nbsp;</p>" .
     "<p align='center'><strong>CRONOGRAMA</strong></p>" .
     "<p>" . $objeto . "</p>" .
@@ -157,7 +165,7 @@ while ($aux = mysqli_fetch_array($cronograma)) {
         $labelFilme = "";
     }
     $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
-    $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
+    $hour = exibirHora($aux['horario_inicio']) . "h - " . exibirHora($aux['horario_fim']) . "h";
     $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'])->fetch_array();
     $lugar = $local['local'];
 
@@ -173,7 +181,7 @@ echo
     "<p>&nbsp;</p>" .
     "<p>___________________________</p>" .
     "<p>" . $pessoa['nome'] . "</p>" .
-    "<p>RG:" . $pessoa['rg'] . "</p>" .
+    $label .
     "<p>&nbsp;</p>";
 
 echo "</body>";

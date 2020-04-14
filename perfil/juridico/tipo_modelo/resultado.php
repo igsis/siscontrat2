@@ -10,9 +10,20 @@ isset($_POST['idEvento']);
 $idEvento = $_POST['idEvento'];
 
 
-$sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
-$mdl = $con->query($sqlModelo)->fetch_assoc();
+$mdl = recuperaDados('modelo_juridicos', 'id', $modelo);
 $eve = recuperaDados('eventos', 'id', $idEvento);
+
+$sqlLocal = "SELECT e.id,l.local FROM eventos as e
+             INNER JOIN ocorrencias as o on o.origem_ocorrencia_id = e.id
+             INNER JOIN locais as l on o.local_id = l.id
+             WHERE e.publicado = 1 AND e.id = '$idEvento'";
+$queryLocal = mysqli_query($con, $sqlLocal);
+$local = '';
+while ($locais = mysqli_fetch_array($queryLocal)) {
+    $local = $local . " - " . $locais['local'];
+}
+$local = substr($local, 3);
+
 
 $fiscal = recuperaDados('usuarios', 'id', $eve['fiscal_id'])['nome_completo'];
 $suplente = recuperaDados('usuarios', 'id', $eve['suplente_id'])['nome_completo'];
@@ -34,7 +45,10 @@ p.pessoa_fisica_id,
 p.pessoa_juridica_id
 from pedidos as p
 inner join eventos as e on e.id = p.origem_id
-where e.id = $idEvento";
+ AND e.publicado = 1
+AND p.status_pedido_id != 1
+AND p.status_pedido_id != 3
+AND p.publicado = 1 where e.id = $idEvento";
 $evento = $con->query($sql)->fetch_array();
 
 
@@ -63,28 +77,30 @@ $evento = $con->query($sql)->fetch_array();
                             <?php
                             if ($evento['pessoa_tipo_id'] == 1) {
                                 $tipo = "Física";
-                                $pessoa = recuperaDados("pessoa_fisicas", "id", $evento ['pessoa_fisica_id'])['nome'];
+                                $pessoa = recuperaDados("pessoa_fisicas", "id", $evento ['pessoa_fisica_id']);
+                                $nome = $pessoa['nome']
+                                ?>
+                                <th width="30%">Contratado:</th>
+                                <td><?= $nome ?></td><?php
                             } else if ($evento['pessoa_tipo_id'] == 2) {
                                 $tipo = "Jurídico";
                                 $pessoa = recuperaDados('pessoa_juridicas', "id", $evento['pessoa_juridica_id']);
-                                $pessoa = $pessoa['razao_social'];
-                            }
-                            ?>
-                            <th width="30%">Contratado:</th>
-                            <td><?= $pessoa ?></td>
+                                $nome = $pessoa['razao_social']; ?>
+                                <th width="30%">Contratado:</th>
+                                <td><?= $nome ?></td>
+                            <?php } ?>
                         </tr>
                         <?php
-                            $atracoes = recuperaDados('atracoes','evento_id',$idEvento);
-                            $ocorrencias = recuperaDados('ocorrencias','atracao_id',$atracoes['id']);
-                            $local = recuperaDados('locais','id',$ocorrencias['local_id']);
+                        $atracoes = recuperaDados('atracoes', 'evento_id', $idEvento);
+                        $ocorrencias = recuperaDados('ocorrencias', 'atracao_id', $atracoes['id']);
                         ?>
                         <tr>
                             <th width="30%">Local:</th>
-                            <td><?= $local['local'] ?></td>
+                            <td><?= $local ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Valor:</th>
-                            <td><?= $evento['valor_total'] ?></td>
+                            <td><?= "R$" . $evento['valor_total'] ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Período:</th>
@@ -97,34 +113,40 @@ $evento = $con->query($sql)->fetch_array();
                         </tr>
                         <tr>
                             <th width="30%">Amparo:</th>
-                            <td><textarea name="amparo" rows="6" cols="85"><?= $mdl['amparo'] ?></textarea></td>
+                            <td><textarea class="form-control" name="amparo" rows="6"
+                                          cols="85"><?= $mdl['amparo'] ?></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
-                            <td><textarea name="dotacao" rows="1" cols="85"></textarea></td>
+                            <td><textarea class="form-control" name="dotacao" rows="1" cols="85"></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
-                            <td><textarea name="finalizacao" rows="8" cols="85"><?= $mdl['finalizacao'] ?></textarea>
+                            <td><textarea class="form-control" name="finalizacao" rows="8"
+                                          cols="85"><?= $mdl['finalizacao'] ?></textarea>
                             </td>
                         </tr>
                     </table>
-                    <div class="pull-left">
-                        <?php // ADICIONAR ANCORA PARA VOLTAR ?>
-                    </div>
+                </div>
+                <div class="box-footer">
+                <form action="perfil=juridico&p=tipo_modelo&sp=dados_modelo" role="form" method="post">
                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                    <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left">Gravar
+                    <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
+                    <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-right"
+                            style="margin: 0 5px;">Gravar
                     </button>
+                </div>
         </form>
-        <form action="?perfil=juridico&p=tipo_modelo&sp=detalhes_evento" role="form" method="post">
-            <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-            <button type="submit" class="btn btn-info pull-right">Detalhes evento</button>
-        </form>
-</div>
+        <div class="box-footer">
+            <form action="?perfil=juridico&p=tipo_modelo&sp=detalhes_evento" role="form" method="post">
+                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
+                <button type="submit" class="btn btn-info pull-right">Detalhes evento</button>
+            </form>
+        </div>
+    </section>
 </div>
 
-</section>
-</div>
 
 <script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>

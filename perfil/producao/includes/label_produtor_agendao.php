@@ -39,7 +39,7 @@ if ($idProdutor != null) {
                                     </tr>
                                     <tr>
                                         <th width="30%">Observação:</th>
-                                        <td><?= $produtor['observacao'] ?></td>
+                                        <td><?= $produtor['observacao'] == null ? "Não cadastrado" : $produtor['observacao'] ?></td>
                                     </tr>
                                 <?php } else { ?>
                                     <div class="row">

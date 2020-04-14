@@ -7,6 +7,10 @@ $idEvento = $_SESSION['idEvento'];
 $_SESSION['idOrigem'] = $_POST['idOrigem'];
 $idAtracao = $_SESSION['idOrigem'];
 
+if(isset($_POST['idFilme'])){
+    $idFilme = $_POST['idFilme'];
+}
+
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
 $tipoEvento = $evento['tipo_evento_id'];
@@ -229,13 +233,12 @@ $tipoEvento = $evento['tipo_evento_id'];
 
                             <?php
                                 if($tipoEvento == 2){
-                                    $filmeEvento = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $idEvento)->fetch_array();
-                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $filmeEvento['filme_id'])->fetch_array();
+                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = $idFilme")->fetch_array();
+                                    $readonly = "readonly";
                                     ?>
                                     <script type="text/javascript">
                                                                     
                                         $('#horaInicio').on('change', function() {
-                                            $('#horaFim').attr("readonly",true);
                                             var horainicio = $('#horaInicio').val();                                      
                                             var hora = parseInt(horainicio.split(':', 1));
                                             var minuto = parseInt(horainicio[3] + horainicio[4]);
@@ -252,19 +255,19 @@ $tipoEvento = $evento['tipo_evento_id'];
                                                minutoFinal -= 60;
                                                hora += 1;
                                             }
-                                            if(minutoFinal == 0 && minutoFinal != 00){
+                                            if(minutoFinal == 0 && minutoFinal != '00'){
                                                 minutoFinal = minutoFinal + "0";
                                             }
                                             if(minutoFinal < 10){
                                                 minutoFinal = "0" + minutoFinal;
                                             }
-                                            if(hora == 0 && minutoFinal != 00){
+                                            if(hora == 0 && minutoFinal != '00'){
                                                 hora = hora + "0";
                                             }
                                             if(hora < 10){
                                                 hora = "0" + hora;
                                             }
-                                            if(hora == 00){
+                                            if(hora == '00'){
                                                 hora = "00";
                                             }
 
@@ -277,14 +280,16 @@ $tipoEvento = $evento['tipo_evento_id'];
                                             
                                     });
                                     </script>
-                                <?php }
+                                <?php } else{
+                                    $readonly = "";
+                                }
                             ?>
 
 
                                  <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
                                     <input type="time" name="horaFim" class="form-control" id="horaFim" required value=""
-                                           placeholder="hh:mm"/>
+                                           placeholder="hh:mm" <?= $readonly ?>/>
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -300,8 +305,8 @@ $tipoEvento = $evento['tipo_evento_id'];
                                 <div class="form-group col-md-3">
                                     <label for="valor_ingresso">Valor Ingresso*</label> <br>
                                     <input type="text" name="valor_ingresso" class="form-control" required
-                                           id="valor_ingresso"
-                                           placeholder="Em reais" onkeypress="return(moeda(this, '.', ',', event))"/>
+                                           id="valor_ingresso" maxlength="5"
+                                           placeholder="Em reais" >
                                 </div>
                             </div>
 
@@ -321,17 +326,21 @@ $tipoEvento = $evento['tipo_evento_id'];
                                         ?>
                                     </select>
                                 </div>
-
                                 <div class="form-group col-md-4">
+                                    <a href="?perfil=evento&p=adicionar_local">
+                                        <button type="button" class="fa fa-plus btn-success pull-right"></button>
+                                    </a>
                                     <label for="local">Local *</label>
                                     <select class="form-control" id="local" name="local" required>
                                         <!-- Populando pelo js -->
                                     </select>
-
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="espaco">Espaço</label>
+                                    <a href="?perfil=evento&p=adicionar_espaco">
+                                        <button type="button" class="fa fa-plus btn-success pull-right"></button>
+                                    </a>
+                                    <label for="espaco">Espaço *</label>
                                     <select class="form-control" id="espaco" name="espaco">
                                         <!-- Populando pelo js -->
                                     </select>
@@ -383,6 +392,10 @@ $tipoEvento = $evento['tipo_evento_id'];
 </div>
 
 <script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#valor_ingresso').mask('00,00',{reverse: true})
+    });
 
     function insti_local() {
         const urlModal = `<?=$url?>`;

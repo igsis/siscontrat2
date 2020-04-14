@@ -1,7 +1,7 @@
 <?php
 include "includes/menu_interno.php";
 $con = bancoMysqli();
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $usuario = recuperaDados('usuarios', 'id', $idUser);
 
 if (isset($_POST['atualizar'])) {
@@ -66,7 +66,7 @@ $usuario = recuperaDados('usuarios', 'id', $idUser);
                         }; ?>
                     </div>
 
-                    <form method="POST" action="?perfil=usuario/minha_conta" role="form">
+                    <form method="POST" action="http://<?=$_SERVER['HTTP_HOST']?>/siscontrat/inicio/edita" role="form">
                         <div class="box-body">
 
                             <div class="row">

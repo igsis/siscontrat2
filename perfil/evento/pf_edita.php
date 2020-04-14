@@ -45,7 +45,7 @@ if (isset($_POST['cadastraLider'])) {
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
     $nome = trim(addslashes($_POST['nome']));
-    $nomeArtistico = trim(addslashes($_POST['nomeArtistico']));
+    $nomeArtistico = trim(addslashes($_POST['nomeArtistico'])) ? "" : NULL;
     $rg =  isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
@@ -671,22 +671,22 @@ include "includes/menu_interno.php";
                                     <div class="form-group col-md-6">
                                         <label for="drt">DRT: </label>
                                         <input type="text" name="drt" class="form-control telefone" maxlength="15"
-                                               placeholder="Digite o DRT" value="<?= $drts['drt'] ?>">
+                                               placeholder="Digite o DRT" value="<?= $drts['drt'] ?? "" ?>">
                                     </div>
                                     <?php
                                 }
                                 ?>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
-                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
+                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?? "" ?>">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
-                                    <textarea name="observacao" rows="3" class="form-control"><?= $observacao['observacao'] ?></textarea>
+                                    <textarea name="observacao" rows="3" class="form-control"><?= $observacao['observacao'] ?? "" ?></textarea>
                                 </div>
                             </div>
                             <?php

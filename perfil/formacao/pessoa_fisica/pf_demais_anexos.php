@@ -4,7 +4,7 @@ $conn = bancoPDO();
 if(isset($_POST['idPf'])){
     $idPf = $_POST ['idPf'];
 }
-$tipoPessoa = 1; // arquivos necessarios para pessoa fisica
+$tipoPessoa = 6; // arquivos necessarios para formação/pessoa física
 
 if (isset($_POST["enviar"])) {
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";

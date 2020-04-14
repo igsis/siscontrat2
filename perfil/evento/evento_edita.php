@@ -12,7 +12,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $telResponsavel = $_POST['telResponsavel'];
     $fiscal_id = $_POST['fiscal'];
     $suplente_id = $_POST['suplente'];
-    $usuario = $_SESSION['idUser'];
+    $usuario = $_SESSION['usuario_id_s'];
     $contratacao = $_POST['contratacao'];
     $eventoStatus = "1";
     $fomento = $_POST['fomento'];
@@ -70,6 +70,7 @@ if (isset($_POST['cadastra'])) {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         //gravarLog($sql);
     }
+
 }
 
 if (isset($_POST['edita'])) {

@@ -6,6 +6,10 @@ $http = $server . "/pdf/";
 isset($_POST['idEvento']);
 $idEvento = $_POST['idEvento'];
 
+isset($_POST['tipoModelo']);
+$modelo = $_POST['tipoModelo'];
+
+
 $link_padraoEvento = $http . "evento_padrao_evento.php";
 $link_vocacionalEvento = $http . "evento_vocacional_evento.php";
 $link_manifestacaojuridicaEvento = $http . "evento_manifestacao_evento.php";
@@ -39,31 +43,36 @@ if ($num > 0) {
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-offset-4 col-md-4" align="center">
-                        <form action="<?= $link_padraoEvento ?>" method="post" role="form">
+                        <form action="<?= $link_padraoEvento ?>" method="post" role="form" target="_blank">
                             <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO PADRÃO
                             </button>
                         </form>
                         <br>
-                        <form action="<?= $link_vocacionalEvento ?>" method="post" role="form">
+                        <form action="<?= $link_vocacionalEvento ?>" method="post" role="form" target="_blank">
                             <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO FORMAÇÃO
                             </button>
                         </form>
                         <br>
-                        <form action="<?= $link_manifestacaojuridicaEvento ?>" method="post" role="form">
+                        <form action="<?= $link_manifestacaojuridicaEvento ?>" method="post" role="form" target="_blank">
                             <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> MANIFESTAÇÃO JURÍDICA
                             </button>
                         </form>
                         <br>
-                        <form action="<?= $link_oficinaEvento ?>" method="post" role="form">
+                        <form action="<?= $link_oficinaEvento ?>" method="post" role="form" target="_blank">
                             <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO OFICINAS
                             </button>
                         </form>
                     </div>
                 </div>
+                <form action="?perfil=juridico&p=tipo_modelo&sp=resultado" method="post" role="form">
+                            <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
+                            <input type="hidden" value="<?= $modelo ?>" name="tipoModelo">
+                            <button type="submit" class="btn btn-default pull-left"> Voltar </button>
+                </form>
             </div>
         </div>
     </section>

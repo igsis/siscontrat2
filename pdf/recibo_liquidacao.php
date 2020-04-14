@@ -98,7 +98,7 @@ $pdf->Ln();
 
 if($pedido['pessoa_tipo_id'] == 1) {
     $idPf = $pedido['pessoa_fisica_id'];
-    $pf = $con->query("SELECT nome, rg, cpf, ccm FROM pessoa_fisicas WHERE id = '$idPf'")->fetch_array();
+    $pf = $con->query("SELECT nome, rg, passaporte,cpf, ccm FROM pessoa_fisicas WHERE id = '$idPf'")->fetch_array();
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial', 'B', 11);
@@ -108,21 +108,30 @@ if($pedido['pessoa_tipo_id'] == 1) {
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial', 'B', 11);
-    $pdf->Cell(9, $l, utf8_decode('RG:'), 0, 0, 'L');
-    $pdf->SetFont('Arial', '', 11);
-    $pdf->Cell(150, $l, utf8_decode($pf['rg']), 0, 1, 'L');
 
-    $pdf->SetX($x);
-    $pdf->SetFont('Arial', 'B', 11);
-    $pdf->Cell(10, $l, utf8_decode('CPF:'), 0, 0, 'L');
-    $pdf->SetFont('Arial', '', 11);
-    $pdf->Cell(150, $l, utf8_decode($pf['cpf']), 0, 1, 'L');
+    if($pf['passaporte'] != NULL){
+        $pdf->Cell(23, $l, utf8_decode('Passaporte:'), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 11);
+        $pdf->Cell(50, $l, utf8_decode($pf['passaporte']), 0, 0, 'L');
+    }else{
+        $pdf->Cell(9, $l, utf8_decode('RG:'), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 11);
+        $pdf->Cell(150, $l, utf8_decode($pf['rg']), 0, 1, 'L');
+        
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 11);
+        $pdf->Cell(10, $l, utf8_decode('CPF:'), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 11);
+        $pdf->Cell(150, $l, utf8_decode($pf['cpf']), 0, 1, 'L');
+    }
+
+    $pdf->Ln();
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial', 'B', 11);
     $pdf->Cell(12, $l, utf8_decode('CCM:'), 0, 0, 'L');
     $pdf->SetFont('Arial', '', 11);
-    $pdf->Cell(150, $l, utf8_decode($pf['ccm']), 0, 1, 'L');
+    $pdf->Cell(150, $l, utf8_decode($pf['ccm'] ? "" : "Não cadastrado"), 0, 1, 'L');
 }
 else{
     $idPj = $pedido['pessoa_juridica_id'];
@@ -148,7 +157,7 @@ else{
     $pdf->SetFont('Arial','B', 11);
     $pdf->Cell(12,$l,utf8_decode('CCM:'),0,0,'L');
     $pdf->SetFont('Arial','', 11);
-    $pdf->Cell(150,$l,utf8_decode($pj['ccm']),0,1,'L');
+    $pdf->Cell(150,$l,utf8_decode($pj['ccm'] ? "" : "Não cadastrado"),0,1,'L');
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial','B', 11);

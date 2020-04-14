@@ -45,6 +45,12 @@ while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
 
 $local = substr($local, 0, -3);
 
+if($pessoa['passaporte' != NULL]){
+    $cpf_passaporte = "Passaporte (" . $pessoa['passaporte'] . ")</p>";
+}else{
+    $cpf_passaporte = "CPF (" . $cpf . ")</p>";
+}
+
 ?>
 
 <html>
@@ -71,7 +77,7 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p align='justify'>" . "$amparo" . "</p>" .
     "<p>&nbsp;</p>" .
-    "<p><strong>Contratado:</strong> " . "$nome" . ", CPF (" . "$cpf" . ")</p>" .
+    "<p><strong>Contratado:</strong> " . "$nome" . ", $cpf_passaporte" .
     "<p><strong>Objeto:</strong> " . "$programa" . " " . "$linguagem" . " " . "$edital" . "</p>" .
     "<p><strong>Data / Período:</strong>" . "$data" . "</p>" .
     "<p><strong>Locais:</strong> " . "  " . "$local" . "</p>" .
@@ -92,6 +98,16 @@ $dados =
 <div align="center">
     <div id="dados" class="texto"><?php echo $dados; ?></div>
 </div>
-
+<br>
+<div align="center">
+    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+        COPIAR TODO O TEXTO
+        <i class="fa fa-copy"></i>
+    </button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="http://sei.prefeitura.sp.gov.br" target="_blank">
+        <button class="btn btn-primary">CLIQUE AQUI PARA ACESSAR O <img src="../visual/images/logo_sei.jpg"></button>
+    </a>
+</div>
 </body>
 </html>

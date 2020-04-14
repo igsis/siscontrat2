@@ -26,7 +26,7 @@ if($pedido['pessoa_tipo_id'] == 1){
     $proponente = $con->query("SELECT razao_social FROM pessoa_juridicas WHERE id = '$idPj'")->fetch_assoc()['razao_social'];
 }
 
-$periodo = retornaPeriodo($pedido['idEvento']);
+$periodo = retornaPeriodoNovo($pedido['idEvento'], 'ocorrencias');
 $tudo = retornaDiasOcorrencias($pedido['idEvento']);
 ?>
  
@@ -71,10 +71,9 @@ $sei =
   "<p>&nbsp;</p>".
   "<p>Atesto que os serviços prestados discriminados no documento:<strong> LINK NOTA FISCAL OU RECIBO DE PAGAMENTO</strong>, foram executados a contento nos termos previstos no instrumento contracontratual (ou documento equivalente) nos dias:</p>".
   "<p>&nbsp;</p>".
-  "<p>".var_dump($tudo)."</p>".
   "<p>&nbsp;</p>".
   "<p>Dentro do prazo previsto.</p>".
-  "<p>O prazo contratual é:".$periodo."</p>".
+  "<p>O prazo contratual é ".$periodo."</p>".
   "<p>À área gestora de liquidação e pagamento encaminho para prosseguimento.</p>"
 ?>
 

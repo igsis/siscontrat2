@@ -170,7 +170,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="elenco">Elenco:</label>
-                                    <textarea class="form-control" name="elenco" id="elenco" rows="10"><?= $row['elenco'] ?> </textarea>
+                                    <textarea class="form-control" name="elenco" id="elenco" rows="10"><?= $row['elenco'] ?></textarea>
                                 </div>
                             </div>
                             <div class="row">

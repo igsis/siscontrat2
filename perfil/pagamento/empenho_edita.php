@@ -7,7 +7,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $empenho = trim(addslashes($_POST['numEmpenho']));
     $dataEntrega = $_POST['data_entrega'];
     $dataEmissao = $_POST['data_emissao'];
-    $idUser = $_SESSION['idUser'];
+    $idUser = $_SESSION['usuario_id_s'];
 }
 
 if (isset($_POST['cadastra'])) {

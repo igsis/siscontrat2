@@ -6,8 +6,8 @@
         $nome = trim(addslashes($_POST['nome']));
         $email = trim($_POST['email']);
         $telefone1 = $_POST['telefone1'];
-        $telefone2 = $_POST['telefone2'];
-        $observacao = trim(addslashes($_POST['observacao']));
+        $telefone2 = $_POST['telefone2'] ?? NULL;
+        $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
         $idProdutor = $_POST['idProdutor'];
         $sql  = "UPDATE `produtores`
                  SET  nome = '$nome',
@@ -62,7 +62,7 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="email">E-mail</label>
+                                    <label for="email">E-mail: *</label>
                                     <input type='email' class='form-control' id='email' name='email' maxlength='60' placeholder='Digite o e-mail' value='<?= $row['email']?>' required>
                                 </div>
                                 <div class="form-group col-md-3">

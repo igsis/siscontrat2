@@ -17,11 +17,11 @@ FROM pedidos AS p
     INNER JOIN pj_enderecos pe on pj.id = pe.pessoa_juridica_id
 WHERE p.publicado = 1 AND e.publicado = 1 AND p.origem_tipo_id = 1 AND p.id = '$idPedido'")->fetch_assoc();
 
-$parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1");
-if($parcela == NULL){
+$parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1")->fetch_array();
+if($parcela['id'] == NULL){
     $valor = $pedido['valor_total'];
 } else {
-    $idParcela = $_POST['idParcela'];
+    $idParcela = $parcela['id'];
     $parc = $con->query("SELECT valor FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1 AND id = '$idParcela'")->fetch_assoc();
     $valor = $parc['valor'];
 }
@@ -60,7 +60,7 @@ header("Content-Disposition: attachment;Filename=$now - Processo SEI $processo -
 </strong></p>
 <p>&nbsp;</p>
 <p align="justify"><strong>Nome da empresa:</strong> <?= $pedido['razao_social'] ?><br>
-    <strong>CCM:</strong> <?= $pedido['ccm'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CNPJ:</strong> <?= $pedido['cnpj'] ?><br>
+    <strong>CCM:</strong> <?= $pedido['ccm'] == null ? "Não cadastado" : $pedido['ccm'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CNPJ:</strong> <?= $pedido['cnpj'] ?><br>
     <strong>Endereço:</strong> <?= $pedido['logradouro'].", ".$pedido['numero']." ".$pedido['complemento']." ".$pedido['bairro']." - ".$pedido['cidade']." - ".$pedido['uf']." CEP: ".$pedido['cep'] ?><br>
     <strong>Telefone:</strong>
     <?php

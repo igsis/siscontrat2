@@ -8,7 +8,7 @@ unset($_SESSION['idPf']);
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $sql = "SELECT eve.id AS id, eve.protocolo, ped.numero_processo, ped.pessoa_tipo_id, ped.pessoa_juridica_id, ped.pessoa_fisica_id, eve.nome_evento, ped.valor_total, pst.status 
         FROM eventos AS eve
         INNER JOIN pedidos AS ped ON eve.id = ped.origem_id
@@ -69,7 +69,13 @@ $query = mysqli_query($con, $sql);
                                 $sql_atracao = "SELECT * FROM atracoes atr INNER JOIN categoria_atracoes cat ON cat.id = atr.categoria_atracao_id WHERE evento_id = '$idEvento' AND atr.publicado = 1";
                                 $query_atracao = mysqli_query($con, $sql_atracao);
 
-                                $locais = listaLocais($evento['id']);
+                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
+                                $queryLocal = mysqli_query($con, $sqlLocal);
+                                $local = '';
+                                while ($locais = mysqli_fetch_array($queryLocal)) {
+                                    $local = $local . '; ' . $locais['local'];
+                                }
+                                $local = substr($local, 1);
 
                                 // $locais = listaLocais($evento['idAtracao']);
                                 echo "<tr>";
@@ -78,7 +84,7 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>";
                                     echo $evento['nome_evento'];
                                 echo "</td>";
-                                echo "<td>" . $locais. "</td>";
+                                echo "<td>" . $local. "</td>";
                                 echo "<td>" . dinheiroParaBr($evento['valor_total']) . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</td>";
                                 echo "<td>" . $evento['status'] . "</td>";

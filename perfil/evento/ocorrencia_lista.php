@@ -376,7 +376,7 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
 
         contentMap.forEach(cells => {
 
-            if (cells.length < 2) {
+            if (cells.length < 3) {
                 return;
             } else {
                 cont++;

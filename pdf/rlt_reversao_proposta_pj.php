@@ -31,7 +31,7 @@ $pessoa = recuperaDados('pessoa_juridicas', 'id', $idPj);
 $idRepresentante = $pessoa['representante_legal1_id'];
 $representante = recuperaDados('representante_legais', 'id', $idRepresentante);
 
-$sqlTelefone = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj'";
+$sqlTelefone = "SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$idPj' AND publicado = '1'";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
@@ -46,6 +46,7 @@ $tel = substr($tel, 0, -3);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 
+$idPenal = $_GET['penal'];
 
 $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
 $queryLocal = mysqli_query($con, $sqlLocal);
@@ -73,7 +74,7 @@ Entenda-se como natureza eventual aquela originária de até duas prestações d
 - Contratados Pessoa Jurídica não podem utilizar conta de pessoa física para o recebimento.
 - Contratação de Pessoa Física: sempre informar Número do NIT ou PIS/PASEP.";
 
-$sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 13";
+$sqlPenalidade = "SELECT texto FROM penalidades WHERE id = $idPenal";
 $penalidades = $con->query($sqlPenalidade)->fetch_array();
 
 if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
@@ -466,7 +467,7 @@ while ($aux = mysqli_fetch_array($cronograma)) {
         $acao = $tipoAcao['acao'];
     }
     $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
-    $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
+    $hour = exibirHora($aux['horario_inicio']) . "h - " . exibirHora($aux['horario_fim']) . "h";
     $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'] . " AND publicado = 1")->fetch_array();
     $lugar = $local['local'];
 

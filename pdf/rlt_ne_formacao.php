@@ -78,23 +78,33 @@ $pdf->Cell(165,$l,utf8_decode($pessoa['nome']),'T',0,'L');
 $pdf->Ln();
 
 $pdf->SetX($x);
-$pdf->Cell(7,$l,utf8_decode("RG:"),0,0,'L');
-$pdf->SetFont('Arial', '',11);
-$pdf->Cell(40,$l,utf8_decode($pessoa['rg']),0,0,'L');
 
-$pdf->Ln();
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(23,$l,utf8_decode("Passaporte:"),0,0,'L');
+    $pdf->SetFont('Arial', '',11);
+    $pdf->Cell(40,$l,utf8_decode($pessoa['passaporte']),0,0,'L');  
+
+    $pdf->Ln();
+}else{
+    $pdf->SetX($x);
+    $pdf->Cell(7,$l,utf8_decode("RG:"),0,0,'L');
+    $pdf->SetFont('Arial', '',11);
+    $pdf->Cell(40,$l,utf8_decode($pessoa['rg']),0,0,'L');  
+
+    $pdf->Ln();
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', 11);
+    $pdf->Cell(9,$l,utf8_decode("CPF:"),0,0,'L');
+    $pdf->SetFont('Arial', '',11);
+    $pdf->Cell(40,$l,utf8_decode($pessoa['cpf']),0,0,'L');
+
+    $pdf->Ln();
+}
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(9,$l,utf8_decode("CPF:"),0,0,'L');
-$pdf->SetFont('Arial', '',11);
-$pdf->Cell(40,$l,utf8_decode($pessoa['cpf']),0,0,'L');
-
-$pdf->Ln();
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(13,$l,utf8_decode("E-mail:"),0,0,'L');
+$pdf->Cell(14,$l,utf8_decode("E-mail:"),0,0,'L');
 $pdf->SetFont('Arial', '',11);
 $pdf->Cell(40,$l,utf8_decode($pessoa['email']),0,0,'L');
 

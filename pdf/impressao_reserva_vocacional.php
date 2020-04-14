@@ -55,7 +55,7 @@ $programa = recuperaDados('programas', 'id', $idPrograma);
         "<p><strong>CONTABILIDADE</strong></p>" .
         "<p><strong>Sr(a). Responsável</strong></p>" .
         "<p>&nbsp;</p>" .
-        "<p>O presente processo trata de " . $pessoa['nome'] . ", " . $programa['programa'] . ", " . $linguagem['linguagem'] . " NOS TERMOS DO EDITAL - " . $programa['edital'] . ", no valor de " . "R$ " . "  " . dinheiroParaBr($pedido['valor_total']) . "( ". valorPorExtenso($pedido['valor_total']) . ")" .  ", conforme solicitação (link da solicitação), foram anexados os documentos necessários exigidos no edital, no período de " . retornaPeriodoFormacao($contratacao['form_vigencia_id']) . " </p>" .
+        "<p>O presente processo trata de " . $pessoa['nome'] . ", " . $programa['programa'] . ", " . $linguagem['linguagem'] . " NOS TERMOS DO EDITAL - " . $programa['edital'] . ", no valor de " . "R$ " . "  " . dinheiroParaBr($pedido['valor_total']) . " ( ". valorPorExtenso($pedido['valor_total']) . " )" .  ", conforme solicitação (link da solicitação), foram anexados os documentos necessários exigidos no edital, no período de " . retornaPeriodoFormacao($contratacao['form_vigencia_id']) . " </p>" .
         "<p>&nbsp;</p>" .
         "<p>Assim, solicito a reserva de recursos que deverá onerar a ação 6375 – Dotação 25.10.13.392.3001.6375</p>" .
         "<p>&nbsp;</p>" .

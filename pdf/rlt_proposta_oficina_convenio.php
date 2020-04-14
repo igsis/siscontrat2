@@ -74,6 +74,16 @@ if($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL){
     $ccm = "Não Cadastrado.";
 }
 
+if($pessoa['passaporte'] != NULL){
+    $rg_cpf_passaporte = "<p><strong>Passaporte:</strong> " . $pessoa['passaporte'] . "</p>";
+    $label = "<p>Passaporte: " . $pessoa['passaporte'] . "</p>";
+}else{
+    $rg_cpf_passaporte = "<p><strong>RG:</strong> " . $pessoa['rg'] . "</p>
+                          <p><strong>CPF:</strong> " . $pessoa['cpf'] . "<p>";   
+    $label = "<p>RG: " . $pessoa['rg'] . "</p>
+              <p>CPF: " . $pessoa['cpf'] . "</p>";
+}
+
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$idPedido.doc");
 ?>
@@ -85,10 +95,9 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
 <p align='center'><strong>CONTRATADO</strong></p>
 <p><i>(Quando se tratar de grupo, o líder do grupo)</i></p>
 <p><strong>Nome:</strong> <?= $pessoa['nome'] ?></p>
-<p><strong>Nome Artístico:</strong> <?= $pessoa['nome_artistico'] ?></p>
+<p><strong>Nome Artístico:</strong> <?= $pessoa['nome_artistico'] == NULL ? "Não cadastrado" : $pessoa['nome_artistico'] ?></p>
 <p><strong>Nacionalidade:</strong> <?= $nacionalidade['nacionalidade'] ?></p>
-<p><strong>RG:</strong> <?= $pessoa['rg'] ?></p>
-<p><strong>CPF:</strong> <?= $pessoa['cpf'] ?></p>
+<?=$rg_cpf_passaporte?>
 <p><strong>CCM:</strong> <?= $ccm ?></p>
 <p><strong>DRT:</strong> <?= $drt ?></p>
 <p>
@@ -96,7 +105,7 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
 </p>
 <p><strong>Telefone:</strong> <?= $tel ?></p>
 <p><strong>E-mail:</strong> <?= $pessoa['email'] ?></p>
-<p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> <?= $nit['nit'] ?></p>
+<p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> <?= $nit['nit'] == NULL ? "Não cadastrado" : $nit['nit'] ?></p>
 
 <br style='page-break-before: always'>
 <p>(B)</p>
@@ -115,8 +124,7 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
 <p>&nbsp;</p>
 <p>___________________________</p>
 <p><?= $pessoa['nome'] ?></p>
-<p>RG: <?= $pessoa['rg'] ?></p>
-<p>CPF: <?= $pessoa['cpf'] ?></p>
+<?=$label?>
 
 <br style='page-break-before: always'>
 <p>(C)</p>
@@ -147,8 +155,7 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
 <p>&nbsp;</p>
 <p>___________________________</p>
 <p><?= $pessoa['nome'] ?></p>
-<p>RG: <?= $pessoa['rg'] ?></p>
-<p>CPF: <?= $pessoa['cpf'] ?></p>
+<?=$label?>
 
 <br style='page-break-before: always'>
 <p align='center'><strong>CRONOGRAMA</strong></p>
@@ -173,7 +180,7 @@ while ($aux = mysqli_fetch_array($cronograma)) {
         $labelFilme = "";
     }
     $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
-    $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
+    $hour = exibirHora($aux['horario_inicio']) . "h - " . exibirHora($aux['horario_fim']) . "h";
     $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'])->fetch_array();
     $lugar = $local['local'];
 
@@ -188,8 +195,7 @@ while ($aux = mysqli_fetch_array($cronograma)) {
 <p>&nbsp;</p>
 <p>___________________________</p>
 <p><?= $pessoa['nome'] ?></p>
-<p>RG:<?= $pessoa['rg'] ?></p>
-<p>CPF:<?= $pessoa['cpf'] ?></p>
+<?=$label?>
 <p>&nbsp;</p>
 
 </body>

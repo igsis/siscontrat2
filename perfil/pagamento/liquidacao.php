@@ -3,6 +3,8 @@ $con = bancoMysqli();
 
 $idPedido = $_POST['idPedido'];
 
+$pedido = $con->query("SELECT p.numero_processo, e.protocolo FROM pedidos AS p INNER JOIN eventos AS e ON e.id = p.origem_id WHERE p.origem_tipo_id = 1 AND p.id = $idPedido")->fetch_array();
+
 if(isset($_POST['cadastrar']) || isset($_POST['editar'])){
     $extrato_liquidacao = addslashes($_POST['extrato_liquidacao']);
     $retencoes_inss = addslashes($_POST['retencoes_inss']);
@@ -59,6 +61,19 @@ if($liquidacao == NULL){
             </div>
             <form action="#" method="post" role="form">
                 <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="processo">Número do Processo:</label>
+                            <input type="text" name="processo" class="form-control" disabled value="<?=$pedido['numero_processo']?>">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="protocolo">Protocolo:</label>
+                            <input type="text" name="protocolo" class="form-control" disabled value="<?=$pedido['protocolo']?>">
+                        </div>
+                    </div>
+                    <br>
+
                     <div class="row">
                         <div class="col-md-6">
                             <label for="extrato_liquidacao">Extrato de Liquidação e Pagamento nº:</label>

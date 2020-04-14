@@ -13,7 +13,7 @@ if(isset($_POST['editar'])){
     $status = "1";
     $fiscal = $_POST['fiscal'] ?? null;
     $suplente = $_POST['suplente'] ?? null;
-    $usuario = $_SESSION['idUser'];
+    $usuario = $_SESSION['usuario_id_s'];
 
     $sqlUpdate = "UPDATE emia_contratacao SET
                     pessoa_fisica_id = '$idPf',

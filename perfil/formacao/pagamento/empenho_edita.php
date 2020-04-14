@@ -9,7 +9,7 @@ if (isset($_POST['cadastra'])) {
     $numEmpenho = $_POST['numEmpenho'];
     $data_entrega = $_POST['data_entrega'];
     $data_emissao = $_POST['data_emissao'];
-    $idUser = $_SESSION['idUser'];
+    $idUser = $_SESSION['usuario_id_s'];
 
     $sql = "INSERT INTO pagamentos (pedido_id, nota_empenho, emissao_nota_empenho, entrega_nota_empenho, usuario_pagamento_id) 
                                 VALUES ('$idPedido', '$numEmpenho', '$data_emissao', '$data_entrega', '$idUser')";
@@ -62,11 +62,6 @@ $link = $http . "rlt_ne_formacao.php";
                                     <input type="date" name="data_entrega" id="datepicker11" required
                                            class="form-control" placeholder="DD/MM/AAAA"
                                            value="<?= $pagamentos['entrega_nota_empenho'] ?>" disabled readonly>
-                                </div>
-                            </div>
-                            <div class="row" id="msg">
-                                <div class="form-group col-md-12">
-                                    <span class="pull-right" style="color: red;"><b>Data de emissão precisa ser maior que a de entrega!</b></span>
                                 </div>
                             </div>
                         </div>
