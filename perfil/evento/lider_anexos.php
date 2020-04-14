@@ -58,7 +58,7 @@ if (isset($_POST['apagar'])) {
     $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
     if (mysqli_query($con, $sql_apagar_arquivo)) {
         $arq = recuperaDados("arquivos", $idArquivo, "id");
-        $mensagem = mensagem("success", "Arquivo " . $arq['arquivo'] . "apagado com sucesso!");
+        $mensagem = mensagem("success", "Arquivo apagado com sucesso!");
         gravarLog($sql_apagar_arquivo);
     } else {
         $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
@@ -230,12 +230,7 @@ if (isset($_POST['apagar'])) {
                             </div>
                         </div>
                         <div class="box-footer">
-                            <form action="?perfil=evento&p=pedido_edita" method="post">
-                                <input type="hidden" value="<?= $idPf ?>" name="idProponente">
-                                <input type="hidden" value="1" name="tipoPessoa">
-                                <input type="hidden" value="<?= $_SESSION['idPedido'] ?>" name="idPedido">
-                                <button type="submit" name="Voltar" class="btn btn-default pull-left">Voltar</button>
-                            </form>
+                            <a href="?perfil=evento&p=pedido_lideres" class="btn btn-default pull-left">Voltar</a>
                         </div>
                     </div>
                 </div>

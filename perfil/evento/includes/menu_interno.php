@@ -98,10 +98,11 @@ if (!$eventoNovo) {
                                     <li><a href="<?= $pasta ?>pedido_parcelas"><i class="fa fa-circle-o"></i> Detalhes de Parcelas</a></li>
                                     <li><a href="<?= $pasta ?>pedido_proponente"><i class="fa fa-circle-o"></i> Cadastro de Proponente</a></li>
                                     <?php if ($tipoPedido == 2): ?>
-                                        <li><a href="#"><i class="fa fa-circle-o"></i> Líderes</a></li>
+                                        <li><a href="<?= $pasta ?>pedido_lideres"><i class="fa fa-circle-o"></i> Líderes</a></li>
                                     <?php endif ?>
-                                    <li><a href="#"><i class="fa fa-circle-o"></i> Parecer Artístico</a></li>
-                                    <li><a href="#"><i class="fa fa-circle-o"></i> Valor por Equipamento</a></li>
+                                    <li><a href="<?= $pasta ?>pedido_parecer_artistico"><i class="fa fa-circle-o"></i> Parecer Artístico</a></li>
+                                    <li><a href="#"><i class="fa fa-circle-o"></i> Anexos do Pedido</a></li>
+                                    <li><a href="<?= $pasta ?>pedido_valor_equipamento"><i class="fa fa-circle-o"></i> Valor por Equipamento</a></li>
                                 </ul>
                             </li>
                         <?php endif; ?>

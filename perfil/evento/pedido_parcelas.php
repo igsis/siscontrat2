@@ -127,11 +127,6 @@ if (($pedido['origem_tipo_id'] != 2) && ($tipoEvento != 2)) {
                             </div>
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                             <input type="hidden" name="data_kit" id="dataKit">
-                            <ul class="list-inline pull-right">
-                                <li>
-
-                                </li>
-                            </ul>
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
@@ -145,33 +140,6 @@ if (($pedido['origem_tipo_id'] != 2) && ($tipoEvento != 2)) {
             <!-- /.col -->
         </div>
         <!-- /.row -->
-
-        <!--.modal-->
-        <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Confirmação de Exclusão</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Tem certeza que deseja excluir este pedido?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <form action="?perfil=evento&p=pedido" method="post">
-                            <input type="hidden" name="idPedido" id="idPedido" value="">
-                            <input type="hidden" name="apagar" id="apagar">
-                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
-                            </button>
-                            <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Excluir">
-                        </form>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
     </section>
     <!-- /.content -->
 </div>
