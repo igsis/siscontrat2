@@ -403,7 +403,7 @@ while ($aux = mysqli_fetch_array($cronograma)) {
         $acao = $tipoAcao['acao'];
     }
     $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
-    $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
+    $hour = exibirHora($aux['horario_inicio']) . "h - " . exibirHora($aux['horario_fim']) . "h";
     $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'] . " AND publicado = 1")->fetch_array();
     $lugar = $local['local'];
 
