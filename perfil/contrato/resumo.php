@@ -277,6 +277,11 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
         $escondeLider = 0;
     }
 
+$sql = "SELECT * FROM  chamados where evento_id = '$idEvento'";
+$query = mysqli_query($con, $sql);
+$chamado = mysqli_fetch_array($query);
+//$idChamado = $chamado['id'];
+
 ?>
 
 <div class="content-wrapper">
@@ -487,6 +492,25 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
                                 </button>
                             </form>
                         </div>
+                        
+                        <?php if(isset($chamado)): ?>
+                            <div class="col-md-4">
+                                <form action="?perfil=contrato&p=chamados_contrato" method="post" role="form">
+                                    <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                    <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                    <button type="submit" class="btn btn-primary btn-block"> Ver chamados</button>
+                                </form>
+                            </div>
+                        <?php else : ?>
+                            <div class="col-md-4">
+                                <!-- <form action="?perfil=contrato&p=chamados_contrato" method="post" role="form">
+                                    <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                    <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                    <button type="submit" class="btn btn-primary btn-block"> Ver chamados</button>
+                                </form> -->
+                            </div>
+                        <?php endif ?>  
+
                         <div class="col-md-4">
                             <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
@@ -495,14 +519,7 @@ $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEven
                                         style="width: 95%"> Baixar todos os arquivos
                                 </button>
                             </form>
-                        </div>
-                        <div class="col-md-4">
-                            <form action="?perfil=contrato&p=chamados_contrato" method="post" role="form">
-                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                <button type="submit" class="btn btn-primary btn-block"> Ver chamados</button>
-                            </form>
-                        </div>
+                        </div>  
 
                        <!-- <div class="col-md-3">
                             <form action="?perfil=contrato&p=anexos_pedido" method="post" role="form">
