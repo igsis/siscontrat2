@@ -1,5 +1,5 @@
 <?php
-include "includes/menu_interno.php";
+
 unset($_SESSION['idPj']);
 unset($_SESSION['idPedido']);
 
@@ -60,7 +60,7 @@ if ($pedido != null) {
         $idProponente = $pf['id'];
     }
 }
-
+include "includes/menu_interno.php";
 ?>
 
 <!-- Content Wrapper. Contains page content -->
