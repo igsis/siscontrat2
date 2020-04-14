@@ -110,3 +110,48 @@ $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
     </section>
     <!-- /.content -->
 </div>
+
+<script>
+    $(document).ready(somaValorEquipamento());
+    function somaValorEquipamento() {
+        let valorEquipamento = $("input[name='valorEquipamento[]']");
+        let valor_total = 0;
+
+        for (let i = 0; i < valorEquipamento.length; i++) {
+            if (valorEquipamento[i].value == "") {
+                valorEquipamento[i].value = "0,00"
+            }
+
+            let valor = parseFloat(valorEquipamento[i].value.replace('.', '').replace(',', '.'));
+
+            valor_total += valor;
+        }
+
+
+        let valorTotal = parseFloat($('#valor_total').val().replace('.', '').replace(',', '.'));
+        let valorDif;
+
+        if (valor_total != valorTotal) {
+            valorDif = valorTotal - valor_total;
+        } else {
+            valorDif = 0;
+        }
+
+        valorDif = parseFloat(valorDif.toFixed(2));
+
+        if (valorDif < 0) {
+            // VALOR DIGITADO MAIOR QUE O VALOR TOTAL DO EVENTO
+            $('#valorFaltante').html("<span style='color: red'>VALOR MAIOR QUE VALOR TOTAL</span>");
+            $('#gravarValorEquipamento').attr("disabled", true);
+        } else if (valorDif == 0) {
+            // VALOR DOS EQUIPAMENTOS IGUAL O DO VALOR TOTAL DO EVENTO
+            $('#valorFaltante').html("<span style='color: green'> VALOR OK </span>");
+            $('#gravarValorEquipamento').attr("disabled", false);
+        } else {
+            //  VALOR DIGITADO MENOR QUE O VALOR TOTAL DO EVENTO
+            valorDif = valorDif.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+            $('#valorFaltante').html(valorDif);
+            $('#gravarValorEquipamento').attr("disabled", true);
+        }
+    }
+</script>
