@@ -1,0 +1,177 @@
+<?php
+include "includes/menu_interno.php";
+
+$idPedido = $_SESSION['idPedido'];
+$idEvento = $_SESSION['idEvento'];
+
+$evento = recuperaDados("eventos", "id", $idEvento);
+$sql = "SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
+$query = $con->query($sql);
+$pedido = $query->fetch_assoc();
+
+$sqlOficina = "SELECT aa.acao_id FROM eventos e
+                INNER JOIN atracoes a on e.id = a.evento_id
+                INNER JOIN acao_atracao aa on a.id = aa.atracao_id
+                WHERE e.id = '$idEvento' and a.publicado = 1";
+$queryOficina = $con->query($sqlOficina);
+
+while ($atracoes = $queryOficina->fetch_assoc()) {
+    if ($atracoes['acao_id'] == 8) {
+        $oficina = 1;
+    }
+}
+
+$tipoPessoa = $pedido['pessoa_tipo_id'];
+$tipoEvento = $evento['tipo_evento_id'];
+
+if (($pedido['origem_tipo_id'] != 2) && ($tipoEvento != 2)) {
+    $readonly = 'readonly';
+} else {
+    $readonly = '';
+}
+
+?>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <!-- START FORM-->
+        <h2 class="page-header">Pedido de Contração</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <form action="?perfil=evento&p=pedido_parcelas" method="POST" role="form">
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Detalhes de parcelas</h3>
+                        </div>
+
+                        <div class="row" align="center">
+                            <?= $mensagem ?? "" ?>
+                        </div>
+
+                        <div class="box-body">
+
+
+                            <?php
+                            if (isset($oficina)) {
+                                ?>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="numero_parcelas">Número de Parcelas *</label>
+                                        <select class="form-control" id="numero_parcelas" required
+                                                name="numero_parcelas"
+                                        >
+                                            <option value="">Selecione...</option>
+                                            <?php
+                                                if ($pedido['numero_parcelas'] == 3) {
+                                                    $option = 4;
+                                                } elseif ($pedido['numero_parcelas'] == 4) {
+                                                    $option = 3;
+                                                } else {
+                                                    $option = $pedido['numero_parcelas'];
+                                                }
+                                                geraOpcaoParcelas("oficina_opcoes", $option);
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <button type="button" id="editarParcelas" class="btn btn-primary"
+                                            style="display: block; margin-top: 1.8%;">
+                                        Editar Parcelas
+                                    </button>
+                                </div>
+                                <?php
+
+                            } else {
+                                ?>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="numero_parcelas">Número de Parcelas *</label>
+                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas"
+                                                required>
+                                            <option value="">Selecione...</option>
+                                            <?php
+                                            geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']);
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" id="editarParcelas" class="btn btn-primary"
+                                            style="display: block; margin-top: 1.8%;">
+                                        Editar Parcelas
+                                    </button>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="forma_pagamento">Forma de pagamento *</label><br/>
+                                    <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
+                                              required rows="8" <?= $pedido['numero_parcelas'] != 13 ? 'readonly' : '' ?>>
+                                        <?= $pedido['forma_pagamento'] ?>
+                                    </textarea>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="justificativa">Justificativa *</label><br/>
+                                    <textarea id="justificativa" name="justificativa" class="form-control"
+                                              required rows="8"><?= $pedido['justificativa'] ?></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="observacao">Observação</label>
+                                    <input type="text" id="observacao" name="observacao" class="form-control"
+                                           maxlength="255" value="<?= $pedido['observacao'] ?>">
+                                </div>
+                            </div>
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <input type="hidden" name="data_kit" id="dataKit">
+                            <ul class="list-inline pull-right">
+                                <li>
+
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <button type="submit" class="pull-right btn btn-primary next-step" id="next">Gravar</button>
+                        </div>
+                        <!-- /.box-footer-->
+                    </div>
+                </form>
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+        <!--.modal-->
+        <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Confirmação de Exclusão</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Tem certeza que deseja excluir este pedido?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="?perfil=evento&p=pedido" method="post">
+                            <input type="hidden" name="idPedido" id="idPedido" value="">
+                            <input type="hidden" name="apagar" id="apagar">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                            </button>
+                            <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Excluir">
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+    <!-- /.content -->
+</div>
