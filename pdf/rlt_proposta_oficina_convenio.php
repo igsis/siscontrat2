@@ -164,32 +164,51 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
     Cultura</p>
 <p>&nbsp;</p>
 <?php
-$cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id']);
-while ($aux = mysqli_fetch_array($cronograma)) {
-    if ($aux['tipo_ocorrencia_id'] == 2) {
-        $testaFilme = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id = $idEvento")->fetch_array();
-        $filme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
-        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
-        $acao = $tipoAcao['acao'];
-        $labelFilme = "<p><strong> Título: </strong>" . $filme['titulo'] . "</p>" .
-            "<p><strong>Duração: </strong>" . $filme['duracao'] . " Hora(s)" . "</p>";
-    } else {
+if ($evento['tipo_evento_id'] == 1) {
+    $cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND tipo_ocorrencia_id = 1 AND publicado = 1");
+    while ($aux = mysqli_fetch_array($cronograma)) {
         $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
-        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'])->fetch_array();
+        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'] . " AND publicado = 1")->fetch_array();
         $acao = $tipoAcao['acao'];
-        $labelFilme = "";
-    }
-    $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
-    $hour = exibirHora($aux['horario_inicio']) . "h - " . exibirHora($aux['horario_fim']) . "h";
-    $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'])->fetch_array();
-    $lugar = $local['local'];
 
-    echo $labelFilme;
-    echo "<p><strong>Ação:</strong> " . $acao . "</p>";
-    echo "<p><strong>Data/Período:</strong> " . $dia . "</p>";
-    echo "<p><strong>Horário:</strong> " . $hour . "</p>";
-    echo "<p><strong>Local:</strong> " . $lugar . "</p>";
-    echo "<p>&nbsp;</p>";
+        $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
+        $hour = exibirHora($aux['horario_inicio']) . "h - " . exibirHora($aux['horario_fim']) . "h";
+        $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'] . " AND publicado = 1")->fetch_array();
+        $lugar = $local['local'];
+
+        echo "<p><strong>Ação:</strong> " . $acao . "</p>";
+        echo "<p><strong>Data/Período:</strong> " . $dia . "</p>";
+        echo "<p><strong>Horário:</strong> " . $hour . "</p>";
+        echo "<p><strong>Local:</strong> " . $lugar . "</p>";
+        echo "<p>&nbsp;</p>";
+    }
+
+} elseif ($evento['tipo_evento_id'] == 2) {
+    $filmes = $con->query("SELECT id, filme_id FROM filme_eventos WHERE evento_id = " . $evento['id']);
+    foreach ($filmes as $filme){
+        $dadosFilme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $filme['filme_id'] . " AND publicado = 1")->fetch_array();
+        $cronograma = $con->query("SELECT * FROM ocorrencias WHERE publicado = 1 AND tipo_ocorrencia_id = 2 AND origem_ocorrencia_id = " . $evento['id'] . " AND atracao_id = " .$filme['id']);
+        while ($aux = mysqli_fetch_array($cronograma)) {
+
+            $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
+            $acao = $tipoAcao['acao'];
+
+            echo "<p><strong> Título: </strong>" . $dadosFilme['titulo'] . "</p>" .
+                "<p><strong>Duração: </strong>" . $dadosFilme['duracao'] . " Minuto(s)" . "</p>";
+
+            $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
+            $hour = exibirHora($aux['horario_inicio']) . "h - " . exibirHora($aux['horario_fim']) . "h";
+            $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'] . " AND publicado = 1")->fetch_array();
+            $lugar = $local['local'];
+
+            echo "<p><strong>Ação:</strong> " . $acao . "</p>";
+            echo "<p><strong>Data/Período:</strong> " . $dia . "</p>";
+            echo "<p><strong>Horário:</strong> " . $hour . "</p>";
+            echo "<p><strong>Local:</strong> " . $lugar . "</p>";
+            echo "<p>&nbsp;</p>";
+
+        }
+    }
 }?>
 
 <p>&nbsp;</p>
