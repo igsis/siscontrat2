@@ -814,7 +814,7 @@ $tipoEvento = $evento['tipo_evento_id'];
 
     $('#dtExc').click(function () {
         $('#ModalDtExec').modal('show');
-    })
+    });
 
     let btnDataE = document.querySelector('#btData');
     let divDatas = document.querySelector('#datas');
@@ -837,6 +837,7 @@ $tipoEvento = $evento['tipo_evento_id'];
         remove.classList.add('btn');
         remove.classList.add('btn-danger');
         remove.classList.add('apData');
+        remove.setAttribute('type','button')
 
         let icone = document.createElement('i');
         icone.classList.add('fa');
@@ -861,6 +862,21 @@ $tipoEvento = $evento['tipo_evento_id'];
         row.appendChild(col4);
 
         divDatas.appendChild(row);
+
+    });
+
+    let datas =  document.querySelector('#datas');
+
+    datas.addEventListener('click', function (event) {
+        let btn = event.target;
+        if(!btn.classList.contains('btn')){
+            btn = btn.parentNode;
+        }
+
+        let col =  btn.parentNode;
+        let row = col.parentNode;
+
+        row.remove();
     })
 
 </script>
