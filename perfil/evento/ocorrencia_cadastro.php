@@ -2,6 +2,7 @@
 $con = bancoMysqli();
 include "includes/menu_interno.php";
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espacos.php';
+$urlAjax = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_ajax_data_excessao.php';
 
 $idEvento = $_SESSION['idEvento'];
 $_SESSION['idOrigem'] = $_POST['idOrigem'];
@@ -215,13 +216,6 @@ $tipoEvento = $evento['tipo_evento_id'];
                                     </label>
                                 </div>
                             </div>
-                            <div class="row" style="margin-bottom: 15px">
-                                <div class="col-md-12">
-                                    <button id="dtExc" class="btn btn-info" type="button">
-                                        Data de excessão
-                                    </button>
-                                </div>
-                            </div>
                             <div class="row" id="msgEsconde">
                                 <div class="form-group col-md-6">
                                     <span style="color: red;">Selecione ao menos um dia da semana!</span>
@@ -396,38 +390,6 @@ $tipoEvento = $evento['tipo_evento_id'];
     </section>
 </div>
 
-<div id="ModalDtExec" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Datas de excessão</h4>
-            </div>
-            <form>
-                <div class="modal-body">
-                    <div class="row" style="margin-bottom: 15px;">
-                        <div class="col-md-12">
-                            <button type="button" id="btData" class="btn btn-success">Adicionar Data</button>
-                        </div>
-                    </div>
-                    <div id="datas">
-                        <div class="row">
-                            <div class="col-md-10">
-                                <label>Data:</label>
-                                <input type="date" class="form-control dataEx">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar</button>
-                </div>
-            </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
 <script type="text/javascript">
 
@@ -811,72 +773,4 @@ $tipoEvento = $evento['tipo_evento_id'];
     }
 
     var diaSemana = $('.semana').change(validaDiaSemana)
-
-    $('#dtExc').click(function () {
-        $('#ModalDtExec').modal('show');
-    });
-
-    let btnDataE = document.querySelector('#btData');
-    let divDatas = document.querySelector('#datas');
-
-    btnDataE.addEventListener('click',function () {
-        let row = document.createElement('div');
-        row.classList.add('row');
-        row.style.display = 'flex';
-        row.style.alignItems = 'end';
-        row.style.justifyContent = 'end';
-
-        let col8 = document.createElement('div');
-        col8.classList.add('col-md-10');
-
-        let col4 = document.createElement('div');
-        col4.classList.add('col-md-2');
-        col4.style.marginTop = '5%';
-
-        let remove = document.createElement('button');
-        remove.classList.add('btn');
-        remove.classList.add('btn-danger');
-        remove.classList.add('apData');
-        remove.setAttribute('type','button')
-
-        let icone = document.createElement('i');
-        icone.classList.add('fa');
-        icone.classList.add('fa-fw');
-        icone.classList.add('fa-trash-o');
-
-        let label = document.createElement('label');
-        label.textContent = "Data:";
-
-        let input = document.createElement('input');
-        input.setAttribute('type','date');
-        input.classList.add('dataEx');
-        input.classList.add('form-control');
-
-        remove.appendChild(icone);
-        col4.appendChild(remove);
-
-        col8.appendChild(label);
-        col8.appendChild(input);
-
-        row.appendChild(col8);
-        row.appendChild(col4);
-
-        divDatas.appendChild(row);
-
-    });
-
-    let datas =  document.querySelector('#datas');
-
-    datas.addEventListener('click', function (event) {
-        let btn = event.target;
-        if(!btn.classList.contains('btn')){
-            btn = btn.parentNode;
-        }
-
-        let col =  btn.parentNode;
-        let row = col.parentNode;
-
-        row.remove();
-    })
-
 </script>
