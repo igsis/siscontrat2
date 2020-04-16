@@ -1,8 +1,26 @@
 <?php
+$con = bancoMysqli();
 include "includes/menu_interno.php";
 
 $idPedido = $_SESSION['idPedido'];
 $idEvento = $_SESSION['idEvento'];
+
+if (isset($_POST['gravar'])) {
+    $idPedido = $_POST['idPedido'];
+
+    $topico1 = trim(addslashes($_POST['topico1']));
+    $topico2 = trim(addslashes($_POST['topico2']));
+    $topico3 = trim(addslashes($_POST['topico3']));
+    $topico4 = trim(addslashes($_POST['topico4']));
+
+    $sql_cadastra = "INSERT INTO parecer_artisticos (pedido_id, topico1, topico2, topico3, topico4) VALUES ('$idPedido','$topico1','$topico2','$topico3','$topico4')
+                         ON DUPLICATE KEY UPDATE topico1 = '$topico1', topico2 = '$topico2', topico3 = '$topico3', topico4 = '$topico4'";
+    if ($con->query($sql_cadastra)) {
+        $mensagem = mensagem('success', 'Parecer artístico gravado com sucesso.');
+    } else {
+        $mensagem = mensagem('danger', 'Erro ao gravar os dados. Tente novamente.');
+    }
+}
 
 $evento = recuperaDados("eventos", "id", $idEvento);
 $sql = "SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
@@ -36,7 +54,7 @@ if ($pedido['pessoa_tipo_id'] == 2) {
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
-                <form class="formulario-ajax" method="POST" action="../funcoes/api_pedido_eventos.php" role="form" data-etapa="Parecer Artístico">
+                <form method="POST" action="?perfil=evento&p=pedido_parecer_artistico" role="form">
                     <div class="box box-info">
                         <div class="box-header with-border">
                             <h3 class="box-title">Parecer Artístico</h3>
@@ -190,7 +208,8 @@ if ($pedido['pessoa_tipo_id'] == 2) {
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="submit" class="pull-right btn btn-primary next-step" id="next">Gravar</button>
+                            <input type="hidden" name="idPedido" value="<?=$idPedido?>">
+                            <input class="pull-right btn btn-primary" type="submit" name="gravar" value="Gravar">
                         </div>
                         <!-- /.box-footer-->
                     </div>
@@ -200,33 +219,54 @@ if ($pedido['pessoa_tipo_id'] == 2) {
             <!-- /.col -->
         </div>
         <!-- /.row -->
-
-        <!--.modal-->
-        <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Confirmação de Exclusão</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Tem certeza que deseja excluir este pedido?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <form action="?perfil=evento&p=pedido" method="post">
-                            <input type="hidden" name="idPedido" id="idPedido" value="">
-                            <input type="hidden" name="apagar" id="apagar">
-                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
-                            </button>
-                            <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Excluir">
-                        </form>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
     </section>
     <!-- /.content -->
 </div>
+
+<script>
+    function mostrarResultado(box, num_max, campospan) {
+        var contagem_carac = box.length;
+        if (contagem_carac != 0) {
+            document.getElementById(campospan).innerHTML = contagem_carac + " caracteres digitados";
+            if (contagem_carac == 1) {
+                document.getElementById(campospan).innerHTML = contagem_carac + " caracter digitado";
+            }
+            if (contagem_carac < num_max) {
+                document.getElementById(campospan).innerHTML = "<font color='red'>Você não inseriu a quantidade mínima de caracteres!</font>";
+            }
+        } else {
+            document.getElementById(campospan).innerHTML = "Ainda não temos nada digitado...";
+        }
+    }
+
+    function contarCaracteres(box, valor, campospan) {
+        var conta = valor - box.length;
+        document.getElementById(campospan).innerHTML = "Faltam " + conta + " caracteres";
+        if (box.length >= valor) {
+            document.getElementById(campospan).innerHTML = "Quantidade mínima de caracteres atingida!";
+        }
+    }
+
+    function mostrarResultado3(box, num_max, campospan) {
+        var contagem_carac = box.length;
+        if (contagem_carac != 0) {
+            document.getElementById(campospan).innerHTML = contagem_carac + " caracteres digitados";
+            if (contagem_carac == 1) {
+                document.getElementById(campospan).innerHTML = contagem_carac + " caracter digitado";
+            }
+            if (contagem_carac < num_max) {
+                document.getElementById(campospan).innerHTML = "<font color='red'>Você não inseriu a quantidade mínima de caracteres!</font>";
+            }
+        } else {
+            document.getElementById(campospan).innerHTML = "Ainda não temos nada digitado...";
+        }
+    }
+
+    function contarCaracteres3(box, valor, campospan) {
+        var conta = valor - box.length;
+        document.getElementById(campospan).innerHTML = "Faltam " + conta + " caracteres";
+        if (box.length >= valor) {
+            document.getElementById(campospan).innerHTML = "Quantidade mínima de caracteres atingida!";
+        }
+    }
+</script>
