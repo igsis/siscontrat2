@@ -1,7 +1,7 @@
 <?php
-include "includes/menu_interno.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
+$idEvento = $_SESSION['idEvento'];
 
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do siscontrat
 $http = $server . "/pdf/";
@@ -332,7 +332,7 @@ if (isset($_POST['cadastra'])) {
     }
 }
 
-
+include "includes/menu_interno.php";
 ?>
 
 <script>
