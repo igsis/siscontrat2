@@ -6,6 +6,7 @@ $idOrigem = $_SESSION['idOrigem'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espacos.php';
+$urlAjax = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_ajax_data_excessao.php';
 
 include "includes/menu_interno.php";
 
@@ -1181,12 +1182,21 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         }
     })
 
-
     let saveDate = document.querySelector('#saveData');
-
     saveDate.addEventListener("click",function (event) {
         event.preventDefault();
-        dados = {};
+        let data = document.querySelectorAll('.dataEx');
+        let datas = [];
+        data.forEach(function (item) {
+            datas.push(item.value);
+        });
+        dados = {
+            id: <?= $idOcorrencia ?>,
+            _method:'post',
+            datas: datas
+        };
+
+        console.log(dados);
         $.post('<?= $urlAjax ?>',dados,function (data,status) {
 
         })
