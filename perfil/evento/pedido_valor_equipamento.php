@@ -1,23 +1,45 @@
 <?php
+$con = bancoMysqli();
 include "includes/menu_interno.php";
-
 $idPedido = $_SESSION['idPedido'];
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
-if ($pedido['pessoa_tipo_id'] == 1) {
-    $tipoPessoa = 1;
-    $idProponente = $pedido['pessoa_fisica_id'];
-} elseif ($pedido['pessoa_tipo_id'] == 2) {
-    $tipoPessoa = 2;
-    $idProponente = $pedido['pessoa_juridica_id'];
+
+if (isset($_POST['gravar'])) {
+    $valoresEquipamentos = $_POST['valorEquipamento'];
+    $equipamentos = $_POST['equipamentos'];
+    $idPedido = $_POST['idPedido'];
+
+    $con->query("DELETE FROM valor_equipamentos WHERE pedido_id = '$idPedido'");
+
+    for ($i = 0; $i < count($valoresEquipamentos); $i++) {
+        $valor = dinheiroDeBr($valoresEquipamentos[$i]);
+        $idLocal = $equipamentos[$i];
+
+        $sql_insert_valor = "INSERT INTO valor_equipamentos (local_id, pedido_id, valor) 
+                     VALUES ('$idLocal', '$idPedido', '$valor')";
+
+        if ($con->query($sql_insert_valor)) {
+            $erro[] = false;
+        } else {
+            $erro[] = true;
+        }
+    }
+
+    if (in_array(true, $erro, true)) {
+        $mensagem = mensagem('danger', 'Erro ao gravar os dados. Tente novamente.');
+    } else {
+        $mensagem = mensagem('success', 'Valores gravados com sucesso.');
+    }
 }
 
-$sqlEquipamento = "SELECT DISTINCT oco.local_id as 'local_id', local.local as 'local' 
-                    FROM ocorrencias AS oco
-                    INNER JOIN locais local ON local.id = oco.local_id 
-                    WHERE oco.origem_ocorrencia_id = '$idEvento' AND local.publicado = 1 AND oco.publicado = 1";
+$pedido = $con->query("SELECT valor_total FROM pedidos WHERE id = '$idPedido'")->fetch_assoc();
 
-$queryEquipamento = mysqli_query($con, $sqlEquipamento);
-$numRowsEquipamento = mysqli_num_rows($queryEquipamento);
+$sqlEquipamento = "SELECT DISTINCT oco.local_id as 'local_id', l.local as 'local' 
+                    FROM ocorrencias AS oco
+                    INNER JOIN locais AS l ON l.id = oco.local_id 
+                    WHERE oco.origem_ocorrencia_id = '$idEvento' AND l.publicado = 1 AND oco.publicado = 1";
+
+$queryEquipamento = $con->query($sqlEquipamento);
+$numRowsEquipamento = $queryEquipamento->num_rows;
 
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -29,7 +51,7 @@ $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
-                <form class="formulario-ajax" method="POST" action="?perfil=evento&p=pedido_valor_equipamento" role="form">
+                <form method="POST" action="?perfil=evento&p=pedido_valor_equipamento" role="form">
                     <div class="box box-info">
                         <div class="box-header with-border">
                             <h3 class="box-title">Valor por Equipamento</h3>
@@ -49,36 +71,32 @@ $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-                                    if ($numRowsEquipamento == 0) {
-                                        ?>
+                                    <?php if ($numRowsEquipamento == 0) { ?>
                                         <tr>
                                             <td width="100%" class="text-center" colspan="2">
                                                 Não há ocorrências cadastradas!
                                                 <br>Por Favor, retorne em atração e cadastre.
                                             </td>
                                         </tr>
-                                        <?php
+                                    <?php
                                     } else {
-
-                                        while ($equipamento = mysqli_fetch_array($queryEquipamento)) {
+                                        while ($equipamento = mysqli_fetch_assoc($queryEquipamento)) {
                                             $idEquipamento = $equipamento['local_id'];
 
                                             $sql_valor = "SELECT * FROM valor_equipamentos WHERE pedido_id = '$idPedido' AND local_id = '$idEquipamento'";
-                                            $queryValor = mysqli_query($con, $sql_valor);
-                                            $arrayValorEquipamento = mysqli_fetch_array($queryValor);
+                                            $queryValor = $con->query($sql_valor);
+                                            $arrayValorEquipamento = $queryValor->fetch_assoc();
 
                                             ?>
                                             <tr>
                                                 <td><?= $equipamento['local'] ?></td>
-                                                <input type="hidden" value="<?= $equipamento['local_id'] ?>">
                                                 <td>
+                                                    <input type="hidden" value="<?= $equipamento['local_id'] ?>"
+                                                           name="equipamentos[]">
                                                     <input type="text" class="form-control" name="valorEquipamento[]"
                                                            value="<?= isset($arrayValorEquipamento['valor']) ? dinheiroParaBr($arrayValorEquipamento['valor']) : "" ?>"
                                                            onkeyup="somaValorEquipamento()"
                                                            onkeypress="return(moeda(this, '.', ',', event));">
-                                                    <input type="hidden" value="<?= $equipamento['local_id'] ?>"
-                                                           name="equipamentos[]">
                                                 </td>
                                             </tr>
                                             <?php
@@ -86,8 +104,9 @@ $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
                                     }
                                     ?>
                                     <tr>
-                                        <td width="50%">Valor Total:
-                                            R$ <?= dinheiroParaBr($pedido['valor_total']) ?></td>
+                                        <td width="50%">
+                                            Valor Total: R$ <span id="valor_total"><?= dinheiroParaBr($pedido['valor_total']) ?></span>
+                                        </td>
                                         <td width="50%">Valor Faltante: <span id="valorFaltante"></span></td>
                                     </tr>
                                     </tbody>
@@ -97,7 +116,8 @@ $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
                         <!-- /.box-body -->
                         <div class="box-footer">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="pull-right btn btn-primary next-step" id="next">Gravar</button>
+                            <input class="pull-right btn btn-primary" type="submit" name="gravar"
+                                   id="gravarValorEquipamento" value="Gravar">
                         </div>
                         <!-- /.box-footer-->
                     </div>
@@ -112,7 +132,6 @@ $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
 </div>
 
 <script>
-    $(document).ready(somaValorEquipamento());
     function somaValorEquipamento() {
         let valorEquipamento = $("input[name='valorEquipamento[]']");
         let valor_total = 0;
@@ -128,7 +147,7 @@ $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
         }
 
 
-        let valorTotal = parseFloat($('#valor_total').val().replace('.', '').replace(',', '.'));
+        let valorTotal = parseFloat($('#valor_total').text().replace('.', '').replace(',', '.'));
         let valorDif;
 
         if (valor_total != valorTotal) {
@@ -154,4 +173,6 @@ $numRowsEquipamento = mysqli_num_rows($queryEquipamento);
             $('#gravarValorEquipamento').attr("disabled", true);
         }
     }
+
+    $(document).ready(somaValorEquipamento());
 </script>
