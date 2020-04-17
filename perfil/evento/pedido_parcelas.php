@@ -51,27 +51,22 @@ if (($pedido['origem_tipo_id'] != 2) && ($tipoEvento != 2)) {
                         </div>
 
                         <div class="box-body">
-
-
-                            <?php
-                            if (isset($oficina)) {
-                                ?>
+                            <?php if (isset($oficina)): ?>
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="numero_parcelas">Número de Parcelas *</label>
                                         <select class="form-control" id="numero_parcelas" required
-                                                name="numero_parcelas"
-                                        >
+                                                name="numero_parcelas">
                                             <option value="">Selecione...</option>
                                             <?php
-                                                if ($pedido['numero_parcelas'] == 3) {
-                                                    $option = 4;
-                                                } elseif ($pedido['numero_parcelas'] == 4) {
-                                                    $option = 3;
-                                                } else {
-                                                    $option = $pedido['numero_parcelas'];
-                                                }
-                                                geraOpcaoParcelas("oficina_opcoes", $option);
+                                            if ($pedido['numero_parcelas'] == 3) {
+                                                $option = 4;
+                                            } elseif ($pedido['numero_parcelas'] == 4) {
+                                                $option = 3;
+                                            } else {
+                                                $option = $pedido['numero_parcelas'];
+                                            }
+                                            geraOpcaoParcelas("oficina_opcoes", $option);
                                             ?>
                                         </select>
                                     </div>
@@ -80,30 +75,22 @@ if (($pedido['origem_tipo_id'] != 2) && ($tipoEvento != 2)) {
                                         Editar Parcelas
                                     </button>
                                 </div>
-                                <?php
-
-                            } else {
-                                ?>
+                            <?php else: ?>
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="numero_parcelas">Número de Parcelas *</label>
                                         <select class="form-control" id="numero_parcelas" name="numero_parcelas"
                                                 required>
                                             <option value="">Selecione...</option>
-                                            <?php
-                                            geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']);
-                                            ?>
+                                            <?php geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']); ?>
                                         </select>
                                     </div>
                                     <!-- Button trigger modal -->
-                                    <button type="button" id="editarParcelas" class="btn btn-primary"
-                                            style="display: block; margin-top: 1.8%;">
+                                    <button type="button" id="editarParcelas" class="btn btn-primary" style="display: block; margin-top: 1.8%;">
                                         Editar Parcelas
                                     </button>
                                 </div>
-                                <?php
-                            }
-                            ?>
+                            <?php endif; ?>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="forma_pagamento">Forma de pagamento *</label><br/>
