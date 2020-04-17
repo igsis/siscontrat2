@@ -8,7 +8,7 @@ $query = mysqli_query($con, $sql);
 <div class="content-wrapper">
     <section class="content">
         <h3 class="box-title">Lista de Modelos</h3>
-        <a href="?perfil=contrato&p=admin&sp=modelo_cadastra">
+        <a href="?perfil=juridico&p=admin&sp=cadastra_modelo">
             <button type="button" class="btn btn-success pull-right">Adicionar um novo modelo</button>
         </a>
         <div class="row" align="center">

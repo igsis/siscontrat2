@@ -1,18 +1,18 @@
 <?php 
 $con = bancoMysqli();
-if (isset($_POST['carregar']));
-    $idModelo = $_POST['idModelo'];
 
-$modelo = recuperaDados('modelo_juridicos','id', $idModelo);
+
 
 if (isset($_POST['cadastra']) || (isset($_POST['edita']))) {
     $amparo = trim(addslashes($_POST['amparo']));
     $finalizacao = trim(addslashes($_POST['finalizacao']));
+    $nome = trim(addslashes($_POST['nome']));
 
-    $sql = "INSERT INTO modelo_juridicos (amparo, finalizacao) VALUES ('$amparo', '$finalizacao')";
+    $sql = "INSERT INTO modelo_juridicos (nome, amparo, finalizacao) VALUES ('$nome', '$amparo', '$finalizacao')";
 
     if (mysqli_query($con, $sql)) {
         $mensagem = mensagem("success", "Cadastrado com sucesso");
+        $idModelo = recuperaUltimo('modelo_juridicos');
     } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar. Tente novamente.");
     }
@@ -20,14 +20,19 @@ if (isset($_POST['cadastra']) || (isset($_POST['edita']))) {
 
 if (isset($_POST['edita'])){
      $idModelo  = $_POST['idModelo'];
-     $sql = "UPDATE modelo_juridicos SET amparo = '$amparo', finalizacao = '$finalizacao' WHERE id = '$idModelo'";
-
+     $sql = "UPDATE modelo_juridicos SET nome = '$nome', amparo = '$amparo', finalizacao = '$finalizacao' WHERE id = '$idModelo'";
     if (mysqli_query($con, $sql)) {
         $mensagem = mensagem("success", "Atualizado com sucesso");
     } else {
         $mensagem = mensagem("danger", "Erro ao atualizar. Tente novamente.");
     }
 }
+
+if (isset($_POST['carregar'])) {
+    $idModelo = $_POST['idModelo'];
+}
+$modelo = recuperaDados('modelo_juridicos','id',$idModelo);
+
 ?>
 
 <div class="content-wrapper">
@@ -44,9 +49,15 @@ if (isset($_POST['edita'])){
                     <div class="box-header with-border">
                         <h3 class="box-title">Modelo</h3>
                     </div>
-                    <form method="POST" action="?perfil=juridico&p=admin&sp=modelo_edita"
-                          role="form">
+                    <form method="POST" action="?perfil=juridico&p=admin&sp=modelo_edita" role="form">
                         <div class="box-body">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="nome">Nome: *</label>
+                                            <input type="text" id="nome" name="nome" class="form-control" required
+                                           value="<?= $modelo['nome'] ?>">
+                                <div>
+                            <div>
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="amparo">Amparo: *</label>
