@@ -14,9 +14,9 @@ if (!$eventoNovo) {
         $sqlPedido = "SELECT pessoa_tipo_id FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
         $queryPedido = $con->query($sqlPedido);
         $nPedido = $queryPedido->num_rows;
-            if ($nPedido > 0) {
-                $tipoPedido = $queryPedido->fetch_assoc()['pessoa_tipo_id'];
-            }
+        if ($nPedido > 0) {
+            $tipoPedido = $queryPedido->fetch_assoc()['pessoa_tipo_id'];
+        }
     } else {
         $contratacao = false;
     }
