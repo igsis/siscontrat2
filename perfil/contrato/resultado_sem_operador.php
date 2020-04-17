@@ -44,7 +44,7 @@ if (isset($_POST['busca'])) {
                    e.nome_evento,
                    p.valor_total, 
                    p.status_pedido_id, 
-                   e.usuario_id, 
+                   e.usuario_id,
                    ps.status
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
@@ -99,6 +99,8 @@ if (isset($_POST['busca'])) {
                                 <th>Valor</th>
                                 <th>Local/Instituição</th>
                                 <th width="14%">Período</th>
+                                <th>Data de Envio</th>
+                                <th>Prazo (dias)</th>
                                 <th>Status</th>
                             </tr>
                             </thead>
@@ -118,6 +120,15 @@ if (isset($_POST['busca'])) {
                                     $local = $local . '; ' . $locais['local'];
                                 }
                                 $local = substr($local, 1);
+
+                                //calcula a diferença entre hoje e a data inicial do evento
+                                $inicial = $con->query("SELECT data_inicio FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'];
+                                $hoje = date("Y-m-d");
+                                $diferenca = strtotime($inicial) - strtotime($hoje);
+                                $prazo = floor($diferenca / (60 * 60 * 24));
+
+                                //consulta ultima data de envio
+                                $envio = $con->query("SELECT data_envio FROM evento_envios WHERE evento_id = " . $evento['id'] . " ORDER BY data_envio DESC LIMIT 0,1")->fetch_array()['data_envio'];
                                 ?>
                                 <tr>
                                 <?php
@@ -142,6 +153,8 @@ if (isset($_POST['busca'])) {
                                 <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
                                 <td><?= $local ?></td>
                                 <td> <?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?> </td>
+                                <td><?= exibirDataBr($envio) ?></td>
+                                <td><?= $prazo ?></td>
                                 <td><?= $evento['status'] ?></td>
                                 </tr>
                                 <?php
@@ -157,6 +170,8 @@ if (isset($_POST['busca'])) {
                                 <th>Valor</th>
                                 <th>Local/Instituição</th>
                                 <th width="14%">Período</th>
+                                <th>Data de Envio</th>
+                                <th>Prazo (dias)</th>
                                 <th>Status</th>
                             </tr>
                             </tfoot>
