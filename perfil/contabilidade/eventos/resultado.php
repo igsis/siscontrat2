@@ -36,7 +36,7 @@ if ($projeto != null && $projeto != 0){
 }
 
 if ($usuario != null && $usuario != 0){
-    $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
+    $sqlUsuario = " AND (fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario')";
 }
 
 if ($status != null) {
@@ -46,10 +46,11 @@ if ($status != null) {
 $sql = "SELECT p.numero_processo, e.nome_evento, e.protocolo,
                p.pessoa_tipo_id, p.pessoa_fisica_id,
                p.pessoa_juridica_id, e.nome_evento, 
-               e.tipo_evento_id, st.status, p.id
+               e.tipo_evento_id, ps.status, p.id
         FROM pedidos AS p 
         INNER JOIN eventos AS e ON e.id = p.origem_id 
-        INNER JOIN evento_status AS st ON e.evento_status_id = st.id
+    --    INNER JOIN evento_status AS st ON e.evento_status_id = st.id
+        INNER JOIN pedido_status AS ps ON p.status_pedido_id = ps.id
         INNER JOIN usuarios AS u ON u.id = e.usuario_id
         INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id 
         WHERE p.origem_tipo_id = 1 AND p.publicado = 1 AND e.publicado = 1
