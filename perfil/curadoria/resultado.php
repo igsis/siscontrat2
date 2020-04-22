@@ -81,7 +81,7 @@ if (isset($_POST['busca'])) {
                                         <form action="?perfil=curadoria&p=resumo" method="POST">
                                             <input type="hidden" name="idEvento" value="<?= $evento['id'] ?>">
                                             <button type="submit" name="carregar" id="carregar"
-                                                    class="btn btn-primary"><?= $evento['numero_processo'] ?></button>
+                                                    class="btn btn-primary"><?= $evento['numero_processo'] ?? "Não cadastrado" ?></button>
                                         </form>
                                     </td>
                                     <td><?= $evento['nome_evento'] ?></td>

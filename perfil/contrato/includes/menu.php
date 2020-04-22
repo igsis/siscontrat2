@@ -1,7 +1,13 @@
 <?php
 $pasta = "?perfil=contrato&p=";
 $idUsuarioDoMenu = $_SESSION['usuario_id_s'];
-$nivelUsuario = recuperaDados('usuario_contratos', 'usuario_id', $idUsuarioDoMenu)['nivel_acesso'];
+$con = bancoMysqli();
+$sqlUsuario = $con->query("SELECT nivel_acesso FROM usuario_contratos WHERE usuario_id = $idUsuarioDoMenu")->num_rows;
+if($sqlUsuario > 0){
+    $nivelUsuario = recuperaDados('usuario_contratos', 'usuario_id', $idUsuarioDoMenu)['nivel_acesso'];
+}else{
+    $nivelUsuario = null;
+}
 ?>
 <aside class="main-sidebar">
     <section class="sidebar">
