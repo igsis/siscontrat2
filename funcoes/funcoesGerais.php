@@ -330,6 +330,25 @@ function geraOpcao($tabela, $select = '')
 		}
 	}
 
+function geraOpcaoStatus()
+	{
+		//gera os options de um select
+		$sql = "SELECT * FROM pedido_status  where id NOT IN (20,21,1) ORDER BY 2";
+		$con = bancoMysqli();
+		$query = mysqli_query($con,$sql);
+		while($option = mysqli_fetch_row($query))
+		{
+			if($option[0] == $select)
+			{
+				echo "<option value='".$option[0]."' selected >".$option[1]."</option>";
+			}
+			else
+			{
+				echo "<option value='".$option[0]."'>".$option[1]."</option>";
+			}
+		}
+	}
+
 function geraOpcaoParcelas($tabela, $select = '')
 {
     //gera os options de um select

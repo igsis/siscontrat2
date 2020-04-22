@@ -24,7 +24,7 @@ $sql = "select fc.protocolo,p.numero_processo, pf.nome, fc.id,ps.status
         INNER JOIN pedido_status as ps on p.status_pedido_id = ps.id
         INNER JOIN formacao_status as fs on fc.form_status_id = fs.id
         INNER JOIN pessoa_fisicas as pf on p.pessoa_fisica_id = pf.id
-        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 $sqlCodigo $sqlnumProcesso $sqlStatus";
+        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 AND p.status_pedido_id NOT IN (1,3,20,21) $sqlCodigo $sqlnumProcesso $sqlStatus";
 ?>
 <div class="content-wrapper">
     <section class="content">

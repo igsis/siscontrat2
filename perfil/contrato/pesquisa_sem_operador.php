@@ -52,7 +52,7 @@
                                     <select name="status" id="status" class="form-control">
                                         <option value="0">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao('pedido_status WHERE id != 3 ');
+                                        geraOpcaoStatus('pedido_status WHERE id != 3 ');
                                         ?>
                                     </select>
                                 </div>

@@ -23,7 +23,7 @@
                                     <select name="statuspedido" id="statuspedido" class="form-control">
                                         <option value="">Selecione uma opção...</option>
                                             <?php
-                                                geraOpcao("pedido_status");
+                                                geraOpcaoStatus();
                                             ?>
                                     </select>
                                 </div>
