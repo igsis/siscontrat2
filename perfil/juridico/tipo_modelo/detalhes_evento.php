@@ -435,12 +435,19 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                     } else if ($evento['tipo_evento_id'] == 2) { ?>
                         <table class="table">
                             <?php
-                            $sqlFilme = $con->query("SELECT f.id, f.titulo, fe.id as 'idFilmeEvento' FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1");
+                            $sqlFilme = $con->query("SELECT f.id, f.titulo, fe.id as 'idFilmeEvento' 
+                            FROM filme_eventos fe 
+                            INNER JOIN eventos e on fe.evento_id = e.id 
+                            INNER JOIN filmes f ON f.id = fe.filme_id 
+                            WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1");
+                        
                             $i = 1;
                             while ($filmes = mysqli_fetch_array($sqlFilme)) {
                                 $sqlOcorrenciaFilme = $con->query("SELECT * FROM ocorrencias oco 
                                                                        INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id 
-                                                                       WHERE fe.filme_id = " . $filmes['id'] . " AND oco.publicado = 1 AND oco.tipo_ocorrencia_id = 2 AND fe.evento_id = $idEvento AND oco.atracao_id = " . $filmes['idFilmeEvento']);
+                                                                       WHERE fe.filme_id = " . $filmes['id'] . " AND oco.publicado = 1 
+                                                                       AND oco.tipo_ocorrencia_id = 2 AND fe.evento_id = $idEvento 
+                                                                       AND oco.atracao_id = " . $filmes['idFilmeEvento']);
                                 while ($oco = mysqli_fetch_array($sqlOcorrenciaFilme)) {
                                     $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $oco['retirada_ingresso_id'])['retirada_ingresso'];
                                     $espaco = recuperaDados('espacos', 'id', $oco['espaco_id'])['espaco'];
@@ -556,7 +563,6 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                     $sql = "SELECT * FROM arquivos as arq
                                     WHERE arq.origem_id = '$idEvento' AND lista_documento_id = '$lista_documento_id'
                                     AND arq.publicado = '1' ORDER BY arq.id";
-                    echo $sql;
                     $query = mysqli_query($con, $sql);
                     $linhas = mysqli_num_rows($query);
 
