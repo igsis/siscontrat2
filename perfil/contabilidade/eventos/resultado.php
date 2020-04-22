@@ -54,7 +54,7 @@ $sql = "SELECT p.numero_processo, e.nome_evento, e.protocolo,
         INNER JOIN usuarios AS u ON u.id = e.usuario_id
         INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id 
         WHERE p.origem_tipo_id = 1 AND p.publicado = 1 AND e.publicado = 1
-        AND e.evento_status_id = 3 AND p.status_pedido_id NOT IN (1,3,20,21)
+        AND e.evento_status_id = 3  
         $sqlProtocolo $sqlProcesso $sqlNomeEvento $sqlUsuario $sqlProjeto $sqlStatus
         GROUP BY e.id";
 

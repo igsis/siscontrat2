@@ -33,7 +33,7 @@ if (isset($_POST['busca'])) {
     if ($objeto != NULL)
         $sqlObejto = " AND e.nome_evento LIKE '%$objeto%'";
     if ($usuariocadastro != NULL)
-        $sqlUsuario = " AND fiscal_id = '$usuariocadastro' OR suplente_id = '$usuariocadastro' OR usuario_id = '$usuariocadastro'";
+        $sqlUsuario = " AND (fiscal_id = '$usuariocadastro' OR suplente_id = '$usuariocadastro' OR usuario_id = '$usuariocadastro')";
 }
 
 
@@ -43,15 +43,17 @@ te.tipo_evento, pt.pessoa,
 e.nome_evento, e.id, 
 e.tipo_evento_id, 
 p.pessoa_fisica_id, 
-p.pessoa_juridica_id, 
+p.pessoa_juridica_id,
+ps.id, 
 p.pessoa_tipo_id,
 e.id,
 e.projeto_especial_id
  from pedidos as p 
  inner join eventos as e on e.id = p.origem_id 
+ INNER JOIN pedido_status AS ps ON p.status_pedido_id = ps.id
  inner join tipo_eventos te on te.id = e.tipo_evento_id 
  inner join pessoa_tipos pt on pt.id = p.pessoa_tipo_id 
- WHERE p.publicado = 1 AND p.origem_tipo_id = 1 $sqlStatus $sqlProjeto $sqlTipo $sqlObejto $sqlUsuario $sqlProtocolo $sqlProcesso
+ WHERE p.publicado = 1 AND p.origem_tipo_id = 1 AND p.status_pedido_id NOT IN (1,3,20,21) $sqlStatus $sqlProjeto $sqlTipo $sqlObejto $sqlUsuario $sqlProtocolo $sqlProcesso
  GROUP BY e.id";
 
 ?>
