@@ -24,12 +24,6 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
 $tipoPessoa = $pedido['pessoa_tipo_id'];
 $tipoEvento = $evento['tipo_evento_id'];
 
-if (($pedido['origem_tipo_id'] != 2) && ($tipoEvento != 2)) {
-    $readonly = 'readonly';
-} else {
-    $readonly = '';
-}
-
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -51,12 +45,12 @@ if (($pedido['origem_tipo_id'] != 2) && ($tipoEvento != 2)) {
                         </div>
 
                         <div class="box-body">
-                            <?php if (isset($oficina)): ?>
-                                <div class="row">
+                            <div class="row">
+                                <?php if (isset($oficina)): ?>
                                     <div class="form-group col-md-6">
                                         <label for="numero_parcelas">Número de Parcelas *</label>
-                                        <select class="form-control" id="numero_parcelas" required
-                                                name="numero_parcelas">
+                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas"
+                                                data-oficina="1" required onchange="formaPagamento()">
                                             <option value="">Selecione...</option>
                                             <?php
                                             if ($pedido['numero_parcelas'] == 3) {
@@ -70,34 +64,28 @@ if (($pedido['origem_tipo_id'] != 2) && ($tipoEvento != 2)) {
                                             ?>
                                         </select>
                                     </div>
-                                    <button type="button" id="editarParcelas" class="btn btn-primary"
-                                            style="display: block; margin-top: 1.8%;">
-                                        Editar Parcelas
-                                    </button>
-                                </div>
-                            <?php else: ?>
-                                <div class="row">
+                                <?php else: ?>
                                     <div class="form-group col-md-6">
                                         <label for="numero_parcelas">Número de Parcelas *</label>
                                         <select class="form-control" id="numero_parcelas" name="numero_parcelas"
-                                                required>
+                                                data-oficina="0" required onchange="formaPagamento()">
                                             <option value="">Selecione...</option>
                                             <?php geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']); ?>
                                         </select>
                                     </div>
-                                    <!-- Button trigger modal -->
-                                    <button type="button" id="editarParcelas" class="btn btn-primary" style="display: block; margin-top: 1.8%;">
-                                        Editar Parcelas
-                                    </button>
-                                </div>
-                            <?php endif; ?>
+                                <?php endif; ?>
+<!--                                <button type="button" id="editarParcelas" class="btn btn-primary" style="display: block; margin-top: 1.8%;">-->
+<!--                                    Editar Parcelas-->
+<!--                                </button>-->
+                                <a href="?perfil=evento&p=parcelas_edita" class="btn btn-primary col-md-1" style="display: block; margin-top: 1.8%;">
+                                    Editar Parcelas
+                                </a>
+                            </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="forma_pagamento">Forma de pagamento *</label><br/>
-                                    <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
-                                              required rows="8" <?= $pedido['numero_parcelas'] != 13 ? 'readonly' : '' ?>>
-                                        <?= $pedido['forma_pagamento'] ?>
-                                    </textarea>
+                                    <textarea id="forma_pagamento" name="forma_pagamento" class="form-control" required
+                                              rows="8" <?= $pedido['numero_parcelas'] != 13 ? 'readonly' : '' ?>><?= $pedido['forma_pagamento'] ?></textarea>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="justificativa">Justificativa *</label><br/>
@@ -130,3 +118,28 @@ if (($pedido['origem_tipo_id'] != 2) && ($tipoEvento != 2)) {
     </section>
     <!-- /.content -->
 </div>
+
+<script>
+    function formaPagamento() {
+        let selectParcela = $('#numero_parcelas');
+        let oficina = selectParcela.data('oficina');
+        let formaPagamento = $('#forma_pagamento');
+
+        if (oficina) {
+            if (selectParcela.val() == 6) {
+                formaPagamento.attr('readonly', false);
+            } else {
+                formaPagamento.attr('readonly', true);
+            }
+            console.log("é oficina!");
+        } else {
+            if (selectParcela.val() == 13) {
+                formaPagamento.attr('readonly', false);
+            } else {
+                formaPagamento.attr('readonly', true);
+            }
+        }
+    }
+
+    $(document).ready(formaPagamento());
+</script>

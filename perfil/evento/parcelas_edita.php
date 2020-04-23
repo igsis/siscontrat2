@@ -1,201 +1,131 @@
 <?php
-$con = bancoMysqli();
-$conn = bancoPDO();
+include "includes/menu_interno.php";
 
 $idPedido = $_SESSION['idPedido'];
-var_dump($_POST);
 
-$parcelas = $_POST['parcelas'] ?? NULL;
-$arrayValor = $_POST['valores'] ?? [];
-$arrayKit = $_POST['datas'] ?? [];
+$pedido = recuperaDados("pedidos", "id", $idPedido);
 
-$sqlVerifica = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido'";
-$queryVerifica = mysqli_query($con, $sqlVerifica);
-$nums = mysqli_num_rows($queryVerifica);
+$sqlOficina = "SELECT aa.acao_id FROM eventos e
+                INNER JOIN atracoes a on e.id = a.evento_id
+                INNER JOIN acao_atracao aa on a.id = aa.atracao_id
+                WHERE e.id = '$idEvento' and a.publicado = 1";
+$queryOficina = $con->query($sqlOficina);
 
-//oficinas
-$arrayInicial = $_POST['arrayInicial'] ?? NULL;
-$arrayFinal = $_POST['arrayFinal'] ?? NULL;
-$horas = $_POST['horas'] ?? NULL;
-
-if ($nums < $parcelas) {
-    for ($i = 1; $i <= $nums; $i++) {
-        $valor = dinheiroDeBr($arrayValor[$i]);
-        $dataPagamento = $arrayKit[$i];
-
-        $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
-
-        if (mysqli_query($con, $sqlUpdate)) {
-
-            if (isset($arrayInicial) && isset($arrayFinal)) {
-                $data_inicio = $arrayInicial[$i];
-                $data_fim = $arrayFinal[$i];
-                $carga_horaria = $horas[$i];
-
-                $sqlVerifica = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
-                $queryVerifica = mysqli_query($con, $sqlVerifica);
-                $parc = mysqli_fetch_array($queryVerifica);
-                $parcela_id = $parc['id'];
-
-                $sqlComplemento = "UPDATE parcela_complementos SET data_inicio = '$data_inicio',  data_fim = '$data_fim', carga_horaria = '$carga_horaria' 
-                                      WHERE parcela_id = '$parcela_id'";
-
-                if (mysqli_query($con, $sqlComplemento)) {
-                    gravarLog($sqlComplemento);
-                }
-
-            }
-            gravarLog($sqlUpdate);
-        } else {
-            echo "Erro ao editar!";
-        }
-    }
-
-    $faltando = (intval($parcelas) - $nums);
-    $count = $nums + 1;
-
-    for ($i = 1; $i <= $faltando; $i++) {
-
-        $valor = dinheiroDeBr($arrayValor[$count]);
-        $dataPagamento = $arrayKit[$count];
-
-        $sqlInsert = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento, publicado) VALUES ('$idPedido', '$count', '$valor', '$dataPagamento', 1)";
-
-        if (mysqli_query($con, $sqlInsert)) {
-            $sqlPedido = "UPDATE pedidos SET numero_parcelas = '$parcelas'";
-            if (mysqli_query($con, $sqlPedido)) {
-                $parcela = recuperaUltimo("parcelas");
-
-                if (isset($arrayInicial) && isset($arrayFinal)) {
-                    $sqlComplemento = "INSERT INTO parcela_complementos (parcela_id, data_inicio, data_fim, carga_horaria, publicado) VALUES ('$parcela', '$arrayInicial[$count]', '$arrayFinal[$count]', '$horas[$count]', 1)";
-
-                    if (mysqli_query($con, $sqlComplemento)) {
-                        gravarLog($sqlComplemento);
-                    }
-                }
-                gravarLog($sqlInsert);
-                gravarLog($sqlPedido);
-            } else {
-                echo "Erro ao editar!";
-            }
-        }
-        $count++;
-    }
-
-} elseif ($nums > $parcelas) {
-
-    $sobrando = $nums - $parcelas;
-
-    for ($i = 1; $i <= $parcelas; $i++) {
-
-        $valor = dinheiroDeBr($arrayValor[$i]);
-        $dataPagamento = $arrayKit[$i];
-
-        $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
-
-        if (mysqli_query($con, $sqlUpdate)) {
-
-            if (isset($arrayInicial) && isset($arrayFinal)) {
-                $data_inicio = $arrayInicial[$i];
-                $data_fim = $arrayFinal[$i];
-                $horario = $horas[$i];
-
-                $sqlVerifica = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
-                $queryVerifica = mysqli_query($con, $sqlVerifica);
-                $parc = mysqli_fetch_array($queryVerifica);
-                $parcela_id = $parc['id'];
-
-                $sqlComplemento = "UPDATE parcela_complementos SET data_inicio = '$data_inicio',  data_fim = '$data_fim', carga_horaria = '$horario' WHERE parcela_id = '$parcela_id'";
-
-                if (mysqli_query($con, $sqlComplemento)) {
-                    gravarLog($sqlComplemento);
-                }
-            }
-            gravarLog($sqlUpdate);
-        } else {
-            echo "Erro ao editar!";
-        }
-    }
-
-    $count = $parcelas + 1;
-
-    for ($i = 1; $i <= $sobrando; $i++) {
-        $valor = dinheiroDeBr($arrayValor[$i]);
-        $dataPagamento = $arrayKit[$i];
-
-        if (isset($arrayInicial) && isset($arrayFinal)) {
-            $sqlTeste = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$count'";
-            $query = mysqli_query($con, $sqlTeste);
-            $parc = mysqli_fetch_array($query);
-            $idParcela = $parc['id'];
-
-            $sqlComplementoDelete = "DELETE FROM parcela_complementos WHERE parcela_id = '$idParcela'";
-
-            echo $sqlComplementoDelete;
-
-            if (mysqli_query($con, $sqlComplementoDelete)) {
-                gravarLog($sqlComplementoDelete);
-
-                $sqlDelete = "DELETE FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$count'";
-
-                if (mysqli_query($con, $sqlDelete)) {
-                    $sqlPedido = "UPDATE pedidos SET numero_parcelas = '$parcelas'";
-
-                    if (mysqli_query($con, $sqlPedido)) {
-                        gravarLog($sqlDelete);
-                        gravarLog($sqlPedido);
-                    } else {
-                        echo "Erro ao editar!";
-                    }
-                }
-            }
-        } else {
-
-            $sqlDelete = "DELETE FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$count'";
-
-            if (mysqli_query($con, $sqlDelete)) {
-                $sqlPedido = "UPDATE pedidos SET numero_parcelas = '$parcelas'";
-
-                if (mysqli_query($con, $sqlPedido)) {
-                    gravarLog($sqlDelete);
-                    gravarLog($sqlPedido);
-                } else {
-                    echo "Erro ao editar!";
-                }
-            }
-        }
-        $count++;
-    }
-} else {
-
-    for ($i = 1; $i <= $parcelas; $i++) {
-
-        $valor = dinheiroDeBr($arrayValor[$i]);
-        $dataPagamento = $arrayKit[$i];
-
-        $sqlUpdate = "UPDATE parcelas SET valor = '$valor', data_pagamento = '$dataPagamento' WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
-
-        if (mysqli_query($con, $sqlUpdate)) {
-
-            if (isset($arrayInicial) && isset($arrayFinal)) {
-                $data_inicio = $arrayInicial[$i];
-                $data_fim = $arrayFinal[$i];
-                $carga_horario = $horas[$i];
-
-                $sqlVerifica = "SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
-                $queryVerifica = mysqli_query($con, $sqlVerifica);
-                $parcelas = mysqli_fetch_array($queryVerifica);
-                $parcela_id = $parcelas['id'];
-
-                $sqlComplemento = "UPDATE parcela_complementos SET data_inicio = '$data_inicio',  data_fim = '$data_fim ', carga_horaria = '$carga_horario' WHERE parcela_id = '$parcela_id'";
-
-                if (mysqli_query($con, $sqlComplemento)) {
-                    gravarLog($sqlComplemento);
-                }
-            }
-            gravarLog($sqlUpdate);
-        } else {
-            echo "Erro ao editar!";
-        }
+while ($atracoes = $queryOficina->fetch_assoc()) {
+    if ($atracoes['acao_id'] == 8) {
+        $oficina = 1;
     }
 }
+?>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <!-- START FORM-->
+        <h2 class="page-header">Pedido de Contração</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <form action="?perfil=evento&p=pedido_parcelas" method="POST" role="form">
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Parcelas</h3>
+                        </div>
+
+                        <div class="row" align="center">
+                            <?= $mensagem ?? "" ?>
+                        </div>
+
+                        <div class="box-body">
+                            <?php if (($pedido['numero_parcelas'] != null) || ($pedido['numero_parcelas'] != 0)):
+                                for ($i = 0; $i < $pedido['numero_parcelas']; $i++):
+                                    if ($oficina): ?>
+                                        <div class='row'>
+                                            <div class='form-group col-md-1'>
+                                                <label for='parcela'>Parcela </label>
+                                                <input type='number' value="{{count}}" class='form-control' disabled>
+                                            </div>
+                                            <div class='form-group col-md-2'>
+                                                <label for='valor'>Valor </label>
+                                                <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}" placeholder="Valor em reais"
+                                                       onkeyup="somar()" onkeypress="return(moeda(this, '.', ',', event))" class='form-control'>
+                                            </div>
+                                            <div class='form-group col-md-2'>
+                                                <label for='data_inicial'>Data Inicial</label>
+                                                <input type='date' id='data_inicial' value="{{inicial}}" name='inicial[{{count}}]'
+                                                       class='form-control'>
+                                            </div>
+                                            <div class='form-group col-md-2'>
+                                                <label for='data_final'>Data Final</label>
+                                                <input type='date' id='data_final' value="{{final}}" name='final[{{count}}]' class='form-control'>
+                                            </div>
+                                            <div class='form-group col-md-2'>
+                                                <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
+                                                <input type='date' id='modal_data_kit_pagamento' value="{{kit}}"
+                                                       name='modal_data_kit_pagamento[{{count}}]' class='form-control'>
+                                            </div>
+                                            <div class='form-group col-md-2'>
+                                                <label for='horas'>Horas</label>
+                                                <input type='number' id='horas' value="{{horas}}" name='horas[{{count}}]' class='form-control'>
+                                            </div>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class='row'>
+                                            <div class='form-group col-md-2'>
+                                                <label for='parcela'>Parcela </label>
+                                                <input type='number' value="" class='form-control' readonly>
+                                            </div>
+                                            <div class='form-group col-md-3'>
+                                                <label for='valor'>Valor *</label>
+                                                <input type='text' id='valor' name='valor[]' value="" required
+                                                       placeholder="Valor em reais"
+                                                       onkeypress="return(moeda(this, '.', ',', event));" onkeyup="somar()" class='form-control'>
+                                            </div>
+                                            <div class='form-group col-md-4'>
+                                                <label for='modal_data_kit_pagamento'>Data Kit Pagamento *</label>
+                                                <input type='date' id='modal_data_kit_pagamento' value="{{kit}}" required
+                                                       name='modal_data_kit_pagamento[{{count}}]'
+                                                       class='form-control'>
+                                            </div>
+                                        </div>
+                                    <?php endif;
+                                endfor;
+                            else: ?>
+                                <div class="alert alert-info ">
+                                    <h4><i class="icon fa fa-info"></i> Atenção!</h4>
+                                    Este pedido não possui parcelas.
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-3">
+                                    <div class="alert">
+                                        <strong>Valor Total:</strong> R$ <?=dinheiroParaBr($pedido['valor_total'])?>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="alert">
+                                        <strong>Valor Registrado:</strong> R$ 123
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <button type="submit" class="pull-right btn btn-primary next-step" id="next">Gravar</button>
+                        </div>
+                        <!-- /.box-footer-->
+                    </div>
+                </form>
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<script>
+
+</script>
