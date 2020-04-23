@@ -33,7 +33,7 @@ if (isset($_POST['busca'])) {
         $sqlStatus = " AND p.status_pedido_id = '$status'";
 
     if ($usuario != null && $usuario != 0)
-        $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
+        $sqlUsuario = " AND (fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario')";
 
     $sql = "SELECT e.id, e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
     p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, 
@@ -47,6 +47,7 @@ if (isset($_POST['busca'])) {
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1
+    AND p.status_pedido_id NOT IN (1,3,20,21)
     AND p.status_pedido_id != 1
     AND p.status_pedido_id != 3
     AND e.evento_status_id != 1 

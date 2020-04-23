@@ -90,10 +90,6 @@ $evento = $con->query($sql)->fetch_array();
                                 <td><?= $nome ?></td>
                             <?php } ?>
                         </tr>
-                        <?php
-                        $atracoes = recuperaDados('atracoes', 'evento_id', $idEvento);
-                        $ocorrencias = recuperaDados('ocorrencias', 'atracao_id', $atracoes['id']);
-                        ?>
                         <tr>
                             <th width="30%">Local:</th>
                             <td><?= $local ?></td>

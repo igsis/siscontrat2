@@ -52,7 +52,7 @@
                             <select name="status" id="status" class="form-control">
                                 <option value="">Selecione uma opção...</option>
                                     <?php
-                                    geraOpcao('evento_status');
+                                    geraOpcaoStatus();
                                     ?>
                             </select>
                         </div>
