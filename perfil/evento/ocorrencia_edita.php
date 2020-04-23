@@ -1192,14 +1192,14 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         });
         dados = {
             id: <?= $idOcorrencia ?>,
-            _method:'post',
             datas: datas
         };
 
-        console.log(dados);
-        $.post('<?= $urlAjax ?>',dados,function (data,status) {
-
-        })
+        $.ajax({
+            url: '<?= $urlAjax ?>',
+            type: 'post',
+            data: dados,
+        });
 
     })
 </script>
