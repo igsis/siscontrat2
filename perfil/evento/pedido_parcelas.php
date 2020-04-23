@@ -4,10 +4,7 @@ include "includes/menu_interno.php";
 $idPedido = $_SESSION['idPedido'];
 $idEvento = $_SESSION['idEvento'];
 
-$evento = recuperaDados("eventos", "id", $idEvento);
-$sql = "SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
-$query = $con->query($sql);
-$pedido = $query->fetch_assoc();
+$pedido = recuperaDados("pedidos", "id", $idPedido);
 
 $sqlOficina = "SELECT aa.acao_id FROM eventos e
                 INNER JOIN atracoes a on e.id = a.evento_id
@@ -21,9 +18,13 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
     }
 }
 
-$tipoPessoa = $pedido['pessoa_tipo_id'];
-$tipoEvento = $evento['tipo_evento_id'];
-
+if ($pedido['numero_parcelas'] != null) {
+    if (($oficina && $pedido['numero_parcelas'] != 6) || (!$oficina && $pedido['numero_parcelas'] != 13)) {
+        $parcelas = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->num_rows;
+    }
+} else {
+    $parcelas = 0;
+}
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -34,7 +35,7 @@ $tipoEvento = $evento['tipo_evento_id'];
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
-                <form action="?perfil=evento&p=pedido_parcelas" method="POST" role="form">
+                <form action="?perfil=evento&p=pedido_parcelas" id="form_parcelas" method="POST" role="form" data-parcelas="<?= $parcelas ?>">
                     <div class="box box-info">
                         <div class="box-header with-border">
                             <h3 class="box-title">Detalhes de parcelas</h3>
@@ -72,12 +73,16 @@ $tipoEvento = $evento['tipo_evento_id'];
                                             <option value="">Selecione...</option>
                                             <?php geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']); ?>
                                         </select>
+                                        <div class="has-error" id="msgParcelas">
+                                            <span class="help-block text-danger"><strong>É necessário editar as parcelas</strong></span>
+                                        </div>
                                     </div>
                                 <?php endif; ?>
 <!--                                <button type="button" id="editarParcelas" class="btn btn-primary" style="display: block; margin-top: 1.8%;">-->
 <!--                                    Editar Parcelas-->
 <!--                                </button>-->
-                                <a href="?perfil=evento&p=parcelas_edita" class="btn btn-primary col-md-1" style="display: block; margin-top: 1.8%;">
+                                <a href="?perfil=evento&p=parcelas_edita" class="btn btn-primary col-md-1"
+                                   style="margin-top: 1.8%;" id="btnParcelas">
                                     Editar Parcelas
                                 </a>
                             </div>
@@ -85,7 +90,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                 <div class="form-group col-md-6">
                                     <label for="forma_pagamento">Forma de pagamento *</label><br/>
                                     <textarea id="forma_pagamento" name="forma_pagamento" class="form-control" required
-                                              rows="8" <?= $pedido['numero_parcelas'] != 13 ? 'readonly' : '' ?>><?= $pedido['forma_pagamento'] ?></textarea>
+                                              rows="8"><?= $pedido['forma_pagamento'] ?></textarea>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="justificativa">Justificativa *</label><br/>
@@ -101,11 +106,10 @@ $tipoEvento = $evento['tipo_evento_id'];
                                 </div>
                             </div>
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <input type="hidden" name="data_kit" id="dataKit">
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="submit" class="pull-right btn btn-primary next-step" id="next">Gravar</button>
+                            <button type="submit" class="pull-right btn btn-primary" id="btnGravar">Gravar</button>
                         </div>
                         <!-- /.box-footer-->
                     </div>
@@ -124,22 +128,44 @@ $tipoEvento = $evento['tipo_evento_id'];
         let selectParcela = $('#numero_parcelas');
         let oficina = selectParcela.data('oficina');
         let formaPagamento = $('#forma_pagamento');
+        let btnParcelas = $('#btnParcelas');
+        let msgParcelas = $('#msgParcelas');
 
         if (oficina) {
             if (selectParcela.val() == 6) {
                 formaPagamento.attr('readonly', false);
+                btnParcelas.hide();
+                msgParcelas.hide();
             } else {
                 formaPagamento.attr('readonly', true);
+                btnParcelas.show();
+                msgParcelas.show();
             }
-            console.log("é oficina!");
         } else {
             if (selectParcela.val() == 13) {
                 formaPagamento.attr('readonly', false);
+                btnParcelas.hide();
+                msgParcelas.hide();
             } else {
                 formaPagamento.attr('readonly', true);
+                btnParcelas.show();
+                msgParcelas.show();
             }
         }
     }
 
     $(document).ready(formaPagamento());
+    $(document).ready(function () {
+        let parcelas = $('#form_parcelas').data('parcelas');
+        let btnGravar = $('#btnGravar');
+        let msgParcelas = $('#msgParcelas');
+
+        if (parcelas) {
+            btnGravar.attr('disabled', false);
+            msgParcelas.hide();
+        } else {
+            btnGravar.attr('disabled', true);
+            msgParcelas.show();
+        }
+    });
 </script>
