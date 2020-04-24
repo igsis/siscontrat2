@@ -1197,8 +1197,15 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
         $.ajax({
             url: '<?= $urlAjax ?>',
-            type: 'post',
+            type: 'POST',
             data: dados,
+            async: true,
+            success: function(response) {
+                console.log("Foi")
+            },
+            error: function (response) {
+                console.log("Deu erro");
+            }
         });
 
     })

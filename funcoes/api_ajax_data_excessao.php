@@ -3,25 +3,40 @@
 require_once 'funcoesConecta.php';
 require_once 'funcoesGerais.php';
 $con = bancoMysqli();
+$conn = bancoPDO();
 
 if (isset($_POST)) {
     $id = $_POST['id'];
     $datas = $_POST['datas'];
     $cont = 0;
-    $sqlLimpar = "DELETE FROM ocorrencia_excecoes WHERE atracao_id = $id";
-    if (mysqli_query($sqlLimpar)) {
-        gravarLog($sqlLimpar);
+    $sqlIds = "SELECT id FROM ocorrencia_excecoes WHERE atracao_id = '$id'";
+    if ($arrayId = mysqli_query($con, $sqlIds)) {
+        $idOcorrencia = mysqli_fetch_all($arrayId,MYSQLI_ASSOC);
+        $sql = "INSERT INTO ocorrencia_excecoes (atracao_id, data_excecao) VALUES ";
         foreach ($datas as $data){
-            $sql = "INSERT INTO ocorrencia_excecoes (atracao_id, data_excessao) VALUES ('$id','$data')";
-            if (mysqli_query($sql)){
+            if ($cont != 0){
+                $sql.=", ('$id','$data')";
+            }else{
+                $sql .="('$id','$data')";
                 $cont++;
             }
         }
-        if ($cont == count($datas)){
-            
+        if (mysqli_query($con,$sql)){
+            foreach ($idOcorrencia as $ocorrencia){
+                $sqlDelete = "DELETE FROM ocorrencia_excecoes WHERE id = '{$ocorrencia['id']}'";
+                if (mysqli_query($con, $sqlDelete))
+                    gravarLog($sqlDelete);
+            }
+            echo http_response_code(200);
+        }else{
+            echo http_response_code(403);
         }
     }
     else{
-
+        echo http_response_code(500);
     }
+}
+
+if (isset($_GET)){
+    
 }
