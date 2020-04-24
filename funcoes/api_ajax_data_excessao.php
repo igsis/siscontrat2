@@ -5,7 +5,7 @@ require_once 'funcoesGerais.php';
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-if (isset($_POST)) {
+if (isset($_POST['datas'])) {
     $id = $_POST['id'];
     $datas = $_POST['datas'];
     $cont = 0;
@@ -37,6 +37,9 @@ if (isset($_POST)) {
     }
 }
 
-if (isset($_GET)){
-    
+if (isset($_POST['idOcorrencia'])){
+    $id = $_POST['idOcorrencia'];
+    $datas = $conn->query("SELECT `data_excecao` FROM `ocorrencia_excecoes` WHERE atracao_id= {$id}")->fetchAll();
+
+    echo json_encode($datas);
 }

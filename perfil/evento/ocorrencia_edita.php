@@ -1084,43 +1084,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         }
     }
 
-    function validaDiaSemana() {
-        var dataInicio = document.querySelector('#datepicker10').value;
-        var isMsg = $('#msgEsconde');
-        isMsg.hide();
-        if (dataInicio != "") {
-            var i = 0;
-            var counter = 0;
-            var diaSemana = $('.semana');
-
-            for (; i < diaSemana.length; i++) {
-                if (diaSemana[i].checked) {
-                    counter++;
-                }
-            }
-
-            if (counter == 0) {
-                $('#edita').attr("disabled", true);
-                isMsg.show();
-                return false;
-            }
-
-            $('#edita').attr("disabled", false);
-            isMsg.hide();
-            return true;
-        }
-    }
-
-    var diaSemana = $('.semana').change(validaDiaSemana)
-
-    $('#dtExc').click(function () {
-        $('#ModalDtExec').modal('show');
-    });
-
-    let btnDataE = document.querySelector('#btData');
-    let divDatas = document.querySelector('#datas');
-
-    btnDataE.addEventListener('click',function () {
+    function criarInputData(valor=0) {
         let row = document.createElement('div');
         row.classList.add('row');
         row.style.display = 'flex';
@@ -1152,6 +1116,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         input.setAttribute('type','date');
         input.classList.add('dataEx');
         input.classList.add('form-control');
+        if (valor){
+            input.value = valor;
+        }
 
         remove.appendChild(icone);
         col4.appendChild(remove);
@@ -1163,8 +1130,41 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         row.appendChild(col4);
 
         divDatas.appendChild(row);
+    }
 
-    });
+    function validaDiaSemana() {
+        var dataInicio = document.querySelector('#datepicker10').value;
+        var isMsg = $('#msgEsconde');
+        isMsg.hide();
+        if (dataInicio != "") {
+            var i = 0;
+            var counter = 0;
+            var diaSemana = $('.semana');
+
+            for (; i < diaSemana.length; i++) {
+                if (diaSemana[i].checked) {
+                    counter++;
+                }
+            }
+
+            if (counter == 0) {
+                $('#edita').attr("disabled", true);
+                isMsg.show();
+                return false;
+            }
+
+            $('#edita').attr("disabled", false);
+            isMsg.hide();
+            return true;
+        }
+    }
+
+    var diaSemana = $('.semana').change(validaDiaSemana)
+
+    let btnDataE = document.querySelector('#btData');
+    let divDatas = document.querySelector('#datas');
+
+    btnDataE.addEventListener('click', criarInputData());
 
     let datas =  document.querySelector('#datas');
 
@@ -1208,5 +1208,24 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             }
         });
 
-    })
+    });
+
+    $('#dtExc').click(function () {
+        let dados = {
+            idOcorrencia: <?= $idOcorrencia ?>,
+        };
+        $.ajax({
+            url: '<?= $urlAjax ?>',
+            type: "POST",
+            data: dados,
+            async: true,
+            success: function(response) {
+                console.log(response)
+                $('#ModalDtExec').modal('show');
+            },
+            error: function(xhr) {
+
+            }
+        });
+    });
 </script>
