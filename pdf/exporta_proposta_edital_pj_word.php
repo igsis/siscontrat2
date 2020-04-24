@@ -14,8 +14,28 @@ $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $pessoa = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
-$ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
+$ocorrencias = $con->query("SELECT atracao_id, tipo_ocorrencia_id FROM ocorrencias WHERE tipo_ocorrencia_id != 3 AND publicado = 1 AND origem_ocorrencia_id =  " . $evento['id']);
+
+$cargaHoraria = 0;
+
+while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
+
+    if($linhaOco['tipo_ocorrencia_id'] == 1){
+        $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
+        $carga = $con->query($sqlCarga);
+
+        if($carga->num_rows > 0 || $cargaHoraria != 0){
+            while($cargaArray = mysqli_fetch_array($carga)){
+                $cargaHoraria =  $cargaHoraria + (int)$cargaArray['carga_horaria'];
+            }
+        }else{
+            $cargaHoraria = "Não possuí.";
+        }
+    }
+}
+
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
+
 $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
 $queryLocal = mysqli_query($con, $sqlLocal);
 $local = '';
@@ -48,18 +68,6 @@ $tel = substr($tel, 0, -3);
 
 $idRepresentante = $pessoa['representante_legal1_id'];
 $representante = recuperaDados('representante_legais', 'id', $idRepresentante);
-
-$idAtracao = $ocorrencia['atracao_id'];
-$sqlCheca = $con->query("SELECT * FROM acao_atracao WHERE atracao_id = '$idAtracao' AND acao_id = 8");
-$checa = mysqli_num_rows($sqlCheca);
-
-if ($checa != 0) {
-    $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
-    $carga = $con->query($sqlCarga)->fetch_array();
-    $carga = $carga['carga_horaria'];
-} else if ($checa == 0) {
-    $carga = "Não se aplica.";
-}
 
 if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
     $ccm = $pessoa['ccm'];
@@ -132,7 +140,7 @@ echo
 if ($evento['tipo_evento_id'] == 1) {
     $cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND tipo_ocorrencia_id = 1 AND publicado = 1");
     while ($aux = mysqli_fetch_array($cronograma)) {
-        $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
+        $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = " . $aux['atracao_id'] )->fetch_array();
         $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'] . " AND publicado = 1")->fetch_array();
         $acao = $tipoAcao['acao'];
 
