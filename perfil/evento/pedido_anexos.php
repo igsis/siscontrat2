@@ -109,7 +109,7 @@ include "includes/menu_interno.php";
     <!-- Main content -->
     <section class="content">
         <!-- START FORM-->
-        <h2 class="page-header">Pedido de Contração</h2>
+        <h2 class="page-header">Pedido de Contratação</h2>
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->

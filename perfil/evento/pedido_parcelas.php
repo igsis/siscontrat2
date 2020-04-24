@@ -5,6 +5,23 @@ $idPedido = $_SESSION['idPedido'];
 $idEvento = $_SESSION['idEvento'];
 
 $pedido = recuperaDados("pedidos", "id", $idPedido);
+$evento = recuperaDados('eventos', 'id', $idEvento);
+
+$tipoEvento = $evento['tipo_evento_id'];
+
+if ($pedido['origem_tipo_id'] != 2 && $tipoEvento != 2) {
+    $readonly = 'readonly';
+} else {
+    $readonly = '';
+}
+
+$tipoPessoa = $pedido['pessoa_tipo_id'];
+if ($tipoPessoa == 2) {
+    $idProponente = $pedido['pessoa_juridica_id'];
+} else {
+    $idProponente = $pedido['pessoa_fisica_id'];
+}
+
 
 $sqlOficina = "SELECT aa.acao_id FROM eventos e
                 INNER JOIN atracoes a on e.id = a.evento_id
@@ -25,17 +42,58 @@ if ($pedido['numero_parcelas'] != null) {
 } else {
     $parcelas = 0;
 }
+
+if (isset($_POST['gravar'])) {
+    $idVerba = $_POST["verba_id"];
+    $valor_total = dinheiroDeBr($_POST["valor_total"]);
+    $num_parcelas = $_POST["numero_parcelas"];
+    $forma_pagamento = trim(addslashes($_POST["forma_pagamento"]));
+    $justificativa = trim(addslashes($_POST["justificativa"]));
+    $observacao = trim(addslashes($_POST["observacao"]));
+    $idPedido = $_POST["idPedido"];
+    $tipoPesso = $_POST["tipoPessoa"];
+    $idProponent = $_POST["idProponente"];
+    $data_kit_pagamento = $_POST["data_kit"];
+
+    if ($num_parcelas == 1 || $num_parcelas == 13 || ($oficina && $num_parcelas == 6)) {
+        $data_kit_pagamento = date('Y-m-d', strtotime("+1 days", strtotime($data_kit_pagamento)));
+    } else {
+        $queryParcela = "SELECT data_pagamento FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = 1";
+        $data_kit_pagamento = $con->query($queryParcela)->fetch_row()[0];
+    }
+
+    $query = "UPDATE pedidos SET 
+                   verba_id = '$idVerba',
+                   numero_parcelas = '$num_parcelas',
+                   valor_total = '$valor_total',
+                   forma_pagamento = '$forma_pagamento',
+                   data_kit_pagamento = '$data_kit_pagamento',
+                   justificativa = '$justificativa',
+                   observacao = '$observacao'
+                WHERE id = '$idPedido'";
+
+    if ($con->query($query)) {
+        $mensagem = $mensagem('success', 'Detalhes da parcela gravados no sistema');
+    } else {
+        $mensagem = $mensagem('danger', 'Erro ao gravar os dados. Tente novamente.');
+    }
+}
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
         <!-- START FORM-->
-        <h2 class="page-header">Pedido de Contração</h2>
+        <h2 class="page-header">Pedido de Contratação</h2>
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
                 <form action="?perfil=evento&p=pedido_parcelas" id="form_parcelas" method="POST" role="form" data-parcelas="<?= $parcelas ?>">
+                    <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                    <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
+                    <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
+                    <input type="hidden" name="data_kit" id="dataKit">
+
                     <div class="box box-info">
                         <div class="box-header with-border">
                             <h3 class="box-title">Detalhes de parcelas</h3>
@@ -44,8 +102,29 @@ if ($pedido['numero_parcelas'] != null) {
                         <div class="row" align="center">
                             <?= $mensagem ?? "" ?>
                         </div>
+                        <div id="mensagem-alerta">
+                        </div>
 
                         <div class="box-body">
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    <label for="verba_id">Verba *</label>
+                                    <select class="form-control" required id="verba_id" name="verba_id" >
+                                        <option value="">Selecione...</option>
+                                        <?php
+                                        geraOpcao("verbas", $pedido['verba_id'])
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="valor_total">Valor Total</label>
+                                    <input type="text" onkeypress="return(moeda(this, '.', ',', event))"
+                                           id="valor_total" name="valor_total" class="form-control"
+                                           value="<?= dinheiroParaBr($pedido['valor_total']) ?>"
+                                        <?= $readonly ?>>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <?php if (isset($oficina)): ?>
                                     <div class="form-group col-md-6">
@@ -109,7 +188,7 @@ if ($pedido['numero_parcelas'] != null) {
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="submit" class="pull-right btn btn-primary" id="btnGravar">Gravar</button>
+                            <input name="gravar" type="submit" class="pull-right btn btn-primary" id="btnGravar" value="Gravar"
                         </div>
                         <!-- /.box-footer-->
                     </div>
@@ -130,26 +209,41 @@ if ($pedido['numero_parcelas'] != null) {
         let formaPagamento = $('#forma_pagamento');
         let btnParcelas = $('#btnParcelas');
         let msgParcelas = $('#msgParcelas');
+        let btnGravar = $('#btnGravar');
+
+        if (selectParcela.val() == 1) {
+            $('#forma_pagamento').val('O pagamento se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.');
+            formaPagamento.attr('readonly', true);
+        }
 
         if (oficina) {
-            if (selectParcela.val() == 6) {
-                formaPagamento.attr('readonly', false);
+            if (selectParcela.val() == 6 || selectParcela.val() == 1) {
+                if (selectParcela.val() != 1) {
+                    formaPagamento.attr('readonly', false);
+                }
                 btnParcelas.hide();
                 msgParcelas.hide();
+                btnGravar.attr('disabled', false);
+
             } else {
                 formaPagamento.attr('readonly', true);
                 btnParcelas.show();
                 msgParcelas.show();
+                btnGravar.attr('disabled', true);
             }
         } else {
-            if (selectParcela.val() == 13) {
-                formaPagamento.attr('readonly', false);
+            if (selectParcela.val() == 13 || selectParcela.val() == 1) {
+                if (selectParcela.val() != 1) {
+                    formaPagamento.attr('readonly', false);
+                }
                 btnParcelas.hide();
                 msgParcelas.hide();
+                btnGravar.attr('disabled', false);
             } else {
                 formaPagamento.attr('readonly', true);
                 btnParcelas.show();
                 msgParcelas.show();
+                btnGravar.attr('disabled', true);
             }
         }
     }
@@ -167,5 +261,12 @@ if ($pedido['numero_parcelas'] != null) {
             btnGravar.attr('disabled', true);
             msgParcelas.show();
         }
+
+        <?php if ($data_kit == null && $data_kit2 == 0): ?>
+            $('.next-step').prop('disabled', true);
+            $('#mensagem-alerta').append('<div class="alert alert-danger col-md-12" role="alert">Crie uma ocorrência antes de prosseguir com pedido.</div>');
+        <?php else: ?>
+            $('#dataKit').val("<?= $data_kit ?>");
+        <?php endif; ?>
     });
 </script>
