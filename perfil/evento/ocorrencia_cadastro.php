@@ -7,7 +7,7 @@ $idEvento = $_SESSION['idEvento'];
 $_SESSION['idOrigem'] = $_POST['idOrigem'];
 $idAtracao = $_SESSION['idOrigem'];
 
-if(isset($_POST['idFilme'])){
+if (isset($_POST['idFilme'])) {
     $idFilme = $_POST['idFilme'];
 }
 
@@ -185,7 +185,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                     </label>
                                     <label>
                                         <input type="checkbox" name="sexta" id="diasemana05"
-                                               value="1"  class="semana"> Sexta
+                                               value="1" class="semana"> Sexta
                                         &nbsp;
                                     </label>
                                     <label>
@@ -209,13 +209,12 @@ $tipoEvento = $evento['tipo_evento_id'];
                                         &nbsp;
                                     </label>
                                     <label>
-                                        <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1"> Audiodescrição
+                                        <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1">
+                                        Audiodescrição
                                         &nbsp;
                                     </label>
                                 </div>
                             </div>
-
-
                             <div class="row" id="msgEsconde">
                                 <div class="form-group col-md-6">
                                     <span style="color: red;">Selecione ao menos um dia da semana!</span>
@@ -228,67 +227,66 @@ $tipoEvento = $evento['tipo_evento_id'];
                                            placeholder="hh:mm"/>
                                 </div>
 
-                                
 
-
-                            <?php
-                                if($tipoEvento == 2){
+                                <?php
+                                if ($tipoEvento == 2) {
                                     $filme = $con->query("SELECT duracao FROM filmes WHERE id = $idFilme")->fetch_array();
                                     $readonly = "readonly";
                                     ?>
                                     <script type="text/javascript">
-                                                                    
-                                        $('#horaInicio').on('change', function() {
-                                            var horainicio = $('#horaInicio').val();                                      
+
+                                        $('#horaInicio').on('change', function () {
+                                            var horainicio = $('#horaInicio').val();
                                             var hora = parseInt(horainicio.split(':', 1));
                                             var minuto = parseInt(horainicio[3] + horainicio[4]);
                                             var duracao = <?=$filme['duracao']?>;
 
-                                            while(duracao >= 60){
+                                            while (duracao >= 60) {
                                                 duracao -= 60;
                                                 hora += 1;
                                             }
 
                                             var minutoFinal = minuto + duracao;
 
-                                            if(minutoFinal >= 60){
-                                               minutoFinal -= 60;
-                                               hora += 1;
+                                            if (minutoFinal >= 60) {
+                                                minutoFinal -= 60;
+                                                hora += 1;
                                             }
-                                            if(minutoFinal == 0 && minutoFinal != '00'){
+                                            if (minutoFinal == 0 && minutoFinal != '00') {
                                                 minutoFinal = minutoFinal + "0";
                                             }
-                                            if(minutoFinal < 10){
+                                            if (minutoFinal < 10) {
                                                 minutoFinal = "0" + minutoFinal;
                                             }
-                                            if(hora == 0 && minutoFinal != '00'){
+                                            if (hora == 0 && minutoFinal != '00') {
                                                 hora = hora + "0";
                                             }
-                                            if(hora < 10){
+                                            if (hora < 10) {
                                                 hora = "0" + hora;
                                             }
-                                            if(hora == '00'){
+                                            if (hora == '00') {
                                                 hora = "00";
                                             }
 
                                             var resultado = hora + ":" + minutoFinal + ":00";
-                    
-                                            
+
+
                                             $('#horaFim').val(resultado);
                                             $('#horaFim').attr("value", resultado);
-                                                               
-                                            
-                                    });
+
+
+                                        });
                                     </script>
-                                <?php } else{
+                                <?php } else {
                                     $readonly = "";
                                 }
-                            ?>
+                                ?>
 
 
-                                 <div class="form-group col-md-3">
+                                <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
-                                    <input type="time" name="horaFim" class="form-control" id="horaFim" required value=""
+                                    <input type="time" name="horaFim" class="form-control" id="horaFim" required
+                                           value=""
                                            placeholder="hh:mm" <?= $readonly ?>/>
                                 </div>
 
@@ -306,7 +304,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                     <label for="valor_ingresso">Valor Ingresso*</label> <br>
                                     <input type="text" name="valor_ingresso" class="form-control" required
                                            id="valor_ingresso" maxlength="5"
-                                           placeholder="Em reais" >
+                                           placeholder="Em reais">
                                 </div>
                             </div>
 
@@ -376,7 +374,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                         </div>
 
                         <div class="box-footer">
-                            <a href="?perfil=evento&p=<?=$tipoEvento == 1 ? "atracoes_lista" : "evento_cinema_lista"?>">
+                            <a href="?perfil=evento&p=<?= $tipoEvento == 1 ? "atracoes_lista" : "evento_cinema_lista" ?>">
                                 <button type="button" class="btn btn-default" id="voltar" name="voltar">Voltar</button>
                             </a>
                             <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
@@ -391,10 +389,11 @@ $tipoEvento = $evento['tipo_evento_id'];
     </section>
 </div>
 
+
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('#valor_ingresso').mask('00,00',{reverse: true})
+        $('#valor_ingresso').mask('00,00', {reverse: true})
     });
 
     function insti_local() {
@@ -601,10 +600,10 @@ $tipoEvento = $evento['tipo_evento_id'];
 
     retiradaIngresso.addEventListener("change", () => {
         let valorIngressos = document.querySelector('#valor_ingresso');
-        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11){
+        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11) {
             valorIngressos.value = '0,00';
             valorIngressos.readOnly = true;
-        }else {
+        } else {
             valorIngressos.readOnly = false;
         }
     });
