@@ -624,15 +624,27 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                         </tr>
                         <tr>
                             <th width="30%">Data de Emissão da N.E:</th>
-                            <td><?= $pagamento['emissao_nota_empenho'] ? "" : "Não cadastrado" ?></td>
+                            <td><?php 
+                            if ( $pagamento['emissao_nota_empenho'] = 'null'){
+                                echo "Não cadastrado";
+                            }else $pagamento['emissao_nota_empenho']
+                            ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Data de Entrega da N.E:</th>
-                            <td><?= $pagamento['entrega_nota_empenho'] ? "" : "Não cadastrado" ?></td>
+                            <td><?php 
+                            if ( $pagamento['entrega_nota_empenho'] = 'null'){
+                                echo "Não cadastrado";
+                            }else $pagamento['entrega_nota_empenho']
+                            ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária:</th>
-                            <td><?= $dotacao['dotacao'] ? "" : "Não cadastrado" ?></td>
+                            <td><?php 
+                            if ($dotacao['dotacao'] = 'null' ){
+                                echo "Não cadastrado";
+                            } else $dotacao['dotacao']
+                            ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Observação:</th>
