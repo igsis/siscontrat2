@@ -28,6 +28,26 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPj = $pedido['pessoa_juridica_id'];
 $pessoa = recuperaDados('pessoa_juridicas', 'id', $idPj);
 
+$ocorrencias = $con->query("SELECT atracao_id, tipo_ocorrencia_id FROM ocorrencias WHERE tipo_ocorrencia_id != 3 AND publicado = 1 AND origem_ocorrencia_id =  " . $pedido['origem_id']);
+
+$cargaHoraria = 0;
+
+while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
+
+    if ($linhaOco['tipo_ocorrencia_id'] == 1) {
+        $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
+        $carga = $con->query($sqlCarga);
+
+        if ($carga->num_rows > 0 || $cargaHoraria != 0) {
+            while ($cargaArray = mysqli_fetch_array($carga)) {
+                $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
+            }
+        } else {
+            $cargaHoraria = "Não possuí.";
+        }
+    }
+}
+
 $idRepresentante = $pessoa['representante_legal1_id'];
 $representante = recuperaDados('representante_legais', 'id', $idRepresentante);
 
@@ -87,22 +107,6 @@ if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
-
-$idAtracao = $ocorrencia['atracao_id'];
-
-$atracao = recuperaDados('atracoes', 'id', $idAtracao);
-
-$idAtracao = $ocorrencia['atracao_id'];
-$sqlCheca = $con->query("SELECT * FROM acao_atracao WHERE atracao_id = '$idAtracao' AND acao_id = 8");
-$checa = mysqli_num_rows($sqlCheca);
-
-if ($checa != 0) {
-    $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
-    $carga = $con->query($sqlCarga)->fetch_array();
-    $carga = $carga['carga_horaria'];
-} else if ($checa == 0) {
-    $carga = "Não se aplica.";
-}
 
 //líder
 if ($evento['tipo_evento_id'] == 1) {
@@ -466,9 +470,9 @@ if ($evento['tipo_evento_id'] == 1) {
 
 } elseif ($evento['tipo_evento_id'] == 2) {
     $filmes = $con->query("SELECT id, filme_id FROM filme_eventos WHERE evento_id = " . $evento['id']);
-    foreach ($filmes as $filme){
+    foreach ($filmes as $filme) {
         $dadosFilme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $filme['filme_id'] . " AND publicado = 1")->fetch_array();
-        $cronograma = $con->query("SELECT * FROM ocorrencias WHERE publicado = 1 AND tipo_ocorrencia_id = 2 AND origem_ocorrencia_id = " . $evento['id'] . " AND atracao_id = " .$filme['id']);
+        $cronograma = $con->query("SELECT * FROM ocorrencias WHERE publicado = 1 AND tipo_ocorrencia_id = 2 AND origem_ocorrencia_id = " . $evento['id'] . " AND atracao_id = " . $filme['id']);
         while ($aux = mysqli_fetch_array($cronograma)) {
 
             $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();

@@ -271,11 +271,11 @@ $sqlAtracao = "SELECT * FROM atracoes where evento_id = '$idEvento' AND publicad
 $queryAtracao = mysqli_query($con, $sqlAtracao);
 
 $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento")->fetch_array();
-    if ($testaFilme['tipo_evento_id'] == 2) {
-        $escondeLider = 1;
-    } else {
-        $escondeLider = 0;
-    }
+if ($testaFilme['tipo_evento_id'] == 2) {
+    $escondeLider = 1;
+} else {
+    $escondeLider = 0;
+}
 
 $sql = "SELECT * FROM  chamados where evento_id = '$idEvento'";
 $query = mysqli_query($con, $sql);
@@ -448,28 +448,30 @@ $chamado = mysqli_fetch_array($query);
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <?php
-                            if($pedido['numero_parcelas'] != 1){?>
-                            <br>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <a href="?perfil=contrato&p=edita_parcelas">
-                                        <button type="button" style="width: 35%" class="btn btn-primary center-block">
-                                            Editar parcelas
-                                        </button>
-                                    </a>
+                            if ($pedido['numero_parcelas'] != 1) {
+                                ?>
+                                <br>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <a href="?perfil=contrato&p=edita_parcelas">
+                                            <button type="button" style="width: 35%"
+                                                    class="btn btn-primary center-block">
+                                                Editar parcelas
+                                            </button>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                        <?php } ?>
+                            <?php } ?>
 
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="pendencia">Pendências no Setor de Contratos Artísticos:</label>
                                     <textarea name="pendencia" rows="5"
-                                              class="form-control"><?=$pedido['pendencias_contratos']?></textarea>
+                                              class="form-control"><?= $pedido['pendencias_contratos'] ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -492,8 +494,8 @@ $chamado = mysqli_fetch_array($query);
                                 </button>
                             </form>
                         </div>
-                        
-                        <?php if(isset($chamado)): ?>
+
+                        <?php if (isset($chamado)): ?>
                             <div class="col-md-4">
                                 <form action="?perfil=contrato&p=chamados_contrato" method="post" role="form">
                                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
@@ -509,7 +511,7 @@ $chamado = mysqli_fetch_array($query);
                                     <button type="submit" class="btn btn-primary btn-block"> Ver chamados</button>
                                 </form> -->
                             </div>
-                        <?php endif ?>  
+                        <?php endif ?>
 
                         <div class="col-md-4">
                             <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
@@ -519,9 +521,9 @@ $chamado = mysqli_fetch_array($query);
                                         style="width: 95%"> Baixar todos os arquivos
                                 </button>
                             </form>
-                        </div>  
+                        </div>
 
-                       <!-- <div class="col-md-3">
+                        <!-- <div class="col-md-3">
                             <form action="?perfil=contrato&p=anexos_pedido" method="post" role="form">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
@@ -577,154 +579,207 @@ $chamado = mysqli_fetch_array($query);
                         </div>
                         <?php
                     } else if ($pedido['pessoa_tipo_id'] == 2) {
-                        $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
+                    $sql_atracao = "SELECT a.id, a.nome_atracao, pf.nome, l.pessoa_fisica_id FROM atracoes AS a                                              
                                             LEFT JOIN lideres l on a.id = l.atracao_id
                                             left join pessoa_fisicas pf on l.pessoa_fisica_id = pf.id
                                             WHERE evento_id = '$idEvento' AND a.publicado = 1";
-                        $query_atracao = mysqli_query($con, $sql_atracao);
-                        ?>
-                        <div class="box box-danger">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Proponente</h3>
-                            </div>
-                            <div class="box-body">
-                                <table class="table table-bordered">
-                                    <thead>
+                    $query_atracao = mysqli_query($con, $sql_atracao);
+                    ?>
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Proponente</h3>
+                        </div>
+                        <div class="box-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Proponente</th>
+                                    <th width="5%">Editar</th>
+                                    <th width="5%">Trocar</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><?= $proponente['razao_social'] ?></td>
+                                    <td>
+                                        <form action="?perfil=contrato&p=edita_pj" method="POST">
+                                            <input type="hidden" name="idPedido" id="idPedido"
+                                                   value="<?= $idPedido ?>">
+                                            <input type="hidden" name="idPj" id="idPj" value="<?= $idPj ?>">
+                                            <input type="hidden" name="idEvento" id="idEvento"
+                                                   value="<?= $idEvento ?>">
+                                            <button type="submit" name="load" id="load"
+                                                    class="btn btn-primary btn-block"><span
+                                                        class="glyphicon glyphicon-pencil"></span></button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="?perfil=contrato&p=tipo_pessoa"
+                                              method="POST">
+                                            <input type="hidden" name="idPedido" id="idPedido"
+                                                   value="<?= $idPedido ?>">
+                                            <button type="submit" class="btn btn-info btn-block"><span
+                                                        class="glyphicon glyphicon-random"></span></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <?php
+                    //determina se há necessidade de esconder ou não a aba de lider da página e determina se ela será para edição ou cadastro
+                    if ($escondeLider == 0) {
+                    $numAtracao = $con->query("SELECT id FROM atracoes WHERE evento_id = $idEvento")->num_rows;
+                    $numLider = $con->query("SELECT * FROM lideres WHERE pedido_id = $idPedido")->num_rows;
+                    if ($numLider > 0 && $numLider >= $numAtracao){
+                    $disabledImpr = "";
+                    ?>
+
+                    <div class="box box-warning">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Líderes</h3>
+                        </div>
+                        <div class="box-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Atração</th>
+                                    <th>Lider</th>
+                                    <th width="5%">Editar</th>
+                                    <th width="5%">Trocar</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                while ($atracao = mysqli_fetch_array($query_atracao)) {
+                                    ?>
                                     <tr>
-                                        <th>Proponente</th>
-                                        <th width="5%">Editar</th>
-                                        <th width="5%">Trocar</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td><?= $proponente['razao_social'] ?></td>
+                                        <td><?= $atracao['nome_atracao'] ?></td>
+                                        <td><?= $atracao['nome'] ?></td>
                                         <td>
-                                            <form action="?perfil=contrato&p=edita_pj" method="POST">
-                                                <input type="hidden" name="idPedido" id="idPedido"
-                                                       value="<?= $idPedido ?>">
-                                                <input type="hidden" name="idPj" id="idPj" value="<?= $idPj ?>">
-                                                <input type="hidden" name="idEvento" id="idEvento"
-                                                       value="<?= $idEvento ?>">
-                                                <button type="submit" name="load" id="load"
+                                            <form action="?perfil=contrato&p=edita_lider" method="POST">
+                                                <input type="hidden" name="idLider"
+                                                       value="<?= $atracao['pessoa_fisica_id'] ?>">
+                                                <input type='hidden' name='idAtracao'
+                                                       value="<?= $atracao['id'] ?>">
+                                                <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
+                                                <button type="submit" name="carregar"
                                                         class="btn btn-primary btn-block"><span
                                                             class="glyphicon glyphicon-pencil"></span></button>
                                             </form>
                                         </td>
                                         <td>
-                                            <form action="?perfil=contrato&p=tipo_pessoa"
-                                                  method="POST">
-                                                <input type="hidden" name="idPedido" id="idPedido"
-                                                       value="<?= $idPedido ?>">
-                                                <button type="submit" class="btn btn-info btn-block"><span
-                                                            class="glyphicon glyphicon-random"></span></button>
+                                            <form method="POST" action="?perfil=contrato&p=pesquisa_lider"
+                                                  role="form">
+                                                <input type='hidden' name='idAtracao'
+                                                       value="<?= $atracao['id'] ?>">
+                                                <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
+                                                <button type="submit" name='trocaLider'
+                                                        class="btn btn-info btn-block">
+                                                    <span class="glyphicon glyphicon-random"></span></button>
                                             </form>
                                         </td>
                                     </tr>
+                                    <?php
+                                }
+                                ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <?php } else {
+                        $disabledImpr = "disabled";
+                        ?>
+                        <div class="box box-warning">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Líderes</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class='col-md-12' style='text-align:center'>
+                                    <span style='color: red; font-size: 16px'><strong>Para ter acesso á area de impressão é necessário cadastrar os líderes restantes</strong></span>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Atração</th>
+                                        <th>Lider</th>
+                                        <th width="5%">Cadastrar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    while ($atracao = mysqli_fetch_array($query_atracao)) {
+                                        ?>
+                                        <tr>
+                                            <td><?= $atracao['nome_atracao'] ?></td>
+                                            <td><?= $atracao['nome'] ?></td>
+                                            <td>
+                                                <form method="POST" action="?perfil=contrato&p=pesquisa_lider"
+                                                      role="form">
+                                                    <input type='hidden' name='idAtracao'
+                                                           value="<?= $atracao['id'] ?>">
+                                                    <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
+                                                    <button type="submit" name='trocaLider'
+                                                            class="btn btn-info btn-block">
+                                                        <span class="glyphicon glyphicon-plus"></span></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                        <?php
-                        if ($escondeLider == 0) {
-                            ?>
-                            <div class="box box-warning">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Líderes</h3>
-                                </div>
-                                <div class="box-body">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th>Atração</th>
-                                            <th>Lider</th>
-                                            <th width="5%">Editar</th>
-                                            <th width="5%">Trocar</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-                                        while ($atracao = mysqli_fetch_array($query_atracao)) {
-                                            ?>
-                                            <tr>
-                                                <td><?= $atracao['nome_atracao'] ?></td>
-                                                <td><?= $atracao['nome'] ?></td>
-                                                <td>
-                                                    <form action="?perfil=contrato&p=edita_lider" method="POST">
-                                                        <input type="hidden" name="idLider"
-                                                               value="<?= $atracao['pessoa_fisica_id'] ?>">
-                                                        <input type='hidden' name='idAtracao'
-                                                               value="<?= $atracao['id'] ?>">
-                                                        <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
-                                                        <button type="submit" name="carregar"
-                                                                class="btn btn-primary btn-block"><span
-                                                                    class="glyphicon glyphicon-pencil"></span></button>
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <form method="POST" action="?perfil=contrato&p=pesquisa_lider"
-                                                          role="form">
-                                                        <input type='hidden' name='idAtracao'
-                                                               value="<?= $atracao['id'] ?>">
-                                                        <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
-                                                        <button type="submit" name='trocaLider'
-                                                                class="btn btn-info btn-block">
-                                                            <span class="glyphicon glyphicon-random"></span></button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                        }
-                                        ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        <?php } //if esconde lider
-                    } //if pessoa_tipo == 2 ?>
+                            <?php } //else
+                            } //if esconde lider
+                            } //if pessoa_tipo == 2 ?>
 
-                    <form action="?perfil=contrato&p=area_impressao" target="_blank" method="post" role="form">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-info pull-right" style="margin: 0 10px;">Ir para a área
-                            de impressão
-                        </button>
-                        <button type="button" class="btn btn-info " name="reabre"
-                                style="margin:0 10px;width: 25%"
-                                id="reabre" data-toggle="modal" data-target="#reabrir">
-                            Reabertura
-                        </button>
-                        <a href="?perfil=contrato&p=pesquisa_contratos">
-                            <button type="button" class="btn btn-info pull-left" style="margin: 0 10px;">
-                                Voltar
+                        </div>
+                        <form action="?perfil=contrato&p=area_impressao" target="_blank" method="post" role="form">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <button type="submit" <?= $disabledImpr ?> class="btn btn-info pull-right"
+                                    style="margin: 0 10px;">Ir para a
+                                área
+                                de impressão
                             </button>
-                        </a>
-                    </form>
-                    <br>
+                            <button type="button" class="btn btn-info " name="reabre"
+                                    style="margin:0 10px;width: 25%"
+                                    id="reabre" data-toggle="modal" data-target="#reabrir">
+                                Reabertura
+                            </button>
+                            <a href="?perfil=contrato&p=pesquisa_contratos">
+                                <button type="button" class="btn btn-info pull-left" style="margin: 0 10px;">
+                                    Voltar
+                                </button>
+                            </a>
+                        </form>
+                        <br>
+                    </div>
                 </div>
-                <hr/>
             </div>
-        </div>
-</div>
-<div id="reabrir" class="modal modal fade in" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Confirmação de Reabertura</h4>
-            </div>
-            <form action="?perfil=contrato&p=resumo"
-                  role="form" method="post">
-                <div class="modal-body">
-                    <p>Tem certeza que deseja reabrir este evento?</p>
+            <div id="reabrir" class="modal modal fade in" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Confirmação de Reabertura</h4>
+                        </div>
+                        <form action="?perfil=contrato&p=resumo"
+                              role="form" method="post">
+                            <div class="modal-body">
+                                <p>Tem certeza que deseja reabrir este evento?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                                </button>
+                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                <button type="submit" class="btn btn-primary" name="reabertura">Reabrir</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
-                    <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                    <button type="submit" class="btn btn-primary" name="reabertura">Reabrir</button>
-                </div>
-            </form>
-        </div>
-    </div>
     </section>
 </div>
 
