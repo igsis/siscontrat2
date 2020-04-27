@@ -700,7 +700,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                 <h4 class="modal-title">Datas de excessão</h4>
             </div>
             <form>
-                <div class="modal-body">
+                <div class="modal-body" id="body-datas">
                     <div class="row" style="margin-bottom: 15px;">
                         <div class="col-md-12">
                             <button type="button" id="btData" class="btn btn-success">Adicionar Data</button>
@@ -1124,7 +1124,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         row.appendChild(col8);
         row.appendChild(col4);
 
-        divDatas.appendChild(row);
+        document.querySelector('#datas').appendChild(row);
     }
 
     function validaDiaSemana() {
@@ -1199,15 +1199,12 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             data: dados,
             async: true,
             success: function(response) {
-                $('#modal').modal('hide');
+                $('#ModalDtExec').modal('toggle');
                 Swal.fire({
-                    title: 'Datas de Exceção Eadastradas',
-                    type: 'success',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    showCancelButton: false,
-                    confirmButtonText: 'Ok'
-                });
+                    title: '<strong>Datas cadastradas com sucesso!</strong>',
+                    icon: 'success',
+
+                })
             },
             error: function (response) {
                 console.log("Deu erro");
@@ -1233,11 +1230,12 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                     })
                 });
 
-                let datasEx = divDatas.childNodes;
+                document.querySelector('#datas').remove();
 
-                for (let x = 1 ; x<datasEx.length; x++){
-                    datasEx[x].remove();
-                }
+                let datas = document.createElement('div');
+                datas.id = "datas";
+
+                document.querySelector('#body-datas').appendChild(datas);
 
                 resultado.forEach(function (x) {
                     criarInputData(x);
