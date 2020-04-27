@@ -707,12 +707,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                         </div>
                     </div>
                     <div id="datas">
-                        <div class="row">
-                            <div class="col-md-10">
-                                <label>Data:</label>
-                                <input type="date" class="form-control dataEx">
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1164,7 +1159,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     let btnDataE = document.querySelector('#btData');
     let divDatas = document.querySelector('#datas');
 
-    btnDataE.addEventListener('click', criarInputData());
+    btnDataE.addEventListener('click', criarInputData);
 
     let datas =  document.querySelector('#datas');
 
@@ -1179,6 +1174,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             let row = col.parentNode;
 
             row.remove();
+            if (divDatas.childNodes.length == 1 || divDatas.childNodes.length == 0){
+                criarInputData(0);
+            }
         }
     })
 
@@ -1201,7 +1199,15 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             data: dados,
             async: true,
             success: function(response) {
-                console.log("Foi")
+                $('#modal').modal('hide');
+                Swal.fire({
+                    title: 'Datas de Exceção Eadastradas',
+                    type: 'success',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showCancelButton: false,
+                    confirmButtonText: 'Ok'
+                });
             },
             error: function (response) {
                 console.log("Deu erro");
@@ -1220,7 +1226,23 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             data: dados,
             async: true,
             success: function(response) {
-                console.log(response)
+                result = JSON.parse(response);
+                 resultado = result.map(function (obj) {
+                    return Object.keys(obj).map(function (chave) {
+                        return obj[chave];
+                    })
+                });
+
+                let datasEx = divDatas.childNodes;
+
+                for (let x = 1 ; x<datasEx.length; x++){
+                    datasEx[x].remove();
+                }
+
+                resultado.forEach(function (x) {
+                    criarInputData(x);
+                })
+
                 $('#ModalDtExec').modal('show');
             },
             error: function(xhr) {
