@@ -15,7 +15,7 @@ if (isset($_POST['carregar']) || isset($_POST['apagar']) || isset($_POST['enviar
 
 }
 
-if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['carregar']) ) {
+if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['carregar'])) {
     $nome = addslashes($_POST['nome']) ?? null;
     $rg = $_POST['rg'];
     $cpf = $_POST['cpf'];
@@ -85,7 +85,7 @@ if (isset($_POST['edita']) || isset($_POST['carregar'])) {
         if (isset($_POST['edita'])) {
             $mensagem = mensagem("success", "Dados atualizados com sucesso!");
 
-        }elseif (isset($_POST['carregar'])) {
+        } elseif (isset($_POST['carregar'])) {
 
             $sqlSeleciona = "UPDATE pessoa_juridicas SET $representante = '$idRepresentante' WHERE id = '$idPj'";
             mysqli_query($con, $sqlSeleciona);
@@ -100,6 +100,8 @@ if (isset($_POST['edita']) || isset($_POST['carregar'])) {
         //gravarLog($sql);
     }
 }
+
+$idPedido = $_POST['idPedido'];
 
 $representantes = recuperaDados("representante_legais", "id", $idRepresentante);
 
@@ -143,29 +145,28 @@ $representantes = recuperaDados("representante_legais", "id", $idRepresentante);
                                 </div>
                             </div>
                             <hr>
-                            
+
                             <input type="hidden" name="idPj" value="<?= $idPj ?>">
                             <input type="hidden" name="idRepresentante" value="<?= $idRepresentante ?>">
                             <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
+                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                             <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">
                                 Atualizar
                             </button>
                     </form>
                     <form action="?perfil=contrato&p=edita_pj" method="post">
-                        <button type="submit" name="idPj" id="idPj" value="<?= $idPj ?>" class="btn btn-default">Voltar</button>
+                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                        <button type="submit" name="idPj" id="idPj" value="<?= $idPj ?>" class="btn btn-default">
+                            Voltar
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
 </div>
 
-
 </section>
 </div>
-
-
-
-
 
 <script type="text/javascript">
     $('#exclusao').on('show.bs.modal', function (e) {

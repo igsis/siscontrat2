@@ -11,6 +11,7 @@ $tipoPessoa = 2;
 
 if (isset($_POST['adicionar']) || isset($_POST['idPj'])) {
     $idPj = $_POST['idPj'];
+    $idPedido = $_POST['idPedido'];
     $editaOnly = "<input type='hidden' name='editOnly' value= '1'>";
 }
 
@@ -404,7 +405,7 @@ if (isset($pj['representante_legal2_id'])) {
                                 $queryPedidos = mysqli_query($con, $sqlPedidos);
                                 $pedidos = mysqli_fetch_array($queryPedidos); ?>
                                 <form method="POST" action="?perfil=contrato&p=resumo" role="form">
-                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
+                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id'] ?>">
                                     <input type="hidden" name="idPj" value="<?= $pj['id'] ?>">
                                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                                     <?= $editaOnly ?? NULL ?>
@@ -417,6 +418,7 @@ if (isset($pj['representante_legal2_id'])) {
                             <div class="form-group col-md-3">
                                 <form method="POST" action="?perfil=contrato&p=demais_anexos_pj"
                                       role="form">
+                                    <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                     <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                             class="btn btn-info btn-block">Demais Anexos
                                     </button>
@@ -484,6 +486,7 @@ if (isset($pj['representante_legal2_id'])) {
                                     <form method="POST" action="?perfil=contrato&p=representante_busca"
                                           role="form">
                                         <input type="hidden" name="tipoRepresentante" value="2">
+                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                         <button type="submit" name="idPj" value="<?= $pj['id'] ?>"
                                                 class="btn btn-info btn-block">
                                             Representante 02
@@ -528,6 +531,7 @@ if (isset($pj['representante_legal2_id'])) {
                             <input type='hidden' name='idPj' id='idPj' value='<?= $idPj ?>'>
                             <input type='hidden' name='idRepresentante' id='idRepresentante' value=''>
                             <input type='hidden' name='tipoRepresentante' id='tipoRepresentante' value=''>
+                            <input type="hidden" name="idPedido" value="<?= $pedidos['id'] ?>">
                             <button type="submit" name="abrirPag" class="btn btn-primary btn-block">
                                 Editar Representante
                             </button>
@@ -538,6 +542,7 @@ if (isset($pj['representante_legal2_id'])) {
                               role="form">
                             <input type='hidden' name='idPj' id='idPj' value='<?= $idPj ?>'>
                             <input type='hidden' name='tipoRepresentanteTroca' id='tipoRepresentanteTroca' value=''>
+                            <input type="hidden" name="idPedido" value="<?= $pedidos['id'] ?>">
                             <button type="submit" name="trocar" class="btn btn-primary btn-block">Trocar de
                                 Representante
                             </button>
