@@ -68,6 +68,7 @@ if(!isset ($_SESSION['login_s'])) //verifica se há uma sessão, se não, volta 
       <link rel="stylesheet" href="css\smoothness_jquery-ui.css">
       <!-- Toastr -->
       <script src="plugins/toastr/toastr.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
       <style>
           .ui-menu-item{
               text-align: center !important;

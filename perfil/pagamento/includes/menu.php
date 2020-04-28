@@ -19,7 +19,7 @@ $nivelUsuario = recuperaDados('usuario_contratos', 'usuario_id', $idUsuarioDoMen
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="<?= $pasta ?>"><i class="fa fa-circle-o"></i> Operadores </a></li>
+                    <li><a href="?perfil=pagamento&p=admin&sp=lista_operadores"><i class="fa fa-circle-o"></i> Operadores </a></li>
                 </ul>
             </li>
 

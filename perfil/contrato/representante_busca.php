@@ -5,12 +5,14 @@ $conn = bancoPDO();
 
 if (isset($_POST['tipoRepresentanteTroca'])){
     $tipoRepresentante = $_POST['tipoRepresentanteTroca'];
+    $idPedido = $_POST['idPedido'];
     $_SESSION['idPj'] = $_POST['idPj'];
     $idPj = $_SESSION['idPj'];
 }
 
 if (isset($_POST['tipoRepresentante']) && isset($_POST['idPj'])) {
     $tipoRepresentante = $_POST['tipoRepresentante'];
+    $idPedido = $_POST['idPedido'];
     $_SESSION['idPj'] = $_POST['idPj'];
     $idPj = $_SESSION['idPj'];
 
@@ -55,6 +57,7 @@ if (isset($_POST['pesquisa'])) {
                             <td>" . $representante['rg'] . "</td>
                             <td>
                                 <input type='hidden' name='idPj' value='" . $idPj . "'>
+                                <input type='hidden' value='$idPedido' name='idPedido'>
                                 <input type='hidden' name='idRepresentante' value='" . $representante['id'] . "'>
                                 <input type='hidden' name='nome' value='" . $representante['nome'] . "'>
                                 <input type='hidden' name='cpf' value='" . $representante['cpf'] . "'>
@@ -72,6 +75,7 @@ if (isset($_POST['pesquisa'])) {
                             <td>
                                 <input type='hidden' name='documentacao' value='" . $cpf . "'>
                                 <input type='hidden' name='tipoRepresentante' value='" . $tipoRepresentante . "'>
+                                <input type='hidden' value='$idPedido' name='idPedido'>
                                 <button type='submit' class='btn btn-primary' id='adicionar' name='adicionar'><i class='glyphicon glyphicon-plus'></i> Adicionar</button>
                             </td>
                         </tr>
@@ -112,6 +116,7 @@ if (isset($_POST['pesquisa'])) {
                                     <span class="input-group-btn">
                                         <input type="hidden" name="idPj" value="<?= $idPj ?>">
                                         <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
+                                        <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                         <button class="btn btn-default" name="pesquisa" type="submit"><i
                                                 class="glyphicon glyphicon-search"></i> Procurar</button>
                                     </span>
@@ -140,6 +145,7 @@ if (isset($_POST['pesquisa'])) {
                         </div>
                         <div class="box-footer">
                             <form action="?perfil=contrato&p=edita_pj" method="post">
+                                <input type="hidden" value="<?=$idPedido?>" name="idPedido">
                                 <button type="submit" id="idPj" name="idPj" value="<?= $idPj ?>"
                                         class="btn btn-default">Voltar
                                 </button>

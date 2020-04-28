@@ -6,6 +6,7 @@ $idOrigem = $_SESSION['idOrigem'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espacos.php';
+$urlAjax = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_ajax_data_excessao.php';
 
 include "includes/menu_interno.php";
 
@@ -370,7 +371,13 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                     &nbsp;
                                 </label>
                             </div>
-
+                            <div class="row" style="margin-bottom: 15px">
+                                <div class="col-md-12">
+                                    <button id="dtExc" class="btn btn-info" type="button">
+                                        Data de excessão
+                                    </button>
+                                </div>
+                            </div>
                             <div class="row" id="msgEsconde" style="display: none;">
                                 <div class="form-group col-md-6">
                                     <span style="color: red;">Selecione ao menos um dia da semana!</span>
@@ -682,6 +689,34 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             </div>
         </div>
     </div>
+</div>
+
+<div id="ModalDtExec" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Datas de excessão</h4>
+            </div>
+            <form>
+                <div class="modal-body" id="body-datas">
+                    <div class="row" style="margin-bottom: 15px;">
+                        <div class="col-md-12">
+                            <button type="button" id="btData" class="btn btn-success">Adicionar Data</button>
+                        </div>
+                    </div>
+                    <div id="datas">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <button type="button" id="saveData" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div>
 
 
@@ -1044,6 +1079,54 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         }
     }
 
+    function criarInputData(valor=0) {
+        let row = document.createElement('div');
+        row.classList.add('row');
+        row.style.display = 'flex';
+        row.style.alignItems = 'end';
+        row.style.justifyContent = 'end';
+
+        let col8 = document.createElement('div');
+        col8.classList.add('col-md-10');
+
+        let col4 = document.createElement('div');
+        col4.classList.add('col-md-2');
+        col4.style.marginTop = '5%';
+
+        let remove = document.createElement('button');
+        remove.classList.add('btn');
+        remove.classList.add('btn-danger');
+        remove.classList.add('apData');
+        remove.setAttribute('type','button')
+
+        let icone = document.createElement('i');
+        icone.classList.add('fa');
+        icone.classList.add('fa-fw');
+        icone.classList.add('fa-trash-o');
+
+        let label = document.createElement('label');
+        label.textContent = "Data:";
+
+        let input = document.createElement('input');
+        input.setAttribute('type','date');
+        input.classList.add('dataEx');
+        input.classList.add('form-control');
+        if (valor){
+            input.value = valor;
+        }
+
+        remove.appendChild(icone);
+        col4.appendChild(remove);
+
+        col8.appendChild(label);
+        col8.appendChild(input);
+
+        row.appendChild(col8);
+        row.appendChild(col4);
+
+        document.querySelector('#datas').appendChild(row);
+    }
+
     function validaDiaSemana() {
         var dataInicio = document.querySelector('#datepicker10').value;
         var isMsg = $('#msgEsconde');
@@ -1072,4 +1155,97 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     }
 
     var diaSemana = $('.semana').change(validaDiaSemana)
+
+    let btnDataE = document.querySelector('#btData');
+    let divDatas = document.querySelector('#datas');
+
+    btnDataE.addEventListener('click', criarInputData);
+
+    let datas =  document.querySelector('#datas');
+
+    datas.addEventListener('click', function (event) {
+        let btn = event.target;
+        if (btn.classList.contains('btn') || btn.classList.contains('fa')){
+            if (!btn.classList.contains('btn')) {
+                btn = btn.parentNode;
+            }
+
+            let col = btn.parentNode;
+            let row = col.parentNode;
+
+            row.remove();
+            if (divDatas.childNodes.length == 1 || divDatas.childNodes.length == 0){
+                criarInputData(0);
+            }
+        }
+    })
+
+    let saveDate = document.querySelector('#saveData');
+    saveDate.addEventListener("click",function (event) {
+        event.preventDefault();
+        let data = document.querySelectorAll('.dataEx');
+        let datas = [];
+        data.forEach(function (item) {
+            datas.push(item.value);
+        });
+        dados = {
+            id: <?= $idOcorrencia ?>,
+            datas: datas
+        };
+
+        $.ajax({
+            url: '<?= $urlAjax ?>',
+            type: 'POST',
+            data: dados,
+            async: true,
+            success: function(response) {
+                $('#ModalDtExec').modal('toggle');
+                Swal.fire({
+                    title: '<strong>Datas cadastradas com sucesso!</strong>',
+                    icon: 'success',
+
+                })
+            },
+            error: function (response) {
+                console.log("Deu erro");
+            }
+        });
+
+    });
+
+    $('#dtExc').click(function () {
+        let dados = {
+            idOcorrencia: <?= $idOcorrencia ?>,
+        };
+        $.ajax({
+            url: '<?= $urlAjax ?>',
+            type: "POST",
+            data: dados,
+            async: true,
+            success: function(response) {
+                result = JSON.parse(response);
+                 resultado = result.map(function (obj) {
+                    return Object.keys(obj).map(function (chave) {
+                        return obj[chave];
+                    })
+                });
+
+                document.querySelector('#datas').remove();
+
+                let datas = document.createElement('div');
+                datas.id = "datas";
+
+                document.querySelector('#body-datas').appendChild(datas);
+
+                resultado.forEach(function (x) {
+                    criarInputData(x);
+                })
+
+                $('#ModalDtExec').modal('show');
+            },
+            error: function(xhr) {
+
+            }
+        });
+    });
 </script>
