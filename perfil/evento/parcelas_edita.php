@@ -36,6 +36,7 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
                 <!-- general form elements -->
                 <form action="?perfil=evento&p=pedido_parcelas" method="POST" role="form">
                     <input type="hidden" name="idPedido" value="<?=$idPedido?>">
+                    <input type="hidden" name="nParcelas" value="<?=$nParcelas?>">
                     <div class="box box-info">
                         <div class="box-header with-border">
                             <h3 class="box-title">Parcelas</h3>
@@ -119,8 +120,8 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-offset-5 col-md-3">
-                                    <strong id="alertValor">Valor OK</strong>
+                                <div class="col-md-offset-5 col-md-3 has-feedback">
+                                    <strong class="text-success" id="alertValor">Valor OK</strong>
                                 </div>
                             </div>
                         </div>

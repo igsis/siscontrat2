@@ -35,25 +35,29 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
     }
 }
 
-$query_data = "SELECT MIN(o.data_inicio)
-FROM eventos AS e INNER JOIN atracoes AS a ON a.evento_id = e.id
-INNER JOIN  ocorrencias AS o ON a.id = o.atracao_id 
-INNER JOIN pedidos AS p ON p.origem_id = e.id 
-WHERE p.origem_tipo_id = 1 AND p.id = '$idPedido' AND p.publicado = 1 AND a.publicado = 1 AND o.publicado = 1";
+if (isset($_POST['gravarParcelas'])) {
+    $num_parcelas = $_POST['nParcelas'];
+    $idPedido = $_POST["idPedido"];
 
-$data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
+    foreach ($_POST['parcela'] as $key => $parcela) {
+        $valor = $_POST['valor'][$key];
+        $data_kit_pagamento = $_POST['data_pagamento'][$key];
 
-$query_data2="SELECT count(*) FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
-INNER JOIN eventos AS e ON fe.evento_id = e.id WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
+        $sqlInsertParcela = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento)
+                                VALUES ('$idPedido', '$parcela', '$valor', '$data_kit_pagamento')";
 
-$data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
-
-if ($pedido['numero_parcelas'] != null) {
-    if (($oficina && $pedido['numero_parcelas'] != 6) || (!$oficina && $pedido['numero_parcelas'] != 13)) {
-        $parcelas = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->num_rows;
+        if ($con->query($sqlInsertParcela)) {
+            gravarLog($sqlInsertParcela);
+        } else {
+            $erro = true;
+        }
     }
-} else {
-    $parcelas = 0;
+
+    if (isset($erro)) {
+        $mensagem = mensagem('danger', 'Erro ao gravar as parcelas. Tente Novamente');
+    } else {
+        $mensagem = mensagem('success', 'Parcelas gravadas com sucesso.');
+    }
 }
 
 if (isset($_POST['gravar'])) {
@@ -91,6 +95,27 @@ if (isset($_POST['gravar'])) {
         $mensagem = $mensagem('danger', 'Erro ao gravar os dados. Tente novamente.');
     }
 }
+
+if ($pedido['numero_parcelas'] != null) {
+    if (($oficina && $pedido['numero_parcelas'] != 6) || (!$oficina && $pedido['numero_parcelas'] != 13)) {
+        $parcelas = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->num_rows;
+    }
+} else {
+    $parcelas = 0;
+}
+
+$query_data = "SELECT MIN(o.data_inicio)
+FROM eventos AS e INNER JOIN atracoes AS a ON a.evento_id = e.id
+INNER JOIN  ocorrencias AS o ON a.id = o.atracao_id 
+INNER JOIN pedidos AS p ON p.origem_id = e.id 
+WHERE p.origem_tipo_id = 1 AND p.id = '$idPedido' AND p.publicado = 1 AND a.publicado = 1 AND o.publicado = 1";
+
+$data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
+
+$query_data2="SELECT count(*) FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
+INNER JOIN eventos AS e ON fe.evento_id = e.id WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
+
+$data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
