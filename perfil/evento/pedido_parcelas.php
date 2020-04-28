@@ -35,6 +35,19 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
     }
 }
 
+$query_data = "SELECT MIN(o.data_inicio)
+FROM eventos AS e INNER JOIN atracoes AS a ON a.evento_id = e.id
+INNER JOIN  ocorrencias AS o ON a.id = o.atracao_id 
+INNER JOIN pedidos AS p ON p.origem_id = e.id 
+WHERE p.origem_tipo_id = 1 AND p.id = '$idPedido' AND p.publicado = 1 AND a.publicado = 1 AND o.publicado = 1";
+
+$data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
+
+$query_data2="SELECT count(*) FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
+INNER JOIN eventos AS e ON fe.evento_id = e.id WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
+
+$data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
+
 if ($pedido['numero_parcelas'] != null) {
     if (($oficina && $pedido['numero_parcelas'] != 6) || (!$oficina && $pedido['numero_parcelas'] != 13)) {
         $parcelas = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->num_rows;
@@ -148,7 +161,7 @@ if (isset($_POST['gravar'])) {
                                     <div class="form-group col-md-6">
                                         <label for="numero_parcelas">Número de Parcelas *</label>
                                         <select class="form-control" id="numero_parcelas" name="numero_parcelas"
-                                                data-oficina="0" required onchange="formaPagamento()">
+                                                data-oficina="0" required onchange="formaPagamento(); formParcela()">
                                             <option value="">Selecione...</option>
                                             <?php geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']); ?>
                                         </select>
@@ -157,9 +170,6 @@ if (isset($_POST['gravar'])) {
                                         </div>
                                     </div>
                                 <?php endif; ?>
-<!--                                <button type="button" id="editarParcelas" class="btn btn-primary" style="display: block; margin-top: 1.8%;">-->
-<!--                                    Editar Parcelas-->
-<!--                                </button>-->
                                 <a href="?perfil=evento&p=parcelas_edita" class="btn btn-primary col-md-1"
                                    style="margin-top: 1.8%;" id="btnParcelas">
                                     Editar Parcelas
@@ -248,8 +258,7 @@ if (isset($_POST['gravar'])) {
         }
     }
 
-    $(document).ready(formaPagamento());
-    $(document).ready(function () {
+    function verificaParcela() {
         let parcelas = $('#form_parcelas').data('parcelas');
         let btnGravar = $('#btnGravar');
         let msgParcelas = $('#msgParcelas');
@@ -268,5 +277,15 @@ if (isset($_POST['gravar'])) {
         <?php else: ?>
             $('#dataKit').val("<?= $data_kit ?>");
         <?php endif; ?>
-    });
+    }
+
+    function formParcela() {
+        let nParcela = $('#numero_parcelas').val();
+        let btnEditaParcela = $('#btnParcelas');
+
+        btnEditaParcela.attr('href', '?perfil=evento&p=parcelas_edita&nParcelas='+nParcela);
+    }
+
+    $(document).ready(formaPagamento());
+    $(document).ready(verificaParcela());
 </script>
