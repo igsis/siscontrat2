@@ -719,7 +719,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     </div><!-- /.modal-dialog -->
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
 
     $(document).ready(function () {
@@ -1203,7 +1203,6 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                 Swal.fire({
                     title: '<strong>Datas cadastradas com sucesso!</strong>',
                     icon: 'success',
-
                 })
             },
             error: function (response) {
