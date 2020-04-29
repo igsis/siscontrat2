@@ -93,14 +93,14 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
                                         <div class='form-group col-md-3'>
                                             <label for='valor'>Valor *</label>
                                             <input type='text' name='valor[<?=$i?>]' class='form-control valor'
-                                                   value="<?=$parcelas[$i]['valor'] ?? ''?>" required
+                                                   value="<?=isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : ''?>" required
                                                    placeholder="Valor em reais"
                                                    onkeypress="return(moeda(this, '.', ',', event));">
                                         </div>
                                         <div class='form-group col-md-4'>
                                             <label for='data_pagamento'>Data Kit Pagamento *</label>
                                             <input type='date' id='data_pagamento' required
-                                                   value="<?=isset($parcelas[$i]['data_pagamento']) ? exibirDataBr($parcelas[$i]['data_pagamento']) : ''?>"
+                                                   value="<?=$parcelas[$i]['data_pagamento'] ?? ''?>"
                                                    name='data_pagamento[<?=$i?>]' class='form-control'>
                                         </div>
                                     </div>
@@ -128,7 +128,7 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
                         <!-- /.box-body -->
                         <div class="box-footer">
                             <a href="?perfil=evento&p=pedido_parcelas" class="pull-left btn btn-default">Voltar</a>
-                            <input type="submit" name="gravaParcelas" class="pull-right btn btn-primary" value="Gravar"
+                            <input type="submit" name="gravarParcelas" class="pull-right btn btn-primary" value="Gravar"
                                    id="gravaParcelas">
                         </div>
                         <!-- /.box-footer-->

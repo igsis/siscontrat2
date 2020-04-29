@@ -40,7 +40,7 @@ if (isset($_POST['gravarParcelas'])) {
     $idPedido = $_POST["idPedido"];
 
     foreach ($_POST['parcela'] as $key => $parcela) {
-        $valor = $_POST['valor'][$key];
+        $valor = dinheiroDeBr($_POST['valor'][$key]);
         $data_kit_pagamento = $_POST['data_pagamento'][$key];
 
         $sqlInsertParcela = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento)
@@ -56,7 +56,11 @@ if (isset($_POST['gravarParcelas'])) {
     if (isset($erro)) {
         $mensagem = mensagem('danger', 'Erro ao gravar as parcelas. Tente Novamente');
     } else {
-        $mensagem = mensagem('success', 'Parcelas gravadas com sucesso.');
+        $sqlPedidoParcela = "UPDATE pedidos SET numero_parcelas = '$num_parcelas' WHERE id = '$idPedido'";
+        if ($con->query($sqlPedidoParcela)) {
+            gravarLog($sqlPedidoParcela);
+            $mensagem = mensagem('success', 'Parcelas gravadas com sucesso.');
+        }
     }
 }
 
@@ -97,7 +101,7 @@ if (isset($_POST['gravar'])) {
 }
 
 if ($pedido['numero_parcelas'] != null) {
-    if (($oficina && $pedido['numero_parcelas'] != 6) || (!$oficina && $pedido['numero_parcelas'] != 13)) {
+    if ((isset($oficina) && $pedido['numero_parcelas'] != 6) || ($pedido['numero_parcelas'] != 13)) {
         $parcelas = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->num_rows;
     }
 } else {
@@ -116,6 +120,8 @@ $query_data2="SELECT count(*) FROM ocorrencias AS o INNER JOIN filme_eventos AS 
 INNER JOIN eventos AS e ON fe.evento_id = e.id WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 
 $data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
+
+$pedido = recuperaDados("pedidos", "id", $idPedido);
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -313,4 +319,5 @@ $data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
 
     $(document).ready(formaPagamento());
     $(document).ready(verificaParcela());
+    $(document).ready(formParcela());
 </script>
