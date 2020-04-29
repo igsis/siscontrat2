@@ -35,31 +35,76 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
     }
 }
 
-if (isset($_POST['gravarParcelas'])) {
+if (isset($_POST['gravarParcelas']) || isset($_POST['editarParcelas'])) {
     $num_parcelas = $_POST['nParcelas'];
     $idPedido = $_POST["idPedido"];
 
-    foreach ($_POST['parcela'] as $key => $parcela) {
-        $valor = dinheiroDeBr($_POST['valor'][$key]);
-        $data_kit_pagamento = $_POST['data_pagamento'][$key];
+    if (isset($_POST['gravarParcelas'])) {
+        foreach ($_POST['parcela'] as $key => $parcela) {
+            $valor = dinheiroDeBr($_POST['valor'][$key]);
+            $data_kit_pagamento = $_POST['data_pagamento'][$key];
 
-        $sqlInsertParcela = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento)
-                                VALUES ('$idPedido', '$parcela', '$valor', '$data_kit_pagamento')";
+            $sqlInsertParcela = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento)
+                                    VALUES ('$idPedido', '$parcela', '$valor', '$data_kit_pagamento')";
 
-        if ($con->query($sqlInsertParcela)) {
-            gravarLog($sqlInsertParcela);
-        } else {
-            $erro = true;
+            if ($con->query($sqlInsertParcela)) {
+                gravarLog($sqlInsertParcela);
+            } else {
+                $erro = true;
+            }
         }
-    }
-
-    if (isset($erro)) {
-        $mensagem = mensagem('danger', 'Erro ao gravar as parcelas. Tente Novamente');
+        if (isset($erro)) {
+            $mensagem = mensagem('danger', 'Erro ao gravar as parcelas. Tente Novamente');
+        } else {
+            $sqlPedidoParcela = "UPDATE pedidos SET numero_parcelas = '$num_parcelas' WHERE id = '$idPedido'";
+            if ($con->query($sqlPedidoParcela)) {
+                gravarLog($sqlPedidoParcela);
+                $mensagem = mensagem('success', 'Parcelas gravadas com sucesso.');
+            }
+        }
     } else {
-        $sqlPedidoParcela = "UPDATE pedidos SET numero_parcelas = '$num_parcelas' WHERE id = '$idPedido'";
-        if ($con->query($sqlPedidoParcela)) {
-            gravarLog($sqlPedidoParcela);
-            $mensagem = mensagem('success', 'Parcelas gravadas com sucesso.');
+        $parcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido'")->fetch_all(MYSQLI_ASSOC);
+
+        foreach ($_POST['parcela'] as $key => $parcela) {
+            $valor = dinheiroDeBr($_POST['valor'][$key]);
+            $data_kit_pagamento = $_POST['data_pagamento'][$key];
+
+            if (isset($parcelas[$key])) {
+                unset($parcelas[$key]);
+
+                $sqlAtualizaParcela = "UPDATE parcelas SET 
+                                    valor = '$valor',
+                                    data_pagamento = '$data_kit_pagamento'
+                                WHERE pedido_id = '$idPedido' AND numero_parcelas = '$parcela'";
+            } else {
+                $sqlAtualizaParcela = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento)
+                                    VALUES ('$idPedido', '$parcela', '$valor', '$data_kit_pagamento')";
+            };
+
+            if ($con->query($sqlAtualizaParcela)) {
+                gravarLog($sqlAtualizaParcela);
+            } else {
+                $erro = true;
+            }
+        }
+
+        if (isset($erro)) {
+            $mensagem = mensagem('danger', 'Erro ao gravar as parcelas. Tente Novamente');
+        } else {
+            if (count($parcelas) > 0) {
+                foreach ($parcelas as $parcela) {
+                    $sqlDeletaParcela = "DELETE FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '{$parcela['numero_parcelas']}'";
+                    if ($con->query($sqlDeletaParcela)) {
+                        gravarLog($sqlDeletaParcela);
+                    }
+                }
+            }
+
+            $sqlPedidoParcela = "UPDATE pedidos SET numero_parcelas = '$num_parcelas' WHERE id = '$idPedido'";
+            if ($con->query($sqlPedidoParcela)) {
+                gravarLog($sqlPedidoParcela);
+                $mensagem = mensagem('success', 'Parcelas atualizadas com sucesso.');
+            }
         }
     }
 }

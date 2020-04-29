@@ -128,8 +128,8 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
                         <!-- /.box-body -->
                         <div class="box-footer">
                             <a href="?perfil=evento&p=pedido_parcelas" class="pull-left btn btn-default">Voltar</a>
-                            <input type="submit" name="gravarParcelas" class="pull-right btn btn-primary" value="Gravar"
-                                   id="gravaParcelas">
+                            <input type="submit" name="<?=$parcelas == null ? 'gravarParcelas' : 'editarParcelas'?>"
+                                   class="pull-right btn btn-primary" value="Gravar" id="gravaParcelas">
                         </div>
                         <!-- /.box-footer-->
                     </div>
