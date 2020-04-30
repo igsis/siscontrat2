@@ -3,6 +3,7 @@ $con = bancoMysqli();
 $idPj = $_SESSION['idPj'];
 $cpf = $_POST['documentacao'];
 $tipoRepresentante = $_POST['tipoRepresentante'];
+$idPedido = $_POST['idPedido'];
 
 ?>
 
@@ -36,11 +37,13 @@ $tipoRepresentante = $_POST['tipoRepresentante'];
                             </div>
                             <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
                             <input type="hidden" name="idPj" value="<?= $idPj ?>">
+                            <input type='hidden' value='<?=$idPedido?>' name='idPedido'>
                             <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
                                 Cadastrar
                             </button>
                     </form>
                     <form action="?perfil=contrato&p=edita_pj" method="post">
+                        <input type="hidden" name="idPedido" value="<?=$idPedido?>">
                         <button type="submit" name="idPj" id="idPj" value="<?= $idPj ?>" class="btn btn-default">Voltar</button>
                     </form>
                 </div>

@@ -11,7 +11,7 @@ if (isset($_POST['cadastrar']) || isset($_POST['editar'])) {
     $nomeArtistico = trim($_POST['nomeArtistico']);
     $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
-    $drt = trim($_POST['drt']);
+    $drt = trim($_POST['drt']) ?? NULL;
     $data = date("y-m-d h:i:s");
     $passaporte = $_POST['passaporte'] ?? NULL;
     $cpf = $_POST['cpf'] ?? NULL;
@@ -152,14 +152,14 @@ if (isset($_POST['selecionar'])) {
     }
 }
 
-if (isset($_POST['carregar'])){
+if (isset($_POST['carregar'])) {
     $idLider = $_POST['idLider'];
     $idPedido = $_POST['idPedido'];
     $idAtracao = $_POST['idAtracao'];
     $tipo = $con->query("SELECT cpf FROM pessoa_fisicas WHERE id = '$idLider'")->fetch_array();
-    if(!empty($tipo['cpf'])){
+    if (!empty($tipo['cpf'])) {
         $tipoDocumento = 1;
-    } else{
+    } else {
         $tipoDocumento = 2;
     }
 }
@@ -204,7 +204,8 @@ $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: *</label>
                                     <input type='text' class='form-control' id='nome' name='nome' maxlength='120'
-                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}" title="Apenas letras"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,120}"
+                                           title="Apenas letras"
                                            value="<?= $lider['nome'] ?>" required>
                                 </div>
                                 <div class="form-group col-md-6">
@@ -241,18 +242,24 @@ $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="celular">Telefone #1</label>
-                                    <input type="text" class="form-control"  onkeyup="mascara( this, mtel );" maxlength="15"  id='telefone' name="telefone[<?= $arrayTelefones[0]['id'] ?>]" required value="<?= $arrayTelefones[0]['telefone']; ?>">
+                                    <input type="text" class="form-control" onkeyup="mascara( this, mtel );"
+                                           maxlength="15" id='telefone' name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
+                                           required value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="telefone">Telefone #2 </label>
                                     <?php
                                     if (isset($arrayTelefones[1])) {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]" value="<?= $arrayTelefones[1]['telefone']; ?>">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control" id="telefone1"
+                                               name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
+                                               value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone1" name="telefone1">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control" id="telefone1" name="telefone1">
                                         <?php
                                     }
                                     ?>
@@ -261,13 +268,17 @@ $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
                                     <label for="telefone2">Telefone #3</label>
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]" value="<?= $arrayTelefones[2]['telefone']; ?>">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control" id="telefone2"
+                                               name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
+                                               value="<?= $arrayTelefones[2]['telefone']; ?>">
 
                                         <?php
                                     } else {
                                         ?>
 
-                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" class="form-control" id="telefone2" name="telefone2">
+                                        <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
+                                               class="form-control" id="telefone2" name="telefone2">
 
                                         <?php
                                     }
@@ -277,7 +288,7 @@ $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
                                     <div class="form-group col-md-3">
                                         <label for="drt">DRT: <i>(Somente para artes cênicas)</i></label>
                                         <input type="text" class="form-control" id='drt' name='drt'
-                                               maxlength="15" value="<?= $drt['drt'] ?>">
+                                               maxlength="15" value="<?= $drt['drt'] ?? NULL ?>">
                                     </div>
                                 </div>
                             </div>
@@ -293,13 +304,13 @@ $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
 
-                            <button type="submit" name="carregar" class="btn btn-info pull-left">Ir ao pedido de
-                                contratação
-                            </button>
-                        </form>
-                    </div>
+                        <button type="submit" name="carregar" class="btn btn-info pull-left">Ir ao pedido de
+                            contratação
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+</div>
+</section>
 </div>

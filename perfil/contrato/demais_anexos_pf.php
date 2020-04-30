@@ -65,7 +65,7 @@ if (isset($_POST['apagar'])) {
 }
 
 // $campo = recuperaPessoa($_REQUEST['idPessoa'],$_REQUEST['tipoPessoa']);
-
+$idPedido = $_POST['idPedido'];
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -182,6 +182,7 @@ if (isset($_POST['apagar'])) {
                                                 }
                                                 ?>
                                                 <input type='hidden' name='idPf' value='<?= $idPf ?>'/>
+                                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                                 <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa; ?>"/>
                                                 <input type="submit" class="btn btn-primary btn-lg btn-block"
                                                        name="enviar" value='Enviar'>
@@ -205,6 +206,7 @@ if (isset($_POST['apagar'])) {
                                                     <form action="?perfil=contrato&p=demais_anexos_pf" method="post">
                                                         <input type="hidden" name="idArquivo" id="idArquivo" value="">
                                                         <input type="hidden" name="tipoPessoa" id="tipoPessoa" value="">
+                                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                                         <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
                                                         <input type="hidden" name="apagar" id="apagar">
                                                         <button type="button" class="btn btn-default pull-left"
@@ -224,6 +226,7 @@ if (isset($_POST['apagar'])) {
                         <div class="box-footer">
                             <form action="?perfil=contrato&p=edita_pf" method="post">
                                 <input type="hidden" value="<?= $idPf ?>" name="idPf">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" name="Voltar" class="btn btn-default pull-left">Voltar</button>
                             </form>
                         </div>
