@@ -280,6 +280,7 @@ if ($testaFilme['tipo_evento_id'] == 2) {
 $sql = "SELECT * FROM  chamados where evento_id = '$idEvento'";
 $query = mysqli_query($con, $sql);
 $chamado = mysqli_fetch_array($query);
+$disabledImpr = "";
 //$idChamado = $chamado['id'];
 
 ?>
@@ -736,50 +737,51 @@ $chamado = mysqli_fetch_array($query);
                             } //if esconde lider
                             } //if pessoa_tipo == 2 ?>
 
-                        </div>
-                        <form action="?perfil=contrato&p=area_impressao" target="_blank" method="post" role="form">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" <?= $disabledImpr ?> class="btn btn-info pull-right"
-                                    style="margin: 0 10px;">Ir para a
-                                área
-                                de impressão
-                            </button>
-                            <button type="button" class="btn btn-info " name="reabre"
-                                    style="margin:0 10px;width: 25%"
-                                    id="reabre" data-toggle="modal" data-target="#reabrir">
-                                Reabertura
-                            </button>
-                            <a href="?perfil=contrato&p=pesquisa_contratos">
-                                <button type="button" class="btn btn-info pull-left" style="margin: 0 10px;">
-                                    Voltar
+
+                            <form action="?perfil=contrato&p=area_impressao" target="_blank" method="post" role="form">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" <?= $disabledImpr ?> class="btn btn-info pull-right"
+                                        style="margin: 0 10px;">Ir para a
+                                    área
+                                    de impressão
                                 </button>
-                            </a>
-                        </form>
-                        <br>
+                                <button type="button" class="btn btn-info " name="reabre"
+                                        style="margin:0 10px;width: 25%"
+                                        id="reabre" data-toggle="modal" data-target="#reabrir">
+                                    Reabertura
+                                </button>
+                                <a href="?perfil=contrato&p=pesquisa_contratos">
+                                    <button type="button" class="btn btn-info pull-left" style="margin: 0 10px;">
+                                        Voltar
+                                    </button>
+                                </a>
+                            </form>
+                            <br>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div id="reabrir" class="modal modal fade in" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Confirmação de Reabertura</h4>
+                <div id="reabrir" class="modal modal fade in" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Confirmação de Reabertura</h4>
+                            </div>
+                            <form action="?perfil=contrato&p=resumo"
+                                  role="form" method="post">
+                                <div class="modal-body">
+                                    <p>Tem certeza que deseja reabrir este evento?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                    <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                    <button type="submit" class="btn btn-primary" name="reabertura">Reabrir</button>
+                                </div>
+                            </form>
                         </div>
-                        <form action="?perfil=contrato&p=resumo"
-                              role="form" method="post">
-                            <div class="modal-body">
-                                <p>Tem certeza que deseja reabrir este evento?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
-                                </button>
-                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                <button type="submit" class="btn btn-primary" name="reabertura">Reabrir</button>
-                            </div>
-                        </form>
                     </div>
-                </div>
     </section>
 </div>
 

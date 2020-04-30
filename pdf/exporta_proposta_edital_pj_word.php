@@ -102,7 +102,7 @@ echo
     "<p>&nbsp;</p>" .
     "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
     "<p><strong>Data / Período:</strong> " . $periodo . " - conforme cronograma</p>" .
-    "<p><strong>Carga Horária:</strong> " . $carga . "</p>" .
+    "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
     "<p><strong>Local:</strong> " . $local . "</p>" .
     "<p><strong>Valor:</strong> " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . ")</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
