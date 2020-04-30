@@ -330,7 +330,11 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
                             $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
                             $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
-                            $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                            if ($ocorrencia['espaco_id'] != 0) {
+                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id']);
+                            } else {
+                                $espaco = "Não cadastrado";
+                            }
                             $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
                             $nomeAtracao = recuperaDados('atracoes', 'id', $ocorrencia['atracao_id'])['nome_atracao'];
                             $produtor = recuperaDados('produtores', 'id', $ocorrencia['produtor_id'])['nome'];
@@ -362,10 +366,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                     <th width="30%">Hora de Encerramento:</th>
                                     <td><?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?></td>
                                 </tr>
-
-                                <?php
-                            }
-                            ?>
+                                <?php } ?>
                             <tr>
                                 <th width="30 % ">Período:</th>
                                 <td><?= $periodo['periodo'] ?></td>
@@ -405,19 +406,15 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                     <th width="30 % ">É virada?</th>
                                     <td>Sim</td>
                                 </tr>
-                                <?php
-                            }
-                            ?>
+                                <?php } ?>
                             <tr>
                                 <th width="30 % ">Local:</th>
                                 <td><?= $local['local'] ?></td>
                             </tr>
-                            <?php if ($ocorrencia['espaco_id'] != 0) { ?>
-                                <tr>
-                                    <th width="30 % ">Espaço:</th>
-                                    <td><?= $espaco ?></td>
-                                </tr>
-                            <?php } ?>
+                            <tr>
+                                <th width="30 % ">Espaço:</th>
+                                <td><?= $espaco ?></td>
+                            </tr>
                             <tr>
                                 <th width="30% ">Observação:</th>
                                 <td><?= $ocorrencia['observacao'] ? "" : "Não cadastrado" ?></td>
@@ -440,7 +437,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             INNER JOIN eventos e on fe.evento_id = e.id 
                             INNER JOIN filmes f ON f.id = fe.filme_id 
                             WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1");
-                        
+
                             $i = 1;
                             while ($filmes = mysqli_fetch_array($sqlFilme)) {
                                 $sqlOcorrenciaFilme = $con->query("SELECT * FROM ocorrencias oco 
@@ -450,10 +447,16 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                                                        AND oco.atracao_id = " . $filmes['idFilmeEvento']);
                                 while ($oco = mysqli_fetch_array($sqlOcorrenciaFilme)) {
                                     $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $oco['retirada_ingresso_id'])['retirada_ingresso'];
-                                    $espaco = recuperaDados('espacos', 'id', $oco['espaco_id'])['espaco'];
+                                    if ($oco['espaco_id'] != 0) {
+                                        $espaco = recuperaDados('espacos', 'id', $oco['espaco_id']);
+                                    } else {
+                                        $espaco = "Não cadastrado";
+                                    }
                                     $instituicao = recuperaDados('instituicoes', 'id', $oco['instituicao_id'])['nome'];
                                     $local = recuperaDados('locais', 'id', $oco['local_id'])['local'];
-                                    $periodo = recuperaDados('periodos', 'id', $oco['periodo_id']); ?>
+                                    $periodo = recuperaDados('periodos', 'id', $oco['periodo_id']);
+
+                                    ?>
 
                                     <tr>
                                         <th width="30%">Filme:</th>
@@ -624,27 +627,27 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                         </tr>
                         <tr>
                             <th width="30%">Data de Emissão da N.E:</th>
-                            <td><?php 
-                            if ( $pagamento['emissao_nota_empenho'] = 'null'){
-                                echo "Não cadastrado";
-                            }else $pagamento['emissao_nota_empenho']
-                            ?></td>
+                            <td><?php
+                                if ($pagamento['emissao_nota_empenho'] = 'null') {
+                                    echo "Não cadastrado";
+                                } else $pagamento['emissao_nota_empenho']
+                                ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Data de Entrega da N.E:</th>
-                            <td><?php 
-                            if ( $pagamento['entrega_nota_empenho'] = 'null'){
-                                echo "Não cadastrado";
-                            }else $pagamento['entrega_nota_empenho']
-                            ?></td>
+                            <td><?php
+                                if ($pagamento['entrega_nota_empenho'] = 'null') {
+                                    echo "Não cadastrado";
+                                } else $pagamento['entrega_nota_empenho']
+                                ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária:</th>
-                            <td><?php 
-                            if ($dotacao['dotacao'] = 'null' ){
-                                echo "Não cadastrado";
-                            } else $dotacao['dotacao']
-                            ?></td>
+                            <td><?php
+                                if ($dotacao['dotacao'] = 'null') {
+                                    echo "Não cadastrado";
+                                } else $dotacao['dotacao']
+                                ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Observação:</th>
