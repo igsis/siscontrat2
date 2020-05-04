@@ -62,6 +62,8 @@ if (isset($_POST['busca'])) {
 
     $query = mysqli_query($con, $sql);
     $num_rows = mysqli_num_rows($query);
+
+
 }
 ?>
 

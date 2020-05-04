@@ -74,6 +74,7 @@ e.projeto_especial_id
                         <th>Proponente</th>
                         <th>Tipo</th>
                         <th>Objeto</th>
+                        <th>Status</th>
                         <th>Pendências</th>
                     </tr>
                     </thead>
@@ -115,6 +116,7 @@ e.projeto_especial_id
                                 <td><?= $pessoa ?></td>
                                 <td><?= $tipo ?></td>
                                 <td><?= $objeto ?></td>
+                                <td><?= $evento['status'] ?></td>
                                 <td>
                                     <?php
                                     // verifica pendencia do evento cadastrado //
@@ -144,6 +146,7 @@ e.projeto_especial_id
                         <th>Proponente</th>
                         <th>Tipo</th>
                         <th>Objeto</th>
+                        <th>Status</th>
                         <th>Pendências</th>
                     </tr>
                     </tfoot>
