@@ -1449,43 +1449,45 @@ function retornaPeriodoNovo($id, $tabela = "ocorrencias")
         $sql_anterior = "SELECT * FROM $tabela oco WHERE oco.origem_ocorrencia_id = '$id' AND oco.publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1"; //a data inicial mais antecedente
         $query_anterior = mysqli_query($con,$sql_anterior);
         $data = mysqli_fetch_array($query_anterior);
-        $data_inicio = $data['data_inicio'];
-        $sql_posterior01 = "SELECT * FROM $tabela oco WHERE oco.origem_ocorrencia_id = '$id' AND oco.publicado = '1' ORDER BY data_fim DESC LIMIT 0,1"; //quando existe data final
-        $sql_posterior02 = "SELECT * FROM $tabela oco WHERE oco.origem_ocorrencia_id = '$id' AND oco.publicado = '1' ORDER BY data_inicio DESC LIMIT 0,1"; //quando há muitas datas únicas
-        $query_anterior01 = mysqli_query($con,$sql_posterior01);
-        $data = mysqli_fetch_array($query_anterior01);
-        $num = mysqli_num_rows($query_anterior01);
-        if(($data['data_fim'] != '0000-00-00') OR ($data['data_fim'] != NULL))
-        {
-            //se existe uma data final e que é diferente de NULO
-            $dataFinal01 = $data['data_fim'];
-        }
-        $query_anterior02 = mysqli_query($con,$sql_posterior02); //recupera a data única mais tarde
-        $data = mysqli_fetch_array($query_anterior02);
-        $dataFinal02 = $data['data_inicio'];
-        if(isset($dataFinal01))
-        {
-            //se existe uma temporada, compara com a última data única
-            if($dataFinal01 > $dataFinal02)
+        if ($data != NULL){
+            $data_inicio = $data['data_inicio'];
+            $sql_posterior01 = "SELECT * FROM $tabela oco WHERE oco.origem_ocorrencia_id = '$id' AND oco.publicado = '1' ORDER BY data_fim DESC LIMIT 0,1"; //quando existe data final
+            $sql_posterior02 = "SELECT * FROM $tabela oco WHERE oco.origem_ocorrencia_id = '$id' AND oco.publicado = '1' ORDER BY data_inicio DESC LIMIT 0,1"; //quando há muitas datas únicas
+            $query_anterior01 = mysqli_query($con,$sql_posterior01);
+            $data = mysqli_fetch_array($query_anterior01);
+            $num = mysqli_num_rows($query_anterior01);
+            if(($data['data_fim'] != '0000-00-00') OR ($data['data_fim'] != NULL))
             {
-                $dataFinal = $dataFinal01;
+                //se existe uma data final e que é diferente de NULO
+                $dataFinal01 = $data['data_fim'];
+            }
+            $query_anterior02 = mysqli_query($con,$sql_posterior02); //recupera a data única mais tarde
+            $data = mysqli_fetch_array($query_anterior02);
+            $dataFinal02 = $data['data_inicio'];
+            if(isset($dataFinal01))
+            {
+                //se existe uma temporada, compara com a última data única
+                if($dataFinal01 > $dataFinal02)
+                {
+                    $dataFinal = $dataFinal01;
+                }
+                else
+                {
+                    $dataFinal = $dataFinal02;
+                }
             }
             else
             {
                 $dataFinal = $dataFinal02;
             }
-        }
-        else
-        {
-            $dataFinal = $dataFinal02;
-        }
-        if($data_inicio == $dataFinal)
-        {
-            return exibirDataBr($data_inicio);
-        }
-        else
-        {
-            return "de ".exibirDataBr($data_inicio)." a ".exibirDataBr($dataFinal);
+            if($data_inicio == $dataFinal)
+            {
+                return exibirDataBr($data_inicio);
+            }
+            else
+            {
+                return "de ".exibirDataBr($data_inicio)." a ".exibirDataBr($dataFinal);
+            }
         }
     }
 }
