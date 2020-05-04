@@ -10,9 +10,18 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 $tipoEvento = $evento['tipo_evento_id'];
 
 if ($pedido['origem_tipo_id'] != 2 && $tipoEvento != 2) {
-    $readonly = 'readonly';
+    $readonlyValorTotal = 'readonly';
+
+    $query_data = "SELECT MIN(o.data_inicio)
+                    FROM eventos AS e INNER JOIN atracoes AS a ON a.evento_id = e.id
+                    INNER JOIN  ocorrencias AS o ON a.id = o.atracao_id 
+                    INNER JOIN pedidos AS p ON p.origem_id = e.id 
+                    WHERE p.origem_tipo_id = 1 AND p.id = '$idPedido' AND p.publicado = 1 AND a.publicado = 1 AND o.publicado = 1";
 } else {
-    $readonly = '';
+    $readonlyValorTotal = '';
+
+    $query_data="SELECT count(*) FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
+                    INNER JOIN eventos AS e ON fe.evento_id = e.id WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 }
 
 $tipoPessoa = $pedido['pessoa_tipo_id'];
@@ -53,15 +62,6 @@ if (isset($_POST['gravarParcelas']) || isset($_POST['editarParcelas'])) {
                 $erro = true;
             }
         }
-        if (isset($erro)) {
-            $mensagem = mensagem('danger', 'Erro ao gravar as parcelas. Tente Novamente');
-        } else {
-            $sqlPedidoParcela = "UPDATE pedidos SET numero_parcelas = '$num_parcelas' WHERE id = '$idPedido'";
-            if ($con->query($sqlPedidoParcela)) {
-                gravarLog($sqlPedidoParcela);
-                $mensagem = mensagem('success', 'Parcelas gravadas com sucesso.');
-            }
-        }
     } else {
         $parcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido'")->fetch_all(MYSQLI_ASSOC);
 
@@ -87,10 +87,12 @@ if (isset($_POST['gravarParcelas']) || isset($_POST['editarParcelas'])) {
                 $erro = true;
             }
         }
+    }
 
-        if (isset($erro)) {
-            $mensagem = mensagem('danger', 'Erro ao gravar as parcelas. Tente Novamente');
-        } else {
+    if (isset($erro)) {
+        $mensagem = mensagem('danger', 'Erro ao gravar as parcelas. Tente Novamente');
+    } else {
+        if (isset($_POST['editarParcelas'])) {
             if (count($parcelas) > 0) {
                 foreach ($parcelas as $parcela) {
                     $sqlDeletaParcela = "DELETE FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '{$parcela['numero_parcelas']}'";
@@ -99,12 +101,26 @@ if (isset($_POST['gravarParcelas']) || isset($_POST['editarParcelas'])) {
                     }
                 }
             }
+        }
 
-            $sqlPedidoParcela = "UPDATE pedidos SET numero_parcelas = '$num_parcelas' WHERE id = '$idPedido'";
-            if ($con->query($sqlPedidoParcela)) {
-                gravarLog($sqlPedidoParcela);
-                $mensagem = mensagem('success', 'Parcelas atualizadas com sucesso.');
-            }
+        $queryParcelas = $con->query("SELECT valor, data_pagamento, numero_parcelas FROM parcelas WHERE pedido_id = '$idPedido' ORDER BY numero_parcelas")->fetch_all(MYSQLI_ASSOC);
+        $forma_pagamento = "";
+
+        foreach ($queryParcelas as $parcela) {
+            $valor = dinheiroParaBr($parcela['valor']);
+            $data = exibirDataBr($parcela['data_pagamento']);
+            $forma_pagamento .= "{$parcela['numero_parcelas']}º Parcela R$ $valor. Entrega de Documentos a partir de $data. \n";
+        }
+
+        $forma_pagamento .= "\nO pagamento de cada parcela se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.";
+
+        $sqlPedidoParcela = "UPDATE pedidos SET
+                                    numero_parcelas = '$num_parcelas',
+                                    forma_pagamento = '$forma_pagamento'
+                                    WHERE id = '$idPedido'";
+        if ($con->query($sqlPedidoParcela)) {
+            gravarLog($sqlPedidoParcela);
+            $mensagem = mensagem('success', 'Parcelas atualizadas com sucesso.');
         }
     }
 }
@@ -117,11 +133,11 @@ if (isset($_POST['gravar'])) {
     $justificativa = trim(addslashes($_POST["justificativa"]));
     $observacao = trim(addslashes($_POST["observacao"]));
     $idPedido = $_POST["idPedido"];
-    $tipoPesso = $_POST["tipoPessoa"];
+    $tipoPessoa = $_POST["tipoPessoa"];
     $idProponent = $_POST["idProponente"];
     $data_kit_pagamento = $_POST["data_kit"];
 
-    if ($num_parcelas == 1 || $num_parcelas == 13 || ($oficina && $num_parcelas == 6)) {
+    if ($num_parcelas == 1 || $num_parcelas == 13 || (isset($oficina) && $num_parcelas == 6)) {
         $data_kit_pagamento = date('Y-m-d', strtotime("+1 days", strtotime($data_kit_pagamento)));
     } else {
         $queryParcela = "SELECT data_pagamento FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = 1";
@@ -139,34 +155,21 @@ if (isset($_POST['gravar'])) {
                 WHERE id = '$idPedido'";
 
     if ($con->query($query)) {
-        $mensagem = $mensagem('success', 'Detalhes da parcela gravados no sistema');
+        $mensagem = mensagem('success', 'Detalhes da parcela gravados no sistema');
     } else {
-        $mensagem = $mensagem('danger', 'Erro ao gravar os dados. Tente novamente.');
+        $mensagem = mensagem('danger', 'Erro ao gravar os dados. Tente novamente.');
     }
 }
 
+$pedido = recuperaDados("pedidos", "id", $idPedido);
+
 if ($pedido['numero_parcelas'] != null) {
-    if ((isset($oficina) && $pedido['numero_parcelas'] != 6) || ($pedido['numero_parcelas'] != 13)) {
-        $parcelas = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->num_rows;
-    }
+    $parcelas = $pedido['numero_parcelas'];
 } else {
     $parcelas = 0;
 }
 
-$query_data = "SELECT MIN(o.data_inicio)
-FROM eventos AS e INNER JOIN atracoes AS a ON a.evento_id = e.id
-INNER JOIN  ocorrencias AS o ON a.id = o.atracao_id 
-INNER JOIN pedidos AS p ON p.origem_id = e.id 
-WHERE p.origem_tipo_id = 1 AND p.id = '$idPedido' AND p.publicado = 1 AND a.publicado = 1 AND o.publicado = 1";
-
 $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
-
-$query_data2="SELECT count(*) FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
-INNER JOIN eventos AS e ON fe.evento_id = e.id WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
-
-$data_kit2 = mysqli_fetch_row(mysqli_query($con,$query_data2))[0];
-
-$pedido = recuperaDados("pedidos", "id", $idPedido);
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -181,7 +184,7 @@ $pedido = recuperaDados("pedidos", "id", $idPedido);
                     <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                     <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
                     <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
-                    <input type="hidden" name="data_kit" id="dataKit">
+                    <input type="hidden" name="data_kit" id="dataKit" value="<?=$data_kit?>">
 
                     <div class="box box-info">
                         <div class="box-header with-border">
@@ -210,7 +213,7 @@ $pedido = recuperaDados("pedidos", "id", $idPedido);
                                     <input type="text" onkeypress="return(moeda(this, '.', ',', event))"
                                            id="valor_total" name="valor_total" class="form-control"
                                            value="<?= dinheiroParaBr($pedido['valor_total']) ?>"
-                                        <?= $readonly ?>>
+                                        <?= $readonlyValorTotal ?>>
                                 </div>
                             </div>
 
