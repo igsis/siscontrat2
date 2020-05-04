@@ -60,9 +60,18 @@ $pjRazaoSocial = $pj["razao_social"];
 $pjCNPJ = $pj['cnpj'];
 $pjCCM = $pj["ccm"];
 $pjTelefone01 = $telefones["telefone"];
-$banco = $bancos["banco_id"];
-$agencia = $bancos["agencia"];
-$conta = $bancos["conta"];
+$testaBanco = $con->query("SELECT b.banco, pj.agencia, pj.conta, b.codigo FROM pj_bancos AS pj INNER JOIN bancos AS b ON b.id = pj.banco_id WHERE pj.publicado = 1 AND pj.pessoa_juridica_id = $id_Pj");
+if ($testaBanco->num_rows > 0) {
+    while ($bancoArray = mysqli_fetch_array($testaBanco)) {
+        $agencia = $bancoArray['agencia'];
+        $conta = $bancoArray['conta'];
+        $codigo = $bancoArray['codigo'];
+    }
+} else {
+    $agencia = "";
+    $conta = "";
+    $codigo = "";
+}
 
 
 // Representante01
@@ -119,7 +128,7 @@ $l=7; //DEFINE A ALTURA DA LINHA
    $pdf->Cell(45,$l,utf8_decode($pjTelefone01),0,0,'L');
    
    $pdf->SetXY(98, 107);
-   $pdf->Cell(15,$l,utf8_decode($banco),0,0,'L');
+   $pdf->Cell(15,$l,utf8_decode($codigo),0,0,'L');
    $pdf->Cell(40,$l,utf8_decode($agencia),0,0,'L');
    $pdf->Cell(37,$l,utf8_decode($conta),0,0,'L');
    

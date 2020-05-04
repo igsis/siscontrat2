@@ -44,7 +44,25 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 $tel = substr($tel, 0, -3);
 
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
-$ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
+$ocorrencias = $con->query("SELECT atracao_id, tipo_ocorrencia_id FROM ocorrencias WHERE tipo_ocorrencia_id != 3 AND publicado = 1 AND origem_ocorrencia_id =  " . $pedido['origem_id']);
+
+$cargaHoraria = 0;
+
+while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
+
+    if ($linhaOco['tipo_ocorrencia_id'] == 1) {
+        $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
+        $carga = $con->query($sqlCarga);
+
+        if ($carga->num_rows > 0 || $cargaHoraria != 0) {
+            while ($cargaArray = mysqli_fetch_array($carga)) {
+                $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
+            }
+        } else {
+            $cargaHoraria = "Não possuí.";
+        }
+    }
+}
 
 $idPenal = $_GET['penal'];
 
@@ -88,43 +106,6 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 
-$idAtracao = $ocorrencia['atracao_id'];
-
-$atracao = recuperaDados('atracoes', 'id', $idAtracao);
-
-$idAtracao = $ocorrencia['atracao_id'];
-$sqlCheca = $con->query("SELECT * FROM acao_atracao WHERE atracao_id = '$idAtracao' AND acao_id = 8");
-$checa = mysqli_num_rows($sqlCheca);
-
-if ($checa != 0) {
-    $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
-    $carga = $con->query($sqlCarga)->fetch_array();
-    $carga = $carga['carga_horaria'];
-} else if ($checa == 0) {
-    $carga = "Não se aplica.";
-}
-
-//líder
-$lider = $con->query("SELECT pessoa_fisica_id FROM lideres WHERE pedido_id = $idPedido")->fetch_array();
-$dadosLider = recuperaDados('pessoa_fisicas', 'id', $lider['pessoa_fisica_id']);
-$drtLider = $con->query('SELECT drt FROM drts WHERE pessoa_fisica_id = ' . $lider['pessoa_fisica_id'])->fetch_array();
-
-if($drtLider['drt'] != NULL || $drtLider['drt'] != ''){
-    $drtLider = $drtLider['drt'];
-}else{
-    $drtLider = "Não cadastrado.";
-}
-
-$telefoneLider = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = " . $lider['pessoa_fisica_id'];
-$telLider = "";
-$queryTelefoneLider = mysqli_query($con, $telefoneLider);
-
-while ($linhaTelLider = mysqli_fetch_array($queryTelefoneLider)) {
-    $telLider = $telLider . $linhaTelLider['telefone'] . ' | ';
-}
-
-$telLider = substr($telLider, 0, -3);
-
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
 $pdf->AddPage();
@@ -149,47 +130,83 @@ $pdf->MultiCell(200, $l, utf8_decode("(Quando se tratar de grupo, o líder do gr
 
 $pdf->Ln(5);
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(12, $l, 'Nome:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($dadosLider['nome']), 0, 'L', 0);
+//lider
+if ($evento['tipo_evento_id'] == 1) {
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(27, $l, utf8_decode("Nome Artístico:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($dadosLider['nome_artistico']), 0, 'L', 0);
+    $idsLider = $con->query("SELECT pessoa_fisica_id FROM lideres WHERE pedido_id = $idPedido");
+    $i = 1;
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(45, $l, utf8_decode($dadosLider['cpf']), 0, 0, 'L');
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, utf8_decode("DRT:"), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(5, $l, utf8_decode($drtLider), 0, 0, 'L');
+    while($lider = mysqli_fetch_array($idsLider)){
+        $testaDrt = $con->query("SELECT drt FROM drts WHERE pessoa_fisica_id = " . $lider['pessoa_fisica_id']);
+        if ($testaDrt->num_rows > 0) {
+            while ($drtArray = mysqli_fetch_array($testaDrt)) {
+                $drtLider = $drtArray['drt'];
+            }
+        } else {
+            $drtLider = "Não Cadastrado.";
+        }
 
-$pdf->Ln(7);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(21, $l, 'Telefone(s):', '0', '0', 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($telLider), 0, 'L', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($dadosLider['email']), 0, 'L', 0);
+        $telefoneLider = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = " . $lider['pessoa_fisica_id'];
+        $telLider = "";
+        $queryTelefoneLider = mysqli_query($con, $telefoneLider);
 
 
-$pdf->SetX($x);
-$pdf->Cell(180, 5, '', 'B', 1, 'C');
+        while ($linhaTelLider = mysqli_fetch_array($queryTelefoneLider)) {
+            $telLider = $telLider . $linhaTelLider['telefone'] . ' | ';
+        }
 
-$pdf->Ln(5);
+        $telLider = substr($telLider, 0, -3);
+
+        $dadosLider = recuperaDados("pessoa_fisicas", "id", $lider['pessoa_fisica_id']);
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->MultiCell(170, $l, utf8_decode('Lider #' . $i), 0, 'C', 0);
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(12, $l, 'Nome:', 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->MultiCell(40, $l, utf8_decode($dadosLider['nome']), 0, 'L', 0);
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(27, $l, utf8_decode("Nome Artístico:"), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->MultiCell(120, $l, utf8_decode($dadosLider['nome_artistico'] == NUll ? "Não cadastrado" : $dadosLider['nome_artistico']), 0, 'L', 0);
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->Cell(45, $l, utf8_decode($dadosLider['cpf']), 0, 0, 'L');
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(9, $l, utf8_decode("DRT:"), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->Cell(5, $l, utf8_decode($drtLider), 0, 0, 'L');
+
+        $pdf->Ln(7);
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(21, $l, 'Telefone(s):', '0', '0', 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->MultiCell(168, $l, utf8_decode($telLider), 0, 'L', 0);
+
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->MultiCell(168, $l, utf8_decode($dadosLider['email']), 0, 'L', 0);
+
+        $pdf->SetX($x);
+        $pdf->Cell(180, 5, '', 'B', 1, 'C');
+        $pdf->Ln(5);
+
+        $i = $i + 1;
+    }
+
+}
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
@@ -217,7 +234,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(26, $l, utf8_decode('Carga Horária:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(50, $l, utf8_decode($carga), 0, 'L', 0);
+$pdf->MultiCell(50, $l, utf8_decode($cargaHoraria), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -445,7 +462,7 @@ $pdf->MultiCell(100, $l, utf8_decode($objeto), 0, 'L', 0);
 if ($evento['tipo_evento_id'] == 1) {
     $cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND tipo_ocorrencia_id = 1 AND publicado = 1");
     while ($aux = mysqli_fetch_array($cronograma)) {
-        $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
+        $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = " . $aux['atracao_id'])->fetch_array();
         $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'] . " AND publicado = 1")->fetch_array();
         $acao = $tipoAcao['acao'];
 
