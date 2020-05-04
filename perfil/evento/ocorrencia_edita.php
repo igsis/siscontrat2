@@ -719,9 +719,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     </div><!-- /.modal-dialog -->
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-
+    let datas =  document.querySelector('#datas');
     $(document).ready(function () {
         $('#valor_ingresso').mask('00,00',{reverse: true})
     });
@@ -1049,9 +1049,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             }
         });
     }
-</script>
 
-<script>
     let msgHora = $('#msgEscondeHora');
 
     // msgHora.hide();
@@ -1098,6 +1096,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         remove.classList.add('btn-danger');
         remove.classList.add('apData');
         remove.setAttribute('type','button')
+        remove.setAttribute('onClick','removerLinha(this)');
 
         let icone = document.createElement('i');
         icone.classList.add('fa');
@@ -1124,7 +1123,11 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         row.appendChild(col8);
         row.appendChild(col4);
 
-        document.querySelector('#datas').appendChild(row);
+        datas = document.querySelector('#datas');
+
+        datas.appendChild(row);
+
+
     }
 
     function validaDiaSemana() {
@@ -1161,25 +1164,6 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
     btnDataE.addEventListener('click', criarInputData);
 
-    let datas =  document.querySelector('#datas');
-
-    datas.addEventListener('click', function (event) {
-        let btn = event.target;
-        if (btn.classList.contains('btn') || btn.classList.contains('fa')){
-            if (!btn.classList.contains('btn')) {
-                btn = btn.parentNode;
-            }
-
-            let col = btn.parentNode;
-            let row = col.parentNode;
-
-            row.remove();
-            if (divDatas.childNodes.length == 1 || divDatas.childNodes.length == 0){
-                criarInputData(0);
-            }
-        }
-    })
-
     let saveDate = document.querySelector('#saveData');
     saveDate.addEventListener("click",function (event) {
         event.preventDefault();
@@ -1203,7 +1187,6 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                 Swal.fire({
                     title: '<strong>Datas cadastradas com sucesso!</strong>',
                     icon: 'success',
-
                 })
             },
             error: function (response) {
@@ -1248,4 +1231,12 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             }
         });
     });
+
+    function removerLinha(btnE) {
+        let divPai = btnE.parentNode;
+        let divAvo = divPai.parentNode;
+
+        divAvo.remove();
+    }
+
 </script>
