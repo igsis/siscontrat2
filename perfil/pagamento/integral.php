@@ -13,7 +13,7 @@ if(isset($_POST['operador'])){
         $botao = true;
         $existeEtapa = $con->query("SELECT pedido_id, data_pagamento FROM pedido_etapas WHERE pedido_id = '$idPedido'")->fetch_assoc();
         $now = dataHoraNow();
-        if($existeEtapa != NULL && $existeEtapa['data_pagamento'] == NULL){
+        if($existeEtapa != NULL && $existeEtapa['data_pagamento'] == "0000-00-00 00:00:00"){
             $con->query("UPDATE pedido_etapas SET data_pagamento = '$now' WHERE pedido_id = '$idPedido'");
         }
         if($existeEtapa == NULL){
@@ -31,7 +31,7 @@ if(isset($_POST['cadastrar'])){
         $botao = true;
         $existeEtapa = $con->query("SELECT pedido_id, data_pagamento FROM pedido_etapas WHERE pedido_id = '$idPedido'")->fetch_assoc();
         $now = dataHoraNow();
-        if($existeEtapa != NULL && $existeEtapa['data_pagamento'] == NULL){
+        if($existeEtapa != NULL && $existeEtapa['data_pagamento'] == "0000-00-00 00:00:00"){
             $con->query("UPDATE pedido_etapas SET data_pagamento = '$now' WHERE pedido_id = '$idPedido'");
         }
         if($existeEtapa == NULL){
@@ -78,7 +78,14 @@ if ($pedido['pessoa_tipo_id'] == 2) {
 }
 
 $idUser = $_SESSION['usuario_id_s'];
-$acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idUser'")->fetch_array();
+$testaAcesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idUser'");
+if($testaAcesso->num_rows == 0){
+    $acesso = 0;
+}else{
+    $acessoArray = mysqli_fetch_array($testaAcesso);
+    $acesso = $acessoArray['nivel_acesso'];
+}
+
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -94,7 +101,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
             </div>
             <div class="box-body">
                 <?php
-                if($acesso['nivel_acesso'] == 1 || $acesso['nivel_acesso'] == 2) {
+                if($acesso == 1 || $acesso == 2) {
                     ?>
                     <div class="row">
                         <form action="#" method="post" role="form">

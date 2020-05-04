@@ -55,7 +55,7 @@ if(isset($_POST['gravar'])){
     if($cadastra){
         $existeEtapa = $con->query("SELECT pedido_id, data_contabilidade FROM pedido_etapas WHERE pedido_id = '$idPedido'")->fetch_assoc();
         $hoje = dataHoraNow();
-        if($existeEtapa != NULL && $existeEtapa['data_contabilidade'] == NULL){
+        if($existeEtapa != NULL && $existeEtapa['data_contabilidade'] == "0000-00-00 00:00:00"){
             $con->query("UPDATE pedido_etapas SET data_contabilidade = '$hoje' WHERE pedido_id = '$idPedido'");
         }
         if($existeEtapa == NULL){
