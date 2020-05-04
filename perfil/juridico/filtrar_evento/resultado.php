@@ -45,6 +45,7 @@ e.tipo_evento_id,
 p.pessoa_fisica_id, 
 p.pessoa_juridica_id,
 ps.id, 
+ps.status,
 p.pessoa_tipo_id,
 e.id,
 e.projeto_especial_id
