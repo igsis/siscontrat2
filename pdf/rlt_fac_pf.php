@@ -93,8 +93,6 @@ if ($testaBanco->num_rows > 0) {
     $codbanco = "";
 }
 
-$cbo = $bancos["cbo"] ?? NULL;
-
 $DataNascimento = date('d/m/Y', strtotime($pf["data_nascimento"]));
 
 
@@ -152,7 +150,7 @@ $pdf->SetXY($x, 107);
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(87,$l,utf8_decode($nit),0,0,'L');
 $pdf->Cell(52,$l,utf8_decode($DataNascimento),0,0,'L');
-$pdf->Cell(33,$l,utf8_decode($cbo),0,0,'L');
+$pdf->Cell(33,$l,utf8_decode(""),0,0,'L');
 
 $pdf->SetXY($x, 122);
 $pdf->SetFont('Arial','', 9);

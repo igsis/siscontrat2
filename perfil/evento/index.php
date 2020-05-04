@@ -86,7 +86,8 @@ $sql = "SELECT e.id, e.contratacao, e.nome_evento, u.nome_completo, ee.data_envi
         WHERE e.publicado = 1
             AND e.evento_status_id >= 3
             AND (e.suplente_id = '$idUsuario' OR e.fiscal_id = '$idUsuario' OR e.usuario_id = '$idUsuario') 
-            AND ee.data_envio is not null 
+            AND ee.data_envio is not null
+        GROUP BY e.id
         ORDER BY e.id DESC";
 
 $query = $con->query($sql);
