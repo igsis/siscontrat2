@@ -43,6 +43,9 @@ $rows = mysqli_num_rows($query);
                                 <th>Valor</th>
                                 <th>Data reabertura</th>
                                 <th>Reaberto por</th>
+                                <th>Local(ais)</th>
+                                <th>Período</th>
+                                <th>Prazo (dias)</th>
                                 <th>Operador</th>
                             </tr>
                             </thead>
@@ -57,6 +60,24 @@ $rows = mysqli_num_rows($query);
                                 <?php
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
+                                    //Locais
+                                    $sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
+                                    $local = "";
+                                    $queryLocal = mysqli_query($con, $sqlLocal);
+
+                                    while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
+                                        $local = $local . $linhaLocal['local'] . ' | ';
+                                    }
+
+                                    $local = substr($local, 0, -3);
+
+                                    //calcula a diferença entre hoje e a data inicial do evento
+                                    $inicial = $con->query("SELECT data_inicio FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'];
+                                    $hoje = date("Y-m-d");
+                                    $diferenca = strtotime($inicial) - strtotime($hoje);
+                                    $prazo = floor($diferenca / (60 * 60 * 24));
+
+                                    //proponente
                                     $baldeProponente = '';
                                     if ($evento['pessoa_tipo_id'] == 1) {
                                         $pf = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id']);
@@ -78,7 +99,17 @@ $rows = mysqli_num_rows($query);
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= exibirDataBr($evento['data_reabertura']) ?></td>
                                         <td><?= recuperaDados('usuarios', 'id', $evento['usuario_reabertura_id'])['nome_completo']; ?></td>
-                                        <td><?= recuperaDados('usuarios', 'id', $evento['operador_id'])['nome_completo']; ?></td>
+                                        <td><?= $local ?></td>
+                                        <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias')?></td>
+                                        <td><?= $prazo ?></td>
+                                        <?php
+                                        if ($evento['operador_id'] != NULL) {
+                                            $operador = recuperaDados('usuarios', 'id', $evento['operador_id'])['nome_completo'];
+                                        } else {
+                                            $operador = "Não possui";
+                                        }
+                                        ?>
+                                        <td><?= $operador ?></td>
                                     </tr>
                                     <?php
                                 }
@@ -93,6 +124,9 @@ $rows = mysqli_num_rows($query);
                                 <th>Valor</th>
                                 <th>Data reabertura</th>
                                 <th>Reaberto por</th>
+                                <th>Local(ais)</th>
+                                <th>Período</th>
+                                <th>Prazo (dias)</th>
                                 <th>Operador</th>
                             </tr>
                             </tfoot>
@@ -109,4 +143,19 @@ $rows = mysqli_num_rows($query);
     </section>
 </div>
 
+<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
+<script type="text/javascript">
+    $(function () {
+        $('#tblResultado').DataTable({
+            "language": {
+                "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
+            },
+            "responsive": true,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+        });
+    });
+</script>

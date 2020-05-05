@@ -25,8 +25,6 @@ $hora_inicio = $ocorrencias['horario_inicio'];
 $nome_evento = $evento['nome_evento'];
 $nome_instituicao = $instituicao['nome'];
 $sigla = $instituicao['sigla'];
-$nome = $pessoa['nome'];
-$cpf = $pessoa['cpf'];
 $data = date("Y/m/d");
 $hoje = date('d/m/Y');
 $diaSemana = diasemana($data);
@@ -34,6 +32,16 @@ $valor = $pedidos['valor_total'];
 $pagamento = $pedidos['forma_pagamento'];
 $valor_extenso = valorPorExtenso($valor);
 $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
+
+if($pessoa['cpf'] = 'null' && $pessoa['nome'] = 'null'){
+    $cpf = "Não cadastrado";
+    $nome = "Não cadastrado";
+} else {
+    $cpf = $pessoa['cpf'];
+    $nome = $pessoa['nome'];
+}
+
+
 ?>
 
 <html>

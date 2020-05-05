@@ -45,6 +45,7 @@ e.tipo_evento_id,
 p.pessoa_fisica_id, 
 p.pessoa_juridica_id,
 ps.id, 
+ps.status,
 p.pessoa_tipo_id,
 e.id,
 e.projeto_especial_id
@@ -74,6 +75,7 @@ e.projeto_especial_id
                         <th>Proponente</th>
                         <th>Tipo</th>
                         <th>Objeto</th>
+                        <th>Status</th>
                         <th>Pendências</th>
                     </tr>
                     </thead>
@@ -115,6 +117,7 @@ e.projeto_especial_id
                                 <td><?= $pessoa ?></td>
                                 <td><?= $tipo ?></td>
                                 <td><?= $objeto ?></td>
+                                <td><?= $evento['status'] ?></td>
                                 <td>
                                     <?php
                                     // verifica pendencia do evento cadastrado //
@@ -144,6 +147,7 @@ e.projeto_especial_id
                         <th>Proponente</th>
                         <th>Tipo</th>
                         <th>Objeto</th>
+                        <th>Status</th>
                         <th>Pendências</th>
                     </tr>
                     </tfoot>

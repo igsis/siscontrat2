@@ -15,13 +15,22 @@ $ocorrencia = recuperaDados('ocorrencias','atracao_id',$atracao['id']);
 $instituicoes = recuperaDados('instituicoes','id',$ocorrencia['instituicao_id']);
 $pedidos = recuperaDados('pedidos','id',$idEvento);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idEvento);
-$num_pro = $pedidos['numero_processo'];
+
 $nome_eve = $evento['nome_evento'];
-$nome = $pessoa['nome'];
 $nome_inst = $instituicoes['nome'];
 $data = date("Y/m/d");
 $hoje = date('d/m/Y');
 
+if($pessoa['nome'] = 'null'){
+    $nome = "Não cadastrado";
+} else {
+    $nome = $pessoa['nome'];
+}
+if($num_pro = 'null'){
+    $num_pro = "Número não gerado";
+}else {
+    $num_pro = $pedidos['numero_processo'];
+}
 ?>
 
 <html>
