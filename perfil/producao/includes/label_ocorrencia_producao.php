@@ -157,7 +157,10 @@
             } else {
                 foreach ($filmes as $filme){
                     $idFilme = $filme['idFilmeEvento'];
-                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1 AND oco.tipo_ocorrencia_id = 2 AND oco.atracao_id = '$idFilme'";
+                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco
+                                    INNER JOIN eventos eve ON eve.id = oco.origem_ocorrencia_id
+                                    INNER JOIN filme_eventos fe ON eve.id = fe.evento_id
+                                    WHERE eve.id = '{$idEvento}' AND oco.tipo_ocorrencia_id= 2 AND oco.publicado = 1 AND fe.id = '{$idFilme}';";
                     $ocorrencias = $con->query($sqlOcorrencia);
                     ?>
                     <div class="panel box box-primary">
@@ -180,7 +183,9 @@
                                                 $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
                                                 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
                                                 $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
-                                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                                if ($ocorrencia['espaco_id']):
+                                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                                endif;
                                                 $subPrefeitura = recuperaDados('subprefeituras', 'id', $ocorrencia['subprefeitura_id']);
                                                 $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
                                                 ?>
