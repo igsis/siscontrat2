@@ -252,6 +252,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                                 minutoFinal -= 60;
                                                 hora += 1;
                                             }
+                                            //impede que haja 3 digitos 0 no campo de hora, exemplo  000:00
                                             if (minutoFinal == 0 && minutoFinal != '00') {
                                                 minutoFinal = minutoFinal + "0";
                                             }
@@ -264,7 +265,10 @@ $tipoEvento = $evento['tipo_evento_id'];
                                             if (hora < 10) {
                                                 hora = "0" + hora;
                                             }
-                                            if (hora == '00') {
+                                            if (hora == "00") {
+                                                hora = "00";
+                                            }
+                                            if(hora == "000"){
                                                 hora = "00";
                                             }
 

@@ -62,6 +62,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 $tipo_ocorrencia_id = $evento['tipo_evento_id'];
 
 if (isset($_POST['carregar'])) {
+    $idFilme = $_POST['idFilme'] ?? NULL;
     $idOrigem = $_POST['idOrigem'];
     unset($_SESSION['idOrigem']);
     $_SESSION['idOrigem'] = $idOrigem;
@@ -185,16 +186,26 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
                                 echo "<td style='display:none'>" . $ocorrencia['libras'] . "</td>";
                                 echo "<td style='display:none'>" . $ocorrencia['audiodescricao'] . "</td>";
 
-                                echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_edita\" role=\"form\">
-                                    <input type='hidden' name='idOcorrencia' value='" . $ocorrencia['idOco'] . "'>
-                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
-                                    </form>
-                                </td>";
+                                if($idFilme != NULL){
+                                    echo "<td>
+                                            <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_edita\" role=\"form\">
+                                                <input type='hidden' name='idOcorrencia' value='" . $ocorrencia['idOco'] . "'>
+                                                <input type='hidden' name='idFilme' value='" . $idFilme . "'>
+                                                <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
+                                            </form>
+                                        </td>";
+                                }else{
+                                    echo "<td>
+                                            <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_edita\" role=\"form\">
+                                                <input type='hidden' name='idOcorrencia' value='" . $ocorrencia['idOco'] . "'> 
+                                                <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
+                                            </form>
+                                          </td>";
+                                }
 
                                 echo "<td>
                                     <input type='hidden' name='idOcorrencia'>
-                                    <buttonn class='btn btn-block btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='" . $ocorrencia['idOco'] . "' data-tittle='Replicando ocorrência' data-message='Digite o número de vezes que deseja replicar a ocorrência: '><span class='glyphicon glyphicon-retweet'></span></buttonn>
+                                    <button class='btn btn-block btn-info' data-toggle='modal' data-target='#duplicar' data-ocorrencia-id='" . $ocorrencia['idOco'] . "' data-tittle='Replicando ocorrência' data-message='Digite o número de vezes que deseja replicar a ocorrência: '><span class='glyphicon glyphicon-retweet'></span></button>
                                 </td>";
 
                                 echo "<td>

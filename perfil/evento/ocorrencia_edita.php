@@ -146,6 +146,9 @@ if (isset($_POST['edita'])) {
 }
 
 if (isset($_POST['carregar'])) {
+    if(isset($_POST['idFilme'])){
+        $idFilme = $_POST['idFilme'];
+    }
     $idOcorrencia = $_POST['idOcorrencia'];
 }
 
@@ -393,8 +396,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
                                 <?php
                                 if ($evento['tipo_evento_id'] == 2) {
-                                    $filmeEvento = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $idEvento)->fetch_array();
-                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $filmeEvento['filme_id'])->fetch_array();
+                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = $idFilme")->fetch_array();
                                     $readonly = "readonly";
                                     ?>
                                     <script type="text/javascript">
@@ -426,6 +428,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                                 hora = "0" + hora;
                                             }
                                             if (hora == "00") {
+                                                hora = "00";
+                                            }
+                                            if(hora == "000"){
                                                 hora = "00";
                                             }
 
