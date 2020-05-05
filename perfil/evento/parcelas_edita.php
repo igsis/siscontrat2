@@ -3,15 +3,6 @@ include "includes/menu_interno.php";
 
 $idPedido = $_SESSION['idPedido'];
 $idEvento = $_SESSION['idEvento'];
-$nParcelas = $_GET['nParcelas'];
-
-$pedido = recuperaDados("pedidos", "id", $idPedido);
-
-$queryParcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido'");
-
-if ($queryParcelas->num_rows) {
-    $parcelas = $queryParcelas->fetch_all(MYSQLI_ASSOC);
-}
 
 $sqlOficina = "SELECT aa.acao_id FROM eventos e
                 INNER JOIN atracoes a on e.id = a.evento_id
@@ -23,6 +14,37 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
     if ($atracoes['acao_id'] == 8) {
         $oficina = 1;
     }
+}
+
+if (isset($oficina)) {
+    switch ($_GET['nParcelas']) {
+        case 3:
+            $nParcelas = 2;
+            break;
+
+        case 4:
+            $nParcelas = 3;
+            break;
+
+        default:
+            $nParcelas = $_GET['nParcelas'];
+            break;
+    }
+} else {
+    $nParcelas = $_GET['nParcelas'];
+}
+
+$pedido = recuperaDados("pedidos", "id", $idPedido);
+
+$sqlParcelas = "SELECT p.id, p.valor, p.data_pagamento, pc.data_inicio, pc.data_fim, pc.carga_horaria 
+                FROM parcelas AS p
+                LEFT JOIN parcela_complementos pc on p.id = pc.parcela_id
+                WHERE pedido_id = '$idPedido'";
+
+$queryParcelas = $con->query($sqlParcelas);
+
+if ($queryParcelas->num_rows) {
+    $parcelas = $queryParcelas->fetch_all(MYSQLI_ASSOC);
 }
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -49,37 +71,43 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
                         <div class="box-body">
                             <?php for ($i = 0; $i < $nParcelas; $i++):
                                 if (isset($oficina)): ?>
+                                    <input type="hidden" name="oficina" value="1">
+                                    <?php if (isset($parcelas)): ?>
+                                        <input type="hidden" name="parcela_id[<?=$i?>]" value="<?=$parcelas[$i]['id']?>">
+                                    <?php endif; ?>
                                     <div class='row'>
                                         <div class='form-group col-md-1'>
                                             <label for='parcela'>Parcela </label>
-                                            <input type='number' value="" class='form-control' readonly>
+                                            <input type='number' name="parcela[<?=$i?>]" value="<?=$i+1?>"
+                                                   class='form-control' readonly>
                                         </div>
                                         <div class='form-group col-md-2'>
-                                            <label for='valor'>Valor </label>
-                                            <input type='text' id='valor' name='valor[{{count}}]' value="{{valor}}"
+                                            <label for='valor'>Valor *</label>
+                                            <input type='text' name='valor[<?=$i?>]' class='form-control valor'
+                                                   value="<?=isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : ''?>" required
                                                    placeholder="Valor em reais"
-                                                   onkeypress="return(moeda(this, '.', ',', event))"
-                                                   class='form-control'>
+                                                   onkeypress="return(moeda(this, '.', ',', event));">
                                         </div>
                                         <div class='form-group col-md-2'>
                                             <label for='data_inicial'>Data Inicial</label>
-                                            <input type='date' id='data_inicial' value="{{inicial}}"
-                                                   name='inicial[{{count}}]'
+                                            <input type='date' id='data_inicial' value="<?=$parcelas[$i]['data_inicio'] ?? ''?>"
+                                                   name='data_inicial[<?=$i?>]'
                                                    class='form-control'>
                                         </div>
                                         <div class='form-group col-md-2'>
                                             <label for='data_final'>Data Final</label>
-                                            <input type='date' id='data_final' value="{{final}}" name='final[{{count}}]'
+                                            <input type='date' id='data_final' value="<?=$parcelas[$i]['data_fim'] ?? ''?>" name='data_final[<?=$i?>]'
                                                    class='form-control'>
                                         </div>
                                         <div class='form-group col-md-2'>
-                                            <label for='modal_data_kit_pagamento'>Data Kit Pagamento</label>
-                                            <input type='date' id='modal_data_kit_pagamento' value="{{kit}}"
-                                                   name='modal_data_kit_pagamento[{{count}}]' class='form-control'>
+                                            <label for='data_pagamento'>Data Kit Pagamento *</label>
+                                            <input type='date' id='data_pagamento' required
+                                                   value="<?=$parcelas[$i]['data_pagamento'] ?? ''?>"
+                                                   name='data_pagamento[<?=$i?>]' class='form-control'>
                                         </div>
                                         <div class='form-group col-md-2'>
-                                            <label for='horas'>Horas</label>
-                                            <input type='number' id='horas' value="{{horas}}" name='horas[{{count}}]'
+                                            <label for='carga_horaria'>Carga Horária</label>
+                                            <input type='number' id='carga_horaria' value="<?=$parcelas[$i]['carga_horaria'] ?? ''?>" name='carga_horaria[<?=$i?>]'
                                                    class='form-control'>
                                         </div>
                                     </div>

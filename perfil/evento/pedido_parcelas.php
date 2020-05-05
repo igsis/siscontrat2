@@ -58,6 +58,22 @@ if (isset($_POST['gravarParcelas']) || isset($_POST['editarParcelas'])) {
 
             if ($con->query($sqlInsertParcela)) {
                 gravarLog($sqlInsertParcela);
+                if (isset($_POST['oficina'])) {
+                    $parcela_id = $con->insert_id;
+                    $data_inicial = $_POST['data_inicial'][$key];
+                    $data_final = $_POST['data_final'][$key];
+                    $carga_horaria = $_POST['carga_horaria'][$key];
+
+                    $sqlInsertComplemento = "INSERT INTO parcela_complementos
+                                            (parcela_id, data_inicio, data_fim, carga_horaria) VALUES 
+                                            ('$parcela_id', '$data_inicial', '$data_final', '$carga_horaria')";
+
+                    if ($con->query($sqlInsertComplemento)) {
+                        gravarLog($sqlInsertComplemento);
+                    } else {
+                        $erro = true;
+                    }
+                }
             } else {
                 $erro = true;
             }
@@ -222,7 +238,7 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
                                     <div class="form-group col-md-6">
                                         <label for="numero_parcelas">Número de Parcelas *</label>
                                         <select class="form-control" id="numero_parcelas" name="numero_parcelas"
-                                                data-oficina="1" required onchange="formaPagamento()">
+                                                data-oficina="1" required onchange="formaPagamento(); formParcela()">
                                             <option value="">Selecione...</option>
                                             <?php
                                             if ($pedido['numero_parcelas'] == 3) {
