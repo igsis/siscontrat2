@@ -157,7 +157,10 @@
             } else {
                 foreach ($filmes as $filme){
                     $idFilme = $filme['idFilmeEvento'];
-                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1 AND oco.tipo_ocorrencia_id = 2 AND oco.atracao_id = '$idFilme'";
+                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco
+                                    INNER JOIN eventos eve ON eve.id = oco.origem_ocorrencia_id
+                                    INNER JOIN filme_eventos fe ON eve.id = fe.evento_id
+                                    WHERE eve.id = '{$idEvento}' AND oco.tipo_ocorrencia_id= 2 AND oco.publicado = 1 AND fe.id = '{$idFilme}';";
                     $ocorrencias = $con->query($sqlOcorrencia);
                     ?>
                     <div class="panel box box-primary">
