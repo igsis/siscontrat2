@@ -180,7 +180,9 @@
                                                 $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
                                                 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
                                                 $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
-                                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                                if ($ocorrencia['espaco_id']):
+                                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                                endif;
                                                 $subPrefeitura = recuperaDados('subprefeituras', 'id', $ocorrencia['subprefeitura_id']);
                                                 $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
                                                 ?>

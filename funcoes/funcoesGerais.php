@@ -662,12 +662,14 @@ function geraOpcaoLocais ($tabela, $select = '')
  */
 function recuperaDados($tabela, $campo, $variavelCampo)
 	{
-		//retorna uma array com os dados de qualquer tabela. serve apenas para 1 registro.
-		$con = bancoMysqli();
-		$sql = "SELECT * FROM $tabela WHERE ".$campo." = '$variavelCampo' LIMIT 0,1";
-		$query = mysqli_query($con,$sql);
-		$campo = mysqli_fetch_array($query);
-		return $campo;
+	    if ($variavelCampo != null):
+            //retorna uma array com os dados de qualquer tabela. serve apenas para 1 registro.
+            $con = bancoMysqli();
+            $sql = "SELECT * FROM $tabela WHERE ".$campo." = '$variavelCampo' LIMIT 0,1";
+            $query = mysqli_query($con,$sql);
+            $campo = mysqli_fetch_array($query);
+            return $campo;
+		endif;
 	}
 
 function recuperaDadosPublicado($tabela, $campo, $variavelCampo)
