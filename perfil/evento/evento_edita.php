@@ -125,6 +125,12 @@ if (isset($_POST['edita'])) {
 if (isset($_POST['carregar'])) {
     $idEvento = $_POST['idEvento'];
     $_SESSION['idEvento'] = $idEvento;
+
+    $sql = "SELECT id FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
+    $queryPedido = $con->query($sql);
+    if ($queryPedido->num_rows > 0) {
+        $_SESSION['idPedido'] = $queryPedido->fetch_assoc()['id'];
+    }
 }
 
 $evento = recuperaDados("eventos", "id", $idEvento);

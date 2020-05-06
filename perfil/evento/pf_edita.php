@@ -14,17 +14,7 @@ if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
 
 if (isset($_POST['editProponente'])) {
     $idPedido = $_SESSION['idPedido'];
-    $voltar = "<form action='?perfil=evento&p=pedido_edita&label=proponente' method='post'>
-                    <input type='hidden' name='idProponente' value='$idPf'>
-                    <input type='hidden' name='tipoPessoa' value='$tipoPessoa'>
-                        <button type='submit' name='idPedido' id='idPedido' value='$idPedido' class='btn btn-default'>Voltar</button>
-                    </form>";
-} else {
-    $voltar = "<form action='?perfil=evento&p=pf_pesquisa' method='post'>
-                        <button type='submit' class='btn btn-default'>Voltar</button>
-                    </form>";
 }
-
 
 if (isset($_POST['cadastraLider'])) {
     $idPedido = $_POST['idPedido'];
@@ -751,7 +741,6 @@ include "includes/menu_interno.php";
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
 
                         </form>
-                        <?= $voltar ?>
                     </div>
                 </div>
                 <!-- /.box-body -->
@@ -788,16 +777,9 @@ include "includes/menu_interno.php";
                             if (($pedidos['pessoa_tipo_id'] == 1) && ($pedidos['pessoa_fisica_id'] == $idPf)) {
 
                                 ?>
-                                <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                    <input type="hidden" name="pessoa_tipo_id" value="1">
-                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
-                                    <input type="hidden" name="idProponente" value="<?= $pf['id'] ?>">
-                                    <input type="hidden" name="tipoPessoa" value="1">
-                                    <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
-                                    <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
-                                        contratação
-                                    </button>
-                                </form>
+                                <a href="?perfil=evento&p=pedido_proponente" class="btn btn-info btn-block">
+                                    Ir ao pedido de contratação
+                                </a>
 
                                 <?php
                             } else {

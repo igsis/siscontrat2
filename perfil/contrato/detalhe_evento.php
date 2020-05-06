@@ -7,30 +7,26 @@ if(isset($_POST['detalheEvento'])){
 }
 
 
-// para inserir a informação em Dotação //
-$sql = "SELECT * FROM juridicos where pedido_id = '$idEvento'";
-$query = mysqli_query($con,$sql);
-$num = mysqli_num_rows($query);
-
 
 // dados //
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$tipo_evento = recuperaDados('tipo_eventos', 'id', $idEvento);
-$projeto_especiais = recuperaDados('projeto_especiais', 'id', $idEvento);
-$relacao_juridica = recuperaDados('relacao_juridicas', 'id', $idEvento);
-$linguagens = recuperaDados('linguagens', 'id', $idEvento);
+$tipo_evento = recuperaDados('tipo_eventos', 'id', $evento['tipo_evento_id']);
+$projeto_especiais = recuperaDados('projeto_especiais', 'id', $evento['id']);
+$relacao_juridica = recuperaDados('relacao_juridicas', 'id', $evento['relacao_juridica_id']);
 $atracao = recuperaDados('atracoes', 'id', $idEvento);
-$classificacao = recuperaDados('classificacao_indicativas', 'id', $idEvento);
+$classificacao = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
+$linguagens = recuperaDados('linguagens', 'id', $idEvento);
 $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
-$ocorrencia = recuperaDados('ocorrencias', 'id', $idEvento);
+$ocorrencia = recuperaDados('ocorrencias', 'atracao_id', $atracao['id']);
 $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
-$pedidos = recuperaDados('pedidos', 'id', $idEvento);
-$pagamento = recuperaDados('pagamentos', 'pedido_id', $idEvento);
-$statusPedido = recuperaDados('pedido_status', 'id', $idEvento);
-$produtor = recuperaDados('produtores', 'id', $idEvento);
+$pedidos = recuperaDados('pedidos', 'id', $idPedido);
+$pagamento = recuperaDados('pagamentos', 'pedido_id', $idPedido);
+$statusPedido = recuperaDados('pedido_status', 'id', $pedidos['status_pedido_id']);
+$produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
 $usuarios = recuperaDados('usuarios', 'id', $evento['usuario_id']);
-$dataEvento = recuperaDados('evento_envios','id',$idEvento);
-$dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_array();
+$dataEvento = recuperaDados('evento_envios','evento_id',$idEvento);
+$juridico = recuperaDados('juridicos','pedido_id',$idPedido);
+
 ?>
 
 
@@ -51,7 +47,7 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Evento enviado em:</th>
-                        <td><?= $dataEvento['data_envio'] ?></td>
+                        <td><?=  $dataEvento['data_envio'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Tipo de evento:</th>
@@ -224,16 +220,12 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <?php
-                        $pedido = "SELECT * FROM PEDIDOS WHERE id = $idEvento AND publicado = 1";
-                        $query = mysqli_query($con,$pedido);
-                        $pessoa = mysqli_num_rows($query);
-
-                        if($pessoa['pessoa_tipo_id'] == 2){
-                            $pj = recuperaDados("pessoa_juridicas","id",$pessoa['pessoa_juridica_id']);
+                        if($pedidos['pessoa_tipo_id'] == 2){
+                            $pj = recuperaDados("pessoa_juridicas","id",$pedidos['pessoa_juridica_id']);
                             echo "<td>".$pj['razao_social']."</td>";
                         }
                         else{
-                            $pf = recuperaDados("pessoa_fisicas","id",$pessoa['pessoa_fisica_id']);
+                            $pf = recuperaDados("pessoa_fisicas","id",$pedidos['pessoa_fisica_id']);
                             echo "<td>".$pf['nome']."</td>";
                         }
                         ?>
@@ -260,15 +252,35 @@ $dotacao = $con->query("SELECT * FROM juridicos WHERE pedido_id = 1")->fetch_arr
                     </tr>
                     <tr>
                         <th width="30%">Data de Emissão da N.E:</th>
-                        <td><?= $pagamento['emissao_nota_empenho'] ?></td>
+                        <td>
+                        <?php if ($pagamento['emissao_nota_empenho'] = 'null'){
+                            echo "Não cadastrado";
+                        } else {
+                            $pagamento['emissao_nota_empenho'];
+                        }?>
+                        </td>
                     </tr>
                     <tr>
                         <th width="30%">Data de Entrega da N.E</th>
-                        <td><?= $pagamento['entrega_nota_empenho'] ?></td>
+                        <td>
+                            <?php if ($pagamento['entrega_nota_empenho'] = 'null'){
+                                echo "Não cadastrado";
+                            } else {
+                                $pagamento['entrega_nota_empenho'];
+                            }?>
+                        </td>
                     </tr>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
-                        <td><?=$dotacao['dotacao']?></td>
+                        <td>
+                            <?php
+                            if ($juridico['dotacao'] = 'null'){
+                                echo "Não cadastrado";
+                            } else {
+                                $juridico['dotacao'];
+                            }
+                            ?>
+                        </td>
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>

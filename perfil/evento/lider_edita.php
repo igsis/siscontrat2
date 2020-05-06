@@ -299,7 +299,7 @@ include "includes/menu_interno.php";
                             <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
                             <button type="submit" name="editar" class="btn btn-info pull-right">Salvar</button>
                     </form>
-                    <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
+                    <form method="POST" action="?perfil=evento&p=pedido_lideres" role="form">
                         <input type="hidden" name="idLider" value="<?= $idLider ?>">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <input type="hidden" name="idAtracao" value="<?= $idAtracao ?>">
