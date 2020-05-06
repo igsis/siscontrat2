@@ -16,8 +16,8 @@ $pedido = $query->fetch_assoc();
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
-                <div class="box box-info">
-                    <div class="box-header with-border">
+                <div class="box">
+                    <div class="box-header">
                         <h3 class="box-title">Dados do Pedido de Contratação</h3>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-danger btn-sm" id="excluiPedido"
@@ -32,7 +32,140 @@ $pedido = $query->fetch_assoc();
                     </div>
 
                     <div class="box-body">
-                        Start creating your amazing application!
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="box box-success">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Detalhes de Parcelas</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <p><strong>Verba:</strong> Aeoo</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p><strong>Parcelas:</strong> Parcela Única</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p><strong>Valor Total:</strong> R$ 80.000,00</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p>
+                                                    <strong>Forma de Pagamento:</strong> Teste
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p>
+                                                    <strong>Justificativa: </strong> Teste 2
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p>
+                                                    <strong>Observação: </strong> Teste 3
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="box box-info">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Cadastro do Proponente</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Razão Social: </strong>Aquela Empresa</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>CNPJ: </strong>12345678945</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Representante Fiscal: </strong> Aeoo De Souza</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Representante Fiscal 2: </strong> Aeoo Soares</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box box-warning">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Parecer Artístico</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p><strong>1º Tópico: </strong> Aeoo 123</p>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <p><strong>2º Tópico: </strong> Aeoo 123</p>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <p><strong>3º Tópico: </strong> Aeoo 123</p>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <p><strong>4º Tópico: </strong> Aeoo 123</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="box box-primary">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Anexos do Pedido</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p><strong>1º Tópico: </strong> Aeoo 123</p>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <p><strong>2º Tópico: </strong> Aeoo 123</p>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <p><strong>3º Tópico: </strong> Aeoo 123</p>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <p><strong>4º Tópico: </strong> Aeoo 123</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="box box-danger">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Valores por Equipamento</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p><strong>Equipmento X: </strong> Aeoo 123</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
