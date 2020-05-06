@@ -14,8 +14,28 @@ $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $pessoa = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
-$ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
+$ocorrencias = $con->query("SELECT atracao_id, tipo_ocorrencia_id FROM ocorrencias WHERE tipo_ocorrencia_id != 3 AND publicado = 1 AND origem_ocorrencia_id =  " . $evento['id']);
+
+$cargaHoraria = 0;
+
+while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
+
+    if($linhaOco['tipo_ocorrencia_id'] == 1){
+        $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
+        $carga = $con->query($sqlCarga);
+
+        if($carga->num_rows > 0 || $cargaHoraria != 0){
+            while($cargaArray = mysqli_fetch_array($carga)){
+                $cargaHoraria =  $cargaHoraria + (int)$cargaArray['carga_horaria'];
+            }
+        }else{
+            $cargaHoraria = "Não possuí.";
+        }
+    }
+}
+
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
+
 $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
 $queryLocal = mysqli_query($con, $sqlLocal);
 $local = '';
@@ -48,18 +68,6 @@ $tel = substr($tel, 0, -3);
 
 $idRepresentante = $pessoa['representante_legal1_id'];
 $representante = recuperaDados('representante_legais', 'id', $idRepresentante);
-
-$idAtracao = $ocorrencia['atracao_id'];
-$sqlCheca = $con->query("SELECT * FROM acao_atracao WHERE atracao_id = '$idAtracao' AND acao_id = 8");
-$checa = mysqli_num_rows($sqlCheca);
-
-if ($checa != 0) {
-    $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
-    $carga = $con->query($sqlCarga)->fetch_array();
-    $carga = $carga['carga_horaria'];
-} else if ($checa == 0) {
-    $carga = "Não se aplica.";
-}
 
 if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
     $ccm = $pessoa['ccm'];
@@ -94,7 +102,7 @@ echo
     "<p>&nbsp;</p>" .
     "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
     "<p><strong>Data / Período:</strong> " . $periodo . " - conforme cronograma</p>" .
-    "<p><strong>Carga Horária:</strong> " . $carga . "</p>" .
+    "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
     "<p><strong>Local:</strong> " . $local . "</p>" .
     "<p><strong>Valor:</strong> " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . ")</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
@@ -129,33 +137,51 @@ echo
     "<p>" . $objeto . "</p>" .
     "<p>&nbsp;</p>";
 
-$cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id']);
-while ($aux = mysqli_fetch_array($cronograma)) {
-    if ($aux['tipo_ocorrencia_id'] == 2) {
-        $testaFilme = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id = " . $evento['id']);
-        while($idFilmes = mysqli_fetch_array($testaFilme)){
-            $filme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $idFilmes['filme_id'])->fetch_array();
-            echo "<p><strong> Título: </strong>" . $filme['titulo'] . "</p>" .
-                 "<p><strong>Duração: </strong>" . $filme['duracao'] . " Minuto(s)" . "</p>";
-        }
-        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
+if ($evento['tipo_evento_id'] == 1) {
+    $cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND tipo_ocorrencia_id = 1 AND publicado = 1");
+    while ($aux = mysqli_fetch_array($cronograma)) {
+        $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = " . $aux['atracao_id'] )->fetch_array();
+        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'] . " AND publicado = 1")->fetch_array();
         $acao = $tipoAcao['acao'];
-    } else {
-        $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = $idAtracao ")->fetch_array();
-        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $checaTipo['acao_id'])->fetch_array();
-        $acao = $tipoAcao['acao'];
-        $labelFilme = "";
-    }
-    $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
-    $hour = $aux['horario_inicio'] . " - " . $aux['horario_fim'];
-    $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'])->fetch_array();
-    $lugar = $local['local'];
 
-    echo "<p><strong>Ação:</strong> " . $acao . "</p>";
-    echo "<p><strong>Data/Período:</strong> " . $dia . "</p>";
-    echo "<p><strong>Horário:</strong> " . $hour . "</p>";
-    echo "<p><strong>Local:</strong> " . $lugar . "</p>";
-    echo "<p>&nbsp;</p>";
+        $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
+        $hour = exibirHora($aux['horario_inicio']) . "h - " . exibirHora($aux['horario_fim']) . "h";
+        $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'] . " AND publicado = 1")->fetch_array();
+        $lugar = $local['local'];
+
+        echo "<p><strong>Ação:</strong> " . $acao . "</p>";
+        echo "<p><strong>Data/Período:</strong> " . $dia . "</p>";
+        echo "<p><strong>Horário:</strong> " . $hour . "</p>";
+        echo "<p><strong>Local:</strong> " . $lugar . "</p>";
+        echo "<p>&nbsp;</p>";
+    }
+
+} elseif ($evento['tipo_evento_id'] == 2) {
+    $filmes = $con->query("SELECT id, filme_id FROM filme_eventos WHERE evento_id = " . $evento['id']);
+    foreach ($filmes as $filme){
+        $dadosFilme = $con->query("SELECT duracao, titulo FROM filmes WHERE id = " . $filme['filme_id'] . " AND publicado = 1")->fetch_array();
+        $cronograma = $con->query("SELECT * FROM ocorrencias WHERE publicado = 1 AND tipo_ocorrencia_id = 2 AND origem_ocorrencia_id = " . $evento['id'] . " AND atracao_id = " .$filme['id']);
+        while ($aux = mysqli_fetch_array($cronograma)) {
+
+            $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
+            $acao = $tipoAcao['acao'];
+
+            echo "<p><strong> Título: </strong>" . $dadosFilme['titulo'] . "</p>" .
+                "<p><strong>Duração: </strong>" . $dadosFilme['duracao'] . " Minuto(s)" . "</p>";
+
+            $dia = retornaPeriodoNovo($aux['origem_ocorrencia_id'], 'ocorrencias');
+            $hour = exibirHora($aux['horario_inicio']) . "h - " . exibirHora($aux['horario_fim']) . "h";
+            $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'] . " AND publicado = 1")->fetch_array();
+            $lugar = $local['local'];
+
+            echo "<p><strong>Ação:</strong> " . $acao . "</p>";
+            echo "<p><strong>Data/Período:</strong> " . $dia . "</p>";
+            echo "<p><strong>Horário:</strong> " . $hour . "</p>";
+            echo "<p><strong>Local:</strong> " . $lugar . "</p>";
+            echo "<p>&nbsp;</p>";
+
+        }
+    }
 }
 
 echo

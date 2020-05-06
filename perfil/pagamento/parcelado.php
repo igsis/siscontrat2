@@ -6,52 +6,52 @@ $link_api = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_docs_p
 $idPedido = $_POST['idPedido'];
 $botao = false;
 
-if(isset($_POST['operador'])){
+if (isset($_POST['operador'])) {
     $operador = $_POST['operador'];
     $data_kit_pagamento = $_POST['data_kit_pagamento'];
     $sql = "UPDATE pedidos SET operador_pagamento_id = '$operador', data_kit_pagamento = '$data_kit_pagamento' WHERE id = '$idPedido'";
     $cadastra = $con->query($sql);
-    if($cadastra){
+    if ($cadastra) {
         $botao = true;
         $existeEtapa = $con->query("SELECT pedido_id, data_pagamento FROM pedido_etapas WHERE pedido_id = '$idPedido'")->fetch_assoc();
         $now = dataHoraNow();
-        if($existeEtapa != NULL && $existeEtapa['data_pagamento'] == NULL){
+        if ($existeEtapa != NULL && $existeEtapa['data_pagamento'] == "0000-00-00 00:00:00") {
             $con->query("UPDATE pedido_etapas SET data_pagamento = '$now' WHERE pedido_id = '$idPedido'");
         }
-        if($existeEtapa == NULL){
+        if ($existeEtapa == NULL) {
             $con->query("INSERT INTO pedido_etapas (pedido_id,data_pagamento) VALUES ('$idPedido','$now')");
         }
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
-    } else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar.");
     }
 }
 
-if(isset($_POST['cadastrar'])){
+if (isset($_POST['cadastrar'])) {
     $cadastra = $con->query("UPDATE pedidos SET status_pedido_id = 19 WHERE id = '$idPedido'");
-    if($cadastra){
+    if ($cadastra) {
         $botao = true;
         $existeEtapa = $con->query("SELECT pedido_id, data_pagamento FROM pedido_etapas WHERE pedido_id = '$idPedido'")->fetch_assoc();
         $now = dataHoraNow();
-        if($existeEtapa != NULL && $existeEtapa['data_pagamento'] == NULL){
+        if ($existeEtapa != NULL && $existeEtapa['data_pagamento'] == "0000-00-00 00:00:00") {
             $con->query("UPDATE pedido_etapas SET data_pagamento = '$now' WHERE pedido_id = '$idPedido'");
         }
-        if($existeEtapa == NULL){
+        if ($existeEtapa == NULL) {
             $con->query("INSERT INTO pedido_etapas (pedido_id,data_pagamento) VALUES ('$idPedido','$now')");
         }
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
-    } else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar.");
     }
 }
 
-if(isset($_POST['concluir'])){
+if (isset($_POST['concluir'])) {
     $cadastra = $con->query("UPDATE pedidos SET status_pedido_id = 21 WHERE id = '$idPedido'");
-    if($cadastra){
+    if ($cadastra) {
         $botao = true;
         $mensagem = mensagem("success", "Evento concluído com sucesso!");
         echo "<meta http-equiv='refresh' content='3;url=?perfil=pagamento' />";
-    } else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao concluir evento.");
     }
 }
@@ -80,7 +80,13 @@ if ($pedido['pessoa_tipo_id'] == 2) {
 }
 
 $idUser = $_SESSION['usuario_id_s'];
-$acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idUser'")->fetch_array();
+$testaAcesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idUser'");
+if ($testaAcesso->num_rows == 0) {
+    $acesso = 0;
+} else {
+    $acessoArray = mysqli_fetch_array($testaAcesso);
+    $acesso = $acessoArray['nivel_acesso'];
+}
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -96,7 +102,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
             </div>
             <div class="box-body">
                 <?php
-                if($acesso['nivel_acesso'] == 1 || $acesso['nivel_acesso'] == 2) {
+                if ($acesso == 1 || $acesso == 2) {
                     ?>
                     <div class="row">
                         <form action="#" method="post" role="form">
@@ -181,10 +187,10 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                         <th>Documentos</th>
                     </tr>
                     </thead>
-<!--                    <tbody>-->
+                    <!--                    <tbody>-->
                     <?php
                     $sqlParcela = $con->query("SELECT id, numero_parcelas, valor, data_pagamento FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1 GROUP BY numero_parcelas ORDER BY numero_parcelas");
-                    while($parcela = mysqli_fetch_array($sqlParcela)){
+                    while ($parcela = mysqli_fetch_array($sqlParcela)) {
                         ?>
                         <tr>
                             <td><?= $parcela['numero_parcelas'] ?></td>
@@ -192,12 +198,13 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                             <td><?= exibirDataBr($parcela['data_pagamento']) ?></td>
                             <td width="15%">
                                 <button type="button" class="btn btn-primary btn-block" id="exibirDocumentos"
-                                                data-toggle="modal" data-target="#modalDocumento"
-                                                data-id="<?= $parcela['id'] ?>"
-                                                name="exibirDocumentos"><span class="glyphicon glyphicon-paperclip"></span>
-                                            
+                                        data-toggle="modal" data-target="#modalDocumento"
+                                        data-id="<?= $parcela['id'] ?>"
+                                        name="exibirDocumentos"><span class="glyphicon glyphicon-paperclip"></span>
+
                                 </button>
                             </td>
+                        </tr>
                         <?php
                     }
                     ?>
@@ -227,7 +234,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
             <div class="modal-body">
                 <table class="table table-striped table-bordered">
                     <tbody id="conteudoModal">
-                            
+
                     </tbody>
                 </table>
             </div>
@@ -242,12 +249,12 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
     $('#modalDocumento').on('show.bs.modal', function (e) {
         $('#modalDocumento').find('#conteudoModal').empty();
         let id = $(e.relatedTarget).attr('data-id');
-       $.ajax({
+        $.ajax({
             method: "GET",
             url: link + "?idParcela=" + id + "&tipo=" + tipo + "&idPedido=" + idPedido
-       })
-       .done(function (content){
-        $('#modalDocumento').find('#conteudoModal').append(`<tr><td>${content}</td></tr>`);
-       });
+        })
+            .done(function (content) {
+                $('#modalDocumento').find('#conteudoModal').append(`<tr><td>${content}</td></tr>`);
+            });
     })
 </script>

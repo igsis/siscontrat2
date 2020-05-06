@@ -230,7 +230,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form action="<?= $link_proposta_padrao ?>" target="_blank" method="post">
+                            <form action="<?= $link_proposta_padrao . "13"?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Contratações gerais - Com cachê
@@ -257,7 +257,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                             <hr/>
 
-                            <form action="<?= $link_reversao ?>" target="_blank" method="post">
+                            <form action="<?= $link_reversao . "13"?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Contratações gerais - Reversão de Bilheteria

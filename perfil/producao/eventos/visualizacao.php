@@ -44,13 +44,11 @@ $view = recuperaDados('producao_eventos', 'evento_id', $idEvento);
         <div class="box-body">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs pull-right">
-                    <?php if ($evento['contratacao'] == 1) { ?>
-                        <li><a href="#pedido" data-toggle="tab"> Pedido de Contratação </a></li>
-                    <?php } ?>
+                   
                     <li><a href="#ocorrencia" data-toggle="tab"> Ocorrência </a></li>
                     <li>
                         <a href="#atracao" data-toggle="tab">
-                            <?= $evento['tipo_evento_id' == 1] ? "Atração" : "Filme" ?>
+                            <?= $evento['tipo_evento_id'] == 1 ? "Atração" : "Filme" ?>
                         </a>
                     </li>
                     <li class="active"><a href="#evento" data-toggle="tab"> Eventos </a></li>

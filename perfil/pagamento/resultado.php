@@ -8,6 +8,7 @@ if (isset($_POST['geral'])){
     $projeto = $_POST['projeto'] ?? NULL;
     $usuario = $_POST['usuario'] ?? NULL;
     $operador_id = $_POST['operador_id'] ?? NULL;
+    $status = $_POST['status'] ?? NULL;
 
     $sqlProcesso = '';
     $sqlNomeEvento = '';
@@ -15,6 +16,7 @@ if (isset($_POST['geral'])){
     $sqlProjeto = '';
     $sqlUsuario = '';
     $sqlOperador = '';
+    $sqlStatus = '';
 
     if ($protocolo != null)
         $sqlProtocolo = " AND e.protocolo LIKE '%$protocolo%'";
@@ -25,9 +27,12 @@ if (isset($_POST['geral'])){
     if ($projeto != null && $projeto != 0)
         $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
     if ($usuario != null && $usuario != 0)
-        $sqlUsuario = " AND e.fiscal_id = '$usuario' OR e.suplente_id = '$usuario' OR e.usuario_id = '$usuario'";
+        $sqlUsuario = " AND (e.fiscal_id = '$usuario' OR e.suplente_id = '$usuario' OR e.usuario_id = '$usuario')";
     if ($operador_id != null && $operador_id != 0)
         $sqlOperador = " AND p.operador_id = '$operador_id'";
+    if ($status != null) {
+        $sqlStatus = " AND p.status_pedido_id = '$status'";
+    }        
 
     $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento, p.operador_id
     FROM eventos e 
@@ -42,7 +47,7 @@ if (isset($_POST['geral'])){
     AND e.evento_status_id = 3
     AND p.status_pedido_id NOT IN (1,3,20,21)
     $sqlProjeto $sqlUsuario $sqlOperador
-    $sqlProtocolo $sqlNomeEvento $sqlProcesso
+    $sqlProtocolo $sqlNomeEvento $sqlProcesso $sqlStatus
     GROUP BY e.id";
     
     $resultado = $con->query($sql);
@@ -179,8 +184,8 @@ if(isset($_POST['operador'])) {
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
-                                        if ($evento['operador_id'] == NULL) {
-                                            $operador = "Não possui";
+                                        if ($evento['operador_id'] = 'NULL') {
+                                            $nome = "Não possui";
                                         } else {
                                             $operador = recuperaDados('usuarios', 'id', $evento['operador_id']);
                                             $nome= $operador['nome_completo'];

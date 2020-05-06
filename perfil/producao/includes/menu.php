@@ -9,7 +9,7 @@ $pasta = "?perfil=producao&p=";
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-circle-o"></i>
-                    <span>Eventos</span>
+                    <span>Evento</span>
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
@@ -24,7 +24,7 @@ $pasta = "?perfil=producao&p=";
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-circle-o"></i>
-                    <span>Agendões</span>
+                    <span>Agendão</span>
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">

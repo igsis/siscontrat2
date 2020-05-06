@@ -34,8 +34,25 @@ $ano=date('Y', strtotime("-3 hours"));
 
 $pf = recuperaDados("pessoa_fisicas", "id", $id_Pf);
 
-$drts = recuperaDados("drts", "pessoa_fisica_id", $id_Pf);
-$nits = recuperaDados("nits", "pessoa_fisica_id", $id_Pf);
+$testaDrt = $con->query("SELECT drt FROM drts WHERE pessoa_fisica_id = $id_Pf");
+if ($testaDrt->num_rows > 0) {
+    while ($drtArray = mysqli_fetch_array($testaDrt)) {
+        $drt = $drtArray['drt'];
+    }
+} else {
+    $drt = "Não Cadastrado.";
+}
+
+$testaNit = $con->query("SELECT nit FROM nits WHERE pessoa_fisica_id = $id_Pf");
+
+if ($testaNit->num_rows > 0) {
+    while($nitArray = mysqli_fetch_array($testaNit)){
+        $nit = $nitArray['nit'];
+    }
+}else{
+    $nit = "Não Cadastrado.";
+}
+
 $end = recuperaDados("pf_enderecos", "pessoa_fisica_id", $id_Pf);
 $bancos = recuperaDados("pf_bancos", "pessoa_fisica_id", $id_Pf);
 
@@ -62,11 +79,20 @@ if(!empty($pf["cpf"])){
 }
 $CCM = $pf["ccm"];
 $Telefone01 = $telefones["telefone"];
-$agencia = $bancos["agencia"];
-$conta = $bancos["conta"];
-$codbanco = $bancos["banco_id"];
-$cbo = $bancos["cbo"] ?? NULL;
-$nit = $nits["nit"];
+
+$testaBanco = $con->query("SELECT b.banco, pf.agencia, b.codigo, pf.conta FROM pf_bancos AS pf INNER JOIN bancos AS b ON b.id = pf.banco_id WHERE pf.publicado = 1 AND pf.pessoa_fisica_id = $id_Pf");
+if ($testaBanco->num_rows > 0) {
+    while ($bancoArray = mysqli_fetch_array($testaBanco)) {
+        $agencia = $bancoArray['agencia'];
+        $conta = $bancoArray['conta'];
+        $codbanco = $bancoArray['codigo'];
+    }
+} else {
+    $agencia = "";
+    $conta = "";
+    $codbanco = "";
+}
+
 $DataNascimento = date('d/m/Y', strtotime($pf["data_nascimento"]));
 
 
@@ -124,7 +150,7 @@ $pdf->SetXY($x, 107);
 $pdf->SetFont('Arial','', 10);
 $pdf->Cell(87,$l,utf8_decode($nit),0,0,'L');
 $pdf->Cell(52,$l,utf8_decode($DataNascimento),0,0,'L');
-$pdf->Cell(33,$l,utf8_decode($cbo),0,0,'L');
+$pdf->Cell(33,$l,utf8_decode(""),0,0,'L');
 
 $pdf->SetXY($x, 122);
 $pdf->SetFont('Arial','', 9);

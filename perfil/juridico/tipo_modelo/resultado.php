@@ -35,7 +35,7 @@ $mdl = str_replace("nomeSuplente", $suplente, $mdl);
 $mdl = str_replace("rfSuplente", $rfSuplente, $mdl);
 
 
-$sql = "select p.numero_processo,
+$sql = "select p.numero_processo, p.id as pedido_id,
 e.protocolo,
 p.valor_total,
 p.forma_pagamento,
@@ -90,10 +90,6 @@ $evento = $con->query($sql)->fetch_array();
                                 <td><?= $nome ?></td>
                             <?php } ?>
                         </tr>
-                        <?php
-                        $atracoes = recuperaDados('atracoes', 'evento_id', $idEvento);
-                        $ocorrencias = recuperaDados('ocorrencias', 'atracao_id', $atracoes['id']);
-                        ?>
                         <tr>
                             <th width="30%">Local:</th>
                             <td><?= $local ?></td>
@@ -131,6 +127,7 @@ $evento = $con->query($sql)->fetch_array();
                 <div class="box-footer">
                 <form action="perfil=juridico&p=tipo_modelo&sp=dados_modelo" role="form" method="post">
                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                    <input type="hidden" name="idPedido" value="<?=$evento['pedido_id'] ?>">
                     <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
                     <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-right"
                             style="margin: 0 5px;">Gravar
