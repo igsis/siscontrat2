@@ -8,8 +8,6 @@ require_once("../funcoes/funcoesGerais.php");
 //CONEXÃO COM BANCO DE DADOS
 $con = bancoMysqli();
 
-session_start(['name' => 'sis']);
-
 class PDF extends FPDF
 {
 // Page header
@@ -27,23 +25,27 @@ class PDF extends FPDF
 }
 
 //CONSULTA  (copia inteira em todos os docs)
-$idPf = $_SESSION['idPf'];
+$idPf = $_GET['idPf'];
 
 $ano = date('Y', strtotime("-3 hours"));
 $dataAtual = date("d/m/Y", strtotime("-3 hours"));
 
-$sqlFoto = "SELECT arquivo FROM arquivos WHERE lista_documento_id = 141 AND publicado = 1 AND origem_id = '$idPf'";
-$foto = $con->query($sqlFoto)->fetch_assoc()['arquivo'];
-
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id'])['nacionalidade'];
-$banco = recuperaDados('pf_bancos', 'pessoa_fisica_id', $idPf);
 $endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
 
-$conta = $banco['conta'];
-$agencia = $banco['agencia'];
-$banco = $banco['banco_id'];
-$banco = recuperaDados('bancos', 'id', $banco)['banco'];
+$testaBanco = $con->query("SELECT b.banco, pf.agencia, b.codigo, pf.conta FROM pf_bancos AS pf INNER JOIN bancos AS b ON b.id = pf.banco_id WHERE pf.publicado = 1 AND pf.pessoa_fisica_id = $idPf");
+if ($testaBanco->num_rows > 0) {
+    while ($bancoArray = mysqli_fetch_array($testaBanco)) {
+        $agencia = $bancoArray['agencia'];
+        $conta = $bancoArray['conta'];
+        $banco = $bancoArray['banco'];
+    }
+} else {
+    $agencia = "Não cadastrado";
+    $conta = "Não cadastrado";
+    $banco = "Não cadastrado";
+}
 
 $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $telefones = mysqli_query($con, $sqlTelefone);
@@ -67,12 +69,6 @@ $cidade = $endereco['cidade'];
 $cep = $endereco['cep'];
 $email = $pessoa["email"];
 
-if ($foto == null)
-    $fotoImg = "../visual/images/avatar_default.png";
-else
-    $fotoImg = "../uploadsdocs/$foto";
-
-
 // GERANDO O PDF:
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -89,10 +85,6 @@ $pdf->SetFont('Arial', 'B', 14);
 $pdf->Cell(180, 15, utf8_decode("REGISTRO DE PESSOA FÍSICA"), 0, 1, 'C');
 
 $pdf->Ln(5);
-
-//$pdf->Image($fotoImg,160,56, );
-$pdf->SetX(160);
-$pdf->Cell(40, 40, $pdf->Image($fotoImg, 160, $pdf->GetY(), 33.78), 0, 0, 'R', false);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -112,7 +104,7 @@ $pdf->Cell(40, $l, utf8_decode($cpf), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, utf8_decode('CCM:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(45, $l, utf8_decode($ccm), 0, 1, 'L');
+$pdf->Cell(45, $l, utf8_decode($ccm ? "" : "Não cadastrado"), 0, 1, 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -128,7 +120,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(19, $l, utf8_decode('Endereço:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(70, $l, utf8_decode($rua . ', ' . $numero . ', ' . $bairro . ' - ' . $cidade));
+$pdf->MultiCell(180, $l, utf8_decode($rua . ', ' . $numero . ', ' . $bairro . ' - ' . $cidade));
 
 $count = 1;
 foreach ($telefones as $row) {
@@ -150,16 +142,16 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(13, $l, utf8_decode('Banco:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(30, $l, utf8_decode($banco ? "" : "Não cadastrado"), 0, 1, 'L');
+$pdf->Cell(30, $l, utf8_decode(str_replace("–", "-", $banco)), 0, 1, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->SetX($x);
 $pdf->Cell(16, $l, utf8_decode('Agência:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(40, $l, utf8_decode($agencia ? "" : "Não cadastrado"), 0, 1, 'L');
+$pdf->Cell(40, $l, utf8_decode($agencia), 0, 1, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->SetX($x);
 $pdf->Cell(12, $l, utf8_decode('Conta:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(45, $l, utf8_decode($conta ? "" : "Não cadastrado"), 0, 1, 'L');
+$pdf->Cell(45, $l, utf8_decode($conta), 0, 1, 'L');
 $pdf->Output();
 ?>
