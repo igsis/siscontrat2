@@ -66,7 +66,13 @@ if (isset($_POST['apagar'])) {
     }
 }
 
-// $campo = recuperaPessoa($_REQUEST['idPessoa'],$_REQUEST['tipoPessoa']);
+$testaPassaporte = $con->query("SELECT passaporte FROM pessoa_fisicas WHERE id = $idPf")->num_rows;
+if($testaPassaporte > 0){
+    $doc = " AND id NOT IN (120,139,117)";
+
+}else{
+    $doc = " AND id NOT IN (120,139)";
+}
 
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -153,7 +159,7 @@ if (isset($_POST['apagar'])) {
                                                             05MB.</h4>
                                                     </tr>
                                                     <?php
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1 $doc";
                                                     $query_arquivos = mysqli_query($con, $sql_arquivos);
                                                     while ($arq = mysqli_fetch_array($query_arquivos)) {
                                                         $idDoc = $arq['id'];
