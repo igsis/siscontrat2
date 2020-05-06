@@ -1,7 +1,7 @@
 <?php
-include "includes/menu_interno.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
+$idEvento = $_SESSION['idEvento'];
 
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do siscontrat
 $http = $server . "/pdf/";
@@ -15,15 +15,6 @@ if (isset($_POST['idPj']) || isset($_POST['idProponente'])) {
 
 if (isset($_POST['editProponente'])) {
     $idPedido = $_SESSION['idPedido'];
-    $voltar = "<form action='?perfil=evento&p=pedido_edita' method='post'>
-                    <input type='hidden' name='idProponente' value='$idPj'>
-                    <input type='hidden' name='tipoPessoa' value='$tipoPessoa'>
-                        <button type='submit' name='idPedido' id='idPedido' value='$idPedido' class='btn btn-default'>Voltar</button>
-                    </form>";
-} else {
-    $voltar = "<form action='?perfil=evento&p=pj_pesquisa' method='post'>
-                        <button type='submit' class='btn btn-default'>Voltar</button>
-                    </form>";
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['atualizaPj'])) {
@@ -332,7 +323,7 @@ if (isset($_POST['cadastra'])) {
     }
 }
 
-
+include "includes/menu_interno.php";
 ?>
 
 <script>
@@ -564,7 +555,6 @@ if (isset($_POST['cadastra'])) {
                                         class="btn btn-info pull-right">Atualizar
                                 </button>
                     </form>
-                    <?= $voltar ?>
                 </div>
             </div>
         </div>
@@ -659,17 +649,9 @@ if (isset($_POST['cadastra'])) {
                             if (($pedidos['pessoa_tipo_id'] == 2) && ($pedidos['pessoa_juridica_id'] == $idPj)) {
 
                                 ?>
-                                <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                    <input type="hidden" name="pessoa_tipo_id" value="2">
-                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
-                                    <input type="hidden" name="idProponente" value="<?= $pj['id'] ?>">
-                                    <input type="hidden" name="tipoPessoa" value="2">
-                                    <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
-                                    <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
-                                        contratação
-                                    </button>
-                                </form>
-
+                                <a href="?perfil=evento&p=pedido_proponente" class="btn btn-info btn-block">
+                                    Ir ao pedido de contratação
+                                </a>
                                 <?php
                             } else {
                                 ?>
