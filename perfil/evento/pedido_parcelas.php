@@ -79,13 +79,14 @@ if (isset($_POST['gravarParcelas']) || isset($_POST['editarParcelas'])) {
             }
         }
     } else {
-        $parcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido'")->fetch_all(MYSQLI_ASSOC);
+        $parcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = '1'")->fetch_all(MYSQLI_ASSOC);
 
         foreach ($_POST['parcela'] as $key => $parcela) {
             $valor = dinheiroDeBr($_POST['valor'][$key]);
             $data_kit_pagamento = $_POST['data_pagamento'][$key];
 
             if (isset($parcelas[$key])) {
+                $id = $parcelas[$key]['id'];
                 unset($parcelas[$key]);
 
                 $sqlAtualizaParcela = "UPDATE parcelas SET 
@@ -99,6 +100,33 @@ if (isset($_POST['gravarParcelas']) || isset($_POST['editarParcelas'])) {
 
             if ($con->query($sqlAtualizaParcela)) {
                 gravarLog($sqlAtualizaParcela);
+
+                if (isset($_POST['oficina'])) {
+                    $parcela_id = $id ?? $con->insert_id;
+                    $data_inicial = $_POST['data_inicial'][$key];
+                    $data_final = $_POST['data_final'][$key];
+                    $carga_horaria = $_POST['carga_horaria'][$key];
+
+                    if (isset($id)) {
+                        $sqlAtualizaComplemento = "UPDATE parcela_complementos SET
+                                                    data_inicio = '$data_inicial',
+                                                    data_fim = '$data_final',
+                                                    carga_horaria = '$carga_horaria'
+                                                    WHERE parcela_id = '$parcela_id'";
+                        unset($id);
+                    } else {
+                        $sqlAtualizaComplemento = "INSERT INTO parcela_complementos
+                                            (parcela_id, data_inicio, data_fim, carga_horaria) VALUES 
+                                            ('$parcela_id', '$data_inicial', '$data_final', '$carga_horaria')";
+                    }
+
+                    if ($con->query($sqlAtualizaComplemento)) {
+                        gravarLog($sqlAtualizaComplemento);
+                    } else {
+                        $erro = true;
+                    }
+                }
+
             } else {
                 $erro = true;
             }
@@ -111,7 +139,13 @@ if (isset($_POST['gravarParcelas']) || isset($_POST['editarParcelas'])) {
         if (isset($_POST['editarParcelas'])) {
             if (count($parcelas) > 0) {
                 foreach ($parcelas as $parcela) {
-                    $sqlDeletaParcela = "DELETE FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '{$parcela['numero_parcelas']}'";
+                    if (isset($_POST['oficina'])) {
+                        $sqlDeletaParcela = "UPDATE parcela_complementos SET publicado = '0' WHERE parcela_id = '{$parcela['id']}'";
+                        if ($con->query($sqlDeletaParcela)) {
+                            gravarLog($sqlDeletaParcela);
+                        }
+                    }
+                    $sqlDeletaParcela = "UPDATE parcelas SET publicado = '0' WHERE pedido_id = '$idPedido' AND numero_parcelas = '{$parcela['numero_parcelas']}'";
                     if ($con->query($sqlDeletaParcela)) {
                         gravarLog($sqlDeletaParcela);
                     }
@@ -119,7 +153,7 @@ if (isset($_POST['gravarParcelas']) || isset($_POST['editarParcelas'])) {
             }
         }
 
-        $queryParcelas = $con->query("SELECT valor, data_pagamento, numero_parcelas FROM parcelas WHERE pedido_id = '$idPedido' ORDER BY numero_parcelas")->fetch_all(MYSQLI_ASSOC);
+        $queryParcelas = $con->query("SELECT valor, data_pagamento, numero_parcelas FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = '1' ORDER BY numero_parcelas")->fetch_all(MYSQLI_ASSOC);
         $forma_pagamento = "";
 
         foreach ($queryParcelas as $parcela) {
@@ -251,6 +285,9 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
                                             geraOpcaoParcelas("oficina_opcoes", $option);
                                             ?>
                                         </select>
+                                        <div class="has-error" id="msgParcelas">
+                                            <span class="help-block text-danger"><strong>É necessário editar as parcelas</strong></span>
+                                        </div>
                                     </div>
                                 <?php else: ?>
                                     <div class="form-group col-md-6">

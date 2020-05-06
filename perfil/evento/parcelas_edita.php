@@ -39,7 +39,7 @@ $pedido = recuperaDados("pedidos", "id", $idPedido);
 $sqlParcelas = "SELECT p.id, p.valor, p.data_pagamento, pc.data_inicio, pc.data_fim, pc.carga_horaria 
                 FROM parcelas AS p
                 LEFT JOIN parcela_complementos pc on p.id = pc.parcela_id
-                WHERE pedido_id = '$idPedido'";
+                WHERE pedido_id = '$idPedido' AND p.publicado = 1";
 
 $queryParcelas = $con->query($sqlParcelas);
 
@@ -72,9 +72,6 @@ if ($queryParcelas->num_rows) {
                             <?php for ($i = 0; $i < $nParcelas; $i++):
                                 if (isset($oficina)): ?>
                                     <input type="hidden" name="oficina" value="1">
-                                    <?php if (isset($parcelas)): ?>
-                                        <input type="hidden" name="parcela_id[<?=$i?>]" value="<?=$parcelas[$i]['id']?>">
-                                    <?php endif; ?>
                                     <div class='row'>
                                         <div class='form-group col-md-1'>
                                             <label for='parcela'>Parcela </label>
