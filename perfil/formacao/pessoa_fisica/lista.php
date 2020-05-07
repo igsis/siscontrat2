@@ -5,8 +5,6 @@ $sql = "SELECT * FROM pessoa_fisicas";
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
 
-unset($_SESSION['idPf']);
-
 ?>
 
 <div class="content-wrapper">
@@ -34,7 +32,7 @@ unset($_SESSION['idPf']);
                             <thead>
                             <tr>
                                 <th>Nome</th>
-                                <th>CPF</th>
+                                <th>CPF/Passaporte</th>
                                 <th>Data nascimento</th>
                                 <th>Email</th>
                                 <th width="9%">Demais anexos</th>
@@ -52,14 +50,28 @@ unset($_SESSION['idPf']);
                                 <?php
                             } else {
                                 while ($pf = mysqli_fetch_array($query)) {
+                                    //verifica se irá mostrar passaporte ou cpf
+                                    if($pf['cpf'] == NULL){
+                                        $doc = $pf['passaporte'];
+                                    }else{
+                                        $doc = $pf['cpf'];
+                                    }
+
+                                    //verifica se há ou não data de nascimento
+
+                                    if($pf['data_nascimento'] == "0000-00-00"){
+                                        $dataNascimento = "Não cadastrado";
+                                    }else{
+                                        $dataNascimento = exibirDataBr($pf['data_nascimento']);
+                                    }
                                     ?>
                                     <tr>
                                         <td><?= $pf['nome'] ?></td>
-                                        <td><?= $pf['cpf'] ?></td>
-                                        <td><?= exibirDataBr($pf['data_nascimento']) ?></td>
+                                        <td><?= $doc ?></td>
+                                        <td><?= $dataNascimento ?></td>
                                         <td><?= $pf['email'] ?></td>
                                         <td>
-                                            <form action="?perfil=formacao&p=pessoa_fisica&sp=anexos"
+                                            <form action="?perfil=formacao&p=pessoa_fisica&sp=pf_demais_anexos"
                                                   method="POST">
                                                 <input type="hidden" name="idPf" id="idPf" value="<?= $pf['id'] ?>">
                                                 <button type="submit" name="carregar" id="carregar"
@@ -89,7 +101,7 @@ unset($_SESSION['idPf']);
                             <tfoot>
                             <tr>
                                 <th>Nome</th>
-                                <th>CPF</th>
+                                <th>CPF/Passaporte</th>
                                 <th>Data nascimento</th>
                                 <th>Email</th>
                                 <th width="9%">Demais anexos</th>

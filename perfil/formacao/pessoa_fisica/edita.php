@@ -7,10 +7,6 @@ $http = $server . "/pdf/";
 $linkResumo = $http . "rlt_formacao_pf.php";
 $link_facc = $http . "rlt_fac_pf.php";
 
-if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
-    $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
-}
-
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $nome = addslashes($_POST['nome']);
     $nomeArtistico = addslashes($_POST['nomeArtistico']);
@@ -203,94 +199,32 @@ if (isset($_POST['carregar'])) {
     $idPf = $_POST['idPf'];
 }
 
-if (isset($_POST["enviar"])) {
-    $idPf = $_POST['idPessoa'];
-    $tipoPessoa = 1;
-
-    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
-    $query_arquivos = mysqli_query($con, $sql_arquivos);
-
-    while ($arq = mysqli_fetch_array($query_arquivos)) {
-        $y = $arq['id'];
-        $x = $arq['sigla'];
-        $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
-        $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
-
-        if ($f_size > 5242880) {
-            $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
-
-        } else {
-            if ($nome_arquivo != "") {
-                $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
-                $new_name = date("YmdHis", strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
-                $hoje = date("Y-m-d H:i:s", strtotime("-3 hours"));
-                $dir = '../uploadsdocs/'; //Diretório para uploads
-                if ($y != 141) {
-                    $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-                }else{
-                    $allowedExts = array(".png", ".PNG", ".JPG", ".jpg"); //Extensões permitidas
-                }
-                $ext = strtolower(substr($nome_arquivo, -4));
-
-                if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
-                {
-                    if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPf', '$y', '$new_name', '$hoje', '1'); ";
-                        $query = mysqli_query($con, $sql_insere_arquivo);
-
-                        if ($query) {
-                            $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                            echo "<script>
-                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
-                            </script>";
-                            gravarLog($sql_insere_arquivo);
-                        } else {
-                            $mensagem = mensagem("danger", "Erro ao gravar no banco");
-                        }
-                    } else {
-                        $mensagem = mensagem("danger", "Erro no upload");
-                    }
-                } else {
-                    echo "<script>
-                            swal(\"Erro no upload! Anexar documentos somente no formato PDF.\", \"\", \"error\");                             
-                        </script>";
-                }
-            }
-        }
-    }
-}
-
-if (isset($_POST['apagar'])) {
-    $idArquivo = $_POST['idArquivo'];
-    $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
-    if (mysqli_query($con, $sql_apagar_arquivo)) {
-        $arq = recuperaDados("arquivos", $idArquivo, "id");
-        $mensagem = mensagem("success", "Arquivo " . $arq['arquivo'] . "apagado com sucesso!");
-        gravarLog($sql_apagar_arquivo);
-    } else {
-        $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
-    }
-}
-
-$_SESSION['idPf'] = $idPf;
-
 $sqlTelefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 
 $pf = recuperaDados("pessoa_fisicas", "id", $idPf);
 $endereco = recuperaDados("pf_enderecos", "pessoa_fisica_id", $idPf);
-$nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
-$observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
-$banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
-$foto = "SELECT arquivo FROM arquivos WHERE lista_documento_id = 141 AND publicado = 1 AND origem_id = '$idPf'";
-$foto = $con->query($foto)->fetch_assoc()['arquivo'];
-if ($foto == null) {
-    $foto = "avatar_default.png";
-    $fotoImg = "../visual/images/$foto";
+$testaNit = $con->query("SELECT nit FROM nits WHERE pessoa_fisica_id = $idPf");
+
+if ($testaNit->num_rows > 0) {
+    while ($nitArray = mysqli_fetch_array($testaNit)) {
+        $nit = $nitArray['nit'];
+    }
 } else {
-    $fotoImg = "../uploadsdocs/$foto";
+    $nit = NULL;
 }
+
+$testaObs = $con->query("SELECT * FROM pf_observacoes WHERE pessoa_fisica_id = $idPf");
+
+if ($testaObs->num_rows > 0) {
+    while ($obsArray = mysqli_fetch_array($testaObs)) {
+        $obs = $obsArray['observacao'];
+    }
+} else {
+    $obs = NULL;
+}
+$banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 ?>
 
 <script language="JavaScript">
@@ -337,17 +271,12 @@ if ($foto == null) {
                             <div class="row">
                                 <?php
                                 if (empty($pf['cpf'])) { ?>
-                                    <div class="col-md-12">
-                                        <label for="passaporte">Passaporte: </label>
-                                        <input type="text" name="passaporte" disabled value="<?= $pf['passaporte'] ?>" class="form-control">
-                                    </div>
+                                <div class="form-group col-md-6">
+                                    <label for="passaporte">Passaporte: </label>
+                                    <input type="text" name="passaporte" disabled value="<?= $pf['passaporte'] ?>"
+                                           class="form-control">
                                 </div>
-                                <br>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <?php anexosNaPagina(116, $idPf, "modal-passaporte", "Passaporte"); ?>
-                                    </div>
-                                    <?php
+                                <?php
                                 } else {
                                     ?>
                                     <div class="form-group col-md-2">
@@ -406,7 +335,8 @@ if ($foto == null) {
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
                                     <input type="number" name="numero" class="form-control"
-                                           placeholder="Digite o número" min="0" required value="<?= $endereco['numero'] ?>">
+                                           placeholder="Digite o número" min="0" required
+                                           value="<?= $endereco['numero'] ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="complemento">Complemento: </label>
@@ -491,10 +421,10 @@ if ($foto == null) {
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
-                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
+                                           placeholder="Digite o NIT" value="<?= $nit ?>">
                                 </div>
                             </div>
 
@@ -502,7 +432,7 @@ if ($foto == null) {
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
                                     <textarea name="observacao" rows="3"
-                                              class="form-control"><?= $observacao['observacao'] ?></textarea>
+                                              class="form-control"><?= $obs ?></textarea>
                                 </div>
                             </div>
 
@@ -510,7 +440,7 @@ if ($foto == null) {
                                 <div class="form-group col-md-4">
                                     <label for="banco">Banco</label>
                                     <select name="banco" id="banco" class="form-control">
-                                    <option value="">Selecione um banco...</option>
+                                        <option value="">Selecione um banco...</option>
                                         <?php
                                         geraOpcao('bancos', $banco['banco_id']);
                                         ?>
@@ -532,27 +462,11 @@ if ($foto == null) {
 
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 42 AND origem_id = '$idPf' AND publicado = 1 group by id";
-                                    $queryFACC = mysqli_query($con, $sqlFACC);
-                                    ?>
                                     <label>Gerar FACC</label><br>
                                     <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
                                        class="btn btn-primary btn-block">Clique aqui para
                                         gerar a FACC
                                     </a>
-                                </div>
-
-                                <div class="form-group col-md-5">
-                                    <label>&nbsp;</label><br>
-                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                        no campo correspondente.</p>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(42, $idPf, "modal-facc", "FACC");
-                                    ?>
                                 </div>
                             </div>
 
@@ -566,7 +480,7 @@ if ($foto == null) {
                                         <button type="button" class="btn btn-default pull-left">Voltar</button>
                                     </a>
 
-                                    <a href="<?= $linkResumo ?>" target="_blank">
+                                    <a href="<?= $linkResumo . "?idPf=" . $idPf?>" target="_blank">
                                         <button type="button" name="pdf" id="pdf" class="btn btn-primary center-block"
                                                 style="align-items: center;">Imprimir resumo
                                         </button>
@@ -584,41 +498,5 @@ if ($foto == null) {
                 </div>
             </div>
         </div>
-        <?php
-        modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
-        ?>
     </section>
 </div>
-<div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Confirmação de Exclusão</h4>
-            </div>
-            <div class="modal-body text-center">
-                <p>Tem certeza que deseja excluir este arquivo?</p>
-            </div>
-            <div class="modal-footer">
-                <form action="?perfil=formacao&p=pessoa_fisica&sp=edita" method="post">
-                    <input type="hidden" name="idArquivo" id="idArquivo" value="">
-                    <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
-                    <input type="hidden" name="apagar" id="apagar">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
-                    </button>
-                    <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Apagar">
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-    $('#exclusao').on('show.bs.modal', function (e) {
-        let nome = $(e.relatedTarget).attr('data-nome');
-        let id = $(e.relatedTarget).attr('data-id');
-
-        $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
-        $(this).find('#idArquivo').attr('value', `${id}`);
-    })
-</script>

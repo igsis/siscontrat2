@@ -401,6 +401,7 @@ $disabledImpr = "";
                                     <label for="valorTotal">Valor Total: </label>
                                     <input type="text" value="<?= dinheiroParaBr($pedido['valor_total']) ?>"
                                            onKeyPress="return(moeda(this,'.',',',event))" class="form-control"
+                                           disabled
                                            name="valorTotal" id="valorTotal">
                                 </div>
 
