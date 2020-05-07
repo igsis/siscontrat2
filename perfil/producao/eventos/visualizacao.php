@@ -102,7 +102,7 @@ $view = recuperaDados('producao_eventos', 'evento_id', $idEvento);
                         </div>
                         <div class="box box-primary">
                             <div class="box-header with-border">
-                                <h3 class="box-title">Anexos de pedido</h3>
+                                <h3 class="box-title">Anexos de Comunicação e Produção</h3>
                             </div>
                             <div class="box-body">
                                 <div class="table-responsive">
@@ -119,7 +119,7 @@ $view = recuperaDados('producao_eventos', 'evento_id', $idEvento);
                                             $sql = "SELECT *
                                             FROM lista_documentos as list
                                             INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
-                                            WHERE arq.origem_id = '$idPedido' AND list.tipo_documento_id = 3
+                                            WHERE arq.origem_id = '$idPedido' AND list.tipo_documento_id = 8
                                             AND arq.publicado = '1' ORDER BY arq.id";
                                             $query = mysqli_query($con, $sql);
                                         ?>
