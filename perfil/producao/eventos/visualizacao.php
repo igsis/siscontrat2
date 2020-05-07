@@ -105,6 +105,17 @@ $view = recuperaDados('producao_eventos', 'evento_id', $idEvento);
                                 <h3 class="box-title">Anexos de Comunicação e Produção</h3>
                             </div>
                             <div class="box-body">
+                                <?php
+                                $sql = "SELECT *
+                                            FROM lista_documentos as list
+                                            INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
+                                            WHERE arq.origem_id = '$idPedido' AND list.tipo_documento_id = 8
+                                            AND arq.publicado = '1' ORDER BY arq.id";
+                                $query = mysqli_query($con, $sql);
+                                $linhas = mysqli_num_rows($query);
+
+                                if ($linhas > 0):
+                                ?>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -114,16 +125,6 @@ $view = recuperaDados('producao_eventos', 'evento_id', $idEvento);
                                             <td>Data de envio</td>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        <?php
-                                            $sql = "SELECT *
-                                            FROM lista_documentos as list
-                                            INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
-                                            WHERE arq.origem_id = '$idPedido' AND list.tipo_documento_id = 8
-                                            AND arq.publicado = '1' ORDER BY arq.id";
-                                            $query = mysqli_query($con, $sql);
-                                        ?>
-                                        </tbody>
                                         <tbody>
                                         <?php
                                         while ($arquivo = mysqli_fetch_array($query)) {
@@ -142,6 +143,7 @@ $view = recuperaDados('producao_eventos', 'evento_id', $idEvento);
                                         </tbody>
                                     </table>
                                 </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
