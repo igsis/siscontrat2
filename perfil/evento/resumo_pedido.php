@@ -39,38 +39,46 @@ $pedido = $query->fetch_assoc();
                                         <h3 class="box-title">Detalhes de Parcelas</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <p><strong>Verba:</strong> Aeoo</p>
+                                        <?php if (($pedido['numero_parcelas'] != null) || ($pedido['verba_id']) != null): ?>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <p><strong>Verba:</strong> <?=$pedido['verba_id']?></p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p><strong>Parcelas:</strong> <?=$pedido['numero_parcelas']?></p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p><strong>Valor Total:</strong> <?=$pedido['valor_total']?></p>
+                                                </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <p><strong>Parcelas:</strong> Parcela Única</p>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p>
+                                                        <strong>Forma de Pagamento:</strong> <?=$pedido['forma_pagamento']?>
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <p><strong>Valor Total:</strong> R$ 80.000,00</p>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p>
+                                                        <strong>Justificativa: </strong> <?=$pedido['justificativa']?>
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p>
-                                                    <strong>Forma de Pagamento:</strong> Teste
-                                                </p>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p>
+                                                        <strong>Observação: </strong> <?=$pedido['observacao']?>
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p>
-                                                    <strong>Justificativa: </strong> Teste 2
-                                                </p>
+                                        <?php else: ?>
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    Detalhes da parcela não cadastrado
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p>
-                                                    <strong>Observação: </strong> Teste 3
-                                                </p>
-                                            </div>
-                                        </div>
+                                        <?php endif ?>
                                     </div>
                                 </div>
                             </div>
@@ -81,22 +89,41 @@ $pedido = $query->fetch_assoc();
                                         <h3 class="box-title">Cadastro do Proponente</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p><strong>Razão Social: </strong>Aquela Empresa</p>
+                                        <?php if (($pedido['pessoa_juridica_id'] == null) && ($pedido['pessoa_fisica_id'] == null)): ?>
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    Proponente não cadastrado
+                                                </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <p><strong>CNPJ: </strong>12345678945</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p><strong>Representante Fiscal: </strong> Aeoo De Souza</p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p><strong>Representante Fiscal 2: </strong> Aeoo Soares</p>
-                                            </div>
-                                        </div>
+                                        <?php else: ?>
+                                            <?php if ($pedido['pessoa_tipo_id'] == 1): ?>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p><strong>Nome: </strong></p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p><strong>CPF: </strong>111.222.333-77</p>
+                                                    </div>
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p><strong>Razão Social: </strong></p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p><strong>CNPJ: </strong>111.222.333-77</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p><strong>Representante Fiscal: </strong> Aeoo De Souza</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p><strong>Representante Fiscal 2: </strong> Aeoo Soares</p>
+                                                    </div>
+                                                </div>
+                                            <?php endif ?>
+                                        <?php endif ?>
                                     </div>
                                 </div>
                             </div>
@@ -135,16 +162,16 @@ $pedido = $query->fetch_assoc();
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <p><strong>1º Tópico: </strong> Aeoo 123</p>
+                                                <p><strong>Aneox 1: </strong> Aeoo 123</p>
                                             </div>
                                             <div class="col-md-12">
-                                                <p><strong>2º Tópico: </strong> Aeoo 123</p>
+                                                <p><strong>Aneox 2: </strong> Aeoo 123</p>
                                             </div>
                                             <div class="col-md-12">
-                                                <p><strong>3º Tópico: </strong> Aeoo 123</p>
+                                                <p><strong>Aneox 3: </strong> Aeoo 123</p>
                                             </div>
                                             <div class="col-md-12">
-                                                <p><strong>4º Tópico: </strong> Aeoo 123</p>
+                                                <p><strong>Aneox 4: </strong> Aeoo 123</p>
                                             </div>
                                         </div>
                                     </div>
