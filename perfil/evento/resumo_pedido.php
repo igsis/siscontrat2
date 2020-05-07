@@ -6,6 +6,17 @@ $evento = recuperaDados("eventos", "id", $idEvento);
 $sql = "SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
 $query = $con->query($sql);
 $pedido = $query->fetch_assoc();
+
+if($pedido['pessoa_tipo_id'] == 1) {
+    $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
+} else {
+    $proponente = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
+    $representante1 = recuperaDados('representante_legais', 'id', $proponente['representante_legal1_id']);
+    $representante2 = recuperaDados('representante_legais', 'id', $proponente['representante_legal2_id']);
+}
+
+$valoresPorEquipamento = $con->query("SELECT * FROM valor_equipamentos WHERE pedido_id = '{$pedido['id']}'")->fetch_all(MYSQLI_ASSOC);
+$parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -99,28 +110,30 @@ $pedido = $query->fetch_assoc();
                                             <?php if ($pedido['pessoa_tipo_id'] == 1): ?>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <p><strong>Nome: </strong></p>
+                                                        <p><strong>Nome: </strong><?=$proponente['nome']?></p>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <p><strong>CPF: </strong>111.222.333-77</p>
+                                                        <p><strong>CPF: </strong><?=$proponente['cpf']?></p>
                                                     </div>
                                                 </div>
                                             <?php else: ?>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <p><strong>Razão Social: </strong></p>
+                                                        <p><strong>Razão Social: </strong><?=$proponente['razao_social']?></p>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <p><strong>CNPJ: </strong>111.222.333-77</p>
+                                                        <p><strong>CNPJ: </strong><?=$proponente['cnpj']?></p>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <p><strong>Representante Fiscal: </strong> Aeoo De Souza</p>
+                                                        <p><strong>Representante Fiscal: </strong><?=$representante1['nome']?></p>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <p><strong>Representante Fiscal 2: </strong> Aeoo Soares</p>
-                                                    </div>
+                                                    <?php if ($representante2 != null): ?>
+                                                        <div class="col-md-6">
+                                                            <p><strong>Representante Fiscal 2: </strong><?=$representante2['nome']?></p>
+                                                        </div>
+                                                    <?php endif ?>
                                                 </div>
                                             <?php endif ?>
                                         <?php endif ?>
@@ -135,20 +148,28 @@ $pedido = $query->fetch_assoc();
                                         <h3 class="box-title">Parecer Artístico</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p><strong>1º Tópico: </strong> Aeoo 123</p>
+                                        <?php if ($parecer != null): ?>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p><strong>1º Tópico: </strong> <?= $parecer['topico1'] ?></p>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <p><strong>2º Tópico: </strong> <?= $parecer['topico2'] ?></p>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <p><strong>3º Tópico: </strong> <?= $parecer['topico3'] ?></p>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <p><strong>4º Tópico: </strong> <?= $parecer['topico4'] ?></p>
+                                                </div>
                                             </div>
-                                            <div class="col-md-12">
-                                                <p><strong>2º Tópico: </strong> Aeoo 123</p>
+                                        <?php else: ?>
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    Pareceres artístico não cadastrados
+                                                </div>
                                             </div>
-                                            <div class="col-md-12">
-                                                <p><strong>3º Tópico: </strong> Aeoo 123</p>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <p><strong>4º Tópico: </strong> Aeoo 123</p>
-                                            </div>
-                                        </div>
+                                        <?php endif ?>
                                     </div>
                                 </div>
                             </div>
@@ -162,16 +183,16 @@ $pedido = $query->fetch_assoc();
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <p><strong>Aneox 1: </strong> Aeoo 123</p>
+                                                <p><strong>Anexo 1: </strong> Aeoo 123</p>
                                             </div>
                                             <div class="col-md-12">
-                                                <p><strong>Aneox 2: </strong> Aeoo 123</p>
+                                                <p><strong>Anexo 2: </strong> Aeoo 123</p>
                                             </div>
                                             <div class="col-md-12">
-                                                <p><strong>Aneox 3: </strong> Aeoo 123</p>
+                                                <p><strong>Anexo 3: </strong> Aeoo 123</p>
                                             </div>
                                             <div class="col-md-12">
-                                                <p><strong>Aneox 4: </strong> Aeoo 123</p>
+                                                <p><strong>Anexo 4: </strong> Aeoo 123</p>
                                             </div>
                                         </div>
                                     </div>
@@ -184,11 +205,19 @@ $pedido = $query->fetch_assoc();
                                         <h3 class="box-title">Valores por Equipamento</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p><strong>Equipmento X: </strong> Aeoo 123</p>
+                                        <?php if ($valoresPorEquipamento != null): ?>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p><strong>Equipmento X: </strong> Aeoo 123</p>
+                                                </div>
                                             </div>
-                                        </div>
+                                        <?php else: ?>
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    Valores por equipamento não cadastrados
+                                                </div>
+                                            </div>
+                                        <?php endif ?>
                                     </div>
                                 </div>
                             </div>
