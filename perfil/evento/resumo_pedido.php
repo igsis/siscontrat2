@@ -7,6 +7,8 @@ $sql = "SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEve
 $query = $con->query($sql);
 $pedido = $query->fetch_assoc();
 
+$verba = $con->query("SELECT verba FROM verbas WHERE id = '{$pedido['verba_id']}'")->fetch_assoc()['verba'];
+
 if($pedido['pessoa_tipo_id'] == 1) {
     $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 } else {
@@ -15,7 +17,18 @@ if($pedido['pessoa_tipo_id'] == 1) {
     $representante2 = recuperaDados('representante_legais', 'id', $proponente['representante_legal2_id']);
 }
 
-$valoresPorEquipamento = $con->query("SELECT * FROM valor_equipamentos WHERE pedido_id = '{$pedido['id']}'")->fetch_all(MYSQLI_ASSOC);
+//lista arquivos de determinado pedido
+$sql = "SELECT * FROM lista_documentos as list
+        INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
+        WHERE arq.origem_id = '{$pedido['id']}' AND list.tipo_documento_id = 3
+        AND arq.publicado = '1' ORDER BY arq.id";
+$query = $con->query($sql);
+$linhas = $query->num_rows;
+
+$sqlValorEquipamento = "SELECT l.local, ve.valor FROM valor_equipamentos AS ve
+                        INNER JOIN locais l on ve.local_id = l.id
+                        WHERE pedido_id = '{$pedido['id']}'";
+$valoresPorEquipamento = $con->query($sqlValorEquipamento)->fetch_all(MYSQLI_ASSOC);
 $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -53,19 +66,19 @@ $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
                                         <?php if (($pedido['numero_parcelas'] != null) || ($pedido['verba_id']) != null): ?>
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <p><strong>Verba:</strong> <?=$pedido['verba_id']?></p>
+                                                    <p><strong>Verba: </strong><?=$verba?></p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <p><strong>Parcelas:</strong> <?=$pedido['numero_parcelas']?></p>
+                                                    <p><strong>Parcelas: </strong><?=$pedido['numero_parcelas']?></p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <p><strong>Valor Total:</strong> <?=$pedido['valor_total']?></p>
+                                                    <p><strong>Valor Total: </strong> R$ <?=dinheiroParaBr($pedido['valor_total'])?></p>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <p>
-                                                        <strong>Forma de Pagamento:</strong> <?=$pedido['forma_pagamento']?>
+                                                        <strong>Forma de Pagamento: </strong><?=$pedido['forma_pagamento']?>
                                                     </p>
                                                 </div>
                                             </div>
@@ -182,18 +195,39 @@ $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
-                                            <div class="col-md-12">
-                                                <p><strong>Anexo 1: </strong> Aeoo 123</p>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <p><strong>Anexo 2: </strong> Aeoo 123</p>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <p><strong>Anexo 3: </strong> Aeoo 123</p>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <p><strong>Anexo 4: </strong> Aeoo 123</p>
-                                            </div>
+                                            <?php if ($linhas > 0): ?>
+                                                <div class="col-md-12">
+                                                    <table class='table text-center table-striped table-bordered table-condensed'>
+                                                        <thead>
+                                                        <tr class='bg-info text-bold'>
+                                                            <td>Tipo de arquivo</td>
+                                                            <td>Nome do documento</td>
+                                                            <td>Data de envio</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <?php while ($arquivo = $query->fetch_assoc()): ?>
+                                                            <tr>
+                                                                <td class='list_description'><?= $arquivo['documento'] ?></td>
+                                                                <td class='list_description'>
+                                                                    <a href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
+                                                                       target='_blank'>
+                                                                        <?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?>
+                                                                    </a>
+                                                                </td>
+                                                                <td class='list_description'>
+                                                                    (<?= exibirDataBr($arquivo['data']) ?>)
+                                                                </td>
+                                                            </tr>
+                                                        <?php endwhile; ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="col-md-12 text-center">
+                                                    Nenhum arquivo anexado
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -206,11 +240,13 @@ $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
                                     </div>
                                     <div class="box-body">
                                         <?php if ($valoresPorEquipamento != null): ?>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <p><strong>Equipmento X: </strong> Aeoo 123</p>
+                                            <?php foreach ($valoresPorEquipamento as $valor): ?>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <p><strong><?=$valor['local']?>: </strong>R$ <?=dinheiroParaBr($valor['valor'])?></p>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            <?php endforeach ?>
                                         <?php else: ?>
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
@@ -223,11 +259,6 @@ $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
                             </div>
                         </div>
                     </div>
-                    <!-- /.box-body -->
-                    <div class="box-footer">
-                        Footer
-                    </div>
-                    <!-- /.box-footer-->
                 </div>
                 <!-- /.box -->
             </div>
