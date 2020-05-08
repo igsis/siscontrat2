@@ -4,6 +4,13 @@ $con = bancoMysqli();
 $idPedido = $_SESSION['idPedido'];
 $idEvento = $_SESSION['idEvento'];
 
+$pessoaTipoPedido = recuperaDados('pedidos','id',$idPedido)['pessoa_tipo_id'];
+if ($pessoaTipoPedido == 1){
+    $tipo = '10';
+}else{
+    $tipo = '9';
+}
+
 $sqlAtracoes = "SELECT id FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'";
 $atracoes = $con->query($sqlAtracoes)->fetch_all(MYSQLI_ASSOC);
 
@@ -134,11 +141,10 @@ include "includes/menu_interno.php";
                                     $sql = "SELECT * 
                                             FROM lista_documentos as list
                                             INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
-                                            WHERE arq.origem_id = '$idPedido' AND list.tipo_documento_id = 3
+                                            WHERE arq.origem_id = '$idPedido' AND list.tipo_documento_id IN  (3, {$tipo})
                                             AND arq.publicado = '1' ORDER BY arq.id";
                                     $query = mysqli_query($con, $sql);
                                     $linhas = mysqli_num_rows($query);
-
                                     if ($linhas > 0) {
                                         ?>
                                         <table class='table text-center table-striped table-bordered table-condensed'>
@@ -202,7 +208,7 @@ include "includes/menu_interno.php";
                                                     $sqlAdicional = "AND (".implode(" OR ", $whereAdicional).")";
                                                 } else
                                                     $sqlAdicional = "";
-                                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1 $sqlAdicional";
+                                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id IN (3,{$tipo}) and publicado = 1 $sqlAdicional";
                                             } else {
                                                 $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
                                             }
