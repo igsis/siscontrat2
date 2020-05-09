@@ -68,20 +68,28 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                             $idEvento = $eventoVerf['id'];
                             $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
                             $queryLocal = mysqli_query($con, $sqlLocal);
+                            $numLocal = mysqli_num_rows($queryLocal);
                             $local = '';
-                            while ($locais = mysqli_fetch_array($queryLocal)) {
-                                $local = $local . '; ' . $locais['local'];
-                            }
-                            $local = substr($local, 1);
+                            if ($numLocal):
+                                while ($locais = mysqli_fetch_array($queryLocal)) {
+                                    $local = $local . '; ' . $locais['local'];
+                                }
 
-                            $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN ocorrencias AS o ON o.espaco_id = e.id WHERE o.origem_ocorrencia_id = '$idEvento'";
-                            $queryEspaco = mysqli_query($con, $sqlEspaco);
-                            $espaco = '';
-                            while ($espacos = mysqli_fetch_array($queryEspaco)) {
-                                $espaco = $espaco . '; ' . $espacos['espaco'];
-                            }
-                            $espaco = substr($espaco, 1);
-
+                                $local = substr($local, 1);
+                                $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN ocorrencias AS o ON o.espaco_id = e.id WHERE o.origem_ocorrencia_id = '$idEvento'";
+                                $queryEspaco = mysqli_query($con, $sqlEspaco);
+                                $numEspaco = mysqli_num_rows($queryEspaco);
+                                $espaco = '';
+                                if ($numEspaco):
+                                    while ($espacos = mysqli_fetch_array($queryEspaco)) {
+                                        $espaco = $espaco . '; ' . $espacos['espaco'];
+                                    }
+                                endif;
+                                $espaco = substr($espaco, 1);
+                            else:
+                                $local = "";
+                                $espaco = "";
+                            endif;
                             $queryData = $con->query("SELECT data_envio FROM evento_envios WHERE evento_id = " . $eventoVerf['id'])->fetch_assoc();
                             $dataEnvio = $queryData['data_envio'];
                             ?>
