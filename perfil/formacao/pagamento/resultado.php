@@ -1,28 +1,26 @@
 <?php
 $con = bancoMysqli();
 
-$protocolo = '';
-$numProcesso = '';
-$proponente = '';
-$row = 0;
-$where = '';
+$protocolo = $_POST['protocolo'] ?? NULL;
+$num_processo = $_POST['numProcesso'] ?? NULL;
+$proponente = $_POST['proponente'] ?? NULL;
 
-if (isset($_POST['protocolo']) && $_POST['protocolo'] != null) {
-    $protocolo = $_POST['protocolo'];
-    $protocolo = " AND fc.protocolo LIKE '$protocolo' ";
-}
+$sqlProcesso = '';
+$sqlProponente = '';
+$sqlProtocolo = '';
 
-if (isset($_POST['numProcesso']) && $_POST['numProcesso'] != null) {
-    $numProcesso = $_POST['numProcesso'];
-    $numProcesso = " AND fc.num_processo_pagto LIKE '$numProcesso' ";
-}
+if ($protocolo != null)
+    $sqlProtocolo = " AND fc.protocolo LIKE '%$protocolo%'";
+if ($num_processo != null)
+    $sqlProcesso = " AND p.numero_processo LIKE '%$num_processo%'";
+if ($proponente != null)
+    $sqlProponente = " AND fc.pessoa_fisica_id = '$proponente'";
 
-if (isset($_POST['proponente']) && $_POST['proponente'] != null) {
-    $proponente = $_POST['proponente'];
-    $proponente = " AND fc.pessoa_fisica_id LIKE '$proponente' ";
-}
-
-$sql = "SELECT fc.id, p.id as pedido_id, fc.protocolo, fc.pessoa_fisica_id, p.numero_processo FROM formacao_contratacoes fc INNER JOIN pedidos p on fc.id = p.origem_id WHERE p.origem_tipo_id = 2 AND fc.publicado = 1 $proponente $numProcesso $protocolo";
+$sql = "SELECT fc.id, p.id AS pedido_id, fc.protocolo, fc.pessoa_fisica_id, p.numero_processo 
+        FROM formacao_contratacoes fc 
+        INNER JOIN pedidos p ON fc.id = p.origem_id
+        WHERE p.origem_tipo_id = 2 AND fc.publicado = 1 
+        $sqlProponente $sqlProcesso $sqlProtocolo";
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
 ?>

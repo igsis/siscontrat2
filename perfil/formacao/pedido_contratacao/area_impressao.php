@@ -76,8 +76,8 @@ $idPf = $pedido['pessoa_fisica_id'];
                         <nav class="navbar navbar-static-top bg-light-blue-active">
                             <h4 align="center">OUTROS</h4>
                         </nav>
-                        <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank">
-                            <button type="button" class="btn btn-outline-info center-block">
+                        <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button">
+                            <button type="button" style="color:black;" class="btn btn-outline-info center-block">
                                 FACC
                             </button>
                         </a>

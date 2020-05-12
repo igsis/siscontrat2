@@ -22,6 +22,19 @@ $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 
 $ano = date('Y',strtotime("-3 hours"));
 
+$enderecoArray = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
+if($enderecoArray == NULL){
+    $endereco = "Não cadastrado";
+}else{
+    $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " .$enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+}
+
+if($pessoa['data_nascimento'] == '0000-00-00'){
+    $dataNascimento = "Não cadastrado";
+}else{
+    $dataNascimento = exibirDataBr($pessoa['data_nascimento']);
+}
+
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
 $pdf->AddPage();
@@ -134,7 +147,7 @@ if($pessoa['passaporte'] != NULL){
 }else{
     $pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
     $pdf->SetFont('Arial', '', 10);
-    $pdf->Cell(50, $l, utf8_decode($pessoa['rg']), 0, 0, 'L');
+    $pdf->Cell(50, $l, utf8_decode($pessoa['rg'] ?? "Não cadastrado"), 0, 0, 'L');
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
     $pdf->SetFont('Arial', '', 10);
@@ -147,15 +160,13 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(35, $l, 'Data de Nascimento:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(25, $l, utf8_decode(exibirDataBr($pessoa['data_nascimento'])), 0, 'L', 0);
-
-$endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
+$pdf->MultiCell(120, $l, utf8_decode($dataNascimento), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(18, $l, utf8_decode("Endereço:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(160, $l, utf8_decode($endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " .$endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf']), 0, 'L', 0);
+$pdf->MultiCell(160, $l, utf8_decode($endereco), 0, 'L', 0);
 
 $pdf->Ln(7);
 
@@ -204,7 +215,9 @@ $pdf->SetFont('Arial','', 10);
 if($pessoa['passaporte'] != NULL){
     $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
 }else{
-    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $rg = $pessoa['rg'] == NULL ? "Não cadastrado" : $pessoa['rg'];
+    $rg = "RG: " . $rg;
+    $pdf->Cell(100, 4,  utf8_decode($rg), 0, 1, 'L');
 }
 
 $pdf->Output();

@@ -73,7 +73,7 @@ $dotacao = $con->query("SELECT acao FROM verbas WHERE id = " . $programa['verba_
         "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
         "<p><strong>Data / Período:</strong> " . retornaPeriodoFormacao($fc['form_vigencia_id']) . "</p>" .
         "<p><strong>Local(ais):</strong> " . $local . "</p>" .
-        "<p><strong>Carga Horária:</strong> " . $carga . "</p>" .
+        "<p><strong>Carga Horária:</strong> " . $carga . " Hora(s)" . "</p>" .
         "<p><strong>Valor:</strong> R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " )" . "</p>" .
         "<p><strong>Forma de Pagamento:</strong> Os valores devidos ao contratado serão apurados mensalmente de acordo com as horas efetivamente trabalhadas e pagos a partir do 1° dia útil do mês subseqüente ao trabalhado, desde que comprovada a execução dos serviços através da entrega à Supervisão de Formação Artística e Cultural dos documentos modelos preenchidos corretamente, sem rasuras, além da entrega do Relatório de Horas Trabalhadas atestadas pelo equipamento vinculado e, apenas para os artistas educadores/orientadores, as Listas de Presença de cada turma, nos termos do item 13.1 do Edital.</p>" .
         "<p><strong>Dotação Orçamentária:</strong>" . $dotacao . "</p>" .

@@ -11,11 +11,11 @@ $sqlProtocolo = "";
 $sqlProcesso = "";
 
 if($processo != NULL){
-    $sqlProcesso = "AND p.numero_processo = '$processo'";
+    $sqlProcesso = "AND p.numero_processo LIKE '%$processo%'";
 }
 
 if($protocolo != NULL){
-    $sqlProtocolo = "AND c.protocolo = '$protocolo'";
+    $sqlProtocolo = "AND c.protocolo LIKE '%$protocolo%'";
 }
 
 if($status != NULL){
