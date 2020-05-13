@@ -16,7 +16,6 @@ $sqlEvento = "SELECT
             INNER JOIN usuarios as u on u.id = e.usuario_id
             INNER JOIN producao_eventos AS en ON en.evento_id = e.id 
             WHERE en.visualizado = 0";
-
 $queryEvento = mysqli_query($con, $sqlEvento);
 
 ?>
