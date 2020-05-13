@@ -8,28 +8,29 @@ $linkResumo = $http . "rlt_formacao_pf.php";
 $link_facc = $http . "rlt_fac_pf.php";
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
-    $nome = addslashes($_POST['nome']);
-    $nomeArtistico = addslashes($_POST['nomeArtistico']);
-    $rg = $_POST['rg'] ?? NULL;
+    $nome = trim(addslashes($_POST['nome']));
+    $nomeArtistico = trim(addslashes($_POST['nomeArtistico'])) ? "" : NULL;
+    $rg =  isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
-    $ccm = $_POST['ccm'] ?? NULL;
+    $ccm = isset($_POST['ccm']) ? trim($_POST['ccm']) : NULL;
     $dtNascimento = $_POST['dtNascimento'] ?? NULL;
     $nacionalidade = $_POST['nacionalidade'];
     $cep = $_POST['cep'];
-    $logradouro = addslashes($_POST['rua']);
+    $logradouro = trim(addslashes($_POST['rua']));
     $numero = $_POST['numero'];
-    $complemento = $_POST['complemento'] ?? NULL;
-    $bairro = addslashes($_POST['bairro']);
-    $cidade = addslashes($_POST['cidade']);
-    $uf = $_POST['estado'];
-    $email = $_POST['email'];
+    $complemento = trim($_POST['complemento']) ?? NULL;
+    $bairro = trim(addslashes($_POST['bairro']));
+    $cidade = trim(addslashes($_POST['cidade']));
+    $uf = trim($_POST['estado']);
+    $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
-    $nit = $_POST['nit'] ?? NULL;
-    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $drt = isset($_POST['drt']) ? trim($_POST['drt']) : NULL;
+    $nit = trim($_POST['nit']) ?? NULL;
+    $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $banco = $_POST['banco'] ?? NULL;
-    $agencia = $_POST['agencia'] ?? NULL;
-    $conta = $_POST['conta'] ?? NULL;
+    $agencia = isset($_POST['agencia']) ? trim($_POST['agencia']) : NULL;
+    $conta = isset($_POST['conta']) ? trim($_POST['conta']) : NULL;
     $data = date("y-m-d h:i:s", strtotime("-3 hours"));
 }
 if (isset($_POST['cadastra'])) {
@@ -61,6 +62,13 @@ if (isset($_POST['cadastra'])) {
             $sqlObs = "INSERT INTO pf_observacoes (pessoa_fisica_id, observacao) VALUES ('$idPf','$observacao')";
             if (!mysqli_query($con, $sqlObs)) {
                 $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlObs;
+            }
+        }
+
+        if ($drt != NULL) {
+            $sqlDRT = "INSERT INTO siscontrat.`drts` (pessoa_fisica_id, drt, publicado)  VALUES ('$idPf','$drt',1)";
+            if (!mysqli_query($con, $sqlDRT)) {
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlDRT;
             }
         }
 
@@ -157,6 +165,22 @@ if (isset($_POST['edita'])) {
             }
         }
 
+        //edita drt
+        if ($drt != NULL) {
+            $drt_existe = verificaExiste("drts", "pessoa_fisica_id", $idPf, 0);
+            if ($drt_existe['numero'] > 0) {
+                $sqlNit = "UPDATE drts SET drt = '$drt' WHERE pessoa_fisica_id = '$idPf'";
+                if (!mysqli_query($con, $sqlNit)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlNit;
+                }
+            } else {
+                $sqlNit = "INSERT INTO siscontrat.`drts` (pessoa_fisica_id, drt, publicado)  VALUES ('$idPf','$drt',1)";
+                if (!mysqli_query($con, $sqlNit)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlNit;
+                }
+            }
+        }
+
         //edita banco
         if ($banco != NULL) {
             $banco_existe = verificaExiste("pf_bancos", "pessoa_fisica_id", $idPf, 0);
@@ -225,8 +249,6 @@ if ($testaEnderecos->num_rows > 0) {
     $uf = NULL;
 }
 
-$endereco = recuperaDados("pf_enderecos", "pessoa_fisica_id", $idPf);
-
 $testaNit = $con->query("SELECT nit FROM nits WHERE pessoa_fisica_id = $idPf");
 
 if ($testaNit->num_rows > 0) {
@@ -235,6 +257,16 @@ if ($testaNit->num_rows > 0) {
     }
 } else {
     $nit = NULL;
+}
+
+$testaDRT = $con->query("SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf");
+
+if ($testaDRT->num_rows > 0) {
+    while ($drtArray = mysqli_fetch_array($testaDRT)) {
+        $drt = $drtArray['drt'];
+    }
+} else {
+    $drt = NULL;
 }
 
 $testaObs = $con->query("SELECT * FROM pf_observacoes WHERE pessoa_fisica_id = $idPf");
@@ -368,6 +400,7 @@ if ($testaBanco->num_rows > 0) {
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
+                                    <i>(se não houver, marcar 0)</i>
                                     <input type="number" name="numero" class="form-control"
                                            placeholder="Digite o número" min="0" required
                                            value="<?= $numero ?>">
@@ -455,10 +488,16 @@ if ($testaBanco->num_rows > 0) {
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-6">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
                                            placeholder="Digite o NIT" value="<?= $nit ?>">
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="drt">DRT: </label>
+                                    <input type="text" name="drt" class="form-control telefone" maxlength="15"
+                                           placeholder="Digite o DRT" value="<?= $drt ?? "" ?>">
                                 </div>
                             </div>
 

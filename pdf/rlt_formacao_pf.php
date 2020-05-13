@@ -68,7 +68,12 @@ $numTelefone = mysqli_num_rows($telefones);
 
 $nome = $pessoa["nome"];
 $nomeArtistico = $pessoa["nome_artistico"];
-$dataNascimento = exibirDataBr($pessoa["data_nascimento"]);
+
+if($pessoa["data_nascimento"] == "0000-00-00"){
+    $dataNascimento = "Não cadastrado";
+}else{
+    $dataNascimento = exibirDataBr($pessoa["data_nascimento"]);
+}
 
 if ($pessoa['passaporte'] == ''){
     $documento = $pessoa['rg'];
@@ -116,16 +121,13 @@ $pdf->Cell(40, $l, utf8_decode($cpf == NULL ? "Não cadastrado" : $cpf), 0, 0, '
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, utf8_decode('CCM:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(45, $l, utf8_decode($ccm ? "" : "Não cadastrado"), 0, 1, 'L');
+$pdf->Cell(45, $l, utf8_decode($ccm == NULL ? "Não cadastrado" : $ccm), 0, 1, 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(36, $l, utf8_decode('Data de Nascimento:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-if ($dataNascimento == "31/12/1969")
-    $pdf->Cell(25, $l, " ", 0, 1, 'L');
-else
-    $pdf->Cell(25, $l, utf8_decode($dataNascimento), 0, 1, 'L');
+$pdf->Cell(25, $l, utf8_decode($dataNascimento), 0, 1, 'L');
 
 
 $pdf->SetX($x);
