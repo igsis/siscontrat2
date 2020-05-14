@@ -10,7 +10,7 @@ $link_facc = $http . "rlt_fac_pf.php";
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $nome = trim(addslashes($_POST['nome']));
     $nomeArtistico = trim(addslashes($_POST['nomeArtistico'])) ? "" : NULL;
-    $rg =  isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
+    $rg = isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
     $ccm = isset($_POST['ccm']) ? trim($_POST['ccm']) : NULL;
@@ -336,14 +336,11 @@ if ($testaBanco->num_rows > 0) {
                             <div class="row">
                                 <?php
                                 if (empty($pf['cpf'])) { ?>
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <label for="passaporte">Passaporte: </label>
-                                        <input type="text" name="passaporte" disabled value="<?= $pf['passaporte'] ?>" class="form-control">
+                                        <input type="text" name="passaporte" readonly value="<?= $pf['passaporte'] ?>"
+                                               class="form-control">
                                     </div>
-                                </div>
-                                <br>
-                                <div class="row">
-
                                     <?php
                                 } else {
                                     ?>
@@ -365,6 +362,7 @@ if ($testaBanco->num_rows > 0) {
                                     <?php
                                 }
                                 ?>
+
                                 <div class="form-group col-md-3">
                                     <label for="dtNascimento">Data de Nascimento: *</label>
                                     <input type="date" class="form-control" id="dtNascimento" name="dtNascimento"
@@ -392,7 +390,7 @@ if ($testaBanco->num_rows > 0) {
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
                                 </div>
-                           </div>
+                            </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="rua">Rua: *</label>
@@ -496,10 +494,10 @@ if ($testaBanco->num_rows > 0) {
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                        <label for="drt">DRT: </label>
-                                        <input type="text" name="drt" class="form-control telefone" maxlength="15"
-                                               placeholder="Digite o DRT" value="<?= $drt ?>">
-                                    </div>
+                                    <label for="drt">DRT: </label>
+                                    <input type="text" name="drt" class="form-control telefone" maxlength="15"
+                                           placeholder="Digite o DRT" value="<?= $drt ?>">
+                                </div>
                             </div>
 
                             <div class="row">
@@ -514,7 +512,7 @@ if ($testaBanco->num_rows > 0) {
                                 <div class="form-group col-md-4">
                                     <label for="banco">Banco</label>
                                     <select name="banco" id="banco" class="form-control">
-                                    <option value="">Selecione um banco...</option>
+                                        <option value="">Selecione um banco...</option>
                                         <?php
                                         geraOpcao('bancos', $banco);
                                         ?>
@@ -533,35 +531,37 @@ if ($testaBanco->num_rows > 0) {
                                            value="<?= $conta ?>">
                                 </div>
                             </div>
-                                <div class="box-footer">
+                            <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
 
                                 <div class="row">
                                     <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
-                                    </form>
-                                    <a href="?perfil=emia">
-                                        <button type="button" class="btn btn-default pull-left">Voltar</button>
-                                    </a>
+                        </form>
+                        <a href="?perfil=emia">
+                            <button type="button" class="btn btn-default pull-left">Voltar</button>
+                        </a>
 
-                                    <a href="<?= $linkResumo . "?idPf=" . $idPf?>" target="_blank">
-                                        <button type="button" name="pdf" id="pdf" class="btn btn-primary center-block"
-                                                style="align-items: center;">Imprimir resumo
-                                        </button>
-                                    </a>
-                                </div>
-                                <br>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <form action="?perfil=emia&p=pessoa_fisica&sp=demais_anexos" method="POST">
-                                    <input type="hidden" name="idPf" value="<?= $idPf ?>">
-                                        <button class="btn btn-success center-block btn-block" style="width:35%" type="submit">Demais Anexos</button>
-                                    </form>
-                                </div>
-                            </div>
+                        <a href="<?= $linkResumo . "?idPf=" . $idPf ?>" target="_blank">
+                            <button type="button" name="pdf" id="pdf" class="btn btn-primary center-block"
+                                    style="align-items: center;">Imprimir resumo
+                            </button>
+                        </a>
+                    </div>
+                    <br>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="?perfil=emia&p=pessoa_fisica&sp=demais_anexos" method="POST">
+                                <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                                <button class="btn btn-success center-block btn-block" style="width:35%"
+                                        type="submit">Demais Anexos
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+</div>
+</section>
 </div>

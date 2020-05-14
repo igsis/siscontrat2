@@ -339,7 +339,7 @@ if ($testaBanco->num_rows > 0) {
                                 if (empty($pf['cpf'])) { ?>
                                     <div class="form-group col-md-6">
                                         <label for="passaporte">Passaporte: </label>
-                                        <input type="text" name="passaporte" disabled value="<?= $pf['passaporte'] ?>"
+                                        <input type="text" name="passaporte" readonly value="<?= $pf['passaporte'] ?>"
                                                class="form-control">
                                     </div>
                                     <?php
