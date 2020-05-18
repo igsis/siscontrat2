@@ -35,7 +35,7 @@ $idPedido = $_POST['idPedido'];
                             </div>
                             <div class="row" id="msg">
                                 <div class="form-group col-md-12">
-                                    <span class="pull-right" style="color: red;"><b>Data de emissão precisa ser maior que a de entrega!</b></span>
+                                    <span class="pull-right" style="color: red;"><b>Data de emissão precisa ser maior ou igual a de entrega!</b></span>
                                 </div>
                             </div>
 
@@ -68,7 +68,7 @@ function comparaData() {
 
         $('#cadastra').attr("disabled", true);
             
-        if (dataFim <= dataInicio) {
+        if (dataFim < dataInicio) {
             $('#cadastra').attr("disabled", true);
             isMsg.show();
         } else {

@@ -9,8 +9,8 @@ $link_facc = $http . "rlt_fac_pf.php";
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $nome = trim(addslashes($_POST['nome']));
-    $nomeArtistico = trim(addslashes($_POST['nomeArtistico']));
-    $rg =  isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
+    $nomeArtistico = trim(addslashes($_POST['nomeArtistico'])) ? "" : NULL;
+    $rg = isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
     $ccm = isset($_POST['ccm']) ? trim($_POST['ccm']) : NULL;
@@ -229,11 +229,69 @@ $sqlTelefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 
 $pf = recuperaDados("pessoa_fisicas", "id", $idPf);
-$endereco = recuperaDados("pf_enderecos", "pessoa_fisica_id", $idPf);
-$drts = recuperaDados("drts", "pessoa_fisica_id", $idPf);
-$nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
-$observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
-$banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
+$testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id = $idPf");
+
+if ($testaEnderecos->num_rows > 0) {
+    while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
+        $cep = $enderecoArray['cep'];
+        $logradouro = $enderecoArray['logradouro'];
+        $numero = $enderecoArray['numero'];
+        $complemento = $enderecoArray['complemento'];
+        $cidade = $enderecoArray['cidade'];
+        $bairro = $enderecoArray['bairro'];
+        $uf = $enderecoArray['uf'];
+    }
+} else {
+    $cep = NULL;
+    $logradouro = NULL;
+    $numero = NULL;
+    $complemento = NULL;
+    $cidade = NULL;
+    $bairro = NULL;
+    $uf = NULL;
+}
+$testaNit = $con->query("SELECT nit FROM nits WHERE pessoa_fisica_id = $idPf");
+
+if ($testaNit->num_rows > 0) {
+    while ($nitArray = mysqli_fetch_array($testaNit)) {
+        $nit = $nitArray['nit'];
+    }
+} else {
+    $nit = NULL;
+}
+
+$testaDRT = $con->query("SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf");
+
+if ($testaDRT->num_rows > 0) {
+    while ($drtArray = mysqli_fetch_array($testaDRT)) {
+        $drt = $drtArray['drt'];
+    }
+} else {
+    $drt = NULL;
+}
+
+$testaObs = $con->query("SELECT * FROM pf_observacoes WHERE pessoa_fisica_id = $idPf");
+
+if ($testaObs->num_rows > 0) {
+    while ($obsArray = mysqli_fetch_array($testaObs)) {
+        $obs = $obsArray['observacao'];
+    }
+} else {
+    $obs = NULL;
+}
+
+$testaBanco = $con->query("SELECT * FROM pf_bancos WHERE publicado = 1 AND pessoa_fisica_id = $idPf");
+if ($testaBanco->num_rows > 0) {
+    while ($bancoArray = mysqli_fetch_array($testaBanco)) {
+        $agencia = $bancoArray['agencia'];
+        $conta = $bancoArray['conta'];
+        $banco = $bancoArray['banco_id'];
+    }
+} else {
+    $agencia = NULL;
+    $conta = NULL;
+    $banco = NULL;
+}
 
 ?>
 
@@ -278,14 +336,11 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
                             <div class="row">
                                 <?php
                                 if (empty($pf['cpf'])) { ?>
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <label for="passaporte">Passaporte: </label>
-                                        <input type="text" name="passaporte" disabled value="<?= $pf['passaporte'] ?>" class="form-control">
+                                        <input type="text" name="passaporte" readonly value="<?= $pf['passaporte'] ?>"
+                                               class="form-control">
                                     </div>
-                                </div>
-                                <br>
-                                <div class="row">
-
                                     <?php
                                 } else {
                                     ?>
@@ -307,6 +362,7 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
                                     <?php
                                 }
                                 ?>
+
                                 <div class="form-group col-md-3">
                                     <label for="dtNascimento">Data de Nascimento: *</label>
                                     <input type="date" class="form-control" id="dtNascimento" name="dtNascimento"
@@ -328,29 +384,30 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
                                     <label for="cep">CEP: *</label>
                                     <input type="text" class="form-control" name="cep" id="cep" maxlength="9"
                                            placeholder="Digite o CEP" required data-mask="00000-000"
-                                           value="<?= $endereco['cep'] ?>">
+                                           value="<?= $cep ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
                                 </div>
-                           </div>
+                            </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="rua">Rua: *</label>
                                     <input type="text" class="form-control" name="rua" id="rua"
                                            placeholder="Digite o endereço" maxlength="200" readonly
-                                           value="<?= $endereco['logradouro'] ?>">
+                                           value="<?= $logradouro ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
+                                    <i>(se não houver, marcar 0)</i>
                                     <input type="number" name="numero" class="form-control"
-                                           placeholder="Digite o número" min="1" required value="<?= $endereco['numero'] ?>">
+                                           placeholder="Digite o número" min="0" required value="<?= $numero ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="complemento">Complemento: </label>
                                     <input type="text" name="complemento" class="form-control" maxlength="20"
-                                           placeholder="Digite o complemento" value="<?= $endereco['complemento'] ?>">
+                                           placeholder="Digite o complemento" value="<?= $complemento ?>">
                                 </div>
                             </div>
                             <div class="row">
@@ -358,19 +415,19 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
                                     <label for="bairro">Bairro: *</label>
                                     <input type="text" class="form-control" name="bairro" id="bairro"
                                            placeholder="Digite o Bairro" maxlength="80" readonly
-                                           value="<?= $endereco['bairro'] ?>">
+                                           value="<?= $bairro ?>">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="cidade">Cidade: *</label>
                                     <input type="text" class="form-control" name="cidade" id="cidade"
                                            placeholder="Digite a cidade" maxlength="50" readonly
-                                           value="<?= $endereco['cidade'] ?>">
+                                           value="<?= $cidade ?>">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
                                     <input type="text" class="form-control" name="estado" id="estado" maxlength="2"
                                            placeholder="Digite o estado ex: (SP)" readonly
-                                           value="<?= $endereco['uf'] ?>">
+                                           value="<?= $uf ?>">
                                 </div>
                             </div>
                             <hr/>
@@ -433,21 +490,21 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
                                 <div class="form-group col-md-6">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
-                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
+                                           placeholder="Digite o NIT" value="<?= $nit ?>">
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                        <label for="drt">DRT: </label>
-                                        <input type="text" name="drt" class="form-control telefone" maxlength="15"
-                                               placeholder="Digite o DRT" value="<?= $drts['drt'] ?>">
-                                    </div>
+                                    <label for="drt">DRT: </label>
+                                    <input type="text" name="drt" class="form-control telefone" maxlength="15"
+                                           placeholder="Digite o DRT" value="<?= $drt ?>">
+                                </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
                                     <textarea name="observacao" rows="3"
-                                              class="form-control"><?= $observacao['observacao'] ?></textarea>
+                                              class="form-control"><?= $obs ?></textarea>
                                 </div>
                             </div>
 
@@ -455,9 +512,9 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
                                 <div class="form-group col-md-4">
                                     <label for="banco">Banco</label>
                                     <select name="banco" id="banco" class="form-control">
-                                    <option value="">Selecione um banco...</option>
+                                        <option value="">Selecione um banco...</option>
                                         <?php
-                                        geraOpcao('bancos', $banco['banco_id']);
+                                        geraOpcao('bancos', $banco);
                                         ?>
                                     </select>
                                 </div>
@@ -465,44 +522,46 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
                                 <div class="form-group col-md-4">
                                     <label for="agencia">Agência</label>
                                     <input type="text" id="agencia" name="agencia" class="form-control"
-                                           value="<?= $banco['agencia'] ?>">
+                                           value="<?= $agencia ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="conta">Conta</label>
                                     <input type="text" id="conta" name="conta" class="form-control"
-                                           value="<?= $banco['conta'] ?>">
+                                           value="<?= $conta ?>">
                                 </div>
                             </div>
-                                <div class="box-footer">
+                            <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
 
                                 <div class="row">
                                     <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
-                                    </form>
-                                    <a href="?perfil=emia">
-                                        <button type="button" class="btn btn-default pull-left">Voltar</button>
-                                    </a>
+                        </form>
+                        <a href="?perfil=emia">
+                            <button type="button" class="btn btn-default pull-left">Voltar</button>
+                        </a>
 
-                                    <a href="<?= $linkResumo ?>" target="_blank">
-                                        <button type="button" name="pdf" id="pdf" class="btn btn-primary center-block"
-                                                style="align-items: center;">Imprimir resumo
-                                        </button>
-                                    </a>
-                                </div>
-                                <br>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <form action="?perfil=emia&p=pessoa_fisica&sp=demais_anexos" method="POST">
-                                    <input type="hidden" name="idPf" value="<?= $idPf ?>">
-                                        <button class="btn btn-success center-block btn-block" style="width:35%" type="submit">Demais Anexos</button>
-                                    </form>
-                                </div>
-                            </div>
+                        <a href="<?= $linkResumo . "?idPf=" . $idPf ?>" target="_blank">
+                            <button type="button" name="pdf" id="pdf" class="btn btn-primary center-block"
+                                    style="align-items: center;">Imprimir resumo
+                            </button>
+                        </a>
+                    </div>
+                    <br>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="?perfil=emia&p=pessoa_fisica&sp=demais_anexos" method="POST">
+                                <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                                <button class="btn btn-success center-block btn-block" style="width:35%"
+                                        type="submit">Demais Anexos
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+</div>
+</section>
 </div>

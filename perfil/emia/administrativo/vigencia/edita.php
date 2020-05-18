@@ -1,11 +1,14 @@
 <?php
 $con = bancoMysqli();
 
-if (isset($_POST['cadastra'])) {
-    $ano = $_POST['ano'];
-    $desc = $_POST['desc'];
-    $numParcela = $_POST['numParcelas'];
+if(isset($_POST['cadastra']) || isset($_POST['editar'])){
+    $idEV = $_POST['idEV'] ?? NULL;
+    $ano = $_POST['ano'] ?? NULL;
+    $desc = trim(addslashes($_POST['desc'])) ?? NULL;
+    $numParcela = $_POST['numParcelas'] ?? NULL;
+}
 
+if (isset($_POST['cadastra'])) {
     $sqlInsert = "INSERT INTO emia_vigencias
                             (ano, descricao,numero_parcelas)
                             VALUES
@@ -13,7 +16,6 @@ if (isset($_POST['cadastra'])) {
     if (mysqli_query($con, $sqlInsert)) {
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
         $idEV = recuperaUltimo('emia_vigencias');
-
     } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar! Tente novamente.");
     }
@@ -21,11 +23,6 @@ if (isset($_POST['cadastra'])) {
 }
 
 if (isset($_POST['editar'])) {
-    $idEV = $_POST['idEV'];
-    $ano = $_POST['ano'];
-    $desc = $_POST['desc'];
-    $numParcela = $_POST['numParcelas'];
-
     $sql = "DELETE FROM emia_parcelas WHERE emia_vigencia_id = '$idEV'";
     mysqli_query($con, $sql);
 
@@ -43,10 +40,10 @@ if (isset($_POST['editar'])) {
     $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 }
 
-if (isset($_POST['edit']))
+if (isset($_POST['edit'])) {
     $idEV = $_POST['idEVEdit'];
     $ev = recuperaDados('emia_vigencias', 'id', $idEV);
-
+}
 
 if(isset($_POST['editar'])){
     $parcelas = $_POST['parcela'];
@@ -138,7 +135,7 @@ if(isset($_POST['editar'])){
                             <div class="form-group col-md-2">
                                 <label for="valor[]">Valor:</label>
                                 <input type="text" id="valor<?= $i ?>" name="valor[]"
-                                       class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcelas['valor']) ?>">
+                                       class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcelas['valor'] ?? NULL) ?>">
                             </div>
 
                             <div class="form-group col-md-2">

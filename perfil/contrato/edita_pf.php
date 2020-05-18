@@ -283,6 +283,13 @@ $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
 $sql = "SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
 $atracao = mysqli_query($con, $sql);
+
+
+$sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
+$queryPedidos = mysqli_query($con, $sqlPedidos);
+$pedidos = mysqli_fetch_array($queryPedidos);
+
+
 ?>
 
 <script language="JavaScript">
@@ -490,7 +497,7 @@ $atracao = mysqli_query($con, $sql);
                                     <div class="form-group col-md-3">
                                         <label for="drt">DRT: </label>
                                         <input type="text" name="drt" class="form-control telefone" maxlength="15"
-                                               placeholder="Digite o DRT" value="<?= $drts['drt'] ?>">
+                                               placeholder="Digite o DRT" value="<?= $drts['drt'] ?? NULL ?>">
                                     </div>
 
                                     <?php
@@ -499,7 +506,7 @@ $atracao = mysqli_query($con, $sql);
                                 <div class="form-group col-md-6">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
-                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
+                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?? NULL ?>">
                                 </div>
                             </div>
 
@@ -507,7 +514,7 @@ $atracao = mysqli_query($con, $sql);
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
                                     <textarea name="observacao" rows="3"
-                                              class="form-control"><?= $observacao['observacao'] ?></textarea>
+                                              class="form-control"><?= $observacao['observacao'] ?? NULL ?></textarea>
                                 </div>
                             </div>
                             <hr/>
@@ -539,7 +546,7 @@ $atracao = mysqli_query($con, $sql);
                             <br>
                             <br>
                             <input type="hidden" name="idPf" value="<?= $idPf ?>">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <input type="hidden" name="idPedido" value="<?= $pedidos['id'] ?>">
                             <button type="submit" name="edita" class="btn btn-info pull-left" style="margin:  0 5px;">Salvar</button>
                         </form>
                     </div>

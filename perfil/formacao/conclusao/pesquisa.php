@@ -29,7 +29,12 @@
                             <select name="status" id="status" class="form-control">
                                 <option value="">Selecione um status...</option>
                                 <?php
-                                    geraOpcao("pedido_status");
+                                $con = bancoMysqli();
+                                $sql = "SELECT * FROM pedido_status WHERE id NOT IN (1,3,20,21)";
+                                $query = mysqli_query($con,$sql);
+                                while($statusArray = mysqli_fetch_array($query)){ ?>
+                                    <option value="<?=$statusArray['id']?>"><?=$statusArray['status']?></option>
+                                <?php }
                                 ?>
                             </select>
                         </div>

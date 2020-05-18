@@ -35,7 +35,7 @@ $num_arrow = mysqli_num_rows($query);
                                 <th>CPF/Passaporte</th>
                                 <th>Data nascimento</th>
                                 <th>Email</th>
-                                <th width="9%">Demais anexos</th>
+                                <th width="10%">Demais anexos</th>
                                 <th width="5%">Editar</th>
                             </tr>
                             </thead>
@@ -51,17 +51,17 @@ $num_arrow = mysqli_num_rows($query);
                             } else {
                                 while ($pf = mysqli_fetch_array($query)) {
                                     //verifica se irá mostrar passaporte ou cpf
-                                    if($pf['cpf'] == NULL){
+                                    if ($pf['cpf'] == NULL) {
                                         $doc = $pf['passaporte'];
-                                    }else{
+                                    } else {
                                         $doc = $pf['cpf'];
                                     }
 
                                     //verifica se há ou não data de nascimento
 
-                                    if($pf['data_nascimento'] == "0000-00-00"){
+                                    if ($pf['data_nascimento'] == "0000-00-00") {
                                         $dataNascimento = "Não cadastrado";
-                                    }else{
+                                    } else {
                                         $dataNascimento = exibirDataBr($pf['data_nascimento']);
                                     }
                                     ?>
@@ -87,7 +87,7 @@ $num_arrow = mysqli_num_rows($query);
                                                        value="<?= $pf['id'] ?>">
                                                 <button type="submit" name="carregar" id="carregar"
                                                         class="btn btn-primary btn-block">
-                                                    <i class='fa fa-file-text-o'></i>
+                                                    <span class='glyphicon glyphicon-edit'></span></button>
                                                 </button>
                                             </form>
                                         </td>
@@ -104,7 +104,7 @@ $num_arrow = mysqli_num_rows($query);
                                 <th>CPF/Passaporte</th>
                                 <th>Data nascimento</th>
                                 <th>Email</th>
-                                <th width="9%">Demais anexos</th>
+                                <th width="10%">Demais anexos</th>
                                 <th width="5%">Editar</th>
                             </tr>
                             </tfoot>

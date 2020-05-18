@@ -95,8 +95,8 @@ $querySelect = mysqli_query($con, $sqlSelect);
                         <th>Pessoa</th>
                         <th>Ano</th>
                         <th>Cargo</th>
-                        <th>Visualizar</th>
-                        <th>Editar</th>
+                        <th width="5%">Visualizar</th>
+                        <th width="5%">Editar</th>
                     </tr>
                     </thead>
                     <?php
@@ -131,8 +131,8 @@ $querySelect = mysqli_query($con, $sqlSelect);
                         <th>Pessoa</th>
                         <th>Ano</th>
                         <th>Cargo</th>
-                        <th>Visualizar</th>
-                        <th>Editar</th>
+                        <th width="5%">Visualizar</th>
+                        <th width="5%">Editar</th>
                     </tr>
                     </tfoot>
                 </table>

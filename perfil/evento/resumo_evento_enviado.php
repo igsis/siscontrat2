@@ -71,6 +71,8 @@ if (isset($_POST['enviar'])) {
         mysqli_query($con, $sqlEnviaEvento);
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
         $con->query($sqlEnvia);
+        $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
+        $queryEnvio = mysqli_query($con,$sqlEnvio);
         $mensagem = mensagem("success", "Evento enviado com sucesso!");
     }
 }

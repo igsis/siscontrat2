@@ -20,7 +20,7 @@ $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $empenho = recuperaDados('pagamentos', 'pedido_id', $idPedido);
 
-$data = date("Y-m-d", strtotime("-3 hours"));
+$data = dataHoraNow();
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -87,15 +87,15 @@ if($pessoa['passaporte'] != NULL){
     $pdf->Ln();
 }else{
     $pdf->SetX($x);
-    $pdf->Cell(7,$l,utf8_decode("RG:"),0,0,'L');
+    $pdf->Cell(8,$l,utf8_decode("RG:"),0,0,'L');
     $pdf->SetFont('Arial', '',11);
-    $pdf->Cell(40,$l,utf8_decode($pessoa['rg']),0,0,'L');  
+    $pdf->Cell(40,$l,utf8_decode($pessoa['rg'] == NULL ? "Não cadastrado" : $pessoa['rg']),0,0,'L');
 
     $pdf->Ln();
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial', 'B', 11);
-    $pdf->Cell(9,$l,utf8_decode("CPF:"),0,0,'L');
+    $pdf->Cell(10,$l,utf8_decode("CPF:"),0,0,'L');
     $pdf->SetFont('Arial', '',11);
     $pdf->Cell(40,$l,utf8_decode($pessoa['cpf']),0,0,'L');
 

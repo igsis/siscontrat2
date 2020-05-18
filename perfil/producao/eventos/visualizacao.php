@@ -29,7 +29,7 @@ $sqlEvento = "SELECT
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $pedido = recuperaDados('pedidos','origem_id',$idEvento);
-$idPedido = $pedido['origem_id'];
+$idPedido = $pedido['origem_id'] ?? NULL;
 $view = recuperaDados('producao_eventos', 'evento_id', $idEvento);
 
 ?>

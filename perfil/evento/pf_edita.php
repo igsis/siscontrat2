@@ -494,7 +494,7 @@ include "includes/menu_interno.php";
                                     <div class="form-group col-md-12">
                                         <label for="passaporte">Passaporte:</label>
                                         <input type="text" class="form-control" name="passaporte" maxlength="70"
-                                               value="<?= $pf['passaporte'] ?>" disabled>
+                                               value="<?= $pf['passaporte'] ?>" readonly>
                                     </div>
 
                                     <div class="form-group col-md-6">

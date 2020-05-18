@@ -109,8 +109,8 @@ if (isset($_POST['edita'])) {
 
                             <?php
                             for ($i = 1; $i < $vigencia['numero_parcelas'] + 1; $i++) {
-                                $sql = "SELECT * FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND numero_parcelas = '$i'";
-                                $parcela = mysqli_fetch_array(mysqli_query($con, $sql));
+                                $testaParcela = $con->query("SELECT * FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND numero_parcelas = '$i'");
+                                $parcelaArray = mysqli_fetch_array($testaParcela);
                                 ?>
                                 <hr>
                                 <div class="row">
@@ -123,31 +123,31 @@ if (isset($_POST['edita'])) {
                                     <div class="form-group col-md-2">
                                         <label for="valor[]">Valor:</label>
                                         <input type="text" id="valor<?= $i ?>" name="valor[]"
-                                               class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcela['valor']) ?>">
+                                               class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= $parcelaArray['valor'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_inicio">Data inicial:</label>
                                         <input type="date" name="data_inicio[]" class="form-control" id="data_inicio<?= $i ?>"
-                                               placeholder="DD/MM/AAAA" value="<?= $parcela['data_inicio'] ?? NULL ?>">
+                                               placeholder="DD/MM/AAAA" value="<?= $parcelaArray['data_inicio'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_fim">Data final: </label>
                                         <input type="date" name="data_fim[]" class="form-control" id="data_fim<?= $i ?>"
-                                               placeholder="DD/MM/AAAA" value="<?= $parcela['data_fim'] ?? NULL ?>">
+                                               placeholder="DD/MM/AAAA" value="<?= $parcelaArray['data_fim'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_pagamento">Data pagamento: </label>
                                         <input type="date" name="data_pagamento[]" class="form-control"
-                                               id="data_pagamento<?= $i ?>" placeholder="DD/MM/AAAA" value="<?= $parcela['data_pagamento'] ?? NULL ?>">
+                                               id="data_pagamento<?= $i ?>" placeholder="DD/MM/AAAA" value="<?= $parcelaArray['data_pagamento'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="carga[]">Carga horária: </label>
                                         <input type="number" name="carga[]" class="form-control" id="carga<?= $i ?>"
-                                               value="<?= $parcela['carga_horaria'] ?? NULL ?>" min="1">
+                                               value="<?= $parcelaArray['carga_horaria'] ?? NULL ?>" min="1">
                                     </div>
                                 </div>
 

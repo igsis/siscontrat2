@@ -3,7 +3,7 @@ $con = bancoMysqli();
 
 if(isset($_POST['editar'])){
     $idEC = $_POST['idEC'];
-    $cargo = $_POST['cargo'];
+    $cargo = trim(addslashes($_POST['cargo']));
     $justificativa = $_POST['justificativa'];
     $sqlUpdate = "UPDATE emia_cargos SET
                     cargo = '$cargo',
@@ -22,8 +22,6 @@ if(isset($_POST['edit'])){
     $ec = recuperaDados('emia_cargos', 'id', $idEC);
 }
 
-
-$_SESSION['idPedido'] = $idEC;
 ?>
 <div class="content-wrapper">
     <section class="content">

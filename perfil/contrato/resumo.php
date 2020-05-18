@@ -559,8 +559,7 @@ $disabledImpr = "";
                                         <td>
                                             <form action="?perfil=contrato&p=edita_pf" method="POST">
                                                 <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
-                                                <input type="hidden" name="idPedido" id="idPedido"
-                                                       value="<?= $idPedido ?>">
+                                                <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
                                                 <button type="submit" class="btn btn-primary btn-block"><span
                                                             class="glyphicon glyphicon-pencil"></span></button>
                                             </form>

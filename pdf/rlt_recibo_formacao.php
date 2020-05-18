@@ -29,9 +29,15 @@ $pdf->AddPage();
 if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
     $ccm = $pessoa['ccm'];
 } else {
-    $ccm = "Não Cadastrado.";
+    $ccm = "Não cadastrado";
 }
 
+$enderecoArray = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
+if($enderecoArray == NULL){
+    $endereco = "Não cadastrado";
+}else{
+    $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " .$enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+}
 
 $x = 20;
 $l = 7; //DEFINE A ALTURA DA LINHA
@@ -83,7 +89,7 @@ if($pessoa['passaporte'] != NULL){
 }else{
     $pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
     $pdf->SetFont('Arial', '', 10);
-    $pdf->Cell(50, $l, utf8_decode($pessoa['rg']), 0, 0, 'L');
+    $pdf->Cell(50, $l, utf8_decode($pessoa['rg'] ?? "Não cadastrado"), 0, 0, 'L');
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
     $pdf->SetFont('Arial', '', 10);
@@ -92,13 +98,11 @@ if($pessoa['passaporte'] != NULL){
 
 $pdf->Ln(7);
 
-$endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
-
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(20, $l, utf8_decode("Endereço:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 11);
-$pdf->MultiCell(160, $l, utf8_decode($endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " .$endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf']), 0, 'L', 0);
+$pdf->MultiCell(160, $l, utf8_decode($endereco), 0, 'L', 0);
 
 $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
@@ -160,8 +164,10 @@ $pdf->SetFont('Arial','', 12);
 if($pessoa['passaporte'] != NULL){
     $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
 }else{
-    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
-    $pdf->SetX($x); 
+    $pdf->SetX($x);
+    $rg = $pessoa['rg'] == NULL ? "Não cadastrado" : $pessoa['rg'];
+    $rg = "RG: " . $rg;
+    $pdf->Cell(100, 4,  utf8_decode($rg), 0, 1, 'L');
 }
 
 $pdf->Output();

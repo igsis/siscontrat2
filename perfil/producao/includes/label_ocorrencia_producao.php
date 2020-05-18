@@ -13,6 +13,7 @@
             if ($evento['tipo_evento_id'] == 1) {
                 foreach ($atracoes as $atracao) {
                     $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE atracao_id = '" . $atracao['id'] . "' AND publicado = '1' AND tipo_ocorrencia_id = '1'";
+                    echo $sqlOcorrencia;
                     $ocorrencias = $con->query($sqlOcorrencia);
                     $numOco = $ocorrencias->num_rows;
                     ?>
@@ -36,7 +37,7 @@
                                                 $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
                                                 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
                                                 $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
-                                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'] ?? NULL;
                                                 $subPrefeitura = recuperaDados('subprefeituras', 'id', $ocorrencia['subprefeitura_id']);
                                                 $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
                                                 ?>

@@ -7,8 +7,6 @@ require_once("../funcoes/funcoesGerais.php");
 //CONEXÃO COM BANCO DE DADOS
 $con = bancoMysqli();
 
-session_start(['name' => 'sis']);
-
 class PDF extends FPDF
 {
 // Page header
@@ -26,23 +24,41 @@ class PDF extends FPDF
 }
 
 //CONSULTA  (copia inteira em todos os docs)
-$idPf = $_SESSION['idPf'];
+$idPf = $_GET['idPf'];
 
 $ano=date('Y', strtotime("-3 hours"));
-$dataAtual = date("d/m/Y", strtotime("-3 hours"));
-
-$sqlFoto = "SELECT arquivo FROM arquivos WHERE lista_documento_id = 59 AND publicado = 1 AND origem_id = '$idPf'";
-$foto = $con->query($sqlFoto)->fetch_assoc()['arquivo'];
+$dataAtual = dataHoraNow();
 
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
-$nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id'])['nacionalidade'];
-$banco = recuperaDados('pf_bancos', 'pessoa_fisica_id', $idPf);
-$endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
+if($pessoa['nacionalidade_id'] != NULL){
+    $nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id'])['nacionalidade'];
+}else{
+    $nacionalidade = "Não cadastrado";
+}
 
-$conta = $banco['conta'];
-$agencia = $banco['agencia'];
-$banco = $banco['banco_id'];
-$banco = recuperaDados('bancos', 'id', $banco)['banco'];
+
+$testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id = $idPf");
+
+if ($testaEnderecos->num_rows > 0) {
+    while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
+        $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " .$enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+    }
+} else {
+    $endereco = "Não cadastrado";
+}
+
+$testaBanco = $con->query("SELECT b.banco, pf.agencia, b.codigo, pf.conta FROM pf_bancos AS pf INNER JOIN bancos AS b ON b.id = pf.banco_id WHERE pf.publicado = 1 AND pf.pessoa_fisica_id = $idPf");
+if ($testaBanco->num_rows > 0) {
+    while ($bancoArray = mysqli_fetch_array($testaBanco)) {
+        $agencia = $bancoArray['agencia'];
+        $conta = $bancoArray['conta'];
+        $banco = $bancoArray['banco'];
+    }
+} else {
+    $agencia = "Não cadastrado";
+    $conta = "Não cadastrado";
+    $banco = "Não cadastrado";
+}
 
 $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $telefones = mysqli_query($con, $sqlTelefone);
@@ -50,20 +66,23 @@ $numTelefone = mysqli_num_rows($telefones);
 
 $nome = $pessoa["nome"];
 $nomeArtistico = $pessoa["nome_artistico"];
-$dataNascimento = exibirDataBr($pessoa["data_nascimento"]);
 
-if($pessoa['rg'] != '')
+if($pessoa["data_nascimento"] == "0000-00-00"){
+    $dataNascimento = "Não cadastrado";
+}else{
+    $dataNascimento = exibirDataBr($pessoa["data_nascimento"]);
+}
+
+if ($pessoa['passaporte'] == ''){
     $documento = $pessoa['rg'];
-else
+    $cpf = $pessoa["cpf"];
+}
+else{
     $documento = $pessoa['passaporte'];
+}
 
 $cpf = $pessoa["cpf"];
 $ccm = $pessoa["ccm"];
-$rua = $endereco['logradouro'];
-$numero = $endereco['numero'];
-$bairro = $endereco['bairro'];
-$cidade = $endereco['cidade'];
-$cep = $endereco['cep'];
 $email = $pessoa["email"];
 
 // GERANDO O PDF:
@@ -93,31 +112,28 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(7,$l,utf8_decode('RG:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(30,$l,utf8_decode($documento),0,0,'L');
+$pdf->Cell(30,$l,utf8_decode($documento == NULL ? "Não cadastrado" : $documento),0,0,'L');
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(10,$l,utf8_decode('CPF:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(40,$l,utf8_decode($cpf),0,0,'L');
+$pdf->Cell(40,$l,utf8_decode($cpf == NULL ? "Não cadastrado" : $cpf),0,0,'L');
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(10,$l,utf8_decode('CCM:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(45,$l,utf8_decode($ccm),0,1,'L');
+$pdf->Cell(45,$l,utf8_decode($ccm == NULL ? "Não cadastrado" : $ccm),0,1,'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(36,$l,utf8_decode('Data de Nascimento:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-if($dataNascimento == "31/12/1969")
-    $pdf->Cell(25,$l, " " ,0,1,'L');
-else
-    $pdf->Cell(25,$l,utf8_decode(exibirDataBr($pessoa['data_nascimento'])),0,1,'L');
+$pdf->Cell(25,$l,utf8_decode($dataNascimento),0,1,'L');
 
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(19,$l,utf8_decode('Endereço:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->MultiCell(200,$l,utf8_decode($rua . ', ' . $numero . ', ' . $bairro . ' - ' . $cidade));
+$pdf->MultiCell(200,$l,utf8_decode($endereco));
 
 $count = 1;
 foreach ($telefones as $row){
@@ -143,17 +159,17 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 10);
 $pdf->Cell(13,$l,utf8_decode('Banco:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(30,$l,utf8_decode($banco ? "" : "Não cadastrado"),0,1,'L');
+$pdf->Cell(30, $l, utf8_decode(str_replace("–", "-", $banco)), 0, 1, 'L');
 $pdf->SetFont('Arial','B', 10);
 $pdf->SetX($x);
 $pdf->Cell(16,$l,utf8_decode('Agência:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(40,$l,utf8_decode($agencia ? "" : "Não cadastrado"),0,1,'L');
+$pdf->Cell(40,$l,utf8_decode($agencia),0,1,'L');
 $pdf->SetFont('Arial','B', 10);
 $pdf->SetX($x);
 $pdf->Cell(12,$l,utf8_decode('Conta:'),0,0,'L');
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(45,$l,utf8_decode($conta ? "" : "Não cadastrado"),0,1,'L');
+$pdf->Cell(45,$l,utf8_decode($conta),0,1,'L');
 $pdf->Output();
 ?>
 
