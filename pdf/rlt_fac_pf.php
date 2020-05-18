@@ -27,7 +27,9 @@ class PDF extends FPDF
 }
 
 //CONSULTA 
-$id_Pf = $_GET['id'];
+if(isset($_POST['idPf'])){
+    $id_Pf = $_POST['idPf'];
+}
 
 $ano = date('Y', strtotime("-3 hours"));
 
@@ -106,7 +108,7 @@ if ($testaBanco->num_rows > 0) {
 if($pf['data_nascimento'] == '0000-00-00'){
     $dataNascimento = "";
 }else{
-    $dataNascimento = exibirDataBr($pessoa['data_nascimento']);
+    $dataNascimento = exibirDataBr($pf['data_nascimento']);
 }
 
 
