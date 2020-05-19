@@ -25,7 +25,9 @@ class PDF extends FPDF
 }
 
 //CONSULTA  (copia inteira em todos os docs)
-$idPf = $_GET['idPf'];
+if(isset($_POST['idPf'])){
+    $idPf = $_POST['idPf'];
+}
 
 $ano = date('Y', strtotime("-3 hours"));
 $dataAtual = date("d/m/Y", strtotime("-3 hours"));

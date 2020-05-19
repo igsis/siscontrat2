@@ -219,7 +219,7 @@ if (isset($_POST['edita'])) {
     }
 }
 
-if (isset($_POST['carregar'])) {
+if (isset($_POST['selecionar']) || isset($_POST['Voltar'])) {
     $idPf = $_POST['idPf'];
 }
 
@@ -558,18 +558,19 @@ if ($testaBanco->num_rows > 0) {
                         </div>
 
                         <div class="form-group col-md-4">
-                            <a href="<?= $linkResumo . "?idPf=" . $idPf ?>" target="_blank">
-                                <button type="button" class="btn btn-info btn-block">Imprimir resumo
+                            <form method="post" action="<?= $linkResumo ?> " role="form" target="_blank">
+                                <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                                <button type="submit" class="btn btn-info btn-block">Imprimir resumo
                                 </button>
-                            </a>
                         </div>
 
                         <div class="form-group col-md-4">
-                            <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank">
-                                <button type="button" class="btn btn-info pull-right btn-block">Clique aqui para
+                            <form method="POST" action="<?= $link_facc ?>" role="form" target="_blank">
+                                <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                                <button type="submit" class="btn btn-info pull-right btn-block">Clique aqui para
                                     gerar a FACC
                                 </button>
-                            </a>
+                            </form>
                         </div>
                     </div>
                 </div>
