@@ -4,6 +4,8 @@ $con = bancoMysqli();
 if (isset($_POST['excluir'])) {
     $idVigencia = $_POST['idVigencia'];
 
+    $deleteParcelas = $con->query("UPDATE formacao_parcelas SET publicado = 0 WHERE formacao_vigencia_id = $idVigencia");
+
     $sql = "UPDATE formacao_vigencias SET publicado = 0 WHERE id = '$idVigencia'";
 
     if (mysqli_query($con, $sql)) {

@@ -1,7 +1,7 @@
 <?php
 $con = bancoMysqli();
 
-$idPedido = $_SESSION['idPedido'];
+$idPedido = $_GET['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 ?>
@@ -33,8 +33,8 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
                                     <div class="form-group col-md-4">
                                         <label for="valor[]">Valor:</label>
                                         <input type="text" id="valor[]" name="valor[]"
-                                               class="form-control" onKeyPress="return(moeda(this,'.',',',event))"
-                                               value="<?= dinheiroParaBr($parcela['valor']) ?>" required>
+                                               class="form-control" class="form-control" onKeyPress="return(moeda(this,'.',',',event))"
+                                               value="<?= dinheiroParaBr($parcelas['valor'] ?? NULL) ?>">
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -51,6 +51,7 @@ $pedido = recuperaDados('pedidos', 'id', $idPedido);
                         <div class="box-footer">
                             <button type="submit" name="parcelaEditada" id="parcelaEditada"
                                     class="btn btn-primary pull-right">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 Gravar
                             </button>
                         </div>
