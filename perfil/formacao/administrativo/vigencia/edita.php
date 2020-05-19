@@ -45,7 +45,7 @@ $vigencia = recuperaDados('formacao_vigencias', 'id', $idVigencia);
 
 if (isset($_POST['edita'])) {
     $parcelas = $_POST['parcela'];
-    $valores = dinheiroDeBr($_POST['valor']);
+    $valores = $_POST['valor'];
     $data_inicios = $_POST['data_inicio'];
     $data_fins = $_POST['data_fim'];
     $data_pagamentos = $_POST['data_pagamento'];
@@ -123,7 +123,7 @@ if (isset($_POST['edita'])) {
                                     <div class="form-group col-md-2">
                                         <label for="valor[]">Valor:</label>
                                         <input type="text" id="valor<?= $i ?>" name="valor[]"
-                                               class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= $parcelaArray['valor'] ?? NULL ?>">
+                                               class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcelaArray['valor'] ?? NULL) ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">

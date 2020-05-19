@@ -11,14 +11,14 @@
                 <form action="?perfil=emia&p=dados_contratacao&sp=listagem" method="POST" role="form">
                     <div class="row">
                         <div class="col-md-6">
-                        <label for="pf">Pessoa Física: *</label>
-                        <select name="pf" id="pf" class="form-control" required value="">
-                            <option value="">Selecione uma pessoa física...</option>
-                            <?php
-                                 geraOpcao('pessoa_fisicas');
-                            ?>
-                        </select>
-                    </div>
+                            <label for="pf">Pessoa Física: *</label>
+                            <select name="pf" id="pf" class="form-control" required value="">
+                                <option value="">Selecione uma pessoa física...</option>
+                                <?php
+                                geraOpcao('pessoa_fisicas');
+                                ?>
+                            </select>
+                        </div>
 
                         <div class="col-md-6">
                             <label for="ano">Ano: *</label>
@@ -33,30 +33,30 @@
                             <select name="local" id="local" required class="form-control" value="">
                                 <option value="">Selecione um local...</option>
                                 <?php
-                                    geraOpcao('locais');
+                                geraOpcaoPublicado('locais');
                                 ?>
                             </select>
                         </div>
 
-                            <div class="col-md-4">
-                                <label for="cargo">Cargo: *</label>
-                                <select name="cargo" id="cargo" class="form-control" required value="">
-                                    <option value="">Selecione um cargo...</option>
-                                    <?php
-                                        geraOpcao('emia_cargos');
-                                    ?>
-                                </select>
-                            </div>
+                        <div class="col-md-4">
+                            <label for="cargo">Cargo: *</label>
+                            <select name="cargo" id="cargo" class="form-control" required value="">
+                                <option value="">Selecione um cargo...</option>
+                                <?php
+                                geraOpcaoPublicado('emia_cargos');
+                                ?>
+                            </select>
+                        </div>
 
-                            <div class="col-md-4">
-                                <label for="vigencia">Vigência: *</label>
-                                <select name="vigencia" id="vigencia" class="form-control" required value="">
-                                    <option value="">Selecione a vigência...</option>
-                                    <?php
-                                        geraOpcao('emia_vigencias');
-                                    ?>
-                                </select>
-                            </div>
+                        <div class="col-md-4">
+                            <label for="vigencia">Vigência: *</label>
+                            <select name="vigencia" id="vigencia" class="form-control" required value="">
+                                <option value="">Selecione a vigência...</option>
+                                <?php
+                                geraOpcaoPublicado('emia_vigencias');
+                                ?>
+                            </select>
+                        </div>
                     </div>
                     <br>
 
@@ -67,17 +67,19 @@
                     </div>
 
                     <div class="row">
-                            <div class="col-md-12">
-                                <label for="cronograma">Cronograma: </label>
-                                <textarea name="cronograma" id="cronograma"  rows="3" type="text" class="form-control"> </textarea>
-                            </div>
+                        <div class="col-md-12">
+                            <label for="cronograma">Cronograma: </label>
+                            <textarea name="cronograma" id="cronograma" rows="3" type="text"
+                                      class="form-control"> </textarea>
+                        </div>
                     </div>
                     <br>
 
                     <div class="row">
                         <div class="col-md-12">
                             <label for="observacao">Observação: </label>
-                            <textarea name="observacao" id="observacao"  rows="3" type="text" class="form-control"> </textarea>
+                            <textarea name="observacao" id="observacao" rows="3" type="text"
+                                      class="form-control"> </textarea>
                         </div>
                     </div>
                     <br>
@@ -88,7 +90,7 @@
                             <select name="fiscal" id="fiscal" class="form-control">
                                 <option value="">Selecione um fiscal...</option>
                                 <?php
-                                    geraOpcaoUsuario("usuarios", 1, "");
+                                geraOpcaoUsuario("usuarios", 1, "");
                                 ?>
                             </select>
                         </div>
@@ -98,7 +100,7 @@
                             <select name="suplente" id="suplente" class="form-control">
                                 <option value="">Selecione um suplente...</option>
                                 <?php
-                                    geraOpcaoUsuario("usuarios", 1, "");
+                                geraOpcaoUsuario("usuarios", 1, "");
                                 ?>
                             </select>
                         </div>
@@ -108,7 +110,8 @@
                 <a href="?perfil=emia&p=dados_contratacao&sp=listagem">
                     <button type="button" class="btn btn-default">Voltar</button>
                 </a>
-                <button type="submit" class="btn btn-primary pull-right" name="cadastrar" id="cadastrar">Cadastrar</button>
+                <button type="submit" class="btn btn-primary pull-right" name="cadastrar" id="cadastrar">Cadastrar
+                </button>
             </div>
             </form>
         </div>

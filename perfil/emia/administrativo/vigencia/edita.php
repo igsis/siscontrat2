@@ -23,29 +23,15 @@ if (isset($_POST['cadastra'])) {
 }
 
 if (isset($_POST['editar'])) {
-    $sql = "DELETE FROM emia_parcelas WHERE emia_vigencia_id = '$idEV'";
-    mysqli_query($con, $sql);
-
     $sqlUpdate = "UPDATE emia_vigencias SET
                     ano = '$ano',
                     descricao = '$desc',
                     numero_parcelas = '$numParcela'
                     WHERE id = '$idEV'";
 
-    if (mysqli_query($con, $sqlUpdate)) {
-        $mensagem = mensagem("success", "Gravado com sucesso!");
-    } else {
-        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
-    }
-    $ev = recuperaDados('emia_vigencias', 'id', $idEV);
-}
+    $sql = "DELETE FROM emia_parcelas WHERE emia_vigencia_id = '$idEV'";
+    mysqli_query($con, $sql);
 
-if (isset($_POST['edit'])) {
-    $idEV = $_POST['idEVEdit'];
-    $ev = recuperaDados('emia_vigencias', 'id', $idEV);
-}
-
-if(isset($_POST['editar'])){
     $parcelas = $_POST['parcela'];
     $valores = dinheiroDeBr($_POST['valor']);
     $data_inicios = $_POST['data_inicio'];
@@ -54,7 +40,7 @@ if(isset($_POST['editar'])){
     $mes_refs = $_POST['mes_ref'];
     $cargas = $_POST['carga'];
 
-    $i = $ev['numero_parcelas'];
+    $i = $numParcela;
 
     for ($count = 0; $count < $i; $count++) {
         $parcela = $parcelas[$count] ?? NULL;
@@ -68,8 +54,19 @@ if(isset($_POST['editar'])){
         $sql = "INSERT INTO emia_parcelas (emia_vigencia_id, numero_parcelas, valor, data_inicio, data_fim, data_pagamento, mes_referencia_id, carga_horaria)
                                        VALUES ('$idEV', '$parcela', '$valor', '$data_inicio', '$data_fim', '$data_pagamento', '$mes_ref', '$carga')";
 
-        mysqli_query($con, $sql);
+        if(mysqli_query($con, $sql)){
+            $mensagem = mensagem("success", "Gravado com sucesso!");
+        }else{
+            $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+        }
     }
+
+    $ev = recuperaDados('emia_vigencias', 'id', $idEV);
+}
+
+if (isset($_POST['edit'])) {
+    $idEV = $_POST['idEVEdit'];
+    $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 }
 
 ?>

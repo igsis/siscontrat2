@@ -3,6 +3,8 @@ $con = bancoMysqli();
 if (isset($_POST['excluir'])) {
     $idEV = $_POST['idEVDelete'];
 
+    $deleteParcelas = $con->query("UPDATE emia_parcelas SET publicado = 0 WHERE emia_vigencia_id = $idEV");
+
     $sqlDelete = "UPDATE emia_vigencias SET publicado = 0 WHERE id = '$idEV'";
     if (mysqli_query($con, $sqlDelete)) {
         $mensagem = mensagem("success", "Vigência excluida com sucesso");
@@ -93,7 +95,7 @@ $query = mysqli_query($con, $sql);
                         <p>Tem certeza que deseja excluir a vigência?</p>
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" name="idEVDelete" id="idEVDelete" value="<?= $ev['id'] ?>">
+                        <input type="hidden" name="idEVDelete" id="idEVDelete" value="">
                         <input type="hidden" name="excluir" id="excluir">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                         </button>
