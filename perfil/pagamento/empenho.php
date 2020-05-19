@@ -87,7 +87,7 @@ function comparaData() {
 
         $('#cadastra').attr("disabled", true);
             
-        if (dataFim <= dataInicio) {
+        if (dataInicio <= dataFim) {
             $('#cadastra').attr("disabled", true);
             isMsg.show();
         } else {
