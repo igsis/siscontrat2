@@ -544,8 +544,8 @@ function geraOpcaoLocais ($tabela, $select = '')
 
     function retornaDiasOcorrencias($idEvento) {
         $con = bancoMysqli();
-
-        $ocorrencias = $con->query("SELECT id, data_inicio, data_fim FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1-'")->fetch_all(MYSQLI_ASSOC);
+        $query = "SELECT id, data_inicio, data_fim FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = '1'";
+        $ocorrencias = $con->query($query)->fetch_all(MYSQLI_ASSOC);
         $diasExecucao = [];
 
         foreach ($ocorrencias as $ocorrencia) {
@@ -558,6 +558,10 @@ function geraOpcaoLocais ($tabela, $select = '')
         }
 
         sort($diasExecucao);
+
+        if (count($diasExecucao) == 0){
+            return "";
+        }
 
         foreach ($diasExecucao as $key => $dia) {
             $dias[] = $diasExecucao[$key]->format('d/m/Y');
