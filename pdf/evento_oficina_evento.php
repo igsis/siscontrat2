@@ -10,17 +10,19 @@ $con = bancoMysqli();
 
 isset($_POST['idEvento']);
 $idEvento = $_POST['idEvento'];
+isset($_POST['idPedido']);
+$idPedido = $_POST['idPedido'];
 
 
 $evento = recuperaDados('eventos','id',$idEvento);
-$modelo_juridico = recuperaDados('juridicos','pedido_id',$idEvento);
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idEvento);
-$pedidos = recuperaDados('pedidos','id',$idEvento);
-$ocorrencias = recuperaDados('ocorrencias','id',$idEvento);
+$modelo_juridico = recuperaDados('juridicos','pedido_id',$idPedido);
+$pedidos = recuperaDados('pedidos','id',$idPedido);
+$ocorrencias = recuperaDados('ocorrencias','origem_ocorrencia_id',$evento['id']);
 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencias['instituicao_id']);
 $finalizacao = $modelo_juridico['finalizacao'];
 $amparo = $modelo_juridico['amparo_legal'];
 $dotacao = $modelo_juridico['dotacao'];
+
 $hora_inicio = $ocorrencias['horario_inicio'];
 $nome_evento = $evento['nome_evento'];
 $nome_instituicao = $instituicao['nome'];
@@ -33,15 +35,9 @@ $pagamento = $pedidos['forma_pagamento'];
 $valor_extenso = valorPorExtenso($valor);
 $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
 
-if($pessoa['cpf'] = 'null' && $pessoa['nome'] = 'null'){
-    $cpf = "Não cadastrado";
-    $nome = "Não cadastrado";
-} else {
-    $cpf = $pessoa['cpf'];
-    $nome = $pessoa['nome'];
+if($dotacao == ''){
+    $dotacao = "Não cadastrado";
 }
-
-
 ?>
 
 <html>
@@ -94,7 +90,7 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p><strong> Valor:</strong> " . "R$ " .$valor. "  " . "($valor_extenso)" . "</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . "$pagamento" . ". Os valores devidos aos prestadores de serviços serão apurados mensalmente e pagos a partir do 1º dia útil do mês subsequente da comprovada execução dos serviços, mediante confirmação pela unidade responsável pela fiscalização.</p>" .
-    "<p><strong>Dotação Orçamentária:</strong>"."$dotacao"."&nbsp;"."</p>" .
+    "<p><strong>Dotação Orçamentária:</strong>"." $dotacao"."&nbsp;"."</p>" .
     "<p>$finalizacao</p>" .
     "<p align='justify'>" . "" . "</p>" .
     "<p>&nbsp;</p>" .
