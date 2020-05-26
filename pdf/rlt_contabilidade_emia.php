@@ -18,7 +18,13 @@ $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
 $sqlLocal = "SELECT local FROM locais l INNER JOIN emia_contratacao ec on ec.local_id = l.id WHERE ec.id = '$idEC' AND ec.publicado = 1";
 $local = $con->query($sqlLocal)->fetch_array();
 
-$horas = $con->query("SELECT carga_horaria FROM emia_parcelas WHERE id = $idParcela")->fetch_array();
+$testaCarga = $con->query("SELECT carga_horaria FROM emia_parcelas WHERE id = $idParcela");
+
+if($testaCarga->num_rows > 0){
+    $horas = mysqli_fetch_array($testaCarga)['carga_horaria'];
+}else{
+    $horas = "(quantidade de horas não cadastrada)";
+}
 
 $cargo = recuperaDados('emia_cargos', 'id', $contratacao['emia_cargo_id']);
 
@@ -62,7 +68,7 @@ $data = date("Y-m-d", strtotime("-3 hours"));
         "<p><strong>Local:</strong> " . $local['local'] . "</p>" .
         "<p><strong>Período:</strong> " . retornaPediodoEmia($contratacao['emia_vigencia_id']) . "</p>" .
         "<p>&nbsp;</p>" .
-        "<p align='justify'>Com base na Confirmação de Serviços (Documento SEI link ), atesto que foi efetivamente cumprido " . $horas['carga_horaria'] . " horas de trabalho durante o período supra citado.</p>" .
+        "<p align='justify'>Com base na Confirmação de Serviços (Documento SEI link ), atesto que foi efetivamente cumprido " . $horas . " horas de trabalho durante o período supra citado.</p>" .
         "<p align='justify'>Em virtude do detalhamento da Ação em 2019, informamos que o pagamento  no valor de R$ 4.194,72 (quatro mil, cento e noventa e quatro reais e setenta e dois centavos) foi gasto na zona sul de São Paulo, rua Volkswagen, s/nº, Jabaquara, SP.</p>" .
         "<p align='justify'>Encaminhamos o presente para as providências necessárias relativas ao pagamento da parcela do referido processo.</p>" .
         "<p>&nbsp;</p>" .

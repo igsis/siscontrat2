@@ -6,14 +6,19 @@ require_once("../funcoes/funcoesGerais.php");
 
 // conexão com banco //
 $con = bancoMysqli();
+
+
 isset($_POST['idEvento']);
 $idEvento = $_POST['idEvento'];
 
+isset($_POST['idPedido']);
+$idPedido = $_POST['idPedido'];
+
 
 $evento = recuperaDados('eventos','id',$idEvento);
-$modelo_juridico = recuperaDados('juridicos','pedido_id',$idEvento);
-$pedidos = recuperaDados('pedidos','origem_id',$idEvento);
-$ocorrencias = recuperaDados('ocorrencias','id',$idEvento);
+$pedidos = recuperaDados('pedidos','id',$idPedido);
+$modelo_juridico = recuperaDados('juridicos','pedido_id',$idPedido);
+$ocorrencias = recuperaDados('ocorrencias','origem_ocorrencia_id',$evento['id']);
 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencias['instituicao_id']);
 $finalizacao = $modelo_juridico['finalizacao'];
 $amparo = $modelo_juridico['amparo_legal'];
@@ -28,9 +33,11 @@ $hoje = date("d/m/Y", strtotime("-3 hours"));
 $valor = $pedidos['valor_total'];
 $pagamento = $pedidos['forma_pagamento'];
 $valor_extenso = valorPorExtenso($valor);
-$periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
+$periodo = retornaPeriodoNovo($pedidos['origem_id'], 'ocorrencias');
 
-
+if ($dotacao == ''){
+    $dotacao = "Não cadastrado";
+}
 ?>
 
 <html>
@@ -39,31 +46,29 @@ $periodo = retornaPeriodoNovo($idEvento, 'ocorrencias');
 
     <style>
 
-        .texto{
+        .texto {
             width: 900px;
             border: solid;
             padding: 20px;
             font-size: 12px;
             font-family: Arial, Helvetica, sans-serif;
-            text-align:justify;
+            text-align: justify;
         }
     </style>
 </head>
 
 
-
-
 <body>
 <?php
 if ($pedidos['pessoa_tipo_id'] == 1) {
-    $pessoa = recuperaDados("pessoa_fisicas", "id", $pedidos ['pessoa_fisica_id']);
+    $pessoa = recuperaDados("pessoa_fisicas", "id", $pedidos['pessoa_fisica_id']);
     $y = $pessoa['nome'];
-    if($pessoa['passaporte'] != NULL){
+    if ($pessoa['passaporte'] != NULL) {
         $x = $pessoa['passaporte'];
-    }else{
+    } else {
         $x = $pessoa['cpf'];
     }
-    
+
 } else if ($pedidos['pessoa_tipo_id'] == 2) {
     $pessoa = recuperaDados('pessoa_juridicas', "id", $pedidos['pessoa_juridica_id']);
     $y = $pessoa['razao_social'];
@@ -75,20 +80,20 @@ $dados =
     "<p>&nbsp;</p>" .
     "<p><strong>Contratado:</strong> " . "$y" . " - (" . "$x" . ")</p>" .
     "<p><strong>Objeto:</strong> " . "$nome_evento" . "</p>" .
-    "<p><strong>Data / Período:</strong>"."$periodo"."</p>" .
+    "<p><strong>Data / Período:</strong>" . "$periodo" . "</p>" .
     "<p>&nbsp;</p>" .
     "<p><strong>Locais e Horários:</strong> " . "</p>" .
-    "<p>"."$nome_instituicao"."&nbsp;"."($sigla)"."<br>$periodo"."&nbsp;"."($diaSemana)"."&nbsp;às&nbsp;$hora_inicio</p>".
+    "<p>" . "$nome_instituicao" . "&nbsp;" . "($sigla)" . "<br>$periodo" . "&nbsp;" . "($diaSemana)" . "&nbsp;às&nbsp;$hora_inicio</p>" .
     "<p>&nbsp;</p>" .
-    "<p><strong> Valor:</strong> " . "R$ " .$valor. "  " . "($valor_extenso)" . "</p>" .
+    "<p><strong> Valor:</strong> " . "R$ " . $valor . "  " . "($valor_extenso)" . "</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . "$pagamento" . "</p>" .
-    "<p><strong>Dotação Orçamentária:</strong>"."$dotacao"."&nbsp;"."</p>" .
+    "<p><strong>Dotação Orçamentária: </strong>" . "$dotacao" . "&nbsp;" . "</p>" .
     "<p>$finalizacao;</p>" .
     "<p align='justify'>" . "" . "</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
-    "<p align='center'>São Paulo, ".$hoje. "</p>" .
+    "<p align='center'>São Paulo, " . $hoje . "</p>" .
     "<p>&nbsp;</p>"
 
 

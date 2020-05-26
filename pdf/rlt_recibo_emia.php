@@ -22,6 +22,13 @@ $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
 
 $cargo = recuperaDados('emia_cargos','id',$contratacao['emia_cargo_id']);
 
+$enderecoArray = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
+if($enderecoArray == NULL){
+    $endereco = "Não cadastrado";
+}else{
+    $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " .$enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+}
+
 $ano = date('Y',strtotime("-3 hours"));
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
@@ -58,17 +65,24 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(14, $l, 'C.C.M.:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 11);
-$pdf->MultiCell(40, $l, utf8_decode($pessoa['ccm']), 0, 'L', 0);
+$pdf->MultiCell(40, $l, utf8_decode($pessoa['ccm']== NULL ? "Não cadastrado" : $pessoa['ccm'] ), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(8, $l, utf8_decode('RG:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 11);
-$pdf->Cell(50, $l, utf8_decode($pessoa['rg']), 0, 0, 'L');
-$pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(10, $l, utf8_decode('CPF:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 11);
-$pdf->Cell(5, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(21, $l, utf8_decode('Passaporte:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(50, $l, utf8_decode($pessoa['passaporte']), 0, 0, 'L');
+
+}else{
+    $pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(50, $l, utf8_decode($pessoa['rg'] ?? "Não cadastrado"), 0, 0, 'L');
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(45, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
+}
 
 $pdf->Ln(7);
 
@@ -78,7 +92,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(20, $l, utf8_decode("Endereço:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 11);
-$pdf->MultiCell(160, $l, utf8_decode($endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " .$endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf']), 0, 'L', 0);
+$pdf->MultiCell(160, $l, utf8_decode($endereco), 0, 'L', 0);
 
 $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";

@@ -60,12 +60,15 @@ $link_contabilidade = $http . "rlt_contabilidade_emia.php";
                                 </div>
                             </div>
                         </div>
-                        <div class="box-footer">
-                            <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button">
-                                <button type="button" class="btn btn-primary center-block">Gerar FACC</button>
-                            </a>
-                        </div>
                     </form>
+
+                        <div class="box-footer">
+                            <form action="<?= $link_facc ?>" method="POST" target="_blank">
+                                <input type="hidden" name="idPf" value="<?=$idPf?>">
+                                <button type="submit" class="btn btn-primary center-block">Gerar FACC</button>
+                            </form>
+                        </div>
+
 
                     <table id="tblParcela" class="table table-bordered table-striped">
                         <thead>
