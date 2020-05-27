@@ -78,6 +78,8 @@ if (isset($_POST['cadastra'])) {
             }
         }
     }
+
+    $mensagem .= mensagem("success", "Cadastrado com sucesso!");
 }
 
 if (isset($_POST['edita'])) {

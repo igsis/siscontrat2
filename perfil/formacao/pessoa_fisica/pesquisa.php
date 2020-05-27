@@ -47,8 +47,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         $resultado .= "<td>
                                      <form action='?perfil=formacao&p=pessoa_fisica&sp=edita' method='post'>
                                         <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
-                                        <input type='hidden' name='idAtracao' value='$idAtracao'>
-                                        <input type='hidden' name='idPedido' value='$idPedido'>
                                         $botaoSelecionar                                        
                                      </form>
                                </td>";
@@ -63,8 +61,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                       </td>
                       <td>
                         <form method='post' action='?perfil=formacao&p=pessoa_fisica&sp=cadastro'>
-                            <input type='hidden' name='idAtracao' value='$idAtracao'>
-                            <input type='hidden' name='idPedido' value='$idPedido'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             $botaoAdd
