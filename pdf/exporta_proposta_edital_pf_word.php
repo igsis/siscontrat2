@@ -47,12 +47,21 @@ $idEvento = $pedido['origem_id'];
 
 $idPessoa = $pessoa['id'];
 
-$idNacionalidade = $pessoa['nacionalidade_id'];
-$sqlNacionalidade = "SELECT nacionalidade FROM nacionalidades WHERE id = '$idNacionalidade'";
-$nacionalidade = $con->query($sqlNacionalidade)->fetch_array();
+if($pessoa['nacionalidade_id'] != NULL){
+    $nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id'])['nacionalidade'];
+}else{
+    $nacionalidade = "Não cadastrado";
+}
 
-$sqlEndereco = "SELECT logradouro, numero, complemento, bairro, cidade, uf FROM pf_enderecos WHERE pessoa_fisica_id = '$idPessoa'";
-$endereco = $con->query($sqlEndereco)->fetch_array();
+$testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id = $idPessoa");
+
+if ($testaEnderecos->num_rows > 0) {
+    while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
+        $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " .$enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+    }
+} else {
+    $endereco = "Não cadastrado";
+}
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 
@@ -97,9 +106,10 @@ if($pessoa['passaporte'] != NULL){
     $rg_cpf_passaporte = "<p><strong>Passaporte:</strong> " . $pessoa['passaporte'] . "</p>";
     $label = "<p>Passaporte: " . $pessoa['passaporte'] . "</p>";
 }else{
-    $rg_cpf_passaporte = "<p><strong>RG:</strong> " . $pessoa['rg'] . "</p>
+    $rg = $pessoa['rg'] == NULL ? "Não cadastrado" : $pessoa['rg'];
+    $rg_cpf_passaporte = "<p><strong>RG:</strong> " . $rg . "</p>
                           <p><strong>CPF:</strong> " . $pessoa['cpf'] . "<p>";
-    $label = "<p>RG: " . $pessoa['rg'] . "</p>";
+    $label = "<p>RG: " . $rg . "</p>";
 }
 
 if($pessoa['nome_artistico'] == NULL || $pessoa['nome_artistico'] == ""){
@@ -120,11 +130,11 @@ echo
     "<p><i>(Quando se tratar de grupo, o líder do grupo)</i></p>" .
     "<p><strong>Nome:</strong> " . $pessoa['nome'] . "</p>" .
     "<p><strong>Nome Artístico:</strong> " . $nomeArtistico . "</p>" .
-    "<p><strong>Nacionalidade:</strong> " . $nacionalidade['nacionalidade'] . "</p>" .
+    "<p><strong>Nacionalidade:</strong> " . $nacionalidade . "</p>" .
     $rg_cpf_passaporte .
     "<p><strong>CCM:</strong> " . $ccm . "</p>" .
     "<p><strong>DRT:</strong> " . $drt . "</p>" .
-    "<p><strong>Endereço:</strong> " . $endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " . $endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf'] . "</p>" .
+    "<p><strong>Endereço:</strong> " . $endereco . "</p>" .
     "<p><strong>Telefone:</strong> " . $tel . "</p>" .
     "<p><strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
     "<p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> " . $nit. "</p>" .

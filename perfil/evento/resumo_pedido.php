@@ -7,9 +7,12 @@ $sql = "SELECT * FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEve
 $query = $con->query($sql);
 $pedido = $query->fetch_assoc();
 
-$verba = $con->query("SELECT verba FROM verbas WHERE id = '{$pedido['verba_id']}'")->fetch_assoc()['verba'];
+$testaVerba = $con->query("SELECT verba FROM verbas WHERE id = '{$pedido['verba_id']}'");
+if ($testaVerba->num_rows > 0) {
+    $verba = mysqli_fetch_assoc($testaVerba)['verba'];
+}
 
-if($pedido['pessoa_tipo_id'] == 1) {
+if ($pedido['pessoa_tipo_id'] == 1) {
     $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 } else {
     $proponente = recuperaDados('pessoa_juridicas', 'id', $pedido['pessoa_juridica_id']);
@@ -46,8 +49,9 @@ $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-danger btn-sm" id="excluiPedido"
                                     data-toggle="modal" data-target="#exclusao" name="excluiPedido"
-                                    data-id="<?=$pedido['id']?>">
-                                <span class='glyphicon glyphicon-trash'></span> Excluir Pedido</button>
+                                    data-id="<?= $pedido['id'] ?>">
+                                <span class='glyphicon glyphicon-trash'></span> Excluir Pedido
+                            </button>
                         </div>
                     </div>
 
@@ -66,33 +70,35 @@ $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
                                         <?php if (($pedido['numero_parcelas'] != null) || ($pedido['verba_id']) != null): ?>
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <p><strong>Verba: </strong><?=$verba?></p>
+                                                    <p><strong>Verba: </strong><?= $verba ?? NULL?></p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <p><strong>Parcelas: </strong><?=$pedido['numero_parcelas']?></p>
+                                                    <p><strong>Parcelas: </strong><?= $pedido['numero_parcelas'] ?></p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <p><strong>Valor Total: </strong> R$ <?=dinheiroParaBr($pedido['valor_total'])?></p>
+                                                    <p><strong>Valor Total: </strong>
+                                                        R$ <?= dinheiroParaBr($pedido['valor_total']) ?></p>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <p>
-                                                        <strong>Forma de Pagamento: </strong><?=$pedido['forma_pagamento']?>
+                                                        <strong>Forma de
+                                                            Pagamento: </strong><?= $pedido['forma_pagamento'] ?>
                                                     </p>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <p>
-                                                        <strong>Justificativa: </strong> <?=$pedido['justificativa']?>
+                                                        <strong>Justificativa: </strong> <?= $pedido['justificativa'] ?>
                                                     </p>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <p>
-                                                        <strong>Observação: </strong> <?=$pedido['observacao']?>
+                                                        <strong>Observação: </strong> <?= $pedido['observacao'] == NULL ? "Não cadastrado" : $pedido['observacao']?>
                                                     </p>
                                                 </div>
                                             </div>
@@ -123,28 +129,32 @@ $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
                                             <?php if ($pedido['pessoa_tipo_id'] == 1): ?>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <p><strong>Nome: </strong><?=$proponente['nome']?></p>
+                                                        <p><strong>Nome: </strong><?= $proponente['nome'] ?></p>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <p><strong>CPF: </strong><?=$proponente['cpf']?></p>
+                                                        <p><strong>CPF: </strong><?= $proponente['cpf'] ?></p>
                                                     </div>
                                                 </div>
                                             <?php else: ?>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <p><strong>Razão Social: </strong><?=$proponente['razao_social']?></p>
+                                                        <p><strong>Razão
+                                                                Social: </strong><?= $proponente['razao_social'] ?></p>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <p><strong>CNPJ: </strong><?=$proponente['cnpj']?></p>
+                                                        <p><strong>CNPJ: </strong><?= $proponente['cnpj'] ?></p>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <p><strong>Representante Fiscal: </strong><?=$representante1['nome']?></p>
+                                                        <p><strong>Representante
+                                                                Fiscal: </strong><?= $representante1['nome'] ?? "Não cadastrado" ?>
+                                                        </p>
                                                     </div>
                                                     <?php if ($representante2 != null): ?>
                                                         <div class="col-md-6">
-                                                            <p><strong>Representante Fiscal 2: </strong><?=$representante2['nome']?></p>
+                                                            <p><strong>Representante Fiscal
+                                                                    2: </strong><?= $representante2['nome'] ?></p>
                                                         </div>
                                                     <?php endif ?>
                                                 </div>
@@ -243,7 +253,8 @@ $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
                                             <?php foreach ($valoresPorEquipamento as $valor): ?>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <p><strong><?=$valor['local']?>: </strong>R$ <?=dinheiroParaBr($valor['valor'])?></p>
+                                                        <p><strong><?= $valor['local'] ?>
+                                                                : </strong>R$ <?= dinheiroParaBr($valor['valor']) ?></p>
                                                     </div>
                                                 </div>
                                             <?php endforeach ?>

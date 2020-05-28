@@ -20,7 +20,7 @@ if ($pedido['origem_tipo_id'] != 2 && $tipoEvento != 2) {
 } else {
     $readonlyValorTotal = '';
 
-    $query_data="SELECT count(*) FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
+    $query_data = "SELECT count(*) FROM ocorrencias AS o INNER JOIN filme_eventos AS fe ON fe.id = o.atracao_id 
                     INNER JOIN eventos AS e ON fe.evento_id = e.id WHERE e.id = '$idEvento' AND e.publicado = 1 AND o.publicado = 1";
 }
 
@@ -45,10 +45,10 @@ while ($atracoes = $queryOficina->fetch_assoc()) {
 }
 
 if (isset($_POST['gravarParcelas']) || isset($_POST['editarParcelas'])) {
-    $num_parcelas = $_POST['nParcelas'];
+    $num_parcelas = $_POST['nParcelas'] ?? NULL;
     $idPedido = $_POST["idPedido"];
 
-    if (isset($_POST['gravarParcelas'])) {
+    if (isset($_POST['gravarParcelas']) && $num_parcelas != NULL) {
         foreach ($_POST['parcela'] as $key => $parcela) {
             $valor = dinheiroDeBr($_POST['valor'][$key]);
             $data_kit_pagamento = $_POST['data_pagamento'][$key];
@@ -230,11 +230,12 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
-                <form action="?perfil=evento&p=pedido_parcelas" id="form_parcelas" method="POST" role="form" data-parcelas="<?= $parcelas ?>">
+                <form action="?perfil=evento&p=pedido_parcelas" id="form_parcelas" method="POST" role="form"
+                      data-parcelas="<?= $parcelas ?>">
                     <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                     <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa ?>">
                     <input type="hidden" name="idProponente" value="<?= $idProponente ?>">
-                    <input type="hidden" name="data_kit" id="dataKit" value="<?=$data_kit?>">
+                    <input type="hidden" name="data_kit" id="dataKit" value="<?= $data_kit ?>">
 
                     <div class="box box-info">
                         <div class="box-header with-border">
@@ -245,13 +246,23 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
                             <?= $mensagem ?? "" ?>
                         </div>
                         <div id="mensagem-alerta">
+                            <?php if ($data_kit == null || $data_kit == "0000-00-00"):
+                                //estava no if da função verificaParcela
+                                $next_step = "$('.next-step').prop('disabled', true)";
+                                ?>
+                                <div class="alert alert-danger col-md-12" role="alert">Crie uma ocorrência antes de
+                                    prosseguir com pedido.
+                                </div>
+                            <?php else:
+                                $next_step = "";
+                            endif; ?>
                         </div>
 
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-8">
                                     <label for="verba_id">Verba *</label>
-                                    <select class="form-control" required id="verba_id" name="verba_id" >
+                                    <select class="form-control" required id="verba_id" name="verba_id">
                                         <option value="">Selecione...</option>
                                         <?php
                                         geraOpcao("verbas", $pedido['verba_id'])
@@ -330,7 +341,8 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <input name="gravar" type="submit" class="pull-right btn btn-primary" id="btnGravar" value="Gravar"
+                            <input name="gravar" type="submit" class="pull-right btn btn-primary" id="btnGravar"
+                                   value="Gravar"
                         </div>
                         <!-- /.box-footer-->
                     </div>
@@ -403,19 +415,14 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
             msgParcelas.show();
         }
 
-        <?php if ($data_kit == null && $data_kit2 == 0): ?>
-            $('.next-step').prop('disabled', true);
-            $('#mensagem-alerta').append('<div class="alert alert-danger col-md-12" role="alert">Crie uma ocorrência antes de prosseguir com pedido.</div>');
-        <?php else: ?>
-            $('#dataKit').val("<?= $data_kit ?>");
-        <?php endif; ?>
+        <?=$next_step?>
     }
 
     function formParcela() {
         let nParcela = $('#numero_parcelas').val();
         let btnEditaParcela = $('#btnParcelas');
 
-        btnEditaParcela.attr('href', '?perfil=evento&p=parcelas_edita&nParcelas='+nParcela);
+        btnEditaParcela.attr('href', '?perfil=evento&p=parcelas_edita&nParcelas=' + nParcela);
     }
 
     $(document).ready(formaPagamento());

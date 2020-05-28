@@ -31,7 +31,7 @@ if (isset($oficina)) {
             break;
     }
 } else {
-    $nParcelas = $_GET['nParcelas'];
+    $nParcelas = $_GET['nParcelas'] ?? NULL;
 }
 
 $pedido = recuperaDados("pedidos", "id", $idPedido);

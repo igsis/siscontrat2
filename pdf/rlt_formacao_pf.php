@@ -34,13 +34,6 @@ $dataAtual = date("d/m/Y", strtotime("-3 hours"));
 
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
-if($pessoa['nacionalidade_id'] != NULL){
-    $nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id'])['nacionalidade'];
-}else{
-    $nacionalidade = "Não cadastrado";
-}
-
-
 $testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id = $idPf");
 
 if ($testaEnderecos->num_rows > 0) {
