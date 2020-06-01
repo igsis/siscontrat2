@@ -186,7 +186,7 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
                                 echo "<td style='display:none'>" . $ocorrencia['libras'] . "</td>";
                                 echo "<td style='display:none'>" . $ocorrencia['audiodescricao'] . "</td>";
 
-                                if($idFilme != NULL){
+                                if(isset($idFilme)){
                                     echo "<td>
                                             <form method=\"POST\" action=\"?perfil=evento&p=ocorrencia_edita\" role=\"form\">
                                                 <input type='hidden' name='idOcorrencia' value='" . $ocorrencia['idOco'] . "'>
