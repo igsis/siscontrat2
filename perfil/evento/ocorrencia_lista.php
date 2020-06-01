@@ -102,6 +102,11 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
             <div class="col-md-2">
                 <form method="POST" action="?perfil=evento&p=ocorrencia_cadastro">
                     <input type="hidden" name="idOrigem" value="<?= $idOrigem ?>">
+                    <?php
+                    if(isset($idFilme)){
+                        echo "<input type='hidden' name='idFilme' value='" . $idFilme . "'>";
+                    }
+                    ?>
                     <button type="submit" class="btn btn-block btn-info"><i class="fa fa-plus"></i> Adiciona</button>
                 </form>
             </div>

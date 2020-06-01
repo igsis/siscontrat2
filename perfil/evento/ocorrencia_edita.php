@@ -106,7 +106,9 @@ if (isset($_POST['cadastra'])) {
         //gravarLog($sql);
         echo $sql;
     }
-
+    if (isset($_POST['idFilme'])):
+        $idFilme = $_POST['idFilme'];
+    endif;
 }
 
 if (isset($_POST['edita'])) {

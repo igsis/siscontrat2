@@ -382,6 +382,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                 <button type="button" class="btn btn-default" id="voltar" name="voltar">Voltar</button>
                             </a>
                             <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
+                            <?= isset($idFilme) ? "<input type='hidden' name='idFilme' value='" . $idFilme . "'>" : ''; ?>
                             <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
                                 Cadastrar
                             </button>
