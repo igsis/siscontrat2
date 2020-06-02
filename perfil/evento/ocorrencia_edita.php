@@ -106,9 +106,6 @@ if (isset($_POST['cadastra'])) {
         //gravarLog($sql);
         echo $sql;
     }
-    if (isset($_POST['idFilme'])):
-        $idFilme = $_POST['idFilme'];
-    endif;
 }
 
 if (isset($_POST['edita'])) {
@@ -153,6 +150,10 @@ if (isset($_POST['carregar'])) {
     }
     $idOcorrencia = $_POST['idOcorrencia'];
 }
+
+if (isset($_POST['idFilme'])):
+    $idFilme = $_POST['idFilme'];
+endif;
 
 $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 ?>
@@ -548,6 +549,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <button type="button" class="btn btn-default" name="voltar">Voltar</button>
                             </a>
                             <input type="hidden" name="idOcorrencia" value="<?= $idOcorrencia ?>">
+                            <?= isset($idFilme) ? "<input type='hidden' name='idFilme' value='{$idFilme}'>" : '' ?>
                             <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Gravar
                             </button>
                         </div>
