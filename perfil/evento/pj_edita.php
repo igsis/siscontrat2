@@ -31,11 +31,11 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['atualiz
     $cidade = trim(addslashes($_POST['cidade']));
     $uf = trim($_POST['estado']);
 
-    if(isset($_POST['bancario'])){
+    if (isset($_POST['bancario'])) {
         $banco = trim($_POST['banco']);
         $agencia = trim($_POST['agencia']);
         $conta = trim($_POST['conta']);
-    }else{
+    } else {
         $banco = NULL;
         $agencia = NULL;
         $conta = NULL;
@@ -51,7 +51,7 @@ if (isset($_POST['cadastra']) || isset($_POST['atualizaPj'])) {
     if (mysqli_query($con, $sql)) {
         $idPj = recuperaUltimo('pessoa_juridicas');
         // cadastrar o telefone de pj
-        foreach ($telefones AS $telefone) {
+        foreach ($telefones as $telefone) {
             if (!empty($telefone)) {
                 $sqlTel = "INSERT INTO pj_telefones (pessoa_juridica_id, telefone, publicado) VALUES ('$idPj', '$telefone', 1)";
                 mysqli_query($con, $sqlTel);
@@ -164,7 +164,7 @@ if (isset($_POST['edita'])) {
                     $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlBanco;
                 }
             } else {
-                if($banco != NULL){
+                if ($banco != NULL) {
                     $sqlBanco = "INSERT INTO pj_bancos (pessoa_juridica_id, banco_id, agencia, conta) VALUES ('$idPj', '$banco', '$agencia', '$conta')";
                     if (!mysqli_query($con, $sqlBanco)) {
                         $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlBanco;
@@ -374,7 +374,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
                                     <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
-                                           class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                           class="form-control" pattern=".{14,15}" title="14 a 15 caracteres"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -384,14 +384,14 @@ include "includes/menu_interno.php";
                                     if (isset($arrayTelefones[1])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               class="form-control" pattern=".{14,15}" title="14 a 15 caracteres"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               class="form-control" pattern=".{14,15}" title="14 a 15 caracteres"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -402,7 +402,7 @@ include "includes/menu_interno.php";
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               class="form-control" pattern=".{14,15}" title="14 a 15 caracteres"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
@@ -410,7 +410,7 @@ include "includes/menu_interno.php";
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               class="form-control" pattern=".{14,15}" title="14 a 15 caracteres"
                                                id="telefone2" name="telefone2">
 
                                         <?php
@@ -471,75 +471,79 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <?php
-                            if($evento['tipo_evento_id'] == 2 || $atracao['valor_individual'] > 0) {
-                                $banco = recuperaDados("pj_bancos", "pessoa_juridica_id", $idPj);
-                                ?>
-                                <input type="hidden" name="bancario">
-                                <hr/>
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="banco">Banco:</label>
-                                        <select id="banco" name="banco" class="form-control">
-                                            <option value="">Selecione um banco...</option>
-                                            <?php
-                                            geraOpcao("bancos", $banco['banco_id']);
-                                            ?>
-                                        </select>
+                            if ($atracao != null) {
+                                if ($evento['tipo_evento_id'] == 2 || $atracao['valor_individual'] > 0) {
+                                    $banco = recuperaDados("pj_bancos", "pessoa_juridica_id", $idPj);
+                                    ?>
+                                    <input type="hidden" name="bancario">
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="banco">Banco:</label>
+                                            <select id="banco" name="banco" class="form-control">
+                                                <option value="">Selecione um banco...</option>
+                                                <?php
+                                                geraOpcao("bancos", $banco['banco_id']);
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="agencia">Agência:</label>
+                                            <input type="text" name="agencia" class="form-control"
+                                                   placeholder="Digite a Agência" maxlength="12"
+                                                   value="<?= $banco['agencia'] ?>">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="conta">Conta:</label>
+                                            <input type="text" name="conta" class="form-control"
+                                                   placeholder="Digite a Conta" maxlength="12"
+                                                   value="<?= $banco['conta'] ?>">
+                                        </div>
                                     </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="agencia">Agência:</label>
-                                        <input type="text" name="agencia" class="form-control"
-                                               placeholder="Digite a Agência" maxlength="12"
-                                               value="<?= $banco['agencia'] ?>">
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="conta">Conta:</label>
-                                        <input type="text" name="conta" class="form-control"
-                                               placeholder="Digite a Conta" maxlength="12"
-                                               value="<?= $banco['conta'] ?>">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 89 AND origem_id = '$idPj' AND publicado = 1";
-                                    $queryFACC = mysqli_query($con, $sqlFACC);
+                                    <div class="row">
+                                        <?php
+                                        $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 89 AND origem_id = '$idPj' AND publicado = 1";
+                                        $queryFACC = mysqli_query($con, $sqlFACC);
 
-                                    $facc = "block";
+                                        $facc = "block";
 
-                                    if (mysqli_num_rows($queryFACC) == 0 && $pj['representante_legal1_id'] == null) {
+                                        if (mysqli_num_rows($queryFACC) == 0 && $pj['representante_legal1_id'] == null) {
 
-                                        echo " <div class='form-group col-md-12 text-center'>
+                                            echo " <div class='form-group col-md-12 text-center'>
                                                    <label>&nbsp;</label><br> 
                                                    <h4 class='text-warning text-bold'><em>Para gerar a FACC primeiro cadastre um representante legal.</em></h4>
                                                </div>";
 
-                                        $facc = "none";
+                                            $facc = "none";
 
-                                    } else if ($pj['representante_legal1_id'] != null) {
-                                        ?>
-                                        <div class="form-group col-md-3">
-                                            <label>Gerar FACC</label><br>
-                                            <a href="<?= $link_facc . "?id=" . $idPj ?>" target="_blank" type="button"
-                                               class="btn btn-primary btn-block">Clique aqui para
-                                                gerar a FACC
-                                            </a>
-                                        </div>
-                                        <div class="form-group col-md-5" style="display: <?= $facc ?>">
-                                            <label>&nbsp;</label><br>
-                                            <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                                documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                                no campo correspondente.</p>
-                                        </div>
-                                        <div class="form-group col-md-4" style="display: <?= $facc ?>">
-                                            <?php
-                                            anexosNaPagina(71, $idPj, "modal-facc", "FACC");
+                                        } else if ($pj['representante_legal1_id'] != null) {
                                             ?>
-                                        </div>
-                                        <?php
-                                    }
-                                    ?>
-                                </div>
-                                <?php
+                                            <div class="form-group col-md-3">
+                                                <label>Gerar FACC</label><br>
+                                                <a href="<?= $link_facc . "?id=" . $idPj ?>" target="_blank"
+                                                   type="button"
+                                                   class="btn btn-primary btn-block">Clique aqui para
+                                                    gerar a FACC
+                                                </a>
+                                            </div>
+                                            <div class="form-group col-md-5" style="display: <?= $facc ?>">
+                                                <label>&nbsp;</label><br>
+                                                <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                                    documento. Logo após, deve-se digitaliza-la e então anexa-la ao
+                                                    sistema
+                                                    no campo correspondente.</p>
+                                            </div>
+                                            <div class="form-group col-md-4" style="display: <?= $facc ?>">
+                                                <?php
+                                                anexosNaPagina(71, $idPj, "modal-facc", "FACC");
+                                                ?>
+                                            </div>
+                                            <?php
+                                        }
+                                        ?>
+                                    </div>
+                                    <?php
+                                }
                             }
                             ?>
                             <hr/>
