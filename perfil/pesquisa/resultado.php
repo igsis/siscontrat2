@@ -45,6 +45,7 @@ if (isset($_POST['busca'])) {
     GROUP BY e.id";
 
     $resultado = $con->query($sql);
+
 }
 ?>
 <div class="content-wrapper">

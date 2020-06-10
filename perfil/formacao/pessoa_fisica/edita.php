@@ -7,6 +7,10 @@ $http = $server . "/pdf/";
 $linkResumo = $http . "rlt_formacao_pf.php";
 $link_facc = $http . "rlt_fac_pf.php";
 
+if(isset($_POST['carregar'])){
+    $idPf = $_POST['idPf'];
+}
+
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $nome = trim(addslashes($_POST['nome']));
     $nomeArtistico = isset($_POST['nomeArtistico']) ? trim(addslashes($_POST['nomeArtistico'])) : "";

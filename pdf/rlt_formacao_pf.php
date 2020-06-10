@@ -70,9 +70,9 @@ if($pessoa["data_nascimento"] == "0000-00-00"){
     $dataNascimento = exibirDataBr($pessoa["data_nascimento"]);
 }
 
-if ($pessoa['passaporte'] == ''){
+if ($pessoa['passaporte'] == ""){
     $documento = $pessoa['rg'];
-    $cpf = $pessoa["cpf"];
+    $cpf = $pessoa['cpf'];
 }
 else{
     $documento = $pessoa['passaporte'];
@@ -112,7 +112,7 @@ $pdf->Cell(50, $l, utf8_decode($documento == NULL ? "Não cadastrado" : $documen
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, utf8_decode('CPF:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(40, $l, utf8_decode($cpf == NULL ? "Não cadastrado" : $cpf), 0, 0, 'L');
+$pdf->Cell(40, $l, utf8_decode($pessoa['cpf'] == NULL ? "Não cadastrado" : $pessoa['cpf']), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, utf8_decode('CCM:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
