@@ -27,8 +27,10 @@ class PDF extends FPDF
 }
 
 //CONSULTA 
-if(isset($_POST['idPf'])){
+if (isset($_POST['idPf'])) {
     $id_Pf = $_POST['idPf'];
+} else if (isset($_POST['idPessoa'])) {
+    $id_Pf = $_POST['idPessoa'];
 }
 
 $ano = date('Y', strtotime("-3 hours"));
@@ -105,9 +107,9 @@ if ($testaBanco->num_rows > 0) {
     $codbanco = "";
 }
 
-if($pf['data_nascimento'] == '0000-00-00'){
+if ($pf['data_nascimento'] == '0000-00-00') {
     $dataNascimento = "";
-}else{
+} else {
     $dataNascimento = exibirDataBr($pf['data_nascimento']);
 }
 
@@ -144,7 +146,7 @@ $pdf->SetFont('Arial', '', 10);
 
 if ($complemento != null) {
     $pdf->Cell(160, $l, utf8_decode("$rua" . ", " . "$num" . " - " . "$complemento"), 0, 0, 'L');
-} elseif($rua != NULL && $complemento == NULL) {
+} elseif ($rua != NULL && $complemento == NULL) {
     $pdf->Cell(160, $l, utf8_decode("$rua" . ", " . "$num"), 0, 0, 'L');
 }
 

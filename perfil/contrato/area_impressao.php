@@ -352,7 +352,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                     <div class="col-md-6">
                         <form action="<?= $link_facc ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPf" value="<?= $idPessoa ?>">
+                            <input type="hidden" name="idPessoa" value="<?= $idPessoa ?>">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                             <button type="submit" class="btn btn-outline-info center-block">
                                 FACC
