@@ -27,7 +27,12 @@ $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
-$nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id']);
+
+if($pessoa['nacionalidade_id'] != NULL){
+    $nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id'])['nacionalidade'];
+}else{
+    $nacionalidade = "Não cadastrado";
+}
 
 $ocorrencias = $con->query("SELECT atracao_id, tipo_ocorrencia_id FROM ocorrencias WHERE tipo_ocorrencia_id != 3 AND publicado = 1 AND origem_ocorrencia_id =  " . $pedido['origem_id']);
 
@@ -64,7 +69,15 @@ $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND 
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
-$endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
+$testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id = $idPf");
+
+if ($testaEnderecos->num_rows > 0) {
+    while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
+        $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " .$enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+    }
+} else {
+    $endereco = "Não cadastrado";
+}
 
 while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
     $tel = $tel . $linhaTel['telefone'] . ' | ';
@@ -108,7 +121,6 @@ if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
 } else {
     $ccm = "Não Cadastrado.";
 }
-
 
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
@@ -162,7 +174,7 @@ if ($pessoa['passaporte'] != NULL) {
 } else {
     $pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
     $pdf->SetFont('Arial', '', 10);
-    $pdf->Cell(50, $l, utf8_decode($pessoa['rg']), 0, 0, 'L');
+    $pdf->Cell(50, $l, utf8_decode($pessoa['rg'] == NULL ? "Não cadastrado" : $pessoa['rg']), 0, 0, 'L');
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
     $pdf->SetFont('Arial', '', 10);
@@ -184,7 +196,7 @@ $pdf->Cell(25, $l, utf8_decode(exibirDataBr($pessoa['data_nascimento'])), 0, 0, 
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(26, $l, "Nacionalidade:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(30, $l, utf8_decode($nacionalidade['nacionalidade']), 0, 0, 'L');
+$pdf->Cell(30, $l, utf8_decode($nacionalidade), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, "CCM:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
@@ -196,7 +208,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(18, $l, utf8_decode("Endereço:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(160, $l, utf8_decode($endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " . $endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf']), 0, 'L', 0);
+$pdf->MultiCell(160, $l, utf8_decode($endereco), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -278,7 +290,9 @@ $pdf->SetFont('Arial', '', 10);
 if ($pessoa['passaporte'] != NULL) {
     $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
 } else {
-    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $rg = $pessoa['rg'] == NULL ? "Não cadastrado" : $pessoa['rg'];
+    $rg = "RG: " . $rg;
+    $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
     $pdf->SetX($x);
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');
@@ -364,7 +378,9 @@ $pdf->SetFont('Arial', '', 10);
 if ($pessoa['passaporte'] != NULL) {
     $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
 } else {
-    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $rg = $pessoa['rg'] == NULL ? "Não cadastrado" : $pessoa['rg'];
+    $rg = "RG: " . $rg;
+    $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
     $pdf->SetX($x);
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');
@@ -489,7 +505,9 @@ $pdf->SetFont('Arial', '', 10);
 if ($pessoa['passaporte'] != NULL) {
     $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
 } else {
-    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $rg = $pessoa['rg'] == NULL ? "Não cadastrado" : $pessoa['rg'];
+    $rg = "RG: " . $rg;
+    $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
     $pdf->SetX($x);
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');

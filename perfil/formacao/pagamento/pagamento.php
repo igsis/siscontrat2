@@ -104,107 +104,109 @@ $link_contabilidade = $http . "rlt_contabilidade_formacao.php";
                             <button type="submit" name="salvar" id="salvar" class="btn btn-primary pull-right">
                                 Salvar
                             </button>
-                            <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button">
-                                <button type="button" class="btn btn-primary">Gerar FACC</button>
-                            </a>
-                        </div>
                     </form>
+                    <form action="<?= $link_facc ?>" target="_blank" method="POST">
+                        <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                        <button type="button" class="btn btn-primary">Gerar FACC</button>
+                    </form>
+                </div>
 
-                    <table id="tblParcela" class="table table-bordered table-striped">
-                        <thead>
+
+                <table id="tblParcela" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Parcela</th>
+                        <th>Valor</th>
+                        <th>Pagamento</th>
+                        <th></th>
+                        <th></th>
+                        <th style="text-align:center">Gerar</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <?php
+                    if ($num_arrow == 0) {
+                        ?>
                         <tr>
-                            <th>Parcela</th>
-                            <th>Valor</th>
-                            <th>Pagamento</th>
-                            <th></th>
-                            <th></th>
-                            <th style="text-align:center">Gerar</th>
-                            <th></th>
-                            <th></th>
+                            <th colspan="8"><p align="center">Não foram encontrados registros</p></th>
                         </tr>
-                        </thead>
-
-                        <tbody>
                         <?php
-                        if ($num_arrow == 0) {
+                    } else {
+                        while ($parcela = mysqli_fetch_array($query)) {
                             ?>
                             <tr>
-                                <th colspan="8"><p align="center">Não foram encontrados registros</p></th>
+                                <td><?= $parcela['numero_parcelas'] ?></td>
+                                <td><?= dinheiroParaBr($parcela['valor']) ?></td>
+                                <td><?= exibirDataBr($parcela['data_pagamento']) ?></td>
+
+                                <th style="text-align:center">
+                                    <form action="<?= $link_pagamento ?>" method="post" target="_blank">
+                                        <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                        <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
+                                        <button type="submit" class="btn btn-primary">Pagamento</button>
+                                    </form>
+                                </th>
+
+                                <th style="text-align:center">
+                                    <form action="<?= $link_recibo ?>" method="post" target="_blank">
+                                        <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                        <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
+                                        <button type="submit" class="btn btn-primary">Recibo</button>
+                                    </form>
+                                </th>
+
+                                <th style="text-align:center">
+                                    <form action="<?= $link_atestado ?>" method="post" target="_blank">
+                                        <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                        <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
+                                        <button type="submit" class="btn btn-primary">Atestado Serviço</button>
+                                    </form>
+                                </th>
+
+                                <th style="text-align:center">
+                                    <form action="<?= $link_horas ?>" method="post" target="_blank">
+                                        <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                        <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
+                                        <button type="submit" class="btn btn-primary">Relatório Horas</button>
+                                    </form>
+                                </th>
+
+                                <th style="text-align:center">
+                                    <form action="<?= $link_contabilidade ?>" method="post" target="_blank">
+                                        <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
+                                        <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
+                                        <button type="submit" class="btn btn-primary">Contabilidade</button>
+                                    </form>
+                                </th>
+
                             </tr>
                             <?php
-                        } else {
-                            while ($parcela = mysqli_fetch_array($query)) {
-                                ?>
-                                <tr>
-                                    <td><?= $parcela['numero_parcelas'] ?></td>
-                                    <td><?= dinheiroParaBr($parcela['valor']) ?></td>
-                                    <td><?= exibirDataBr($parcela['data_pagamento']) ?></td>
-
-                                    <th style="text-align:center">
-                                        <form action="<?= $link_pagamento ?>" method="post" target="_blank">
-                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
-                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
-                                            <button type="submit" class="btn btn-primary">Pagamento</button>
-                                        </form>
-                                    </th>
-
-                                    <th style="text-align:center">
-                                        <form action="<?= $link_recibo ?>" method="post" target="_blank">
-                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
-                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
-                                            <button type="submit" class="btn btn-primary">Recibo</button>
-                                        </form>
-                                    </th>
-
-                                    <th style="text-align:center">
-                                        <form action="<?= $link_atestado ?>" method="post" target="_blank">
-                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
-                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
-                                            <button type="submit" class="btn btn-primary">Atestado Serviço</button>
-                                        </form>
-                                    </th>
-
-                                    <th style="text-align:center">
-                                        <form action="<?= $link_horas ?>" method="post" target="_blank">
-                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
-                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
-                                            <button type="submit" class="btn btn-primary">Relatório Horas</button>
-                                        </form>
-                                    </th>
-
-                                    <th style="text-align:center">
-                                        <form action="<?= $link_contabilidade ?>" method="post" target="_blank">
-                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
-                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
-                                            <button type="submit" class="btn btn-primary">Contabilidade</button>
-                                        </form>
-                                    </th>
-
-                                </tr>
-                                <?php
-                            }
                         }
-                        ?>
-                        </tbody>
+                    }
+                    ?>
+                    </tbody>
 
-                        <tfoot>
-                        <tr>
-                            <th>Parcela</th>
-                            <th>Valor</th>
-                            <th>Pagamento</th>
-                            <th></th>
-                            <th></th>
-                            <th style="text-align:center">Gerar</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </tfoot>
-                    </table>
+                    <tfoot>
+                    <tr>
+                        <th>Parcela</th>
+                        <th>Valor</th>
+                        <th>Pagamento</th>
+                        <th></th>
+                        <th></th>
+                        <th style="text-align:center">Gerar</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
+                </table>
 
-                </div>
             </div>
         </div>
-    </section>
+</div>
+</section>
 </div>
 
 <script type="text/javascript">

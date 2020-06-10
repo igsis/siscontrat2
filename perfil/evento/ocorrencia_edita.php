@@ -106,7 +106,6 @@ if (isset($_POST['cadastra'])) {
         //gravarLog($sql);
         echo $sql;
     }
-
 }
 
 if (isset($_POST['edita'])) {
@@ -136,7 +135,7 @@ if (isset($_POST['edita'])) {
                             observacao = '$observacao'
                             WHERE id = '$idOcorrencia'";
 
-    If (mysqli_query($con, $sql)) {
+    if (mysqli_query($con, $sql)) {
         $mensagem = mensagem("success", "Gravado com sucesso!");
         //gravarLog($sql);
     } else {
@@ -146,11 +145,15 @@ if (isset($_POST['edita'])) {
 }
 
 if (isset($_POST['carregar'])) {
-    if(isset($_POST['idFilme'])){
+    if (isset($_POST['idFilme'])) {
         $idFilme = $_POST['idFilme'];
     }
     $idOcorrencia = $_POST['idOcorrencia'];
 }
+
+if (isset($_POST['idFilme'])):
+    $idFilme = $_POST['idFilme'];
+endif;
 
 $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 ?>
@@ -430,7 +433,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                             if (hora == "00") {
                                                 hora = "00";
                                             }
-                                            if(hora == "000"){
+                                            if (hora == "000") {
                                                 hora = "00";
                                             }
 
@@ -493,7 +496,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <a href="?perfil=evento&p=adicionar_local">
+                                    <a class="link-adc" href="?perfil=evento&p=adicionar_local">
                                         <button type="button" class="fa fa-plus btn-success pull-right"></button>
                                     </a>
                                     <label for="local">Local *</label>
@@ -503,7 +506,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <a href="?perfil=evento&p=adicionar_espaco">
+                                    <a class="link-adc" href="?perfil=evento&p=adicionar_espaco">
                                         <button type="button" class="fa fa-plus btn-success pull-right"></button>
                                     </a>
                                     <label for="espaco">Espaço *</label>
@@ -546,6 +549,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <button type="button" class="btn btn-default" name="voltar">Voltar</button>
                             </a>
                             <input type="hidden" name="idOcorrencia" value="<?= $idOcorrencia ?>">
+                            <?= isset($idFilme) ? "<input type='hidden' name='idFilme' value='{$idFilme}'>" : '' ?>
                             <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Gravar
                             </button>
                         </div>
@@ -726,123 +730,127 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-    let datas =  document.querySelector('#datas');
+
+    var links_adc = document.querySelectorAll(".link-adc")
+
+    let datas = document.querySelector('#datas');
     $(document).ready(function () {
-        $('#valor_ingresso').mask('00,00',{reverse: true})
+        $('#valor_ingresso').mask('00,00', {reverse: true})
     });
 
-    function insti_local() {
-        const urlModal = `<?=$url?>`;
 
-        var idInstituicaoModal = $('#instituicaoModal').val();
+    //function insti_local() {
+    //    const urlModal = `<?//=$url?>//`;
+    //
+    //    var idInstituicaoModal = $('#instituicaoModal').val();
+    //
+    //    $.post(urlModal, {
+    //        instituicao_id: idInstituicaoModal,
+    //    })
+    //        .done(function (data) {
+    //            $('#SelectLocal option').remove();
+    //            $('#SelectLocal').append('<option value="">Selecione uma opção...</option>');
+    //
+    //            for (let local of data) {
+    //                $('#SelectLocal').append(`<option value='${local.id}'>${local.local}</option>`).focus();
+    //            }
+    //        })
+    //        .fail(function () {
+    //            swal("danger", "Erro ao gravar");
+    //        });
+    //
+    //}
 
-        $.post(urlModal, {
-            instituicao_id: idInstituicaoModal,
-        })
-            .done(function (data) {
-                $('#SelectLocal option').remove();
-                $('#SelectLocal').append('<option value="">Selecione uma opção...</option>');
+    // function cadastraLocal() {
+    //     var instituicao = $("#instituicoes").val();
+    //     var local = $("input[name='localModal']").val();
+    //     var cep = $("input[name='cep']").val();
+    //     var rua = $("input[name='rua']").val();
+    //     var num = $("input[name='numero']").val();
+    //     var complemento = $("input[name='complemento']").val();
+    //     var bairro = $("input[name='bairro']").val();
+    //     var cidade = $("input[name='cidade']").val();
+    //     var estado = $("input[name='estado']").val();
+    //     var zona = $("#zona").val();
+    //
+    //     $('#modaLocal').slideUp();
+    //
+    //     $.post('?perfil=evento&p=index', {
+    //         cadastraLocal: 1,
+    //         instituicao: instituicao,
+    //         local: local,
+    //         cep: cep,
+    //         rua: rua,
+    //         numero: num,
+    //         complemento: complemento,
+    //         bairro: bairro,
+    //         cidade: cidade,
+    //         estado: estado,
+    //         zona: zona
+    //     })
+    //         .done(function (data) {
+    //             let res = $(data).find('#resposta').text();
+    //
+    //             if (res == 0) {
+    //                 swal('Esse local já existe! Procure-o na lista novamente.', '', 'warning')
+    //                     .then(() => {
+    //                         $('#modaLocal').slideDown('slow');
+    //                     });
+    //             } else if (res == 1) {
+    //                 swal("Solicitação de novo local enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
+    //                     .then(() => {
+    //                         $('#modaLocal').modal('hide');
+    //                     });
+    //             } else {
+    //                 console.log(res);
+    //                 swal("Erro na solicitação! Tente novamente.", "", "danger")
+    //                     .then(() => {
+    //                         $('#modaLocal').slideDown('slow');
+    //                     });
+    //             }
+    //
+    //         })
+    //         .fail(function () {
+    //             swal("danger", "Erro ao gravar");
+    //         });
+    // }
 
-                for (let local of data) {
-                    $('#SelectLocal').append(`<option value='${local.id}'>${local.local}</option>`).focus();
-                }
-            })
-            .fail(function () {
-                swal("danger", "Erro ao gravar");
-            });
-
-    }
-
-    function cadastraLocal() {
-        var instituicao = $("#instituicoes").val();
-        var local = $("input[name='localModal']").val();
-        var cep = $("input[name='cep']").val();
-        var rua = $("input[name='rua']").val();
-        var num = $("input[name='numero']").val();
-        var complemento = $("input[name='complemento']").val();
-        var bairro = $("input[name='bairro']").val();
-        var cidade = $("input[name='cidade']").val();
-        var estado = $("input[name='estado']").val();
-        var zona = $("#zona").val();
-
-        $('#modaLocal').slideUp();
-
-        $.post('?perfil=evento&p=index', {
-            cadastraLocal: 1,
-            instituicao: instituicao,
-            local: local,
-            cep: cep,
-            rua: rua,
-            numero: num,
-            complemento: complemento,
-            bairro: bairro,
-            cidade: cidade,
-            estado: estado,
-            zona: zona
-        })
-            .done(function (data) {
-                let res = $(data).find('#resposta').text();
-
-                if (res == 0) {
-                    swal('Esse local já existe! Procure-o na lista novamente.', '', 'warning')
-                        .then(() => {
-                            $('#modaLocal').slideDown('slow');
-                        });
-                } else if (res == 1) {
-                    swal("Solicitação de novo local enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
-                        .then(() => {
-                            $('#modaLocal').modal('hide');
-                        });
-                } else {
-                    console.log(res);
-                    swal("Erro na solicitação! Tente novamente.", "", "danger")
-                        .then(() => {
-                            $('#modaLocal').slideDown('slow');
-                        });
-                }
-
-            })
-            .fail(function () {
-                swal("danger", "Erro ao gravar");
-            });
-    }
-
-    function cadastraEspaco() {
-
-        var local = $("#SelectLocal").val();
-        var espaco = $("input[name='espaco']").val();
-
-        $('#modalEspaco').slideUp();
-
-        $.post('?perfil=evento&p=index', {
-            cadastraEspaco: 1,
-            espaco: espaco,
-            local: local
-        })
-            .done(function (data) {
-                let res = $(data).find('#resposta').text();
-
-                if (res == 0) {
-                    swal('Esse espaço já existe! Procure-o na lista novamente.', '', 'warning')
-                        .then(() => {
-                            $('#modalEspaco').slideDown('slow');
-                        });
-                } else if (res == 1) {
-                    swal("Solicitação de novo espaço enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
-                        .then(() => {
-                            $('#modalEspaco').modal('hide');
-                        });
-                } else {
-                    swal("Erro na solicitação! Tente novamente.", "", "error")
-                        .then(() => {
-                            $('#modalEspaco').slideDown('slow');
-                        });
-                }
-            })
-            .fail(function () {
-                swal("danger", "Erro ao gravar");
-            });
-    }
+    // function cadastraEspaco() {
+    //
+    //     var local = $("#SelectLocal").val();
+    //     var espaco = $("input[name='espaco']").val();
+    //
+    //     $('#modalEspaco').slideUp();
+    //
+    //     $.post('?perfil=evento&p=index', {
+    //         cadastraEspaco: 1,
+    //         espaco: espaco,
+    //         local: local
+    //     })
+    //         .done(function (data) {
+    //             let res = $(data).find('#resposta').text();
+    //
+    //             if (res == 0) {
+    //                 swal('Esse espaço já existe! Procure-o na lista novamente.', '', 'warning')
+    //                     .then(() => {
+    //                         $('#modalEspaco').slideDown('slow');
+    //                     });
+    //             } else if (res == 1) {
+    //                 swal("Solicitação de novo espaço enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
+    //                     .then(() => {
+    //                         $('#modalEspaco').modal('hide');
+    //                     });
+    //             } else {
+    //                 swal("Erro na solicitação! Tente novamente.", "", "error")
+    //                     .then(() => {
+    //                         $('#modalEspaco').slideDown('slow');
+    //                     });
+    //             }
+    //         })
+    //         .fail(function () {
+    //             swal("danger", "Erro ao gravar");
+    //         });
+    // }
 
     let data_fim = document.querySelector("input[name='data_fim']");
 
@@ -860,7 +868,13 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     let instituicao = document.querySelector('#instituicao');
     let local_id = <?=$ocorrencia['local_id']?>;
 
+
     if (instituicao.value != '') {
+        if (instituicao.value == 6) {
+            hideOrShow(links_adc, "block")
+        } else {
+            hideOrShow(links_adc, "none")
+        }
         getLocais(instituicao.value, local_id)
     }
 
@@ -868,6 +882,11 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         let idInstituicao = $('#instituicao option:checked').val();
         getLocais(idInstituicao, '')
         getEspacos('', '') // Se alterar o primeiro ele limpa o local e o espaço
+        if (idInstituicao != 6) {
+            hideOrShow(links_adc, "none");
+        } else {
+            hideOrShow(links_adc, "block")
+        }
 
     })
 
@@ -1068,10 +1087,10 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             horaFim = parseInt(horaFim.split(":")[0].toString() + horaFim.split(":")[1].toString());
 
             if (horaFim < horaInicio) {
-                if (horaFim != 1200){
+                if (horaFim != 1200) {
                     msgHora.show();
                     $('#edita').attr("disabled", true);
-                }else{
+                } else {
                     msgHora.hide();
                     $('#edita').attr("disabled", false);
                 }
@@ -1082,7 +1101,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         }
     }
 
-    function criarInputData(valor=0) {
+    function criarInputData(valor = 0) {
         let row = document.createElement('div');
         row.classList.add('row');
         row.style.display = 'flex';
@@ -1100,8 +1119,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         remove.classList.add('btn');
         remove.classList.add('btn-danger');
         remove.classList.add('apData');
-        remove.setAttribute('type','button')
-        remove.setAttribute('onClick','removerLinha(this)');
+        remove.setAttribute('type', 'button')
+        remove.setAttribute('onClick', 'removerLinha(this)');
 
         let icone = document.createElement('i');
         icone.classList.add('fa');
@@ -1112,10 +1131,10 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         label.textContent = "Data:";
 
         let input = document.createElement('input');
-        input.setAttribute('type','date');
+        input.setAttribute('type', 'date');
         input.classList.add('dataEx');
         input.classList.add('form-control');
-        if (valor){
+        if (valor) {
             input.value = valor;
         }
 
@@ -1170,7 +1189,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     btnDataE.addEventListener('click', criarInputData);
 
     let saveDate = document.querySelector('#saveData');
-    saveDate.addEventListener("click",function (event) {
+    saveDate.addEventListener("click", function (event) {
         event.preventDefault();
         let data = document.querySelectorAll('.dataEx');
         let datas = [];
@@ -1187,7 +1206,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             type: 'POST',
             data: dados,
             async: true,
-            success: function(response) {
+            success: function (response) {
                 $('#ModalDtExec').modal('toggle');
                 Swal.fire({
                     title: '<strong>Datas cadastradas com sucesso!</strong>',
@@ -1210,9 +1229,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             type: "POST",
             data: dados,
             async: true,
-            success: function(response) {
+            success: function (response) {
                 result = JSON.parse(response);
-                 resultado = result.map(function (obj) {
+                resultado = result.map(function (obj) {
                     return Object.keys(obj).map(function (chave) {
                         return obj[chave];
                     })
@@ -1231,7 +1250,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
                 $('#ModalDtExec').modal('show');
             },
-            error: function(xhr) {
+            error: function (xhr) {
 
             }
         });
@@ -1244,4 +1263,19 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         divAvo.remove();
     }
 
+    function hideOrShow(array, acao) {
+        for (ob of array) {
+            ob.style.display = acao;
+        }
+    }
+
+    window.onload = function () {
+        let instuicao = $('#instituicao').val();
+
+        if (instuicao != 6) {
+            hideOrShow(links_adc, "none");
+        } else {
+            hideOrShow(links_adc, "block");
+        }
+    }
 </script>

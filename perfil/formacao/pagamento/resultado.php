@@ -23,6 +23,7 @@ $sql = "SELECT fc.id, p.id AS pedido_id, fc.protocolo, fc.pessoa_fisica_id, p.nu
         $sqlProponente $sqlProcesso $sqlProtocolo";
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
+
 ?>
 
 <div class="content-wrapper">

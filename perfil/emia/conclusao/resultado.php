@@ -1,25 +1,20 @@
 <?php
 $con = bancoMysqli();
 
-$protocolo = '';
-$numProcesso = '';
-$status = '';
-$where = '';
+$protocolo = $_POST['protocolo'] ?? NULL;
+$num_processo = $_POST['numProcesso'] ?? NULL;
+$status = $_POST['status'] ?? NULL;
 
-if (isset($_POST['protocolo']) && $_POST['protocolo'] != null) {
-    $protocolo = $_POST['protocolo'];
-    $protocolo = " AND ec.protocolo = '$protocolo' ";
-}
+$sqlProcesso = '';
+$sqlStatus = '';
+$sqlProtocolo = '';
 
-if (isset($_POST['numProcesso']) && $_POST['numProcesso'] != null) {
-    $numProcesso = $_POST['numProcesso'];
-    $numProcesso = " AND p.numero_processo = '$numProcesso' ";
-}
-
-if (isset($_POST['status']) && $_POST['status'] != null) {
-    $status = $_POST['status'];
-    $status = " AND p.status_pedido_id = '$status' ";
-}
+if ($protocolo != null)
+    $sqlProtocolo = " AND ec.protocolo LIKE '%$protocolo%'";
+if ($num_processo != null)
+    $sqlProcesso = " AND p.numero_processo LIKE '%$num_processo%'";
+if ($status != null)
+    $sqlStatus = " AND p.status_pedido_id = '$status'";
 
 $sql = "SELECT p.id, 
                ec.protocolo,
@@ -30,7 +25,7 @@ $sql = "SELECT p.id,
         INNER JOIN emia_contratacao AS ec ON ec.id = p.origem_id
         INNER JOIN pessoa_fisicas AS pf ON p.pessoa_fisica_id = pf.id
         INNER JOIN pedido_status AS s ON p.status_pedido_id = s.id
-        WHERE p.origem_tipo_id = 3 AND ec.publicado = 1 AND p.publicado = 1 $status $numProcesso $protocolo";
+        WHERE p.origem_tipo_id = 3 AND ec.publicado = 1 AND p.publicado = 1 $sqlStatus $sqlProcesso $sqlProtocolo";
 ?>
 
 <div class="content-wrapper">
@@ -67,7 +62,7 @@ $sql = "SELECT p.id,
                                         <td>
                                             <form action="?perfil=emia&p=conclusao&sp=finaliza" method="post" role="form">
                                                 <input type="hidden" name="idPedido" id="idPedido" value="<?= $ec['id'] ?>">
-                                                <button type="submit" name="carrega" id="carrega" class="btn btn-primary center-block"><?= $ec['numero_processo'] ?></button>
+                                                <button type="submit" name="carrega" id="carrega" class="btn btn-primary btn-block"><?= $ec['numero_processo'] ?></button>
                                             </form>
                                         </td>
                                         <td><?= $ec['protocolo'] ?></td>

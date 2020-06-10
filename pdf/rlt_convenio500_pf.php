@@ -22,7 +22,8 @@ if($pessoa['passaporte'] != NULL){
     $trecho_rg_cpf_passaporte = ", Passaporte: " . $pessoa['passaporte'];
     $trecho_texto = "do Passaporte original";
 }else{
-    $trecho_rg_cpf_passaporte = ", RG: " . $pessoa['rg'] . ", CPF: " . $pessoa['cpf'];
+    $rg = $pessoa['rg'] == NULL ? "(Não cadastrado)" : $pessoa['rg'];
+    $trecho_rg_cpf_passaporte = ", RG: " . $rg . ", CPF: " . $pessoa['cpf'];
     $trecho_texto = "de RG e CPF originais";
 }
 
@@ -71,7 +72,9 @@ $pdf->SetFont('Arial','', 10);
 if($pessoa['passaporte'] != NULL){
     $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
 }else{
-    $pdf->Cell(100, 4, "RG: " . $pessoa['rg'], 0, 1, 'L');
+    $rg = $pessoa['rg'] == NULL ? "Não cadastrado" : $pessoa['rg'];
+    $rg = "RG: " . $rg;
+    $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
     $pdf->SetX($x);
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');    

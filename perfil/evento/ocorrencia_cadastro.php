@@ -268,7 +268,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                             if (hora == "00") {
                                                 hora = "00";
                                             }
-                                            if(hora == "000"){
+                                            if (hora == "000") {
                                                 hora = "00";
                                             }
 
@@ -329,7 +329,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <a href="?perfil=evento&p=adicionar_local">
+                                    <a class="link-adc" href="?perfil=evento&p=adicionar_local">
                                         <button type="button" class="fa fa-plus btn-success pull-right"></button>
                                     </a>
                                     <label for="local">Local *</label>
@@ -339,7 +339,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <a href="?perfil=evento&p=adicionar_espaco">
+                                    <a class="link-adc" href="?perfil=evento&p=adicionar_espaco">
                                         <button type="button" class="fa fa-plus btn-success pull-right"></button>
                                     </a>
                                     <label for="espaco">Espaço *</label>
@@ -382,6 +382,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                 <button type="button" class="btn btn-default" id="voltar" name="voltar">Voltar</button>
                             </a>
                             <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
+                            <?= isset($idFilme) ? "<input type='hidden' name='idFilme' value='" . $idFilme . "'>" : ''; ?>
                             <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
                                 Cadastrar
                             </button>
@@ -395,6 +396,8 @@ $tipoEvento = $evento['tipo_evento_id'];
 
 
 <script type="text/javascript">
+
+    var links_adc = document.querySelectorAll(".link-adc")
 
     $(document).ready(function () {
         $('#valor_ingresso').mask('00,00', {reverse: true})
@@ -531,7 +534,13 @@ $tipoEvento = $evento['tipo_evento_id'];
                     ;
                 }
             })
+        if (idInstituicao != 6) {
+            hideOrShow(links_adc, "none");
+        } else {
+            hideOrShow(links_adc, "block")
+        }
     })
+
 
     let local = document.querySelector('#local');
 
@@ -776,4 +785,20 @@ $tipoEvento = $evento['tipo_evento_id'];
     }
 
     var diaSemana = $('.semana').change(validaDiaSemana)
+
+    function hideOrShow(array, acao) {
+        for (ob of array) {
+            ob.style.display = acao;
+        }
+    }
+
+    window.onload = function () {
+        let instuicao = $('#instituicao').val();
+
+        if (instuicao != 6) {
+            hideOrShow(links_adc, "none");
+        } else {
+            hideOrShow(links_adc, "block");
+        }
+    }
 </script>

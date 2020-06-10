@@ -88,7 +88,8 @@ if ($num > 0) {
                     <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
                     <input type="hidden" value="<?= $modelo ?>" name="tipoModelo">
                     <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
-                    <button type="submit" class="btn btn-default pull-left"> Voltar</button>
+                    <input type="hidden" value="<?= $dotacao ?>" name="dotacao">
+                    <button type="submit" name="voltar" class="btn btn-default pull-left"> Voltar</button>
                 </form>
             </div>
         </div>

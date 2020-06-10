@@ -5,10 +5,14 @@ $http = $server . "/pdf/";
 
 if (isset($_POST['tipoModelo'])) {
     $modelo = $_POST['tipoModelo'];
+    $dotacao = "";
 }
 isset($_POST['idEvento']);
 $idEvento = $_POST['idEvento'];
 
+if(isset($_POST['voltar'])){
+    $dotacao = $_POST['dotacao'];
+}
 
 $mdl = recuperaDados('modelo_juridicos', 'id', $modelo);
 $eve = recuperaDados('eventos', 'id', $idEvento);
@@ -114,7 +118,7 @@ $evento = $con->query($sql)->fetch_array();
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
-                            <td><textarea class="form-control" name="dotacao" rows="1" cols="85"></textarea></td>
+                            <td><textarea class="form-control" name="dotacao" rows="1" cols="85"><?= $dotacao ?></textarea></td>
                         </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
