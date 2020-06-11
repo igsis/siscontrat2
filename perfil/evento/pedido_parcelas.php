@@ -370,6 +370,7 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
             formaPagamento.attr('readonly', true);
         }
 
+
         if (oficina) {
             if (selectParcela.val() == 6 || selectParcela.val() == 1) {
                 if (selectParcela.val() != 1) {
@@ -386,7 +387,7 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
                 btnGravar.attr('disabled', true);
             }
         } else {
-            if (selectParcela.val() == 13 || selectParcela.val() == 1) {
+            if (selectParcela.val() == 13 || selectParcela.val() == 1 || selectParcela.val() == "") {
                 if (selectParcela.val() != 1) {
                     formaPagamento.attr('readonly', false);
                 }
