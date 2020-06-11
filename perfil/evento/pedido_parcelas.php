@@ -421,10 +421,12 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
 
     function formParcela() {
         let nParcela = $('#numero_parcelas').val();
+        let valorTotal = $('#valor_total').val();
         let btnEditaParcela = $('#btnParcelas');
 
-        btnEditaParcela.attr('href', '?perfil=evento&p=parcelas_edita&nParcelas=' + nParcela);
+        btnEditaParcela.attr('href', '?perfil=evento&p=parcelas_edita&nParcelas=' + nParcela +'&valorTotal=' + valorTotal);
     }
+
 
     $(document).ready(formaPagamento());
     $(document).ready(verificaParcela());
