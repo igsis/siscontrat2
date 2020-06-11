@@ -32,7 +32,7 @@ if (isset($_POST['editar'])) {
 
     if (mysqli_query($con, $sqlUpdate)) {
 
-        $existeLider = "SELECT * FROM lideres WHERE pedido_id ='$idPedido' AND atracao_id = '$idAtracao'";
+        $existeLider = "SELECT * FROM lideres WHERE pedido_id = '$idPedido' AND atracao_id = '$idAtracao'";
 
         $resultado = mysqli_num_rows(mysqli_query($con, $existeLider));
         if ($resultado) {

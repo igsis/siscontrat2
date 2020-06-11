@@ -56,6 +56,8 @@ if($pessoa['passaporte'] != NULL){
     $cpf_passaporte = "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />";    
 }
 
+$numProcesso = $pedido['numero_processo'] == NULL ? "Não cadastrado" : $pedido['numero_processo'];
+
 ?>
 <html>
 <head>
@@ -89,7 +91,7 @@ if($pessoa['passaporte'] != NULL){
         "<p>Solicitamos a contratação a seguir:</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Protocolo nº:</strong> " . $contratacao['protocolo'] . "</p>" .
-        "<p><strong>Processo SEI nº:</strong> " . $pedido['numero_processo'] . "</p>" .
+        "<p><strong>Processo SEI nº:</strong> " . $numProcesso . "</p>" .
         "<p><strong>Setor  solicitante:</strong> Supervisão de Formação Cultural</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Nome:</strong> " . $pessoa['nome'] . " <br />" .

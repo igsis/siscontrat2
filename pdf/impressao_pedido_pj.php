@@ -85,6 +85,8 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 $fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
 $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
 
+$numProcesso = $pedido['numero_processo'] == NULL ? "Não cadastrado" : $pedido['numero_processo'];
+
 if ($pedido['numero_processo_mae'] != NULL) {
     $processoMae = "<p><strong>Processo SEI de reserva global:</strong> " . $pedido['numero_processo_mae'] . "</p>";
 } else {
@@ -124,7 +126,7 @@ if ($pedido['numero_processo_mae'] != NULL) {
         "<p>Solicitamos a contratação a seguir:</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Pedido de Contratação nº:</strong> " . $evento['protocolo'] . "</p>" .
-        "<p><strong>Processo SEI nº:</strong> " . $pedido['numero_processo'] . "</p>" .
+        "<p><strong>Processo SEI nº:</strong> " . $numProcesso . "</p>" .
         $processoMae .
         "<p><strong>Setor  solicitante:</strong> $setores </p>" .
         "<p>&nbsp;</p>" .
