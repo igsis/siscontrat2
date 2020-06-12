@@ -4,6 +4,13 @@ include "includes/menu_interno.php";
 $idPedido = $_SESSION['idPedido'];
 $idEvento = $_SESSION['idEvento'];
 
+$invalido = false;
+
+if (isset($_GET['valorTotal']) && $_GET['valorTotal'] != '0,00'){
+    $query = "UPDATE `pedidos` SET valor_total = ". dinheiroDeBr($_GET['valorTotal']) ." WHERE id = {$idPedido}";
+    $con->query($query);
+}
+
 $sqlOficina = "SELECT aa.acao_id FROM eventos e
                 INNER JOIN atracoes a on e.id = a.evento_id
                 INNER JOIN acao_atracao aa on a.id = aa.atracao_id
@@ -45,6 +52,11 @@ $queryParcelas = $con->query($sqlParcelas);
 
 if ($queryParcelas->num_rows) {
     $parcelas = $queryParcelas->fetch_all(MYSQLI_ASSOC);
+}
+
+if ($pedido['valor_total'] == '0.00'){
+    $mensagem = mensagem('danger','Valor deve ser maior que 0,00 para cadastrar parcelas.');
+    $invalido = true;
 }
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -153,8 +165,10 @@ if ($queryParcelas->num_rows) {
                         <!-- /.box-body -->
                         <div class="box-footer">
                             <a href="?perfil=evento&p=pedido_parcelas" class="pull-left btn btn-default">Voltar</a>
+                            <?php if (!$invalido): ?>
                             <input type="submit" name="<?= !isset($parcelas) ? 'gravarParcelas' : 'editarParcelas'?>"
                                    class="pull-right btn btn-primary" value="Gravar" id="gravaParcelas">
+                            <?php endif;?>
                         </div>
                         <!-- /.box-footer-->
                     </div>
@@ -169,11 +183,12 @@ if ($queryParcelas->num_rows) {
 </div>
 
 <script>
+    $('#alertValor').css("display","none");
     $(document).on("keyup", ".valor", function() {
         var btnGravar = $('#gravaParcelas');
         var total = parseFloat($('#valorTotal').text());
         var sum = 0;
-
+        let alerta = $('#alertValor');
 
         $(".valor").each(function(){
             let valor = $(this).val().replace('.', '').replace(',', '.');
@@ -184,8 +199,10 @@ if ($queryParcelas->num_rows) {
         $("#totalRegistrado").text(sum.toFixed(2));
         if (diferenca != 0) {
             btnGravar.attr('disabled', true);
+            alerta.css("display","none");
         } else {
             btnGravar.attr('disabled', false);
+            alerta.css("display","block");
         }
     });
 </script>
