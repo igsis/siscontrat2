@@ -37,6 +37,9 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
         }else{
             $cargaHoraria = "Não possuí.";
         }
+    } else if($linhaOco['tipo_ocorrencia_id'] == 2) {
+        $trechoApresentacoes = "";
+        $cargaHoraria = "Não possuí.";
     }
 }
 
@@ -79,10 +82,10 @@ if($evento['tipo_evento_id'] == 2){
     $queryFilme = mysqli_query($con, $sqlTestaFilme);
 
     while($idFilmes = mysqli_fetch_array($queryFilme)){
-        $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $idFilmes['filme_id']);
+        $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $idFilmes['filme_id'])->fetch_array();
         $duracao = $duracao + (int)$filme['duracao'];
     }
-    $duracao = $duracao . "Minuto(s)";
+    $duracao = $duracao . " Minuto(s)";
 }
 
 if ($pedido['numero_processo_mae'] != NULL) {
