@@ -34,7 +34,7 @@ if (isset($_POST['geral'])){
         $sqlStatus = " AND p.status_pedido_id = '$status'";
     }        
 
-    $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento, p.operador_id
+    $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento, p.operador_id, p.operador_pagamento_id
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
@@ -99,7 +99,7 @@ if(isset($_POST['operador'])) {
     } else{
         $sqlOperador = "";
     }
-    $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento,  p.operador_id
+    $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.operador_pagamento_id, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento,  p.operador_id
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN evento_envios ee ON e.id = ee.evento_id 
@@ -184,7 +184,7 @@ if(isset($_POST['operador'])) {
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
-                                        if ($evento['operador_id'] == 'NULL') {
+                                        if ($evento['operador_id'] == NULL) {
                                             $nome = "Não possui";
                                         } else {
                                             $operador = recuperaDados('usuarios', 'id', $evento['operador_id']);
