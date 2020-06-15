@@ -29,7 +29,7 @@ if (isset($_POST['geral'])){
     if ($usuario != null && $usuario != 0)
         $sqlUsuario = " AND (e.fiscal_id = '$usuario' OR e.suplente_id = '$usuario' OR e.usuario_id = '$usuario')";
     if ($operador_id != null && $operador_id != 0)
-        $sqlOperador = " AND p.operador_id = '$operador_id'";
+        $sqlOperador = " AND p.operador_pagamento_id = '$operador_id'";
     if ($status != null) {
         $sqlStatus = " AND p.status_pedido_id = '$status'";
     }        
@@ -96,7 +96,7 @@ if(isset($_POST['operador'])) {
     }
 
     if ($operador_id != null && $operador_id != 0) {
-        $sqlOperador = " AND p.operador_id = '$operador_id'";
+        $sqlOperador = " AND p.operador_pagamento_id = '$operador_id'";
     } else{
         $sqlOperador = "";
     }
@@ -116,7 +116,7 @@ if(isset($_POST['operador'])) {
     GROUP BY e.id";
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
-    echo $sql;
+    // echo $sql;
 }
 /* ************** /.operador ************** */
 ?>
@@ -186,10 +186,10 @@ if(isset($_POST['operador'])) {
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
-                                        if ($evento['operador_id'] == NULL) {
+                                        if ($evento['operador_pagamento_id'] == NULL) {
                                             $nome = "Não possui";
                                         } else {
-                                            $operador = recuperaDados('usuarios', 'id', $evento['operador_id']);
+                                            $operador = recuperaDados('usuarios', 'id', $evento['operador_pagamento_id']);
                                             $nome= $operador['nome_completo'];
                                         }
                                         ?>
