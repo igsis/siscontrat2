@@ -37,6 +37,9 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
         }else{
             $cargaHoraria = "Não possuí.";
         }
+    } else if($linhaOco['tipo_ocorrencia_id'] == 2) {
+        $trechoApresentacoes = "";
+        $cargaHoraria = "Não possuí.";
     }
 }
 
@@ -79,10 +82,10 @@ if($evento['tipo_evento_id'] == 2){
     $queryFilme = mysqli_query($con, $sqlTestaFilme);
 
     while($idFilmes = mysqli_fetch_array($queryFilme)){
-        $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $idFilmes['filme_id']);
+        $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $idFilmes['filme_id'])->fetch_array();
         $duracao = $duracao + (int)$filme['duracao'];
     }
-    $duracao = $duracao . "Minuto(s)";
+    $duracao = $duracao . " Minuto(s)";
 }
 
 if ($pedido['numero_processo_mae'] != NULL) {
@@ -90,6 +93,9 @@ if ($pedido['numero_processo_mae'] != NULL) {
 } else {
     $processoMae = NULL;
 }
+
+
+$numProcesso = $pedido['numero_processo'] == NULL ? "Não cadastrado" : $pedido['numero_processo'];
 
 if($pessoa['passaporte'] != NULL){
     $cpf_passaporte = "<strong>Passaporte: </strong> " . $pessoa['passaporte'] . "<br />";
@@ -132,7 +138,7 @@ if($pessoa['passaporte'] != NULL){
         "<p>Solicitamos a contratação a seguir:</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Protocolo:</strong> " . $evento['protocolo'] . "</p>" .
-        "<p><strong>Processo SEI nº:</strong> " . $pedido['numero_processo'] . "</p>" .
+        "<p><strong>Processo SEI nº:</strong> " . $numProcesso . "</p>" .
         $processoMae .
         "<p><strong>Setor(es)  solicitante(s):</strong> $setores </p>" .
         "<p>&nbsp;</p>" .

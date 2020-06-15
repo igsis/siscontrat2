@@ -356,7 +356,7 @@ $disabledImpr = "";
 
                                     <div class="form-group col-md-6">
                                         <label for="valor">Valor Individual: </label>
-                                        <input type="text" disabled
+                                        <input type="text" readonly
                                                value="<?= dinheiroParaBr($atracao['valor_individual']) ?>"
                                                class="form-control">
                                     </div>
@@ -402,7 +402,7 @@ $disabledImpr = "";
                                     <label for="valorTotal">Valor Total: </label>
                                     <input type="text" value="<?= dinheiroParaBr($pedido['valor_total']) ?>"
                                            onKeyPress="return(moeda(this,'.',',',event))" class="form-control"
-                                           disabled
+                                           readonly
                                            name="valorTotal" id="valorTotal">
                                 </div>
 
@@ -560,7 +560,8 @@ $disabledImpr = "";
                                         <td>
                                             <form action="?perfil=contrato&p=edita_pf" method="POST">
                                                 <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
-                                                <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
+                                                <input type="hidden" name="idPedido" id="idPedido"
+                                                       value="<?= $idPedido ?>">
                                                 <button type="submit" class="btn btn-primary btn-block"><span
                                                             class="glyphicon glyphicon-pencil"></span></button>
                                             </form>
