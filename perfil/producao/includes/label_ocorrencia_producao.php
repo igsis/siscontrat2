@@ -13,7 +13,6 @@
             if ($evento['tipo_evento_id'] == 1) {
                 foreach ($atracoes as $atracao) {
                     $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE atracao_id = '" . $atracao['id'] . "' AND publicado = '1' AND tipo_ocorrencia_id = '1'";
-                    echo $sqlOcorrencia;
                     $ocorrencias = $con->query($sqlOcorrencia);
                     $numOco = $ocorrencias->num_rows;
                     ?>

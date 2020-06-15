@@ -146,7 +146,8 @@ if (isset($_POST['salvar'])) {
     $processo = $_POST['processo'];
     $justificativa = trim(addslashes($_POST['justificativa']));
     $operador = $_POST['operador'] ?? NULL;
-    $valorTotal = $_POST['valorTotal'];
+    $pedido = recuperaDados('pedidos', 'id', $idPedido);
+    $valorTotal = $pedido['valor_total'];
     $valorTotal = str_replace(",", ".", $valorTotal);
     $pendencia = trim(addslashes($_POST['pendencia']));
 
