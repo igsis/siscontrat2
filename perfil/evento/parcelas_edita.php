@@ -175,7 +175,8 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                                 </div>
                                 <div class="col-md-3">
                                     <div class="alert">
-                                        <strong>Valor Registrado:</strong> R$ <span id="totalRegistrado">0.00</span>
+                                        <strong>Valor Registrado:</strong> R$ <span id="totalRegistrado"
+                                                                                    class="moedasBR">0.00</span>
                                     </div>
                                 </div>
                             </div>
@@ -208,6 +209,9 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
 
 <script>
 
+    moedaBR("#valorTotal");
+    moedaBR("#totalRegistrado");
+
     $('#alertValor').css("display", "none");
 
     let linha_erro = $('#linha-erro');
@@ -225,15 +229,18 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
             sum += +valor;
         });
 
-        var diferenca = total - sum;
+        let valOriginal = document.querySelector('#valorTotal').textContent;
+        let valRegistrado = document.querySelector('#totalRegistrado').textContent;
         $("#totalRegistrado").text(sum.toFixed(2));
-        if (diferenca != 0) {
-            btnGravar.attr('disabled', true);
-            alerta.css("display", "none");
-        } else {
+
+        if (valOriginal === valRegistrado) {
             btnGravar.attr('disabled', false);
             alerta.css("display", "block");
+        } else {
+            btnGravar.attr('disabled', true);
+            alerta.css("display", "none");
         }
+        moedaBR("#totalRegistrado");
     });
 
     let dataInicio = new Date("<?= $dataInicio[0]['data_inicio'] ?>");
@@ -248,4 +255,10 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
             btnGravar.attr('disabled', false);
         }
     });
+
+    function moedaBR(elemento) {
+        let valor = document.querySelector(elemento);
+        let x = parseFloat(valor.textContent).toLocaleString('pt-br', {minimumFractionDigits: 2});
+        valor.textContent = x;
+    }
 </script>
