@@ -329,7 +329,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <a class="link-adc" href="?perfil=evento&p=adicionar_local">
+                                    <a class="link-adc" target="_blank" href="?perfil=evento&p=adicionar_local">
                                         <button type="button" class="fa fa-plus btn-success pull-right"></button>
                                     </a>
                                     <label for="local">Local *</label>
@@ -339,7 +339,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <a class="link-adc" href="?perfil=evento&p=adicionar_espaco">
+                                    <a class="link-adc" target="_blank" href="?perfil=evento&p=adicionar_espaco">
                                         <button type="button" class="fa fa-plus btn-success pull-right"></button>
                                     </a>
                                     <label for="espaco">Espaço *</label>

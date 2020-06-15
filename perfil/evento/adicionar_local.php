@@ -3,6 +3,8 @@ include "includes/menu_principal.php";
 
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_cep.php';
 
+$con = bancoMysqli();
+
 if (isset($_POST['cadastraLocal'])) {
     $idInstituicao = $_POST['instituicao'] ?? NULL;
     $local = addslashes($_POST['local']);
@@ -27,14 +29,21 @@ if (isset($_POST['cadastraLocal'])) {
     if ($existe != 0) {
     } else {
         $sql = "INSERT INTO locais (instituicao_id, local, logradouro, numero, complemento, bairro, cidade, uf, cep, zona_id, publicado)
-                VALUES ('$idInstituicao', '$local', '$rua', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$zona', 2)";
+                VALUES ('$idInstituicao', '$local', '$rua', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$zona', 1)";
 
         if (mysqli_query($con, $sql)) {
             gravarLog($sql);
-            $mensagem2 = mensagem("success", "Adição de local efetuado com sucesso");
+            $mensagem = mensagem("success", "Adição de local efetuado com sucesso");
+            $fechar = "<script defer='defer'>
+                        window.onload = function() {
+                            setTimeout(window.close ,8000);  
+                        }
+                    </script>";
+
+            echo $fechar;
 
         } else {
-            $mensagem2 = mensagem("danger", "Erro na adição de local! Tente novamente.");
+            $mensagem = mensagem("danger", "Erro na adição de local! Tente novamente.");
         }
     }
 }
@@ -53,6 +62,11 @@ if (isset($_POST['cadastraLocal'])) {
                         <h3 class="box-title">Local</h3>
                     </div>
                     <!-- /.box-header -->
+                    <div class="row" align="center">
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
+                    </div>
                     <!-- form start -->
                     <form method="POST" action="?perfil=evento&p=adicionar_local"
                           role="form">
@@ -61,7 +75,7 @@ if (isset($_POST['cadastraLocal'])) {
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="cep">Instituição: *</label>
-                                    <select name="instituicao" id="instituicao" class="form-control" required>
+                                    <select name="instituicao" id="instituicao" class="form-control" required readonly>
                                         <option value="6">Outros</option>
                                     </select>
                                 </div>

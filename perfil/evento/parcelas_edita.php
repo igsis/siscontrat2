@@ -4,6 +4,13 @@ include "includes/menu_interno.php";
 $idPedido = $_SESSION['idPedido'];
 $idEvento = $_SESSION['idEvento'];
 
+$invalido = false;
+
+if (isset($_GET['valorTotal']) && $_GET['valorTotal'] != '0,00'){
+    $query = "UPDATE `pedidos` SET valor_total = ". dinheiroDeBr($_GET['valorTotal']) ." WHERE id = {$idPedido}";
+    $con->query($query);
+}
+
 $sqlOficina = "SELECT aa.acao_id FROM eventos e
                 INNER JOIN atracoes a on e.id = a.evento_id
                 INNER JOIN acao_atracao aa on a.id = aa.atracao_id
@@ -46,6 +53,16 @@ $queryParcelas = $con->query($sqlParcelas);
 if ($queryParcelas->num_rows) {
     $parcelas = $queryParcelas->fetch_all(MYSQLI_ASSOC);
 }
+
+if ($pedido['valor_total'] == '0.00'){
+    $mensagem = mensagem('danger','Valor deve ser maior que 0,00 para cadastrar parcelas.');
+    $invalido = true;
+}
+
+$sqlData = "SELECT data_inicio FROM ocorrencias WHERE origem_ocorrencia_id = {$idEvento} AND publicado = 1 ORDER BY data_inicio ASC LIMIT 1 ";
+$dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
+
+
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -66,6 +83,16 @@ if ($queryParcelas->num_rows) {
 
                         <div class="row" align="center">
                             <?= $mensagem ?? "" ?>
+                            <div id="linha-erro" class="col-md-12">
+                                <div class="box box-danger box-solid">
+                                <div class="box-header with-border">
+                                <h3 class="box-title">Data de pagamento deve ser após a data de ocorrência!</h3>
+                                <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
                         </div>
 
                         <div class="box-body">
@@ -126,12 +153,11 @@ if ($queryParcelas->num_rows) {
                                             <label for='data_pagamento'>Data Kit Pagamento *</label>
                                             <input type='date' id='data_pagamento' required
                                                    value="<?=$parcelas[$i]['data_pagamento'] ?? ''?>"
-                                                   name='data_pagamento[<?=$i?>]' class='form-control'>
+                                                   name='data_pagamento[<?=$i?>]' class='form-control dataPagamento'>
                                         </div>
                                     </div>
                                 <?php endif;
                             endfor; ?>
-
                             <div class="row">
                                 <div class="col-md-offset-3 col-md-3">
                                     <div class="alert">
@@ -153,8 +179,10 @@ if ($queryParcelas->num_rows) {
                         <!-- /.box-body -->
                         <div class="box-footer">
                             <a href="?perfil=evento&p=pedido_parcelas" class="pull-left btn btn-default">Voltar</a>
+                            <?php if (!$invalido): ?>
                             <input type="submit" name="<?= !isset($parcelas) ? 'gravarParcelas' : 'editarParcelas'?>"
                                    class="pull-right btn btn-primary" value="Gravar" id="gravaParcelas">
+                            <?php endif;?>
                         </div>
                         <!-- /.box-footer-->
                     </div>
@@ -169,11 +197,19 @@ if ($queryParcelas->num_rows) {
 </div>
 
 <script>
+    let dataInicio = new Date("<?= $dataInicio[0]['data_inicio'] ?>");
+
+    $('#alertValor').css("display","none");
+
+    let linha_erro = $('#linha-erro');
+    var btnGravar = $('#gravaParcelas');
+
+    linha_erro.css("display","none");
+
     $(document).on("keyup", ".valor", function() {
-        var btnGravar = $('#gravaParcelas');
         var total = parseFloat($('#valorTotal').text());
         var sum = 0;
-
+        let alerta = $('#alertValor');
 
         $(".valor").each(function(){
             let valor = $(this).val().replace('.', '').replace(',', '.');
@@ -184,8 +220,24 @@ if ($queryParcelas->num_rows) {
         $("#totalRegistrado").text(sum.toFixed(2));
         if (diferenca != 0) {
             btnGravar.attr('disabled', true);
+            alerta.css("display","none");
         } else {
             btnGravar.attr('disabled', false);
+            alerta.css("display","block");
         }
+    });
+
+    $(document).on("change",".dataPagamento", function () {
+        let dataParcela = new Date(this.value);
+         if(dataInicio.getDate() > dataParcela.getDate())
+         {
+            linha_erro.css("display","block");
+             btnGravar.attr('disabled', true);
+         }
+         else
+         {
+             linha_erro.css("display","none");
+             btnGravar.attr('disabled', false);
+         }
     });
 </script>
