@@ -184,7 +184,7 @@ if(isset($_POST['operador'])) {
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
-                                        if ($evento['operador_id'] = 'NULL') {
+                                        if ($evento['operador_id'] == 'NULL') {
                                             $nome = "Não possui";
                                         } else {
                                             $operador = recuperaDados('usuarios', 'id', $evento['operador_id']);
