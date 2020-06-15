@@ -1,6 +1,48 @@
 <?php
 include "includes/menu_principal.php";
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espacos.php';
+
+$con = bancoMysqli();
+
+if (isset($_POST['cadastraEspaco'])) {
+    $idLocal = $_POST['local'];
+    $espaco = $_POST['espaco'];
+
+    $existe = 0;
+    $sqlEspacos = "SELECT * FROM espacos WHERE local_id = '$idLocal'";
+    $queryEspacos = mysqli_query($con, $sqlEspacos);
+    while ($espacos = mysqli_fetch_array($queryEspacos)) {
+        if ($espacos['espaco'] == $espaco) {
+            $existe = 1;
+        }
+    }
+
+    if ($existe != 0) {
+
+    } else {
+
+        $sql = "INSERT INTO espacos (local_id ,espaco, publicado)
+                VALUES ('$idLocal', '$espaco', 1)";
+
+        if (mysqli_query($con, $sql)) {
+            gravarLog($sql);
+
+            $mensagem = mensagem("success", "Adição de espaço efetuado com sucesso");
+            $fechar = "<script defer='defer'>
+                        window.onload = function() {
+                            setTimeout(window.close ,8000);  
+                        }
+                    </script>";
+
+            echo $fechar;
+        } else {
+            $mensagem = mensagem("danger", "Erro na adição de espaço! Tente novamente.");
+        }
+    }
+
+}
+
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -19,15 +61,20 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espa
                         <h3 class="box-title">Espaços</h3>
                     </div>
                     <!-- /.box-header -->
+                    <div class="row" align="center">
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
+                    </div>
                     <!-- form start -->
-                    <form method="POST" action="?perfil=evento&p=index"
+                    <form method="POST" action="?perfil=evento&p=adicionar_espaco"
                           role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="instituicao">Instituição: *</label>
-                                    <select name="instituicao" id="instituicao" class="form-control" required>
-                                        <option value="6">Espaços Abertos</option>
+                                    <select name="instituicao" id="instituicao" class="form-control" required readonly>
+                                        <option value="6">Outros</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-6">
