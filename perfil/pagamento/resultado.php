@@ -29,12 +29,12 @@ if (isset($_POST['geral'])){
     if ($usuario != null && $usuario != 0)
         $sqlUsuario = " AND (e.fiscal_id = '$usuario' OR e.suplente_id = '$usuario' OR e.usuario_id = '$usuario')";
     if ($operador_id != null && $operador_id != 0)
-        $sqlOperador = " AND p.operador_id = '$operador_id'";
+        $sqlOperador = " AND p.operador_pagamento_id = '$operador_id'";
     if ($status != null) {
         $sqlStatus = " AND p.status_pedido_id = '$status'";
     }        
 
-    $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento, p.operador_id
+    $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento, p.operador_id, p.operador_pagamento_id
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
@@ -52,6 +52,7 @@ if (isset($_POST['geral'])){
     
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
+    echo $sql;
 }
 /* ************** /.geral ************** */
 
@@ -95,16 +96,16 @@ if(isset($_POST['operador'])) {
     }
 
     if ($operador_id != null && $operador_id != 0) {
-        $sqlOperador = " AND operador_pagamento_id = '$operador_id'";
+        $sqlOperador = " AND p.operador_pagamento_id = '$operador_id'";
     } else{
         $sqlOperador = "";
     }
-    $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento,  p.operador_id
+    $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.operador_pagamento_id, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento,  p.operador_id
     FROM eventos e 
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN evento_envios ee ON e.id = ee.evento_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
-    LEFT JOIN usuario_pagamentos up on p.operador_pagamento_id = up.usuario_id
+    LEFT JOIN usuario_pagamentos up on p.operador_id = up.usuario_id
     LEFT JOIN usuarios u on up.usuario_id = u.id
     WHERE e.publicado = 1 
     AND p.publicado = 1 
@@ -115,6 +116,7 @@ if(isset($_POST['operador'])) {
     GROUP BY e.id";
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
+    // echo $sql;
 }
 /* ************** /.operador ************** */
 ?>
@@ -184,10 +186,10 @@ if(isset($_POST['operador'])) {
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
-                                        if ($evento['operador_id'] = 'NULL') {
+                                        if ($evento['operador_pagamento_id'] == NULL) {
                                             $nome = "Não possui";
                                         } else {
-                                            $operador = recuperaDados('usuarios', 'id', $evento['operador_id']);
+                                            $operador = recuperaDados('usuarios', 'id', $evento['operador_pagamento_id']);
                                             $nome= $operador['nome_completo'];
                                         }
                                         ?>
