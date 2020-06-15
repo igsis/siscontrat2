@@ -37,7 +37,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Gênero:</th>
-                                            <td><?= $filme['genero'] ?></td>
+                                            <td><?= $filme['genero'] == NULL ? "Não cadastrado" : $filme['genero']?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Sinopse:</th>

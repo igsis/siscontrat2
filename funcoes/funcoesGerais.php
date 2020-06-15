@@ -1446,7 +1446,7 @@ function retornaPeriodoNovo($id, $tabela = "ocorrencias")
         }
         else
         {
-            return "de ".exibirDataBr($data_inicio)." a ".exibirDataBr($dataFinal)." DE ACORDO COM PROGRAMAÇÃO DO EVENTO NO PERÍODO DA VIRADA CULTURAL.";
+            return "de ".exibirDataBr($data_inicio)." à ".exibirDataBr($dataFinal)." DE ACORDO COM PROGRAMAÇÃO DO EVENTO NO PERÍODO DA VIRADA CULTURAL.";
         }
     }
     else
@@ -1492,7 +1492,7 @@ function retornaPeriodoNovo($id, $tabela = "ocorrencias")
             }
             else
             {
-                return "de ".exibirDataBr($data_inicio)." a ".exibirDataBr($dataFinal);
+                return "de ".exibirDataBr($data_inicio)." à ".exibirDataBr($dataFinal);
             }
         }
     }

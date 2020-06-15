@@ -179,9 +179,16 @@ if ($evento['tipo_evento_id'] == 1) {
 
         $pdf->SetX($x);
         $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(45, $l, utf8_decode($dadosLider['cpf']), 0, 0, 'L');
+        if($dadosLider['passaporte'] != NULL){
+            $pdf->Cell(21, $l, utf8_decode('Passaporte:'), 0, 0, 'L');
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(50, $l, utf8_decode($dadosLider['passaporte']), 0, 0, 'L');
+        }else{
+            $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(45, $l, utf8_decode($dadosLider['cpf']), 0, 0, 'L');
+        }
+
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(9, $l, utf8_decode("DRT:"), 0, 0, 'L');
         $pdf->SetFont('Arial', '', 10);

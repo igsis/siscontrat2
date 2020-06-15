@@ -181,7 +181,7 @@ $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento'";
                                                     $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
                                                     $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
                                                     $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
-                                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'] ?? NULL;
 
                                                     ?>
 
