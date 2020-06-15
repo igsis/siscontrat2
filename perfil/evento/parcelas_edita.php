@@ -6,8 +6,8 @@ $idEvento = $_SESSION['idEvento'];
 
 $invalido = false;
 
-if (isset($_GET['valorTotal']) && $_GET['valorTotal'] != '0,00'){
-    $query = "UPDATE `pedidos` SET valor_total = ". dinheiroDeBr($_GET['valorTotal']) ." WHERE id = {$idPedido}";
+if (isset($_GET['valorTotal']) && $_GET['valorTotal'] != '0,00') {
+    $query = "UPDATE `pedidos` SET valor_total = " . dinheiroDeBr($_GET['valorTotal']) . " WHERE id = {$idPedido}";
     $con->query($query);
 }
 
@@ -54,8 +54,8 @@ if ($queryParcelas->num_rows) {
     $parcelas = $queryParcelas->fetch_all(MYSQLI_ASSOC);
 }
 
-if ($pedido['valor_total'] == '0.00'){
-    $mensagem = mensagem('danger','Valor deve ser maior que 0,00 para cadastrar parcelas.');
+if ($pedido['valor_total'] == '0.00') {
+    $mensagem = mensagem('danger', 'Valor deve ser maior que 0,00 para cadastrar parcelas.');
     $invalido = true;
 }
 
@@ -74,8 +74,8 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
             <div class="col-md-12">
                 <!-- general form elements -->
                 <form action="?perfil=evento&p=pedido_parcelas" method="POST" role="form">
-                    <input type="hidden" name="idPedido" value="<?=$idPedido?>">
-                    <input type="hidden" name="nParcelas" value="<?=$nParcelas?>">
+                    <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                    <input type="hidden" name="nParcelas" value="<?= $nParcelas ?>">
                     <div class="box box-info">
                         <div class="box-header with-border">
                             <h3 class="box-title">Parcelas</h3>
@@ -85,14 +85,15 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                             <?= $mensagem ?? "" ?>
                             <div id="linha-erro" class="col-md-12">
                                 <div class="box box-danger box-solid">
-                                <div class="box-header with-border">
-                                <h3 class="box-title">Data de pagamento deve ser após a data de ocorrência!</h3>
-                                <div class="box-tools pull-right">
-                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Data de pagamento deve ser após a data de ocorrência!</h3>
+                                        <div class="box-tools pull-right">
+                                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                                        class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-            </div>
                         </div>
 
                         <div class="box-body">
@@ -102,36 +103,42 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                                     <div class='row'>
                                         <div class='form-group col-md-1'>
                                             <label for='parcela'>Parcela </label>
-                                            <input type='number' name="parcela[<?=$i?>]" value="<?=$i+1?>"
+                                            <input type='number' name="parcela[<?= $i ?>]" value="<?= $i + 1 ?>"
                                                    class='form-control' readonly>
                                         </div>
                                         <div class='form-group col-md-2'>
                                             <label for='valor'>Valor *</label>
-                                            <input type='text' name='valor[<?=$i?>]' class='form-control valor'
-                                                   value="<?=isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : ''?>" required
+                                            <input type='text' name='valor[<?= $i ?>]' class='form-control valor'
+                                                   value="<?= isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : '' ?>"
+                                                   required
                                                    placeholder="Valor em reais"
                                                    onkeypress="return(moeda(this, '.', ',', event));">
                                         </div>
                                         <div class='form-group col-md-2'>
                                             <label for='data_inicial'>Data Inicial</label>
-                                            <input type='date' id='data_inicial' value="<?=$parcelas[$i]['data_inicio'] ?? ''?>"
-                                                   name='data_inicial[<?=$i?>]'
+                                            <input type='date' id='data_inicial'
+                                                   value="<?= $parcelas[$i]['data_inicio'] ?? '' ?>"
+                                                   name='data_inicial[<?= $i ?>]'
                                                    class='form-control'>
                                         </div>
                                         <div class='form-group col-md-2'>
                                             <label for='data_final'>Data Final</label>
-                                            <input type='date' id='data_final' value="<?=$parcelas[$i]['data_fim'] ?? ''?>" name='data_final[<?=$i?>]'
+                                            <input type='date' id='data_final'
+                                                   value="<?= $parcelas[$i]['data_fim'] ?? '' ?>"
+                                                   name='data_final[<?= $i ?>]'
                                                    class='form-control'>
                                         </div>
                                         <div class='form-group col-md-2'>
                                             <label for='data_pagamento'>Data Kit Pagamento *</label>
                                             <input type='date' id='data_pagamento' required
-                                                   value="<?=$parcelas[$i]['data_pagamento'] ?? ''?>"
-                                                   name='data_pagamento[<?=$i?>]' class='form-control'>
+                                                   value="<?= $parcelas[$i]['data_pagamento'] ?? '' ?>"
+                                                   name='data_pagamento[<?= $i ?>]' class='form-control'>
                                         </div>
                                         <div class='form-group col-md-2'>
                                             <label for='carga_horaria'>Carga Horária</label>
-                                            <input type='number' id='carga_horaria' value="<?=$parcelas[$i]['carga_horaria'] ?? ''?>" name='carga_horaria[<?=$i?>]'
+                                            <input type='number' id='carga_horaria'
+                                                   value="<?= $parcelas[$i]['carga_horaria'] ?? '' ?>"
+                                                   name='carga_horaria[<?= $i ?>]'
                                                    class='form-control'>
                                         </div>
                                     </div>
@@ -139,21 +146,22 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                                     <div class='row'>
                                         <div class='form-group col-md-2'>
                                             <label for='parcela'>Parcela </label>
-                                            <input type='number' name="parcela[<?=$i?>]" value="<?=$i+1?>"
+                                            <input type='number' name="parcela[<?= $i ?>]" value="<?= $i + 1 ?>"
                                                    class='form-control' readonly>
                                         </div>
                                         <div class='form-group col-md-3'>
                                             <label for='valor'>Valor *</label>
-                                            <input type='text' name='valor[<?=$i?>]' class='form-control valor'
-                                                   value="<?=isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : ''?>" required
+                                            <input type='text' name='valor[<?= $i ?>]' class='form-control valor'
+                                                   value="<?= isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : '' ?>"
+                                                   required
                                                    placeholder="Valor em reais"
                                                    onkeypress="return(moeda(this, '.', ',', event));">
                                         </div>
                                         <div class='form-group col-md-4'>
                                             <label for='data_pagamento'>Data Kit Pagamento *</label>
                                             <input type='date' id='data_pagamento' required
-                                                   value="<?=$parcelas[$i]['data_pagamento'] ?? ''?>"
-                                                   name='data_pagamento[<?=$i?>]' class='form-control dataPagamento'>
+                                                   value="<?= $parcelas[$i]['data_pagamento'] ?? '' ?>"
+                                                   name='data_pagamento[<?= $i ?>]' class='form-control dataPagamento'>
                                         </div>
                                     </div>
                                 <?php endif;
@@ -161,7 +169,8 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                             <div class="row">
                                 <div class="col-md-offset-3 col-md-3">
                                     <div class="alert">
-                                        <strong>Valor Total:</strong> R$ <span id="valorTotal"><?= $pedido['valor_total'] ?></span>
+                                        <strong>Valor Total:</strong> R$ <span
+                                                id="valorTotal"><?= $pedido['valor_total'] ?></span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -180,9 +189,10 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                         <div class="box-footer">
                             <a href="?perfil=evento&p=pedido_parcelas" class="pull-left btn btn-default">Voltar</a>
                             <?php if (!$invalido): ?>
-                            <input type="submit" name="<?= !isset($parcelas) ? 'gravarParcelas' : 'editarParcelas'?>"
-                                   class="pull-right btn btn-primary" value="Gravar" id="gravaParcelas">
-                            <?php endif;?>
+                                <input type="submit"
+                                       name="<?= !isset($parcelas) ? 'gravarParcelas' : 'editarParcelas' ?>"
+                                       class="pull-right btn btn-primary" value="Gravar" id="gravaParcelas">
+                            <?php endif; ?>
                         </div>
                         <!-- /.box-footer-->
                     </div>
@@ -197,21 +207,20 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
 </div>
 
 <script>
-    let dataInicio = new Date("<?= $dataInicio[0]['data_inicio'] ?>");
 
-    $('#alertValor').css("display","none");
+    $('#alertValor').css("display", "none");
 
     let linha_erro = $('#linha-erro');
     var btnGravar = $('#gravaParcelas');
 
-    linha_erro.css("display","none");
+    linha_erro.css("display", "none");
 
-    $(document).on("keyup", ".valor", function() {
+    $(document).on("keyup", ".valor", function () {
         var total = parseFloat($('#valorTotal').text());
         var sum = 0;
         let alerta = $('#alertValor');
 
-        $(".valor").each(function(){
+        $(".valor").each(function () {
             let valor = $(this).val().replace('.', '').replace(',', '.');
             sum += +valor;
         });
@@ -220,24 +229,23 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
         $("#totalRegistrado").text(sum.toFixed(2));
         if (diferenca != 0) {
             btnGravar.attr('disabled', true);
-            alerta.css("display","none");
+            alerta.css("display", "none");
         } else {
             btnGravar.attr('disabled', false);
-            alerta.css("display","block");
+            alerta.css("display", "block");
         }
     });
 
-    $(document).on("change",".dataPagamento", function () {
+    let dataInicio = new Date("<?= $dataInicio[0]['data_inicio'] ?>");
+
+    $(".dataPagamento").keyup(function (e) {
         let dataParcela = new Date(this.value);
-         if(dataInicio.getDate() > dataParcela.getDate())
-         {
-            linha_erro.css("display","block");
-             btnGravar.attr('disabled', true);
-         }
-         else
-         {
-             linha_erro.css("display","none");
-             btnGravar.attr('disabled', false);
-         }
+        if (dataInicio >= dataParcela) {
+            linha_erro.css("display", "block");
+            btnGravar.attr('disabled', true);
+        } else {
+            linha_erro.css("display", "none");
+            btnGravar.attr('disabled', false);
+        }
     });
 </script>
