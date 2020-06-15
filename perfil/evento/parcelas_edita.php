@@ -58,6 +58,11 @@ if ($pedido['valor_total'] == '0.00'){
     $mensagem = mensagem('danger','Valor deve ser maior que 0,00 para cadastrar parcelas.');
     $invalido = true;
 }
+
+$sqlData = "SELECT data_inicio FROM ocorrencias WHERE origem_ocorrencia_id = {$idEvento} AND publicado = 1 ORDER BY data_inicio ASC LIMIT 1 ";
+$dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
+
+
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -78,6 +83,16 @@ if ($pedido['valor_total'] == '0.00'){
 
                         <div class="row" align="center">
                             <?= $mensagem ?? "" ?>
+                            <div id="linha-erro" class="col-md-12">
+                                <div class="box box-danger box-solid">
+                                <div class="box-header with-border">
+                                <h3 class="box-title">Data de pagamento deve ser após a data de ocorrência!</h3>
+                                <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
                         </div>
 
                         <div class="box-body">
@@ -138,12 +153,11 @@ if ($pedido['valor_total'] == '0.00'){
                                             <label for='data_pagamento'>Data Kit Pagamento *</label>
                                             <input type='date' id='data_pagamento' required
                                                    value="<?=$parcelas[$i]['data_pagamento'] ?? ''?>"
-                                                   name='data_pagamento[<?=$i?>]' class='form-control'>
+                                                   name='data_pagamento[<?=$i?>]' class='form-control dataPagamento'>
                                         </div>
                                     </div>
                                 <?php endif;
                             endfor; ?>
-
                             <div class="row">
                                 <div class="col-md-offset-3 col-md-3">
                                     <div class="alert">
@@ -183,9 +197,16 @@ if ($pedido['valor_total'] == '0.00'){
 </div>
 
 <script>
+    let dataInicio = new Date("<?= $dataInicio[0]['data_inicio'] ?>");
+
     $('#alertValor').css("display","none");
+
+    let linha_erro = $('#linha-erro');
+    var btnGravar = $('#gravaParcelas');
+
+    linha_erro.css("display","none");
+
     $(document).on("keyup", ".valor", function() {
-        var btnGravar = $('#gravaParcelas');
         var total = parseFloat($('#valorTotal').text());
         var sum = 0;
         let alerta = $('#alertValor');
@@ -204,5 +225,19 @@ if ($pedido['valor_total'] == '0.00'){
             btnGravar.attr('disabled', false);
             alerta.css("display","block");
         }
+    });
+
+    $(document).on("change",".dataPagamento", function () {
+        let dataParcela = new Date(this.value);
+         if(dataInicio.getDate() > dataParcela.getDate())
+         {
+            linha_erro.css("display","block");
+             btnGravar.attr('disabled', true);
+         }
+         else
+         {
+             linha_erro.css("display","none");
+             btnGravar.attr('disabled', false);
+         }
     });
 </script>
