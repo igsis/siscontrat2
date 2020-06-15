@@ -52,6 +52,7 @@ if (isset($_POST['geral'])){
     
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
+    echo $sql;
 }
 /* ************** /.geral ************** */
 
@@ -95,7 +96,7 @@ if(isset($_POST['operador'])) {
     }
 
     if ($operador_id != null && $operador_id != 0) {
-        $sqlOperador = " AND operador_pagamento_id = '$operador_id'";
+        $sqlOperador = " AND p.operador_id = '$operador_id'";
     } else{
         $sqlOperador = "";
     }
@@ -104,7 +105,7 @@ if(isset($_POST['operador'])) {
     INNER JOIN pedidos p on e.id = p.origem_id 
     INNER JOIN evento_envios ee ON e.id = ee.evento_id 
     INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
-    LEFT JOIN usuario_pagamentos up on p.operador_pagamento_id = up.usuario_id
+    LEFT JOIN usuario_pagamentos up on p.operador_id = up.usuario_id
     LEFT JOIN usuarios u on up.usuario_id = u.id
     WHERE e.publicado = 1 
     AND p.publicado = 1 
@@ -115,6 +116,7 @@ if(isset($_POST['operador'])) {
     GROUP BY e.id";
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
+    echo $sql;
 }
 /* ************** /.operador ************** */
 ?>
