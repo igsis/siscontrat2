@@ -7,9 +7,14 @@ $eventoNovo = isset($_SESSION['idEvento']) ? false : true;
 if (!$eventoNovo) {
     $idEvento = $_SESSION['idEvento'];
     $evento = recuperaDados("eventos", "id", $idEvento);
-    $sqlAtracoes = "SELECT id FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'";
-    $nAtracoes = $con->query($sqlAtracoes)->num_rows;
-    if (($evento['contratacao'] == 1 && $nAtracoes > 0) || ($evento['contratacao'] == 1 && $evento['tipo_evento_id'] == 2)) {
+    if ($evento['tipo_evento_id'] == 1) {
+        $sqlAtracoes = "SELECT id FROM atracoes WHERE evento_id = '$idEvento' AND publicado = '1'";
+        $numero = $con->query($sqlAtracoes)->num_rows;
+    } else {
+        $sqlFilmes = "SELECT id FROM filme_eventos WHERE evento_id = '$idEvento'";
+        $numero = $con->query($sqlFilmes)->num_rows;
+    }
+    if ($evento['contratacao'] == 1 && $numero > 0) {
         $contratacao = true;
         $sqlPedido = "SELECT pessoa_tipo_id FROM pedidos WHERE origem_tipo_id = '1' AND origem_id = '$idEvento' AND publicado = '1'";
         $queryPedido = $con->query($sqlPedido);
@@ -26,7 +31,7 @@ if (!$eventoNovo) {
     <section class="sidebar">
         <ul class="sidebar-menu" data-widget="tree">
             <li>
-                <a href="http://<?=$_SERVER['HTTP_HOST']?>/siscontrat/inicio">
+                <a href="http://<?= $_SERVER['HTTP_HOST'] ?>/siscontrat/inicio">
                     <i class="fa fa-home"></i>
                     <span>Home</span>
                 </a>
@@ -34,9 +39,9 @@ if (!$eventoNovo) {
 
             <li class="header">EVENTO</li>
 
-            <?php if($eventoNovo): ?>
+            <?php if ($eventoNovo): ?>
                 <li>
-                    <a href="<?=$pasta?>evento_cadastro">
+                    <a href="<?= $pasta ?>evento_cadastro">
                         <i class="fa fa-circle-o text-green"></i>
                         <span>Evento</span>
                     </a>
@@ -49,72 +54,79 @@ if (!$eventoNovo) {
                     </a>
                 </li>
             <?php
-                endif;
+            endif;
 
-                if (!($eventoNovo)):
-                    //atração
-                    if($evento['tipo_evento_id'] == 1): ?>
-                        <li>
-                            <a href="<?=$pasta?>atracoes_lista">
-                                <i class="fa fa-circle-o text-lime"></i>
-                                <span>Atração</span>
-                            </a>
-                        </li>
-                    <?php else: //filme ?>
-                        <li>
-                            <a href="<?=$pasta?>evento_cinema_lista">
-                                <i class="fa fa-circle-o text-lime"></i>
-                                <span>Filme</span>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-
+            if (!($eventoNovo)):
+                //atração
+                if ($evento['tipo_evento_id'] == 1): ?>
                     <li>
-                        <a href="<?=$pasta?>arqs_com_prod">
-                            <i class="fa fa-circle-o text-teal"></i>
-                            <span>Anexos Comunicação/Produção</span>
+                        <a href="<?= $pasta ?>atracoes_lista">
+                            <i class="fa fa-circle-o text-lime"></i>
+                            <span>Atração</span>
                         </a>
                     </li>
-
-                    <?php if($contratacao): ?>
-                        <?php if ($nPedido == 0): ?>
-                            <li>
-                                <a href="<?= $pasta ?>pedido">
-                                    <i class="fa fa-circle-o text-aqua"></i>
-                                    <span>Pedido</span>
-                                </a>
-                            </li>
-                        <?php else: ?>
-                            <li class="treeview menu-open">
-                                <a href="#">
-                                    <i class="fa fa-circle-o text-aqua"></i>
-                                    <span>Pedido</span>
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </span>
-                                </a>
-                                <ul class="treeview-menu" style="display: block;">
-                                    <li><a href="<?= $pasta ?>resumo_pedido"><i class="fa fa-circle-o"></i> Resumo do Pedido</a></li>
-                                    <li><a href="<?= $pasta ?>pedido_parcelas"><i class="fa fa-circle-o"></i> Detalhes de Parcelas</a></li>
-                                    <li><a href="<?= $pasta ?>pedido_proponente"><i class="fa fa-circle-o"></i> Cadastro de Proponente</a></li>
-                                    <?php if ($tipoPedido == 2): ?>
-                                        <li><a href="<?= $pasta ?>pedido_lideres"><i class="fa fa-circle-o"></i> Líderes</a></li>
-                                    <?php endif ?>
-                                    <li><a href="<?= $pasta ?>pedido_parecer_artistico"><i class="fa fa-circle-o"></i> Parecer Artístico</a></li>
-                                    <li><a href="<?= $pasta ?>pedido_anexos"><i class="fa fa-circle-o"></i> Anexos do Pedido</a></li>
-                                    <li><a href="<?= $pasta ?>pedido_valor_equipamento"><i class="fa fa-circle-o"></i> Valor por Equipamento</a></li>
-                                </ul>
-                            </li>
-                        <?php endif; ?>
-                    <?php endif; ?>
-
+                <?php else: //filme ?>
                     <li>
-                        <a href="<?=$pasta?>finalizar">
-                            <i class="fa fa-circle-o text-light-blue"></i>
-                            <span>Finalizar</span>
+                        <a href="<?= $pasta ?>evento_cinema_lista">
+                            <i class="fa fa-circle-o text-lime"></i>
+                            <span>Filme</span>
                         </a>
                     </li>
                 <?php endif; ?>
+
+                <li>
+                    <a href="<?= $pasta ?>arqs_com_prod">
+                        <i class="fa fa-circle-o text-teal"></i>
+                        <span>Anexos Comunicação/Produção</span>
+                    </a>
+                </li>
+
+                <?php if ($contratacao): ?>
+                <?php if ($nPedido == 0): ?>
+                    <li>
+                        <a href="<?= $pasta ?>pedido">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span>Pedido</span>
+                        </a>
+                    </li>
+                <?php else: ?>
+                    <li class="treeview menu-open">
+                        <a href="#">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span>Pedido</span>
+                            <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                        </a>
+                        <ul class="treeview-menu" style="display: block;">
+                            <li><a href="<?= $pasta ?>resumo_pedido"><i class="fa fa-circle-o"></i> Resumo do Pedido</a>
+                            </li>
+                            <li><a href="<?= $pasta ?>pedido_parcelas"><i class="fa fa-circle-o"></i> Detalhes de
+                                    Parcelas</a></li>
+                            <li><a href="<?= $pasta ?>pedido_proponente"><i class="fa fa-circle-o"></i> Cadastro de
+                                    Proponente</a></li>
+                            <?php if ($tipoPedido == 2): ?>
+                                <li><a href="<?= $pasta ?>pedido_lideres"><i class="fa fa-circle-o"></i> Líderes</a>
+                                </li>
+                            <?php endif ?>
+                            <li><a href="<?= $pasta ?>pedido_parecer_artistico"><i class="fa fa-circle-o"></i> Parecer
+                                    Artístico</a></li>
+                            <li><a href="<?= $pasta ?>pedido_anexos"><i class="fa fa-circle-o"></i> Anexos do Pedido</a>
+                            </li>
+                            <li><a href="<?= $pasta ?>pedido_valor_equipamento"><i class="fa fa-circle-o"></i> Valor por
+                                    Equipamento</a></li>
+                        </ul>
+                    </li>
+                <?php endif; ?>
+            <?php endif; ?>
+
+                <li>
+                    <a href="<?= $pasta ?>finalizar">
+                        <i class="fa fa-circle-o text-light-blue"></i>
+                        <span>Finalizar</span>
+                    </a>
+                </li>
+            <?php endif; ?>
 
             <li>
                 <a href="?perfil=evento">
