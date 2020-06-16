@@ -1,7 +1,7 @@
 <?php
 $con = bancoMysqli();
 
-$idEvento = $_SESSION['idEvento'];
+$idEvento = $_POST['idEvento'];
 $pedido = $con->query("SELECT id, numero_parcelas FROM pedidos WHERE origem_id = $idEvento AND origem_tipo_id = 1 AND publicado = 1")->fetch_array();
 $idPedido = $pedido['id'];
 ?>

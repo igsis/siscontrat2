@@ -1,8 +1,5 @@
 <?php
 
-unset($_SESSION['idEvento']);
-unset($_SESSION['idPj']);
-unset($_SESSION['idPf']);
 $idUser = $_SESSION['usuario_id_s'];
 $con = bancoMysqli();
 
@@ -15,7 +12,7 @@ $sqlEvento = "SELECT
             FROM eventos AS e
             INNER JOIN usuarios as u on u.id = e.usuario_id
             INNER JOIN producao_eventos AS en ON en.evento_id = e.id 
-            WHERE en.visualizado = 0";
+            WHERE en.visualizado = 0 AND e.publicado = 1 GROUP BY e.id";
 $queryEvento = mysqli_query($con, $sqlEvento);
 
 ?>
