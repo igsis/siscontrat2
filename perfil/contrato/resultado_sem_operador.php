@@ -123,7 +123,7 @@ if (isset($_POST['busca'])) {
                                 $local = substr($local, 1);
 
                                 //calcula a diferença entre hoje e a data inicial do evento
-                                $inicial = $con->query("SELECT data_inicio FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'];
+                                $inicial = $con->query("SELECT data_inicio FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'] ?? NULL;
                                 $hoje = date("Y-m-d");
                                 $diferenca = strtotime($inicial) - strtotime($hoje);
                                 $prazo = floor($diferenca / (60 * 60 * 24));
@@ -179,7 +179,7 @@ if (isset($_POST['busca'])) {
                         </table>
                     </div>
                     <div class="box-footer">
-                        <a href="?perfil=contrato&p=filtrar_sem_operador&sp=pesquisa_contratos">
+                        <a href="?perfil=contrato&p=pesquisa_sem_operador">
                             <button type="button" class="btn btn-default">Voltar</button>
                         </a>
                     </div>
