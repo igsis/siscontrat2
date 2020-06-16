@@ -234,11 +234,11 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
         $("#totalRegistrado").text(sum.toFixed(2));
 
         if (valOriginal === valRegistrado) {
-            btnGravar.attr('disabled', false);
             alerta.css("display", "block");
+            btnGravar.attr('disabled', false);
         } else {
-            btnGravar.attr('disabled', true);
             alerta.css("display", "none");
+            btnGravar.attr('disabled', true);
         }
         moedaBR("#totalRegistrado");
     });

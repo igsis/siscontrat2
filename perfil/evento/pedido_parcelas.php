@@ -319,7 +319,7 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
                                         </div>
                                     </div>
                                 <?php endif; ?>
-                                <div class="col-md-2" style="margin-top: 2%;">
+                                <div class="col-md-2" style="margin-top: 2.2%;">
                                     <a href="?perfil=evento&p=parcelas_edita" class="btn btn-primary" id="btnParcelas">
                                         Editar Parcelas
                                     </a>
