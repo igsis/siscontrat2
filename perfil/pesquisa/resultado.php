@@ -3,7 +3,7 @@ $con = bancoMysqli();
 
 if (isset($_POST['busca'])) {
     $protocolo = $_POST['protocolo'] ?? NULL;
-    $numProcesso = $_POST['$numProcesso'] ?? NULL;
+    $numProcesso = $_POST['numProcesso'] ?? NULL;
     $nomeEvento = $_POST['nomeEvento'] ?? NULL;
     $usuario = $_POST['usuario'] ?? NULL;
     $projeto = $_POST['projeto'] ?? NULL;
@@ -16,6 +16,8 @@ if (isset($_POST['busca'])) {
     $sqlUsuario = '';
     $sqlValorInicial = '';
     $sqlValorFinal = '';
+    $sqlValor = '';
+    $sqlProcesso = '';
 
     if ($protocolo != null)
         $sqlProtocolo = " AND e.protocolo LIKE '%$protocolo%'";
@@ -25,10 +27,13 @@ if (isset($_POST['busca'])) {
         $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
     if ($usuario != null && $usuario != 0)
         $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
-    if ($valorInicial != null && $valorInicial != 0)
-        $sqlValorInicial = " AND valor_inicial = '$valorInicial'";
-    if ($valorFinal != null && $valorFinal != 0)
-        $sqlValorFinal = " AND valor_inicial = '$valorFinal'";
+    if($valorInicial != NULL && $valorInicial != 0  || $valorFinal != NULL && $valorFinal != 0){
+        $sqlValor = " AND p.valor_total between '$valorInicial' AND '$valorFinal'";
+    }else{
+        $sqlValor = "";
+    }
+    if($numProcesso != null)
+        $sqlProcesso = "AND p.numero_processo LIKE '%$numProcesso%'";
 
     $sql = "SELECT e.id, e.protocolo, 
                    p.numero_processo, p.pessoa_tipo_id,
@@ -40,8 +45,8 @@ if (isset($_POST['busca'])) {
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.status_pedido_id NOT IN (1,3,20,21)
-    $sqlProjeto $sqlUsuario $sqlValorInicial
-    $sqlProtocolo $sqlNomeEvento $sqlValorFinal
+    $sqlProjeto $sqlUsuario $sqlValor
+    $sqlProtocolo $sqlNomeEvento $sqlProcesso
     GROUP BY e.id";
 
     $resultado = $con->query($sql);
