@@ -70,7 +70,7 @@ $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
                                         <?php if (($pedido['numero_parcelas'] != null) || ($pedido['verba_id']) != null): ?>
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <p><strong>Verba: </strong><?= $verba ?? NULL?></p>
+                                                    <p><strong>Verba: </strong><?= $verba ?? NULL ?></p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p><strong>Parcelas: </strong><?= $pedido['numero_parcelas'] ?></p>
@@ -98,7 +98,7 @@ $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <p>
-                                                        <strong>Observação: </strong> <?= $pedido['observacao'] == NULL ? "Não cadastrado" : $pedido['observacao']?>
+                                                        <strong>Observação: </strong> <?= $pedido['observacao'] == NULL ? "Não cadastrado" : $pedido['observacao'] ?>
                                                     </p>
                                                 </div>
                                             </div>
@@ -131,9 +131,17 @@ $parecer = recuperaDados('parecer_artisticos', 'pedido_id', $pedido['id']);
                                                     <div class="col-md-6">
                                                         <p><strong>Nome: </strong><?= $proponente['nome'] ?></p>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <p><strong>CPF: </strong><?= $proponente['cpf'] ?></p>
-                                                    </div>
+                                                    <?php if ($proponente['cpf'] != ""): ?>
+                                                        <div class="col-md-6">
+                                                            <p><strong>CPF: </strong><?= $proponente['cpf'] ?></p>
+                                                        </div>
+                                                    <?php else: ?>
+                                                        <div class="col-md-6">
+                                                            <p>
+                                                                <strong>Passaporte: </strong><?= $proponente['passaporte'] ?>
+                                                            </p>
+                                                        </div>
+                                                    <?php endif; ?>
                                                 </div>
                                             <?php else: ?>
                                                 <div class="row">
