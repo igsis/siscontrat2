@@ -86,7 +86,7 @@ e.projeto_especial_id
                             ?>
                             <tr>
                                 <?php
-                                if (isset($evento['numero_processo'])) {
+                               if ($evento['numero_processo'] != NULL ) {
                                     ?>
                                     <td>
                                         <form action="?perfil=juridico&p=tipo_modelo&sp=seleciona_modelo" role="form"
