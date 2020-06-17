@@ -90,7 +90,7 @@ $sql = "SELECT p.numero_processo, e.nome_evento, e.protocolo,
                             ?>
                             <tr>
                                 <?php
-                                if (isset($pedido['numero_processo'])) {
+                                if ($pedido['numero_processo'] != NULL) {
                                     ?>
                                     <td>
                                         <form action="?perfil=contabilidade&p=eventos&sp=detalhes" role="form"

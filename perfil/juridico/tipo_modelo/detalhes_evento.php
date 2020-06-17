@@ -75,8 +75,8 @@ if ($evento['tel_responsavel'] != "") {
 
 
 $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
-$espaco = recuperaDados('evento_publico', 'evento_id', $idEvento);
-$publico = recuperaDados('publicos', 'id', $espaco['publico_id']);
+$evento_pub = recuperaDados('evento_publico', 'evento_id', $idEvento);
+$publico = recuperaDados('publicos', 'id', $evento_pub['publico_id']);
 $pagamento = recuperaDados('pagamentos', 'pedido_id', $evento['id']);
 $dotacao = recuperaDados('juridicos', 'pedido_id', $evento['id']);
 $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']);
@@ -330,10 +330,10 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
                             $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
                             $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
-                            if ($ocorrencia['espaco_id'] != 0) {
-                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id']);
-                            } else {
+                            if ($ocorrencia['espaco_id'] == 0 && $ocorrencia['espaco_id'] == NULL) {
                                 $espaco = "Não cadastrado";
+                            } else {
+                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id']);
                             }
                             $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
                             $nomeAtracao = recuperaDados('atracoes', 'id', $ocorrencia['atracao_id'])['nome_atracao'];
@@ -366,7 +366,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                     <th width="30%">Hora de Encerramento:</th>
                                     <td><?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?></td>
                                 </tr>
-                                <?php } ?>
+                            <?php } ?>
                             <tr>
                                 <th width="30 % ">Período:</th>
                                 <td><?= $periodo['periodo'] ?></td>
@@ -406,14 +406,14 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                     <th width="30 % ">É virada?</th>
                                     <td>Sim</td>
                                 </tr>
-                                <?php } ?>
+                            <?php } ?>
                             <tr>
                                 <th width="30 % ">Local:</th>
                                 <td><?= $local['local'] ?></td>
                             </tr>
                             <tr>
                                 <th width="30 % ">Espaço:</th>
-                                <td><?= $espaco ?></td>
+                                <td><?= $espaco['espaco'] ?></td>
                             </tr>
                             <tr>
                                 <th width="30% ">Observação:</th>
@@ -447,10 +447,10 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                                                        AND oco.atracao_id = " . $filmes['idFilmeEvento']);
                                 while ($oco = mysqli_fetch_array($sqlOcorrenciaFilme)) {
                                     $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $oco['retirada_ingresso_id'])['retirada_ingresso'];
-                                    if ($oco['espaco_id'] != 0) {
-                                        $espaco = recuperaDados('espacos', 'id', $oco['espaco_id']);
-                                    } else {
+                                    if ($oco['espaco_id'] == 0 && $oco['espaco_id'] == NULL) {
                                         $espaco = "Não cadastrado";
+                                    } else {
+                                        $espaco = recuperaDados('espacos', 'id', $oco['espaco_id']);
                                     }
                                     $instituicao = recuperaDados('instituicoes', 'id', $oco['instituicao_id'])['nome'];
                                     $local = recuperaDados('locais', 'id', $oco['local_id'])['local'];
@@ -534,11 +534,10 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                         <th width="30%">Local:</th>
                                         <td><?= $local ?></td>
                                     </tr>
-
                                     <?php if ($oco['espaco_id'] != 0) { ?>
                                         <tr>
                                             <th width="30 % ">Espaço:</th>
-                                            <td><?= $espaco ?></td>
+                                            <td><?= $espaco['espaco'] ?? NULL ?></td>
                                         </tr>
                                     <?php } ?>
 

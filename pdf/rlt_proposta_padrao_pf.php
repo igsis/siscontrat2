@@ -404,7 +404,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(13, $l, 'Objeto:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($objeto), 0, 'L', 0);
+$pdf->MultiCell(70, $l, utf8_decode($objeto), 0, 'L', 0);
 
 if ($evento['tipo_evento_id'] == 1) {
     $cronograma = $con->query("SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND tipo_ocorrencia_id = 1 AND publicado = 1");
@@ -426,7 +426,7 @@ if ($evento['tipo_evento_id'] == 1) {
 
         $pdf->SetX($x);
         $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(21, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
+        $pdf->Cell(22, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
         $pdf->SetFont('Arial', '', 10);
         $pdf->MultiCell(148, $l, utf8_decode($dia));
 
@@ -480,7 +480,7 @@ if ($evento['tipo_evento_id'] == 1) {
 
             $pdf->SetX($x);
             $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(21, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
+            $pdf->Cell(22, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
             $pdf->SetFont('Arial', '', 10);
             $pdf->MultiCell(148, $l, utf8_decode($dia));
 

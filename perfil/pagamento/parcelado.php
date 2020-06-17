@@ -213,7 +213,7 @@ if ($testaAcesso->num_rows == 0) {
 
             </div>
             <div class="box-footer">
-                <form action="#" method="post" role="form">
+                <form action="?perfil=pagamento&p=integral" method="post" role="form">
                     <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                     <button type="submit" class="btn btn-warning pull-left" name="concluir">Concluir evento</button>
                     <button type="submit" class="btn btn-primary pull-right" name="cadastrar">Gravar</button>

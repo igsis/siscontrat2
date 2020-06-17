@@ -113,7 +113,7 @@ $pedido = $con->query("SELECT e.protocolo, p.numero_processo FROM pedidos AS p I
                             <button type="button" class="btn btn-default">Voltar</button>
                         </a>
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-primary pull-right" name="edita">Salvar</button>
+                        <button type="submit" class="btn btn-primary pull-right" name="edita" id="cadastra">Salvar</button>
                         </form>
                     </div>
                 </div>
@@ -139,19 +139,13 @@ function comparaData() {
         var dataFim = document.querySelector('#data_fim').value;
 
         if (dataInicio != "" && dataFim != "") {
-            var dataInicio = parseInt(dataInicio.split("-")[0].toString() + dataInicio.split("-")[1].toString() + dataInicio.split("-")[2].toString());
-            var dataFim = parseInt(dataFim.split("-")[0].toString() + dataFim.split("-")[1].toString() + dataFim.split("-")[2].toString());
-            isMsg.hide();
-        }
-
-        $('#cadastra').attr("disabled", true);
-            
-        if (dataFim <= dataInicio) {
-            $('#cadastra').attr("disabled", true);
-            isMsg.show();
-        } else {
-            $('#cadastra').attr("disabled", false);
-            isMsg.hide();
+            if (dataFim < dataInicio) {
+                $('#cadastra').attr("disabled", true);
+                isMsg.show();
+            } else {
+                $('#cadastra').attr("disabled", false);
+                isMsg.hide();
+            }
         }
 }
    $('#data_inicio').on('change', comparaData);

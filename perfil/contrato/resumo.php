@@ -459,7 +459,7 @@ $disabledImpr = "";
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <a href="?perfil=contrato&p=edita_parcelas">
+                                        <a href="?perfil=contrato&p=edita_parcelas&id=<?=$idEvento?>">
                                             <button type="button" style="width: 35%"
                                                     class="btn btn-primary center-block">
                                                 Editar parcelas

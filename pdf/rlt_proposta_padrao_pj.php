@@ -467,7 +467,7 @@ if ($evento['tipo_evento_id'] == 1) {
 
         $pdf->SetX($x);
         $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(21, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
+        $pdf->Cell(22, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
         $pdf->SetFont('Arial', '', 10);
         $pdf->MultiCell(148, $l, utf8_decode($dia));
 
@@ -521,7 +521,7 @@ if ($evento['tipo_evento_id'] == 1) {
 
             $pdf->SetX($x);
             $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(21, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
+            $pdf->Cell(22, $l, utf8_decode('Data/Perído:'), 0, 0, 'L');
             $pdf->SetFont('Arial', '', 10);
             $pdf->MultiCell(148, $l, utf8_decode($dia));
 

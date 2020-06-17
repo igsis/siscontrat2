@@ -52,7 +52,7 @@ if (isset($_POST['geral'])){
     
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
-    echo $sql;
+    // echo $sql;
 }
 /* ************** /.geral ************** */
 
