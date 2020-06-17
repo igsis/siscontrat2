@@ -271,52 +271,59 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="valor_total">Valor Total</label>
-                                    <input type="text" onkeypress="return(moeda(this, '.', ',', event))"
+                                    <input type="text"
                                            id="valor_total" name="valor_total" class="form-control"
                                            value="<?= dinheiroParaBr($pedido['valor_total']) ?>"
-                                        <?= $readonlyValorTotal ?>>
+                                        <?= $readonlyValorTotal ?> maxlength="10">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <?php if (isset($oficina)): ?>
-                                    <div class="form-group col-md-6">
-                                        <label for="numero_parcelas">Número de Parcelas *</label>
-                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas"
-                                                data-oficina="1" required onchange="formaPagamento(); formParcela()">
-                                            <option value="">Selecione...</option>
-                                            <?php
-                                            if ($pedido['numero_parcelas'] == 3) {
-                                                $option = 4;
-                                            } elseif ($pedido['numero_parcelas'] == 4) {
-                                                $option = 3;
-                                            } else {
-                                                $option = $pedido['numero_parcelas'];
-                                            }
-                                            geraOpcaoParcelas("oficina_opcoes", $option);
-                                            ?>
-                                        </select>
-                                        <div class="has-error" id="msgParcelas">
-                                            <span class="help-block text-danger"><strong>É necessário editar as parcelas</strong></span>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="numero_parcelas">Número de Parcelas *</label>
+                                            <select class="form-control" id="numero_parcelas" name="numero_parcelas"
+                                                    data-oficina="1" required
+                                                    onchange="formaPagamento(); formParcela()">
+                                                <option value="">Selecione...</option>
+                                                <?php
+                                                if ($pedido['numero_parcelas'] == 3) {
+                                                    $option = 4;
+                                                } elseif ($pedido['numero_parcelas'] == 4) {
+                                                    $option = 3;
+                                                } else {
+                                                    $option = $pedido['numero_parcelas'];
+                                                }
+                                                geraOpcaoParcelas("oficina_opcoes", $option);
+                                                ?>
+                                            </select>
+                                            <div class="has-error" id="msgParcelas">
+                                                <span class="help-block text-danger"><strong>É necessário editar as parcelas</strong></span>
+                                            </div>
                                         </div>
                                     </div>
                                 <?php else: ?>
-                                    <div class="form-group col-md-6">
-                                        <label for="numero_parcelas">Número de Parcelas *</label>
-                                        <select class="form-control" id="numero_parcelas" name="numero_parcelas"
-                                                data-oficina="0" required onchange="formaPagamento(); formParcela()">
-                                            <option value="">Selecione...</option>
-                                            <?php geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']); ?>
-                                        </select>
-                                        <div class="has-error" id="msgParcelas">
-                                            <span class="help-block text-danger"><strong>É necessário editar as parcelas</strong></span>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="numero_parcelas">Número de Parcelas *</label>
+                                            <select class="form-control" id="numero_parcelas" name="numero_parcelas"
+                                                    data-oficina="0" required
+                                                    onchange="formaPagamento(); formParcela()">
+                                                <option value="">Selecione...</option>
+                                                <?php geraOpcaoParcelas("parcela_opcoes", $pedido['numero_parcelas']); ?>
+                                            </select>
+                                            <div class="has-error" id="msgParcelas">
+                                                <span class="help-block text-danger"><strong>É necessário editar as parcelas</strong></span>
+                                            </div>
                                         </div>
                                     </div>
                                 <?php endif; ?>
-                                <a href="?perfil=evento&p=parcelas_edita" class="btn btn-primary col-md-1"
-                                   style="margin-top: 1.8%;" id="btnParcelas">
-                                    Editar Parcelas
-                                </a>
+                                <div class="col-md-2" style="margin-top: 2.2%;">
+                                    <a href="?perfil=evento&p=parcelas_edita" class="btn btn-primary" id="btnParcelas">
+                                        Editar Parcelas
+                                    </a>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -424,11 +431,15 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
         let valorTotal = $('#valor_total').val();
         let btnEditaParcela = $('#btnParcelas');
 
-        btnEditaParcela.attr('href', '?perfil=evento&p=parcelas_edita&nParcelas=' + nParcela +'&valorTotal=' + valorTotal);
+        btnEditaParcela.attr('href', '?perfil=evento&p=parcelas_edita&nParcelas=' + nParcela + '&valorTotal=' + valorTotal);
     }
 
 
     $(document).ready(formaPagamento());
     $(document).ready(verificaParcela());
     $(document).ready(formParcela());
+
+    $(document).ready(function () {
+        $('#valor_total').mask('000.000,00',{reverse:true});
+    })
 </script>
