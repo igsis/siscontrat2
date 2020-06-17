@@ -111,8 +111,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                                             <input type='text' name='valor[<?= $i ?>]' class='form-control valor'
                                                    value="<?= isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : '' ?>"
                                                    required
-                                                   placeholder="Valor em reais"
-                                                   onkeypress="return(moeda(this, '.', ',', event));">
+                                                   placeholder="Valor em reais" maxlength="10">
                                         </div>
                                         <div class='form-group col-md-2'>
                                             <label for='data_inicial'>Data Inicial</label>
@@ -155,7 +154,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                                                    value="<?= isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : '' ?>"
                                                    required
                                                    placeholder="Valor em reais"
-                                                   onkeypress="return(moeda(this, '.', ',', event));">
+                                                   maxlength="10">
                                         </div>
                                         <div class='form-group col-md-4'>
                                             <label for='data_pagamento'>Data Kit Pagamento *</label>
@@ -261,4 +260,8 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
         let x = parseFloat(valor.textContent).toLocaleString('pt-br', {minimumFractionDigits: 2});
         valor.textContent = x;
     }
+
+    $(document).ready(function () {
+        $('.valor').mask('00.000,00',{reverse: true})
+    })
 </script>

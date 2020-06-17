@@ -271,10 +271,10 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="valor_total">Valor Total</label>
-                                    <input type="text" onkeypress="return(moeda(this, '.', ',', event))"
+                                    <input type="text"
                                            id="valor_total" name="valor_total" class="form-control"
                                            value="<?= dinheiroParaBr($pedido['valor_total']) ?>"
-                                        <?= $readonlyValorTotal ?>>
+                                        <?= $readonlyValorTotal ?> maxlength="10">
                                 </div>
                             </div>
 
@@ -438,4 +438,8 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
     $(document).ready(formaPagamento());
     $(document).ready(verificaParcela());
     $(document).ready(formParcela());
+
+    $(document).ready(function () {
+        $('#valor_total').mask('000.000,00',{reverse:true});
+    })
 </script>
