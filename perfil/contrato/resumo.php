@@ -202,7 +202,7 @@ if (isset($_POST['reabertura'])) {
 if (isset($_POST['parcelaEditada'])) {
     $idPedido = $_POST['idPedido'];
     $parcelas = $_POST['parcela'];
-    $idEvento = $_SESSION['idEvento'];
+    $idEvento = $_POST['idEvento'];
     $valores = dinheiroDeBr($_POST['valor']);
     $data_pagamentos = $_POST['data_pagamento'];
 
