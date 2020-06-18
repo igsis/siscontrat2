@@ -4,10 +4,10 @@ $con = bancoMysqli();
 $sql = "SELECT e.id, e.protocolo, e.nome_evento,  er.data_reabertura, e.usuario_id, er.usuario_reabertura_id, p.pessoa_tipo_id, p.pessoa_juridica_id, p.pessoa_fisica_id, p.valor_total, p.operador_id
         FROM eventos e 
         INNER JOIN evento_envios ee ON e.id = ee.evento_id 
-        INNER JOIN evento_reaberturas er on e.id = er.evento_id
+        LEFT JOIN evento_reaberturas er on e.id = er.evento_id
         INNER JOIN pedidos p ON p.origem_id = e.id
-        WHERE er.data_reabertura > ee.data_envio 
-        AND e.publicado = 1 
+        WHERE e.publicado = 1 
+        AND er.evento_id IS NULL
         AND p.publicado = 1
         AND p.origem_tipo_id = 1
         AND e.evento_status_id != 1 
@@ -41,8 +41,6 @@ $rows = mysqli_num_rows($query);
                                 <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
-                                <th>Data reabertura</th>
-                                <th>Reaberto por</th>
                                 <th>Local(ais)</th>
                                 <th>Período</th>
                                 <th>Prazo (dias)</th>
@@ -72,7 +70,7 @@ $rows = mysqli_num_rows($query);
                                     $local = substr($local, 0, -3);
 
                                     //calcula a diferença entre hoje e a data inicial do evento
-                                    $inicial = $con->query("SELECT data_inicio FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'];
+                                    $inicial = $con->query("SELECT data_inicio FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'] ?? NULL;
                                     $hoje = date("Y-m-d");
                                     $diferenca = strtotime($inicial) - strtotime($hoje);
                                     $prazo = floor($diferenca / (60 * 60 * 24));
@@ -97,8 +95,6 @@ $rows = mysqli_num_rows($query);
                                         <td><?= $baldeProponente ?></td>
                                         <td><?= $evento['nome_evento'] ?></td>
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                        <td><?= exibirDataBr($evento['data_reabertura']) ?></td>
-                                        <td><?= recuperaDados('usuarios', 'id', $evento['usuario_reabertura_id'])['nome_completo']; ?></td>
                                         <td><?= $local ?></td>
                                         <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias')?></td>
                                         <td><?= $prazo ?></td>
@@ -122,8 +118,6 @@ $rows = mysqli_num_rows($query);
                                 <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
-                                <th>Data reabertura</th>
-                                <th>Reaberto por</th>
                                 <th>Local(ais)</th>
                                 <th>Período</th>
                                 <th>Prazo (dias)</th>
