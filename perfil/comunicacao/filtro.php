@@ -8,32 +8,29 @@ $conn = bancoPDO();
 $idUser = $_SESSION['usuario_id_s'];
 
 if (isset($_POST['_filtros'])) {
-
-    $confirmados = [];
-    isset($_POST['editado']) && $_POST['editado'] == 1 ? array_push($confirmados, $_POST['editado']) : '';
-    isset($_POST['revisado']) && $_POST['revisado'] == 2 ? array_push($confirmados, $_POST['revisado']) : '';
-    isset($_POST['site']) && $_POST['site'] == 3 ? array_push($confirmados, $_POST['site']) : '';
-    isset($_POST['impresso']) && $_POST['impresso'] == 4 ? array_push($confirmados, $_POST['impresso']) : '';
-    isset($_POST['foto']) && $_POST['foto'] == 5 ? array_push($confirmados, $_POST['foto']) : '';
-
-    $pendente = [];
-    isset($_POST['editado']) && (float)$_POST['editado'] <> 1 ? array_push($pendente, 1) : '';
-    isset($_POST['revisado']) && (float)$_POST['revisado'] <> 2 ? array_push($pendente, 2) : '';
-    isset($_POST['site']) && (float)$_POST['site'] <> 3 ? array_push($pendente, 3) : '';
-    isset($_POST['impresso']) && (float)$_POST['impresso'] <> 4 ? array_push($pendente, 4) : '';
-    isset($_POST['foto']) && (float)$_POST['foto'] <> 5 ? array_push($pendente, 5) : '';
-
-
-    $confirmados = verificaArray($confirmados);
-    $pendente = verificaArray($pendente);
-
-    $query = retornaEventosComunicacao($idUser,['eventos','comunicacoes'],$confirmados,$pendente);
-    $query2 = retornaEventosComunicacao($idUser,['agendoes','comunicacao_agendoes'],$confirmados,$pendente);
-
-} else {
-    $query = retornaEventosComunicacao($idUser,['eventos','']);
-    $query2 = retornaEventosComunicacao($idUser,['agendoes','']);
+    $arrays = [];
+    foreach ($_POST as $key => $value){
+        switch ($key){
+            case 'editado':
+                $editado = $_POST['editado'];
+                break;
+            case 'revisado':
+                $revisado = $_POST['revisado'];
+                break;
+            case 'site':
+                $site = $_POST['site'];
+                break;
+            case 'impresso':
+                $impresso = $_POST['impresso'];
+                break;
+            case 'foto':
+                $foto = $_POST['foto'];
+                break;
+        }
+    }
 }
+$query = retornaEventosComunicacao($idUser,'eventos');
+$query2 = retornaEventosComunicacao($idUser,'agendoes');
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -49,7 +46,6 @@ if (isset($_POST['_filtros'])) {
                     <div class="box-header">
                         <h3 class="box-title">Filtrar por:</h3>
                     </div>
-
                     <div id="caixa-filtro" class="row">
                         <div class="col-md-11 col-md-offset-1 margin-top-20">
                             <form action="?perfil=comunicacao&p=filtro" method="POST">
@@ -59,14 +55,14 @@ if (isset($_POST['_filtros'])) {
                                             <span id="titulo-filtro">Editado</span>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="editado"
-                                                       id="editadoC" value="1">
+                                                       id="editadoC" value="1" <?= $editado ? 'checked' : '' ?>>
                                                 <label class="form-check-label" for="editadoC">
                                                     Confirmado
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="editado"
-                                                       id="editadoP" value="11">
+                                                       id="editadoP" value="0" <?= !$editado ? 'checked' : '' ?>>
                                                 <label class="form-check-label" for="editadoP">
                                                     Pendente
                                                 </label>
@@ -76,14 +72,14 @@ if (isset($_POST['_filtros'])) {
                                             <span id="titulo-filtro">Revisado</span>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="revisado"
-                                                       id="revisadoC" value="2">
+                                                       id="revisadoC" value="1" <?= $revisado ? 'checked' : '' ?>>
                                                 <label class="form-check-label" for="revisadoC">
                                                     Confirmado
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="revisado"
-                                                       id="revisadoP" value=22">
+                                                       id="revisadoP" value=0" <?= !$revisado ? 'checked' : '' ?>>
                                                 <label class="form-check-label" for="revisadoP">
                                                     Pendente
                                                 </label>
@@ -93,14 +89,14 @@ if (isset($_POST['_filtros'])) {
                                             <span id="titulo-filtro">Site</span>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="site" id="siteC"
-                                                       value="3">
+                                                       value="1" <?= $site ? 'checked' : '' ?>>
                                                 <label class="form-check-label" for="siteC">
                                                     Confirmado
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="site" id="siteP"
-                                                       value="33">
+                                                       value="0" <?= !$site ? 'checked' : '' ?>>
                                                 <label class="form-check-label" for="siteP">
                                                     Pendente
                                                 </label>
@@ -110,14 +106,14 @@ if (isset($_POST['_filtros'])) {
                                             <span id="titulo-filtro">Impresso</span>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="impresso"
-                                                       id="impressoC" value="4">
+                                                       id="impressoC" value="1" <?= $impresso ? 'checked' : '' ?>>
                                                 <label class="form-check-label" for="impressoC">
                                                     Confirmado
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="impresso"
-                                                       id="impressoP" value="44">
+                                                       id="impressoP" value="0" <?= !$impresso ? 'checked' : '' ?>>
                                                 <label class="form-check-label" for="impressoP">
                                                     Pendente
                                                 </label>
@@ -127,14 +123,14 @@ if (isset($_POST['_filtros'])) {
                                             <span id="titulo-filtro">Foto</span>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="foto" id="fotoC"
-                                                       value="5">
+                                                       value="1" <?= $foto ? 'checked' : '' ?>>
                                                 <label class="form-check-label" for="fotoC">
                                                     Confirmado
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="foto" id="fotoP"
-                                                       value="55">
+                                                       value="0" <?= !$foto ? 'checked' : '' ?>>
                                                 <label class="form-check-label" for="fotoP">
                                                     Pendente
                                                 </label>
