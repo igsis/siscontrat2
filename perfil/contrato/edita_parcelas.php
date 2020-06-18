@@ -34,47 +34,50 @@ while ($acoesArray = mysqli_fetch_array($consultaAcoes)) {
                         <div class="box-body">
                             <?php
                             for ($i = 1; $i < $pedido['numero_parcelas'] + 1; $i++) {
-
                                 if ($oficina == 1) {
+                                    $sql = "SELECT * FROM parcelas AS p 
+                                            INNER JOIN parcela_complementos pc ON p.id = pc.parcela_id
+                                            WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
+                                    $parcela = mysqli_fetch_array(mysqli_query($con, $sql));
                                     ?>
                                     <div class="row">
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-2">
                                             <label for="parcela[]">Parcela:</label>
                                             <input type="number" readonly class="form-control" value="<?= $i ?>"
-                                                   name="parcela[]" id="parcela[]" required>
+                                                   name="parcela[]" required>
                                         </div>
 
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-2">
                                             <label for="valor[]">Valor:</label>
-                                            <input type="text" id="valor[]" name="valor[]"
-                                                   class="form-control" onKeyPress="return(moeda(this,'.',',',event))"
-                                                   value="<?= dinheiroParaBr($parcela['valor']) ?>" required>
+                                            <input type="text" name="valor[<?= $i ?>]"
+                                                   class="form-control valor"
+                                                   value="<?= dinheiroParaBr($parcela['valor']) ?>" maxlength="10" required>
                                         </div>
 
-                                        <div class="form-group col-md-4">
-                                            <label for="data_pagamento">Data Inicial: </label>
-                                            <input type="date" name="data_inicial[]" class="form-control"
-                                                   id="datepicker12" placeholder="DD/MM/AAAA" required
-                                                   value="<?= $parcela['data_inicial'] ?? NULL ?>">
+                                        <div class="form-group col-md-2">
+                                            <label for="data_inicio[]">Data Inicial: </label>
+                                            <input type="date" name="data_inicio[<?= $i ?>]" class="form-control"
+                                                   placeholder="DD/MM/AAAA"
+                                                   value="<?= $parcela['data_inicio'] ?? NULL ?>">
                                         </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="data_pagamento">Data Final: </label>
-                                            <input type="date" name="data_final[]" class="form-control"
-                                                   id="datepicker12" placeholder="DD/MM/AAAA" required
-                                                   value="<?= $parcela['data_final'] ?? NULL ?>">
+                                        <div class="form-group col-md-2">
+                                            <label for="data_fim[]">Data Final: </label>
+                                            <input type="date" name="data_fim[<?= $i ?>]" class="form-control"
+                                                   placeholder="DD/MM/AAAA"
+                                                   value="<?= $parcela['data_fim'] ?? NULL ?>">
                                         </div>
 
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-2">
                                             <label for="data_pagamento">Data Kit pagamento: </label>
-                                            <input type="date" name="data_pagamento[]" class="form-control"
-                                                   id="datepicker12" placeholder="DD/MM/AAAA" required
+                                            <input type="date" name="data_pagamento[<?= $i ?>]" class="form-control"
+                                                    placeholder="DD/MM/AAAA" required
                                                    value="<?= $parcela['data_pagamento'] ?? NULL ?>">
                                         </div>
 
-                                        <div class="form-group col-md-4">
-                                            <label for="parcela[]">Carga Horária:</label>
+                                        <div class="form-group col-md-2">
+                                            <label for="cargaHoraria[]">Carga Horária:</label>
                                             <input type="number" class="form-control" value="<?= $parcela['carga_horaria'] ?>"
-                                                   name="parcela[]" id="parcela[]" required>
+                                                   name="cargaHoraria[<?= $i ?>]">
                                         </div>
                                     </div>
                                     <?php
@@ -90,10 +93,10 @@ while ($acoesArray = mysqli_fetch_array($consultaAcoes)) {
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            <label for="valor[<?=$i?>]">Valor:</label>
-                                            <input type="text" name="valor[]"
-                                                   class="form-control valor" onKeyPress="return(moeda(this,'.',',',event))"
-                                                   value="<?= dinheiroParaBr($parcela['valor']) ?>" required>
+                                            <label for="valor[]">Valor:</label>
+                                            <input type="text" name="valor[<?= $i ?>]"
+                                                   class="form-control valor" maxlength="10"
+                                                   value="<?= dinheiroParaBr($parcela['valor']) ?? NULL ?>" required>
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -150,6 +153,8 @@ while ($acoesArray = mysqli_fetch_array($consultaAcoes)) {
 <script>
     let msgValorErrado = $('#msgValorErrado');
     msgValorErrado.hide();
+    var valorSomado = $('#totalSomado');
+
     function valores() {
         var total = parseFloat($('#valorTotal').text());
         var sum = 0;
@@ -163,7 +168,8 @@ while ($acoesArray = mysqli_fetch_array($consultaAcoes)) {
 
         var diferenca = total - sum;
 
-        $("#totalSomado").text(sum.toFixed(2).replace('.', ','));
+        valorSomado.text(sum.toFixed(2));
+
         if (diferenca != 0) {
             btnGravar.attr('disabled', true);
             msgValorOk.hide();
@@ -174,6 +180,11 @@ while ($acoesArray = mysqli_fetch_array($consultaAcoes)) {
             msgValorErrado.hide();
         }
     }
+
     $('.valor').keyup(valores);
+
+    $(document).ready(function () {
+        $('.valor').mask('00.000,00',{reverse: true});
+    });
 </script>
 

@@ -107,7 +107,7 @@ $link_contabilidade = $http . "rlt_contabilidade_formacao.php";
                     </form>
                     <form action="<?= $link_facc ?>" target="_blank" method="POST">
                         <input type="hidden" name="idPf" value="<?= $idPf ?>">
-                        <button type="button" class="btn btn-primary">Gerar FACC</button>
+                        <button type="submit" class="btn btn-primary">Gerar FACC</button>
                     </form>
                 </div>
 

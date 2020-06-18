@@ -61,7 +61,7 @@ if(isset($_POST['periodo'])){
     $data_inicio = $_POST['data_inicio'] ?? NULL;
     $data_fim = $_POST['data_fim'] ?? NULL;
     // a data de início da ocorrência precisa estar entre a data_inicio e data_fim
-    $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento, p.operador_id
+    $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.operador_pagamento_id, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento, p.operador_id
     FROM eventos AS e 
     INNER JOIN ocorrencias o on o.origem_ocorrencia_id = e.id
     INNER JOIN pedidos p on e.id = p.origem_id 

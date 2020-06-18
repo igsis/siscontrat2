@@ -557,6 +557,12 @@ $pedidos = mysqli_fetch_array($queryPedidos);
         </div>
         <!-- /.col -->
         <!-- /.row -->
+        <?php
+        $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
+        $queryPedidos = mysqli_query($con, $sqlPedidos);
+        $pedidos = mysqli_fetch_array($queryPedidos);
+        ?>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-default">
@@ -565,17 +571,13 @@ $pedidos = mysqli_fetch_array($queryPedidos);
                             <div class="form-group col-md-3 pull-right">
                                 <form method="POST" action="?perfil=contrato&p=demais_anexos_pf"
                                       role="form">
+                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id'] ?>">
                                     <button type="submit" name="idPf" value="<?= $pf['id'] ?>"
                                             class="btn btn-info btn-block">Demais Anexos
                                     </button>
                                 </form>
                             </div>
                             <div class="form-group col-md-3">
-                                <?php
-                                $sqlPedidos = "SELECT * FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = '$idEvento'";
-                                $queryPedidos = mysqli_query($con, $sqlPedidos);
-                                $pedidos = mysqli_fetch_array($queryPedidos);
-                                ?>
                                 <form method="POST" action="?perfil=contrato&p=resumo" role="form">
                                     <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
                                     <input type="hidden" name="idPf" value="<?= $pf['id'] ?>">
