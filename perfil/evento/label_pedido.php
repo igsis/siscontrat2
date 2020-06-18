@@ -80,8 +80,8 @@ switch ($pedido['pessoa_tipo_id']) {
         ];
         $dadosBancarios = [
             'Banco' => $banco == null ?  "Não Cadastrado" : $banco,
-            'Agência' => $pfBancos['agencia'] ? "" : "Não Cadastrado",
-            'Conta' => $pfBancos['conta'] ? "" : "Não Cadastrado"
+            'Agência' => $pfBancos['agencia'] == null ? "Não Cadastrado" : $pfBancos['agencia'],
+            'Conta' => $pfBancos['conta'] == null ? "Não Cadastrado" : $pfBancos['conta']
         ];
         break;
 
