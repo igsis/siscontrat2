@@ -201,49 +201,52 @@ if (isset($_POST['reabertura'])) {
 
 if (isset($_POST['parcelaEditada'])) {
     $idPedido = $_POST['idPedido'];
-    $parcelas = $_POST['parcela'];
     $idEvento = $_POST['idEvento'];
-    $valores = dinheiroDeBr($_POST['valor']);
-    $data_pagamentos = $_POST['data_pagamento'];
-
-    $pedido = recuperaDados('pedidos', 'id', $idPedido);
 
     $sql = "DELETE FROM parcelas WHERE pedido_id = '$idPedido'";
     mysqli_query($con, $sql);
 
-    $formaCompleta = "";
+    foreach ($_POST['parcela'] AS $countPost => $parcela) {
+        $valor = dinheiroDeBr($_POST['valor'][$countPost]) ?? NULL;
+        $data_pagamento = $_POST['data_pagamento'][$countPost];
 
-    $i = $pedido['numero_parcelas'];
+        $sqlParcelas = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
 
-    $baldeValor = 0;
+        if ($queryParcelas = mysqli_query($con, $sqlParcelas)) {
+            if ($_POST['checaOficina'] == 1) {
+                $idParcela = mysqli_fetch_array($queryParcelas)['id'];
+                $data_inicio = $_POST['data_inicio'][$countPost] ?? NULL;
+                $data_fim = $_POST['data_fim'][$countPost] ?? NULL;
+                $cargaHoraria = $_POST['carga'][$countPost] ?? NULL;
 
-    for ($contador = 0; $contador < $i; $contador++) {
-        $forma = $contador + 1 . "º parcela R$ " . $valores[$contador] . ". Entrega de documentos a partir de " . exibirDataBr($data_pagamentos[$contador]) . ".\n";
-        $formaCompleta = $formaCompleta . $forma;
-    }
-    $formaCompleta = $formaCompleta . "\nO pagamento de cada parcela se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.";
+                $queryComplementos = $con->query("INSERT INTO parcela_complementos (parcela_id, data_inicio, data_fim, carga_horaria) VALUES 
+                                            ('$idParcela', '$data_inicio', '$data_fim', '$cargaHoraria')");
 
-    $sqlForma = "UPDATE pedidos SET forma_pagamento = '$formaCompleta' WHERE id = $idPedido AND origem_tipo_id = 1";
-    mysqli_query($con, $sqlForma);
+            }
 
-
-    for ($count = 0; $count < $i; $count++) {
-        $parcela = $parcelas[$count] ?? NULL;
-        $valor = $valores[$count] ?? NULL;
-        $baldeValor += $valor;
-        $data_pagamento = $data_pagamentos[$count] ?? NULL;
-
-        $sql = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
-
-        if (mysqli_query($con, $sql)) {
             $mensagem = mensagem('success', 'Parcelas Atualizadas!');
         } else {
             $mensagem = mensagem('danger', 'Erro ao atualizar as parcelas! Tente Novamente.');
         }
     }
 
-    $sql = "UPDATE pedidos SET valor_total = '$baldeValor' WHERE id = '$idPedido'";
-    mysqli_query($con, $sql);
+    $pedido = recuperaDados('pedidos', 'id', $idPedido);
+    $i = $pedido['numero_parcelas'];
+
+    $formaCompleta = "";
+
+    $consultaParcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = $idPedido AND publicado = 1 ORDER BY numero_parcelas");
+
+    $countForma = 0;
+
+    while ($parcelasArray = mysqli_fetch_array($consultaParcelas)) {
+        $forma = $countForma + 1 . "º parcela R$ " . $parcelasArray['valor'] . ". Entrega de documentos a partir de " . exibirDataBr($parcelasArray['data_pagamento']) . ".\n";
+        $formaCompleta = $formaCompleta . $forma;
+    }
+    $formaCompleta = $formaCompleta . "\nO pagamento de cada parcela se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.";
+
+    $sqlForma = "UPDATE pedidos SET forma_pagamento = '$formaCompleta' WHERE id = $idPedido AND origem_tipo_id = 1";
+    mysqli_query($con, $sqlForma);
 }
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
@@ -459,7 +462,7 @@ $disabledImpr = "";
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <a href="?perfil=contrato&p=edita_parcelas&id=<?=$idEvento?>">
+                                        <a href="?perfil=contrato&p=edita_parcelas&id=<?= $idEvento ?>">
                                             <button type="button" style="width: 35%"
                                                     class="btn btn-primary center-block">
                                                 Editar parcelas

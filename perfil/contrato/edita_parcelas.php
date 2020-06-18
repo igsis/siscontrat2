@@ -120,6 +120,8 @@ while ($acoesArray = mysqli_fetch_array($consultaAcoes)) {
 
                                 <div class="col-md-2">
                                     <input type="hidden" value="<?= $idPedido ?>" name="idPedido">
+                                    <input type="hidden" value="<?= $idEvento ?>" name="idEvento">
+                                    <input type="hidden" value="<?= $oficina ?>" name="checaOficina">
                                     <button type="submit" name="parcelaEditada" id="grava"
                                             class="btn btn-primary pull-right">
                                         Gravar
