@@ -60,6 +60,18 @@ if (isset($_POST['geral'])){
 if(isset($_POST['periodo'])){
     $data_inicio = $_POST['data_inicio'] ?? NULL;
     $data_fim = $_POST['data_fim'] ?? NULL;
+
+    if($data_fim != NULL && $data_fim != NULL){
+        $sqlPeriodo = " AND o.data_inicio BETWEEN '$data_inicio' AND '$data_fim'";
+    }
+    elseif ($data_fim != NULL && $data_fim == NULL){
+        $sqlPeriodo = " AND o.data_inicio >= '$data_inicio'";
+    }
+    else{
+        $sqlPeriodo = "";
+
+    }
+
     // a data de início da ocorrência precisa estar entre a data_inicio e data_fim
     $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.operador_pagamento_id, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento, p.operador_id
     FROM eventos AS e 
@@ -76,7 +88,7 @@ if(isset($_POST['periodo'])){
     AND p.origem_tipo_id = 1
     AND e.evento_status_id = 3
     AND p.status_pedido_id NOT IN (1,3,20,21)
-    AND o.data_inicio between '$data_inicio' AND '$data_fim'
+    $sqlPeriodo
     GROUP BY e.id";
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
