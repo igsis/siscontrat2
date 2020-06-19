@@ -29,7 +29,7 @@ function gravaStatus($status, $tabela, $idEvento)
     return $Valida;
 }
 
-function retornaEventosComunicacao($idUser, $tabela)
+function retornaEventosComunicacao($idUser, $tabela, $filtro = '', $status = '')
 {
     $con = bancoMysqli();
 
@@ -43,6 +43,8 @@ function retornaEventosComunicacao($idUser, $tabela)
                         INNER JOIN usuarios us ON lous.usuario_id = us.id
                     WHERE us.id = '{$idUser}')";
     }
+
+
     $sqlSis = "SELECT   eve.id AS idEvento, 
                           eve.nome_evento AS nome_evento, 
                           es.status AS status, 
@@ -56,7 +58,7 @@ function retornaEventosComunicacao($idUser, $tabela)
 
     $sqlSis .= $spp;
 
-    return mysqli_query($con,$sqlSis);
+    return mysqli_query($con, $sqlSis);
 }
 
 function geraLegendas($idEvento, $tabela, $tabelaComunicacao)
@@ -65,10 +67,10 @@ function geraLegendas($idEvento, $tabela, $tabelaComunicacao)
     $con = bancoMysqli();
 
     $sqlStatus = "SELECT co.id as id
-                                                            FROM " . $tabelaComunicacao . " AS c
-                                                            INNER JOIN " . $tabela . " AS e ON c.eventos_id = e.id
-                                                            INNER JOIN comunicacao_status AS co ON c.comunicacao_status_id = co.id
-                                                            WHERE c.publicado = 1 AND e.id = '$idEvento' ";
+                FROM " . $tabelaComunicacao . " AS c
+                INNER JOIN " . $tabela . " AS e ON c.eventos_id = e.id
+                INNER JOIN comunicacao_status AS co ON c.comunicacao_status_id = co.id
+                WHERE c.publicado = 1 AND e.id = '$idEvento' ";
     $queryS = mysqli_query($con, $sqlStatus);
     $status = mysqli_fetch_all($queryS, MYSQLI_ASSOC);
     if ($status != null) {
@@ -106,3 +108,58 @@ function geraLegendas($idEvento, $tabela, $tabelaComunicacao)
     }
 }
 
+function montarFiltro($status)
+{
+    switch ($status) {
+        case 'editado':
+            return '1';
+            break;
+        case 'revisado':
+            return '2';
+            break;
+        case 'site':
+            return '3';
+            break;
+        case 'impresso':
+            return '4';
+            break;
+        case 'foto':
+            return '5';
+            break;
+    }
+}
+
+function aplicarFiltro($idEvento, $filtro)
+{
+    $con = bancoPDO();
+    $query = "SELECT comunicacao_status_id FROM comunicacoes WHERE publicado = 1  AND eventos_id = {$idEvento} ";
+    $result = $con->query($query);
+    $status = $result->fetchAll();
+
+
+//    foreach ($filtro as $key => $value){
+//        if ($value){
+//            if ($in != ''){
+//                $in .= ',';
+//            }
+//            $in .= montarFiltro($key);
+//        }else{
+//            if ($not != ''){
+//                $not .= ',';
+//            }
+//            $not .= montarFiltro($key);
+//        }
+//    }
+//
+//    if ($in != ''){
+//        $in = "AND comunicacao_status_id IN (".$in.")";
+//    }
+//    if ($not != ''){
+//        $not = "AND comunicacao_status_id NOT IN(".$not.")";
+//    }
+//
+//    $query .= $in;
+//    $query .= $not;
+
+    return true;
+}
