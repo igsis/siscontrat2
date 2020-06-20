@@ -202,34 +202,52 @@ if (isset($_POST['reabertura'])) {
 if (isset($_POST['parcelaEditada'])) {
     $idPedido = $_POST['idPedido'];
     $idEvento = $_POST['idEvento'];
+    $numParcelas = $_POST['numParcelas'];
+    $checaOficina = $_POST['checaOficina'];
 
-    $sql = "DELETE FROM parcelas WHERE pedido_id = '$idPedido'";
-    mysqli_query($con, $sql);
+    $parcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1")->fetch_all(MYSQLI_ASSOC);
 
-    foreach ($_POST['parcela'] AS $countPost => $parcela) {
-        $valor = dinheiroDeBr($_POST['valor'][$countPost]) ?? NULL;
-        $data_pagamento = $_POST['data_pagamento'][$countPost];
-
-        $sqlParcelas = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
-
-        if ($queryParcelas = mysqli_query($con, $sqlParcelas)) {
-            if ($_POST['checaOficina'] == 1) {
-                $idParcela = mysqli_fetch_array($queryParcelas)['id'];
-                $data_inicio = $_POST['data_inicio'][$countPost] ?? NULL;
-                $data_fim = $_POST['data_fim'][$countPost] ?? NULL;
-                $cargaHoraria = $_POST['carga'][$countPost] ?? NULL;
-
-                $queryComplementos = $con->query("INSERT INTO parcela_complementos (parcela_id, data_inicio, data_fim, carga_horaria) VALUES 
-                                            ('$idParcela', '$data_inicio', '$data_fim', '$cargaHoraria')");
-
+    if (count($parcelas) > 0) {
+        foreach ($parcelas as $parcela) {
+            if (isset($_POST['checaOficina'])) {
+                $sqlDeletaParcela = "UPDATE parcela_complementos SET publicado = '0' WHERE parcela_id = '{$parcela['id']}'";
+                if ($con->query($sqlDeletaParcela)) {
+                    gravarLog($sqlDeletaParcela);
+                }
             }
-
-            $mensagem = mensagem('success', 'Parcelas Atualizadas!');
-        } else {
-            $mensagem = mensagem('danger', 'Erro ao atualizar as parcelas! Tente Novamente.');
+            $sqlDeletaParcela = "UPDATE parcelas SET publicado = '0' WHERE pedido_id = '$idPedido' AND numero_parcelas = '{$parcela['numero_parcelas']}'";
+            if ($con->query($sqlDeletaParcela)) {
+                gravarLog($sqlDeletaParcela);
+            }
         }
     }
 
+    if (isset($_POST['parcelaEditada']) && $numParcelas != NULL) {
+
+        foreach ($_POST['parcela'] AS $countPost => $parcela) {
+            $valor = dinheiroDeBr($_POST['valor'][$countPost]) ?? NULL;
+            $data_pagamento = $_POST['data_pagamento'][$countPost] ?? NULL;
+
+            $sqlParcelas = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
+
+            if ($con->query($sqlParcelas)) {
+                if ($checaOficina == 1) {
+                    $idParcela = $con->insert_id;
+                    $data_inicio = $_POST['data_inicio'][$countPost] ?? NULL;
+                    $data_fim = $_POST['data_fim'][$countPost] ?? NULL;
+                    $cargaHoraria = $_POST['cargaHoraria'][$countPost] ?? NULL;
+
+                    $queryComplementos = $con->query("INSERT INTO parcela_complementos (parcela_id, data_inicio, data_fim, carga_horaria) VALUES 
+                                            ('$idParcela', '$data_inicio', '$data_fim', '$cargaHoraria')");
+
+                }
+
+                $mensagem = mensagem('success', 'Parcelas Atualizadas!');
+            } else {
+                $mensagem = mensagem('danger', 'Erro ao atualizar as parcelas! Tente Novamente.');
+            }
+        }
+    }
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
     $i = $pedido['numero_parcelas'];
 
@@ -242,6 +260,8 @@ if (isset($_POST['parcelaEditada'])) {
     while ($parcelasArray = mysqli_fetch_array($consultaParcelas)) {
         $forma = $countForma + 1 . "º parcela R$ " . $parcelasArray['valor'] . ". Entrega de documentos a partir de " . exibirDataBr($parcelasArray['data_pagamento']) . ".\n";
         $formaCompleta = $formaCompleta . $forma;
+
+        $countForma += 1;
     }
     $formaCompleta = $formaCompleta . "\nO pagamento de cada parcela se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.";
 

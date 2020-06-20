@@ -1,5 +1,7 @@
 <?php
 $con = bancoMysqli();
+$link_api = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_contratos.php';
+
 unset($_SESSION['idEvento']);
 
 if (isset($_POST['busca'])) {
@@ -112,17 +114,6 @@ if (isset($_POST['busca'])) {
                                 <?php
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
-                                    //Locais
-                                    $sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
-                                    $local = "";
-                                    $queryLocal = mysqli_query($con, $sqlLocal);
-
-                                    while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-                                        $local = $local . $linhaLocal['local'] . ' | ';
-                                    }
-
-                                    $local = substr($local, 0, -3);
-
                                     //Proponente
                                     if ($evento['pessoa_tipo_id'] == 1){
                                         $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome'];
@@ -145,7 +136,7 @@ if (isset($_POST['busca'])) {
                                     <tr>
                                         <td>
                                             <form method="POST" action="?perfil=contrato&p=resumo">
-                                                <input type="hidden" name="idEvento" id="idEvento"
+                                                <input type="hidden" name="idEvento"
                                                        value="<?= $evento['id'] ?>">
                                                 <button type="submit" class="btn btn-link"
                                                         name="load"><?= $evento['protocolo'] ?></button>
@@ -155,7 +146,14 @@ if (isset($_POST['busca'])) {
                                         <td><?= $pessoa ?></td>
                                         <td><?= $evento['nome_evento'] ?></td>
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                        <td><?= $local ?></td>
+                                        <td width="15%">
+                                            <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                                    data-toggle="modal" data-target="#modalLocais"
+                                                    data-id="<?= $evento['id'] ?>"
+                                                    name="exibirLocais">
+                                                Clique para ver os locais
+                                            </button>
+                                        </td>
                                         <td><?= $inst ?></td>
                                         <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias")?></td>
                                         <td><?= $evento['pendencias_contratos'] ? "" : "Não possui" ?></td>
@@ -218,4 +216,37 @@ if (isset($_POST['busca'])) {
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
+</script>
+
+<div id="modalLocais" class="modal modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Lista de Local(ais)</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered">
+                    <tbody id="conteudoModal">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const link = `<?=$link_api?>`;
+    $('#modalLocais').on('show.bs.modal', function (e) {
+        $('#modalLocais').find('#conteudoModal').empty();
+        let id = $(e.relatedTarget).attr('data-id');
+        $.ajax({
+            method: "GET",
+            url: link + "?idEvento=" + id
+        })
+            .done(function (content) {
+                $('#modalLocais').find('#conteudoModal').append(`<tr><td>${content}</td></tr>`);
+            });
+    })
 </script>
