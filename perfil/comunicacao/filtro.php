@@ -6,31 +6,26 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['usuario_id_s'];
+$filtro = null;
 
 if (isset($_POST['_filtros'])) {
     $filtro = [];
-    $status = [];
     foreach ($_POST as $key => $value) {
         switch ($key) {
             case 'editado':
                 $filtro[$key] = $value;
-                $status[$key] = 1;
                 break;
             case 'revisado':
                 $filtro[$key] = $value;
-                $status[$key] = 2;
                 break;
             case 'site':
                 $filtro[$key] = $value;
-                $status[$key] = 3;
                 break;
             case 'impresso':
                 $filtro[$key] = $value;
-                $status[$key] = 4;
                 break;
             case 'foto':
                 $filtro[$key] = $value;
-                $status[$key] = 5;
                 break;
         }
     }

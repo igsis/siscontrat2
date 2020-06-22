@@ -129,37 +129,74 @@ function montarFiltro($status)
     }
 }
 
-function aplicarFiltro($idEvento, $filtro)
+function verificaPendencia($array, $query)
 {
-    $con = bancoPDO();
-    $query = "SELECT comunicacao_status_id FROM comunicacoes WHERE publicado = 1  AND eventos_id = {$idEvento} ";
-    $result = $con->query($query);
-    $status = $result->fetchAll();
 
+    $con = bancoMysqli();
+    foreach ($array as $ar) {
+        $sql = $query . " AND comunicacao_status_id = {$ar}";
+        $queryE = mysqli_query($con, $sql);
+        $comunicacao = mysqli_num_rows($queryE);
+        if ($comunicacao > 0) {
+            return false;
+        }
+    }
+    return true;
+}
 
-//    foreach ($filtro as $key => $value){
-//        if ($value){
-//            if ($in != ''){
-//                $in .= ',';
-//            }
-//            $in .= montarFiltro($key);
-//        }else{
-//            if ($not != ''){
-//                $not .= ',';
-//            }
-//            $not .= montarFiltro($key);
-//        }
-//    }
-//
-//    if ($in != ''){
-//        $in = "AND comunicacao_status_id IN (".$in.")";
-//    }
-//    if ($not != ''){
-//        $not = "AND comunicacao_status_id NOT IN(".$not.")";
-//    }
-//
-//    $query .= $in;
-//    $query .= $not;
+function aplicarFiltro($idEvento, $filtro = '')
+{
+    $con = bancoMysqli();
+    $query = "SELECT comunicacao_status_id FROM comunicacoes WHERE publicado = 1  AND eventos_id = {$idEvento}";
+
+    $in = '';
+    $not = [];
+    if ($filtro) {
+        foreach ($filtro as $key => $value) {
+            if ($value) {
+                if ($in != '') {
+                    $in .= ',';
+                }
+                $in .= montarFiltro($key);
+            } else {
+                array_push($not, montarFiltro($key));
+            }
+        }
+        if ($in != '' || $not != []) {
+            if ($in != '') {
+                $in = "AND comunicacao_status_id IN (" . $in . ")";
+                $sqlIn = $query . " " . $in;
+                $resul = mysqli_query($con, $sqlIn);
+                $in = mysqli_num_rows($resul);
+            }
+            if ($not != []) {
+                $not = verificaPendencia($not, $query);
+            }
+
+            if ($in == ''){
+                $in = 0;
+            }
+            if ($not == []){
+                $not = 0;
+            }
+
+            if ($in > 0 && $not) {
+                return true;
+            } else {
+                if ($in > 0 && $not) {
+                    return true;
+                } else {
+                    if ($not && $in != 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        } else {
+            return false;
+        }
+    }
 
     return true;
 }
