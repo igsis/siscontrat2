@@ -136,7 +136,7 @@ if (isset($_POST['busca'])) {
                                                         class="btn btn-link" name="load"><?= $evento['protocolo'] ?></button>
                                             </form>
                                         </td>
-                                        <td><?= $evento['numero_processo'] ?></td>
+                                        <td><?= $evento['numero_processo'] == NULL ? "Não cadastrado" : $evento['numero_processo'] ?></td>
                                         <td><?= $pessoa ?></td>
                                         <td><?= $evento['nome_evento'] ?></td>
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>

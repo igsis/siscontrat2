@@ -305,6 +305,7 @@ $sql = "SELECT * FROM  chamados where evento_id = '$idEvento'";
 $query = mysqli_query($con, $sql);
 $chamado = mysqli_fetch_array($query);
 $disabledImpr = "";
+$disableDown = "";
 //$idChamado = $chamado['id'];
 
 ?>
@@ -539,16 +540,24 @@ $disabledImpr = "";
                             </div>
                         <?php endif ?>
 
+                        <?php
+                        if ($idEvento) {
+                        $sqlEvento = $con->query("SELECT arq.* FROM arquivos AS arq 
+                        INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
+                        WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='3'")->num_rows;
+                        if ($sqlEvento == 0 || $sqlEvento == "" ){
+                        $disableDown = "";
+                        ?>
                         <div class="col-md-4">
                             <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                <button type="submit" class="btn btn-primary pull-right "
+                                <button type="submit" <?= $disableDown ?> class="btn btn-primary pull-right "
                                         style="width: 95%"> Baixar todos os arquivos
                                 </button>
                             </form>
                         </div>
-
+                        <?php } }?>
                         <!-- <div class="col-md-3">
                             <form action="?perfil=contrato&p=anexos_pedido" method="post" role="form">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
