@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
-$link_api = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_contratos.php';
+$link_api_locais = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais.php';
+
+$link_api_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_instituicoes.php';
 
 unset($_SESSION['idEvento']);
 
@@ -115,23 +117,11 @@ if (isset($_POST['busca'])) {
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
                                     //Proponente
-                                    if ($evento['pessoa_tipo_id'] == 1){
+                                    if ($evento['pessoa_tipo_id'] == 1) {
                                         $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome'];
-                                    }
-                                    else if ($evento['pessoa_tipo_id'] == 2){
+                                    } else if ($evento['pessoa_tipo_id'] == 2) {
                                         $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
                                     }
-
-                                    //Instituições
-                                    $sqlInst = "SELECT i.nome FROM instituicoes AS i INNER JOIN ocorrencias AS o ON o.instituicao_id = i.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
-                                    $inst = "";
-                                    $queryInst = mysqli_query($con, $sqlInst);
-
-                                    while ($linhaInst = mysqli_fetch_array($queryInst)) {
-                                        $inst = $inst . $linhaInst['nome'] . '; ';
-                                    }
-
-                                    $inst = substr($inst, 0);
                                     ?>
                                     <tr>
                                         <td>
@@ -142,11 +132,11 @@ if (isset($_POST['busca'])) {
                                                         name="load"><?= $evento['protocolo'] ?></button>
                                             </form>
                                         </td>
-                                        <td><?= $evento['numero_processo'] ?></td>
+                                        <td><?= $evento['numero_processo'] == NULL ? "Não cadastrado" : $evento['numero_processo'] ?></td>
                                         <td><?= $pessoa ?></td>
                                         <td><?= $evento['nome_evento'] ?></td>
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                        <td width="15%">
+                                        <td>
                                             <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
                                                     data-toggle="modal" data-target="#modalLocais"
                                                     data-id="<?= $evento['id'] ?>"
@@ -154,8 +144,16 @@ if (isset($_POST['busca'])) {
                                                 Clique para ver os locais
                                             </button>
                                         </td>
-                                        <td><?= $inst ?></td>
-                                        <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias")?></td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary btn-block"
+                                                    id="exibirInstituicoes"
+                                                    data-toggle="modal" data-target="#modalInsituicoes"
+                                                    data-id="<?= $evento['id'] ?>"
+                                                    name="exibirInstituicoes">
+                                                Clique para ver as instituições
+                                            </button>
+                                        </td>
+                                        <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias") ?></td>
                                         <td><?= $evento['pendencias_contratos'] ? "" : "Não possui" ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
@@ -227,7 +225,25 @@ if (isset($_POST['busca'])) {
             </div>
             <div class="modal-body">
                 <table class="table table-striped table-bordered">
-                    <tbody id="conteudoModal">
+                    <tbody id="conteudoModalLocais">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalInsituicoes" class="modal modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Lista de Instituição(ões)</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered">
+                    <tbody id="conteudoModalInstituicoes">
 
                     </tbody>
                 </table>
@@ -237,16 +253,31 @@ if (isset($_POST['busca'])) {
 </div>
 
 <script>
-    const link = `<?=$link_api?>`;
+    const linkLocais = `<?=$link_api_locais?>`;
     $('#modalLocais').on('show.bs.modal', function (e) {
-        $('#modalLocais').find('#conteudoModal').empty();
+        $('#modalLocais').find('#conteudoModalLocais').empty();
         let id = $(e.relatedTarget).attr('data-id');
         $.ajax({
             method: "GET",
-            url: link + "?idEvento=" + id
+            url: linkLocais + "?idEvento=" + id
         })
             .done(function (content) {
-                $('#modalLocais').find('#conteudoModal').append(`<tr><td>${content}</td></tr>`);
+                $('#modalLocais').find('#conteudoModalLocais').append(`<tr><td>${content}</td></tr>`);
+            });
+    })
+</script>
+
+<script>
+    const linkInstituicoes = `<?=$link_api_instituicoes?>`;
+    $('#modalInsituicoes').on('show.bs.modal', function (e) {
+        $('#modalInsituicoes').find('#conteudoModalInstituicoes').empty();
+        let id = $(e.relatedTarget).attr('data-id');
+        $.ajax({
+            method: "GET",
+            url: linkInstituicoes + "?idEvento=" + id
+        })
+            .done(function (content) {
+                $('#modalInsituicoes').find('#conteudoModalInstituicoes').append(`<tr><td>${content}</td></tr>`);
             });
     })
 </script>

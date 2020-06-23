@@ -15,10 +15,10 @@ if(isset($_GET['idEvento'])){
     $queryLocal = mysqli_query($con, $sqlLocal);
 
     while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-        $local = $local . $linhaLocal['local'] . ' | ';
+        $local = $local . $linhaLocal['local'] . '<br>';
     }
 
-    $local = substr($local, 0, -3);
+    $local = substr($local, 0);
 
     echo $local;
 }

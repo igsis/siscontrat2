@@ -174,12 +174,11 @@ if (isset($_POST['busca'])) {
                                 <th>Status</th>
                                 <th>Operador</th>
                             </tr>
-                            </tr>
                             </tfoot>
                         </table>
                     </div>
                     <div class="box-footer">
-                        <a href="?perfil=contrato&p=filtrar_periodo&sp=pesquisa_contratos">
+                        <a href="?perfil=contrato&p=pesquisa_periodo">
                             <button type="button" class="btn btn-default">Voltar</button>
                         </a>
                     </div>
