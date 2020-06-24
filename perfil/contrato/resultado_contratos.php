@@ -137,14 +137,17 @@ if (isset($_POST['busca'])) {
                                         <td>
                                             <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
                                                     data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                                    onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirLocais">
                                                 Clique para ver os locais
                                             </button>
+                                        </td>
                                         <td>
                                             <button type="button" class="btn btn-primary btn-block"
                                                     id="exibirInstituicoes"
                                                     data-toggle="modal" data-target="#modalLocais_Inst"
+                                                    onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
                                                     data-name="inst"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirInstituicoes">
@@ -212,43 +215,4 @@ if (isset($_POST['busca'])) {
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
-</script>
-
-<div id="modalLocais_Inst" class="modal modal fade in" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title" id="modalTitulo"></h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-striped table-bordered">
-                    <tbody id="conteudoModal">
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    const link = '<?=$link_api_locais_instituicoes?>';
-    $('#modalLocais_Inst').on('show.bs.modal', function (e) {
-        $('#modalLocais_Inst').find('#conteudoModal').empty();
-        let conteudo = $(e.relatedTarget).attr('data-name');
-        let id = $(e.relatedTarget).attr('data-id');
-        if(conteudo == "local"){
-            $('#modalTitulo').html('<strong>Lista de Local(ais)</strong>');
-        }else{
-            $('#modalTitulo').html('<strong>Lista de Instituição(ões)</strong>');
-        }
-        $.ajax({
-            method: "GET",
-            url: link + "?idEvento=" + id + "&conteudo=" + conteudo
-        })
-            .done(function (content) {
-                $('#modalLocais_Inst').find('#conteudoModal').append(`<tr><td>${content}</td></tr>`);
-            });
-    })
 </script>
