@@ -1,6 +1,6 @@
 <?php
 include "includes/menu.php";
-include "includes/funcoesAuxiliares.php";
+include "includes/funcoesAuxiliares1.php";
 
 $con = bancoMysqli();
 $conn = bancoPDO();
