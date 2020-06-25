@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
 
+$link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php';
+
 if (isset($_POST['busca'])) {
     $protocolo = $_POST['protocolo'] ?? NULL;
     $numProcesso = $_POST['numProcesso'] ?? NULL;
@@ -27,12 +29,12 @@ if (isset($_POST['busca'])) {
         $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
     if ($usuario != null && $usuario != 0)
         $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
-    if($valorInicial != NULL && $valorInicial != 0  || $valorFinal != NULL && $valorFinal != 0){
+    if ($valorInicial != NULL && $valorInicial != 0 || $valorFinal != NULL && $valorFinal != 0) {
         $sqlValor = " AND p.valor_total between '$valorInicial' AND '$valorFinal'";
-    }else{
+    } else {
         $sqlValor = "";
     }
-    if($numProcesso != null)
+    if ($numProcesso != null)
         $sqlProcesso = "AND p.numero_processo LIKE '%$numProcesso%'";
 
     $sql = "SELECT e.id, e.protocolo, 
@@ -79,18 +81,10 @@ if (isset($_POST['busca'])) {
                             <tbody>
                             <?php
                             while ($evento = mysqli_fetch_array($resultado)) {
-                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
-                                $queryLocal = mysqli_query($con, $sqlLocal);
-                                $local = '';
-                                while ($locais = mysqli_fetch_array($queryLocal)) {
-                                    $local = $local . '; ' . $locais['local'];
-                                }
-                                $local = substr($local, 1);
-
-                                if($evento['pessoa_tipo_id'] == 1){
+                                if ($evento['pessoa_tipo_id'] == 1) {
                                     $tipo = "Física";
                                     $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome'];
-                                }else{
+                                } else {
                                     $tipo = "Jurídica";
                                     $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
                                 }
@@ -108,7 +102,15 @@ if (isset($_POST['busca'])) {
                                     <td><?= $pessoa ?></td>
                                     <td><?= $tipo ?></td>
                                     <td><?= $evento['nome_evento'] ?></td>
-                                    <td><?= $local ?></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                                data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                                onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
+                                                data-id="<?= $evento['id'] ?>"
+                                                name="exibirLocais">
+                                            Clique para ver os locais
+                                        </button>
+                                    </td>
                                     <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
                                     <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                     <td><?= $evento['status'] ?></td>

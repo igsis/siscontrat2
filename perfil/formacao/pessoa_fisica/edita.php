@@ -445,7 +445,7 @@ if ($testaBanco->num_rows > 0) {
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
                                     <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
-                                           class="form-control"
+                                           class="form-control" data-mask="(00) 00000-0000"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -455,14 +455,16 @@ if ($testaBanco->num_rows > 0) {
                                     if (isset($arrayTelefones[1])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
+                                               pattern=".{14,15}" title="14 a 15 caracteres"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
+                                               pattern=".{14,15}" title="14 a 15 caracteres"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -473,7 +475,8 @@ if ($testaBanco->num_rows > 0) {
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
+                                               pattern=".{14,15}" title="14 a 15 caracteres"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
@@ -482,7 +485,8 @@ if ($testaBanco->num_rows > 0) {
                                         ?>
 
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
+                                               pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone2" name="telefone2">
 
                                         <?php

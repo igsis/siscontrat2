@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
 
+$link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php';
+
 if (isset($_POST['aprovar'])) {
     $idEvento = $_POST['idEvento'];
     $evento = recuperaDados('eventos', 'id', $idEvento);
@@ -114,12 +116,21 @@ $query = mysqli_query($con, $sql);
                                 $idOperador = $testaOperador['operador_id'] ?? NULL;
                                 if ($idOperador > 0) {
                                     $operador = $con->query("SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idOperador AND usuario_id = $idOperador")->fetch_array()['nome_completo'];
-                                }else{
+                                } else {
                                     $operador = "Não cadastrado";
                                 }
                                 echo "<tr>";
-                                echo "<td>" . $eventos['nome_evento'] . "</td>";
-                                echo "<td>" . $local . "</td>";
+                                echo "<td>" . $eventos['nome_evento'] . "</td>"; ?>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                            data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                            onClick="exibirLocal_Instituicao('<?= $link_api_locais_instituicoes ?>', '#modalLocais_Inst', '#modalTitulo')"
+                                            data-id="<?= $eventos['id'] ?>"
+                                            name="exibirLocais">
+                                        Clique para ver os locais
+                                    </button>
+                                </td>
+                                <?php
                                 echo "<td>" . retornaPeriodoNovo($eventos['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $eventos['fiscal'] . "</td>";
                                 echo "<td>" . $operador . "</td>";

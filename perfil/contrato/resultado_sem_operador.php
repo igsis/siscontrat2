@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
 
+$link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php';
+
 if (isset($_POST['busca'])) {
     $protocolo = $_POST['protocolo'] ?? NULL;
     $num_processo = $_POST['num_processo'] ?? NULL;
@@ -98,7 +100,7 @@ if (isset($_POST['busca'])) {
                                 <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
-                                <th>Local/Instituição</th>
+                                <th>Local</th>
                                 <th width="14%">Período</th>
                                 <th>Data de Envio</th>
                                 <th>Prazo (dias)</th>
@@ -114,13 +116,6 @@ if (isset($_POST['busca'])) {
                                 else if ($evento['pessoa_tipo_id'] == 2)
                                     $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
                                 $idEvento = $evento['id'];
-                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento'";
-                                $queryLocal = mysqli_query($con, $sqlLocal);
-                                $local = '';
-                                while ($locais = mysqli_fetch_array($queryLocal)) {
-                                    $local = $local . '; ' . $locais['local'];
-                                }
-                                $local = substr($local, 1);
 
                                 //calcula a diferença entre hoje e a data inicial do evento
                                 $inicial = $con->query("SELECT data_inicio FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'] ?? NULL;
@@ -132,31 +127,42 @@ if (isset($_POST['busca'])) {
                                 $envio = $con->query("SELECT data_envio FROM evento_envios WHERE evento_id = " . $evento['id'] . " ORDER BY data_envio DESC LIMIT 0,1")->fetch_array()['data_envio'];
                                 ?>
                                 <tr>
-                                <?php
-
-                                if ($evento['protocolo'] != NULL) {
-                                    ?>
-                                    <td>
-                                        <form action="?perfil=contrato&p=resumo" role="form" method="POST">
-                                            <input type="hidden" id="idPedido" name="idPedido"
-                                                   value="<?= $evento['pedido_id'] ?>">
-                                            <input type="hidden" name="idEvento" id="idEvento" value="<?=$evento['id']?>">
-                                            <button type="submit" class="btn btn-link" name="load"><?= $evento['protocolo'] ?></button>
-                                        </form>
-                                    </td>
                                     <?php
-                                }else{?>
-                                   <td> </td>
-                                <?php }
-                                ?>
-                                <td><?= $pessoa ?></td>
-                                <td><?= $evento['nome_evento'] ?></td>
-                                <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                <td><?= $local ?></td>
-                                <td> <?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?> </td>
-                                <td><?= exibirDataBr($envio) ?></td>
-                                <td><?= $prazo ?></td>
-                                <td><?= $evento['status'] ?></td>
+
+                                    if ($evento['protocolo'] != NULL) {
+                                        ?>
+                                        <td>
+                                            <form action="?perfil=contrato&p=resumo" role="form" method="POST">
+                                                <input type="hidden" id="idPedido" name="idPedido"
+                                                       value="<?= $evento['pedido_id'] ?>">
+                                                <input type="hidden" name="idEvento" id="idEvento"
+                                                       value="<?= $evento['id'] ?>">
+                                                <button type="submit" class="btn btn-link"
+                                                        name="load"><?= $evento['protocolo'] ?></button>
+                                            </form>
+                                        </td>
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <td></td>
+                                    <?php }
+                                    ?>
+                                    <td><?= $pessoa ?></td>
+                                    <td><?= $evento['nome_evento'] ?></td>
+                                    <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                                data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                                onClick="exibirLocal_Instituicao('<?= $link_api_locais_instituicoes ?>', '#modalLocais_Inst', '#modalTitulo')"
+                                                data-id="<?= $evento['id'] ?>"
+                                                name="exibirLocais">
+                                            Clique para ver os locais
+                                        </button>
+                                    </td>
+                                    <td> <?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?> </td>
+                                    <td><?= exibirDataBr($envio) ?></td>
+                                    <td><?= $prazo ?></td>
+                                    <td><?= $evento['status'] ?></td>
                                 </tr>
                                 <?php
                             }
@@ -169,7 +175,7 @@ if (isset($_POST['busca'])) {
                                 <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
-                                <th>Local/Instituição</th>
+                                <th>Local</th>
                                 <th width="14%">Período</th>
                                 <th>Data de Envio</th>
                                 <th>Prazo (dias)</th>

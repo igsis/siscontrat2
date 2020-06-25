@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
 
+$link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php';
+
 if (isset($_POST['busca'])) {
     $protocolo = $_POST['protocolo'] ?? NULL;
     $nomeEvento = $_POST['nomeEvento'] ?? NULL;
@@ -21,7 +23,7 @@ if (isset($_POST['busca'])) {
     if ($projeto != null && $projeto != 0)
         $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
     if ($usuario != null && $usuario != 0)
-        $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
+        $sqlUsuario = " AND (e.fiscal_id = '$usuario' OR e.suplente_id = '$usuario' OR e.usuario_id = '$usuario')";
     if ($status != null && $status != 0)
         $sqlStatus = " AND evento_status_id = '$status'";
 
@@ -67,13 +69,6 @@ if (isset($_POST['busca'])) {
                             <tbody>
                             <?php
                             while ($evento = mysqli_fetch_array($resultado)) {
-                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
-                                $queryLocal = mysqli_query($con, $sqlLocal);
-                                $local = '';
-                                while ($locais = mysqli_fetch_array($queryLocal)) {
-                                    $local = $local . '; ' . $locais['local'];
-                                }
-                                $local = substr($local, 1);
                                 ?>
                                 <tr>
                                     <td><?= $evento['protocolo'] ?></td>
@@ -86,7 +81,15 @@ if (isset($_POST['busca'])) {
                                     </td>
                                     <td><?= $evento['nome_evento'] ?></td>
                                     <td><?= $evento['fiscal'] ?></td>
-                                    <td><?= $local ?></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                                data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                                onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
+                                                data-id="<?= $evento['id'] ?>"
+                                                name="exibirLocais">
+                                            Clique para ver os locais
+                                        </button>
+                                    </td>
                                     <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
                                     <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                 </tr>

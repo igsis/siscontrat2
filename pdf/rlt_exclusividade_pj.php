@@ -19,7 +19,14 @@ $idPj = $pedido['pessoa_juridica_id'];
 $pessoa = recuperaDados('pessoa_juridicas', 'id', $idPj);
 $rep = recuperaDados('representante_legais', 'id', $pessoa['representante_legal1_id']);
 
-$lider = $con->query("SELECT p.nome, p.rg, p.cpf FROM pessoa_fisicas AS p INNER JOIN lideres l on p.id = l.pessoa_fisica_id WHERE l.pedido_id = $idPedido")->fetch_array();
+$lider = $con->query("SELECT p.nome, p.rg, p.cpf, p.passaporte FROM pessoa_fisicas AS p INNER JOIN lideres l on p.id = l.pessoa_fisica_id WHERE l.pedido_id = $idPedido")->fetch_array();
+
+if($lider['passaporte'] != NULL){
+    $trecho_rg_cpf_passaporte = ", Passaporte: " . $lider['passaporte'];
+}else{
+    $rg = $lider['rg'] == NULL ? "(Não cadastrado)" : $lider['rg'];
+    $trecho_rg_cpf_passaporte = ", RG: " . $rg . ", CPF: " . $lider['cpf'];
+}
 
 $ano = date('Y');
 
@@ -43,7 +50,7 @@ $pdf->Ln(3);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 11);
-$pdf->MultiCell(170, $l, utf8_decode("Eu, " . $lider['nome'] .  " RG: " . $lider['rg']  . ", CPF: " . $lider['cpf'] . ", sob penas da lei, declaro que sou representado exclusivamente pela empresa " . $pessoa['razao_social'] . ", CNPJ " . $pessoa['cnpj'] . ""));
+$pdf->MultiCell(170, $l, utf8_decode("Eu, ".$lider['nome'] . $trecho_rg_cpf_passaporte .", sob penas da lei, declaro que sou representado exclusivamente pela empresa " . $pessoa['razao_social'] . ", CNPJ " . $pessoa['cnpj'] . ""));
 
 $pdf->Ln();
 

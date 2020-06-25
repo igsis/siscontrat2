@@ -201,49 +201,72 @@ if (isset($_POST['reabertura'])) {
 
 if (isset($_POST['parcelaEditada'])) {
     $idPedido = $_POST['idPedido'];
-    $parcelas = $_POST['parcela'];
     $idEvento = $_POST['idEvento'];
-    $valores = dinheiroDeBr($_POST['valor']);
-    $data_pagamentos = $_POST['data_pagamento'];
+    $numParcelas = $_POST['numParcelas'];
+    $checaOficina = $_POST['checaOficina'];
 
+    $parcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1")->fetch_all(MYSQLI_ASSOC);
+
+    if (count($parcelas) > 0) {
+        foreach ($parcelas as $parcela) {
+            if (isset($_POST['checaOficina'])) {
+                $sqlDeletaParcela = "UPDATE parcela_complementos SET publicado = '0' WHERE parcela_id = '{$parcela['id']}'";
+                if ($con->query($sqlDeletaParcela)) {
+                    gravarLog($sqlDeletaParcela);
+                }
+            }
+            $sqlDeletaParcela = "UPDATE parcelas SET publicado = '0' WHERE pedido_id = '$idPedido' AND numero_parcelas = '{$parcela['numero_parcelas']}'";
+            if ($con->query($sqlDeletaParcela)) {
+                gravarLog($sqlDeletaParcela);
+            }
+        }
+    }
+
+    if (isset($_POST['parcelaEditada']) && $numParcelas != NULL) {
+
+        foreach ($_POST['parcela'] AS $countPost => $parcela) {
+            $valor = dinheiroDeBr($_POST['valor'][$countPost]) ?? NULL;
+            $data_pagamento = $_POST['data_pagamento'][$countPost] ?? NULL;
+
+            $sqlParcelas = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
+
+            if ($con->query($sqlParcelas)) {
+                if ($checaOficina == 1) {
+                    $idParcela = $con->insert_id;
+                    $data_inicio = $_POST['data_inicio'][$countPost] ?? NULL;
+                    $data_fim = $_POST['data_fim'][$countPost] ?? NULL;
+                    $cargaHoraria = $_POST['cargaHoraria'][$countPost] ?? NULL;
+
+                    $queryComplementos = $con->query("INSERT INTO parcela_complementos (parcela_id, data_inicio, data_fim, carga_horaria) VALUES 
+                                            ('$idParcela', '$data_inicio', '$data_fim', '$cargaHoraria')");
+
+                }
+
+                $mensagem = mensagem('success', 'Parcelas Atualizadas!');
+            } else {
+                $mensagem = mensagem('danger', 'Erro ao atualizar as parcelas! Tente Novamente.');
+            }
+        }
+    }
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
-
-    $sql = "DELETE FROM parcelas WHERE pedido_id = '$idPedido'";
-    mysqli_query($con, $sql);
+    $i = $pedido['numero_parcelas'];
 
     $formaCompleta = "";
 
-    $i = $pedido['numero_parcelas'];
+    $consultaParcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = $idPedido AND publicado = 1 ORDER BY numero_parcelas");
 
-    $baldeValor = 0;
+    $countForma = 0;
 
-    for ($contador = 0; $contador < $i; $contador++) {
-        $forma = $contador + 1 . "º parcela R$ " . $valores[$contador] . ". Entrega de documentos a partir de " . exibirDataBr($data_pagamentos[$contador]) . ".\n";
+    while ($parcelasArray = mysqli_fetch_array($consultaParcelas)) {
+        $forma = $countForma + 1 . "º parcela R$ " . $parcelasArray['valor'] . ". Entrega de documentos a partir de " . exibirDataBr($parcelasArray['data_pagamento']) . ".\n";
         $formaCompleta = $formaCompleta . $forma;
+
+        $countForma += 1;
     }
     $formaCompleta = $formaCompleta . "\nO pagamento de cada parcela se dará no 20º (vigésimo) dia após a data de entrega de toda documentação correta relativa ao pagamento.";
 
     $sqlForma = "UPDATE pedidos SET forma_pagamento = '$formaCompleta' WHERE id = $idPedido AND origem_tipo_id = 1";
     mysqli_query($con, $sqlForma);
-
-
-    for ($count = 0; $count < $i; $count++) {
-        $parcela = $parcelas[$count] ?? NULL;
-        $valor = $valores[$count] ?? NULL;
-        $baldeValor += $valor;
-        $data_pagamento = $data_pagamentos[$count] ?? NULL;
-
-        $sql = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
-
-        if (mysqli_query($con, $sql)) {
-            $mensagem = mensagem('success', 'Parcelas Atualizadas!');
-        } else {
-            $mensagem = mensagem('danger', 'Erro ao atualizar as parcelas! Tente Novamente.');
-        }
-    }
-
-    $sql = "UPDATE pedidos SET valor_total = '$baldeValor' WHERE id = '$idPedido'";
-    mysqli_query($con, $sql);
 }
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
@@ -282,6 +305,7 @@ $sql = "SELECT * FROM  chamados where evento_id = '$idEvento'";
 $query = mysqli_query($con, $sql);
 $chamado = mysqli_fetch_array($query);
 $disabledImpr = "";
+$disableDown = "";
 //$idChamado = $chamado['id'];
 
 ?>
@@ -459,7 +483,7 @@ $disabledImpr = "";
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <a href="?perfil=contrato&p=edita_parcelas&id=<?=$idEvento?>">
+                                        <a href="?perfil=contrato&p=edita_parcelas&id=<?= $idEvento ?>">
                                             <button type="button" style="width: 35%"
                                                     class="btn btn-primary center-block">
                                                 Editar parcelas
@@ -516,16 +540,24 @@ $disabledImpr = "";
                             </div>
                         <?php endif ?>
 
+                        <?php
+                        if ($idEvento) {
+                        $sqlEvento = $con->query("SELECT arq.* FROM arquivos AS arq 
+                        INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
+                        WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='3'")->num_rows;
+                        if ($sqlEvento == 0 || $sqlEvento == "" ){
+                        $disableDown = "";
+                        ?>
                         <div class="col-md-4">
                             <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
                                 <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                <button type="submit" class="btn btn-primary pull-right "
+                                <button type="submit" <?= $disableDown ?> class="btn btn-primary pull-right "
                                         style="width: 95%"> Baixar todos os arquivos
                                 </button>
                             </form>
                         </div>
-
+                        <?php } }?>
                         <!-- <div class="col-md-3">
                             <form action="?perfil=contrato&p=anexos_pedido" method="post" role="form">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">

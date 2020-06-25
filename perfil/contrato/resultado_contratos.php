@@ -1,5 +1,7 @@
 <?php
 $con = bancoMysqli();
+$link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php';
+
 unset($_SESSION['idEvento']);
 
 if (isset($_POST['busca'])) {
@@ -112,52 +114,47 @@ if (isset($_POST['busca'])) {
                                 <?php
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
-                                    //Locais
-                                    $sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
-                                    $local = "";
-                                    $queryLocal = mysqli_query($con, $sqlLocal);
-
-                                    while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-                                        $local = $local . $linhaLocal['local'] . ' | ';
-                                    }
-
-                                    $local = substr($local, 0, -3);
-
                                     //Proponente
-                                    if ($evento['pessoa_tipo_id'] == 1){
+                                    if ($evento['pessoa_tipo_id'] == 1) {
                                         $pessoa = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id'])['nome'];
-                                    }
-                                    else if ($evento['pessoa_tipo_id'] == 2){
+                                    } else if ($evento['pessoa_tipo_id'] == 2) {
                                         $pessoa = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id'])['razao_social'];
                                     }
-
-                                    //Instituições
-                                    $sqlInst = "SELECT i.nome FROM instituicoes AS i INNER JOIN ocorrencias AS o ON o.instituicao_id = i.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
-                                    $inst = "";
-                                    $queryInst = mysqli_query($con, $sqlInst);
-
-                                    while ($linhaInst = mysqli_fetch_array($queryInst)) {
-                                        $inst = $inst . $linhaInst['nome'] . '; ';
-                                    }
-
-                                    $inst = substr($inst, 0);
                                     ?>
                                     <tr>
                                         <td>
                                             <form method="POST" action="?perfil=contrato&p=resumo">
-                                                <input type="hidden" name="idEvento" id="idEvento"
+                                                <input type="hidden" name="idEvento"
                                                        value="<?= $evento['id'] ?>">
                                                 <button type="submit" class="btn btn-link"
                                                         name="load"><?= $evento['protocolo'] ?></button>
                                             </form>
                                         </td>
-                                        <td><?= $evento['numero_processo'] ?></td>
+                                        <td><?= $evento['numero_processo'] == NULL ? "Não cadastrado" : $evento['numero_processo'] ?></td>
                                         <td><?= $pessoa ?></td>
                                         <td><?= $evento['nome_evento'] ?></td>
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                        <td><?= $local ?></td>
-                                        <td><?= $inst ?></td>
-                                        <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias")?></td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                                    data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                                    onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
+                                                    data-id="<?= $evento['id'] ?>"
+                                                    name="exibirLocais">
+                                                Clique para ver os locais
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary btn-block"
+                                                    id="exibirInstituicoes"
+                                                    data-toggle="modal" data-target="#modalLocais_Inst"
+                                                    onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
+                                                    data-name="inst"
+                                                    data-id="<?= $evento['id'] ?>"
+                                                    name="exibirInstituicoes">
+                                                Clique para ver as instituições
+                                            </button>
+                                        </td>
+                                        <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias") ?></td>
                                         <td><?= $evento['pendencias_contratos'] ? "" : "Não possui" ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
