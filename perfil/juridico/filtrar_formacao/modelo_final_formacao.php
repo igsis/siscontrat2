@@ -10,10 +10,9 @@ $link_pia = $http . "formacao_pia.php";
 isset($_POST['idFormacao']);
 $idFormacao = $_POST['idFormacao'];
 
-$amparo = $_POST['amparo'];
-$dotacao = $_POST['dotacao'];
-$finalizacao = $_POST['finalizar'];
-
+if(isset($_POST['enviar'])) {
+    $dotacao = $_POST['dotacao'];
+}
 
 
 $sql = "SELECT * FROM juridicos where pedido_id = '$idFormacao'";
@@ -21,13 +20,13 @@ $query = mysqli_query($con,$sql);
 $num = mysqli_num_rows($query);
 
 if ($num > 0) {
-    $sqlUpdate = "UPDATE juridicos SET pedido_id = $idFormacao, amparo_legal = '$amparo',dotacao ='$dotacao', finalizacao = '$finalizacao'
+    $sqlUpdate = "UPDATE juridicos SET pedido_id = $idFormacao,dotacao ='$dotacao'
     WHERE pedido_id = $idFormacao";
     $query = mysqli_query($con,$sqlUpdate);
 }
 else {
     $sqlInsert = "INSERT INTO juridicos(pedido_id, amparo_legal, finalizacao, dotacao)
-        VALUES ('$idFormacao','$amparo','$finalizacao','$dotacao')";
+        VALUES ('$idFormacao','','','$dotacao')";
     $query = mysqli_query($con,$sqlInsert);
 
 }
