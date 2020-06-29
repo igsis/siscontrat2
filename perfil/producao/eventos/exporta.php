@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
 
+$link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php';
+
 if(isset($_POST['pesquisa'])){
 
     $datainicio = $_POST['data_inicio'] ?? NULL;
@@ -65,14 +67,6 @@ if(isset($_POST['pesquisa'])){
                     <tbody>
                     <?php
                     while ($evento = mysqli_fetch_array($query)) {
-                        $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
-                        $queryLocal = mysqli_query($con, $sqlLocal);
-                        $local = '';
-                        while ($locais = mysqli_fetch_array($queryLocal)) {
-                            $local = $local . '; ' . $locais['local'];
-                        }
-                        $local = substr($local, 1);
-
                         if ($evento['tipo_evento_id'] == 2) {
                             $sqlClassificacao = "SELECT c.classificacao_indicativa FROM classificacao_indicativas AS c 
                                                  INNER JOIN filmes AS f ON f.classificacao_indicativa_id = c.id  
@@ -98,7 +92,15 @@ if(isset($_POST['pesquisa'])){
                         ?>
                         <tr>
                             <td><?= $evento['nome_evento'] ?></td>
-                            <td><?= $local ?></td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                        data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                        onClick="exibirLocal_Instituicao('<?= $link_api_locais_instituicoes ?>', '#modalLocais_Inst', '#modalTitulo')"
+                                        data-id="<?= $evento['id'] ?>"
+                                        name="exibirLocais">
+                                    Clique para ver os locais
+                                </button>
+                            </td>
                             <td><?= $classificao ?></td>
                             <td><?= $evento['subprefeitura'] ?></td>
                             <td><?= $evento['valor_ingresso'] == '0.00' ? 'Grátis' : 'R$ ' . dinheiroParaBr($evento['valor_ingresso']) ?></td>

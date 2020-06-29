@@ -12,71 +12,15 @@ session_start(['name' => 'sis']);
 
 $idEvento = $_POST['idEvento'];
 
-$sql = "SELECT
-                E.id AS 'evento_id',
-                A.id AS 'atracao_id',
-                E.tipo_evento_id AS 'tipo_evento',
-                E.nome_evento AS 'nome',
-                E.espaco_publico AS 'espaco_publico',
-                A.quantidade_apresentacao AS 'apresentacoes',
-                PE.projeto_especial AS 'projeto_especial',
-                TE.tipo_evento AS 'categoria',
-                O.id AS 'idOcorrencia',
-                O.horario_inicio AS 'hora_inicio',
-                O.data_inicio AS 'data_inicio',
-                O.data_fim AS 'data_fim',
-                O.horario_fim AS 'hora_fim',
-                O.valor_ingresso AS 'valor_ingresso',
-                O.segunda AS 'segunda',
-                O.terca AS 'terca',
-                O.quarta AS 'quarta',
-                O.quinta AS 'quinta',
-                O.sexta AS 'sexta',
-                O.sabado AS 'sabado',
-                O.domingo AS 'domingo',
-                L.local AS 'nome_local',
-                L.logradouro AS 'logradouro',
-                L.numero AS 'numero',
-                L.complemento AS 'complemento',
-                L.bairro AS 'bairro',
-                L.cidade AS 'cidade',
-                L.uf AS 'estado',
-                L.cep AS 'cep',
-                E.sinopse AS 'artistas',
-                CI.classificacao_indicativa AS 'classificacao',
-                A.links AS 'divulgacao',
-                E.sinopse AS 'sinopse',
-                E.fomento AS 'fomento',
-                P.nome AS 'produtor_nome',
-                P.email AS 'produtor_email',
-                P.telefone1 AS 'produtor_fone',
-                U.nome_completo AS 'nomeCompleto',
-                PE.projeto_especial,
-                SUB_PRE.subprefeitura AS 'subprefeitura',
-                DIA_PERI.periodo AS 'periodo',
-                retirada.retirada_ingresso AS 'retirada',
-                I.sigla AS 'instiSigla'
-                FROM eventos AS E
-                LEFT JOIN tipo_eventos AS TE ON E.tipo_evento_id = TE.id  
-                LEFT JOIN ocorrencias AS O ON O.origem_ocorrencia_id = E.id          
-                LEFT JOIN usuarios AS U ON E.usuario_id = U.id
-                LEFT JOIN projeto_especiais AS PE ON E.projeto_especial_id = PE.id
-                LEFT JOIN instituicoes AS I ON I.id = O.instituicao_id
-                LEFT JOIN locais AS L ON O.local_id = L.id
-                LEFT JOIN subprefeituras AS SUB_PRE ON O.subprefeitura_id = SUB_PRE.id
-                LEFT JOIN periodos AS DIA_PERI ON O.periodo_id = DIA_PERI.id
-                LEFT JOIN retirada_ingressos AS retirada ON O.retirada_ingresso_id = retirada.id
-                LEFT JOIN atracoes AS A ON A.evento_id = E.id 
-                LEFT JOIN classificacao_indicativas AS CI ON A.classificacao_indicativa_id = CI.id
-                LEFT JOIN produtores AS P ON A.produtor_id = P.id
-                WHERE E.id = '$idEvento' AND E.evento_status_id = 3 AND E.publicado = 1 AND O.publicado = 1
-                ORDER BY O.data_inicio";
+$sql = "SELECT 
+id AS 'evento_id', tipo_evento_id, nome_evento, sinopse, projeto_especial_id, fomento
+FROM eventos
+WHERE id = $idEvento AND evento_status_id = 3 AND publicado = 1";
 
 $query = mysqli_query($con, $sql);
 
 // Instanciamos a classe
 $objPHPExcel = new PHPExcel();
-
 
 // Podemos renomear o nome das planilha atual, lembrando que um único arquivo pode ter várias planilhas
 $objPHPExcel->getProperties()->setCreator("Sistema SisContrat");
@@ -187,78 +131,6 @@ $objPHPExcel->getActiveSheet()->getStyle('A' . $proxCabecalho . ':X' . $proxCabe
 $cont = $proxCabecalho + 1;
 while ($linha = mysqli_fetch_array($query)) {
 
-    if ($linha['tipo_evento'] == 2) {
-        $filme_evento = recuperaDados("filme_eventos", "evento_id", $linha['evento_id']);
-
-        $filme = recuperaDados("filmes", "id", $filme_evento['filme_id']);
-        $classificao = recuperaDados("classificacao_indicativas", "id", $filme['classificacao_indicativa_id']);
-
-        $linha['classificacao'] = $classificao['classificacao_indicativa'];
-    }
-
-
-    $totalDias = '';
-    $dias = "";
-    $linha['segunda'] == 1 ? $dias .= "Segunda, " : '';
-    $linha['terca'] == 1 ? $dias .= "Terça, " : '';
-    $linha['quarta'] == 1 ? $dias .= "Quarta, " : '';
-    $linha['quinta'] == 1 ? $dias .= "Quinta, " : '';
-    $linha['sexta'] == 1 ? $dias .= "Sexta, " : '';
-    $linha['sabado'] == 1 ? $dias .= "Sabádo, " : '';
-    $linha['domingo'] == 1 ? $dias .= "Domingo. " : '';
-
-    if ($dias != "") {
-        $totalDias .= substr($dias, 0, -2);
-    } else {
-        $totalDias .= "Dias não especificados.";
-    }
-
-    //Ações
-    if ($linha['tipo_evento'] == 1) {
-        $sqlAcao = "SELECT * FROM acao_atracao WHERE atracao_id = '" . $linha['atracao_id'] . "'";
-        $queryAcao = mysqli_query($con, $sqlAcao);
-        $acoes = [];
-        $i = 0;
-
-        while ($arrayAcoes = mysqli_fetch_array($queryAcao)) {
-            $idAcao = $arrayAcoes['acao_id'];
-            $sqlLinguagens = "SELECT * FROM acoes WHERE id = '$idAcao'";
-            $linguagens = $con->query($sqlLinguagens)->fetch_assoc();
-            $acoes[$i] = $linguagens['acao'];
-            $i++;
-        }
-
-        if (count($acoes) != 0) {
-            $stringAcoes = implode(", ", $acoes);
-        }
-    } else {
-        $acao = $con->query("SELECT acao FROM acoes WHERE id = 1")->fetch_array();
-        $stringAcoes = $acao['acao'];
-    }
-
-    //Público
-    $sqlPublico = "SELECT * FROM evento_publico WHERE evento_id = '" . $linha['evento_id'] . "'";
-    $queryPublico = mysqli_query($con, $sqlPublico);
-    $representatividade = [];
-    $i = 0;
-
-    while ($arrayPublico = mysqli_fetch_array($queryPublico)) {
-        $idRepresentatividade = $arrayPublico['publico_id'];
-        $sqlRepresen = "SELECT * FROM publicos WHERE id = '$idRepresentatividade'";
-        $publicos = $con->query($sqlRepresen)->fetch_assoc();
-        $representatividade[$i] = $publicos['publico'];
-        $i++;
-    }
-
-    if (count($acoes) != 0) {
-        $stringPublico = implode(", ", $representatividade);
-    }
-
-    if ($linha['fomento'] != 0) {
-        $sqlFomento = "SELECT * FROM fomentos WHERE id = '" . $linha['fomento'] . "'";
-        $fomento = $con->query($sqlFomento)->fetch_assoc();
-    }
-
     $a = "A" . $cont;
     $b = "B" . $cont;
     $c = "C" . $cont;
@@ -284,51 +156,212 @@ while ($linha = mysqli_fetch_array($query)) {
     $w = "W" . $cont;
     $x = "X" . $cont;
 
-    $enderecoCompleto = [
-        $linha['logradouro'],
-        $linha['numero'],
-        $linha['bairro']
-    ];
+    //Endereço do proponente
+    $testaTipoProponente = $con->query("SELECT pessoa_tipo_id, pessoa_fisica_id, pessoa_juridica_id FROM pedidos WHERE publicado = 1 AND origem_id = " . $linha['evento_id'])->fetch_array();
+    if($testaTipoProponente['pessoa_tipo_id'] == 1){
+        $testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id = " . $testaTipoProponente['pessoa_fisica_id']);
+        if ($testaEnderecos->num_rows > 0) {
+            while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
+                $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " .$enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+            }
+        } else {
+            $endereco = "Não cadastrado";
+        }
 
-    $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $linha['evento_id'] . " AND o.publicado = 1";
-    $queryLocal = mysqli_query($con, $sqlLocal);
-    $local = '';
-    while ($locais = mysqli_fetch_array($queryLocal)) {
-        $local = $local . '; ' . $locais['local'];
+    }else if($testaTipoProponente['pessoa_tipo_id'] == 2){
+        $testaEnderecos = $con->query("SELECT * FROM pj_enderecos WHERE pessoa_juridica_id = " . $testaTipoProponente['pessoa_juridica_id']);
+        if ($testaEnderecos->num_rows > 0) {
+            while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
+                $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " .$enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+            }
+        } else {
+            $endereco = "Não cadastrado";
+        }
     }
-    $local = substr($local, 1);
+
+    //Público
+    $checaPublico = $con->query("SELECT * FROM evento_publico WHERE evento_id = " . $linha['evento_id']);
+    $publicos = "";
+    if($checaPublico->num_rows > 0){
+        while ($arrayPublico = mysqli_fetch_array($checaPublico)) {
+            $publicoArray = $con->query("SELECT publico FROM publicos WHERE id = " . $arrayPublico['publico_id'])->fetch_array()['publico'];
+            $publicos = $publicos . $publicoArray . "; ";
+        }
+        $publicos = substr($publicos, 0);
+    }else{
+        $publicos = "Não cadastrado";
+    }
+
+    //Instituições, Subprefeituras e Locais
+    $sqlInst = "SELECT i.sigla, s.subprefeitura, l.local, ri.retirada_ingresso,
+                       o.segunda, o.terca, o.quarta, o.quinta, o.sexta, o.sabado, o.domingo 
+                FROM ocorrencias AS o 
+    INNER JOIN instituicoes AS i ON o.instituicao_id = i.id
+    INNER JOIN subprefeituras AS s ON o.subprefeitura_id = s.id
+    INNER JOIN locais AS l ON l.id = o.local_id
+    INNER JOIN retirada_ingressos AS ri ON ri.id = o.retirada_ingresso_id
+    WHERE o.origem_ocorrencia_id = " . $linha['evento_id'] . " AND o.publicado = 1";
+
+    $siglas = "";
+    $subprefeituras = "";
+    $locais = "";
+    $retiradas = "";
+    $totalDias = "";
+    $dias = "";
+
+    $queryOco = mysqli_query($con, $sqlInst);
+
+    while ($linhaOco = mysqli_fetch_array($queryOco)) {
+        $siglas = $siglas . $linhaOco['sigla'] . '; ';
+        $subprefeituras = $subprefeituras . $linhaOco['subprefeitura'] . '; ';
+        $locais = $locais . $linhaOco['local'] . '; ';
+        $retiradas = $retiradas . $linhaOco['retirada_ingresso'] . '; ';
+
+
+        $linhaOco['segunda'] == 1 ? $dias .= "Segunda, " : '';
+        $linhaOco['terca'] == 1 ? $dias .= "Terça, " : '';
+        $linhaOco['quarta'] == 1 ? $dias .= "Quarta, " : '';
+        $linhaOco['quinta'] == 1 ? $dias .= "Quinta, " : '';
+        $linhaOco['sexta'] == 1 ? $dias .= "Sexta, " : '';
+        $linhaOco['sabado'] == 1 ? $dias .= "Sabádo, " : '';
+        $linhaOco['domingo'] == 1 ? $dias .= "Domingo. " : '';
+
+        if ($dias != "") {
+            $totalDias .= substr($dias, 0, -2);
+        } else {
+            $totalDias .= "Dias não especificados.";
+        }
+    }
+
+    $locais = substr($locais, 0);
+    $subprefeituras = substr($subprefeituras, 0);
+    $siglas = substr($siglas, 0);
+    $retiradas = substr($retiradas, 0);
+
+    $valorIngresso_consulta = $con->query("SELECT valor_ingresso FROM ocorrencias WHERE publicado = 1 AND retirada_ingresso_id NOT IN (2,5,7,11) AND origem_ocorrencia_id = " . $linha['evento_id']);
+    if($valorIngresso_consulta->num_rows > 0){
+         $valorIngresso = mysqli_fetch_array($valorIngresso_consulta)['valor_ingresso'];
+    }else{
+        $valorIngresso = "0.00";
+    }
+
+    $horaInicio = $con->query("SELECT horario_inicio FROM ocorrencias WHERE publicado = 1 AND origem_ocorrencia_id = " . $linha['evento_id'])->fetch_array()['horario_inicio'];
+    $horaInicio = exibirHora($horaInicio);
+
+    $acoes = "";
+    $qtAtracao = 0;
+    $artistas = "";
+    $links = "";
+    $classificoes = "";
+    $produtorNomes = "";
+    $produtorEmails = "";
+    $produtorTelefones = "";
+    $count = 1;
+
+    if ($linha['tipo_evento_id'] == 1) {
+
+        //Artistas, ações e quantidade de apresentação
+        $sqlAtracoes = "SELECT a.id, a.integrantes, a.quantidade_apresentacao, ci.classificacao_indicativa, a.produtor_id, links FROM atracoes AS a
+        INNER JOIN classificacao_indicativas AS ci ON a.classificacao_indicativa_id = ci.id
+        WHERE a.evento_id = " . $linha['evento_id'] . " AND a.publicado = 1";
+        $queryAtracoes = mysqli_query($con, $sqlAtracoes);
+
+        while ($linhaAtracoes = mysqli_fetch_array($queryAtracoes)) {
+            $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = " . $linhaAtracoes['id']);
+            while($idAcoes = mysqli_fetch_array($checaTipo)){
+                $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $idAcoes['acao_id'] . " AND publicado = 1")->fetch_array();
+                $acoes = $acoes . "Ação#" . $count . ": " . $tipoAcao['acao'] . "; ";
+            }
+
+            $artistas = $artistas . $linhaAtracoes['integrantes'] . '; ';
+            $qtAtracao = $qtAtracao + (int)$linhaAtracoes['quantidade_apresentacao'];
+            $classificoes = $classificoes . $linhaAtracoes['classificacao_indicativa'] . "; ";
+            if($linhaAtracoes['links'] == ""){
+                $links = $links . "Link#" . $count . ": Não cadastrado; ";
+            }else{
+                $links = $links . "Link#" . $count . ": "  . $linhaAtracoes['links'] . "; ";
+            }
+
+            //dados dos produtores
+            $produtorArray = $con->query("SELECT nome, email, telefone1 FROM produtores WHERE id = " . $linhaAtracoes['produtor_id'])->fetch_array();
+            $produtorNomes = $produtorNomes . "Produtor#" . $count . ": " . $produtorArray['nome'] . "; ";
+            $produtorEmails = $produtorEmails . "Produtor#" . $count . ": " . $produtorArray['email'] . "; ";
+            $produtorTelefones = $produtorTelefones . "Produtor#" . $count . ": " . $produtorArray['telefone1'] . "; ";;
+            $count += 1;
+        }
+
+        $acoes = substr($acoes, 0);
+        $artistas = substr($artistas, 0);
+        $classificoes = substr($classificoes, 0);
+        $links = substr($links, 0);
+        $produtorNomes = substr($produtorNomes, 0);
+        $produtorEmails = substr($produtorEmails, 0);
+        $produtorTelefones = substr($produtorTelefones, 0);
+    }
+
+    if ($linha['tipo_evento_id'] == 2) {
+        $consultaFilmes = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id = " . $linha['evento_id']);
+        while($idFilmes = mysqli_fetch_array($consultaFilmes)){
+            $filmesArray = $con->query("SELECT ci.classificacao_indicativa, f.link_trailer FROM classificacao_indicativas AS ci INNER JOIN filmes AS f ON ci.id = f.classificacao_indicativa_id WHERE f.id = " . $idFilmes['filme_id'])->fetch_array();
+
+            if($filmesArray['link_trailer'] == ""){
+                $links = $links . "Link#" . $count . ": Não cadastrado; ";
+            }else{
+                $links = $links . "Link#" . $count . ": "  . $filmesArray['link_trailer'] . "; ";
+            }
+
+            $classificoes = $classificoes . $filmesArray['classificacao_indicativa'] . "; ";
+            $count += 1;
+        }
+        $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = 1 AND publicado = 1")->fetch_array()['acao'];
+        $acoes = $tipoAcao;
+
+
+        $classificoes = substr($classificoes, 0);
+    }
+
+    $dataInicio = $con->query("SELECT data_inicio FROM ocorrencias oco WHERE oco.origem_ocorrencia_id = " . $linha['evento_id'] . " AND oco.publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'];
+    $dataFim = $con->query("SELECT data_fim FROM ocorrencias oco WHERE oco.origem_ocorrencia_id = " . $linha['evento_id'] . " AND oco.publicado = '1' ORDER BY data_fim DESC LIMIT 0,1")->fetch_array()['data_fim'];
+    $projeto_especial = $con->query("SELECT projeto_especial FROM projeto_especiais WHERE id = " . $linha['evento_id'])->fetch_array()['projeto_especial'];
+
+    if ($linha['fomento'] != 0) {
+        $consultaFomento = $con->query("SELECT fomento_id FROM evento_fomento WHERE evento_id = " . $linha['evento_id'])->fetch_array();
+        $fomento = $con->query("SELECT fomento FROM fomentos WHERE id = " . $consultaFomento['fomento_id'])->fetch_array();
+    }else{
+        $fomento = "Não possuí";
+    }
 
     $objPHPExcel->setActiveSheetIndex(0)
-        ->setCellValue($a, $linha['instiSigla'])
-        ->setCellValue($b, $local)
-        ->setCellValue($c, implode(", ", $enderecoCompleto) . " - CEP: " . $linha['cep'])
-        ->setCellValue($d, $linha['subprefeitura'])
-        ->setCellValue($e, $linha['nome'])
-        ->setCellValue($f, $linha['artistas'])
-        ->setCellValue($g, exibirDataBr($linha['data_inicio']))
-        ->setCellValue($h, ($linha['data_fim'] == "0000-00-00") ? "Não é Temporada" : exibirDataBr($linha['data_fim']))
-        ->setCellValue($i, exibirHora($linha['hora_inicio']))
-        ->setCellValue($j, $linha['apresentacoes'] == '' ? 'Este evento é filme!' : $linha['apresentacoes'])
-        ->setCellValue($k, $linha['periodo'])
-        ->setCellValue($l, $stringAcoes ?? "Não foi selecionada linguagem.")
-        ->setCellValue($m, $stringPublico ?? "Não foi selecionado público.")
+        ->setCellValue($a, $siglas)
+        ->setCellValue($b, $locais)
+        ->setCellValue($c, $endereco)
+        ->setCellValue($d, $subprefeituras)
+        ->setCellValue($e, $linha['nome_evento'])
+        ->setCellValue($f, $artistas == "" ? "Este evento é filme!" : $artistas)
+        ->setCellValue($g, exibirDataBr($dataInicio))
+        ->setCellValue($h, $dataFim == "0000-00-00" ? "Não é Temporada" : exibirDataBr($dataFim))
+        ->setCellValue($i, $horaInicio)
+        ->setCellValue($j, $qtAtracao == 0 ? 'Este evento é filme!' : $qtAtracao)
+        ->setCellValue($k, retornaPeriodoNovo($linha['evento_id'], 'ocorrencias'))
+        ->setCellValue($l, $acoes == NULL ? "Não foi selecionada linguagem." : $acoes)
+        ->setCellValue($m, $publicos)
         ->setCellValue($n, $linha['espaco_publico'] == 1 ? "SIM" : "NÃO")
-        ->setCellValue($o, $linha['retirada'])
-        ->setCellValue($p, $linha['valor_ingresso'] != '0.00' ? dinheiroParaBr($linha['valor_ingresso']) . " reais." : "Gratuito")
-        ->setCellValue($q, $linha['classificacao'])
-        ->setCellValue($r, isset($linha['divulgacao']) ? $linha['divulgacao'] : "Sem link de divulgação.")
+        ->setCellValue($o, $retiradas)
+        ->setCellValue($p, $valorIngresso != '0.00' ? "R$" . dinheiroParaBr($valorIngresso) : "Gratuito")
+        ->setCellValue($q, $classificoes)
+        ->setCellValue($r, $links)
         ->setCellValue($s, $linha['sinopse'])
-        ->setCellValue($t, $linha['projeto_especial'])
-        ->setCellValue($u, isset($fomento['fomento']) ? $fomento['fomento'] : "Não")
-        ->setCellValue($v, $linha['produtor_nome'])
-        ->setCellValue($w, $linha['produtor_email'])
-        ->setCellValue($x, $linha['produtor_fone']);
+        ->setCellValue($t, $projeto_especial)
+        ->setCellValue($u, $fomento)
+        ->setCellValue($v, $produtorNomes == "" ? "Este evento é filme!" : $produtorNomes)
+        ->setCellValue($w, $produtorEmails == "" ? "Este evento é filme!" : $produtorEmails)
+        ->setCellValue($x, $produtorTelefones == "" ? "Este evento é filme!" : $produtorTelefones);
 
     $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $x)->getAlignment()->setWrapText(true);
     $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $x)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
     $objPHPExcel->getActiveSheet()->getStyle($a . ":" . $x)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
-    $objPHPExcel->getActiveSheet()->getRowDimension($cont)->setRowHeight(20);
+    $objPHPExcel->getActiveSheet()->getRowDimension($cont)->setRowHeight(70);
 
     $cont++;
 
@@ -338,13 +371,14 @@ while ($linha = mysqli_fetch_array($query)) {
 // Renomeia a guia
 $objPHPExcel->getActiveSheet()->setTitle('Inscritos');
 
-for ($col = 'A'; $col !== 'X'; $col++) {
-    $objPHPExcel->getActiveSheet()
-        ->getColumnDimension($col)
+foreach(range('A','X') as $columnID) {
+    $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
         ->setAutoSize(true);
 }
 
-$objPHPExcel->getActiveSheet()->getColumnDimension('X')->setWidth(25);
+//Consertando a coluna referente aos locais
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(70);
 
 $objPHPExcel->setActiveSheetIndex(0);
 ob_end_clean();

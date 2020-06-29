@@ -18,6 +18,13 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 $ano = date('Y');
 
 $parecer = recuperaDados("parecer_artisticos", "pedido_id", $idPedido);
+
+if ($parecer) {
+    $parecer = nl2br($parecer['topico1']);
+} else {
+    $parecer = "(Parecer não cadastrado)";
+}
+
 ?>
 
 <html>
@@ -46,19 +53,19 @@ $parecer = recuperaDados("parecer_artisticos", "pedido_id", $idPedido);
 <div align="center">
     <?php
     $conteudo =
-        "<p align='right'>Folha de Informação nº ___________</p>".
-        "<p><strong>Do processo nº:</strong> ". $pedido['numero_processo'] ."</p>".
-        "<p align='right' class='style_01'>Data: _______ / _______ / ". $ano .".  </p>".
-        "<p>&nbsp;</p>".
-        "<p><strong>INTERESSADO:</strong> ". $pessoa['nome'] ."  </span></p>".
-        "<p><strong>ASSUNTO:</strong> ". $objeto ."  </p>".
-        "<p>&nbsp;</p>".
-        "<p>&nbsp;</p>".
+        "<p align='right'>Folha de Informação nº ___________</p>" .
+        "<p><strong>Do processo nº:</strong> " . $pedido['numero_processo'] . "</p>" .
+        "<p align='right' class='style_01'>Data: _______ / _______ / " . $ano . ".  </p>" .
+        "<p>&nbsp;</p>" .
+        "<p><strong>INTERESSADO:</strong> " . $pessoa['nome'] . "  </span></p>" .
+        "<p><strong>ASSUNTO:</strong> " . $objeto . "  </p>" .
+        "<p>&nbsp;</p>" .
+        "<p>&nbsp;</p>" .
         "<p align='center'><strong>PARECER DA COMISSÃO TÉCNICA DE ATIVIDADES ARTÍSTICAS E CULTURAIS<br/> 
-							(Instituído pela Portaria nº 168/2019-SMC-G e nº 050/2019-SMC.G)</strong></p>".
-        "<p>&nbsp;</p>".
+							(Instituído pela Portaria nº 168/2019-SMC-G e nº 050/2019-SMC.G)</strong></p>" .
+        "<p>&nbsp;</p>" .
 
-        "<p align='justify'>".nl2br($parecer['topico1'])."</p>".
+        "<p align='justify'>" . $parecer ."</p>" .
 
 
         "<p>&nbsp;</p>"
