@@ -1,6 +1,16 @@
 <?php
 $con = bancoMysqli();
 
+if(isset($_POST['deletar'])){
+    $idPedido = $_POST['idPedido'];
+    $apagaPedido = $con->query("UPDATE pedidos SET publicado = 0 WHERE id = $idPedido AND origem_tipo_id = 3");
+    if($apagaPedido){
+        $mensagem = mensagem("success", "Pedido apagado com sucesso!");
+    }else{
+        $mensagem = mensagem("danger", "Erro ao apagar pedido");
+    }
+}
+
 $sql = "SELECT p.id,
 		       ec.protocolo,
                p.numero_processo,
@@ -43,6 +53,7 @@ $query = mysqli_query($con, $sql);
                         <th>Ano</th>
                         <th>Verba</th>
                         <th>Status</th>
+                        <th>Apagar</th>
                     </tr>
                     </thead>
                     <?php
@@ -60,6 +71,9 @@ $query = mysqli_query($con, $sql);
                         echo "<td>" . $dados['ano'] . "</td>";
                         echo "<td>" . $dados['verba'] . "</td>";
                         echo "<td>" . $dados['status'] . "</td>";
+                        echo "<td width='7%'> 
+                                    <button type='button' name='apagar' id='apaga' data-target='#modalExclusao' data-toggle='modal' data-id='" . $dados['id'] . "' class='btn btn-block btn-danger'><span class='glyphicon glyphicon-trash'></span></button> 
+                              </td>";
                         echo "</tbody>";
                     }
                     ?>
@@ -72,6 +86,7 @@ $query = mysqli_query($con, $sql);
                         <th>Ano</th>
                         <th>Verba</th>
                         <th>Status</th>
+                        <th>Apagar</th>
                     </tr>
                     </tfoot>
                 </table>
@@ -85,8 +100,39 @@ $query = mysqli_query($con, $sql);
     </section>
 </div>
 
+<div id="modalExclusao" class="modal modal-danger modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirmação de Exclusão</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir o pedido?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="?perfil=emia&p=pedido_contratacao&sp=listagem" method="POST">
+                    <input type="hidden" name="idPedido" id="idPedido" value="">
+                    <input type="hidden" name="deletar" id="deletar">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                    </button>
+                    <input type="submit" class="btn btn-danger btn-outline" name="exclui" value="Excluir">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $('#modalExclusao').on('show.bs.modal', function (e) {
+        let id = $(e.relatedTarget).attr('data-id');
+
+        $(this).find('#idPedido').attr('value', `${id}`);
+    })
+</script>
 
 <script type="text/javascript">
     $(function () {

@@ -3,7 +3,7 @@ $con = bancoMysqli();
 
 $link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php';
 
-if(isset($_POST['pesquisa'])){
+if (isset($_POST['pesquisa'])) {
 
     $datainicio = $_POST['data_inicio'] ?? NULL;
     $datafim = $_POST['data_fim'] ?? null;
@@ -74,20 +74,23 @@ if(isset($_POST['pesquisa'])){
                                                  WHERE fe.evento_id = " . $evento['id'] . " AND f.publicado = 1";
                             $queryClassificacao = mysqli_query($con, $sqlClassificacao);
                             $classificao = '';
+                            $artistas = "Este evento é filme!";
                             while ($classificoes = mysqli_fetch_array($queryClassificacao)) {
                                 $classificao = $classificao . '; ' . $classificoes['classificacao_indicativa'];
                             }
-                            $classificao = substr($classificao, 1);
 
-                        }else{
-                            $sqlClassificacao = "SELECT c.classificacao_indicativa FROM classificacao_indicativas c INNER JOIN atracoes a ON a.classificacao_indicativa_id = c.id WHERE a.evento_id = " . $evento['id'] ." AND a.publicado = 1";
+                        } else {
+                            $sqlClassificacao = "SELECT c.classificacao_indicativa, a.integrantes FROM classificacao_indicativas c INNER JOIN atracoes a ON a.classificacao_indicativa_id = c.id WHERE a.evento_id = " . $evento['id'] . " AND a.publicado = 1";
                             $queryClassificacao = mysqli_query($con, $sqlClassificacao);
                             $classificao = '';
-                            while ($classificoes = mysqli_fetch_array($queryClassificacao)) {
-                                $classificao = $classificao . '; ' . $classificoes['classificacao_indicativa'];
+                            $artistas = "";
+                            while ($arrayAtracoes = mysqli_fetch_array($queryClassificacao)) {
+                                $classificao = $classificao . $arrayAtracoes['classificacao_indicativa'] . '; ';
+                                $artistas = $artistas . $arrayAtracoes['integrantes'] . '; ';
                             }
-                            $classificao = substr($classificao, 1);
+                            $artistas = substr($artistas, 1);
                         }
+                        $classificao = substr($classificao, 1);
 
                         ?>
                         <tr>
@@ -105,10 +108,10 @@ if(isset($_POST['pesquisa'])){
                             <td><?= $evento['subprefeitura'] ?></td>
                             <td><?= $evento['valor_ingresso'] == '0.00' ? 'Grátis' : 'R$ ' . dinheiroParaBr($evento['valor_ingresso']) ?></td>
                             <td><?= $evento['quantidade_apresentacao'] == '' ? 'Este evento é filme!' : $evento['quantidade_apresentacao'] ?></td>
-                            <td><?= $evento['ficha_tecnica'] ?></td>
+                            <td><?= $artistas ?></td>
                             <td>
                                 <form action="../pdf/exporta_excel_evento_producao.php" target="_blank" method="POST">
-                                    <input type="hidden" value="<?=$evento['id']?>" name="idEvento">
+                                    <input type="hidden" value="<?= $evento['id'] ?>" name="idEvento">
                                     <button type="submit" class="btn btn-block btn-success">
                                         <span class="glyphicon glyphicon-list-alt"></span>
                                     </button>
@@ -136,7 +139,9 @@ if(isset($_POST['pesquisa'])){
             </div>
             <div class="box-footer">
                 <a href="?perfil=producao&p=eventos&sp=pesquisa">
-                    <button type="button" class="btn btn-default btn-block center-block" style="width:30%">Voltar para a pesquisa</button>
+                    <button type="button" class="btn btn-default btn-block center-block" style="width:30%">Voltar para a
+                        pesquisa
+                    </button>
                 </a>
             </div>
         </div>
