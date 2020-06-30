@@ -58,7 +58,7 @@ if (isset($_POST['apagar'])) {
     $idArquivo = $_POST['idArquivo'];
     $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
     if (mysqli_query($con, $sql_apagar_arquivo)) {
-        $arq = recuperaDados("arquivos", $idArquivo, "id");
+        $arq = recuperaDados("arquivos", 'id',$idArquivo);
         $mensagem = mensagem("success", "Arquivo " . $arq['arquivo'] . "apagado com sucesso!");
         gravarLog($sql_apagar_arquivo);
     } else {
