@@ -28,7 +28,7 @@ $sql = "SELECT p.numero_processo,
         INNER JOIN formacao_status fs on p.origem_id = fs.id 
         INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
         INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
-        WHERE p.publicado = 1 AND fc.publicado = 1 AND p.origem_tipo_id = 2 AND fc.id = '$idFormacao'";
+        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 AND fc.id = $idFormacao";
 $query = $con->query($sql)->fetch_assoc();
 
 // pegar periodo da formação ( atraves do id da vigencia )
