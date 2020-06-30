@@ -1,4 +1,5 @@
 <?php
+<?php
 
 //require '../include/';
 require_once("../funcoes/funcoesConecta.php");

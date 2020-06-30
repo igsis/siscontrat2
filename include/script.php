@@ -260,8 +260,8 @@
     });
 </script>
 
-<!-- Animação Progress Bar -->
 <script type="text/javascript">
+    // <!-- Animação Progress Bar -->
     $(function () {
         var current_progress = 0;
         var interval = setInterval(function () {

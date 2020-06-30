@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
 
+$link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php';
+
 $sql = "SELECT e.id, e.protocolo, e.nome_evento,  er.data_reabertura, e.usuario_id, er.usuario_reabertura_id, p.pessoa_tipo_id, p.pessoa_juridica_id, p.pessoa_fisica_id, p.valor_total, p.operador_id
         FROM eventos e 
         INNER JOIN evento_envios ee ON e.id = ee.evento_id 
@@ -58,17 +60,6 @@ $rows = mysqli_num_rows($query);
                                 <?php
                             } else {
                                 while ($evento = mysqli_fetch_array($query)) {
-                                    //Locais
-                                    $sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
-                                    $local = "";
-                                    $queryLocal = mysqli_query($con, $sqlLocal);
-
-                                    while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-                                        $local = $local . $linhaLocal['local'] . ' | ';
-                                    }
-
-                                    $local = substr($local, 0, -3);
-
                                     //calcula a diferença entre hoje e a data inicial do evento
                                     $inicial = $con->query("SELECT data_inicio FROM ocorrencias WHERE origem_ocorrencia_id = " . $evento['id'] . " AND publicado = '1' ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'] ?? NULL;
                                     $hoje = date("Y-m-d");
@@ -95,7 +86,15 @@ $rows = mysqli_num_rows($query);
                                         <td><?= $baldeProponente ?></td>
                                         <td><?= $evento['nome_evento'] ?></td>
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                        <td><?= $local ?></td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                                    data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                                    onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
+                                                    data-id="<?= $evento['id'] ?>"
+                                                    name="exibirLocais">
+                                                Clique para ver os locais
+                                            </button>
+                                        </td>
                                         <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias')?></td>
                                         <td><?= $prazo ?></td>
                                         <?php

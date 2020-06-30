@@ -1,8 +1,6 @@
 <?php
 $con = bancoMysqli();
-$link_api_locais = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais.php';
-
-$link_api_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_instituicoes.php';
+$link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php';
 
 unset($_SESSION['idEvento']);
 
@@ -138,7 +136,8 @@ if (isset($_POST['busca'])) {
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td>
                                             <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
-                                                    data-toggle="modal" data-target="#modalLocais"
+                                                    data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                                    onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirLocais">
                                                 Clique para ver os locais
@@ -147,7 +146,9 @@ if (isset($_POST['busca'])) {
                                         <td>
                                             <button type="button" class="btn btn-primary btn-block"
                                                     id="exibirInstituicoes"
-                                                    data-toggle="modal" data-target="#modalInsituicoes"
+                                                    data-toggle="modal" data-target="#modalLocais_Inst"
+                                                    onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
+                                                    data-name="inst"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirInstituicoes">
                                                 Clique para ver as instituições
@@ -214,70 +215,4 @@ if (isset($_POST['busca'])) {
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
-</script>
-
-<div id="modalLocais" class="modal modal fade in" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Lista de Local(ais)</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-striped table-bordered">
-                    <tbody id="conteudoModalLocais">
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="modalInsituicoes" class="modal modal fade in" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Lista de Instituição(ões)</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-striped table-bordered">
-                    <tbody id="conteudoModalInstituicoes">
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    const linkLocais = `<?=$link_api_locais?>`;
-    $('#modalLocais').on('show.bs.modal', function (e) {
-        $('#modalLocais').find('#conteudoModalLocais').empty();
-        let id = $(e.relatedTarget).attr('data-id');
-        $.ajax({
-            method: "GET",
-            url: linkLocais + "?idEvento=" + id
-        })
-            .done(function (content) {
-                $('#modalLocais').find('#conteudoModalLocais').append(`<tr><td>${content}</td></tr>`);
-            });
-    })
-</script>
-
-<script>
-    const linkInstituicoes = `<?=$link_api_instituicoes?>`;
-    $('#modalInsituicoes').on('show.bs.modal', function (e) {
-        $('#modalInsituicoes').find('#conteudoModalInstituicoes').empty();
-        let id = $(e.relatedTarget).attr('data-id');
-        $.ajax({
-            method: "GET",
-            url: linkInstituicoes + "?idEvento=" + id
-        })
-            .done(function (content) {
-                $('#modalInsituicoes').find('#conteudoModalInstituicoes').append(`<tr><td>${content}</td></tr>`);
-            });
-    })
 </script>

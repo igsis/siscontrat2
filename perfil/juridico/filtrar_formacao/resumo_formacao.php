@@ -5,30 +5,26 @@ $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
 
 if (isset($_POST['tipoModelo'])) {
     $modelo = $_POST['tipoModelo'];
+    $dotacao = "";
 }
 if(isset($_POST['idFormacao'])){
     $idFormacao = $_POST['idFormacao'];
 }
+if(isset($_POST['voltar'])){
+    $dotacao = $_POST['dotacao'];
+}
+
 
 
 $sqlModelo = "SELECT * FROM modelo_juridicos where id = $modelo";
 $mdl = $con->query($sqlModelo)->fetch_assoc();
 
-$sql = "SELECT p.numero_processo,
-            p.forma_pagamento,
-            p.valor_total,
-            p.origem_id,
-            fc.protocolo, 
-            pf.nome, 
-            fs.status,
-            fc.id
-            
 
-        FROM pedidos as p 
-        INNER JOIN formacao_status fs on p.origem_id = fs.id 
-        INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id 
-        INNER JOIN formacao_contratacoes fc on p.origem_id = fc.id 
-        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.publicado = 1 AND fc.id = $idFormacao";
+$sql = "
+SELECT p.numero_processo,fc.protocolo,pf.nome,p.origem_id,p.forma_pagamento,p.valor_total from pedidos AS p
+INNER JOIN formacao_contratacoes AS fc ON p.origem_id = fc.id
+INNER JOIN pessoa_fisicas AS pf ON p.pessoa_fisica_id = pf.id
+WHERE fc.id = '$idFormacao' AND p.origem_tipo_id = 2";
 $query = $con->query($sql)->fetch_assoc();
 
 // pegar periodo da formação ( atraves do id da vigencia )
@@ -59,7 +55,7 @@ $queryLocal = mysqli_query($con, $sqlLocal);
         <div class="page-header">
             <h2 class="page-title">Jurídico</h2>
         </div>
-        <form action="?perfil=juridico&p=filtrar_formacao&sp=modelo_final_formacao" role="form" method="post">
+            <form action="?perfil=juridico&p=filtrar_formacao&sp=detalhe_formacao" role="form" method="post">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Detalhes da formação selecionada</h3>
@@ -106,25 +102,32 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                         </tr>
                         <tr>
                             <th width="30%">Amparo:</th>
-                            <td><textarea name="amparo" rows="6" cols="85" class="form-control"><?= $mdl['amparo'] ?></textarea></td>
+                            <td><textarea name="amparo" rows="6"
+                                          cols="85" class="form-control"><?= $mdl['amparo'] ?></textarea>
+                            </td>
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária</th>
-                            <td><textarea name="dotacao" rows="1" cols="85" class="form-control"></textarea></td>
+                            <td><textarea name="dotacao" rows="1"
+                                          cols="85" class="form-control"><?$dotacao?></textarea>
+                            </td>
                         </tr>
                         <tr>
                             <th width="30%">Finalização:</th>
-                            <td><textarea name="finalizar" rows="8" cols="85" class="form-control"><?= $mdl['finalizacao'] ?></textarea></td>
+                            <td><textarea name="finalizacao" rows="8"
+                                          cols="85" class="form-control"><?= $mdl['finalizacao'] ?></textarea>
+                            </td>
                         </tr>
                     </table>
                     <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
-                    <button type="submit" name="enviar" value="GRAVAR" class="btn btn-info pull-left">Gravar
+                    <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
+                    <button type="submit" name="detalhe" class="btn btn-info pull-right">Detalhe Formação
                     </button>
         </form>
-        <form action="?perfil=juridico&p=filtrar_formacao&sp=detalhe_formacao" method="post">
+        <form action="?perfil=juridico&p=filtrar_formacao&sp=modelo_final_formacao" method="post">
             <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
-            <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
-            <button type="submit" class="btn btn-info pull-right">Detalhes Formação
+            <input type="hidden" name="dotacao" value="<?= $dotacao ?>">
+            <button type="submit" name="enviar" class="btn btn-info pull-left">Gravar
             </button>
         </form>
 </div>
