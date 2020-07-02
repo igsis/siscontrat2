@@ -12,111 +12,150 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $observacao = addslashes($_POST['observacao']) ?? null;
     $local = $_POST['local'];
     $processoMae = $_POST['processoMae'];
+}
+if (isset($_POST['cadastra'])) {
+    $idPc = $_POST['idPc'];
+    $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
+    $idPf = $fc['pessoa_fisica_id'] ?? null;
+    $_SESSION['idPF'] = $idPf;
 
-    if (isset($_POST['cadastra'])) {
-        $idPc = $_POST['idPc'];
-        $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
-        $idPf = $fc['pessoa_fisica_id'] ?? null;
-        $_SESSION['idPF'] = $idPf;
-
-        $sql = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_fisica_id, numero_processo, numero_processo_mae, verba_id, numero_parcelas, valor_total, forma_pagamento, data_kit_pagamento, justificativa, status_pedido_id, observacao)
+    $sql = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_fisica_id, numero_processo, numero_processo_mae, verba_id, numero_parcelas, valor_total, forma_pagamento, data_kit_pagamento, justificativa, status_pedido_id, observacao)
                          VALUES (2, '$idPc', 1, '$idPf', '$numeroProcesso', '$processoMae' ,'$verba', '$numParcelas', '$valor', '$forma_pagamento', '$dataKit', '$justificativa', 2, '$observacao')";
-        if (mysqli_query($con, $sql)) {
-            $idPedido = recuperaUltimo('pedidos');
-            gravarLog($sql);
-            $sqlInsert = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) 
+    if (mysqli_query($con, $sql)) {
+        $idPedido = recuperaUltimo('pedidos');
+        gravarLog($sql);
+        $sqlInsert = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) 
                     SELECT p.id, fp.numero_parcelas, fp.valor, fp.data_pagamento 
                     FROM formacao_parcelas fp 
                     INNER JOIN formacao_contratacoes fc ON fc.form_vigencia_id = fp.formacao_vigencia_id 
                     INNER JOIN pedidos p ON p.origem_id = fc.id 
                     WHERE p.origem_tipo_id = 2 AND p.id = '$idPedido'";
-            mysqli_query($con, $sqlInsert);
-            gravarLog($sqlInsert);
+        mysqli_query($con, $sqlInsert);
+        gravarLog($sqlInsert);
 
-            $sql_delete = "DELETE FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
-            mysqli_query($con, $sql_delete);
+        $formaCompleta = "";
 
-            for ($i = 0; $i < count($local); $i++) {
-                $idLocal = $local[$i];
+        $consultaParcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = $idPedido AND publicado = 1 ORDER BY numero_parcelas");
 
-                $sqlLocal = "INSERT INTO formacao_locais (form_pre_pedido_id, local_id) VALUES ('$idPc', '$idLocal')";
-                mysqli_query($con, $sqlLocal);
-                gravarLog($sqlLocal);
-            }
+        $countForma = 0;
 
-            $mensagem = mensagem("success", "Pedido de contratação cadastrado com sucesso.");
+        while ($parcelasArray = mysqli_fetch_array($consultaParcelas)) {
+            $forma = $countForma + 1 . "º parcela R$ " . dinheiroParaBr($parcelasArray['valor']) . ". Entrega de documentos a partir de " . exibirDataBr($parcelasArray['data_pagamento']) . ".\n";
+            $formaCompleta = $formaCompleta . $forma;
 
-            $sqlUpdate = "UPDATE formacao_contratacoes SET pedido_id = '$idPedido' WHERE id='$idPc'";
-            mysqli_query($con, $sqlUpdate);
-
-        } else {
-            $mensagem = mensagem("danger", "Ocorreu um erro ao criar o pedido de contratação. Tente novamente!");
+            $countForma += 1;
         }
-    } else if (isset($_POST['edita'])) {
-        $idPedido = $_POST['idPedido'];
+        $formaCompleta = $formaCompleta . "\nA liquidação de cada parcela se dará em 3 (três) dias úteis após a data de confirmação da correta execução do(s) serviço(s).";
 
-        $sql = "UPDATE pedidos SET verba_id = '$verba', valor_total = '$valor', data_kit_pagamento = '$dataKit', numero_processo = '$numeroProcesso', numero_processo_mae = '$processoMae',forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao', numero_parcelas = '$numParcelas' WHERE id = '$idPedido'";
+        $sqlForma = "UPDATE pedidos SET forma_pagamento = '$formaCompleta' WHERE id = $idPedido AND origem_tipo_id = 2";
+        mysqli_query($con, $sqlForma);
 
-        if (mysqli_query($con, $sql)) {
-            gravarLog($sql);
+        $sql_delete = "DELETE FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
+        mysqli_query($con, $sql_delete);
 
-            $pedido = recuperaDados('pedidos', 'id', $idPedido);
-            $idPc = $pedido['origem_id'];
-            $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
+        for ($i = 0; $i < count($local); $i++) {
+            $idLocal = $local[$i];
 
-            $sql_delete = "DELETE FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
-            mysqli_query($con, $sql_delete);
-
-            for ($i = 0; $i < count($local); $i++) {
-                $idLocal = $local[$i];
-
-                $sqlLocal = "INSERT INTO formacao_locais (form_pre_pedido_id, local_id) VALUES ('$idPc', '$idLocal')";
-                mysqli_query($con, $sqlLocal);
-                gravarLog($sqlLocal);
-            }
-
-            $mensagem = mensagem("success", "Pedido de contratação salvo com sucesso.");
-
-        } else {
-            $mensagem = mensagem("danger", "Ocorreu um erro ao salvar o pedido de contratação. Tente novamente!");
+            $sqlLocal = "INSERT INTO formacao_locais (form_pre_pedido_id, local_id) VALUES ('$idPc', '$idLocal')";
+            mysqli_query($con, $sqlLocal);
+            gravarLog($sqlLocal);
         }
+
+        $mensagem = mensagem("success", "Pedido de contratação cadastrado com sucesso.");
+
+        $sqlUpdate = "UPDATE formacao_contratacoes SET pedido_id = '$idPedido' WHERE id='$idPc'";
+        mysqli_query($con, $sqlUpdate);
+
+    } else {
+        $mensagem = mensagem("danger", "Ocorreu um erro ao criar o pedido de contratação. Tente novamente!");
     }
 }
+
+if (isset($_POST['edita'])) {
+    $idPedido = $_POST['idPedido'];
+
+    $sql = "UPDATE pedidos SET verba_id = '$verba', valor_total = '$valor', data_kit_pagamento = '$dataKit', numero_processo = '$numeroProcesso', numero_processo_mae = '$processoMae',forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$observacao', numero_parcelas = '$numParcelas' WHERE id = '$idPedido'";
+
+    if (mysqli_query($con, $sql)) {
+        gravarLog($sql);
+
+        $pedido = recuperaDados('pedidos', 'id', $idPedido);
+        $idPc = $pedido['origem_id'];
+        $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
+
+        $sql_delete = "DELETE FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
+        mysqli_query($con, $sql_delete);
+
+        for ($i = 0; $i < count($local); $i++) {
+            $idLocal = $local[$i];
+
+            $sqlLocal = "INSERT INTO formacao_locais (form_pre_pedido_id, local_id) VALUES ('$idPc', '$idLocal')";
+            mysqli_query($con, $sqlLocal);
+            gravarLog($sqlLocal);
+        }
+
+        $mensagem = mensagem("success", "Pedido de contratação salvo com sucesso.");
+
+    } else {
+        $mensagem = mensagem("danger", "Ocorreu um erro ao salvar o pedido de contratação. Tente novamente!");
+    }
+}
+
 
 if (isset($_POST['carregar']))
     $idPedido = $_POST['idPedido'];
 
 if (isset($_POST['parcelaEditada'])) {
-    $idPedido = $_SESSION['idPedido'];
-    $parcelas = $_POST['parcela'];
-    $valores = dinheiroDeBr($_POST['valor']);
-    $data_pagamentos = $_POST['data_pagamento'];
+    $idPedido = $_POST['idPedido'];
+    $numParcelas = $_POST['numParcelas'];
 
-    $pedido = recuperaDados('pedidos', 'id', $idPedido);
+    $parcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1")->fetch_all(MYSQLI_ASSOC);
 
-    $sql = "DELETE FROM parcelas WHERE pedido_id = '$idPedido'";
-    mysqli_query($con, $sql);
-
-    $i = $pedido['numero_parcelas'];
-
-    $baldeValor = 0;
-
-    for ($count = 0; $count < $i; $count++) {
-        $parcela = $parcelas[$count] ?? NULL;
-        $valor = $valores[$count] ?? NULL;
-        $baldeValor += $valor;
-        $data_pagamento = $data_pagamentos[$count] ?? NULL;
-
-        $sql = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
-
-        mysqli_query($con, $sql);
+    if (count($parcelas) > 0) {
+        foreach ($parcelas as $parcela) {
+            $sqlDeletaParcela = "UPDATE parcelas SET publicado = '0' WHERE pedido_id = '$idPedido' AND numero_parcelas = '{$parcela['numero_parcelas']}'";
+            if ($con->query($sqlDeletaParcela)) {
+                gravarLog($sqlDeletaParcela);
+            }
+        }
     }
 
-    $sql = "UPDATE pedidos SET valor_total = '$baldeValor' WHERE id = '$idPedido'";
-    mysqli_query($con, $sql);
-}
+    if (isset($_POST['parcelaEditada']) && $numParcelas != NULL) {
 
-$_SESSION['idPedido'] = $idPedido;
+        foreach ($_POST['parcela'] AS $countPost => $parcela) {
+            $valor = dinheiroDeBr($_POST['valor'][$countPost]) ?? NULL;
+            $data_pagamento = $_POST['data_pagamento'][$countPost] ?? NULL;
+
+            $sqlParcelas = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
+
+            if ($con->query($sqlParcelas)) {
+                $mensagem = mensagem('success', 'Parcelas Atualizadas!');
+            } else {
+                $mensagem = mensagem('danger', 'Erro ao atualizar as parcelas! Tente Novamente.');
+            }
+        }
+    }
+
+    $pedido = recuperaDados('pedidos', 'id', $idPedido);
+    $i = $pedido['numero_parcelas'];
+
+    $formaCompleta = "";
+
+    $consultaParcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = $idPedido AND publicado = 1 ORDER BY numero_parcelas");
+
+    $countForma = 0;
+
+    while ($parcelasArray = mysqli_fetch_array($consultaParcelas)) {
+        $forma = $countForma + 1 . "º parcela R$ " . dinheiroParaBr($parcelasArray['valor']) . ". Entrega de documentos a partir de " . exibirDataBr($parcelasArray['data_pagamento']) . ".\n";
+        $formaCompleta = $formaCompleta . $forma;
+
+        $countForma += 1;
+    }
+    $formaCompleta = $formaCompleta . "\nA liquidação de cada parcela se dará em 3 (três) dias úteis após a data de confirmação da correta execução do(s) serviço(s).";
+
+    $sqlForma = "UPDATE pedidos SET forma_pagamento = '$formaCompleta' WHERE id = $idPedido AND origem_tipo_id = 2";
+    mysqli_query($con, $sqlForma);
+}
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPc = $pedido['origem_id'];
@@ -136,14 +175,6 @@ $vigencia = recuperaDados('formacao_vigencias', 'id', $fc['form_vigencia_id']);
 $numParcelas = $pedido['numero_parcelas'];
 $fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id'])['nome_completo'];
 $suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'];
-$valor = 0;
-
-for ($i = 1; $i < $pedido['numero_parcelas'] + 1; $i++) {
-    $sql = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
-    $parcela = mysqli_fetch_array(mysqli_query($con, $sql));
-    $valor += $parcela['valor'];
-}
-$valor = dinheiroParaBr($valor);
 
 $sqlLocal = "SELECT local_id FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
 $queryLocais = mysqli_query($con, $sqlLocal);
@@ -216,24 +247,28 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
                         <div class="form-group col-md-3">
                             <label for="programa">Programa *</label>
-                            <input type="text" name="programa" value="<?= $programa ?>" required disabled class="form-control">
+                            <input type="text" name="programa" value="<?= $programa ?>" required disabled
+                                   class="form-control">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label for="linguagem">Linguagem *</label>
-                            <input type="text" name="linguagem" value="<?= $linguagem ?>" required disabled class="form-control">
+                            <input type="text" name="linguagem" value="<?= $linguagem ?>" required disabled
+                                   class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="projeto">Projeto *</label>
-                            <input type="text" name="projeto" value="<?= $projeto ?>" required disabled class="form-control">
+                            <input type="text" name="projeto" value="<?= $projeto ?>" required disabled
+                                   class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="cargo">Cargo *</label>
-                            <input type="text" name="cargo" value="<?= $cargo ?>" required disabled class="form-control">
+                            <input type="text" name="cargo" value="<?= $cargo ?>" required disabled
+                                   class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
@@ -254,12 +289,14 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="fiscal">Fiscal *</label>
-                            <input type="text" name="fiscal" value="<?= $fiscal ?>" disabled required class="form-control">
+                            <input type="text" name="fiscal" value="<?= $fiscal ?>" disabled required
+                                   class="form-control">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="fiscal">Suplente </label>
-                            <input type="text" name="suplente" value="<?= $suplente ?>" disabled required class="form-control">
+                            <input type="text" name="suplente" value="<?= $suplente ?>" disabled required
+                                   class="form-control">
                         </div>
                     </div>
 
@@ -283,7 +320,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                         <div class="form-group col-md-3">
                             <label for="valor">Valor: *</label>
                             <input type="text" name="valor" onKeyPress="return(moeda(this,'.',',',event))"
-                                   class="form-control" value="<?= $valor ?>" readonly required>
+                                   class="form-control" value="<?= $pedido['valor_total'] ?>" readonly required>
                         </div>
                     </div>
 
@@ -296,7 +333,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
                         <div class="form-group col-md-6">
                             <br>
-                            <a href="?perfil=formacao&p=pedido_contratacao&sp=edita_parcelas">
+                            <a href="?perfil=formacao&p=pedido_contratacao&sp=edita_parcelas&idPedido=<?=$idPedido?>">
                                 <button type="button" class="btn btn-info btn-block">Editar parcelas</button>
                             </a>
                         </div>
@@ -313,7 +350,8 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                         <div class="form-group col-md-6">
                             <label for="numeroProcesso">Número do Processo Mãe: *</label>
                             <input type="text" name="processoMae" id="processoMae" class="form-control"
-                                   value="<?= $pedido['numero_processo_mae'] ?>" data-mask="9999.9999/9999999-9" required
+                                   value="<?= $pedido['numero_processo_mae'] ?>" data-mask="9999.9999/9999999-9"
+                                   required
                                    minlength="19">
                         </div>
                     </div>
@@ -322,6 +360,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                         <div class="form-group col-md-6">
                             <label for="forma_pagamento">Forma de pagamento: *</label>
                             <textarea id="forma_pagamento" name="forma_pagamento" class="form-control" required
+                                      readonly
                                       rows="8"><?= $pedido['forma_pagamento'] ?? NULL ?></textarea>
                         </div>
 
@@ -389,7 +428,8 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                 <div class="col-md-12" style="text-align:center">
                     <form action="?perfil=formacao&p=pedido_contratacao&sp=area_impressao" method="post" role="form">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-default" style="width: 35%;">Ir para a área de impressão</button>
+                        <button type="submit" class="btn btn-default" style="width: 35%;">Ir para a área de impressão
+                        </button>
                     </form>
                 </div>
             </div>

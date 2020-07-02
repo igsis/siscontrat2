@@ -57,6 +57,23 @@ if (isset($_POST['cadastra'])) {
         mysqli_query($con, $sqlInsert);
         gravarLog($sqlInsert);
 
+        $formaCompleta = "";
+
+        $consultaParcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = $idPedido AND publicado = 1 ORDER BY numero_parcelas");
+
+        $countForma = 0;
+
+        while ($parcelasArray = mysqli_fetch_array($consultaParcelas)) {
+            $forma = $countForma + 1 . "º parcela R$ " . dinheiroParaBr($parcelasArray['valor']) . ". Entrega de documentos a partir de " . exibirDataBr($parcelasArray['data_pagamento']) . ".\n";
+            $formaCompleta = $formaCompleta . $forma;
+
+            $countForma += 1;
+        }
+        $formaCompleta = $formaCompleta . "\nA liquidação de cada parcela se dará em 3 (três) dias úteis após a data de confirmação da correta execução do(s) serviço(s).";
+
+        $sqlForma = "UPDATE pedidos SET forma_pagamento = '$formaCompleta' WHERE id = $idPedido AND origem_tipo_id = 3";
+        mysqli_query($con, $sqlForma);
+
         $mensagem = mensagem("success", "Pedido de contratação cadastrado com sucesso.");
 
         $sqlUpdate = "UPDATE emia_contratacao SET pedido_id = '$idPedido' WHERE id = '$idEc'";
@@ -276,7 +293,7 @@ $link_proposta = $http . "rlt_proposta_emia.php";
 
                         <div class="form-group col-md-3">
                             <label for="numParcelas">Número de parcelas:</label>
-                            <input type="text" name="numParcelas" value="<?= $ec['numero_parcelas'] ?>" readonly
+                            <input type="text" name="numParcelas" value="<?= $ec['numero_parcelas'] ?>"
                                    class="form-control" required>
                         </div>
 
