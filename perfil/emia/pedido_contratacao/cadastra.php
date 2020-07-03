@@ -2,7 +2,7 @@
 
 $con = bancoMysqli();
 
-$idEc = $_SESSION['idPedido'];
+$idEc = $_POST['idDados'];
 
 $sql = "SELECT pf.nome,
 		       ec.ano,
@@ -192,7 +192,7 @@ $valor = dinheiroParaBr($valor);
 
 
                 <div class="box-footer">
-                    <input type="hidden" name="idEc" value="<?= $idEc ?>" id="idPc">
+                    <input type="hidden" name="idEc" value="<?= $idEc ?>">
                     <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">
                         Cadastrar
                     </button>

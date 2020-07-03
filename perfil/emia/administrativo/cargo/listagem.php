@@ -66,8 +66,6 @@ $query = mysqli_query($con, $sql);
                         </form>
                         </td>";
                         echo "<td>
-                        <form action='?perfil=emia&p=administrativo&sp=cargo&spp=listagem' method='POST'>
-                        <input type='hidden' name='idECDelete' id='idECDelete' value='" . $ec['id'] . "'>
                         <button type='button' name='excluir' id='excluir' class='btn btn-block btn-danger' 
                         data-target='#exclusao' data-toggle='modal' data-id='" . $ec['id'] . "'>
                         <span class='glyphicon glyphicon-trash'></span></button>
@@ -108,11 +106,10 @@ $query = mysqli_query($con, $sql);
                         <p>Tem certeza que deseja excluir o cargo?</p>
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" name="idECDelete" id="idECDelete" value="<?= $ec['id'] ?>">
-                        <input type="hidden" name="excluir" id="excluir">
+                        <input type="hidden" name="idECDelete" id="idECDelete" value="">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                         </button>
-                        <input type="submit" class="btn btn-danger btn-outline" name="exclui" value="Excluir">
+                        <input type="submit" class="btn btn-danger btn-outline" name="excluir" value="Excluir">
                         </form>
                     </div>
                 </div>

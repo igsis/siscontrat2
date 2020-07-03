@@ -126,10 +126,9 @@ $ec = $con->query($sql)->fetch_assoc();
             </div>
             <div class="modal-footer">
                 <input type="hidden" name="idDados" id="idDados" value="<?= $ec['id']?>">
-                <input type="hidden" name="despublicar" id="despublicar">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                 </button>
-                <input type="submit" class="btn btn-danger btn-outline" name="despublica" value="Excluir">
+                <input type="submit" class="btn btn-danger btn-outline" name="despublicar" value="Excluir">
                 </form>
             </div>
         </div>

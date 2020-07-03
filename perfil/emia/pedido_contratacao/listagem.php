@@ -113,10 +113,9 @@ $query = mysqli_query($con, $sql);
             <div class="modal-footer">
                 <form action="?perfil=emia&p=pedido_contratacao&sp=listagem" method="POST">
                     <input type="hidden" name="idPedido" id="idPedido" value="">
-                    <input type="hidden" name="deletar" id="deletar">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                     </button>
-                    <input type="submit" class="btn btn-danger btn-outline" name="exclui" value="Excluir">
+                    <input type="submit" class="btn btn-danger btn-outline" name="deletar" value="Excluir">
                 </form>
             </div>
         </div>
