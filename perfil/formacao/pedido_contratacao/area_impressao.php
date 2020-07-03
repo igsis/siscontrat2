@@ -19,6 +19,7 @@ $link_despacho = $http . "rlt_despacho_formacao.php";
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPf = $pedido['pessoa_fisica_id'];
+
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -76,11 +77,12 @@ $idPf = $pedido['pessoa_fisica_id'];
                         <nav class="navbar navbar-static-top bg-light-blue-active">
                             <h4 align="center">OUTROS</h4>
                         </nav>
-                        <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button">
-                            <button type="button" style="color:black;" class="btn btn-outline-info center-block">
+                        <form action="<?= $link_facc ?>" target="_blank" method="POST">
+                            <input type="hidden" value="<?=$idPf?>" name="idPf">
+                            <button type="submit" style="color:black;" class="btn btn-outline-info center-block">
                                 FACC
                             </button>
-                        </a>
+                        </form>
                         <hr/>
                     </div>
                 </div>

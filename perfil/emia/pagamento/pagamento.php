@@ -7,7 +7,7 @@ $pedido = $con->query($sqlPedido)->fetch_array();
 $ec = recuperaDados('emia_contratacao', 'id', $pedido['origem_id']);
 $pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 
-$sql = "SELECT * FROM parcelas where pedido_id = '$idPedido'";
+$sql = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1";
 $query = mysqli_query($con, $sql);
 
 $idLocal = $ec['local_id'];

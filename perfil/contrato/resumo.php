@@ -569,7 +569,7 @@ $disableDown = "";
                         </div>-->
                     </div>
 
-
+                    <br>
                     <?php
                     if ($pedido['pessoa_tipo_id'] == 1) {
                         ?>

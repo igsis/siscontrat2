@@ -160,7 +160,7 @@ if (isset($_POST['edit'])) {
                 <hr>
                 <form action="?perfil=emia&p=pedido_contratacao&sp=cadastra" method="POST">
                     <input type="hidden" name="idDados" value="<?=$idEC?>">
-                    <button type="button" style="width: 30%" class="btn btn-success center-block">Gerar pedido de contratação</button>
+                    <button type="submit" style="width: 30%" class="btn btn-success center-block">Gerar pedido de contratação</button>
                 </form>
             </div>
 

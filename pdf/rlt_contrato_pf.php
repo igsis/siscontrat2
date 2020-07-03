@@ -26,7 +26,7 @@ class PDF extends FPDF
 }
 
 //CONSULTA  (copia inteira em todos os docs)
-$idPf = $_SESSION['idPf'];
+$idPf = $_POST['idPf'];
 
 $ano=date('Y');
 $dataAtual = date("d/m/Y");

@@ -12,8 +12,6 @@ if (isset($_POST['selecionar']) || isset($_POST['idPf'])) {
     $editaOnly = "<input type='hidden' name='editOnly' value= '1'>";
 }
 
-
-
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider'])) {
     $nome = addslashes($_POST['nome']);
     $nomeArtistico = addslashes($_POST['nomeArtistico']);

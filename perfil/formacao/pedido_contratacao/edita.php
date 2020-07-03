@@ -17,7 +17,6 @@ if (isset($_POST['cadastra'])) {
     $idPc = $_POST['idPc'];
     $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
     $idPf = $fc['pessoa_fisica_id'] ?? null;
-    $_SESSION['idPF'] = $idPf;
 
     $sql = "INSERT INTO pedidos (origem_tipo_id, origem_id, pessoa_tipo_id, pessoa_fisica_id, numero_processo, numero_processo_mae, verba_id, numero_parcelas, valor_total, forma_pagamento, data_kit_pagamento, justificativa, status_pedido_id, observacao)
                          VALUES (2, '$idPc', 1, '$idPf', '$numeroProcesso', '$processoMae' ,'$verba', '$numParcelas', '$valor', '$forma_pagamento', '$dataKit', '$justificativa', 2, '$observacao')";
