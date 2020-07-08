@@ -38,7 +38,7 @@ if (isset($_POST['selecionar'])) {
     if (isset($_POST['editOnly'])) {
 
     } else {
-        $sql = "UPDATE pedidos SET pessoa_juridica_id = '$idPj', pessoa_tipo_id = 2, pessoa_fisica_id = null WHERE id ='$idPedido'";
+        $sql = "UPDATE pedidos SET pessoa_juridica_id = '$idPj', pessoa_tipo_id = 2, pessoa_fisica_id = null WHERE id ='$idPedido' AND origem_tipo_id = 1";
         if (mysqli_query($con, $sql)) {
             $mensagem = mensagem("success", "Troca efetuada com sucesso!");
         } else {
@@ -88,6 +88,7 @@ if (isset($_POST['load'])) {
 
 if (isset($_POST['salvar'])) {
     $idPedido = $_POST['idPedido'];
+    $idEvento = $_POST['idEvento'];
     if ($nivelUsuario == 1) { // alterar o operador e/ou o status do pedido
         $operador = $_POST['operador'] ?? NULL;
         $status = $_POST['status'] ?? NULL;
@@ -103,7 +104,7 @@ if (isset($_POST['salvar'])) {
         if ($status == NULL) {
 
         } else {
-            $sql = "UPDATE pedidos SET status_pedido_id = '$status' WHERE id = '$idPedido'";
+            $sql = "UPDATE pedidos SET status_pedido_id = '$status' WHERE id = '$idPedido' AND origem_tipo_id = 1";
             if (mysqli_query($con, $sql)) {
                 gravarLog($sql);
             }
@@ -115,10 +116,6 @@ if (isset($_POST['salvar'])) {
             }
         }
     }
-
-
-    $idEvento = $_POST['idEvento'];
-    $idPedido = $_POST['idPedido'];
 
     $testaFilme = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento")->fetch_array();
 
@@ -156,7 +153,7 @@ if (isset($_POST['salvar'])) {
     $suplente = $_POST['suplente'] ?? null;
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', valor_total = '$valorTotal', pendencias_contratos = '$pendencia' WHERE id = '$idPedido'";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', valor_total = '$valorTotal', pendencias_contratos = '$pendencia' WHERE id = '$idPedido' AND status_pedido_id = 1";
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
         if ($operador != NULL) {
@@ -366,7 +363,6 @@ $disableDown = "";
 
                             <?php
                             while ($atracao = mysqli_fetch_array($queryAtracao)) {
-                                $_SESSION['idAtracao'] = $atracao['id'];
                                 ?>
                                 <div class="row">
                                     <input type="hidden" name="idAtracao[]" value="<?= $atracao['id'] ?>">

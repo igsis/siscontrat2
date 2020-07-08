@@ -15,32 +15,37 @@ $setores = "";
 $qtsApresentacao = 0;
 $cargaHoraria = 0;
 
-while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
-    $setores = $setores . $linhaOco['nome'] . '; ';
+if ($ocorrencias->num_rows > 0) {
 
-    if ($linhaOco['tipo_ocorrencia_id'] == 1) {
-        $atracoes = $con->query("SELECT quantidade_apresentacao FROM atracoes WHERE publicado = 1 AND evento_id = " . $evento['id'] . " AND id = " . $linhaOco['atracao_id']);
+    while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
+        $setores = $setores . $linhaOco['nome'] . '; ';
 
-        while ($atracao = mysqli_fetch_array($atracoes)) {
-            $qtsApresentacao = $qtsApresentacao + (int)$atracao['quantidade_apresentacao'];
-        }
+        if ($linhaOco['tipo_ocorrencia_id'] == 1) {
+            $atracoes = $con->query("SELECT quantidade_apresentacao FROM atracoes WHERE publicado = 1 AND evento_id = " . $evento['id'] . " AND id = " . $linhaOco['atracao_id']);
 
-        $trechoApresentacoes = ", totalizando $qtsApresentacao apresentações conforme proposta/cronograma";
-
-        $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
-        $carga = $con->query($sqlCarga);
-
-        if ($carga->num_rows > 0 || $cargaHoraria != 0) {
-            while ($cargaArray = mysqli_fetch_array($carga)) {
-                $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
+            while ($atracao = mysqli_fetch_array($atracoes)) {
+                $qtsApresentacao = $qtsApresentacao + (int)$atracao['quantidade_apresentacao'];
             }
-        } else {
+
+            $trechoApresentacoes = ", totalizando $qtsApresentacao apresentações conforme proposta/cronograma";
+
+            $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
+            $carga = $con->query($sqlCarga);
+
+            if ($carga->num_rows > 0 || $cargaHoraria != 0) {
+                while ($cargaArray = mysqli_fetch_array($carga)) {
+                    $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
+                }
+            } else {
+                $cargaHoraria = "Não possuí.";
+            }
+        } else if ($linhaOco['tipo_ocorrencia_id'] == 2) {
+            $trechoApresentacoes = "";
             $cargaHoraria = "Não possuí.";
         }
-    } else if($linhaOco['tipo_ocorrencia_id'] == 2) {
-        $trechoApresentacoes = "";
-        $cargaHoraria = "Não possuí.";
     }
+}else{
+    $trechoApresentacoes = "";
 }
 
 $setores = substr($setores, 0);

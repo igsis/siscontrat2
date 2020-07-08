@@ -2,7 +2,8 @@
 $con = bancoMysqli();
 
 $idEvento = $_SESSION['idEvento'];
-$idPedido = recuperaDados('pedidos', 'origem_id', $idEvento . ' publicado = 1')['id'];
+$idPedido = $con->query("SELECT id FROM pedidos WHERE origem_id = $idEvento AND origem_tipo_id = 1 AND publicado = 1")->fetch_array()['id'];
+
 
 $exibir = ' ';
 $resultado = "<td></td>";

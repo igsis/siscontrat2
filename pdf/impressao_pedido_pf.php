@@ -15,32 +15,36 @@ $setores = "";
 $qtsApresentacao = 0;
 $cargaHoraria = 0;
 
-while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
-    $setores = $setores . $linhaOco['nome'] . '; ';
+if ($ocorrencias->num_rows > 0) {
+    while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
+        $setores = $setores . $linhaOco['nome'] . '; ';
 
-    if($linhaOco['tipo_ocorrencia_id'] == 1){
-        $atracoes = $con->query("SELECT quantidade_apresentacao FROM atracoes WHERE publicado = 1 AND evento_id = " . $evento['id'] . " AND id = " . $linhaOco['atracao_id']);
+        if ($linhaOco['tipo_ocorrencia_id'] == 1) {
+            $atracoes = $con->query("SELECT quantidade_apresentacao FROM atracoes WHERE publicado = 1 AND evento_id = " . $evento['id'] . " AND id = " . $linhaOco['atracao_id']);
 
-        while($atracao = mysqli_fetch_array($atracoes)){
-            $qtsApresentacao = $qtsApresentacao + (int)$atracao['quantidade_apresentacao'];
-        }
-
-        $trechoApresentacoes = ", totalizando $qtsApresentacao apresentações conforme proposta/cronograma";
-
-        $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
-        $carga = $con->query($sqlCarga);
-
-        if($carga->num_rows > 0 || $cargaHoraria != 0){
-            while($cargaArray = mysqli_fetch_array($carga)){
-                $cargaHoraria =  $cargaHoraria + (int)$cargaArray['carga_horaria'];
+            while ($atracao = mysqli_fetch_array($atracoes)) {
+                $qtsApresentacao = $qtsApresentacao + (int)$atracao['quantidade_apresentacao'];
             }
-        }else{
+
+            $trechoApresentacoes = ", totalizando $qtsApresentacao apresentações conforme proposta/cronograma";
+
+            $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
+            $carga = $con->query($sqlCarga);
+
+            if ($carga->num_rows > 0 || $cargaHoraria != 0) {
+                while ($cargaArray = mysqli_fetch_array($carga)) {
+                    $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
+                }
+            } else {
+                $cargaHoraria = "Não possuí.";
+            }
+        } else if ($linhaOco['tipo_ocorrencia_id'] == 2) {
+            $trechoApresentacoes = "";
             $cargaHoraria = "Não possuí.";
         }
-    } else if($linhaOco['tipo_ocorrencia_id'] == 2) {
-        $trechoApresentacoes = "";
-        $cargaHoraria = "Não possuí.";
     }
+}else{
+    $trechoApresentacoes = "";
 }
 
 $setores = substr($setores, 0);
@@ -76,12 +80,12 @@ $fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
 $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
 
 $duracao = "Não se aplica";
-if($evento['tipo_evento_id'] == 2){
+if ($evento['tipo_evento_id'] == 2) {
     $duracao = 0;
     $sqlTestaFilme = "SELECT filme_id FROM filme_eventos WHERE evento_id = $idEvento";
     $queryFilme = mysqli_query($con, $sqlTestaFilme);
 
-    while($idFilmes = mysqli_fetch_array($queryFilme)){
+    while ($idFilmes = mysqli_fetch_array($queryFilme)) {
         $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $idFilmes['filme_id'])->fetch_array();
         $duracao = $duracao + (int)$filme['duracao'];
     }
@@ -97,10 +101,10 @@ if ($pedido['numero_processo_mae'] != NULL) {
 
 $numProcesso = $pedido['numero_processo'] == NULL ? "Não cadastrado" : $pedido['numero_processo'];
 
-if($pessoa['passaporte'] != NULL){
+if ($pessoa['passaporte'] != NULL) {
     $cpf_passaporte = "<strong>Passaporte: </strong> " . $pessoa['passaporte'] . "<br />";
-}else{
-    $cpf_passaporte = "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />";    
+} else {
+    $cpf_passaporte = "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />";
 }
 
 
@@ -148,11 +152,11 @@ if($pessoa['passaporte'] != NULL){
         "<strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
-        "<p><strong>Data / Período:</strong> " . retornaPeriodoNovo($idEvento,'ocorrencias') . $trechoApresentacoes  . "</p>" .
+        "<p><strong>Data / Período:</strong> " . retornaPeriodoNovo($idEvento, 'ocorrencias') . $trechoApresentacoes . "</p>" .
         "<p><strong>Carga Horária:</strong> $cargaHoraria </p>" .
-        "<p><strong>Duração: </strong> $duracao  </p>".
+        "<p><strong>Duração: </strong> $duracao  </p>" .
         "<p align='justify'><strong>Local:</strong> $local </p>" .
-        "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . " ( ". valorPorExtenso($pedido['valor_total']) . " )"  . "</p>" .
+        "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . " ( " . valorPorExtenso($pedido['valor_total']) . " )" . "</p>" .
         "<p align='justify'><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
         "<p align='justify'><strong>Justificativa: </strong> " . $pedido['justificativa'] . "</p>" .
         "<p align='justify'>Nos termos do art. 6º do decreto 54.873/2014, fica designado como fiscal desta contratação artística o(a) servidor(a) " . $fiscal['nome_completo'] . ", RF " . $fiscal['rf_rg'] . " e, como substituto, " . $suplente['nome_completo'] . ", RF " . $suplente['rf_rg'] . ". Diante do exposto, solicitamos autorização para prosseguimento do presente." . "</p>";

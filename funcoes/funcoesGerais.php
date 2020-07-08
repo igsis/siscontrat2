@@ -816,6 +816,12 @@ function recuperaDadosPublicado($tabela, $campo, $variavelCampo)
 		}
 		return($rt ? $rt : "zero");
 	}
+	
+	function statusPedidoParaPropostaGerada ($idPedido){
+        $con = bancoMysqli();
+        $sql = "UPDATE pedidos SET status_pedido_id = 14 WHERE id = $idPedido AND publicado = 1 AND origem_tipo_id = 1";
+        mysqli_query($con, $sql);
+    }
 
 	function analisaArray($array)
 	{
