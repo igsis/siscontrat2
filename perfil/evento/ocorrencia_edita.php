@@ -398,7 +398,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <?php
-                                if ($evento['tipo_evento_id'] == 2 && isset($idFilme) && $idFilme != NULL) {
+                                if ($evento['tipo_evento_id'] == 2 && isset($idFilme)) {
                                     $filme = $con->query("SELECT duracao FROM filmes WHERE id = $idFilme")->fetch_array();
                                     $readonly = "readonly";
                                     ?>
