@@ -27,6 +27,7 @@ if($evento['tipo_evento_id'] == 2){
     $trechoApre = $atracao['quantidade_apresentacao'] ." (" . qtdApresentacoesPorExtenso($atracao['quantidade_apresentacao']) . " ) apresentações";
 }
 
+alteraStatusPedidoContratos($idPedido, "reserva");
 ?>
 
 <html>

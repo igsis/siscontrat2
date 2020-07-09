@@ -107,6 +107,8 @@ if($pessoa['passaporte'] != NULL){
               <p>CPF: " . $pessoa['cpf'] . "</p>";
 }
 
+alteraStatusPedidoContratos($idPedido, "proposta");
+
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$idPedido.doc");
 ?>

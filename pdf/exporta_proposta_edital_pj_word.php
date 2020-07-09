@@ -75,6 +75,8 @@ if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
     $ccm = "Não Cadastrado.";
 }
 
+alteraStatusPedidoContratos($idPedido, "proposta");
+
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=proposta_edital_pj_$idPedido.doc");
 echo "<html>";

@@ -27,7 +27,7 @@ if($evento['tipo_evento_id'] == 2){
 
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
-
+alteraStatusPedidoContratos($idPedido, "reserva");
 ?>
 
 <html>

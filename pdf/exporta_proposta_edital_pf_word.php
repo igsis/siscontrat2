@@ -118,6 +118,8 @@ if($pessoa['nome_artistico'] == NULL || $pessoa['nome_artistico'] == ""){
     $nomeArtistico = $pessoa['nome_artistico'];
 }
 
+alteraStatusPedidoContratos($idPedido, "proposta");
+
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=proposta_edital_pf_$idPedido.doc");
 echo "<html>";

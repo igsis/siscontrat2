@@ -120,6 +120,8 @@ if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
     $ccm = "Não Cadastrado.";
 }
 
+alteraStatusPedidoContratos($idPedido, "proposta");
+
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
 $pdf->AddPage();
