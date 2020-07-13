@@ -232,7 +232,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
         let valRegistrado = document.querySelector('#totalRegistrado').textContent;
         $("#totalRegistrado").text(sum.toFixed(2));
 
-        if (valOriginal === valRegistrado) {
+        if (valOriginal == valRegistrado) {
             alerta.css("display", "block");
             btnGravar.attr('disabled', false);
         } else {
