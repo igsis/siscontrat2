@@ -108,6 +108,8 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 
+alteraStatusPedidoContratos($idPedido, "proposta");
+
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
 $pdf->AddPage();

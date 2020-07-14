@@ -52,8 +52,6 @@ if (isset($_POST['edit'])) {
     $fc = recuperaDados('formacao_contratacoes', 'id', $idPC);
 }
 
-$_SESSION['idPc'] = $idPC;
-
 ?>
 
 <div class="content-wrapper">
@@ -90,7 +88,7 @@ $_SESSION['idPc'] = $idPC;
                             <label for="pf">Pessoa Física: *</label>
                             <select required name="idPF" id="idPF" class="form-control">
                                 <?php
-                                    geraOpcao('pessoa_fisicas', $fc['pessoa_fisica_id']);
+                                geraOpcao('pessoa_fisicas', $fc['pessoa_fisica_id']);
                                 ?>
                             </select>
                             <br>
@@ -104,7 +102,7 @@ $_SESSION['idPc'] = $idPC;
                                     data-target="#modal-default"><i class="fa fa-info"></i></button>
                             <select class="form-control" name="classificacao" id="classificacao" required>
                                 <?php
-                                    geraOpcao("classificacao_indicativas", $fc['classificacao']);
+                                geraOpcao("classificacao_indicativas", $fc['classificacao']);
                                 ?>
                             </select>
                         </div>
@@ -115,7 +113,7 @@ $_SESSION['idPc'] = $idPC;
                             <label for="territorio">Território *</label>
                             <select class="form-control" name="territorio" id="territorio" required>
                                 <?php
-                                    geraOpcao("territorios", $fc['territorio_id']);
+                                geraOpcao("territorios", $fc['territorio_id']);
                                 ?>
                             </select>
                         </div>
@@ -124,7 +122,7 @@ $_SESSION['idPc'] = $idPC;
                             <label for="coordenadoria">Coordenadoria *</label>
                             <select class="form-control" name="coordenadoria" id="coordenadoria" required>
                                 <?php
-                                    geraOpcao("coordenadorias", $fc['coordenadoria_id']);
+                                geraOpcao("coordenadorias", $fc['coordenadoria_id']);
                                 ?>
                             </select>
                         </div>
@@ -133,7 +131,7 @@ $_SESSION['idPc'] = $idPC;
                             <label for="subprefeitura">Subprefeitura *</label>
                             <select class="form-control" name="subprefeitura" id="subprefeitura" required>
                                 <?php
-                                    geraOpcao("subprefeituras", $fc['subprefeitura_id']);
+                                geraOpcao("subprefeituras", $fc['subprefeitura_id']);
                                 ?>
                             </select>
                         </div>
@@ -153,7 +151,7 @@ $_SESSION['idPc'] = $idPC;
                             <label for="linguagem">Linguagem *</label>
                             <select class="form-control" name="linguagem" id="linguagem" required>
                                 <?php
-                                    geraOpcao("linguagens", $fc['linguagem_id']);
+                                geraOpcao("linguagens", $fc['linguagem_id']);
                                 ?>
                             </select>
                         </div>
@@ -162,7 +160,7 @@ $_SESSION['idPc'] = $idPC;
                             <label for="projeto">Projeto *</label>
                             <select class="form-control" name="projeto" id="projeto" required>
                                 <?php
-                                    geraOpcao("projetos", $fc['projeto_id']);
+                                geraOpcao("projetos", $fc['projeto_id']);
                                 ?>
                             </select>
                         </div>
@@ -183,7 +181,7 @@ $_SESSION['idPc'] = $idPC;
                                 geraOpcao("formacao_vigencias", $fc['form_vigencia_id']);
                                 ?>
                             </select>
-                    </div>
+                        </div>
 
                     </div>
 
@@ -218,7 +216,7 @@ $_SESSION['idPc'] = $idPC;
                             <select name="fiscal" id="fiscal" class="form-control" required>
                                 <option>Selecione um fiscal...</option>
                                 <?php
-                                     geraOpcaoUsuario('usuarios', 1, $fc['fiscal_id']);
+                                geraOpcaoUsuario('usuarios', 1, $fc['fiscal_id']);
                                 ?>
                             </select>
                         </div>
@@ -228,34 +226,37 @@ $_SESSION['idPc'] = $idPC;
                             <select name="suplente" id="suplente" class="form-control">
                                 <option>Selecione um suplente...</option>
                                 <?php
-                                     geraOpcaoUsuario('usuarios', 1, $fc['suplente_id']);
+                                geraOpcaoUsuario('usuarios', 1, $fc['suplente_id']);
                                 ?>
                             </select>
                         </div>
                     </div>
                 </div>
+
                 <div class="box-footer">
                     <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
-                        <button type="button" class="btn btn-default">Voltar</button>
+                    <button type="button" class="btn btn-default">Voltar</button>
                     </a>
-                    <input type="hidden" name="idFC" value="<?=$idPC?>" id="idFC">
+                    <input type="hidden" name="idFC" value="<?= $idPC ?>" id="idFC">
                     <button type="submit" name="editar" id="editar" class="btn btn-primary pull-right">
                         Salvar
                     </button>
-                    <a href="?perfil=formacao&p=pedido_contratacao&sp=cadastra">
-                        <button type="button" class="btn btn-default pull-right">Gerar pedido de contratação</button>
-                    </a>
-                </div>
             </form>
+            <hr>
+                   <form action="?perfil=formacao&p=pedido_contratacao&sp=cadastra" method="POST">
+                       <input type="hidden" name="idFC" value="<?= $idPC ?>">
+                       <button style="width: 30%" type="submit" name="carregar" class="btn btn-success center-block">Gerar pedido de contratação</button>
+                   </form>
+                </div>
         </div>
-
     </section>
 </div>
 
-    <?php @include "../perfil/includes/modal_classificacao.php"?>
+
+<?php @include "../perfil/includes/modal_classificacao.php" ?>
 
 
-    <script>
+<script>
     let ano = $('#ano');
     let vigencia = $('#vigencia');
     let botao = $('#editar');

@@ -2,13 +2,9 @@
 
 $con = bancoMysqli();
 
-if (isset($_POST['carregar']))
-    $idPc = $_POST['idPc'];
-else
-    $idPc = $_SESSION['idPc'];
-
-$_SESSION['idPc'] = $idPc;
-$idPc = $_SESSION['idPc'];
+if (isset($_POST['carregar'])){
+    $idPc = $_POST['idFC'];
+}
 
 $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
 $pessoa_fisica = recuperaDados('pessoa_fisicas', 'id', $fc['pessoa_fisica_id'])['nome'];
@@ -201,6 +197,8 @@ $valor = dinheiroParaBr($valor);
                         <div class="form-group col-md-6">
                             <label for="forma_pagamento">Forma de pagamento: *</label>
                             <textarea id="forma_pagamento" name="forma_pagamento" required class="form-control"
+                                      readonly
+                                      placeholder="A FORMA DE PAGAMENTO É PREENCHIDA AUTOMATICAMENTE APÓS O CADASTRO DO PEDIDO/EDIÇÃO DE PARCELAS"
                                       rows="8"></textarea>
                         </div>
 
@@ -247,7 +245,6 @@ $valor = dinheiroParaBr($valor);
 
                     <div class="box-footer">
                         <input type="hidden" name="idPc" value="<?= $idPc ?>" id="idPc">
-
                         <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">
                             Cadastrar
                         </button>

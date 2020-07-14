@@ -40,11 +40,11 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Gênero:</th>
-                                            <td><?= $filme['genero'] ?></td>
+                                            <td><?= $filme['genero'] == NULL ? "Não cadastrado" : $filme['genero'] ?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Sinopse:</th>
-                                            <td><?= $filme['sinopse'] == null ? "Não cadastrado" : $filme['sinopse']?></td>
+                                            <td><?= $filme['sinopse'] == null ? "Não cadastrado" : $filme['sinopse'] ?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Duração(mins):</th>
@@ -114,7 +114,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Links:</th>
-                                            <td><?= $atracao['links'] == null ? "Não cadastrado" : $atracao['links']?></td>
+                                            <td><?= $atracao['links'] == null ? "Não cadastrado" : $atracao['links'] ?></td>
                                         </tr>
                                         <tr>
                                             <th class="text-center bg-primary" colspan="2">Dados do Produtor</th>
@@ -138,9 +138,9 @@ if ($evento['tipo_evento_id'] == 2) {
                                                 <td><?= $produtor['telefone2'] ?></td>
                                             </tr>
                                         <?php }
-                                        if($produtor['observacao'] != "" && $produtor != NULL){
+                                        if ($produtor['observacao'] != "" && $produtor != NULL) {
                                             $obs = $produtor['observacao'];
-                                        }else{
+                                        } else {
                                             $obs = "Não cadastado";
                                         }
                                         ?>

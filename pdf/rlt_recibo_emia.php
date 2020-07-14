@@ -86,8 +86,6 @@ if($pessoa['passaporte'] != NULL){
 
 $pdf->Ln(7);
 
-$endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
-
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(20, $l, utf8_decode("Endereço:"), 0, 0, 'L');

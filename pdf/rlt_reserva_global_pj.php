@@ -38,6 +38,7 @@ while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
 
 $local = substr($local, 0, -3);
 
+alteraStatusPedidoContratos($idPedido, "reserva");
 ?>
 
 <html>

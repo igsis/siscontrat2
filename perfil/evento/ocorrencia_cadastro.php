@@ -229,7 +229,7 @@ $tipoEvento = $evento['tipo_evento_id'];
 
 
                                 <?php
-                                if ($tipoEvento == 2) {
+                                if ($tipoEvento == 2 && isset($idFilme)) {
                                     $filme = $con->query("SELECT duracao FROM filmes WHERE id = $idFilme")->fetch_array();
                                     $readonly = "readonly";
                                     ?>

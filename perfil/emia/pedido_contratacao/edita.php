@@ -14,8 +14,10 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $obs = addslashes($_POST['observacao']) ?? null;
     $processoMae = $_POST['processoMae'];
     $data_kit = $_POST['dataKit'];
-    if (isset($_POST['cadastra'])) {
-        $sql = "INSERT INTO pedidos (origem_tipo_id, 
+}
+
+if (isset($_POST['cadastra'])) {
+    $sql = "INSERT INTO pedidos (origem_tipo_id, 
                                  origem_id, 
                                  pessoa_tipo_id,  
                                  pessoa_fisica_id, 
@@ -28,8 +30,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
                                  data_kit_pagamento, 
                                  justificativa, 
                                  status_pedido_id, 
-                                 observacao 
-                                )
+                                 observacao)
             VALUES('3',
                    '$idEc',
                    '1',
@@ -44,39 +45,58 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
                    '$justificativa',
                    '2',
                    '$obs')";
-        if (mysqli_query($con, $sql)) {
-            $idPedido = recuperaUltimo('pedidos');
-            gravarLog($sql);
-            $sqlInsert = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) 
+    if (mysqli_query($con, $sql)) {
+        $idPedido = recuperaUltimo('pedidos');
+        gravarLog($sql);
+        $sqlInsert = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) 
                     SELECT p.id, ep.numero_parcelas, ep.valor, ep.data_pagamento 
                     FROM emia_parcelas ep 
                     INNER JOIN emia_contratacao ec ON ec.emia_vigencia_id = ep.emia_vigencia_id 
                     INNER JOIN pedidos p ON p.origem_id = ec.id 
                     WHERE p.origem_tipo_id = 3 AND p.id = '$idPedido'";
-            mysqli_query($con, $sqlInsert);
-            gravarLog($sqlInsert);
+        mysqli_query($con, $sqlInsert);
+        gravarLog($sqlInsert);
 
-            $mensagem = mensagem("success", "Pedido de contratação cadastrado com sucesso.");
+        $formaCompleta = "";
 
-            $sqlUpdate = "UPDATE emia_contratacao SET pedido_id = '$idPedido' WHERE id = '$idEc'";
-            mysqli_query($con, $sqlUpdate);
-        } else {
-            $mensagem = mensagem("danger", "Erro ao Cadastrar! Tente novamente.");
+        $consultaParcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = $idPedido AND publicado = 1 ORDER BY numero_parcelas");
+
+        $countForma = 0;
+
+        while ($parcelasArray = mysqli_fetch_array($consultaParcelas)) {
+            $forma = $countForma + 1 . "º parcela R$ " . dinheiroParaBr($parcelasArray['valor']) . ". Entrega de documentos a partir de " . exibirDataBr($parcelasArray['data_pagamento']) . ".\n";
+            $formaCompleta = $formaCompleta . $forma;
+
+            $countForma += 1;
         }
-    } else if (isset($_POST['edita'])) {
-        $idPedido = $_POST['idEc'];
+        $formaCompleta = $formaCompleta . "\nA liquidação de cada parcela se dará em 3 (três) dias úteis após a data de confirmação da correta execução do(s) serviço(s).";
 
-        $sql = "UPDATE pedidos SET verba_id = '$verba', valor_total = '$valor', data_kit_pagamento = '$data_kit', numero_processo = '$num_processo', numero_processo_mae = '$processoMae',forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$obs', numero_parcelas = '$num_parcelas' WHERE id = '$idPedido'";
+        $sqlForma = "UPDATE pedidos SET forma_pagamento = '$formaCompleta' WHERE id = $idPedido AND origem_tipo_id = 3";
+        mysqli_query($con, $sqlForma);
 
-        if (mysqli_query($con, $sql)) {
-            gravarLog($sql);
-            $mensagem = mensagem("success", "Pedido de contratação salvo com sucesso.");
-        } else {
-            $mensagem = mensagem("danger", "Erro ao Salvar! Tente novamente.");
-        }
+        $mensagem = mensagem("success", "Pedido de contratação cadastrado com sucesso.");
 
+        $sqlUpdate = "UPDATE emia_contratacao SET pedido_id = '$idPedido' WHERE id = '$idEc'";
+        mysqli_query($con, $sqlUpdate);
+    } else {
+        $mensagem = mensagem("danger", "Erro ao Cadastrar! Tente novamente.");
     }
 }
+
+if (isset($_POST['edita'])) {
+    $idPedido = $_POST['idEc'];
+
+    $sql = "UPDATE pedidos SET verba_id = '$verba', valor_total = '$valor', data_kit_pagamento = '$data_kit', numero_processo = '$num_processo', numero_processo_mae = '$processoMae',forma_pagamento = '$forma_pagamento', justificativa = '$justificativa', observacao = '$obs', numero_parcelas = '$num_parcelas' WHERE id = '$idPedido'";
+
+    if (mysqli_query($con, $sql)) {
+        gravarLog($sql);
+        $mensagem = mensagem("success", "Pedido de contratação salvo com sucesso.");
+    } else {
+        $mensagem = mensagem("danger", "Erro ao Salvar! Tente novamente.");
+    }
+
+}
+
 
 if (isset($_POST['carregar'])) {
     $idPedido = $_POST['idEc'];
@@ -84,36 +104,54 @@ if (isset($_POST['carregar'])) {
 
 if (isset($_POST['parcelaEditada'])) {
     $idPedido = $_POST['idPedido'];
-    $parcelas = $_POST['parcela'];
-    $valores = dinheiroDeBr($_POST['valor']);
-    $data_pagamentos = $_POST['data_pagamento'];
+    $numParcelas = $_POST['numParcelas'];
 
-    $pedido = recuperaDados('pedidos', 'id', $idPedido);
+    $parcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1")->fetch_all(MYSQLI_ASSOC);
 
-    $sql = "DELETE FROM parcelas WHERE pedido_id = '$idPedido'";
-    mysqli_query($con, $sql);
-
-    $i = $pedido['numero_parcelas'];
-
-    $baldeValor = 0;
-
-    for ($count = 0; $count < $i; $count++) {
-        $parcela = $parcelas[$count] ?? NULL;
-        $valor = $valores[$count] ?? NULL;
-        $baldeValor += $valor;
-        $data_pagamento = $data_pagamentos[$count] ?? NULL;
-
-        $sql = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
-
-        if (mysqli_query($con, $sql)) {
-            $mensagem = mensagem('success', 'Parcelas Atualizadas!');
-        } else {
-            $mensagem = mensagem('danger', 'Erro ao atualizar as parcelas! Tente Novamente.');
+    if (count($parcelas) > 0) {
+        foreach ($parcelas as $parcela) {
+            $sqlDeletaParcela = "UPDATE parcelas SET publicado = '0' WHERE pedido_id = '$idPedido' AND numero_parcelas = '{$parcela['numero_parcelas']}'";
+            if ($con->query($sqlDeletaParcela)) {
+                gravarLog($sqlDeletaParcela);
+            }
         }
     }
 
-    $sql = "UPDATE pedidos SET valor_total = '$baldeValor' WHERE id = '$idPedido'";
-    mysqli_query($con, $sql);
+    if (isset($_POST['parcelaEditada']) && $numParcelas != NULL) {
+
+        foreach ($_POST['parcela'] AS $countPost => $parcela) {
+            $valor = dinheiroDeBr($_POST['valor'][$countPost]) ?? NULL;
+            $data_pagamento = $_POST['data_pagamento'][$countPost] ?? NULL;
+
+            $sqlParcelas = "INSERT INTO parcelas (pedido_id, numero_parcelas, valor, data_pagamento) VALUES ('$idPedido', '$parcela', '$valor', '$data_pagamento')";
+
+            if ($con->query($sqlParcelas)) {
+                $mensagem = mensagem('success', 'Parcelas Atualizadas!');
+            } else {
+                $mensagem = mensagem('danger', 'Erro ao atualizar as parcelas! Tente Novamente.');
+            }
+        }
+    }
+
+    $pedido = recuperaDados('pedidos', 'id', $idPedido);
+    $i = $pedido['numero_parcelas'];
+
+    $formaCompleta = "";
+
+    $consultaParcelas = $con->query("SELECT * FROM parcelas WHERE pedido_id = $idPedido AND publicado = 1 ORDER BY numero_parcelas");
+
+    $countForma = 0;
+
+    while ($parcelasArray = mysqli_fetch_array($consultaParcelas)) {
+        $forma = $countForma + 1 . "º parcela R$ " . dinheiroParaBr($parcelasArray['valor']) . ". Entrega de documentos a partir de " . exibirDataBr($parcelasArray['data_pagamento']) . ".\n";
+        $formaCompleta = $formaCompleta . $forma;
+
+        $countForma += 1;
+    }
+    $formaCompleta = $formaCompleta . "\nA liquidação de cada parcela se dará em 3 (três) dias úteis após a data de confirmação da correta execução do(s) serviço(s).";
+
+    $sqlForma = "UPDATE pedidos SET forma_pagamento = '$formaCompleta' WHERE id = $idPedido AND origem_tipo_id = 3";
+    mysqli_query($con, $sqlForma);
 }
 
 $sql = "SELECT pf.nome,
@@ -132,6 +170,7 @@ $sql = "SELECT pf.nome,
                p.data_kit_pagamento,
                p.numero_processo,
                p.numero_processo_mae,
+               p.valor_total,
                p.justificativa,
                p.forma_pagamento,
                p.verba_id,
@@ -148,18 +187,6 @@ $sql = "SELECT pf.nome,
         INNER JOIN verbas AS verba ON p.verba_id = verba.id
         WHERE p.publicado = 1 AND p.id = '$idPedido' AND p.origem_tipo_id = 3";
 $ec = $con->query($sql)->fetch_array();
-
-$valor = 0;
-if($ec['numero_parcelas'] == NULL){
-    for ($i = 1; $i < $ec['numero_parcelas'] + 1; $i++) {
-        $sql = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND numero_parcelas = '$i'";
-        $parcela = mysqli_fetch_array(mysqli_query($con, $sql));
-        $valor += $parcela['valor'];
-    }
-    $valor = dinheiroParaBr($valor);
-}else{
-    $valor = dinheiroParaBr($valor);
-}
 
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
@@ -266,14 +293,14 @@ $link_proposta = $http . "rlt_proposta_emia.php";
 
                         <div class="form-group col-md-3">
                             <label for="numParcelas">Número de parcelas:</label>
-                            <input type="text" name="numParcelas" value="<?= $ec['numero_parcelas'] ?>" readonly
+                            <input type="text" name="numParcelas" value="<?= $ec['numero_parcelas'] ?>"
                                    class="form-control" required>
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="valor">Valor Total:</label>
                             <input type="text" name="valor" onKeyPress="return(moeda(this,'.',',',event))"
-                                   class="form-control" value="<?= $valor ?>" readonly>
+                                   class="form-control" value="<?= dinheiroParaBr($ec['valor_total']) ?>" readonly>
                         </div>
                     </div>
 
@@ -311,6 +338,7 @@ $link_proposta = $http . "rlt_proposta_emia.php";
                         <div class="form-group col-md-6">
                             <label for="forma_pagamento">Forma de pagamento: </label>
                             <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
+                                      readonly
                                       rows="8"><?= $ec['forma_pagamento'] ?></textarea>
                         </div>
 
@@ -379,7 +407,10 @@ $link_proposta = $http . "rlt_proposta_emia.php";
             <div class="col-md-1">
                 <form action="<?= $link_proposta ?>" target="_blank" method="post">
                     <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                    <button type="submit" class="btn btn-primary center-block" <?= $disabledEmia . " " .$disabledPedido ?>>Gerar Proposta</button>
+                    <button type="submit"
+                            class="btn btn-primary center-block" <?= $disabledEmia . " " . $disabledPedido ?>>Gerar
+                        Proposta
+                    </button>
                 </form>
             </div>
 

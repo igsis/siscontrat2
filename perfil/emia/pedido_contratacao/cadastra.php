@@ -2,7 +2,7 @@
 
 $con = bancoMysqli();
 
-$idEc = $_SESSION['idPedido'];
+$idEc = $_POST['idDados'];
 
 $sql = "SELECT pf.nome,
 		       ec.ano,
@@ -169,6 +169,8 @@ $valor = dinheiroParaBr($valor);
                             <div class="form-group col-md-6">
                                 <label for="forma_pagamento">Forma de pagamento: </label>
                                 <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
+                                          readonly
+                                          placeholder="A FORMA DE PAGAMENTO É PREENCHIDA AUTOMATICAMENTE APÓS A CRIAÇÃO DO PEDIDO/EDIÇÃO DAS PARCELAS"
                                           rows="8"></textarea>
                             </div>
 
@@ -190,7 +192,7 @@ $valor = dinheiroParaBr($valor);
 
 
                 <div class="box-footer">
-                    <input type="hidden" name="idEc" value="<?= $idEc ?>" id="idPc">
+                    <input type="hidden" name="idEc" value="<?= $idEc ?>">
                     <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">
                         Cadastrar
                     </button>

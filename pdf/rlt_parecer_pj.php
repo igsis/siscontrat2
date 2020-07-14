@@ -18,6 +18,14 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 $ano = date('Y');
 
 $parecer = recuperaDados("parecer_artisticos", "pedido_id", $idPedido);
+
+$parecer = recuperaDados("parecer_artisticos", "pedido_id", $idPedido);
+
+if ($parecer) {
+    $parecer = nl2br($parecer['topico1']);
+} else {
+    $parecer = "(Parecer não cadastrado)";
+}
 ?>
 
 <html>
@@ -58,7 +66,7 @@ $parecer = recuperaDados("parecer_artisticos", "pedido_id", $idPedido);
 							(Instituído pela Portaria nº 168/2019-SMC-G e nº 050/2019-SMC.G)</strong></p>".
         "<p>&nbsp;</p>".
 
-        "<p align='justify'>".nl2br($parecer['topico1'])."</p>".
+        "<p align='justify'>".$parecer."</p>".
 
 
         "<p>&nbsp;</p>"

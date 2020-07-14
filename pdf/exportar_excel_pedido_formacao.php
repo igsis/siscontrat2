@@ -10,9 +10,10 @@ require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 session_start(['name' => 'sis']);
 
-$ano = $_SESSION['ano'];
+$idPedido = $_POST['idPedido'];
 
 $sql = "SELECT    pc.id,
+                  fc.protocolo,
                   pc.origem_id,
                   fc.pessoa_fisica_id AS 'idp', 
 	              pf.nome AS 'nome',
@@ -28,7 +29,7 @@ $sql = "SELECT    pc.id,
 	        INNER JOIN formacao_cargos AS c ON c.id = fc.form_cargo_id
             INNER JOIN linguagens AS l ON l.id = fc.linguagem_id
             INNER JOIN formacao_status AS st ON st.id = fc.form_status_id 
-            WHERE fc.ano = '$ano' AND pc.publicado = 1";
+            WHERE pc.id = $idPedido AND pc.origem_tipo_id = 2 AND pc.publicado = 1";
 
 $query = mysqli_query($con, $sql);
 
@@ -77,16 +78,14 @@ $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue("C2", "Função")
     ->setCellValue("D2", "Linguagem")
     ->setCellValue("E2", "E-mail")
-    ->setCellValue("F2", "Telefone 1")
-    ->setCellValue("G2", "Telefone 2")
-    ->setCellValue("H2", "Telefone 3")
-    ->setCellValue("I2", "Estado do Pedido");
+    ->setCellValue("F2", "Telefones do Proponente")
+    ->setCellValue("G2", "Status do Pedido");
 
 // Definimos o estilo da fonte
-$objPHPExcel->getActiveSheet()->getStyle('A2:I2')->getFont()->setBold(true);
+$objPHPExcel->getActiveSheet()->getStyle('A2:G2')->getFont()->setBold(true);
 
 //Colorir a primeira linha
-$objPHPExcel->getActiveSheet()->getStyle('A2:I2')->applyFromArray
+$objPHPExcel->getActiveSheet()->getStyle('A2:G2')->applyFromArray
 (
     array
     (
@@ -115,8 +114,16 @@ while ($linha = mysqli_fetch_array($query)) {
     $i = "I" . $cont;
 
     $idp = $linha['idp'];
-    $sqltel = "SELECT telefone FROM pf_telefones WHERE pessoa_fisica_id = '$idp' AND publicado = 1";
-    $tel = $con->query($sqltel)->fetch_all();
+
+    $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idp' AND publicado = 1";
+    $tel = "";
+    $queryTelefone = mysqli_query($con, $sqlTelefone);
+
+    while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
+        $tel = $tel . $linhaTel['telefone'] . ' | ';
+    }
+
+    $tel = substr($tel, 0, -3);
 
     $objPHPExcel->setActiveSheetIndex(0)
         ->setCellValue($a, $linha['nome'])
@@ -124,10 +131,8 @@ while ($linha = mysqli_fetch_array($query)) {
         ->setCellValue($c, $linha['funcao'])
         ->setCellValue($d, $linha['linguagem'])
         ->setCellValue($e, $linha['email'])
-        ->setCellValue($f, $tel[0] [0])
-        ->setCellValue($g, $tel[1] [0])
-        ->setCellValue($h, $tel[2] [0])
-        ->setCellValue($i, $linha['status']);
+        ->setCellValue($f, $tel)
+        ->setCellValue($g, $linha['status']);
 
     $cont++;
 }
@@ -136,20 +141,21 @@ while ($linha = mysqli_fetch_array($query)) {
 // Renomeia a guia
 $objPHPExcel->getActiveSheet()->setTitle('Inscritos');
 
-for ($col = 'A'; $col !== 'I'; $col++) {
+for ($col = 'A'; $col !== 'G'; $col++) {
     $objPHPExcel->getActiveSheet()
         ->getColumnDimension($col)
         ->setAutoSize(true);
 }
 
-$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(25);
+//Consertando a coluna referente ao status
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(50);
 
 $objPHPExcel->setActiveSheetIndex(0);
 ob_end_clean();
 ob_start();
 
-$nome_arquivo = "pedidos_formacao_" . date("Y") . ".xls";
-
+$nome_arquivo = "pedido_formacao_" . date("Y") . ".xls";
 
 // Cabeçalho do arquivo para ele baixar(Excel2007)
 header('Content-Type: text/html; charset=ISO-8859-1');

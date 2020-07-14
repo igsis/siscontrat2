@@ -25,7 +25,8 @@ $sql = "SELECT p.id,
         INNER JOIN emia_contratacao AS ec ON ec.id = p.origem_id
         INNER JOIN pessoa_fisicas AS pf ON p.pessoa_fisica_id = pf.id
         INNER JOIN pedido_status AS s ON p.status_pedido_id = s.id
-        WHERE p.origem_tipo_id = 3 AND ec.publicado = 1 AND p.publicado = 1 $sqlProponente $sqlProcesso $sqlProtocolo";
+        WHERE p.origem_tipo_id = 3 AND ec.publicado = 1 AND p.publicado = 1 $sqlProponente $sqlProcesso $sqlProtocolo
+        GROUP BY p.id";
 ?>
 
 <div class="content-wrapper">

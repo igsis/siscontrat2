@@ -116,8 +116,6 @@ $link_hip_hop_pj = $http . "rlt_hip_hop_pj.php";
 
 $idPedido = $_POST['idPedido'];
 
-$idEvento = $_SESSION['idEvento'];
-
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 
 if ($pedido['pessoa_tipo_id'] == 1) {
@@ -505,6 +503,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                                 Mês do Hip-Hop
                             </button>
                         </form>
+                        <hr/>
                     </div>
                     <?php
                 } else if ($pedido['pessoa_tipo_id'] == 2) { ?>
@@ -642,6 +641,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             Mês do Hip-Hop
                         </button>
                     </form>
+                    <hr/>
                 <?php } ?>
 
             </div>
