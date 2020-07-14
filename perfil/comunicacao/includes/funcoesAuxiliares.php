@@ -29,7 +29,7 @@ function gravaStatus($status, $tabela, $idEvento)
     return $Valida;
 }
 
-function retornaEventosComunicacao($idUser, $tabela, $filtro = '', $status = '')
+function retornaEventosComunicacao($idUser, $tabela, $filtro = '')
 {
     $con = bancoMysqli();
 
@@ -49,16 +49,45 @@ function retornaEventosComunicacao($idUser, $tabela, $filtro = '', $status = '')
                           eve.nome_evento AS nome_evento, 
                           es.status AS status, 
                           u.nome_completo AS nome_usuario
-                FROM {$tabela} as eve
-                INNER JOIN usuarios u ON eve.usuario_id = u.id
-                INNER JOIN evento_status es on eve.evento_status_id = es.id
-                INNER JOIN local_usuarios ls ON eve.usuario_id = ls.usuario_id
-                INNER JOIN locais lo ON lo.id = ls.local_id
+                FROM eventos as eve
+                LEFT JOIN usuarios u ON eve.usuario_id = u.id
+                LEFT JOIN evento_status es on eve.evento_status_id = es.id
+                LEFT JOIN local_usuarios ls ON eve.usuario_id = ls.usuario_id
+                LEFT JOIN locais lo ON lo.id = ls.local_id
                 WHERE eve.publicado = 1 AND evento_status_id IN  (3,4) ";
 
     $sqlSis .= $spp;
 
+    if($filtro != ''){
+        $in = [];
+        $not = [];
+
+        foreach ($filtro as $key => $value){
+            switch ($key){
+                case 'editado':
+                    $in = 0;
+                case 'revisado':
+
+                case 'site':
+
+                case 'impresso':
+
+                case 'foto':
+
+            }
+        }
+        gerarFiltro();
+    }
+
     return mysqli_query($con, $sqlSis);
+}
+
+function gerarFiltro($filtro){
+
+}
+
+function separar() {
+
 }
 
 function geraLegendas($idEvento, $tabela, $tabelaComunicacao)
@@ -106,97 +135,4 @@ function geraLegendas($idEvento, $tabela, $tabelaComunicacao)
         }
 
     }
-}
-
-function montarFiltro($status)
-{
-    switch ($status) {
-        case 'editado':
-            return '1';
-            break;
-        case 'revisado':
-            return '2';
-            break;
-        case 'site':
-            return '3';
-            break;
-        case 'impresso':
-            return '4';
-            break;
-        case 'foto':
-            return '5';
-            break;
-    }
-}
-
-function verificaPendencia($array, $query)
-{
-
-    $con = bancoMysqli();
-    foreach ($array as $ar) {
-        $sql = $query . " AND comunicacao_status_id = {$ar}";
-        $queryE = mysqli_query($con, $sql);
-        $comunicacao = mysqli_num_rows($queryE);
-        if ($comunicacao > 0) {
-            return false;
-        }
-    }
-    return true;
-}
-
-function aplicarFiltro($idEvento, $filtro = '')
-{
-    $con = bancoMysqli();
-    $query = "SELECT comunicacao_status_id FROM comunicacoes WHERE publicado = 1  AND eventos_id = {$idEvento}";
-
-    $in = '';
-    $not = [];
-    if ($filtro) {
-        foreach ($filtro as $key => $value) {
-            if ($value) {
-                if ($in != '') {
-                    $in .= ',';
-                }
-                $in .= montarFiltro($key);
-            } else {
-                array_push($not, montarFiltro($key));
-            }
-        }
-        if ($in != '' || $not != []) {
-            if ($in != '') {
-                $in = "AND comunicacao_status_id IN (" . $in . ")";
-                $sqlIn = $query . " " . $in;
-                $resul = mysqli_query($con, $sqlIn);
-                $in = mysqli_num_rows($resul);
-            }
-            if ($not != []) {
-                $not = verificaPendencia($not, $query);
-            }
-
-            if ($in == ''){
-                $in = 0;
-            }
-            if ($not == []){
-                $not = 0;
-            }
-
-            if ($in > 0 && $not) {
-                return true;
-            } else {
-                if ($in > 0 && $not) {
-                    return true;
-                } else {
-                    if ($not && $in != 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        } else {
-            return false;
-        }
-    }
-
-    return true;
 }

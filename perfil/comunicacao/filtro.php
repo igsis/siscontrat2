@@ -29,9 +29,13 @@ if (isset($_POST['_filtros'])) {
                 break;
         }
     }
+
+    $query = retornaEventosComunicacao($idUser, 'eventos', $filtro);
+    $query2 = retornaEventosComunicacao($idUser, 'agendoes', $filtro);
+} else {
+    $query = retornaEventosComunicacao($idUser, 'eventos');
+    $query2 = retornaEventosComunicacao($idUser, 'agendoes');
 }
-$query = retornaEventosComunicacao($idUser, 'eventos');
-$query2 = retornaEventosComunicacao($idUser, 'agendoes');
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -40,7 +44,7 @@ $query2 = retornaEventosComunicacao($idUser, 'agendoes');
     <section class="content">
 
         <h2 class="page-header">Filtro de Evento</h2>
-
+        <?= var_dump($filtro) ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -227,7 +231,7 @@ $query2 = retornaEventosComunicacao($idUser, 'agendoes');
                                     <tr>
                                         <td>
                                             <?= $evento['nome_evento'] ?>
-                                        </td>   
+                                        </td>
                                         <td>
                                             <?= $evento['nome_usuario'] ?>
                                         </td>
