@@ -92,7 +92,6 @@ function separar() {
 
 function geraLegendas($idEvento, $tabela, $tabelaComunicacao)
 {
-
     $con = bancoMysqli();
 
     $sqlStatus = "SELECT co.id as id
