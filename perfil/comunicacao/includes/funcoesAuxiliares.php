@@ -51,43 +51,128 @@ function retornaEventosComunicacao($idUser, $tabela, $filtro = '')
                           u.nome_completo AS nome_usuario
                 FROM eventos as eve
                 LEFT JOIN usuarios u ON eve.usuario_id = u.id
-                LEFT JOIN evento_status es on eve.evento_status_id = es.id
-                LEFT JOIN local_usuarios ls ON eve.usuario_id = ls.usuario_id
-                LEFT JOIN locais lo ON lo.id = ls.local_id
-                WHERE eve.publicado = 1 AND evento_status_id IN  (3,4) ";
+                INNER JOIN evento_status es on eve.evento_status_id = es.id
+                INNER JOIN local_usuarios ls ON eve.usuario_id = ls.usuario_id
+                INNER JOIN locais lo ON lo.id = ls.local_id
+                WHERE eve.publicado = 1 AND (eve.evento_status_id = 3 OR eve.evento_status_id = 4) ";
 
     $sqlSis .= $spp;
-
-    if($filtro != ''){
-        $in = [];
-        $not = [];
-
-        foreach ($filtro as $key => $value){
-            switch ($key){
-                case 'editado':
-                    $in = 0;
-                case 'revisado':
-
-                case 'site':
-
-                case 'impresso':
-
-                case 'foto':
-
-            }
-        }
-        gerarFiltro();
-    }
 
     return mysqli_query($con, $sqlSis);
 }
 
-function gerarFiltro($filtro){
-
+function limparArray($array){
+    $lenght = count($array);
+    $array2 = [];
+    for ($i=0;$i<$lenght;$i++){
+        array_push($array2, $array[$i][0]);
+    }
+    return $array2;
 }
 
-function separar() {
+function aplicarFiltro($idEvento, $filtro)
+{
+    $con = bancoMysqli();
+    if ($filtro != null) {
+        $sql = "SELECT comunicacao_status_id FROM comunicacoes WHERE publicado = '1' AND eventos_id = '{$idEvento}'";
+        $queryComu = mysqli_query($con, $sql);
+        $status = mysqli_fetch_all($queryComu, MYSQLI_NUM);
 
+        $array = limparArray($status);
+
+        foreach ($filtro as $key => $value) {
+            foreach ($status as $st) {
+                switch ($key){
+                    case 'editado':
+                        if ($value){
+                            if (!in_array("1",$array)){
+                                $valid = true;
+                            }
+                            else {
+                                $valid = false;
+                            }
+                        }else {
+                            if (in_array("1",$array)){
+                                $valid = true;
+                            } else {
+                                $valid = false;
+                            }
+                        }
+                        break;
+                    case 'revisado':
+                        if ($value){
+                            if (!in_array("2",$array)){
+                                $valid = true;
+                            }
+                            else {
+                                $valid = false;
+                            }
+                        }else {
+                            if (in_array("2",$array)){
+                                $valid = true;
+                            } else {
+                                $valid = false;
+                            }
+                        }
+                        break;
+                    case 'site':
+                        if ($value){
+                            if (!in_array("3",$array)){
+                                $valid = true;
+                            }
+                            else {
+                                $valid = false;
+                            }
+                        }else {
+                            if (in_array("3",$array)){
+                                $valid = true;
+                            } else {
+                                $valid = false;
+                            }
+                        }
+                        break;
+                    case 'impresso':
+                        if ($value){
+                            if (!in_array("4",$array)){
+                                $valid = true;
+                            }
+                            else {
+                                $valid = false;
+                            }
+                        }else {
+                            if (in_array("4",$array)){
+                                $valid = true;
+                            } else {
+                                $valid = false;
+                            }
+                        }
+                        break;
+                    case 'foto':
+                        if ($value){
+                            if (!in_array("5",$array)){
+                                $valid = true;
+                            }
+                            else {
+                                $valid = false;
+                            }
+                        }else {
+                            if (in_array("5",$array)){
+                                $valid = true;
+                            } else {
+                                $valid = false;
+                            }
+                        }
+                        break;
+                }
+
+                if ($valid){
+                    return !$valid;
+                }
+            }
+        }
+        return true;
+    }
+    return true;
 }
 
 function geraLegendas($idEvento, $tabela, $tabelaComunicacao)
