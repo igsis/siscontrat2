@@ -33,7 +33,7 @@ $parcela = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido'")->
                                         <label for="valor[]">Valor:</label>
                                         <input type="text" name="valor[<?=$i?>]"
                                                class="form-control valor" maxlength="10"
-                                               value="<?= dinheiroParaBr($parcela[$i]['valor']) ?>">
+                                               value="<?= dinheiroParaBr($parcela[$i]['valor'] ?? NULL)?>">
                                     </div>
 
                                     <div class="form-group col-md-4">
