@@ -61,38 +61,36 @@ function retornaEventosComunicacao($idUser, $tabela, $filtro = '')
     return mysqli_query($con, $sqlSis);
 }
 
-function limparArray($array){
+function limparArray($array)
+{
     $lenght = count($array);
     $array2 = [];
-    for ($i=0;$i<$lenght;$i++){
+    for ($i = 0; $i < $lenght; $i++) {
         array_push($array2, $array[$i][0]);
     }
     return $array2;
 }
 
-function aplicarFiltro($idEvento, $filtro)
+function aplicarFiltro($idEvento, $filtro, $tabela)
 {
     $con = bancoMysqli();
     if ($filtro != null) {
-        $sql = "SELECT comunicacao_status_id FROM comunicacoes WHERE publicado = '1' AND eventos_id = '{$idEvento}'";
+        $sql = "SELECT comunicacao_status_id FROM {$tabela} WHERE publicado = '1' AND eventos_id = '{$idEvento}'";
         $queryComu = mysqli_query($con, $sql);
         $status = mysqli_fetch_all($queryComu, MYSQLI_NUM);
-
-        $array = limparArray($status);
-
-        foreach ($filtro as $key => $value) {
-            foreach ($status as $st) {
-                switch ($key){
+        if (count($status)) {
+            $array = limparArray($status);
+            foreach ($filtro as $key => $value) {
+                switch ($key) {
                     case 'editado':
-                        if ($value){
-                            if (!in_array("1",$array)){
+                        if ($value) {
+                            if (!in_array("1", $array)) {
                                 $valid = true;
-                            }
-                            else {
+                            } else {
                                 $valid = false;
                             }
-                        }else {
-                            if (in_array("1",$array)){
+                        } else {
+                            if (in_array("1", $array)) {
                                 $valid = true;
                             } else {
                                 $valid = false;
@@ -100,15 +98,14 @@ function aplicarFiltro($idEvento, $filtro)
                         }
                         break;
                     case 'revisado':
-                        if ($value){
-                            if (!in_array("2",$array)){
+                        if ($value) {
+                            if (!in_array("2", $array)) {
                                 $valid = true;
-                            }
-                            else {
+                            } else {
                                 $valid = false;
                             }
-                        }else {
-                            if (in_array("2",$array)){
+                        } else {
+                            if (in_array("2", $array)) {
                                 $valid = true;
                             } else {
                                 $valid = false;
@@ -116,15 +113,14 @@ function aplicarFiltro($idEvento, $filtro)
                         }
                         break;
                     case 'site':
-                        if ($value){
-                            if (!in_array("3",$array)){
+                        if ($value) {
+                            if (!in_array("3", $array)) {
                                 $valid = true;
-                            }
-                            else {
+                            } else {
                                 $valid = false;
                             }
-                        }else {
-                            if (in_array("3",$array)){
+                        } else {
+                            if (in_array("3", $array)) {
                                 $valid = true;
                             } else {
                                 $valid = false;
@@ -132,15 +128,14 @@ function aplicarFiltro($idEvento, $filtro)
                         }
                         break;
                     case 'impresso':
-                        if ($value){
-                            if (!in_array("4",$array)){
+                        if ($value) {
+                            if (!in_array("4", $array)) {
                                 $valid = true;
-                            }
-                            else {
+                            } else {
                                 $valid = false;
                             }
-                        }else {
-                            if (in_array("4",$array)){
+                        } else {
+                            if (in_array("4", $array)) {
                                 $valid = true;
                             } else {
                                 $valid = false;
@@ -148,15 +143,14 @@ function aplicarFiltro($idEvento, $filtro)
                         }
                         break;
                     case 'foto':
-                        if ($value){
-                            if (!in_array("5",$array)){
+                        if ($value) {
+                            if (!in_array("5", $array)) {
                                 $valid = true;
-                            }
-                            else {
+                            } else {
                                 $valid = false;
                             }
-                        }else {
-                            if (in_array("5",$array)){
+                        } else {
+                            if (in_array("5", $array)) {
                                 $valid = true;
                             } else {
                                 $valid = false;
@@ -165,14 +159,20 @@ function aplicarFiltro($idEvento, $filtro)
                         break;
                 }
 
-                if ($valid){
+                if ($valid) {
                     return !$valid;
                 }
             }
+            return true;
+        } elseif (in_array(0, $filtro)) {
+            return true;
         }
+    } elseif ($filtro == null) {
         return true;
     }
-    return true;
+
+    return false;
+
 }
 
 function geraLegendas($idEvento, $tabela, $tabelaComunicacao)

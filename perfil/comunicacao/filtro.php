@@ -226,7 +226,7 @@ if (isset($_POST['_filtros'])) {
                             <tbody>
                             <?php
                             while ($evento = mysqli_fetch_array($query)) {
-                                if (aplicarFiltro($evento['idEvento'], $filtro)) {
+                                if (aplicarFiltro($evento['idEvento'], $filtro, "comunicacoes")) {
                                     ?>
                                     <tr>
                                         <td>
@@ -256,32 +256,34 @@ if (isset($_POST['_filtros'])) {
                             ?>
                             <?php
                             while ($agendao = mysqli_fetch_array($query2)) {
-                                ?>
-                                <tr>
-                                    <td>
-                                        <?= $agendao['nome_evento'] ?>
-                                    </td>
-                                    <td>
-                                        <?= $agendao['nome_usuario'] ?>
-                                    </td>
-                                    <td>
-                                        <?=
-                                        retornaPeriodo($agendao['idEvento']);
-                                        ?>
-                                    </td>
-                                    <td>
-                                        <div class="status-comunicacao">
-                                            <?php geraLegendas($agendao['idEvento'], 'agendoes', 'comunicacao_agendoes'); ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <form method="post" action="?perfil=comunicacao&p=comunicacao">
-                                            <input type="hidden" name="agendao" value="<?= $agendao['idEvento'] ?>">
-                                            <button class="btn-info btn">Editar</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <?php
+                                if (aplicarFiltro($agendao['idEvento'], $filtro, "comunicacao_agendoes")) {
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <?= $agendao['nome_evento'] ?>
+                                        </td>
+                                        <td>
+                                            <?= $agendao['nome_usuario'] ?>
+                                        </td>
+                                        <td>
+                                            <?=
+                                            retornaPeriodo($agendao['idEvento']);
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <div class="status-comunicacao">
+                                                <?php geraLegendas($agendao['idEvento'], 'agendoes', 'comunicacao_agendoes'); ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <form method="post" action="?perfil=comunicacao&p=comunicacao">
+                                                <input type="hidden" name="agendao" value="<?= $agendao['idEvento'] ?>">
+                                                <button class="btn-info btn">Editar</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                }
                             }
                             ?>
                             </tbody>
