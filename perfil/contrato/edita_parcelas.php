@@ -50,7 +50,7 @@ $parcela = $con->query("SELECT p.id, p.valor, p.data_pagamento, pc.data_inicio, 
                                             <label for="valor[]">Valor:</label>
                                             <input type="text" name='valor[<?= $i ?>]'
                                                    class="form-control valor"
-                                                   value="<?= dinheiroParaBr($parcela[$i]['valor']) ?>" maxlength="10"
+                                                   value="<?= dinheiroParaBr($parcela[$i]['valor'] ?? NULL) ?>" maxlength="10"
                                                    required>
                                         </div>
 
@@ -95,7 +95,7 @@ $parcela = $con->query("SELECT p.id, p.valor, p.data_pagamento, pc.data_inicio, 
                                             <label for="valor[]">Valor:</label>
                                             <input type="text" name="valor[<?= $i ?>]"
                                                    class="form-control valor" maxlength="10"
-                                                   value="<?= dinheiroParaBr($parcela[$i]['valor']) ?? NULL ?>" required>
+                                                   value="<?= dinheiroParaBr($parcela[$i]['valor'] ?? NULL)?>" required>
                                         </div>
 
                                         <div class="form-group col-md-4">
