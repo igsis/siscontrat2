@@ -318,8 +318,8 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
                         <div class="form-group col-md-3">
                             <label for="valor">Valor: *</label>
-                            <input type="text" name="valor" onKeyPress="return(moeda(this,'.',',',event))"
-                                   class="form-control" value="<?= $pedido['valor_total'] ?>" readonly required>
+                            <input type="text" name="valor"
+                                   class="form-control" value="<?= dinheiroParaBr($pedido['valor_total'] ?? NULL) ?>" readonly required>
                         </div>
                     </div>
 

@@ -4,7 +4,7 @@ $idPedido = $_GET['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 
-$parcela = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido'")->fetch_all(MYSQLI_ASSOC);
+$parcela = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1")->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <div class="content-wrapper">
@@ -83,7 +83,7 @@ $parcela = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido'")->
                         <form action="?perfil=formacao&p=pedido_contratacao&sp=edita" method="POST" role="form">
                             <button type="submit" name="carregar"
                                     class="btn btn-default pull-left">
-                                <input type="hidden" name="idEc" value="<?= $idPedido ?>">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                                 Voltar
                             </button>
                         </form>
