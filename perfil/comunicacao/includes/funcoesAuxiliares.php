@@ -78,6 +78,9 @@ function aplicarFiltro($idEvento, $filtro, $tabela)
         $sql = "SELECT comunicacao_status_id FROM {$tabela} WHERE publicado = '1' AND eventos_id = '{$idEvento}'";
         $queryComu = mysqli_query($con, $sql);
         $status = mysqli_fetch_all($queryComu, MYSQLI_NUM);
+
+        $resu = 0;
+
         if (count($status)) {
             $array = limparArray($status);
             foreach ($filtro as $key => $value) {
@@ -160,18 +163,23 @@ function aplicarFiltro($idEvento, $filtro, $tabela)
                 }
 
                 if ($valid) {
-                    return !$valid;
+                    $resu++;
+                    break;
                 }
             }
-            return true;
+
+            if ($resu){
+                return false;
+            }else{
+                return true;
+            }
+
         } elseif (in_array(0, $filtro)) {
             return true;
         }
     } elseif ($filtro == null) {
         return true;
     }
-
-    return false;
 
 }
 
