@@ -441,7 +441,11 @@ $nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
 $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
 $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
+if ($evento['tipo_evento_id'] == 1){
 $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'")->fetch_array();
+}else{
+    $atracao = null;
+}
 
 include "includes/menu_interno.php";
 ?>
@@ -683,7 +687,7 @@ include "includes/menu_interno.php";
                             </div>
                             <?php
                             if ($atracao != null) {
-                                if ($atracao['valor_individual'] > 0 || $evento['tipo_evento_id'] == 2) {
+                                if ($atracao['valor_individual'] > 0) {
                                     ?>
                                     <hr/>
                                     <div class="row">
@@ -738,6 +742,64 @@ include "includes/menu_interno.php";
                                     </div>
                                     <?php
                                 }
+                            }else{
+                                ?>
+                                <hr/>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="banco">Banco:</label>
+                                        <select id="banco" name="banco" class="form-control">
+                                            <option value="">Selecione um banco...</option>
+                                            <?php
+                                            if (isset($banco)){
+                                                geraOpcao("bancos", $banco['banco_id']);
+                                            }else{
+                                                geraOpcao("bancos");
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="agencia">Agência:</label>
+                                        <input type="text" name="agencia" class="form-control"
+                                               placeholder="Digite a Agência" maxlength="12"
+                                               value="<?= isset($banco)? $banco['agencia'] : '' ?>">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="conta">Conta:</label>
+                                        <input type="text" name="conta" class="form-control"
+                                               placeholder="Digite a Conta" maxlength="12"
+                                               value="<?= isset($banco) ? $banco['conta'] : '' ?>">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-3">
+                                        <?php
+                                        $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
+                                        $queryFACC = mysqli_query($con, $sqlFACC);
+                                        ?>
+
+                                        <label>Gerar FACC</label><br>
+                                        <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
+                                           class="btn btn-primary btn-block">Clique aqui para
+                                            gerar a FACC
+                                        </a>
+                                    </div>
+
+                                    <div class="form-group col-md-5">
+                                        <label>&nbsp;</label><br>
+                                        <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                            documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                            no campo correspondente.</p>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <?php
+                                        anexosNaPagina(42, $idPf, "modal-facc", "FACC");
+                                        ?>
+                                    </div>
+                                </div>
+                                <?php
                             }
                             ?>
                             <div class="box-footer">
