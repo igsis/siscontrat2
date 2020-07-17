@@ -44,7 +44,6 @@ if (isset($_POST['_filtros'])) {
     <section class="content">
 
         <h2 class="page-header">Filtro de Evento</h2>
-        <?= var_dump($filtro) ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
