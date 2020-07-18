@@ -228,11 +228,11 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
             sum += +valor;
         });
 
-        let valOriginal = document.querySelector('#valorTotal').textContent;
-        let valRegistrado = document.querySelector('#totalRegistrado').textContent;
+        //let valOriginal = document.querySelector('#valorTotal').textContent;
+        //let valRegistrado = document.querySelector('#totalRegistrado').textContent;
         $("#totalRegistrado").text(sum.toFixed(2));
 
-        if (valOriginal == valRegistrado) {
+        if (sum == total) {
             alerta.css("display", "block");
             btnGravar.attr('disabled', false);
         } else {
