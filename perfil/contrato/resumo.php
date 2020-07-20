@@ -157,8 +157,19 @@ if (isset($_POST['salvar'])) {
         if ($operador != NULL) {
             $trocaOp = $con->query("UPDATE pedidos SET operador_id = '$operador' WHERE id = $idPedido AND origem_id = 1");
         }
-        if($processo != NULL || $processoMae != NULL){
+        if ($processo != NULL || $processoMae != NULL) {
             $atualizaStatus = $con->query("UPDATE pedidos SET status_pedido_id = 13 WHERE id = $idPedido AND origem_id = 1");
+            if ($atualizaStatus) {
+                $testaEtapa = $con->query("SELECT pedido_id, data_contrato FROM pedido_etapas WHERE pedido_id = $idPedido")->fetch_assoc();
+                $data = dataHoraNow();
+                if ($testaEtapa != NULL && $testaEtapa['data_contrato'] == "0000-00-00 00:00:00" || $testaEtapa['data_contrato'] != "0000-00-00 00:00:00") {
+                    $updateEtapa = $con->query("UPDATE pedido_etapas SET data_contrato = '$data' WHERE pedido_id = '$idPedido'");
+                }
+                if ($testaEtapa == NULL) {
+                    $insereEtapa = $con->query("INSERT INTO pedido_etapas (pedido_id, data_contrato) VALUES ('$idPedido', '$data')");
+                }
+            }
+
         }
         gravarLog($sqlEvento);
         gravarLog($sqlPedido);
@@ -539,22 +550,23 @@ $disableDown = "";
 
                         <?php
                         if ($idEvento) {
-                        $sqlEvento = $con->query("SELECT arq.* FROM arquivos AS arq 
+                            $sqlEvento = $con->query("SELECT arq.* FROM arquivos AS arq 
                         INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
                         WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='3'")->num_rows;
-                        if ($sqlEvento == 0 || $sqlEvento == "" ){
-                        $disableDown = "";
-                        ?>
-                        <div class="col-md-4">
-                            <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
-                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                <button type="submit" <?= $disableDown ?> class="btn btn-primary pull-right "
-                                        style="width: 95%"> Baixar todos os arquivos
-                                </button>
-                            </form>
-                        </div>
-                        <?php } }?>
+                            if ($sqlEvento == 0 || $sqlEvento == "") {
+                                $disableDown = "";
+                                ?>
+                                <div class="col-md-4">
+                                    <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
+                                        <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                        <button type="submit" <?= $disableDown ?> class="btn btn-primary pull-right "
+                                                style="width: 95%"> Baixar todos os arquivos
+                                        </button>
+                                    </form>
+                                </div>
+                            <?php }
+                        } ?>
                         <!-- <div class="col-md-3">
                             <form action="?perfil=contrato&p=anexos_pedido" method="post" role="form">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">

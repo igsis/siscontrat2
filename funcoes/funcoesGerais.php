@@ -802,10 +802,29 @@ function alteraStatusPedidoContratos($idPedido, $tipo)
     $con = bancoMysqli();
     if ($tipo == "reserva") {
         $sql = "UPDATE pedidos SET status_pedido_id = 7 WHERE id = $idPedido AND publicado = 1 AND origem_tipo_id = 1";
-        mysqli_query($con, $sql);
+        if(mysqli_query($con, $sql)){
+            $testaEtapa = $con->query("SELECT pedido_id, data_reserva FROM pedido_etapas WHERE pedido_id = $idPedido")->fetch_assoc();
+            $data = dataHoraNow();
+            if ($testaEtapa != NULL && $testaEtapa['data_reserva'] == "0000-00-00 00:00:00" || $testaEtapa['data_reserva'] != "0000-00-00 00:00:00") {
+                $updateEtapa = $con->query("UPDATE pedido_etapas SET data_reserva = '$data' WHERE pedido_id = '$idPedido'");
+            }
+            if ($testaEtapa == NULL) {
+                $insereEtapa = $con->query("INSERT INTO pedido_etapas (pedido_id, data_reserva) VALUES ('$idPedido', '$data')");
+            }
+        }
+
     } else if ($tipo == "proposta") {
         $sql = "UPDATE pedidos SET status_pedido_id = 14 WHERE id = $idPedido AND publicado = 1 AND origem_tipo_id = 1";
-        mysqli_query($con, $sql);
+        if(mysqli_query($con, $sql)){
+            $testaEtapa = $con->query("SELECT pedido_id, data_proposta FROM pedido_etapas WHERE pedido_id = $idPedido")->fetch_assoc();
+            $data = dataHoraNow();
+            if ($testaEtapa != NULL && $testaEtapa['data_proposta'] == "0000-00-00 00:00:00" || $testaEtapa['data_proposta'] != "0000-00-00 00:00:00") {
+                $updateEtapa = $con->query("UPDATE pedido_etapas SET data_proposta = '$data' WHERE pedido_id = '$idPedido'");
+            }
+            if ($testaEtapa == NULL) {
+                $insereEtapa = $con->query("INSERT INTO pedido_etapas (pedido_id, data_proposta) VALUES ('$idPedido', '$data')");
+            }
+        };
     }
 }
 
