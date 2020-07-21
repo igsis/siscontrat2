@@ -338,7 +338,7 @@ $disableDown = "";
                         <div class="box-body">
 
                             <?php
-                            if ($nivelUsuario == 1 || $nivelUsuario == 2) {
+                            if ($nivelUsuario == 3) {
                                 ?>
                                 <div class="row">
                                     <div class="col-md-6 from-group">
@@ -346,7 +346,7 @@ $disableDown = "";
                                         <select name="operador" id="operador" class="form-control">
                                             <option value="">Selecione um operador</option>
                                             <?php
-                                            geraOpcao('usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id', $pedido['operador_id']);
+                                            geraOpcao('usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id WHERE uc.nivel_acesso != 1', $pedido['operador_id']);
                                             ?>
                                         </select>
                                     </div>
@@ -371,6 +371,25 @@ $disableDown = "";
                                 <hr>
                                 <?php
                             }
+                            if ($nivelUsuario == 2 || $nivelUsuario == 1) {
+                                $nomeStatus = $con->query("SELECT status FROM pedido_status WHERE id = " . $pedido['status_pedido_id'])->fetch_array();
+                                ?>
+                                <div class="row">
+                                    <div class="col-md-12 form-group">
+                                        <label for="status">Status Contrato</label>
+                                        <select name="status" id="status" class="form-control">
+                                            <option value="<?= $pedido['status_pedido_id'] ?>"><?= $nomeStatus['status'] ?></option>
+                                            <?php
+                                            $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " ORDER BY ordem";
+                                            $queryStatus = mysqli_query($con, $sqlStatus);
+                                            while ($status = mysqli_fetch_array($queryStatus)) {
+                                                echo "<option value='" . $status['id'] . "'>" . $status['status'] . "</option>";
+                                            } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr>
+                            <?php }
                             ?>
 
                             <?php
@@ -788,17 +807,26 @@ $disableDown = "";
                                     área
                                     de impressão
                                 </button>
-                                <button type="button" class="btn btn-info " name="reabre"
-                                        style="margin:0 10px;width: 25%"
-                                        id="reabre" data-toggle="modal" data-target="#reabrir">
-                                    Reabertura
-                                </button>
+                                <?php
+                                if ($nivelUsuario != 2) { ?>
+                                    <button type="button" class="btn btn-info" name="reabre"
+                                            style="margin:0 10px;width: 25%"
+                                            id="reabre" data-toggle="modal" data-target="#reabrir">
+                                        Reabertura
+                                    </button>
+                                <?php } ?>
+
                                 <a href="?perfil=contrato&p=pesquisa_contratos">
                                     <button type="button" class="btn btn-info pull-left" style="margin: 0 10px;">
                                         Voltar
                                     </button>
                                 </a>
                             </form>
+                            <?php
+                            //apenas para questões estéticas
+                                if($nivelUsuario == 2){ ?>
+                                    <br>
+                            <?php } ?>
                             <br>
                         </div>
                     </div>
