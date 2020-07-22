@@ -144,8 +144,6 @@ if (isset($_POST['salvar'])) {
     $justificativa = trim(addslashes($_POST['justificativa']));
     $operador = $_POST['operador'] ?? NULL;
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
-    $valorTotal = $pedido['valor_total'];
-    $valorTotal = str_replace(",", ".", $valorTotal);
     $pendencia = trim(addslashes($_POST['pendencia']));
 
     //eventos
@@ -153,14 +151,25 @@ if (isset($_POST['salvar'])) {
     $suplente = $_POST['suplente'] ?? null;
 
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', valor_total = '$valorTotal', pendencias_contratos = '$pendencia' WHERE id = '$idPedido' AND origem_tipo_id = 1";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', pendencias_contratos = '$pendencia' WHERE id = '$idPedido' AND origem_tipo_id = 1";
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
         if ($operador != NULL) {
             $trocaOp = $con->query("UPDATE pedidos SET operador_id = '$operador' WHERE id = $idPedido AND origem_id = 1");
         }
-        if($processo != NULL || $processoMae != NULL){
+        if ($processo != NULL || $processoMae != NULL) {
             $atualizaStatus = $con->query("UPDATE pedidos SET status_pedido_id = 13 WHERE id = $idPedido AND origem_id = 1");
+            if ($atualizaStatus) {
+                $testaEtapa = $con->query("SELECT pedido_id, data_contrato FROM pedido_etapas WHERE pedido_id = $idPedido")->fetch_assoc();
+                $data = dataHoraNow();
+                if ($testaEtapa != NULL && $testaEtapa['data_contrato'] == "0000-00-00 00:00:00" || $testaEtapa['data_contrato'] != "0000-00-00 00:00:00") {
+                    $updateEtapa = $con->query("UPDATE pedido_etapas SET data_contrato = '$data' WHERE pedido_id = '$idPedido'");
+                }
+                if ($testaEtapa == NULL) {
+                    $insereEtapa = $con->query("INSERT INTO pedido_etapas (pedido_id, data_contrato) VALUES ('$idPedido', '$data')");
+                }
+            }
+
         }
         gravarLog($sqlEvento);
         gravarLog($sqlPedido);
@@ -329,7 +338,7 @@ $disableDown = "";
                         <div class="box-body">
 
                             <?php
-                            if ($nivelUsuario == 1 || $nivelUsuario == 2) {
+                            if ($nivelUsuario == 3) {
                                 ?>
                                 <div class="row">
                                     <div class="col-md-6 from-group">
@@ -337,7 +346,7 @@ $disableDown = "";
                                         <select name="operador" id="operador" class="form-control">
                                             <option value="">Selecione um operador</option>
                                             <?php
-                                            geraOpcao('usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id', $pedido['operador_id']);
+                                            geraOpcao('usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id WHERE uc.nivel_acesso != 1', $pedido['operador_id']);
                                             ?>
                                         </select>
                                     </div>
@@ -362,6 +371,25 @@ $disableDown = "";
                                 <hr>
                                 <?php
                             }
+                            if ($nivelUsuario == 2 || $nivelUsuario == 1) {
+                                $nomeStatus = $con->query("SELECT status FROM pedido_status WHERE id = " . $pedido['status_pedido_id'])->fetch_array();
+                                ?>
+                                <div class="row">
+                                    <div class="col-md-12 form-group">
+                                        <label for="status">Status Contrato</label>
+                                        <select name="status" id="status" class="form-control">
+                                            <option value="<?= $pedido['status_pedido_id'] ?>"><?= $nomeStatus['status'] ?></option>
+                                            <?php
+                                            $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " ORDER BY ordem";
+                                            $queryStatus = mysqli_query($con, $sqlStatus);
+                                            while ($status = mysqli_fetch_array($queryStatus)) {
+                                                echo "<option value='" . $status['id'] . "'>" . $status['status'] . "</option>";
+                                            } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr>
+                            <?php }
                             ?>
 
                             <?php
@@ -541,22 +569,23 @@ $disableDown = "";
 
                         <?php
                         if ($idEvento) {
-                        $sqlEvento = $con->query("SELECT arq.* FROM arquivos AS arq 
+                            $sqlEvento = $con->query("SELECT arq.* FROM arquivos AS arq 
                         INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
                         WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='3'")->num_rows;
-                        if ($sqlEvento == 0 || $sqlEvento == "" ){
-                        $disableDown = "";
-                        ?>
-                        <div class="col-md-4">
-                            <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
-                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                <button type="submit" <?= $disableDown ?> class="btn btn-primary pull-right "
-                                        style="width: 95%"> Baixar todos os arquivos
-                                </button>
-                            </form>
-                        </div>
-                        <?php } }?>
+                            if ($sqlEvento == 0 || $sqlEvento == "") {
+                                $disableDown = "";
+                                ?>
+                                <div class="col-md-4">
+                                    <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
+                                        <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                        <button type="submit" <?= $disableDown ?> class="btn btn-primary pull-right "
+                                                style="width: 95%"> Baixar todos os arquivos
+                                        </button>
+                                    </form>
+                                </div>
+                            <?php }
+                        } ?>
                         <!-- <div class="col-md-3">
                             <form action="?perfil=contrato&p=anexos_pedido" method="post" role="form">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
@@ -778,17 +807,26 @@ $disableDown = "";
                                     área
                                     de impressão
                                 </button>
-                                <button type="button" class="btn btn-info " name="reabre"
-                                        style="margin:0 10px;width: 25%"
-                                        id="reabre" data-toggle="modal" data-target="#reabrir">
-                                    Reabertura
-                                </button>
+                                <?php
+                                if ($nivelUsuario != 2) { ?>
+                                    <button type="button" class="btn btn-info" name="reabre"
+                                            style="margin:0 10px;width: 25%"
+                                            id="reabre" data-toggle="modal" data-target="#reabrir">
+                                        Reabertura
+                                    </button>
+                                <?php } ?>
+
                                 <a href="?perfil=contrato&p=pesquisa_contratos">
                                     <button type="button" class="btn btn-info pull-left" style="margin: 0 10px;">
                                         Voltar
                                     </button>
                                 </a>
                             </form>
+                            <?php
+                            //apenas para questões estéticas
+                                if($nivelUsuario == 2){ ?>
+                                    <br>
+                            <?php } ?>
                             <br>
                         </div>
                     </div>
