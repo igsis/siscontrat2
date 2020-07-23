@@ -29,7 +29,7 @@ function gravaStatus($status, $tabela, $idEvento)
     return $Valida;
 }
 
-function retornaEventosComunicacao($idUser, $tabela, $filtro = '')
+function retornaEventosComunicacao($idUser, $tabela = '', $filtro = '')
 {
     $con = bancoMysqli();
 
@@ -51,8 +51,8 @@ function retornaEventosComunicacao($idUser, $tabela, $filtro = '')
                           u.nome_completo AS nome_usuario
                 FROM eventos as eve
                 LEFT JOIN usuarios u ON eve.usuario_id = u.id
-                INNER JOIN evento_status es on eve.evento_status_id = es.id
-                INNER JOIN local_usuarios ls ON eve.usuario_id = ls.usuario_id
+                LEFT JOIN evento_status es on eve.evento_status_id = es.id
+                LEFT JOIN local_usuarios ls ON eve.usuario_id = ls.usuario_id
                 INNER JOIN locais lo ON lo.id = ls.local_id
                 WHERE eve.publicado = 1 AND (eve.evento_status_id = 3 OR eve.evento_status_id = 4) ";
 
