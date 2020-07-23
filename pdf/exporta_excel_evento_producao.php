@@ -13,7 +13,7 @@ session_start(['name' => 'sis']);
 $idEvento = $_POST['idEvento'];
 
 $sql = "SELECT 
-id AS 'evento_id', tipo_evento_id, nome_evento, sinopse, projeto_especial_id, fomento, contratacao
+id AS 'evento_id', tipo_evento_id, nome_evento, sinopse, projeto_especial_id, fomento, contratacao, espaco_publico
 FROM eventos
 WHERE id = $idEvento AND evento_status_id = 3 AND publicado = 1";
 
