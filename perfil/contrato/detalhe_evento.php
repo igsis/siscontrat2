@@ -329,7 +329,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
                             $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
                             if ($ocorrencia['espaco_id'] != 0) {
-                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id']);
+                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
                             } else {
                                 $espaco = "Não cadastrado";
                             }

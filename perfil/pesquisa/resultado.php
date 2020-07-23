@@ -47,6 +47,9 @@ if (isset($_POST['busca'])) {
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.status_pedido_id NOT IN (1,3,20,21)
+    AND p.status_pedido_id != 1
+    AND p.status_pedido_id != 3
+    AND e.evento_status_id != 1
     $sqlProjeto $sqlUsuario $sqlValor
     $sqlProtocolo $sqlNomeEvento $sqlProcesso
     GROUP BY e.id";

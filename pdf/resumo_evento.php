@@ -21,7 +21,7 @@ class PDF extends FPDF
 $idEvento = $_GET['id'];
 
 $con = bancoMysqli();
-$evento = $con->query("SELECT  e.protocolo, e.tipo_evento_id, e.original, e.nome_evento, e.espaco_publico, e.fomento, f.fomento AS fomento_nome, rj.relacao_juridica, pe.projeto_especial, e.sinopse, uf.nome_completo AS fiscal_nome, us.nome_completo AS suplente_nome, uf.nome_completo AS user_nome
+$evento = $con->query("SELECT  e.protocolo, e.tipo_evento_id, e.nome_evento, e.espaco_publico, e.fomento, f.fomento AS fomento_nome, rj.relacao_juridica, pe.projeto_especial, e.sinopse, uf.nome_completo AS fiscal_nome, us.nome_completo AS suplente_nome, uf.nome_completo AS user_nome
     FROM eventos AS e
     LEFT JOIN fomentos f on e.fomento = f.fomento
     INNER JOIN relacao_juridicas rj on e.relacao_juridica_id = rj.id
@@ -36,7 +36,7 @@ if ($evento['fomento'] == 1) $fomento = $evento['fomento_nome']; else $fomento =
 
 
 
-$pedido = $con->query("SELECT p.id, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, p.numero_processo, l.extrato_liquidacao, l.retencoes_inss, l.retencoes_iss, l.retencoes_irrf FROM pedidos AS p INNER JOIN eventos AS e ON p.origem_id = e.id INNER JOIN liquidacao l on p.id = l.pedido_id WHERE e.publicado = 1 AND p.publicado = 1 AND p.origem_id = '$idEvento'")->fetch_array();
+$pedido = $con->query("SELECT p.id, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, p.numero_processo, l.extrato_liquidacao, l.retencoes_inss, l.retencoes_iss, l.retencoes_irrf FROM pedidos AS p INNER JOIN eventos AS e ON p.origem_id = e.id LEFT JOIN liquidacao l on p.id = l.pedido_id WHERE e.publicado = 1 AND p.publicado = 1 AND p.origem_id = '$idEvento'")->fetch_array();
 
 
 // GERANDO O PDF:
@@ -210,9 +210,9 @@ if ($evento['tipo_evento_id'] == 1) {
 
         while ($ocorrencia = mysqli_fetch_array($sql_ocorrencia)){
             $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
-            $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
-            $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['sigla'];
-            $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+            $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']) ?? NULL;
+            $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['sigla'] ?? NULL;
+            $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'] ?? NULL;
 
             $pdf->SetX($x);
             $pdf->SetFont('Arial','', 11);
