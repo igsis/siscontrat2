@@ -13,7 +13,7 @@ session_start(['name' => 'sis']);
 $idEvento = $_POST['idEvento'];
 
 $sql = "SELECT 
-id AS 'evento_id', tipo_evento_id, nome_evento, sinopse, projeto_especial_id, fomento
+id AS 'evento_id', tipo_evento_id, nome_evento, sinopse, projeto_especial_id, fomento, contratacao
 FROM eventos
 WHERE id = $idEvento AND evento_status_id = 3 AND publicado = 1";
 
@@ -156,39 +156,44 @@ while ($linha = mysqli_fetch_array($query)) {
     $w = "W" . $cont;
     $x = "X" . $cont;
 
-    //Endereço do proponente
-    $testaTipoProponente = $con->query("SELECT pessoa_tipo_id, pessoa_fisica_id, pessoa_juridica_id FROM pedidos WHERE publicado = 1 AND origem_id = " . $linha['evento_id'])->fetch_array();
-    if($testaTipoProponente['pessoa_tipo_id'] == 1){
-        $testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id = " . $testaTipoProponente['pessoa_fisica_id']);
-        if ($testaEnderecos->num_rows > 0) {
-            while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
-                $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " .$enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
-            }
-        } else {
-            $endereco = "Não cadastrado";
-        }
 
-    }else if($testaTipoProponente['pessoa_tipo_id'] == 2){
-        $testaEnderecos = $con->query("SELECT * FROM pj_enderecos WHERE pessoa_juridica_id = " . $testaTipoProponente['pessoa_juridica_id']);
-        if ($testaEnderecos->num_rows > 0) {
-            while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
-                $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " .$enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+    if ($linha['contratacao'] == 1) {
+        //Endereço do proponente
+        $testaTipoProponente = $con->query("SELECT pessoa_tipo_id, pessoa_fisica_id, pessoa_juridica_id FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = " . $linha['evento_id'])->fetch_array();
+        if ($testaTipoProponente['pessoa_tipo_id'] == 1) {
+            $testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id = " . $testaTipoProponente['pessoa_fisica_id']);
+            if ($testaEnderecos->num_rows > 0) {
+                while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
+                    $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " . $enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+                }
+            } else {
+                $endereco = "Não cadastrado";
             }
-        } else {
-            $endereco = "Não cadastrado";
+
+        } else if ($testaTipoProponente['pessoa_tipo_id'] == 2) {
+            $testaEnderecos = $con->query("SELECT * FROM pj_enderecos WHERE pessoa_juridica_id = " . $testaTipoProponente['pessoa_juridica_id']);
+            if ($testaEnderecos->num_rows > 0) {
+                while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
+                    $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " . $enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+                }
+            } else {
+                $endereco = "Não cadastrado";
+            }
         }
+    }else{
+        $endereco = "Não se aplica";
     }
 
     //Público
     $checaPublico = $con->query("SELECT * FROM evento_publico WHERE evento_id = " . $linha['evento_id']);
     $publicos = "";
-    if($checaPublico->num_rows > 0){
+    if ($checaPublico->num_rows > 0) {
         while ($arrayPublico = mysqli_fetch_array($checaPublico)) {
             $publicoArray = $con->query("SELECT publico FROM publicos WHERE id = " . $arrayPublico['publico_id'])->fetch_array()['publico'];
             $publicos = $publicos . $publicoArray . "; ";
         }
         $publicos = substr($publicos, 0);
-    }else{
+    } else {
         $publicos = "Não cadastrado";
     }
 
@@ -239,9 +244,9 @@ while ($linha = mysqli_fetch_array($query)) {
     $retiradas = substr($retiradas, 0);
 
     $valorIngresso_consulta = $con->query("SELECT valor_ingresso FROM ocorrencias WHERE publicado = 1 AND retirada_ingresso_id NOT IN (2,5,7,11) AND origem_ocorrencia_id = " . $linha['evento_id']);
-    if($valorIngresso_consulta->num_rows > 0){
-         $valorIngresso = mysqli_fetch_array($valorIngresso_consulta)['valor_ingresso'];
-    }else{
+    if ($valorIngresso_consulta->num_rows > 0) {
+        $valorIngresso = mysqli_fetch_array($valorIngresso_consulta)['valor_ingresso'];
+    } else {
         $valorIngresso = "0.00";
     }
 
@@ -268,7 +273,7 @@ while ($linha = mysqli_fetch_array($query)) {
 
         while ($linhaAtracoes = mysqli_fetch_array($queryAtracoes)) {
             $checaTipo = $con->query("SELECT acao_id FROM acao_atracao WHERE atracao_id = " . $linhaAtracoes['id']);
-            while($idAcoes = mysqli_fetch_array($checaTipo)){
+            while ($idAcoes = mysqli_fetch_array($checaTipo)) {
                 $tipoAcao = $con->query("SELECT acao FROM acoes WHERE id = " . $idAcoes['acao_id'] . " AND publicado = 1")->fetch_array();
                 $acoes = $acoes . "Ação#" . $count . ": " . $tipoAcao['acao'] . "; ";
             }
@@ -276,10 +281,10 @@ while ($linha = mysqli_fetch_array($query)) {
             $artistas = $artistas . $linhaAtracoes['integrantes'] . '; ';
             $qtAtracao = $qtAtracao + (int)$linhaAtracoes['quantidade_apresentacao'];
             $classificoes = $classificoes . $linhaAtracoes['classificacao_indicativa'] . "; ";
-            if($linhaAtracoes['links'] == ""){
+            if ($linhaAtracoes['links'] == "") {
                 $links = $links . "Link#" . $count . ": Não cadastrado; ";
-            }else{
-                $links = $links . "Link#" . $count . ": "  . $linhaAtracoes['links'] . "; ";
+            } else {
+                $links = $links . "Link#" . $count . ": " . $linhaAtracoes['links'] . "; ";
             }
 
             //dados dos produtores
@@ -301,13 +306,13 @@ while ($linha = mysqli_fetch_array($query)) {
 
     if ($linha['tipo_evento_id'] == 2) {
         $consultaFilmes = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id = " . $linha['evento_id']);
-        while($idFilmes = mysqli_fetch_array($consultaFilmes)){
+        while ($idFilmes = mysqli_fetch_array($consultaFilmes)) {
             $filmesArray = $con->query("SELECT ci.classificacao_indicativa, f.link_trailer FROM classificacao_indicativas AS ci INNER JOIN filmes AS f ON ci.id = f.classificacao_indicativa_id WHERE f.id = " . $idFilmes['filme_id'])->fetch_array();
 
-            if($filmesArray['link_trailer'] == ""){
+            if ($filmesArray['link_trailer'] == "") {
                 $links = $links . "Link#" . $count . ": Não cadastrado; ";
-            }else{
-                $links = $links . "Link#" . $count . ": "  . $filmesArray['link_trailer'] . "; ";
+            } else {
+                $links = $links . "Link#" . $count . ": " . $filmesArray['link_trailer'] . "; ";
             }
 
             $classificoes = $classificoes . $filmesArray['classificacao_indicativa'] . "; ";
@@ -327,7 +332,7 @@ while ($linha = mysqli_fetch_array($query)) {
     if ($linha['fomento'] != 0) {
         $consultaFomento = $con->query("SELECT fomento_id FROM evento_fomento WHERE evento_id = " . $linha['evento_id'])->fetch_array();
         $fomento = $con->query("SELECT fomento FROM fomentos WHERE id = " . $consultaFomento['fomento_id'])->fetch_array();
-    }else{
+    } else {
         $fomento = "Não possuí";
     }
 
@@ -371,7 +376,7 @@ while ($linha = mysqli_fetch_array($query)) {
 // Renomeia a guia
 $objPHPExcel->getActiveSheet()->setTitle('Inscritos');
 
-foreach(range('A','X') as $columnID) {
+foreach (range('A', 'X') as $columnID) {
     $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
         ->setAutoSize(true);
 }
