@@ -156,34 +156,6 @@ while ($linha = mysqli_fetch_array($query)) {
     $w = "W" . $cont;
     $x = "X" . $cont;
 
-
-    if ($linha['contratacao'] == 1) {
-        //Endereço do proponente
-        $testaTipoProponente = $con->query("SELECT pessoa_tipo_id, pessoa_fisica_id, pessoa_juridica_id FROM pedidos WHERE publicado = 1 AND origem_tipo_id = 1 AND origem_id = " . $linha['evento_id'])->fetch_array();
-        if ($testaTipoProponente['pessoa_tipo_id'] == 1) {
-            $testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id = " . $testaTipoProponente['pessoa_fisica_id']);
-            if ($testaEnderecos->num_rows > 0) {
-                while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
-                    $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " . $enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
-                }
-            } else {
-                $endereco = "Não cadastrado";
-            }
-
-        } else if ($testaTipoProponente['pessoa_tipo_id'] == 2) {
-            $testaEnderecos = $con->query("SELECT * FROM pj_enderecos WHERE pessoa_juridica_id = " . $testaTipoProponente['pessoa_juridica_id']);
-            if ($testaEnderecos->num_rows > 0) {
-                while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
-                    $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " . $enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
-                }
-            } else {
-                $endereco = "Não cadastrado";
-            }
-        }
-    }else{
-        $endereco = "Não se aplica";
-    }
-
     //Público
     $checaPublico = $con->query("SELECT * FROM evento_publico WHERE evento_id = " . $linha['evento_id']);
     $publicos = "";
@@ -199,6 +171,7 @@ while ($linha = mysqli_fetch_array($query)) {
 
     //Instituições, Subprefeituras e Locais
     $sqlInst = "SELECT i.sigla, s.subprefeitura, l.local, ri.retirada_ingresso,
+                       l.logradouro, l.numero, l.complemento, l.bairro, l.cidade, l.uf, l.cep,
                        o.segunda, o.terca, o.quarta, o.quinta, o.sexta, o.sabado, o.domingo 
                 FROM ocorrencias AS o 
     INNER JOIN instituicoes AS i ON o.instituicao_id = i.id
@@ -213,6 +186,7 @@ while ($linha = mysqli_fetch_array($query)) {
     $retiradas = "";
     $totalDias = "";
     $dias = "";
+    $endereco = "";
 
     $queryOco = mysqli_query($con, $sqlInst);
 
@@ -221,7 +195,7 @@ while ($linha = mysqli_fetch_array($query)) {
         $subprefeituras = $subprefeituras . $linhaOco['subprefeitura'] . '; ';
         $locais = $locais . $linhaOco['local'] . '; ';
         $retiradas = $retiradas . $linhaOco['retirada_ingresso'] . '; ';
-
+        $enderecos = $enderecos . $linhaOco['logradouro'] . ", " . $linhaOco['numero'] . " " . $linhaOco['complemento'] . " / - " . $linhaOco['bairro'] . " - " . $linhaOco['cidade'] . " / " . $linhaOco['uf'] . $linhaOco['cep'] . " | ";
 
         $linhaOco['segunda'] == 1 ? $dias .= "Segunda, " : '';
         $linhaOco['terca'] == 1 ? $dias .= "Terça, " : '';
@@ -242,6 +216,7 @@ while ($linha = mysqli_fetch_array($query)) {
     $subprefeituras = substr($subprefeituras, 0);
     $siglas = substr($siglas, 0);
     $retiradas = substr($retiradas, 0);
+    $enderecos = substr($enderecos, 0);
 
     $valorIngresso_consulta = $con->query("SELECT valor_ingresso FROM ocorrencias WHERE publicado = 1 AND retirada_ingresso_id NOT IN (2,5,7,11) AND origem_ocorrencia_id = " . $linha['evento_id']);
     if ($valorIngresso_consulta->num_rows > 0) {
