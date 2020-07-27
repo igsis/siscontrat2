@@ -1,3 +1,10 @@
+<?php
+
+if (isset($erro)){
+    $mensagem = mensagem('danger','Use o filtro para acessar Listagem Pessoa Fisica Capac');
+}
+
+?>
 <div class="content-wrapper">
     <section class="content">
         <h2 class="page-header">Busca</h2>
@@ -7,8 +14,12 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Buscar no CAPAC</h3>
                     </div>
-                    <form method="POST" action="#"
-                          role="form">
+                    <div class="row" align="center">
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
+                    </div>
+                    <form method="POST" action="?perfil=formacao&p=pessoa_fisica&sp=resultado_pesquisa_capac" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-4 form-group">
