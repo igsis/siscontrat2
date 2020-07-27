@@ -26,11 +26,13 @@ class PDF extends FPDF
 
 }
 
-//CONSULTA 
+//CONSULTA
 if (isset($_POST['idPf'])) {
     $id_Pf = $_POST['idPf'];
 } else if (isset($_POST['idPessoa'])) {
     $id_Pf = $_POST['idPessoa'];
+} else if (isset($_GET['id'])) {
+    $id_Pf = $_GET['id'];
 }
 
 $ano = date('Y', strtotime("-3 hours"));
