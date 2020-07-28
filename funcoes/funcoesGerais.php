@@ -1583,10 +1583,10 @@ function geraModalDescritivo($tabela, $publicado = false)
     }
 }
 
-function recuperaDadosCapac($tabela,$idEvento,$campo)
+function recuperaDadosCapac($tabela, $campo,$valor)
 {
     $con = bancoCapacAntigo();
-    $sql = "SELECT * FROM $tabela WHERE ".$campo." = '$idEvento' LIMIT 0,1";
+    $sql = "SELECT * FROM $tabela WHERE ".$campo." = '$valor' LIMIT 0,1";
     $query = mysqli_query($con,$sql);
     $campo = mysqli_fetch_array($query);
     return $campo;

@@ -131,16 +131,16 @@
                                 $linguagem = recuperaDadosCapac('formacao_linguagem', 'id', $linha['formacao_linguagem_id']);
                                 ?>
                                 <tr>
-                                    <td class="list_description"><?= $linha['id'] ?></td>
-                                    <td class="list_description"><?= $linha['nome'] ?></td>
-                                    <td class="list_description"><?= $linha['nomeArtistico'] ?></td>
-                                    <td class="list_description"><?= exibirDataBr($linha['dataNascimento']) ?></td>
-                                    <td class="list_description"><?= $formacao['descricao'] ?></td>
-                                    <td class="list_description"><?= $funcao['funcao'] ?></td>
-                                    <td class="list_description"><?= $linguagem['linguagem'] ?></td>
-                                    <td class="list_description"><?= !isset($linha['regiao']) || $linha['regiao'] == null ? "Não Cadastrado" : $linha['regiao'] ?></td>
+                                    <td><?= $linha['id'] ?></td>
+                                    <td><?= $linha['nome'] ?></td>
+                                    <td><?= $linha['nomeArtistico'] ?></td>
+                                    <td><?= exibirDataBr($linha['dataNascimento']) ?></td>
+                                    <td><?= $formacao != null ? $formacao['descricao'] : '' ?></td>
+                                    <td><?= $funcao != null ? $funcao['funcao'] : '' ?></td>
+                                    <td><?=  $linguagem != null ? $linguagem['linguagem'] : '' ?></td>
+                                    <td><?= !isset($linha['regiao']) || $linha['regiao'] == null ? "Não Cadastrado" : $linha['regiao'] ?></td>
                                     <td>
-                                        <a class='btn btn-theme btn-md btn-block' target='_blank' href='?perfil=formacao&id_capac=<?=$linha['id']?>'>CARREGAR</a>
+                                        <a class='btn btn-primary' href='?perfil=formacao&id_capac=<?=$linha['id']?>'>Carregar</a>
                                     </td>
                                 </tr>
                                 <?php
