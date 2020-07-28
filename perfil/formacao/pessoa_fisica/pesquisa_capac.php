@@ -1,6 +1,6 @@
 <?php
 
-if (isset($erro)){
+if (isset($_GET['erro'])){
     $mensagem = mensagem('danger','Use o filtro para acessar Listagem Pessoa Fisica Capac');
 }
 

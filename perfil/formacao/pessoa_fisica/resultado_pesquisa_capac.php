@@ -140,7 +140,7 @@
                                     <td><?=  $linguagem != null ? $linguagem['linguagem'] : '' ?></td>
                                     <td><?= !isset($linha['regiao']) || $linha['regiao'] == null ? "Não Cadastrado" : $linha['regiao'] ?></td>
                                     <td>
-                                        <a class='btn btn-primary' href='?perfil=formacao&id_capac=<?=$linha['id']?>'>Carregar</a>
+                                        <a class='btn btn-primary' href='?perfil=formacao&p=pessoa_fisica&sp=detalhes_pf_capac&id_capac=<?=$linha['id']?>'>Carregar</a>
                                     </td>
                                 </tr>
                                 <?php
