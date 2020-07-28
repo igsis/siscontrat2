@@ -28,7 +28,7 @@
                                 $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
                                 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
                                 $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
-                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'] ?? NULL;
                                 $periodo = recuperaDados("periodos","id",$ocorrencia['periodo_id']);
                                 $subprefeitura = recuperaDados("subprefeituras","id",$ocorrencia['subprefeitura_id']);
                                 ?>
@@ -91,7 +91,7 @@
                                 <?php } ?>
                                 <tr>
                                     <th width="30%"> Observação:</th>
-                                    <td><?= $ocorrencia['observacao'] ?></td>
+                                    <td><?= $ocorrencia['observacao'] == "" ? "Não cadastrado" : $ocorrencia['observacao'] ?></td>
                                 </tr>
                                 <?php
                                 $i++;

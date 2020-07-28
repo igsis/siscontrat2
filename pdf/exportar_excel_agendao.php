@@ -304,7 +304,7 @@ $objPHPExcel->setActiveSheetIndex(0);
 ob_end_clean();
 ob_start();
 
-$nome_arquivo = date("YmdHis", strtotime("-3 hours")) . "_eventos_pesquisa.xls";
+$nome_arquivo = date("d-m-Y", strtotime("-3 hours")) . "_agendoes_pesquisa.xls";
 
 // Cabeçalho do arquivo para ele baixar(Excel2007)
 header('Content-Type: text/html; charset=ISO-8859-1');

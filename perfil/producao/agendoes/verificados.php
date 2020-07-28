@@ -22,10 +22,9 @@ $sqlAgendaoVerificados = "SELECT
 		a.nome_evento AS 'nome',
         a.data_envio AS 'data_envio',
         env.visualizado AS 'visualizado'
-		from agendoes AS a
-        INNER JOIN agendao_ocorrencias AS ao ON ao.id = a.id
+		FROM agendoes AS a
         INNER JOIN producao_agendoes AS env ON env.agendao_id = a.id
-        WHERE a.publicado = 1 AND env.visualizado = 1 AND evento_status_id = 3";
+        WHERE a.publicado = 1 AND env.visualizado = 1 AND a.evento_status_id = 3";
 $queryAgendaoVerificados = mysqli_query($con, $sqlAgendaoVerificados);
 
 ?>
@@ -62,8 +61,7 @@ $queryAgendaoVerificados = mysqli_query($con, $sqlAgendaoVerificados);
                             <?php
                             echo "<tbody>";
                             while ($agendaoVerif = mysqli_fetch_array($queryAgendaoVerificados)) {
-                            $idAgendao = $agendaoVerif['id'];
-                            $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = '$idAgendao' AND ao.publicado = 1";
+                            $sqlLocal = "SELECT l.local FROM locais l INNER JOIN agendao_ocorrencias ao ON ao.local_id = l.id WHERE ao.origem_ocorrencia_id = " . $agendaoVerif['id'] . " AND ao.publicado = 1";
                             $queryLocal = mysqli_query($con, $sqlLocal);
                             $local = '';
                             while ($locais = mysqli_fetch_array($queryLocal)) {
@@ -71,7 +69,7 @@ $queryAgendaoVerificados = mysqli_query($con, $sqlAgendaoVerificados);
                             }
                             $local = substr($local, 1);
 
-                            $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN agendao_ocorrencias AS ao ON ao.espaco_id = e.id WHERE ao.origem_ocorrencia_id = '$idAgendao'";
+                            $sqlEspaco = "SELECT e.espaco FROM espacos AS e INNER JOIN agendao_ocorrencias AS ao ON ao.espaco_id = e.id WHERE ao.origem_ocorrencia_id = " . $agendaoVerif['id'];
                             $queryEspaco = mysqli_query($con, $sqlEspaco);
                             $espaco = '';
                             while ($espacos = mysqli_fetch_array($queryEspaco)) {
@@ -83,8 +81,9 @@ $queryAgendaoVerificados = mysqli_query($con, $sqlAgendaoVerificados);
 
                                 <?php
                                 echo "<td>" . $agendaoVerif['nome'] . "</td>";
-                                echo "<td>" . $local . "</td>";
-                                echo "<td>" . $espaco . "</td>";
+                                echo "<td>" . $local . "</td>"; ?>
+                                <td> <?= $espaco == "" ? "Não possuí" : $espaco ?> </td>
+                                <?php
                                 echo "<td>" . retornaPeriodoNovo($agendaoVerif['id'], 'agendao_ocorrencias') . "</td>";
                                 echo "<td>" . exibirDataBr($agendaoVerif['data_envio']) . "</td>";
                                 echo "<td>

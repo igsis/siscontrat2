@@ -83,7 +83,7 @@ if(isset($_POST['pesquisa'])){
                             <td><?= $agendao['quantidade_apresentacao'] ?></td>
                             <td><?= $agendao['ficha_tecnica'] ?></td>
                             <td>
-                                 <form method="post" target="_blank" action="../pdf/exporta_excel_agendao_producao.php">
+                                 <form method="post" target="_blank" action="../pdf/exportar_excel_agendao.php">
                                       <input type="hidden" name="idAgendao" value="<?=$agendao['id']?>">
                                       <button type="submit" class="btn btn-success btn-theme btn-block">
                                          <span class="glyphicon glyphicon-list-alt"></span>
