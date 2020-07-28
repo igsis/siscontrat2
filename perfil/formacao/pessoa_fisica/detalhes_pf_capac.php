@@ -248,8 +248,8 @@ $linhas = mysqli_num_rows($query);
                                                     }
                                                 } else{ ?>
                                                     <tr>
-                                                        <td>
-                                                            <span style="text-align: center">Nenhum arquivo encontrado</span>
+                                                        <td style="text-align: center">
+                                                            Nenhum arquivo encontrado
                                                         </td>
                                                     </tr>
                                                 <?php
@@ -260,6 +260,13 @@ $linhas = mysqli_num_rows($query);
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="#" class="btn btn-success btn-block" style="font-size: 1.4em !important;">IMPORTAR</a>
                             </div>
                         </div>
                     </div>
