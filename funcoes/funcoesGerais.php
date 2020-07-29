@@ -1582,3 +1582,33 @@ function geraModalDescritivo($tabela, $publicado = false)
         <?php
     }
 }
+
+function recuperaDadosCapac($tabela, $campo,$valor)
+{
+    $con = bancoCapacAntigo();
+    $sql = "SELECT * FROM $tabela WHERE ".$campo." = '$valor' LIMIT 0,1";
+    $query = mysqli_query($con,$sql);
+    $campo = mysqli_fetch_array($query);
+    return $campo;
+}
+
+function recuperaEstadoCivilCapac($campoX)
+{
+    $estadoCivil = recuperaDadosCapac("estado_civil",$campoX,"id");
+    $nomeEstadoCivil = $estadoCivil['estadoCivil'];
+    return $nomeEstadoCivil;
+}
+
+function recuperaBanco($campoY)
+{
+    $banco = recuperaDadosCapac("banco",$campoY,"id");
+    $nomeBanco = $banco['banco'];
+    return $nomeBanco;
+}
+
+function recuperaUsuarioCapac($campoZ)
+{
+    $usuario = recuperaDadosCapac("usuario",$campoZ,"id");
+    $nomeUsuario = $usuario['nome'];
+    return $nomeUsuario;
+}

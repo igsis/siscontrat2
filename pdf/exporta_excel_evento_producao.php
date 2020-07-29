@@ -186,29 +186,30 @@ while ($linha = mysqli_fetch_array($query)) {
     $retiradas = "";
     $totalDias = "";
     $dias = "";
-    $endereco = "";
+    $enderecos = "";
 
     $queryOco = mysqli_query($con, $sqlInst);
+    if ($queryOco->num_rows > 0) {
+        while ($linhaOco = mysqli_fetch_array($queryOco)) {
+            $siglas = $siglas . $linhaOco['sigla'] . '; ';
+            $subprefeituras = $subprefeituras . $linhaOco['subprefeitura'] . '; ';
+            $locais = $locais . $linhaOco['local'] . '; ';
+            $retiradas = $retiradas . $linhaOco['retirada_ingresso'] . '; ';
+            $enderecos = $enderecos . $linhaOco['logradouro'] . ", " . $linhaOco['numero'] . " " . $linhaOco['complemento'] . " / - " . $linhaOco['bairro'] . " - " . $linhaOco['cidade'] . " / " . $linhaOco['uf'] . " CEP: " . $linhaOco['cep'] . "\n";
 
-    while ($linhaOco = mysqli_fetch_array($queryOco)) {
-        $siglas = $siglas . $linhaOco['sigla'] . '; ';
-        $subprefeituras = $subprefeituras . $linhaOco['subprefeitura'] . '; ';
-        $locais = $locais . $linhaOco['local'] . '; ';
-        $retiradas = $retiradas . $linhaOco['retirada_ingresso'] . '; ';
-        $enderecos = $enderecos . $linhaOco['logradouro'] . ", " . $linhaOco['numero'] . " " . $linhaOco['complemento'] . " / - " . $linhaOco['bairro'] . " - " . $linhaOco['cidade'] . " / " . $linhaOco['uf'] . $linhaOco['cep'] . " | ";
+            $linhaOco['segunda'] == 1 ? $dias .= "Segunda, " : '';
+            $linhaOco['terca'] == 1 ? $dias .= "Terça, " : '';
+            $linhaOco['quarta'] == 1 ? $dias .= "Quarta, " : '';
+            $linhaOco['quinta'] == 1 ? $dias .= "Quinta, " : '';
+            $linhaOco['sexta'] == 1 ? $dias .= "Sexta, " : '';
+            $linhaOco['sabado'] == 1 ? $dias .= "Sabádo, " : '';
+            $linhaOco['domingo'] == 1 ? $dias .= "Domingo. " : '';
 
-        $linhaOco['segunda'] == 1 ? $dias .= "Segunda, " : '';
-        $linhaOco['terca'] == 1 ? $dias .= "Terça, " : '';
-        $linhaOco['quarta'] == 1 ? $dias .= "Quarta, " : '';
-        $linhaOco['quinta'] == 1 ? $dias .= "Quinta, " : '';
-        $linhaOco['sexta'] == 1 ? $dias .= "Sexta, " : '';
-        $linhaOco['sabado'] == 1 ? $dias .= "Sabádo, " : '';
-        $linhaOco['domingo'] == 1 ? $dias .= "Domingo. " : '';
-
-        if ($dias != "") {
-            $totalDias .= substr($dias, 0, -2);
-        } else {
-            $totalDias .= "Dias não especificados.";
+            if ($dias != "") {
+                $totalDias .= substr($dias, 0, -2);
+            } else {
+                $totalDias .= "Dias não especificados.";
+            }
         }
     }
 
@@ -304,9 +305,10 @@ while ($linha = mysqli_fetch_array($query)) {
     $dataFim = $con->query("SELECT data_fim FROM ocorrencias oco WHERE oco.origem_ocorrencia_id = " . $linha['evento_id'] . " AND oco.publicado = '1' ORDER BY data_fim DESC LIMIT 0,1")->fetch_array()['data_fim'];
     $projeto_especial = $con->query("SELECT projeto_especial FROM projeto_especiais WHERE id = " . $linha['evento_id'])->fetch_array()['projeto_especial'];
 
+
     if ($linha['fomento'] != 0) {
         $consultaFomento = $con->query("SELECT fomento_id FROM evento_fomento WHERE evento_id = " . $linha['evento_id'])->fetch_array();
-        $fomento = $con->query("SELECT fomento FROM fomentos WHERE id = " . $consultaFomento['fomento_id'])->fetch_array();
+        $fomento = $con->query("SELECT fomento FROM fomentos WHERE id = " . $consultaFomento['fomento_id'])->fetch_array()['fomento'];
     } else {
         $fomento = "Não possuí";
     }
@@ -314,7 +316,7 @@ while ($linha = mysqli_fetch_array($query)) {
     $objPHPExcel->setActiveSheetIndex(0)
         ->setCellValue($a, $siglas)
         ->setCellValue($b, $locais)
-        ->setCellValue($c, $endereco)
+        ->setCellValue($c, $enderecos)
         ->setCellValue($d, $subprefeituras)
         ->setCellValue($e, $linha['nome_evento'])
         ->setCellValue($f, $artistas == "" ? "Este evento é filme!" : $artistas)
