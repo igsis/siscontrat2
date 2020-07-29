@@ -13,6 +13,16 @@ if (isset($_POST['busca'])) {
     if ($operador != null && $operador != 0)
         $sqlOperador = " AND p.operador_id = '$operador'";
 
+    if($data_inicio != NULL && $data_fim != NULL){
+        $sqlPeriodo = " AND o.data_inicio BETWEEN '$data_inicio' AND '$data_fim'";
+    }
+    elseif ($data_inicio != NULL && $data_fim == NULL){
+        $sqlPeriodo = " AND o.data_inicio >= '$data_inicio'";
+    }
+    else{
+        $sqlPeriodo = "";
+    }
+
     $sql = "SELECT e.id, e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
     p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, 
     p.valor_total, e.evento_status_id, p.operador_id, ps.status,
@@ -37,6 +47,7 @@ if (isset($_POST['busca'])) {
       (er.data_reabertura is null)
     )
     $sqlOperador
+    $sqlPeriodo
     GROUP BY e.id";
 
     $query = mysqli_query($con, $sql);
