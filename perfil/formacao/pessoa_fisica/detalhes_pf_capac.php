@@ -266,7 +266,12 @@ $linhas = mysqli_num_rows($query);
                     <div class="box-footer">
                         <div class="row">
                             <div class="col-md-12">
-                                <a href="#" class="btn btn-success btn-block" style="font-size: 1.4em !important;">IMPORTAR</a>
+                                <form method="post" action="?perfil=formacao&p=pessoa_fisica&sp=cadastro">
+                                    <input type="hidden" name="cpf" value="<?= $pf['cpf'] ?>">
+                                    <button name="importar" type="submit" class="btn btn-success btn-block" style="font-size: 1.4em !important;">
+                                        IMPORTAR
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,11 @@
 <?php
 
-if (isset($_GET['erro'])){
-    $mensagem = mensagem('danger','Use o filtro para acessar Listagem Pessoa Fisica Capac');
+if (isset($_GET['erro'])) {
+    if ($_GET['erro']) {
+        $mensagem = mensagem('danger', 'Use o filtro para acessar Listagem Pessoa Fisica Capac');
+    } else{
+        $mensagem = mensagem('danger', 'Proponente já foi cadastrado no sistema');
+    }
 }
 
 ?>
@@ -19,7 +23,8 @@ if (isset($_GET['erro'])){
                             echo $mensagem;
                         }; ?>
                     </div>
-                    <form method="POST" action="?perfil=formacao&p=pessoa_fisica&sp=resultado_pesquisa_capac" role="form">
+                    <form method="POST" action="?perfil=formacao&p=pessoa_fisica&sp=resultado_pesquisa_capac"
+                          role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-4 form-group">
