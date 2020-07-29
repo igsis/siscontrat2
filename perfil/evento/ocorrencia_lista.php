@@ -133,9 +133,11 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
                             <thead>
                             <tr>
                                 <th>Data início</th>
+                                <th>Data final</th>
                                 <th>Horario início</th>
                                 <th>Horario final</th>
                                 <th>Local</th>
+                                <th>Datas de Exceçoes</th>
                                 <th style='display:none'>atracao_id</th>
                                 <th style='display:none'>instituicao_id</th>
                                 <th style='display:none'>local_id</th>
@@ -167,12 +169,23 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
 
                             echo "<tbody>";
                             while ($ocorrencia = mysqli_fetch_array($query)) {
+                                if ($ocorrencia['data_fim'] != "0000-00-00") {
+                                    $sqlExcecoes = "SELECT GROUP_CONCAT(DATE_FORMAT(data_excecao, '%d/%m/%Y') SEPARATOR ', ') AS 'excecoes' FROM ocorrencia_excecoes WHERE atracao_id = '{$ocorrencia['idOco']}'";
+                                    $excecoes = $con->query($sqlExcecoes)->fetch_assoc()['excecoes'];
+                                    $excecoes = $excecoes == null ? "Sem datas cadastradas" : $excecoes;
+                                    $dataFim = exibirDataBr($ocorrencia['data_fim']);
+                                } else {
+                                    $excecoes = "Não é Temporada";
+                                    $dataFim = "Não é Temporada";
+                                }
 
                                 echo "<tr class='content'>";
                                 echo "<td>" . exibirDataBr($ocorrencia['data_inicio']) . "</td>";
+                                echo "<td>" . $dataFim . "</td>";
                                 echo "<td>" . exibirHora($ocorrencia['horario_inicio']) . "</td>";
                                 echo "<td>" . exibirHora($ocorrencia['horario_fim']) . "</td>";
                                 echo "<td>" . $ocorrencia['local'] . "</td>";
+                                echo "<td>" . $excecoes . "</td>";
                                 echo "<td style='display:none'>" . $ocorrencia['atracao_id'] . "</td>";
                                 echo "<td style='display:none'>" . $ocorrencia['instituicao_id'] . "</td>";
                                 echo "<td style='display:none'>" . $ocorrencia['espaco_id'] . "</td>";
@@ -223,9 +236,11 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
                             <tfoot>
                             <tr>
                                 <th>Data início</th>
+                                <th>Data final</th>
                                 <th>Horario início</th>
                                 <th>Horario final</th>
                                 <th>Local</th>
+                                <th>Datas de Exceçoes</th>
                                 <th style='display:none'>atracao_id</th>
                                 <th style='display:none'>instituicao_id</th>
                                 <th style='display:none'>local_id</th>

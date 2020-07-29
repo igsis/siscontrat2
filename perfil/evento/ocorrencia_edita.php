@@ -377,13 +377,15 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                     &nbsp;
                                 </label>
                             </div>
-                            <div class="row" style="margin-bottom: 15px">
-                                <div class="col-md-12">
-                                    <button id="dtExc" class="btn btn-info" type="button">
-                                        Data de excessão
-                                    </button>
+                            <?php if (isset($ocorrencia['data_fim']) && $ocorrencia['data_fim'] != "0000-00-00"): ?>
+                                <div class="row" style="margin-bottom: 15px">
+                                    <div class="col-md-12">
+                                        <button id="dtExc" class="btn btn-info" type="button">
+                                            Data de exceção
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endif ?>
                             <div class="row" id="msgEsconde" style="display: none;">
                                 <div class="form-group col-md-6">
                                     <span style="color: red;">Selecione ao menos um dia da semana!</span>
