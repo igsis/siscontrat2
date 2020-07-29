@@ -49,7 +49,7 @@ $parcela = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND
                             <div class="row">
                                 <div class="col-md-6">
                                     <strong> Valor Total: </strong> R$ <span
-                                            id="valorTotal"> <?= dinheiroParaBr($pedido['valor_total']) ?></span>
+                                            id="valorTotal" data-id="<?=$pedido['valor_total']?>"> <?= dinheiroParaBr($pedido['valor_total']) ?></span>
                                 </div>
 
                                 <div class="col-md-4">
@@ -99,7 +99,7 @@ $parcela = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND
     var valorSomado = $('#totalSomado');
 
     function valores() {
-        var total = parseFloat($('#valorTotal').text());
+        var total = parseFloat($('#valorTotal').attr('data-id'));
         var sum = 0;
         let msgValorOk = $('#msgValorOk');
         var btnGravar = $('#grava');

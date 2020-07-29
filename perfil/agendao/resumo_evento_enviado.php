@@ -110,7 +110,7 @@ $ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias as ocorrencias
                                 <p><b>Nome do produtor:</b> <?= $produtor['nome'] ?></p>
                                 <p><b>Email:</b> <?= $produtor['email'] ?></p>
                                 <p><b>Telefone(s):</b> <?= $produtor['telefone1'] ?? NULL ?>  <?= " | " . $produtor['telefone2'] ?? NULL ?></p>
-                                <p><b>Observação do produtor:</b> <?= $produtor['observacao'] ?></p>
+                                <p><b>Observação do produtor:</b> <?= $produtor['observacao'] == NULL ? "Não cadastrado" : $produtor['observacao'] ?></p>
                                 <hr/>
                             </div>
 
@@ -119,7 +119,7 @@ $ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias as ocorrencias
                                 <?php
                                 foreach ($ocorrencias as $ocorrencia) {
                                     $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
-                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'] ?? NULL;
                                     ?>
                                     <p><b>Data:</b> <?= exibirDataBr($ocorrencia['data_inicio']) ?> - <?= $ocorrencia['data_fim'] == "0000-00-00" ? "Data única" : exibirDataBr($ocorrencia['data_fim']) ?></p>
                                     <p><b>Horário:</b> <?= date("H:i", strtotime($ocorrencia['horario_inicio'])) ?> às <?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?></p>
@@ -135,14 +135,14 @@ $ocorrencias = $con->query("SELECT * FROM agendao_ocorrencias as ocorrencias
                                         ?>
                                     </p>
                                     <p><b>Retirada de Ingresso:</b> <?= $ocorrencia['retirada_ingresso'] ?></p>
-                                    <p><b>Valor do Ingresso:</b> <?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></p>
+                                    <p><b>Valor do Ingresso:</b> <?= $ocorrencia['valor_ingresso'] == "0.00" ? "GRÁTIS" : "R$" . dinheiroParaBr($ocorrencia['valor_ingresso']) ?></p>
                                     <p><b>Local:</b><?= $local ?>  <?php if ($ocorrencia['espaco_id'] != 0) {
                                             echo " - " . $espaco;
                                         } ?>
                                     </p>
                                     <p><b>Subprefeitura:</b> <?= $ocorrencia['subprefeitura'] ?></p>
                                     <p><b>Período:</b> <?= $ocorrencia['periodo'] ?></p>
-                                    <p><b>Observação:</b> <?= $ocorrencia['observacao'] ?></p>
+                                    <p><b>Observação:</b> <?= $ocorrencia['observacao'] == NULL ? "Não cadastrado" : $ocorrencia['observacao']?></p>
                                     <hr/>
                                     <?php
                                 }

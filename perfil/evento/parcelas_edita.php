@@ -169,7 +169,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                                 <div class="col-md-offset-3 col-md-3">
                                     <div class="alert">
                                         <strong>Valor Total:</strong> R$ <span
-                                                id="valorTotal"><?= $pedido['valor_total'] ?></span>
+                                                id="valorTotal" data-id="<?=$pedido['valor_total']?>"><?= $pedido['valor_total'] ?></span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -219,7 +219,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
     linha_erro.css("display", "none");
 
     $(document).on("keyup", ".valor", function () {
-        var total = parseFloat($('#valorTotal').text());
+        var total = parseFloat($('#valorTotal').attr('data-id'));
         var sum = 0;
         let alerta = $('#alertValor');
 
@@ -231,7 +231,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
         //let valOriginal = document.querySelector('#valorTotal').textContent;
         //let valRegistrado = document.querySelector('#totalRegistrado').textContent;
         $("#totalRegistrado").text(sum.toFixed(2));
-
+        console.log("TOTAL: " + total);
         if (sum == total) {
             alerta.css("display", "block");
             btnGravar.attr('disabled', false);
