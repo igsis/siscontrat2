@@ -54,7 +54,7 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
         $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
         $carga = $con->query($sqlCarga);
 
-        if ($carga->num_rows > 0 || $cargaHoraria != 0) {
+        if ($carga->num_rows > 0) {
             while ($cargaArray = mysqli_fetch_array($carga)) {
                 $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
             }

@@ -73,7 +73,7 @@ switch ($pedido['pessoa_tipo_id']) {
             'CEP' => $endereco['cep'],
             'Logradouro' => $endereco['logradouro'],
             'Número' => $endereco['numero'],
-            'Complemento' => $endereco['complemento'] ? "" : "Não cadastrado",
+            'Complemento' => $endereco['complemento'] == NULL ? "Não cadastrado" : $endereco['complemento'],
             'Bairro' => $endereco['bairro'],
             'Cidade' => $endereco['cidade'],
             'Estado' => $endereco['uf']
