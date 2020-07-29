@@ -239,7 +239,7 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
 
                     <div class="box box-info">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Detalhes de parcelas</h3>
+                            <h3 class="box-title">Detalhes do pagamento</h3>
                         </div>
 
                         <div class="row" align="center">

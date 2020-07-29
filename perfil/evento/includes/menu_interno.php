@@ -101,8 +101,8 @@ if (!$eventoNovo) {
                         <ul class="treeview-menu" style="display: block;">
                             <li><a href="<?= $pasta ?>resumo_pedido"><i class="fa fa-circle-o"></i> Resumo do Pedido</a>
                             </li>
-                            <li><a href="<?= $pasta ?>pedido_parcelas"><i class="fa fa-circle-o"></i> Detalhes de
-                                    Parcelas</a></li>
+                            <li><a href="<?= $pasta ?>pedido_parcelas"><i class="fa fa-circle-o"></i> Detalhes do
+                                    Pagamento</a></li>
                             <li><a href="<?= $pasta ?>pedido_proponente"><i class="fa fa-circle-o"></i> Cadastro de
                                     Proponente</a></li>
                             <?php if ($tipoPedido == 2): ?>
