@@ -78,7 +78,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                                     $espaco = "";
                                 endif;
                                 $queryData = $con->query("SELECT data_envio FROM evento_envios WHERE evento_id = " . $eventoVerf['id'])->fetch_assoc();
-                                $dataEnvio = $queryData['data_envio'];
+                                $dataEnvio = $queryData['data_envio'] ?? NULL;
                                 ?>
 
                                 <tr>

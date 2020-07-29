@@ -11,7 +11,7 @@ require_once("../funcoes/funcoesGerais.php");
 $idAgendao = $_POST['idAgendao'];
 
 $sql = "SELECT
-                a.id AS 'id',
+                a.id,
                 a.nome_evento,
                 a.espaco_publico,
                 a.quantidade_apresentacao,
@@ -184,7 +184,7 @@ while ($linha = mysqli_fetch_array($query)) {
         $subprefeituras = $subprefeituras . $linhaOco['subprefeitura'] . '; ';
         $locais = $locais . $linhaOco['local'] . '; ';
         $retiradas = $retiradas . $linhaOco['retirada_ingresso'] . '; ';
-        $enderecos = $enderecos . $linhaOco['logradouro'] . ", " . $linhaOco['numero'] . " " . $linhaOco['complemento'] . " / - " . $linhaOco['bairro'] . " - " . $linhaOco['cidade'] . " / " . $linhaOco['uf'] . $linhaOco['cep'] . "\n";
+        $enderecos = $enderecos . $linhaOco['logradouro'] . ", " . $linhaOco['numero'] . " " . $linhaOco['complemento'] . " / - " . $linhaOco['bairro'] . " - " . $linhaOco['cidade'] . " / " . $linhaOco['uf'] . " CEP: " . $linhaOco['cep'] . "\n";
 
         $linhaOco['segunda'] == 1 ? $dias .= "Segunda, " : '';
         $linhaOco['terca'] == 1 ? $dias .= "Terça, " : '';
@@ -215,8 +215,10 @@ while ($linha = mysqli_fetch_array($query)) {
     }
 
     if ($linha['fomento'] != 0) {
-        $sqlFomento = "SELECT * FROM fomentos WHERE id = '" . $linha['fomento'] . "'";
-        $fomento = $con->query($sqlFomento)->fetch_assoc();
+        $consultaFomento = $con->query("SELECT fomento_id FROM evento_fomento WHERE evento_id = " . $linha['id'])->fetch_array();
+        $fomento = $con->query("SELECT fomento FROM fomentos WHERE id = " . $consultaFomento['fomento_id'])->fetch_array()['fomento'];
+    } else {
+        $fomento = "Não possuí";
     }
 
     $acoes = "";
@@ -274,7 +276,7 @@ while ($linha = mysqli_fetch_array($query)) {
         ->setCellValue($r, isset($linha['divulgacao']) ? $linha['divulgacao'] : "Sem link de divulgação.")
         ->setCellValue($s, $linha['sinopse'])
         ->setCellValue($t, $linha['projeto_especial'])
-        ->setCellValue($u, isset($fomento['fomento']) ? $fomento['fomento'] : "Não")
+        ->setCellValue($u, $fomento)
         ->setCellValue($v, $linha['produtor_nome'])
         ->setCellValue($w, $linha['produtor_email'])
         ->setCellValue($x, $linha['produtor_fone']);
