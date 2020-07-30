@@ -140,7 +140,7 @@ if (isset($_POST['busca'])) {
                                                     onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirLocais">
-                                                Clique para ver os locais
+                                                Ver locais
                                             </button>
                                         </td>
                                         <td>
@@ -151,7 +151,7 @@ if (isset($_POST['busca'])) {
                                                     data-name="inst"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirInstituicoes">
-                                                Clique para ver as instituições
+                                                Ver instituições
                                             </button>
                                         </td>
                                         <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias") ?></td>
