@@ -360,7 +360,7 @@ $disableDown = "";
                                         <select name="status" id="status" class="form-control">
                                             <option value="<?= $pedido['status_pedido_id'] ?>"><?= $nomeStatus['status'] ?></option>
                                             <?php
-                                            $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " ORDER BY ordem";
+                                            $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " AND area = 1 ORDER BY ordem";
                                             $queryStatus = mysqli_query($con, $sqlStatus);
                                             while ($status = mysqli_fetch_array($queryStatus)) {
                                                 echo "<option value='" . $status['id'] . "'>" . $status['status'] . "</option>";
@@ -380,7 +380,7 @@ $disableDown = "";
                                         <select name="status" id="status" class="form-control">
                                             <option value="<?= $pedido['status_pedido_id'] ?>"><?= $nomeStatus['status'] ?></option>
                                             <?php
-                                            $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " ORDER BY ordem";
+                                            $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " AND area = 1 ORDER BY ordem";
                                             $queryStatus = mysqli_query($con, $sqlStatus);
                                             while ($status = mysqli_fetch_array($queryStatus)) {
                                                 echo "<option value='" . $status['id'] . "'>" . $status['status'] . "</option>";
