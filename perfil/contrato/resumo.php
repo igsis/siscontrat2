@@ -1,6 +1,4 @@
 <!-- Sweet Alert 2 -->
-<script src="../visual/plugins/sweetalert2/sweetalert2.min.js"></script>
-<link rel="stylesheet" href="../visual/plugins/sweetalert2/sweetalert2.css">
 <?php
 $con = bancoMysqli();
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
@@ -176,35 +174,6 @@ if (isset($_POST['salvar'])) {
         $mensagem = mensagem("success", "Atualizações salvas com sucesso!");
     } else {
         $mensagem = mensagem("danger", "Erro ao salvar alterações! Tente novamente.");
-    }
-}
-
-if (isset($_POST['reabertura'])) {
-    $idEvento = $_POST['idEvento'];
-    $now = date('Y-m-d H:i:s', strtotime("-3 Hours"));
-    $idUsuario = $_SESSION['usuario_id_s'];
-    $sql = "INSERT INTO evento_reaberturas (evento_id, data_reabertura, usuario_reabertura_id) VALUES ('$idEvento', '$now', '$idUsuario')";
-    $sqlStatus = "UPDATE eventos SET evento_status_id = 1 WHERE id = '$idEvento'";
-
-    if ((mysqli_query($con, $sql)) && (mysqli_query($con, $sqlStatus))) {
-        $mensagem = "<script>
-                    Swal.fire({
-                        title: 'Reabertura',
-                        html: 'Reabertura do evento realizada com sucesso!',
-                        type: 'success',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        showCancelButton: false,
-                        confirmButtonText: 'Ok'
-                    }).then(function() {
-                        window.location.href = 'index.php';
-                    });
-                </script>";
-        gravarLog($sql);
-        unset($_SESSION['idEvento']);
-        unset($_SESSION['idPedido']);
-    } else {
-        $mensagem = mensagem("danger", "Erro ao efetuar a reabertura do evento! Tente novamente.");
     }
 }
 
@@ -838,7 +807,7 @@ $disableDown = "";
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title">Confirmação de Reabertura</h4>
                             </div>
-                            <form action="?perfil=contrato&p=resumo"
+                            <form action="?perfil=contrato&p=reabertura"
                                   role="form" method="post">
                                 <div class="modal-body">
                                     <p>Tem certeza que deseja reabrir este evento?</p>
@@ -848,7 +817,7 @@ $disableDown = "";
                                         Cancelar
                                     </button>
                                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                    <button type="submit" class="btn btn-primary" name="reabertura">Reabrir</button>
+                                    <button type="submit" class="btn btn-primary">Reabrir</button>
                                 </div>
                             </form>
                         </div>
