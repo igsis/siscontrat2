@@ -61,7 +61,7 @@ echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">";
 echo "<body>";
 
 echo "<p><b>CONTRATANTE:</b> "."Secretaria Municipal de Cultura"."</p>";
-echo "<p align='justify'><b>CONTRATADO(S):</b>".$razao_social.", CNPJ ("."$cnpj"."), legalmente representada por ".$nomeRep." CPF (".$cpfRep.").</p>";
+echo "<p align='justify'><b>CONTRATADO(S):</b> ".$razao_social.", CNPJ ("."$cnpj"."), legalmente representada por ".$nomeRep." CPF (".$cpfRep.").</p>";
 echo "<p align='justify'><b>EVENTO/SERV:</b> Apresentação do "."$objeto".", conforme segue:<br>
 "."$local"." <br>";
 echo "<p align='justify'><b>DATA/PERÍODO: </b>"."$periodo".".</p>";
