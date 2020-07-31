@@ -6,14 +6,14 @@ $link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat
 $sql = "SELECT e.id, e.protocolo, e.nome_evento,  er.data_reabertura, e.usuario_id, er.usuario_reabertura_id, p.pessoa_tipo_id, p.pessoa_juridica_id, p.pessoa_fisica_id, p.valor_total, p.operador_id
         FROM eventos e 
         INNER JOIN evento_envios ee ON e.id = ee.evento_id 
-        LEFT JOIN evento_reaberturas er on e.id = er.evento_id
+        INNER JOIN evento_reaberturas er on e.id = er.evento_id
         INNER JOIN pedidos p ON p.origem_id = e.id
         WHERE e.publicado = 1 
-        AND er.evento_id IS NULL
         AND p.publicado = 1
         AND p.origem_tipo_id = 1
-        AND e.evento_status_id != 1 
-        AND p.status_pedido_id != 3 GROUP BY e.id";
+        AND e.evento_status_id = 1 
+        AND p.status_pedido_id != 3
+        GROUP BY e.id";
 
 
 $query = mysqli_query($con, $sql);
