@@ -50,7 +50,7 @@ if ($artesCenicas) { $whereAdicional[] = "teatro = '1'"; }
 if ($edital) { $whereAdicional[] = "edital = '1'"; }
 
 if (isset($_POST["enviarArquivo"])) {
-    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1";
+    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id IN ('3','$tipo') and publicado = 1";
     $query_arquivos = mysqli_query($con, $sql_arquivos);
     while ($arq = mysqli_fetch_array($query_arquivos)) {
         $y = $arq['id'];

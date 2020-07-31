@@ -5,6 +5,7 @@ $link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat
 unset($_SESSION['idEvento']);
 
 if (isset($_POST['busca'])) {
+    $semOperador = $_POST['semOperador'] ?? NULL;
     $protocolo = $_POST['protocolo'] ?? NULL;
     $num_processo = $_POST['num_processo'] ?? NULL;
     $nomeEvento = $_POST['evento'] ?? NULL;
@@ -19,8 +20,11 @@ if (isset($_POST['busca'])) {
     $sqlStatus = '';
     $sqlUsuario = '';
 
+    if ($semOperador != null)
+        $sqlProtocolo = " AND p.operador_id IS NULL";
+
     if ($protocolo != null)
-        $sqlProtocolo = " AND e.protocolo LIKE '%$protocolo%'";
+    $sqlProtocolo = " AND e.protocolo LIKE '%$protocolo%'";
 
     if ($num_processo != null)
         $sqlProcesso = " AND p.numero_processo LIKE '%$num_processo%'";
@@ -87,7 +91,7 @@ if (isset($_POST['busca'])) {
                         <h3 class="box-title">Listagem</h3
                     </div>
                     <div class="box-body">
-                        <table id="tblResultado" class="table table-bordered table-striped">
+                        <table id="tblResultado" class="table table-bordered table-striped table-responsive">
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
@@ -140,7 +144,7 @@ if (isset($_POST['busca'])) {
                                                     onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirLocais">
-                                                Clique para ver os locais
+                                                Ver locais
                                             </button>
                                         </td>
                                         <td>
@@ -151,7 +155,7 @@ if (isset($_POST['busca'])) {
                                                     data-name="inst"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirInstituicoes">
-                                                Clique para ver as instituições
+                                                Ver instituições
                                             </button>
                                         </td>
                                         <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias") ?></td>
@@ -213,6 +217,7 @@ if (isset($_POST['busca'])) {
             "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+            "scrollX": true,
         });
     });
 </script>

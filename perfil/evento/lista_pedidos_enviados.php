@@ -83,7 +83,7 @@ $query = mysqli_query($con, $sql);
                                             onClick="exibirLocal_Instituicao('<?= $link_api_locais_instituicoes ?>', '#modalLocais_Inst', '#modalTitulo')"
                                             data-id="<?= $idEvento ?>"
                                             name="exibirLocais">
-                                        Clique para ver os locais
+                                        Ver locais
                                     </button>
                                 </td>
                                 <?php
