@@ -307,7 +307,7 @@ $disableDown = "";
                         <div class="box-body">
 
                             <?php
-                            if ($nivelUsuario == 3) {
+                            if ($nivelUsuario != 3) { //1-admin 2-atualiza status e operador
                                 ?>
                                 <div class="row">
                                     <div class="col-md-6 from-group">
@@ -340,7 +340,7 @@ $disableDown = "";
                                 <hr>
                                 <?php
                             }
-                            if ($nivelUsuario == 2 || $nivelUsuario == 1) {
+                            if ($nivelUsuario == 3) { //atualiza status
                                 $nomeStatus = $con->query("SELECT status FROM pedido_status WHERE id = " . $pedido['status_pedido_id'])->fetch_array();
                                 ?>
                                 <div class="row">
