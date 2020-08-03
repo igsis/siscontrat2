@@ -142,14 +142,23 @@ if (isset($_POST['salvar'])) {
     $justificativa = trim(addslashes($_POST['justificativa']));
     $operador = $_POST['operador'] ?? NULL;
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
-    $pendencia = trim(addslashes($_POST['pendencia']));
 
     //eventos
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'] ?? null;
 
+    //contratos
+    $pendencia = trim(addslashes($_POST['pendencia']));
+    $idUsuario = $_SESSION['usuario_id_s'];
+    $consultaContratos = $con->query("SELECT pedido_id FROM contratos WHERE pedido_id = $idPedido");
+    if($consultaContratos->num_rows > 0){
+        $inserePendencia = $con->query("UPDATE contratos SET pendencia_documentacao = '$pendencia', usuario_contrato_id = '$idUsuario' WHERE pedido_id = $idPedido");
+    }else{
+        $inserePendencia = $con->query("INSERT INTO contratos (pedido_id, pendencia_documentacao, usuario_contrato_id) VALUES ('$idPedido', '$pendencia', '$idUsuario')");
+    }
+
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', pendencias_contratos = '$pendencia' WHERE id = '$idPedido' AND origem_tipo_id = 1";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido' AND origem_tipo_id = 1";
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
         if ($operador != NULL) {
@@ -279,7 +288,7 @@ if ($testaFilme['tipo_evento_id'] == 2) {
     $escondeLider = 0;
 }
 
-$sql = "SELECT * FROM  chamados where evento_id = '$idEvento'";
+$sql = "SELECT * FROM chamados where evento_id = '$idEvento'";
 $query = mysqli_query($con, $sql);
 $chamado = mysqli_fetch_array($query);
 $disabledImpr = "";
@@ -494,7 +503,7 @@ $disableDown = "";
                                 <div class="col-md-12">
                                     <label for="pendencia">Pendências no Setor de Contratos Artísticos:</label>
                                     <textarea name="pendencia" rows="5"
-                                              class="form-control"><?= $pedido['pendencias_contratos'] ?></textarea>
+                                              class="form-control"><?= $contrato['pendencia_documentacao'] ?? NULL ?></textarea>
                                 </div>
                             </div>
                         </div>
