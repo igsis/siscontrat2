@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
 
+$idUser = $_SESSION['usuario_id_s'];
+
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
 
@@ -185,6 +187,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         <div class="col-md-6">
                             <form action="<?= $link_edital . "23" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <input type="hidden" name="idUser" value="<?= $idUser ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Editais
                                 </button>
@@ -193,6 +196,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                             <form action="<?= $link_reversao . "13" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <input type="hidden" name="idUser" value="<?= $idUser ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Contratações gerais - Reversão de Bilheteria
                                 </button>
@@ -203,6 +207,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         <div class="col-md-6">
                             <form action="<?= $link_proposta_padrao . "13" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <input type="hidden" name="idUser" value="<?= $idUser ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Contratações gerais - Com cachê
                                 </button>
@@ -214,6 +219,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         <div class="col-md-6">
                             <form action="<?= $link_proposta_padrao . "20" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <input type="hidden" name="idUser" value="<?= $idUser ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Vocacional
                                 </button>
@@ -222,6 +228,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                             <form action="<?= $link_edital . "23" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <input type="hidden" name="idUser" value="<?= $idUser ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Editais
                                 </button>
@@ -230,6 +237,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                             <form action="<?= $link_proposta_padrao . "13" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <input type="hidden" name="idUser" value="<?= $idUser ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Contratações gerais - Com cachê
                                 </button>
@@ -238,6 +246,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                             <form action="<?= $link_proposta_convenio . "13" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <input type="hidden" name="idUser" value="<?= $idUser ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Proposta Oficinas / Convênio MINC
                                 </button>
@@ -249,6 +258,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         <div class="col-md-6">
                             <form action="<?= $link_proposta_padrao . "21" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <input type="hidden" name="idUser" value="<?= $idUser ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     PIÁ
                                 </button>
@@ -257,6 +267,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                             <form action="<?= $link_reversao . "13" ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <input type="hidden" name="idUser" value="<?= $idUser ?>">
                                 <button type="submit" class="btn btn-outline-info center-block">
                                     Contratações gerais - Reversão de Bilheteria
                                 </button>
@@ -266,6 +277,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
 
                     <?php }
                     if ($pedido['origem_tipo_id'] == 3) {
+                        /*
                         ?>
                         <form action="<?= $link_emia ?>" target="_blank" method="post">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
@@ -273,8 +285,8 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                                 EMIA
                             </button>
                         </form>
-                        <hr/>
-                    <?php } ?>
+                        <hr/>*/
+                    } ?>
                 </div>
 
                 <div class="row">

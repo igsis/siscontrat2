@@ -5,7 +5,6 @@ require_once("../include/lib/fpdf/fpdf.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
-
 $con = bancoMysqli();
 
 class PDF extends FPDF
@@ -22,6 +21,8 @@ class PDF extends FPDF
         $this->Ln(20);
     }
 }
+
+$idUser = $_POST['idUser'];
 
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -132,7 +133,7 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 
-alteraStatusPedidoContratos($idPedido, "proposta");
+alteraStatusPedidoContratos($idPedido, "proposta", $idPenal, $idUser);
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();

@@ -23,6 +23,7 @@ class PDF extends FPDF
     }
 }
 
+$idUser = $_POST['idUser'];
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $idPj = $pedido['pessoa_juridica_id'];
@@ -108,7 +109,7 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 
-alteraStatusPedidoContratos($idPedido, "proposta");
+alteraStatusPedidoContratos($idPedido, "proposta", $idPenal, $idUser);
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();

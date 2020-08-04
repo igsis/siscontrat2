@@ -10,6 +10,7 @@ $con = bancoMysqli();
 
 
 //CONSULTA
+$idUser = $_POST['idUser'];
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
@@ -118,7 +119,8 @@ if($pessoa['nome_artistico'] == NULL || $pessoa['nome_artistico'] == ""){
     $nomeArtistico = $pessoa['nome_artistico'];
 }
 
-alteraStatusPedidoContratos($idPedido, "proposta");
+$idPenal = $_GET['penal'];
+alteraStatusPedidoContratos($idPedido, "proposta", $idPenal, $idUser);
 
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=proposta_edital_pf_$idPedido.doc");

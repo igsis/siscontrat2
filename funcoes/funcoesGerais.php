@@ -797,14 +797,17 @@ function qtdApresentacoesPorExtenso($valor = 0)
     return ($rt ? $rt : "zero");
 }
 
-function alteraStatusPedidoContratos($idPedido, $tipo)
+//atualiza o status do pedido baseado em qual pedido foi feito e faz a insert/update na tabela de contratos
+function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = NULL, $idUsuario = NULL)
 {
     $con = bancoMysqli();
     if ($tipo == "reserva") {
         $sql = "UPDATE pedidos SET status_pedido_id = 7 WHERE id = $idPedido AND publicado = 1 AND origem_tipo_id = 1";
-        if(mysqli_query($con, $sql)){
+        if (mysqli_query($con, $sql)) {
             $testaEtapa = $con->query("SELECT pedido_id, data_reserva FROM pedido_etapas WHERE pedido_id = $idPedido")->fetch_array();
             $data = dataHoraNow();
+
+            //insert/update em pedido_etapas
             if ($testaEtapa != NULL && $testaEtapa['data_reserva'] == "0000-00-00 00:00:00" || $testaEtapa['data_reserva'] != "0000-00-00 00:00:00") {
                 $updateEtapa = $con->query("UPDATE pedido_etapas SET data_reserva = '$data' WHERE pedido_id = '$idPedido'");
             }
@@ -815,9 +818,21 @@ function alteraStatusPedidoContratos($idPedido, $tipo)
 
     } else if ($tipo == "proposta") {
         $sql = "UPDATE pedidos SET status_pedido_id = 14 WHERE id = $idPedido AND publicado = 1 AND origem_tipo_id = 1";
-        if(mysqli_query($con, $sql)){
+        if (mysqli_query($con, $sql)) {
             $testaEtapa = $con->query("SELECT pedido_id, data_proposta FROM pedido_etapas WHERE pedido_id = $idPedido")->fetch_array();
             $data = dataHoraNow();
+
+            if($idPenal && $idUsuario != NULL){
+                //update/insert de penalidade
+                $consultaContratos = $con->query("SELECT pedido_id FROM contratos WHERE pedido_id = $idPedido");
+                if ($consultaContratos->num_rows > 0) {
+                    $inserePendencia = $con->query("UPDATE contratos SET penalidade_id = '$idPenal', usuario_contrato_id = '$idUsuario' WHERE pedido_id = $idPedido");
+                } else {
+                    $inserePendencia = $con->query("INSERT INTO contratos (pedido_id, penalidade_id, usuario_contrato_id) VALUES ('$idPedido', '$idPenal', '$idUsuario')");
+                }
+            }
+
+            //insert/update em pedido_etapas
             if ($testaEtapa != NULL && $testaEtapa['data_proposta'] == "0000-00-00 00:00:00" || $testaEtapa['data_proposta'] != "0000-00-00 00:00:00") {
                 $updateEtapa = $con->query("UPDATE pedido_etapas SET data_proposta = '$data' WHERE pedido_id = '$idPedido'");
             }
@@ -1583,32 +1598,32 @@ function geraModalDescritivo($tabela, $publicado = false)
     }
 }
 
-function recuperaDadosCapac($tabela, $campo,$valor)
+function recuperaDadosCapac($tabela, $campo, $valor)
 {
     $con = bancoCapacAntigo();
-    $sql = "SELECT * FROM $tabela WHERE ".$campo." = '$valor' LIMIT 0,1";
-    $query = mysqli_query($con,$sql);
+    $sql = "SELECT * FROM $tabela WHERE " . $campo . " = '$valor' LIMIT 0,1";
+    $query = mysqli_query($con, $sql);
     $campo = mysqli_fetch_array($query);
     return $campo;
 }
 
 function recuperaEstadoCivilCapac($campoX)
 {
-    $estadoCivil = recuperaDadosCapac("estado_civil",$campoX,"id");
+    $estadoCivil = recuperaDadosCapac("estado_civil", $campoX, "id");
     $nomeEstadoCivil = $estadoCivil['estadoCivil'];
     return $nomeEstadoCivil;
 }
 
 function recuperaBanco($campoY)
 {
-    $banco = recuperaDadosCapac("banco",$campoY,"id");
+    $banco = recuperaDadosCapac("banco", $campoY, "id");
     $nomeBanco = $banco['banco'];
     return $nomeBanco;
 }
 
 function recuperaUsuarioCapac($campoZ)
 {
-    $usuario = recuperaDadosCapac("usuario",$campoZ,"id");
+    $usuario = recuperaDadosCapac("usuario", $campoZ, "id");
     $nomeUsuario = $usuario['nome'];
     return $nomeUsuario;
 }
