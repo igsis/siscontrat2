@@ -8,23 +8,33 @@ $con = bancoMysqli();
 $idPedido = $_POST['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
-$evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
-$ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 $idEvento = $pedido['origem_id'];
-$idPf = $pedido['pessoa_fisica_id'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
-
-$idAtracao = $ocorrencia['atracao_id'];
-
-$atracao = recuperaDados('atracoes', 'id', $idAtracao);
-
+$atracao = $con->query("SELECT id, quantidade_apresentacao FROM atracoes WHERE evento_id = '$idEvento'")->fetch_assoc();
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
+$verba = $con->query("SELECT acao FROM verbas WHERE id = '{$pedido['verba_id']}'")->fetch_assoc();
+
+if ($pedido['pessoa_tipo_id'] == 1) {
+    $idPf = $pedido['pessoa_fisica_id'];
+    $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
+    $proponente = $pessoa['nome'];
+    $tipo = "Pessoa Física";
+} else {
+    $idPj = $pedido['pessoa_juridica_id'];
+    $pessoa = recuperaDados('pessoa_juridicas', 'id', $idPj);
+    $proponente = $pessoa['razao_social'];
+    $tipo = "Pessoa Jurídica";
+}
 
 if($evento['tipo_evento_id'] == 2){
     $trechoApre = "exibição de filme";
 }else{
-    $trechoApre = $atracao['quantidade_apresentacao'] ." (" . qtdApresentacoesPorExtenso($atracao['quantidade_apresentacao']) . " ) apresentações";
+    if ($atracao['quantidade_apresentacao'] > 1){
+        $txtApr = "apresentações";
+    } else{
+        $txtApr = "apresentação";
+    }
+    $trechoApre = $atracao['quantidade_apresentacao'] ." (" . qtdApresentacoesPorExtenso($atracao['quantidade_apresentacao']) . " ) ".$txtApr;
 }
 
 alteraStatusPedidoContratos($idPedido, "reserva");
@@ -57,14 +67,14 @@ alteraStatusPedidoContratos($idPedido, "reserva");
     <?php
     $conteudo =
     "<p>&nbsp;</p>".
-    "<p><strong>INTERESSADO:</strong> ". $pessoa['nome'] ."  </span></p>".
+    "<p><strong>INTERESSADO:</strong> ". $proponente ."  </span></p>".
     "<p><strong>ASSUNTO:</strong> ". $objeto ."  </p>".
     "<p>&nbsp;</p>".
     "<p><strong>SMC/CAF/SCO</strong></p>".
     "<p><strong>Senhor Supervisor</strong></p>".
     "<p>&nbsp;</p>".
-    "<p>O presente processo trata da contratação de ". $objeto .", no valor de R$ ". $pedido['valor_total'] ." (". valorPorExtenso($pedido['valor_total'])." ), concernente a ". $trechoApre . ", no período de ". retornaPeriodoNovo($idEvento, 'ocorrencias') .".</p>".
-    "<p>Assim, solicito a reserva de recursos que deverá onerar a ação 6394 – Mês do Hip Hop (Pessoa Fisica) da U.O. 25.10 - Fonte 00.</p>".
+    "<p>O presente processo trata da contratação de ". $objeto .", no valor de R$ ". dinheiroParaBr($pedido['valor_total']) ." (".valorPorExtenso($pedido['valor_total']). "), concernente a " . $trechoApre . ", no período de ". retornaPeriodoNovo($idEvento, 'ocorrencias') .".</p>".
+    "<p>Assim, solicito a reserva de recursos que deverá onerar a ação ".$verba['acao']." (".$tipo.") da U.O. 25.10 - Fonte 00. </p>".
     "<p>&nbsp;</p>".
     "<p>Após, enviar para SMC/AJ para prosseguimento.</p>".
     "<p>&nbsp;</p>".
