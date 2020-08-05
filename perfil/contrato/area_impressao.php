@@ -80,14 +80,6 @@ $link_reserva_oficina_pf = $http . "rlt_reserva_oficina_pf.php";
 
 $link_reserva_oficina_pj = $http . "rlt_reserva_oficina_pj.php";
 
-$link_reserva_csmb_pf = $http . "rlt_reserva_csmb_pf.php";
-
-$link_reserva_csmb_pj = $http . "rlt_reserva_csmb_pj.php";
-
-$link_reserva_dph_pf = $http . "rlt_reserva_gabinete_dph_pf.php";
-
-$link_reserva_dph_pj = $http . "rlt_reserva_gabinete_dph_pj.php";
-
 $link_reserva_gabinete_pf = $http . "rlt_reserva_gabinete_pf.php";
 
 $link_reserva_gabinete_pj = $http . "rlt_reserva_gabinete_pj.php";
@@ -400,15 +392,6 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </div>
 
 
-                    <form action="<?= $link_reserva_csmb_pf ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva CSMB
-                        </button>
-                    </form>
-                    <hr/>
-
-
                     <form action="<?= $link_reserva_ccsp_6393_pf ?>" target="_blank" method="post">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         <button type="submit" class="btn btn-outline-info center-block">
@@ -434,14 +417,6 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </form>
                     <hr/>
 
-                    <form action="<?= $link_reserva_dph_pf ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva DPH
-                        </button>
-                    </form>
-                    <hr/>
-
                     <div class="col-md-12">
                         <form action="<?= $link_hip_hop_pf ?>" target="_blank" method="post">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
@@ -458,14 +433,6 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                             <button type="submit" class="btn btn-outline-info center-block">
                                 Reserva Centros Culturais e Teatros 6354
-                            </button>
-                        </form>
-                        <hr/>
-
-                        <form action="<?= $link_reserva_csmb_pj ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Reserva CSMB
                             </button>
                         </form>
                         <hr/>
@@ -505,15 +472,6 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         </form>
                         <hr/>
                     </div>
-
-
-                    <form action="<?= $link_reserva_dph_pj ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva DPH
-                        </button>
-                    </form>
-                    <hr/>
 
 
                     <form action="<?= $link_casa_cultura_pj ?>" target="_blank" method="post">

@@ -88,7 +88,7 @@ alteraStatusPedidoContratos($idPedido, "reserva");
     "<p><b>Data/período:</b>" . retornaPeriodoNovo($idEvento, 'ocorrencias'). "</p>".
     "<p><strong>Duração: </strong>" . $duracao  ."</p>".
     "<p><b>Local:</b> " . $local . "</p>".
-    "<p><b>Valor:</b> R$ " . $pedido['valor_total'] ." (".valorPorExtenso($pedido['valor_total']). ")</p>".
+    "<p><b>Valor:</b> R$ " . dinheiroParaBr($pedido['valor_total']) ." (".valorPorExtenso($pedido['valor_total']). ")</p>".
     "<p>&nbsp;</p>".
     "<p>Diante do exposto, autorizo a reserva de recursos proveniente da nota de reserva inclusa no processo " . $pedido['numero_processo_mae'] ." - (Pessoa Física) para a presente contratação.</p>".
     "<p>&nbsp;</p>".
