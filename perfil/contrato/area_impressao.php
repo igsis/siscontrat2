@@ -18,12 +18,6 @@ $link_proposta_padrao_pf = $http . "rlt_proposta_padrao_pf.php?penal=";
 
 $link_proposta_padrao_pj = $http . "rlt_proposta_padrao_pj.php?penal=";
 
-$link_reserva_vocacional = $http . "impressao_reserva_vocacional.php";
-
-$link_reserva_sme = $http . "impressao_reserva_sme.php";
-
-$link_reserva_pia = $http . "impressao_reserva_pia.php";
-
 $link_proposta_convenio = $http . "rlt_proposta_oficina_convenio.php?penal=";
 
 $link_reversao_pf = $http . "rlt_reversao_proposta_pf.php?penal=";
@@ -56,41 +50,7 @@ $link_normas_pf = $http . "rlt_normas_internas_teatros_pf.php";
 
 $link_normas_pj = $http . "rlt_normas_internas_teatros_pj.php";
 
-$link_casa_cultura_pf = $http . "rlt_casa_cultura_pf.php";
-
-$link_casa_cultura_pj = $http . "rlt_casa_cultura_pj.php";
-
-$link_vai_pf = $http . "rlt_programa_vai_pf.php";
-
-$link_vai_pj = $http . "rlt_programa_vai_pj.php";
-
-$link_fepac = $http . "rlt_fepac.php";
-
 $link_reserva_global = $http . "rlt_reserva_global.php";
-
-$link_centros_culturais_6354_pf = $http . "rlt_centros_culturais_6354_pf.php";
-
-$link_centros_culturais_6354_pj = $http . "rlt_centros_culturais_6354_pj.php";
-
-$link_reserva_ccsp_6393_pf = $http . "rlt_reserva_ccsp_6393_pf.php";
-
-$link_reserva_ccsp_6393_pj = $http . "rlt_reserva_ccsp_6393_pj.php";
-
-$link_reserva_oficina_pf = $http . "rlt_reserva_oficina_pf.php";
-
-$link_reserva_oficina_pj = $http . "rlt_reserva_oficina_pj.php";
-
-$link_reserva_gabinete_pf = $http . "rlt_reserva_gabinete_pf.php";
-
-$link_reserva_gabinete_pj = $http . "rlt_reserva_gabinete_pj.php";
-
-$link_reserva_crd = $http . "rlt_reserva_crd.php";
-
-$link_memoria_circo = $http . "rlt_memoria_circo.php";
-
-$link_hip_hop_pf = $http . "rlt_hip_hop_pf.php";
-
-$link_hip_hop_pj = $http . "rlt_hip_hop_pj.php";
 
 $link_reserva_padrao = $http."rlt_reserva_padrao.php";
 
@@ -328,204 +288,12 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             </form>
                         </div>
 
-                        <div class="col-md-3">
-                            <form action="
-                                <?php
-                                if ($pedido['pessoa_tipo_id'] == 1) {
-                                    echo $link_casa_cultura_pf;
-                                } else {
-                                    echo $link_casa_cultura_pj;
-                                }
-                                ?>" target="_blank" method="post">
-                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva Casas de Cultura
-                                </button>
-                            </form>
-                        </div>
-
                     </div>
                 </div>
             </div>
 
         </div>
 
-
-
-
-        <div class="box">
-            <div class="box-header">
-                <h4 align="center">
-                    Qual modelo de documento deseja imprimir?
-                </h4>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <nav class="navbar navbar-static-top bg-light-blue-active">
-                        <h4 align="center">PEDIDO DE RESERVA</h4>
-                    </nav>
-                </div>
-
-                <?php
-                if ($pedido['pessoa_tipo_id'] == 1) { ?>
-                    <div class="col-md-6">
-
-                        <form action="<?= $link_vai_pf ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Programa VAI
-                            </button>
-                        </form>
-                        <hr/>
-                    </div>
-
-
-                    <div class="col-md-6">
-                        <form action="<?= $link_centros_culturais_6354_pf ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Reserva Centros Culturais 6354
-                            </button>
-                        </form>
-                        <hr/>
-                    </div>
-
-
-                    <form action="<?= $link_reserva_ccsp_6393_pf ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva CCSP 6393
-                        </button>
-                    </form>
-                    <hr/>
-
-
-                    <form action="<?= $link_reserva_oficina_pf ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Oficina
-                        </button>
-                    </form>
-                    <hr/>
-
-                    <form action="<?= $link_reserva_gabinete_pf ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva Gabinete
-                        </button>
-                    </form>
-                    <hr/>
-
-                    <div class="col-md-12">
-                        <form action="<?= $link_hip_hop_pf ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block btn-block" style="width:35%">
-                                Mês do Hip-Hop
-                            </button>
-                        </form>
-                        <hr/>
-                    </div>
-                    <?php
-                } else if ($pedido['pessoa_tipo_id'] == 2) { ?>
-                    <div class="col-md-6">
-                        <form action="<?= $link_centros_culturais_6354_pj ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Reserva Centros Culturais e Teatros 6354
-                            </button>
-                        </form>
-                        <hr/>
-
-                        <form action="<?= $link_fepac ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                FEPAC
-                            </button>
-                        </form>
-                        <hr/>
-
-                        <form action="<?= $link_reserva_crd ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Reserva CRD
-                            </button>
-                        </form>
-                        <hr/>
-
-                        <form action="<?= $link_vai_pj ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Programa VAI
-                            </button>
-                        </form>
-                        <hr/>
-                    </div>
-
-
-                    <div class="col-md-6">
-                        <form action="<?= $link_reserva_gabinete_pj ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Reserva Gabinete
-                            </button>
-                        </form>
-                        <hr/>
-                    </div>
-
-
-                    <form action="<?= $link_casa_cultura_pj ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva Casas de Cultura
-                        </button>
-                    </form>
-                    <hr/>
-
-                    <form action="<?= $link_reserva_ccsp_6393_pj ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva CCSP 6393
-                        </button>
-                    </form>
-                    <hr/>
-
-
-                    <form action="<?= $link_reserva_oficina_pj ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva Oficina
-                        </button>
-                    </form>
-                    <hr/>
-
-                    <form action="<?= $link_memoria_circo ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Centro de Memória do Circo
-                        </button>
-                    </form>
-                    <hr/>
-
-                    <form action="<?= $link_reserva_global_pj ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Reserva Global
-                        </button>
-                    </form>
-                    <hr/>
-
-                    <form action="<?= $link_hip_hop_pj ?>" target="_blank" method="post">
-                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-outline-info center-block">
-                            Mês do Hip-Hop
-                        </button>
-                    </form>
-                    <hr/>
-                <?php } ?>
-
-            </div>
-        </div>
     </section>
 </div>
 
