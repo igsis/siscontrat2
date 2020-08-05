@@ -56,21 +56,9 @@ $link_normas_pf = $http . "rlt_normas_internas_teatros_pf.php";
 
 $link_normas_pj = $http . "rlt_normas_internas_teatros_pj.php";
 
-$link_centroculturaisteatro_pf_6391 = $http . "rlt_pedido_reserva_centrosculturaisteatros_pf_6391.php";
-
-$link_centroculturaisteatro_pj_6391 = $http . "rlt_pedido_reserva_centrosculturaisteatros_pj_6391.php";
-
 $link_casa_cultura_pf = $http . "rlt_casa_cultura_pf.php";
 
 $link_casa_cultura_pj = $http . "rlt_casa_cultura_pj.php";
-
-$link_reserva_bma_pf = $http . "rlt_reserva_bma_pf.php";
-
-$link_reserva_bma_pj = $http . "rlt_reserva_bma_pj.php";
-
-$link_bma_csmb_pf = $http . "rlt_reserva_bma_csmb_pf.php";
-
-$link_bma_csmb_pj = $http . "rlt_reserva_bma_csmb_pj.php";
 
 $link_vai_pf = $http . "rlt_programa_vai_pf.php";
 
@@ -78,9 +66,7 @@ $link_vai_pj = $http . "rlt_programa_vai_pj.php";
 
 $link_fepac = $http . "rlt_fepac.php";
 
-$link_reserva_global_pf = $http . "rlt_reserva_global_pf.php";
-
-$link_reserva_global_pj = $http . "rlt_reserva_global_pj.php";
+$link_reserva_global = $http . "rlt_reserva_global.php";
 
 $link_centros_culturais_6354_pf = $http . "rlt_centros_culturais_6354_pf.php";
 
@@ -114,8 +100,9 @@ $link_hip_hop_pf = $http . "rlt_hip_hop_pf.php";
 
 $link_hip_hop_pj = $http . "rlt_hip_hop_pj.php";
 
-//$idPedido = $_POST['idPedido'];
-$idPedido = 23;
+$link_reserva_padrao = $http."rlt_reserva_padrao.php";
+
+$idPedido = $_POST['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 
@@ -332,20 +319,23 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                     </div>
                     <div class="box-body">
                         <div class="col-md-3">
-                            <form action="
-                                <?php
-                                if ($pedido['pessoa_tipo_id'] == 1) {
-                                    echo $link_centroculturaisteatro_pf_6391;
-                                } else {
-                                    echo $link_centroculturaisteatro_pj_6391;
-                                }
-                                ?>" target="_blank" method="post">
+                            <form action="<?= $link_reserva_padrao ?>" target="_blank" method="post">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                <button type="submit" class="btn btn-outline-info center-block">
-                                    Reserva Centros Culturais e Teatros 6391
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    Reserva Padrão
                                 </button>
                             </form>
                         </div>
+
+                        <div class="col-md-3">
+                            <form action="<?= $link_reserva_global ?>" target="_blank" method="post">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    Reserva Global
+                                </button>
+                            </form>
+                        </div>
+
                         <div class="col-md-3">
                             <form action="
                                 <?php
@@ -388,30 +378,6 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                 <?php
                 if ($pedido['pessoa_tipo_id'] == 1) { ?>
                     <div class="col-md-6">
-
-                        <form action="<?= $link_reserva_bma_pf ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Reserva BMA
-                            </button>
-                        </form>
-                        <hr/>
-
-                        <form action="<?= $link_bma_csmb_pf ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Reserva Oficinas CSMB e BMA
-                            </button>
-                        </form>
-                        <hr/>
-
-                        <form action="<?= $link_reserva_global_pf ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Reserva Global
-                            </button>
-                        </form>
-                        <hr/>
 
                         <form action="<?= $link_vai_pf ?>" target="_blank" method="post">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
@@ -508,22 +474,6 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                             <button type="submit" class="btn btn-outline-info center-block">
                                 FEPAC
-                            </button>
-                        </form>
-                        <hr/>
-
-                        <form action="<?= $link_reserva_bma_pj ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Reserva BMA
-                            </button>
-                        </form>
-                        <hr/>
-
-                        <form action="<?= $link_bma_csmb_pj ?>" target="_blank" method="post">
-                            <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                            <button type="submit" class="btn btn-outline-info center-block">
-                                Reserva Oficinas CSMB e BMA
                             </button>
                         </form>
                         <hr/>
