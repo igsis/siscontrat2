@@ -44,12 +44,13 @@ if (isset($_POST['busca'])) {
     $sql = "SELECT e.id, e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
     p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, 
     p.valor_total, e.evento_status_id, p.operador_id, ps.status,
-    p.pendencias_contratos
+    c.pendencia_documentacao
     FROM eventos e 
-    INNER JOIN pedidos p on e.id = p.origem_id 
-    INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
+    INNER JOIN pedidos p ON e.id = p.origem_id 
+    INNER JOIN contratos c ON p.id = c.pedido_id
+    INNER JOIN pedido_status ps ON p.status_pedido_id = ps.id
     INNER JOIN evento_envios ee ON e.id = ee.evento_id 
-    LEFT JOIN evento_reaberturas er on e.id = er.evento_id
+    LEFT JOIN evento_reaberturas er ON e.id = er.evento_id
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1
@@ -159,7 +160,7 @@ if (isset($_POST['busca'])) {
                                             </button>
                                         </td>
                                         <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias") ?></td>
-                                        <td><?= $evento['pendencias_contratos'] ? "" : "Não possui" ?></td>
+                                        <td><?= $evento['pendencia_documentacao'] == NULL ? "Não possui" : $evento['pendencia_documentacao'] ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
                                         if ($evento['operador_id'] != NULL) {
