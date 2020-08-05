@@ -59,7 +59,7 @@ header("Content-Disposition: attachment;Filename=$now - Processo SEI $processo -
 	Secretaria Municipal de Cultura
 </strong></p>
 <p>&nbsp;</p>
-<p align="justify"><strong>Nome da empresa:</strong> <?= $pedido['razao_social'] ?><br>
+<p><strong>Nome da empresa:</strong> <?= $pedido['razao_social'] ?><br>
     <strong>CCM:</strong> <?= $pedido['ccm'] == null ? "Não cadastado" : $pedido['ccm'] ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>CNPJ:</strong> <?= $pedido['cnpj'] ?><br>
     <strong>Endereço:</strong> <?= $pedido['logradouro'].", ".$pedido['numero']." ".$pedido['complemento']." ".$pedido['bairro']." - ".$pedido['cidade']." - ".$pedido['uf']." CEP: ".$pedido['cep'] ?><br>
     <strong>Telefone:</strong>
@@ -71,16 +71,16 @@ header("Content-Disposition: attachment;Filename=$now - Processo SEI $processo -
     <strong>E-mail:</strong> <?= $pedido['email'] ?>
 </p>
 <p>&nbsp;</p>
-<p align="justify"><strong>Evento:</strong> <?= $pedido['nome_evento'] ?><br>
+<p><strong>Evento:</strong> <?= $pedido['nome_evento'] ?><br>
     <strong>Data / Período:</strong> <?= retornaPeriodo($pedido['idEvento']) ?><br>
     <strong>Local:</strong> <?php retornaLocal($pedido['idEvento']) ?><br>
     <strong>Valor:</strong> R$ <?= dinheiroParaBr($valor) ?> ( <?= valorPorExtenso($valor)?> )
 </p>
 <p>&nbsp;</p>
-<p align="justify">Venho, mui respeitosamente, requerer que o(a) senhor(a) se digne submeter a exame à decisão do órgão competente o pedido supra.</p>
-<p align="justify">Declaro, sob as penas da Lei, não possuir débitos perante as Fazendas Públicas, em especial com a Prefeitura do Município de São Paulo. Nestes termos, encaminho para deferimento.</p>
+<p>Venho, mui respeitosamente, requerer que o(a) senhor(a) se digne submeter a exame à decisão do órgão competente o pedido supra.</p>
+<p>Declaro, sob as penas da Lei, não possuir débitos perante as Fazendas Públicas, em especial com a Prefeitura do Município de São Paulo. Nestes termos, encaminho para deferimento.</p>
 <p>&nbsp;</p>
-<p align="justify">São Paulo, _______ de ________________________ de <?= date('Y') ?>.</p>
+<p>São Paulo, _______ de ________________________ de <?= date('Y') ?>.</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>________________________________________________<br>
