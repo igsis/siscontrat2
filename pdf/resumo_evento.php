@@ -34,10 +34,36 @@ $evento = $con->query("SELECT  e.protocolo, e.tipo_evento_id, e.nome_evento, e.e
 if ($evento['espaco_publico'] == 1) $espaco = "Sim"; else $espaco = "Não";
 if ($evento['fomento'] == 1) $fomento = $evento['fomento_nome']; else $fomento = "Não";
 
-
-
 $pedido = $con->query("SELECT p.id, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, p.numero_processo, l.extrato_liquidacao, l.retencoes_inss, l.retencoes_iss, l.retencoes_irrf FROM pedidos AS p INNER JOIN eventos AS e ON p.origem_id = e.id LEFT JOIN liquidacao l on p.id = l.pedido_id WHERE e.publicado = 1 AND p.publicado = 1 AND p.origem_id = '$idEvento'")->fetch_array();
 
+function diadasemanaocorrencia($idOcorrencia){
+    $array = [];
+    $con = bancoMysqli();
+    $ocorrencia = $con->query("SELECT segunda,terca,quarta,quinta,sexta,sabado,domingo FROM ocorrencias WHERE id = '$idOcorrencia'")->fetch_assoc();
+    if($ocorrencia['domingo'] == 1){
+        array_push($array, "domingo, ");
+    }
+    if($ocorrencia['segunda'] == 1){
+        array_push($array,"segunda, ");
+    }
+    if($ocorrencia['terca'] == 1){
+        array_push($array, "terça, ");
+    }
+    if($ocorrencia['quarta'] == 1){
+        array_push($array, "quarta, ");
+    }
+    if($ocorrencia['quinta'] == 1){
+        array_push($array,"quinta, ");
+    }
+    if($ocorrencia['sexta'] == 1){
+        array_push($array, "sexta, ");
+    }
+    if($ocorrencia['sabado'] == 1){
+        array_push($array, "sábado, ");
+    }
+    $completo = implode(",",$array);
+    return substr($completo, 0, -2);
+}
 
 // GERANDO O PDF:
 $pdf = new PDF('P','mm','A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
@@ -222,6 +248,8 @@ if ($evento['tipo_evento_id'] == 1) {
             if ($ocorrencia['data_fim'] != "0000-00-00"){
                 $pdf->Cell(21, $l, utf8_decode("até ".exibirDataBr($ocorrencia['data_fim'])), 0, 0, 'L');
             }
+            $pdf->Cell(21,$l,utf8_decode("(".diadasemanaocorrencia($ocorrencia['id']).")"),0,0,'L');
+            //var_dump(diadasemanaocorrencia($ocorrencia['id']));
             $pdf->Ln();
 
             $pdf->SetX($x);

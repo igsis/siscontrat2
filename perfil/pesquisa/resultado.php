@@ -56,6 +56,8 @@ if (isset($_POST['busca'])) {
 
     $resultado = $con->query($sql);
 }
+
+$http = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/resumo_evento.php?id=";
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -101,7 +103,7 @@ if (isset($_POST['busca'])) {
                                                     class="btn btn-link"><?= $evento['protocolo'] ?></button>
                                         </form>
                                     </td>
-                                    <td><?= $evento['numero_processo'] ?></td>
+                                    <td><a href="<?=$http.$evento['id']?>" target='_blank'><?= $evento['numero_processo'] ?></a></td>
                                     <td><?= $pessoa ?></td>
                                     <td><?= $tipo ?></td>
                                     <td><?= $evento['nome_evento'] ?></td>
