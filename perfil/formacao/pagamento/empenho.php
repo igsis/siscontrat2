@@ -35,7 +35,7 @@ $idPedido = $_POST['idPedido'];
                             </div>
                             <div class="row" id="msg">
                                 <div class="form-group col-md-12">
-                                    <span class="pull-right" style="color: red;"><b>Data de emissão precisa ser maior ou igual a de entrega!</b></span>
+                                    <span class="pull-right" style="color: red;"><b>Data de entrega precisa ser maior ou igual a de emissão!</b></span>
                                 </div>
                             </div>
 
