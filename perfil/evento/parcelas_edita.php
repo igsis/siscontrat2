@@ -231,7 +231,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
         //let valOriginal = document.querySelector('#valorTotal').textContent;
         //let valRegistrado = document.querySelector('#totalRegistrado').textContent;
         $("#totalRegistrado").text(sum.toFixed(2));
-        console.log("TOTAL: " + total);
+        //console.log("TOTAL: " + total);
         if (sum == total) {
             alerta.css("display", "block");
             btnGravar.attr('disabled', false);
@@ -262,6 +262,6 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
     }
 
     $(document).ready(function () {
-        $('.valor').mask('00.000,00',{reverse: true})
+        $('.valor').mask('000.000,00',{reverse: true})
     })
 </script>

@@ -63,7 +63,10 @@ $queryDias = mysqli_query($con, $sqlDias);
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="modalidade">Modalidade: *</label> <button class='btn btn-default btn-sm' type='button' data-toggle='modal' data-target='#infoModalidade' style="border-radius: 15px;"><i class="fa fa-question-circle"></i></button>
+                                    <label for="modalidade">Modalidade: *</label>
+                                    <button class='btn btn-default btn-sm' type='button' data-toggle='modal'
+                                            data-target='#infoModalidade' style="border-radius: 15px;"><i
+                                                class="fa fa-question-circle"></i></button>
                                     <select id="modalidade" name="modalidade" required class="form-control">
                                         <option value="">Selecione uma opção...</option>
                                         <?php geraOpcao('modalidades'); ?>
@@ -73,8 +76,9 @@ $queryDias = mysqli_query($con, $sqlDias);
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="valor_hora">Valor hora/aula: *</label><br>
-                                    <input class="form-control" style="max-width: 175px;" type="tel" required name="valor_hora"
-                                           onkeypress="return(moeda(this, '.', ',', event))">
+                                    <input class="form-control" style="max-width: 175px;" type="text" required
+                                           name="valor_hora"
+                                           id="valor_hora">
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -110,7 +114,7 @@ $queryDias = mysqli_query($con, $sqlDias);
                                     <select name="idDia1" id="dia1" class="form-control" required>
                                         <option>Selecione o dia...</option>
                                         <?php
-                                            geraOpcaoParcelas('execucao_dias')
+                                        geraOpcaoParcelas('execucao_dias')
                                         ?>
                                     </select>
                                 </div>
@@ -121,7 +125,7 @@ $queryDias = mysqli_query($con, $sqlDias);
                                     <select name="idDia2" id="dia2" class="form-control" required>
                                         <option>Selecione o dia...</option>
                                         <?php
-                                             geraOpcaoParcelas('execucao_dias')
+                                        geraOpcaoParcelas('execucao_dias')
                                         ?>
 
                                     </select>
@@ -150,7 +154,8 @@ $queryDias = mysqli_query($con, $sqlDias);
             </div>
         </div>
 
-        <div class="modal fade" id="infoModalidade" role="dialog" aria-labelledby="infoModalidadeLabel" aria-hidden="true">
+        <div class="modal fade" id="infoModalidade" role="dialog" aria-labelledby="infoModalidadeLabel"
+             aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -160,7 +165,7 @@ $queryDias = mysqli_query($con, $sqlDias);
                     <div class="modal-body">
                         <table class="table table-bordered">
                             <tbody>
-                                <?php geraModalDescritivo('modalidades', true); ?>
+                            <?php geraModalDescritivo('modalidades', true); ?>
                             </tbody>
                         </table>
                     </div>
@@ -174,11 +179,13 @@ $queryDias = mysqli_query($con, $sqlDias);
 </div>
 
 <script>
+    let valor = $('#valor_hora');
     let dia1 = $('#dia1');
     let dia2 = $('#dia2');
     let botao = $('#cadastra');
     var isMsgDia = $('#msgEscondeDias');
     isMsgDia.hide();
+
     function igual() {
         if (dia1.val() == "Selecione o dia..." || dia2.val() == "Selecione o dia...") {
             botao.prop('disabled', true)
@@ -198,4 +205,9 @@ $queryDias = mysqli_query($con, $sqlDias);
     dia1.on('change', igual);
 
     $(document).ready(igual)
+
+    $(document).ready(function () {
+        valor.mask('00.000,00', {reverse: true});
+        valor.text(this.toLocaleString('pt-br', {minimumFractionDigits: 2}));
+    });
 </script>
