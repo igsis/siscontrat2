@@ -10,6 +10,7 @@ $con = bancoMysqli();
 
 
 //CONSULTA
+$idUser = $_POST['idUser'];
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
@@ -75,7 +76,8 @@ if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
     $ccm = "Não Cadastrado.";
 }
 
-alteraStatusPedidoContratos($idPedido, "proposta");
+$idPenal = $_GET['penal'];
+alteraStatusPedidoContratos($idPedido, "proposta", $idPenal, $idUser);
 
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=proposta_edital_pj_$idPedido.doc");

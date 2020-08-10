@@ -54,7 +54,7 @@ $pedido = $con->query("SELECT e.protocolo, p.numero_processo FROM pedidos AS p I
                     </div>
                     <div class="row" id="msg">
                                 <div class="form-group col-md-12">
-                                    <span class="pull-right" style="color: red;"><b>Data de emissão precisa ser maior que a de entrega!</b></span>
+                                    <span class="pull-right" style="color: red;"><b>Data de entrega precisa ser maior que a de emissão!</b></span>
                                 </div>
                             </div>
 

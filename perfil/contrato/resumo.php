@@ -1,6 +1,4 @@
 <!-- Sweet Alert 2 -->
-<script src="../visual/plugins/sweetalert2/sweetalert2.min.js"></script>
-<link rel="stylesheet" href="../visual/plugins/sweetalert2/sweetalert2.css">
 <?php
 $con = bancoMysqli();
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2";
@@ -144,14 +142,23 @@ if (isset($_POST['salvar'])) {
     $justificativa = trim(addslashes($_POST['justificativa']));
     $operador = $_POST['operador'] ?? NULL;
     $pedido = recuperaDados('pedidos', 'id', $idPedido);
-    $pendencia = trim(addslashes($_POST['pendencia']));
 
     //eventos
     $fiscal = $_POST['fiscal'];
     $suplente = $_POST['suplente'] ?? null;
 
+    //contratos
+    $pendencia = trim(addslashes($_POST['pendencia']));
+    $idUsuario = $_SESSION['usuario_id_s'];
+    $consultaContratos = $con->query("SELECT pedido_id FROM contratos WHERE pedido_id = $idPedido");
+    if($consultaContratos->num_rows > 0){
+        $inserePendencia = $con->query("UPDATE contratos SET pendencia_documentacao = '$pendencia', usuario_contrato_id = '$idUsuario' WHERE pedido_id = $idPedido");
+    }else{
+        $inserePendencia = $con->query("INSERT INTO contratos (pedido_id, pendencia_documentacao, usuario_contrato_id) VALUES ('$idPedido', '$pendencia', '$idUsuario')");
+    }
+
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba', pendencias_contratos = '$pendencia' WHERE id = '$idPedido' AND origem_tipo_id = 1";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido' AND origem_tipo_id = 1";
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
         if ($operador != NULL) {
@@ -176,35 +183,6 @@ if (isset($_POST['salvar'])) {
         $mensagem = mensagem("success", "Atualizações salvas com sucesso!");
     } else {
         $mensagem = mensagem("danger", "Erro ao salvar alterações! Tente novamente.");
-    }
-}
-
-if (isset($_POST['reabertura'])) {
-    $idEvento = $_POST['idEvento'];
-    $now = date('Y-m-d H:i:s', strtotime("-3 Hours"));
-    $idUsuario = $_SESSION['usuario_id_s'];
-    $sql = "INSERT INTO evento_reaberturas (evento_id, data_reabertura, usuario_reabertura_id) VALUES ('$idEvento', '$now', '$idUsuario')";
-    $sqlStatus = "UPDATE eventos SET evento_status_id = 1 WHERE id = '$idEvento'";
-
-    if ((mysqli_query($con, $sql)) && (mysqli_query($con, $sqlStatus))) {
-        $mensagem = "<script>
-                    Swal.fire({
-                        title: 'Reabertura',
-                        html: 'Reabertura do evento realizada com sucesso!',
-                        type: 'success',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        showCancelButton: false,
-                        confirmButtonText: 'Ok'
-                    }).then(function() {
-                        window.location.href = 'index.php';
-                    });
-                </script>";
-        gravarLog($sql);
-        unset($_SESSION['idEvento']);
-        unset($_SESSION['idPedido']);
-    } else {
-        $mensagem = mensagem("danger", "Erro ao efetuar a reabertura do evento! Tente novamente.");
     }
 }
 
@@ -310,7 +288,7 @@ if ($testaFilme['tipo_evento_id'] == 2) {
     $escondeLider = 0;
 }
 
-$sql = "SELECT * FROM  chamados where evento_id = '$idEvento'";
+$sql = "SELECT * FROM chamados where evento_id = '$idEvento'";
 $query = mysqli_query($con, $sql);
 $chamado = mysqli_fetch_array($query);
 $disabledImpr = "";
@@ -338,7 +316,7 @@ $disableDown = "";
                         <div class="box-body">
 
                             <?php
-                            if ($nivelUsuario == 3) {
+                            if ($nivelUsuario != 3) { //1-admin 2-atualiza status e operador
                                 ?>
                                 <div class="row">
                                     <div class="col-md-6 from-group">
@@ -360,7 +338,7 @@ $disableDown = "";
                                         <select name="status" id="status" class="form-control">
                                             <option value="<?= $pedido['status_pedido_id'] ?>"><?= $nomeStatus['status'] ?></option>
                                             <?php
-                                            $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " ORDER BY ordem";
+                                            $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " AND area = 1 ORDER BY ordem";
                                             $queryStatus = mysqli_query($con, $sqlStatus);
                                             while ($status = mysqli_fetch_array($queryStatus)) {
                                                 echo "<option value='" . $status['id'] . "'>" . $status['status'] . "</option>";
@@ -371,7 +349,7 @@ $disableDown = "";
                                 <hr>
                                 <?php
                             }
-                            if ($nivelUsuario == 2 || $nivelUsuario == 1) {
+                            if ($nivelUsuario == 3) { //atualiza status
                                 $nomeStatus = $con->query("SELECT status FROM pedido_status WHERE id = " . $pedido['status_pedido_id'])->fetch_array();
                                 ?>
                                 <div class="row">
@@ -380,7 +358,7 @@ $disableDown = "";
                                         <select name="status" id="status" class="form-control">
                                             <option value="<?= $pedido['status_pedido_id'] ?>"><?= $nomeStatus['status'] ?></option>
                                             <?php
-                                            $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " ORDER BY ordem";
+                                            $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " AND area = 1 ORDER BY ordem";
                                             $queryStatus = mysqli_query($con, $sqlStatus);
                                             while ($status = mysqli_fetch_array($queryStatus)) {
                                                 echo "<option value='" . $status['id'] . "'>" . $status['status'] . "</option>";
@@ -525,7 +503,7 @@ $disableDown = "";
                                 <div class="col-md-12">
                                     <label for="pendencia">Pendências no Setor de Contratos Artísticos:</label>
                                     <textarea name="pendencia" rows="5"
-                                              class="form-control"><?= $pedido['pendencias_contratos'] ?></textarea>
+                                              class="form-control"><?= $contrato['pendencia_documentacao'] ?? NULL ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -838,7 +816,7 @@ $disableDown = "";
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title">Confirmação de Reabertura</h4>
                             </div>
-                            <form action="?perfil=contrato&p=resumo"
+                            <form action="?perfil=contrato&p=reabertura"
                                   role="form" method="post">
                                 <div class="modal-body">
                                     <p>Tem certeza que deseja reabrir este evento?</p>
@@ -848,7 +826,7 @@ $disableDown = "";
                                         Cancelar
                                     </button>
                                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                    <button type="submit" class="btn btn-primary" name="reabertura">Reabrir</button>
+                                    <button type="submit" class="btn btn-primary">Reabrir</button>
                                 </div>
                             </form>
                         </div>

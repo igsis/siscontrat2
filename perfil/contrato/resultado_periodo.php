@@ -13,16 +13,27 @@ if (isset($_POST['busca'])) {
     if ($operador != null && $operador != 0)
         $sqlOperador = " AND p.operador_id = '$operador'";
 
+    if($data_inicio != NULL && $data_fim != NULL){
+        $sqlPeriodo = " AND o.data_inicio BETWEEN '$data_inicio' AND '$data_fim'";
+    }
+    elseif ($data_inicio != NULL && $data_fim == NULL){
+        $sqlPeriodo = " AND o.data_inicio >= '$data_inicio'";
+    }
+    else{
+        $sqlPeriodo = "";
+    }
+
     $sql = "SELECT e.id, e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
     p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, 
     p.valor_total, e.evento_status_id, p.operador_id, ps.status,
-    p.pendencias_contratos
+    c.pendencia_documentacao
     FROM eventos e 
-    INNER JOIN pedidos p on e.id = p.origem_id 
-    INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
-    INNER JOIN ocorrencias o on e.id = o.origem_ocorrencia_id
+    INNER JOIN pedidos p ON e.id = p.origem_id 
+    INNER JOIN contratos c ON p.id = c.pedido_id
+    INNER JOIN pedido_status ps ON p.status_pedido_id = ps.id
+    INNER JOIN ocorrencias o ON e.id = o.origem_ocorrencia_id
     INNER JOIN evento_envios ee ON e.id = ee.evento_id 
-    LEFT JOIN evento_reaberturas er on e.id = er.evento_id
+    LEFT JOIN evento_reaberturas er ON e.id = er.evento_id
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1
@@ -37,6 +48,7 @@ if (isset($_POST['busca'])) {
       (er.data_reabertura is null)
     )
     $sqlOperador
+    $sqlPeriodo
     GROUP BY e.id";
 
     $query = mysqli_query($con, $sql);
@@ -126,7 +138,7 @@ if (isset($_POST['busca'])) {
                                                     onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirLocais">
-                                                Clique para ver os locais
+                                                Ver locais
                                             </button>
                                         </td>
                                         <td>
@@ -137,11 +149,11 @@ if (isset($_POST['busca'])) {
                                                     data-name="inst"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirInstituicoes">
-                                                Clique para ver as instituições
+                                                Ver instituições
                                             </button>
                                         </td>
                                         <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias")?></td>
-                                        <td><?= $evento['pendencias_contratos'] ? "" : "Não possui" ?></td>
+                                        <td><?= $evento['pendencia_documentacao'] == NULL ? "Não possui" : $evento['pendencia_documentacao'] ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
                                             if($evento['operador_id'] != NULL){

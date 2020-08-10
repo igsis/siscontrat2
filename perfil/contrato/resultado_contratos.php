@@ -5,6 +5,7 @@ $link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat
 unset($_SESSION['idEvento']);
 
 if (isset($_POST['busca'])) {
+    $semOperador = $_POST['semOperador'] ?? NULL;
     $protocolo = $_POST['protocolo'] ?? NULL;
     $num_processo = $_POST['num_processo'] ?? NULL;
     $nomeEvento = $_POST['evento'] ?? NULL;
@@ -19,8 +20,11 @@ if (isset($_POST['busca'])) {
     $sqlStatus = '';
     $sqlUsuario = '';
 
+    if ($semOperador != null)
+        $sqlProtocolo = " AND p.operador_id IS NULL";
+
     if ($protocolo != null)
-        $sqlProtocolo = " AND e.protocolo LIKE '%$protocolo%'";
+    $sqlProtocolo = " AND e.protocolo LIKE '%$protocolo%'";
 
     if ($num_processo != null)
         $sqlProcesso = " AND p.numero_processo LIKE '%$num_processo%'";
@@ -40,12 +44,13 @@ if (isset($_POST['busca'])) {
     $sql = "SELECT e.id, e.protocolo, p.numero_processo, p.pessoa_tipo_id, 
     p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, 
     p.valor_total, e.evento_status_id, p.operador_id, ps.status,
-    p.pendencias_contratos
+    c.pendencia_documentacao
     FROM eventos e 
-    INNER JOIN pedidos p on e.id = p.origem_id 
-    INNER JOIN pedido_status ps on p.status_pedido_id = ps.id
+    INNER JOIN pedidos p ON e.id = p.origem_id 
+    INNER JOIN contratos c ON p.id = c.pedido_id
+    INNER JOIN pedido_status ps ON p.status_pedido_id = ps.id
     INNER JOIN evento_envios ee ON e.id = ee.evento_id 
-    LEFT JOIN evento_reaberturas er on e.id = er.evento_id
+    LEFT JOIN evento_reaberturas er ON e.id = er.evento_id
     WHERE e.publicado = 1 
     AND p.publicado = 1 
     AND p.origem_tipo_id = 1
@@ -87,7 +92,7 @@ if (isset($_POST['busca'])) {
                         <h3 class="box-title">Listagem</h3
                     </div>
                     <div class="box-body">
-                        <table id="tblResultado" class="table table-bordered table-striped">
+                        <table id="tblResultado" class="table table-bordered table-striped table-responsive">
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
@@ -140,7 +145,7 @@ if (isset($_POST['busca'])) {
                                                     onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirLocais">
-                                                Clique para ver os locais
+                                                Ver locais
                                             </button>
                                         </td>
                                         <td>
@@ -151,11 +156,11 @@ if (isset($_POST['busca'])) {
                                                     data-name="inst"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirInstituicoes">
-                                                Clique para ver as instituições
+                                                Ver instituições
                                             </button>
                                         </td>
                                         <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias") ?></td>
-                                        <td><?= $evento['pendencias_contratos'] ? "" : "Não possui" ?></td>
+                                        <td><?= $evento['pendencia_documentacao'] == NULL ? "Não possui" : $evento['pendencia_documentacao'] ?></td>
                                         <td><?= $evento['status'] ?></td>
                                         <?php
                                         if ($evento['operador_id'] != NULL) {
@@ -213,6 +218,7 @@ if (isset($_POST['busca'])) {
             "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+            "scrollX": true,
         });
     });
 </script>

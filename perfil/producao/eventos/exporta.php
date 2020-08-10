@@ -101,7 +101,7 @@ if (isset($_POST['pesquisa'])) {
                                         onClick="exibirLocal_Instituicao('<?= $link_api_locais_instituicoes ?>', '#modalLocais_Inst', '#modalTitulo')"
                                         data-id="<?= $evento['id'] ?>"
                                         name="exibirLocais">
-                                    Clique para ver os locais
+                                    Ver locais
                                 </button>
                             </td>
                             <td><?= $classificao ?></td>

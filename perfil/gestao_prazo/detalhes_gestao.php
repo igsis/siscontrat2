@@ -138,12 +138,11 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
                             <select name="motivo" class="form-control" required>
                                 <option value="">Selecione o Motivo</option>
                                 <?php
-                                $sql = "SELECT * FROM chamado_tipos WHERE id <> 4";
+                                $sql = "SELECT * FROM chamado_tipos WHERE id IN (1, 2, 7, 10)";
                                 $query = mysqli_query($con,$sql);
                                 while($chamado = mysqli_fetch_array($query)){ ?>
                                     <option value="<?=$chamado['id']?>"><?=$chamado['tipo']?></option>
-                                <?php }
-                                ?>
+                                <?php } ?>
                             </select>
                             <label for="justificativa">Justificativa:</label>
                             <textarea name="justificativa" id="justificativa" class="form-control" rows="3" required></textarea>

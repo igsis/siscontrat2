@@ -16,6 +16,14 @@
                           role="form">
                         <div class="box-body">
                             <div class="row">
+                                <div class="col-md-4 checkbox">
+                                    <label>
+                                        <input type="checkbox" name="semOperador" id="semOperador"> <strong>Pesquisar
+                                            contratos sem Operador?</strong>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label for="protocolo">Protocolo</label>
                                     <input type="text" name="protocolo" id="protocolo" class="form-control" data-mask="99999999.99999-S">

@@ -90,7 +90,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                                                 onClick="exibirLocal_Instituicao('<?= $link_api_locais_instituicoes ?>', '#modalLocais_Inst', '#modalTitulo')"
                                                 data-id="<?= $eventoVerf['id'] ?>"
                                                 name="exibirLocais">
-                                            Clique para ver os locais
+                                            Ver locais
                                         </button>
                                     </td>
                                     <td><?= $espaco == NULL ? "Não possuí" : $espaco?></td>
