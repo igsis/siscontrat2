@@ -3,7 +3,6 @@ include "includes/menu_principal.php";
 $con = bancoMysqli();
 
 
-
 $idUser = $_SESSION['usuario_id_s'];
 $sessions = ['login_s', 'nome_s', 'usuario_id_s', 'perfil_s'];
 
@@ -25,7 +24,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
 $tipoEvento = $evento['tipo_evento_id'];
 
-$data = date("Y-m-d H:i:s",strtotime("-3 hours"));
+$data = date("Y-m-d H:i:s", strtotime("-3 hours"));
 
 if (isset($_POST['enviar'])) {
     $fora = $_POST['fora'];
@@ -36,14 +35,14 @@ if (isset($_POST['enviar'])) {
         $protocolo = geraProtocolo($idEvento) . "-C";
     }
 
-    if($evento['contratacao'] == 1){
+    if ($evento['contratacao'] == 1) {
         if ($fora == 1) {
             $sqlPedido = "UPDATE pedidos SET status_pedido_id = 1 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
             $sqlEvento = "UPDATE eventos SET evento_status_id = 2 WHERE id = '$idEvento'";
             if (mysqli_query($con, $sqlPedido)) {
                 mysqli_query($con, $sqlEvento);
 
-                $titulo = "Evento Fora do Prazo: ".$evento["nome_evento"];
+                $titulo = "Evento Fora do Prazo: " . $evento["nome_evento"];
                 $sqlChamado = "INSERT INTO chamados (evento_id, chamado_tipo_id, titulo, justificativa, usuario_id, data) VALUES
                                                     ('$idEvento', '5', '$titulo', 'Evento Fora do Prazo', '$idUser', '$data')";
                 mysqli_query($con, $sqlChamado);
@@ -61,18 +60,18 @@ if (isset($_POST['enviar'])) {
                 $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
                 $queryEnvia = mysqli_query($con, $sqlEnvia);
                 $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-                $queryEnvio = mysqli_query($con,$sqlEnvio);
+                $queryEnvio = mysqli_query($con, $sqlEnvio);
                 $mensagem = mensagem("success", "Evento enviado com sucesso!");
             }
         }
 
-    }else{
+    } else {
         $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3 WHERE id = '$idEvento'";
         mysqli_query($con, $sqlEnviaEvento);
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
         $con->query($sqlEnvia);
         $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-        $queryEnvio = mysqli_query($con,$sqlEnvio);
+        $queryEnvio = mysqli_query($con, $sqlEnvio);
         $mensagem = mensagem("success", "Evento enviado com sucesso!");
     }
 }
@@ -88,6 +87,37 @@ $contratacao = $evento['contratacao'] == 1 ? 'Sim' : 'Não';
 $evento_status = recuperaDados('evento_status', 'id', $evento['evento_status_id']);
 $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
 $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
+
+$datas = "";
+
+//testa e se necessário retorna as datas de excessão
+if (retornaTipo($idEvento) == "Atração") {
+    $consultaAtracoes = $con->query("SELECT id FROM atracoes WHERE evento_id = $idEvento AND publicado = 1");
+    if ($consultaAtracoes->num_rows > 0) {
+        while ($atracaoIds = mysqli_fetch_array($consultaAtracoes)) {
+            $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $atracaoIds['id']);
+            if ($testaExcecao->num_rows > 0) {
+                while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
+                    $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
+                }
+            }
+        }
+    }
+} /*elseif (retornaTipo($idEvento) == "Filme") {
+    $consultaFilmeEventos = $con->query("SELECT atracao_id FROM ocorrencias WHERE origem_ocorrencia_id = $idEvento AND tipo_ocorrencia_id = 2 AND publicado = 1");
+    if ($consultaFilmeEventos->num_rows > 0) {
+        while ($atracaoIds = mysqli_fetch_array($consultaFilmeEventos)) {
+            $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $atracaoIds['atracao_id']);
+            if ($testaExcecao->num_rows > 0) {
+                while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
+                    $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
+                }
+            }
+        }
+    }
+}*/
+
+$datas = substr($datas, 0, -2);
 ?>
 
 <div class="content-wrapper">
@@ -128,6 +158,13 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                         <div class="form-group col-md-12">
                                             <strong>Período: </strong><?= retornaPeriodoNovo($idEvento, 'ocorrencias'); ?>
                                         </div>
+
+                                        <?php if ($datas != "") : ?>
+                                            <div class="form-group col-md-12">
+                                                <strong>Data(s) de Exceção: </strong><?= $datas ?>
+                                            </div>
+                                        <?php endif; ?>
+
                                         <div class="form-group col-md-12">
                                             <strong>Tipo evento: </strong><?= $tipo_evento['tipo_evento']; ?>
                                         </div>
@@ -305,7 +342,8 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                         <strong>Espaço: </strong><?= $espaco ?? "Não possui" ?>
                                                     </div>
                                                     <div class="form-group col-md-12">
-                                                        <strong>Valor do ingresso: </strong>R$<?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>
+                                                        <strong>Valor do
+                                                            ingresso: </strong>R$<?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>
                                                     </div>
                                                     <?php
                                                     if ($ocorrencia['horario_inicio'] != NULL) {
