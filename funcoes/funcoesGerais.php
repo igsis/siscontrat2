@@ -1648,3 +1648,16 @@ function numeroChamados($idEvento, $litar = false)
         return $rows;
     }
 }
+
+function retornaChamadosTD($id){
+    if ($result = numeroChamados($id) > 0){
+        return "<td class='text-center'>
+                   <button class='btn bg-orange' type='button' 
+                    onclick='exibirChamados({$id})'>
+                    {$result}
+                  </button>
+                </td>";
+    }else{
+        return "<td>Sem chamados</td>";
+    }
+}

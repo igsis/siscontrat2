@@ -115,16 +115,7 @@ $num = numeroChamados(4);
 
                                     echo "<td>" . $evento['status'] . "</td>";
                                 }
-                                echo "<td class='text-center'>";
-                                if ($result = numeroChamados($evento['idEvento']) > 0){
-                                    echo "<button class='btn bg-orange' type='button' 
-                                            onclick='exibirChamados({$evento['idEvento']})'>
-                                            {$result}
-                                          </button>";
-                                }else{
-                                    echo "Sem chamados";
-                                }
-                                echo"</td>";
+                                print_r(retornaChamadosTD($evento['idEvento']));
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>

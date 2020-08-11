@@ -44,10 +44,11 @@ $query = mysqli_query($con, $sql);
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
-                                <th width="15%">Objeto</th>
+                                <th>Objeto</th>
                                 <th>Local</th>
-                                <th width="17%">Período</th>
+                                <th>Período</th>
                                 <th>Status</th>
+                                <th>Chamados</th>
                                 <th>Visualizar</th>
                             </tr>
                             </thead>
@@ -71,6 +72,7 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . $local . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</td>";
                                 echo "<td>" . $evento['status'] . "</td>";
+                                print_r(retornaChamadosTD($evento['idEvento']));
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=resumo_evento_enviado\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $idEvento . "'>
@@ -88,6 +90,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Local</th>
                                 <th>Período</th>
                                 <th>Status</th>
+                                <th>Chamados</th>
                                 <th>Visualizar</th>
                             </tr>
                             </tfoot>
