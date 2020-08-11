@@ -44,6 +44,8 @@ $sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status, ev.
         INNER JOIN evento_status es on ev.evento_status_id = es.id
         WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id IN (1, 2, 5,6)";
 $query = mysqli_query($con, $sql);
+
+$num = numeroChamados(4);
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -60,27 +62,26 @@ $query = mysqli_query($con, $sql);
                     <div class="box-header">
                         <h3 class="box-title">Listagem</h3>
                     </div>
-
                     <div class="row" align="center">
                         <?php if (isset($mensagem)) {
                             echo $mensagem;
                         }; ?>
                     </div>
-
+                    <?= $num ?>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblEvento" class="table table-bordered table-striped">
+                        <table id="tblEvento" class="table table-bordered table-striped table-responsive">
                             <thead>
                             <tr>
                                 <th>Nome do evento</th>
                                 <th>Tipo do evento</th>
                                 <th>Vínculo</th>
                                 <th>Status</th>
+                                <th>Chamados</th>
                                 <th>Editar</th>
                                 <th>Apagar</th>
                             </tr>
                             </thead>
-
                             <?php
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
@@ -114,6 +115,16 @@ $query = mysqli_query($con, $sql);
 
                                     echo "<td>" . $evento['status'] . "</td>";
                                 }
+                                echo "<td class='text-center'>";
+                                if ($result = numeroChamados($evento['idEvento']) > 0){
+                                    echo "<button class='btn bg-orange' type='button' 
+                                            data-toggle='modal' data-target='#modalChamadosEventos' data-name='chamados'>
+                                            {$result}
+                                          </button>";
+                                }else{
+                                    echo "Sem chamados";
+                                }
+                                echo"</td>";
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=evento_edita\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $evento['idEvento'] . "'>
@@ -144,6 +155,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Tipo do evento</th>
                                 <th>Vínculo</th>
                                 <th>Status</th>
+                                <th>Chamados</th>
                                 <th>Editar</th>
                                 <th>Apagar</th>
                             </tr>

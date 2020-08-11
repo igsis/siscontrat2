@@ -12,13 +12,13 @@ function habilitarErro()
 function saudacao()
 {
     $hora = date('H', strtotime("-3 hours"));
-    if (($hora > 12) AND ($hora <= 18)) {
+    if (($hora > 12) and ($hora <= 18)) {
         return "Boa tarde";
-    } else if (($hora > 18) AND ($hora <= 23)) {
+    } else if (($hora > 18) and ($hora <= 23)) {
         return "Boa noite";
-    } else if (($hora >= 0) AND ($hora <= 4)) {
+    } else if (($hora >= 0) and ($hora <= 4)) {
         return "Boa noite";
-    } else if (($hora > 4) AND ($hora <= 12)) {
+    } else if (($hora > 4) and ($hora <= 12)) {
         return "Bom dia";
     }
 }
@@ -462,7 +462,7 @@ function retornaPeriodo($idEvento)
     $array_fim = mysqli_fetch_array($query_data_fim);
 
     $data_fim = $array_fim['data_fim'] ?? "";
-    if ($data_fim == '0000-00-00' OR $data_fim == NULL) {
+    if ($data_fim == '0000-00-00' or $data_fim == NULL) {
         return "dia " . exibirDataBr($data_inicio);
     } else {
         return "de " . exibirDataBr($data_inicio) . " até " . exibirDataBr($data_fim);
@@ -489,7 +489,7 @@ function testaPeriodo($idOcorrencia)
 
     $data_fim = $ocorrencia['data_fim'];
 
-    if ($data_fim == '0000-00-00' OR $data_fim == NULL) {
+    if ($data_fim == '0000-00-00' or $data_fim == NULL) {
         return false;
     } else {
         return true;
@@ -601,7 +601,7 @@ function retornaModulos($perfil)
     $campoFetch = mysqli_fetch_array($query);
     $nome = "";
     while ($fieldinfo = mysqli_fetch_field($query)) {
-        if (($campoFetch[$fieldinfo->name] == 1) AND ($fieldinfo->name != 'id')) {
+        if (($campoFetch[$fieldinfo->name] == 1) and ($fieldinfo->name != 'id')) {
             $descricao = recuperaModulo($fieldinfo->name);
             $nome = $nome . ";\n + " . $descricao['nome'];
         }
@@ -618,7 +618,7 @@ function listaModulos($perfil)
     $query = mysqli_query($con, $sql);
     $campoFetch = mysqli_fetch_array($query);
     while ($fieldinfo = mysqli_fetch_field($query)) {
-        if (($campoFetch[$fieldinfo->name] == 1) AND ($fieldinfo->name != 'id')) {
+        if (($campoFetch[$fieldinfo->name] == 1) and ($fieldinfo->name != 'id')) {
             $descricao = recuperaModulo($fieldinfo->name);
             echo "<tr>";
             echo "<td class='list_description'><b>" . $descricao['nome'] . "</b></td>";
@@ -822,7 +822,7 @@ function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = NULL, $idUsuar
             $testaEtapa = $con->query("SELECT pedido_id, data_proposta FROM pedido_etapas WHERE pedido_id = $idPedido")->fetch_array();
             $data = dataHoraNow();
 
-            if($idPenal && $idUsuario != NULL){
+            if ($idPenal && $idUsuario != NULL) {
                 //update/insert de penalidade
                 $consultaContratos = $con->query("SELECT pedido_id FROM contratos WHERE pedido_id = $idPedido");
                 if ($consultaContratos->num_rows > 0) {
@@ -1426,7 +1426,7 @@ function retornaPeriodoNovo($id, $tabela = "ocorrencias")
         $query_anterior01 = mysqli_query($con, $sql_posterior01);
         $data = mysqli_fetch_array($query_anterior01);
         // $num = mysqli_num_rows($query_anterior01);
-        if (($data['data_fim'] != '0000-00-00') OR ($data['data_fim'] != NULL)) {
+        if (($data['data_fim'] != '0000-00-00') or ($data['data_fim'] != NULL)) {
             //se existe uma data final e que é diferente de NULO
             $dataFinal01 = $data['data_fim'];
         }
@@ -1460,7 +1460,7 @@ function retornaPeriodoNovo($id, $tabela = "ocorrencias")
             $query_anterior01 = mysqli_query($con, $sql_posterior01);
             $data = mysqli_fetch_array($query_anterior01);
             $num = mysqli_num_rows($query_anterior01);
-            if (($data['data_fim'] != '0000-00-00') OR ($data['data_fim'] != NULL)) {
+            if (($data['data_fim'] != '0000-00-00') or ($data['data_fim'] != NULL)) {
                 //se existe uma data final e que é diferente de NULO
                 $dataFinal01 = $data['data_fim'];
             }
@@ -1626,4 +1626,25 @@ function recuperaUsuarioCapac($campoZ)
     $usuario = recuperaDadosCapac("usuario", $campoZ, "id");
     $nomeUsuario = $usuario['nome'];
     return $nomeUsuario;
+}
+
+function numeroChamados($idEvento, $litar = false)
+{
+    $con = bancoPDO();
+    $query = "SELECT 	ct.`tipo`,
+                        ch.`titulo`,
+                        ch.`justificativa`,
+                        ch.`data`
+            FROM chamados AS ch
+            LEFT JOIN chamado_tipos AS ct ON ch.chamado_tipo_id = ct.id
+            WHERE ch.evento_id = {$idEvento}";
+
+    $resultado = $con->query($query);
+    if ($litar) {
+        $result = $resultado->fetchAll(PDO::FETCH_NUM);
+        return $result;
+    } else {
+        $rows = $resultado->rowCount();
+        return $rows;
+    }
 }

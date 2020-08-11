@@ -51,6 +51,30 @@
     </div>
 </div>
 
+<!--  MODAL PARA LISTAGEM DE CHAMADOS DE EVENTOS -->
+<div id="modalChamadosEventos" class="modal modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modalTitulo"></h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Datas</th>
+                            <th>Justificativo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="conteudoModal">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--  Mask-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
 <!-- FastClick -->
@@ -405,6 +429,10 @@
                     $(modalId).find('#conteudoModal').append(`<tr><td>${content}</td></tr>`);
                 });
         })
+    }
+
+    function exibirChamados(modalId, tituloModal){
+
     }
 </script>
 </body>
