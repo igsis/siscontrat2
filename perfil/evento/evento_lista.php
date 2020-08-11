@@ -118,7 +118,7 @@ $num = numeroChamados(4);
                                 echo "<td class='text-center'>";
                                 if ($result = numeroChamados($evento['idEvento']) > 0){
                                     echo "<button class='btn bg-orange' type='button' 
-                                            data-toggle='modal' data-target='#modalChamadosEventos' data-name='chamados'>
+                                            onclick='exibirChamados({$evento['idEvento']})'>
                                             {$result}
                                           </button>";
                                 }else{

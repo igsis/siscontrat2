@@ -1641,7 +1641,7 @@ function numeroChamados($idEvento, $litar = false)
 
     $resultado = $con->query($query);
     if ($litar) {
-        $result = $resultado->fetchAll(PDO::FETCH_NUM);
+        $result = $resultado->fetchAll();
         return $result;
     } else {
         $rows = $resultado->rowCount();
