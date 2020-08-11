@@ -57,19 +57,20 @@ $query = mysqli_query($con, $sql);
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
                                 $idEvento = $evento['idEvento'];
-                                $sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['idEvento'] ." AND o.publicado = 1";
-                                $queryLocal = mysqli_query($con, $sqlLocal);
-                                $local = '';
-                                while ($locais = mysqli_fetch_array($queryLocal)) {
-                                    $local = $local . '; ' . $locais['local'];
-                                }
-                                $local = substr($local, 1);
-
-                                // $locais = listaLocais($evento['idAtracao']);
                                 echo "<tr>";
                                 echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
-                                echo "<td>" . $local . "</td>";
+                                ?>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                            data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                            onClick="exibirLocal_Instituicao('<?= 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php' ?>', '#modalLocais_Inst', '#modalTitulo')"
+                                            data-id="<?= $idEvento ?>"
+                                            name="exibirLocais">
+                                        Ver locais
+                                    </button>
+                                </td>
+                            <?php
                                 echo "<td>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</td>";
                                 echo "<td>" . $evento['status'] . "</td>";
                                 print_r(retornaChamadosTD($evento['idEvento']));
