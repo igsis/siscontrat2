@@ -547,7 +547,7 @@ if ($testaBanco->num_rows > 0) {
                                 <div class="row">
                                     <button type="submit" name="edita" class="btn btn-primary pull-right">Gravar</button>
 
-                                    <a href="?perfil=formacao">
+                                    <a href="?perfil=formacao&p=pessoa_fisica&sp=lista">
                                         <button type="button" class="btn btn-default pull-left">Voltar</button>
                                     </a>
                                 </div>
