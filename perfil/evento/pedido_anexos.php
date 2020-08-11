@@ -4,10 +4,10 @@ $con = bancoMysqli();
 $idPedido = $_SESSION['idPedido'];
 $idEvento = $_SESSION['idEvento'];
 
-$pessoaTipoPedido = recuperaDados('pedidos','id',$idPedido)['pessoa_tipo_id'];
-if ($pessoaTipoPedido == 1){
+$pessoaTipoPedido = recuperaDados('pedidos', 'id', $idPedido)['pessoa_tipo_id'];
+if ($pessoaTipoPedido == 1) {
     $tipo = '10';
-}else{
+} else {
     $tipo = '9';
 }
 
@@ -44,10 +44,18 @@ foreach ($atracoes as $atracao) {
     }
 }
 
-if ($musica) { $whereAdicional[] = "musica = '1'"; }
-if ($oficina) { $whereAdicional[] = "oficina = '1'"; }
-if ($artesCenicas) { $whereAdicional[] = "teatro = '1'"; }
-if ($edital) { $whereAdicional[] = "edital = '1'"; }
+if ($musica) {
+    $whereAdicional[] = "musica = '1'";
+}
+if ($oficina) {
+    $whereAdicional[] = "oficina = '1'";
+}
+if ($artesCenicas) {
+    $whereAdicional[] = "teatro = '1'";
+}
+if ($edital) {
+    $whereAdicional[] = "edital = '1'";
+}
 
 if (isset($_POST["enviarArquivo"])) {
     $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id IN ('3','$tipo') and publicado = 1";
@@ -162,14 +170,18 @@ include "includes/menu_interno.php";
                                                 ?>
                                                 <tr>
                                                     <td class='list_description'><?= $arquivo['documento'] ?></td>
-                                                    <td class='list_description'><a href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
-                                                                                    target='_blank'>
+                                                    <td class='list_description'><a
+                                                                href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
+                                                                target='_blank'>
                                                             <?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
                                                     </td>
-                                                    <td class='list_description'>(<?= exibirDataBr($arquivo['data']) ?>)</td>
+                                                    <td class='list_description'>(<?= exibirDataBr($arquivo['data']) ?>
+                                                        )
+                                                    </td>
                                                     <td class='list_description'>
                                                         <form id='formExcliuir' method='POST'>
-                                                            <button class='btn btn-danger glyphicon glyphicon-trash' type='button'
+                                                            <button class='btn btn-danger glyphicon glyphicon-trash'
+                                                                    type='button'
                                                                     data-toggle='modal' data-target='#exclusao'
                                                                     data-nome='<?= $arquivo['arquivo'] ?>'
                                                                     data-id='<?= $arquivo['id'] ?>'>
@@ -196,25 +208,26 @@ include "includes/menu_interno.php";
                                     <h3 class="box-title">Enviar Arquivos</h3>
                                 </div>
                                 <div class="box-body">
-                                    <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho máximo do arquivo deve ser 5MB.</h4>
+                                    <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho
+                                        máximo do arquivo deve ser 5MB.</h4>
 
-                                    <form  method="POST" enctype="multipart/form-data" action="?perfil=evento&p=pedido_anexos" role="form">
+                                    <form method="POST" enctype="multipart/form-data"
+                                          action="?perfil=evento&p=pedido_anexos" role="form">
                                         <table class="table text-center table-striped">
                                             <tbody>
                                             <?php
                                             $evento = recuperaDados('eventos', 'id', $idEvento);
-                                            if($evento['tipo_evento_id'] == 1) {
+                                            if ($evento['tipo_evento_id'] == 1) {
                                                 if ($musica || $oficina || $artesCenicas) {
-                                                    $sqlAdicional = "AND (".implode(" OR ", $whereAdicional).")";
+                                                    $sqlAdicional = "AND (" . implode(" OR ", $whereAdicional) . ")";
                                                 } else
                                                     $sqlAdicional = "";
                                                 $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id IN (3,{$tipo}) and publicado = 1 $sqlAdicional";
                                             } else {
                                                 $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
                                             }
-                                            $query_arquivos = mysqli_query($con,$sql_arquivos);
-                                            while($arq = mysqli_fetch_array($query_arquivos))
-                                            {
+                                            $query_arquivos = mysqli_query($con, $sql_arquivos);
+                                            while ($arq = mysqli_fetch_array($query_arquivos)) {
                                                 $idDoc = $arq['id'];
                                                 $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = '$idDoc' AND origem_id = '$idPedido' AND publicado = 1";
                                                 $queryExistentes = mysqli_query($con, $sqlExistentes);
@@ -226,7 +239,8 @@ include "includes/menu_interno.php";
                                                             <label><?php echo $arq['documento'] ?></label>
                                                         </td>
                                                         <td>
-                                                            <input type='file' name='arquivo[<?php echo $arq['sigla']; ?>]'>
+                                                            <input type='file'
+                                                                   name='arquivo[<?php echo $arq['sigla']; ?>]'>
                                                         </td>
                                                     </tr>
                                                     <!--                                    Aparece com a Parte de envio de arquivos-->
@@ -251,9 +265,9 @@ include "includes/menu_interno.php";
                                         <br>
                                         <?php
                                         $num_lista = mysqli_num_rows($query_arquivos);
-                                        $num_arquivos = $con->query("SELECT * FROM arquivos WHERE lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1) AND origem_id = '$idPedido' AND publicado = 1")->num_rows;
+                                        $num_arquivos = $con->query("SELECT * FROM arquivos WHERE lista_documento_id /*IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1)*/ AND origem_id = '$idPedido' AND publicado = 1")->num_rows;
                                         $num_total = $num_lista - $num_arquivos;
-                                        if($num_total != 0) {
+                                        if ($num_total != 0) {
                                             ?>
                                             <input type='hidden' name='idPedido' value='<?= $idPedido ?>'/>
                                             <input type="hidden" name="tipoPessoa"
@@ -295,7 +309,7 @@ include "includes/menu_interno.php";
                 <form method="POST" action="?perfil=evento&p=pedido_anexos" role="form" data-etapa="Envio de Arquivos">
                     <input type="hidden" name="idArquivo" id="idArquivo" value="">
                     <input type="hidden" name="tipoPessoa" id="tipoPessoa" value="">
-                    <input type="hidden" name="idPedido" id="idPedido" value="<?=$idPedido?>">
+                    <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
                     <input type="hidden" name="apagarArquivo" id="apagar">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                     </button>
