@@ -79,6 +79,7 @@ if (isset($_POST['busca'])) {
                                 <th>Período</th>
                                 <th>Valor</th>
                                 <th>Status</th>
+                                <th>Chamados</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -117,7 +118,7 @@ if (isset($_POST['busca'])) {
                                     <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
                                     <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                     <td><?= $evento['status'] ?></td>
-
+                                    <?= retornaChamadosTD($evento['id']) ?>
                                 </tr>
                                 <?php
                             }
@@ -134,6 +135,7 @@ if (isset($_POST['busca'])) {
                                 <th>Período</th>
                                 <th>Valor</th>
                                 <th>Status</th>
+                                <th>Chamados</th>
                             </tr>
                             </tfoot>
                         </table>

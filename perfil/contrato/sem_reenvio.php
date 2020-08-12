@@ -46,6 +46,7 @@ $rows = mysqli_num_rows($query);
                                 <th>Local(ais)</th>
                                 <th>Período</th>
                                 <th>Prazo (dias)</th>
+                                <th>Chamados</th>
                                 <th>Operador</th>
                             </tr>
                             </thead>
@@ -97,6 +98,7 @@ $rows = mysqli_num_rows($query);
                                         </td>
                                         <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias')?></td>
                                         <td><?= $prazo ?></td>
+                                        <?= retornaChamadosTD($evento['id']) ?>
                                         <?php
                                         if ($evento['operador_id'] != NULL) {
                                             $operador = recuperaDados('usuarios', 'id', $evento['operador_id'])['nome_completo'];

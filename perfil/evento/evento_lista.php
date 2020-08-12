@@ -45,7 +45,6 @@ $sql = "SELECT ev.id AS idEvento, ev.nome_evento, te.tipo_evento, es.status, ev.
         WHERE publicado = 1 AND (usuario_id = '$idUser' OR fiscal_id = '$idUser' OR suplente_id = '$idUser') AND evento_status_id IN (1, 2, 5,6)";
 $query = mysqli_query($con, $sql);
 
-$num = numeroChamados(4);
 ?>
 
 <!-- Content Wrapper. Contains page content -->

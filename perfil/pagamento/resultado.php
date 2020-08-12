@@ -145,7 +145,7 @@ if(isset($_POST['operador'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblResultado" style="text-align: left;font-size: 90%;" class="table table-bordered table-striped">
+                        <table id="tblResultado" style="text-align: left;font-size: 1em;" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>Processo</th>
@@ -155,6 +155,7 @@ if(isset($_POST['operador'])) {
                                 <th>Período</th>
                                 <th>Valor</th>
                                 <th>Status</th>
+                                <th>Chamados</th>
                                 <th>Operador</th>
                                 <th>Kit pagamento</th>
                                 <th>N.E.</th>
@@ -197,6 +198,7 @@ if(isset($_POST['operador'])) {
                                         <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
                                         <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td><?= $evento['status'] ?></td>
+                                        <?= retornaChamadosTD($evento['id']) ?>
                                         <?php
                                         if ($evento['operador_pagamento_id'] == NULL) {
                                             $nome = "Não possui";
@@ -247,6 +249,7 @@ if(isset($_POST['operador'])) {
                                     <th>Período</th>
                                     <th>Valor</th>
                                     <th>Status</th>
+                                    <th>Chamados</th>
                                     <th>Operador</th>
                                     <th>Kit pagamento</th>
                                     <th>N.E.</th>

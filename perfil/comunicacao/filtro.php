@@ -185,7 +185,7 @@ if (isset($_POST['_filtros'])) {
                                     <div class="panel panel-default">
                                         <!-- Default panel contents -->
                                         <div class="panel-heading">Legendas</div>
-                                        <table class="table">
+                                        <table class="table table-responsive">
                                             <tbody id="legendas-tbody">
                                             <tr>
                                                 <td>
@@ -222,13 +222,14 @@ if (isset($_POST['_filtros'])) {
 
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblEvento" class="table table-bordered table-striped">
+                        <table id="tblEvento" class="table table-bordered table-striped table-responsive">
                             <thead>
                             <tr>
                                 <th>Nome do Evento</th>
                                 <th>Enviado por</th>
                                 <th>Início/Termino</th>
                                 <th>Status</th>
+                                <th>Chamado</th>
                                 <th>Operação</th>
                             </tr>
                             </thead>
@@ -253,6 +254,7 @@ if (isset($_POST['_filtros'])) {
                                                 <?php geraLegendas($evento['idEvento'], 'eventos', 'comunicacoes'); ?>
                                             </div>
                                         </td>
+                                        <?= retornaChamadosTD($evento['idEvento']) ?>
                                         <td>
                                             <form method="post" action="?perfil=comunicacao&p=comunicacao">
                                                 <input type="hidden" name="evento" value="<?= $evento['idEvento'] ?>">
@@ -303,6 +305,7 @@ if (isset($_POST['_filtros'])) {
                                 <th>Enviado por</th>
                                 <th>Início/Termino</th>
                                 <th>Status</th>
+                                <th>Chamado</th>
                                 <th>Operação</th>
                             </tr>
                             </tfoot>

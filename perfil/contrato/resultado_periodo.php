@@ -76,12 +76,12 @@ if (isset($_POST['busca'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblResultado" class="table table-bordered table-striped">
+                        <table id="tblResultado" class="table table-bordered table-striped table-responsive">
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
                                 <th>Número de processo</th>
-                                <th>Proponente</th>
+<!--                                <th>Proponente</th>-->
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
                                 <th>Local(ais)</th>
@@ -89,6 +89,7 @@ if (isset($_POST['busca'])) {
                                 <th>Período</th>
                                 <th>Pendências</th>
                                 <th>Status</th>
+                                <th>Chamado</th>
                                 <th>Operador</th>
                             </tr>
                             </thead>
@@ -129,7 +130,7 @@ if (isset($_POST['busca'])) {
                                             </form>
                                         </td>
                                         <td><?= $evento['numero_processo'] == NULL ? "Não cadastrado" : $evento['numero_processo'] ?></td>
-                                        <td><?= $pessoa ?></td>
+<!--                                        <td>--><?//= $pessoa ?><!--</td>-->
                                         <td><?= $evento['nome_evento'] ?></td>
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td>
@@ -155,6 +156,7 @@ if (isset($_POST['busca'])) {
                                         <td><?= retornaPeriodoNovo($evento['id'], "ocorrencias")?></td>
                                         <td><?= $evento['pendencia_documentacao'] == NULL ? "Não possui" : $evento['pendencia_documentacao'] ?></td>
                                         <td><?= $evento['status'] ?></td>
+                                        <?= retornaChamadosTD($evento['id']) ?>
                                         <?php
                                             if($evento['operador_id'] != NULL){
                                                 $operador = recuperaDados('usuarios', 'id', $evento['operador_id'])['nome_completo'];
@@ -174,7 +176,7 @@ if (isset($_POST['busca'])) {
                             <tr>
                                 <th>Protocolo</th>
                                 <th>Número de processo</th>
-                                <th>Proponente</th>
+<!--                                <th>Proponente</th>-->
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
                                 <th>Local(ais)</th>
@@ -182,6 +184,7 @@ if (isset($_POST['busca'])) {
                                 <th>Período</th>
                                 <th>Pendências</th>
                                 <th>Status</th>
+                                <th>Chamado</th>
                                 <th>Operador</th>
                             </tr>
                             </tfoot>

@@ -1650,11 +1650,12 @@ function numeroChamados($idEvento, $litar = false)
 }
 
 function retornaChamadosTD($id){
-    if ($result = numeroChamados($id) > 0){
+    if (numeroChamados($id) > 0){
+        $quant = numeroChamados($id);
         return "<td class='text-center'>
                    <button class='btn bg-orange' type='button' 
                     onclick='exibirChamados({$id})'>
-                    {$result}
+                    {$quant}
                   </button>
                 </td>";
     }else{
