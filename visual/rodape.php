@@ -51,6 +51,32 @@
     </div>
 </div>
 
+<!--  MODAL PARA LISTAGEM DE CHAMADOS DE EVENTOS -->
+<div id="modalChamadosEventos" class="modal modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modalTitulo">Lista de Chamados</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Datas</th>
+                            <th>Tipo</th>
+                            <th>Titulo</th>
+                            <th>Justificativo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="conteudoModal">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--  Mask-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
 <!-- FastClick -->
@@ -69,6 +95,43 @@
 <script type="text/javascript" src="js/autocomplete.js"></script>
 <script src="js/jquery-ui.js"></script>
 
+<script>
+    function exibirChamados(id){
+        const modalId= '#modalChamadosEventos';
+        const conteudo = '#conteudoModal';
+        $.ajax({
+            method: "GET",
+            url: "<?= 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_chamado_evento.php' ?>?idEvento="+id,
+        })
+            .done(function (content) {
+                $(modalId).find(conteudo).empty();
+                content = JSON.parse(content);
+
+                content.forEach((item) =>{
+                    let linha = document.createElement('tr');
+
+                    let data = new Date(`${item.data}`);
+
+                    linha.appendChild(criaColuna(`${data.toLocaleDateString()}`));
+                    linha.appendChild(criaColuna(`${item.tipo}`));
+                    linha.appendChild(criaColuna(`${item.titulo}`));
+                    linha.appendChild(criaColuna(`${item.justificativa}`));
+
+                    document.querySelector(`${modalId} ${conteudo}`).appendChild(linha);
+
+                });
+
+                // $(modalId).find(conteudo).append(`<tr><td>${content}</td></tr>`);
+                $(modalId).modal();
+            });
+    }
+
+    function criaColuna(text){
+        let coluna = document.createElement("td");
+        coluna.innerHTML = `${text}`;
+        return coluna;
+    }
+</script>
 
 <!-- page script -->
 <script>
