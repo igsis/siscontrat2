@@ -40,6 +40,8 @@ while ($publico = mysqli_fetch_array($sql_publico)){
     $publicos .= $publico['publico'] . '; ';
 }
 
+$sql_arqcomprod = $con->query("SELECT * FROM arquivos as arq INNER JOIN lista_documentos AS ld ON arq.lista_documento_id = ld.id  WHERE arq.origem_id = '$idEvento' AND arq.publicado = '1' ORDER BY arq.id");
+
 $pedido = $con->query("SELECT p.id, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, p.numero_processo, l.extrato_liquidacao, l.retencoes_inss, l.retencoes_iss, l.retencoes_irrf FROM pedidos AS p INNER JOIN eventos AS e ON p.origem_id = e.id LEFT JOIN liquidacao l on p.id = l.pedido_id WHERE e.publicado = 1 AND p.publicado = 1 AND p.origem_id = '$idEvento'")->fetch_array();
 
 function diadasemanaocorrencia($idOcorrencia){
@@ -311,9 +313,22 @@ if ($evento['tipo_evento_id'] == 1) {
 }
 // fim atração
 
-$pdf->Ln();
+// arquivo comunicação produção
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 11);
+$pdf->Cell(180, $l, utf8_decode('Arquivos para Comunicação/Produção'), 'B', 1, 'L');
+while ($arquivo = mysqli_fetch_array($sql_arqcomprod)) {
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'U', 11);
+    $pdf->Cell(150, $l, utf8_decode(mb_strimwidth($arquivo['arquivo'], 15, 25, "...")), 0, 1, 'L', false,"../uploadsdocs/" . $arquivo['arquivo']);
+}
+// fim aqrquivo comunicação produção
+$pdf->Ln(15);
 
-
+// pedido de contratação
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 11);
+$pdf->Cell(180, $l, utf8_decode('Pedido de Contratação'), 'B', 1, 'L');
 
 if($pedido['pessoa_tipo_id'] == 1) {
     $idPf = $pedido['pessoa_fisica_id'];
