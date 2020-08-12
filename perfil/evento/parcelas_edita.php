@@ -244,7 +244,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
 
     let dataInicio = new Date("<?= $dataInicio[0]['data_inicio'] ?>");
 
-    $(".dataPagamento").keyup(function (e) {
+    $(".dataPagamento").change(function (e) {
         let dataParcela = new Date(this.value);
         if (dataInicio >= dataParcela) {
             linha_erro.css("display", "block");
