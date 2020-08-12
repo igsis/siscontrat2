@@ -66,7 +66,6 @@ $query = mysqli_query($con, $sql);
                             echo $mensagem;
                         }; ?>
                     </div>
-                    <?= $num ?>
                     <!-- /.box-header -->
                     <div class="box-body">
                         <table id="tblEvento" class="table table-bordered table-striped table-responsive">
