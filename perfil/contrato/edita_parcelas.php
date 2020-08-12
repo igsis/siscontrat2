@@ -6,7 +6,7 @@ $pedido = $con->query("SELECT id, numero_parcelas, valor_total FROM pedidos WHER
 $idPedido = $pedido['id'];
 
 $tipoEvento = retornaTipo($idEvento);
-if($tipoEvento == 1){
+if($tipoEvento == "Atração"){
     $consultaAcoes = $con->query("SELECT acao_id FROM atracoes AS a 
                                     INNER JOIN eventos AS e ON a.evento_id = e.id 
                                     INNER JOIN acao_atracao aa on a.id = aa.atracao_id 
