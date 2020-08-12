@@ -431,7 +431,7 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
         let valorTotal = $('#valor_total').val();
         let btnEditaParcela = $('#btnParcelas');
 
-        btnEditaParcela.attr('href', '?perfil=evento&p=parcelas_edita&dataMin=<?= $data_kit ?>&nParcelas=' + nParcela + '&valorTotal=' + valorTotal);
+        btnEditaParcela.attr('href', '?perfil=evento&p=parcelas_edita&nParcelas=' + nParcela + '&valorTotal=' + valorTotal);
     }
 
 
