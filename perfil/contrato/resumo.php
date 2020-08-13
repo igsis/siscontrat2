@@ -151,9 +151,9 @@ if (isset($_POST['salvar'])) {
     $pendencia = trim(addslashes($_POST['pendencia']));
     $idUsuario = $_SESSION['usuario_id_s'];
     $consultaContratos = $con->query("SELECT pedido_id FROM contratos WHERE pedido_id = $idPedido");
-    if($consultaContratos->num_rows > 0){
+    if ($consultaContratos->num_rows > 0) {
         $inserePendencia = $con->query("UPDATE contratos SET pendencia_documentacao = '$pendencia', usuario_contrato_id = '$idUsuario' WHERE pedido_id = $idPedido");
-    }else{
+    } else {
         $inserePendencia = $con->query("INSERT INTO contratos (pedido_id, pendencia_documentacao, usuario_contrato_id) VALUES ('$idPedido', '$pendencia', '$idUsuario')");
     }
 
@@ -211,7 +211,7 @@ if (isset($_POST['parcelaEditada'])) {
 
     if (isset($_POST['parcelaEditada']) && $numParcelas != NULL) {
 
-        foreach ($_POST['parcela'] AS $countPost => $parcela) {
+        foreach ($_POST['parcela'] as $countPost => $parcela) {
             $valor = dinheiroDeBr($_POST['valor'][$countPost]) ?? NULL;
             $data_pagamento = $_POST['data_pagamento'][$countPost] ?? NULL;
 
@@ -543,27 +543,28 @@ $disableDown = "";
                                     <button type="submit" class="btn btn-primary btn-block"> Ver chamados</button>
                                 </form> -->
                             </div>
-                        <?php endif ?>
-
-                        <?php
-                        if ($idEvento) {
-                            $sqlEvento = $con->query("SELECT arq.* FROM arquivos AS arq 
+                        <?php endif;
+                        $sqlEvento = $con->query("SELECT arq.* FROM arquivos AS arq 
                         INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
                         WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='3'")->num_rows;
-                            if ($sqlEvento == 0 || $sqlEvento == "") {
-                                $disableDown = "";
-                                ?>
-                                <div class="col-md-4">
-                                    <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
-                                        <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
-                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                        <button type="submit" <?= $disableDown ?> class="btn btn-primary pull-right "
-                                                style="width: 95%"> Baixar todos os arquivos
-                                        </button>
-                                    </form>
-                                </div>
-                            <?php }
+                        if ($sqlEvento != 0) {
+                            $disableDown = "";
+                            $display = "none";
+                        } else {
+                            $disableDown = "disabled";
+                            $display = "block";
                         } ?>
+
+                        <div class="col-md-4">
+                            <form action="<?= $link_todosArquivos ?>" method="post" target="_blank">
+                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                <button type="submit" <?= $disableDown ?> class="btn btn-primary btn-block"
+                                        style="width: 95%;">Baixar todos os arquivos
+                                </button>
+                                <span style="color: red; text-align: center; display: <?= $display ?>"><strong>Pedido não possuí anexos</strong></span>
+                            </form>
+                        </div>
                         <!-- <div class="col-md-3">
                             <form action="?perfil=contrato&p=anexos_pedido" method="post" role="form">
                                 <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
@@ -574,7 +575,6 @@ $disableDown = "";
                             </form>
                         </div>-->
                     </div>
-
                     <br>
                     <?php
                     if ($pedido['pessoa_tipo_id'] == 1) {
@@ -802,8 +802,8 @@ $disableDown = "";
                             </form>
                             <?php
                             //apenas para questões estéticas
-                                if($nivelUsuario == 2){ ?>
-                                    <br>
+                            if ($nivelUsuario == 2) { ?>
+                                <br>
                             <?php } ?>
                             <br>
                         </div>

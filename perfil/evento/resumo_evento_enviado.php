@@ -103,11 +103,11 @@ if (retornaTipo($idEvento) == "Atração") {
             }
         }
     }
-} /*elseif (retornaTipo($idEvento) == "Filme") {
-    $consultaFilmeEventos = $con->query("SELECT atracao_id FROM ocorrencias WHERE origem_ocorrencia_id = $idEvento AND tipo_ocorrencia_id = 2 AND publicado = 1");
+} elseif (retornaTipo($idEvento) == "Filme") {
+    $consultaFilmeEventos = $con->query("SELECT id FROM ocorrencias WHERE origem_ocorrencia_id = $idEvento AND tipo_ocorrencia_id = 2 AND publicado = 1");
     if ($consultaFilmeEventos->num_rows > 0) {
         while ($atracaoIds = mysqli_fetch_array($consultaFilmeEventos)) {
-            $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $atracaoIds['atracao_id']);
+            $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $atracaoIds['id']);
             if ($testaExcecao->num_rows > 0) {
                 while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
                     $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
@@ -115,7 +115,7 @@ if (retornaTipo($idEvento) == "Atração") {
             }
         }
     }
-}*/
+}
 
 $datas = substr($datas, 0, -2);
 ?>
