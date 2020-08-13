@@ -56,11 +56,19 @@ if (isset($_POST['enviar'])) {
                 $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3 WHERE id = '$idEvento'";
                 mysqli_query($con, $sqlEnviaEvento);
 
-
-                $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
+               $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
                 $queryEnvia = mysqli_query($con, $sqlEnvia);
-                $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-                $queryEnvio = mysqli_query($con, $sqlEnvio);
+
+                $consultaEvento = $con->query("SELECT id, evento_id FROM producao_eventos WHERE evento_id = $idEvento");
+                if($consultaEvento->num_rows == 0){
+                    $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
+                   mysqli_query($con, $sqlEnvio);
+                }else{
+                    $idProducaoEvento = mysqli_fetch_array($consultaEvento)['id'];
+                    $sqlEnvio = "UPDATE producao_eventos SET data = '$data' WHERE id = $idProducaoEvento";
+                    mysqli_query($con, $sqlEnvio);
+                }
+
                 $mensagem = mensagem("success", "Evento enviado com sucesso!");
             }
         }
@@ -70,8 +78,15 @@ if (isset($_POST['enviar'])) {
         mysqli_query($con, $sqlEnviaEvento);
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
         $con->query($sqlEnvia);
-        $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-        $queryEnvio = mysqli_query($con, $sqlEnvio);
+        $consultaEvento = $con->query("SELECT id, evento_id FROM producao_eventos WHERE evento_id = $idEvento");
+        if($consultaEvento->num_rows == 0){
+            $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
+            mysqli_query($con, $sqlEnvio);
+        }else{
+            $idProducaoEvento = mysqli_fetch_array($consultaEvento)['id'];
+            $sqlEnvio = "UPDATE producao_eventos SET data = '$data' WHERE id = $idProducaoEvento";
+           mysqli_query($con, $sqlEnvio);
+        }
         $mensagem = mensagem("success", "Evento enviado com sucesso!");
     }
 }
