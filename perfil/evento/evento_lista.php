@@ -64,9 +64,8 @@ $query = mysqli_query($con, $sql);
                     <div class="row" align="center">
                         <?php if (isset($mensagem)) {
                             echo $mensagem;
-                        }; ?>
+                        } ?>
                     </div>
-                    <?= $num ?>
                     <!-- /.box-header -->
                     <div class="box-body">
                         <table id="tblEvento" class="table table-bordered table-striped table-responsive">
