@@ -64,7 +64,7 @@ $query = mysqli_query($con, $sql);
                     <div class="row" align="center">
                         <?php if (isset($mensagem)) {
                             echo $mensagem;
-                        }; ?>
+                        } ?>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">

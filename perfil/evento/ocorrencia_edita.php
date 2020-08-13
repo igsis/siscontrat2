@@ -717,6 +717,14 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                             <button type="button" id="btData" class="btn btn-success">Adicionar Data</button>
                         </div>
                     </div>
+                    <div class="mensagemData">
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <p>
+                                <i class="icon fa fa-ban"></i> Data de excessão deve ser menor que data inicio e maior que a data de encerramento!
+                            </p>
+                        </div>
+                    </div>
                     <div id="datas">
 
                     </div>
@@ -1134,6 +1142,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
         let input = document.createElement('input');
         input.setAttribute('type', 'date');
+        input.setAttribute('onChange','validaData(this)')
         input.classList.add('dataEx');
         input.classList.add('form-control');
         if (valor) {
@@ -1273,6 +1282,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
     window.onload = function () {
         let instuicao = $('#instituicao').val();
+        document.querySelector(".mensagemData").style.display = 'none';
 
         if (instuicao != 6) {
             hideOrShow(links_adc, "none");
@@ -1280,4 +1290,22 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             hideOrShow(links_adc, "block");
         }
     }
+
+    function validaData(txtData){
+        let dataEx = new Date(txtData.value);
+        let dataIni = new Date(document.querySelector('#datepicker10').value);
+        let dataEnc = new Date(document.querySelector('#datepicker11').value);
+        let mensagem = document.querySelector(".mensagemData");
+        let button = document.querySelector("#saveData");
+
+        if (dataEx.getTime() > dataIni.getTime() && dataEx.getTime() < dataEnc.getTime()) {
+            mensagem.style.display = "none";
+            button.disabled = false;
+        }
+        else {
+            mensagem.style.display = "block";
+            button.disabled = true;
+        }
+    }
+
 </script>
