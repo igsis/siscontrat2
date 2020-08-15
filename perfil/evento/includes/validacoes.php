@@ -44,6 +44,28 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
 
                 if (mysqli_num_rows($queryLider) == 0) {
                     array_push($erros, "Líder não cadastrado na atração: <b>" . $atracao['nome_atracao'] . '</b>');
+                } else if (mysqli_num_rows($queryLider) > 0) {
+                    while ($arrayLider = mysqli_fetch_array($queryLider)) {
+                        $consultaDocLider = $con->query("SELECT ld.id, ld.documento, a.arquivo
+                                                                FROM lista_documentos ld
+                                                                LEFT JOIN (SELECT arq.arquivo, arq.lista_documento_id, list.sigla FROM lista_documentos as list
+				                                                           INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
+				                                                           WHERE arq.origem_id = " . $arrayLider['pessoa_fisica_id'] . " AND list.tipo_documento_id = 1
+				                                                AND arq.publicado = '1' ORDER BY arq.id) a ON ld.id = a.lista_documento_id
+                                                                WHERE ld.tipo_documento_id = 1 AND ld.publicado = 1
+                                                                AND ld.sigla IN ('rg','cpf', 'drt', 'currlider')");
+                        if ($consultaDocLider->num_rows > 0) {
+                            while ($arrayDoc = mysqli_fetch_array($consultaDocLider)) {
+                                if ($arrayDoc['arquivo'] == NULL) {
+                                    $nomeLider = $con->query("SELECT nome FROM pessoa_fisicas WHERE id = " . $arrayLider['pessoa_fisica_id'])->fetch_array()['nome'];
+                                    array_push($errosArqs, $arrayDoc['documento'] . " do Lider ''<strong>$nomeLider</strong>''" . " não enviado");
+                                }
+                            }
+                        } else {
+                            $nomeLider = $con->query("SELECT nome FROM pessoa_fisicas WHERE id = " . $arrayLider['pessoa_fisica_id'])->fetch_array()['nome'];
+                            array_push($errosArqs, "Todos os documentos do lider ''$nomeLider'' não enviado");
+                        }
+                    }
                 }
 
             }
