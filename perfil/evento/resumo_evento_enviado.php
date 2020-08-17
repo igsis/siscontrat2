@@ -56,14 +56,14 @@ if (isset($_POST['enviar'])) {
                 $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3 WHERE id = '$idEvento'";
                 mysqli_query($con, $sqlEnviaEvento);
 
-               $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
+                $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
                 $queryEnvia = mysqli_query($con, $sqlEnvia);
 
                 $consultaEvento = $con->query("SELECT id, evento_id FROM producao_eventos WHERE evento_id = $idEvento");
-                if($consultaEvento->num_rows == 0){
+                if ($consultaEvento->num_rows == 0) {
                     $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-                   mysqli_query($con, $sqlEnvio);
-                }else{
+                    mysqli_query($con, $sqlEnvio);
+                } else {
                     $idProducaoEvento = mysqli_fetch_array($consultaEvento)['id'];
                     $sqlEnvio = "UPDATE producao_eventos SET data = '$data' WHERE id = $idProducaoEvento";
                     mysqli_query($con, $sqlEnvio);
@@ -79,13 +79,13 @@ if (isset($_POST['enviar'])) {
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
         $con->query($sqlEnvia);
         $consultaEvento = $con->query("SELECT id, evento_id FROM producao_eventos WHERE evento_id = $idEvento");
-        if($consultaEvento->num_rows == 0){
+        if ($consultaEvento->num_rows == 0) {
             $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
             mysqli_query($con, $sqlEnvio);
-        }else{
+        } else {
             $idProducaoEvento = mysqli_fetch_array($consultaEvento)['id'];
             $sqlEnvio = "UPDATE producao_eventos SET data = '$data' WHERE id = $idProducaoEvento";
-           mysqli_query($con, $sqlEnvio);
+            mysqli_query($con, $sqlEnvio);
         }
         $mensagem = mensagem("success", "Evento enviado com sucesso!");
     }
@@ -106,27 +106,13 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
 $datas = "";
 
 //testa e se necessário retorna as datas de excessão
-if (retornaTipo($idEvento) == "Atração") {
-    $consultaAtracoes = $con->query("SELECT id FROM atracoes WHERE evento_id = $idEvento AND publicado = 1");
-    if ($consultaAtracoes->num_rows > 0) {
-        while ($atracaoIds = mysqli_fetch_array($consultaAtracoes)) {
-            $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $atracaoIds['id']);
-            if ($testaExcecao->num_rows > 0) {
-                while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
-                    $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
-                }
-            }
-        }
-    }
-} elseif (retornaTipo($idEvento) == "Filme") {
-    $consultaFilmeEventos = $con->query("SELECT id FROM ocorrencias WHERE origem_ocorrencia_id = $idEvento AND tipo_ocorrencia_id = 2 AND publicado = 1");
-    if ($consultaFilmeEventos->num_rows > 0) {
-        while ($atracaoIds = mysqli_fetch_array($consultaFilmeEventos)) {
-            $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $atracaoIds['id']);
-            if ($testaExcecao->num_rows > 0) {
-                while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
-                    $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
-                }
+$consultaAtracoes = $con->query("SELECT id FROM ocorrencias WHERE origem_ocorrencia_id = $idEvento AND publicado = 1 AND tipo_ocorrencia_id = " . $evento['tipo_evento_id']);
+if ($consultaAtracoes->num_rows > 0) {
+    while ($atracaoIds = mysqli_fetch_array($consultaAtracoes)) {
+        $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $atracaoIds['id']);
+        if ($testaExcecao->num_rows > 0) {
+            while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
+                $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
             }
         }
     }

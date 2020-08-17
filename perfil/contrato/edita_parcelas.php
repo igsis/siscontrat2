@@ -5,8 +5,8 @@ $idEvento = $_GET['id'];
 $pedido = $con->query("SELECT id, numero_parcelas, valor_total FROM pedidos WHERE origem_id = $idEvento AND origem_tipo_id = 1 AND publicado = 1")->fetch_array();
 $idPedido = $pedido['id'];
 
-$tipoEvento = retornaTipo($idEvento);
-if($tipoEvento == "Atração"){
+$tipoEvento = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento AND publicado = 1")->fetch_array()['tipo_evento_id'];
+if($tipoEvento == 1){
     $consultaAcoes = $con->query("SELECT acao_id FROM atracoes AS a 
                                     INNER JOIN eventos AS e ON a.evento_id = e.id 
                                     INNER JOIN acao_atracao aa on a.id = aa.atracao_id 
