@@ -441,12 +441,11 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
 
                     if ($linhas > 0) {
                         echo "
-                                    <table class='table table-striped'>
-                                        <thead>
+                                <table class='table table-striped'>
+                                    <thead>
                                             <tr class='bg-info text-bold'>
                                                 <td>Nome do documento</td>
-                                                <td>Data de envio</td>
-                                                <td width='15%'></td>
+                                                <td width='10%'>Data de envio</td>
                                             </tr>
                                         </thead>
                                         <tbody>";
