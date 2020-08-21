@@ -544,10 +544,12 @@ $disableDown = "";
                                 </form> -->
                             </div>
                         <?php endif;
-                        $sqlEvento = $con->query("SELECT arq.* FROM arquivos AS arq 
-                        INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
-                        WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='3'")->num_rows;
-                        if ($sqlEvento != 0) {
+                        $numArq = $con->query("SELECT list.documento 
+                                                         FROM lista_documentos as list
+                                                         INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
+                                                         WHERE arq.origem_id = $idPedido AND list.tipo_documento_id = 3
+                                                         AND arq.publicado = 1")->num_rows;
+                        if ($numArq > 0) {
                             $disableDown = "";
                             $display = "none";
                         } else {

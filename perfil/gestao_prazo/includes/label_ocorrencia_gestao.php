@@ -275,7 +275,7 @@
                                                 <?php } ?>
                                                 <tr>
                                                     <th width="30%">Observação:</th>
-                                                    <td><?= $ocorrencia['observacao'] ?></td>
+                                                    <td><?= $ocorrencia['observacao'] == NULl ? "Não cadastrado" : $ocorrencia['observacao']?></td>
                                                 </tr>
                                                 <?php
                                                 $i++;

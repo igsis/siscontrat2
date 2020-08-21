@@ -32,16 +32,18 @@ if ($zip->open($nome_arquivo, ZipArchive::CREATE) === true) {
 
     if ($idEvento) {
         // arquivos do evento
-        $sql = "SELECT arq.* FROM arquivos AS arq 
-        INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
-        WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='3'";
+        $sql = "SELECT list.documento 
+                FROM lista_documentos as list
+                INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
+                WHERE arq.origem_id = " . $pedido['id'] . " AND list.tipo_documento_id = 3
+                AND arq.publicado = 1";
         $query = mysqli_query($con, $sql);
         while ($arquivo = mysqli_fetch_array($query)) {
             $file = $path . $arquivo['arquivo'];
             $file2 = $arquivo['arquivo'];
             $zip->addFile($file, "evento/" . $file2);
         }
-        // arquivivos produção
+        // arquivos produção
         $sql_com_prod = "SELECT arq.* FROM arquivos AS arq 
         INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
         WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='8'";
