@@ -19,6 +19,9 @@ if (isset($_POST['busca'])) {
     elseif ($data_inicio != NULL && $data_fim == NULL){
         $sqlPeriodo = " AND o.data_inicio >= '$data_inicio'";
     }
+    elseif ($data_inicio == NULL && $data_fim != NULL){
+        $sqlPeriodo = " AND o.data_fim >= '$data_fim'";
+    }
     else{
         $sqlPeriodo = "";
     }

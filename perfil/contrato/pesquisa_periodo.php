@@ -14,13 +14,13 @@
                                 <div class="form-group col-md-4">
                                     <label for="data_inicio">Data Início *</label> <br>
                                     <input type="date" name="data_inicio" class="form-control" id="datepicker10"
-                                           placeholder="DD/MM/AAAA" onblur="comparaData()" required>
+                                           placeholder="DD/MM/AAAA" onblur="comparaData()">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="data_fim">Data Final *</label><br>
                                     <input type="date" name="data_fim" class="form-control" id="datepicker11"
-                                           placeholder="DD/MM/AAAA" onblur="comparaData()" required>
+                                           placeholder="DD/MM/AAAA" onblur="comparaData()">
                                 </div>
 
                                 <div class="form-group col-md-4">
