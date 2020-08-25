@@ -157,8 +157,13 @@ if (isset($_POST['salvar'])) {
         $inserePendencia = $con->query("INSERT INTO contratos (pedido_id, pendencia_documentacao, usuario_contrato_id) VALUES ('$idPedido', '$pendencia', '$idUsuario')");
     }
 
+    //se houver operador, adiciona o campo no update
+    $sqlOperador = "";
+    if ($operador != NULL)
+        $sqlOperador = ", operador_id = '$operador'";
+
     $sqlEvento = "UPDATE eventos SET fiscal_id = '$fiscal', suplente_id ='$suplente' WHERE id = '$idEvento'";
-    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' WHERE id = '$idPedido' AND origem_tipo_id = 1";
+    $sqlPedido = "UPDATE pedidos SET numero_processo = '$processo', numero_processo_mae = '$processoMae', forma_pagamento = '$formaPagamento', justificativa = '$justificativa', verba_id = '$verba' $sqlOperador WHERE id = '$idPedido' AND origem_tipo_id = 1";
 
     if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
         if ($operador != NULL) {
@@ -324,7 +329,7 @@ $disableDown = "";
                                         <select name="operador" id="operador" class="form-control">
                                             <option value="">Selecione um operador</option>
                                             <?php
-                                            geraOpcao('usuarios u INNER JOIN usuario_contratos uc on uc.usuario_id = u.id WHERE uc.nivel_acesso != 1', $pedido['operador_id']);
+                                            geraOpcao('usuarios u INNER JOIN usuario_contratos uc ON uc.usuario_id = u.id WHERE uc.nivel_acesso = 2', $pedido['operador_id']);
                                             ?>
                                         </select>
                                     </div>

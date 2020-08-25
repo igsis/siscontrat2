@@ -9,8 +9,9 @@ if (isset($_POST['busca'])) {
     $operador = $_POST['operador'] ?? NULL;
 
     $sqlOperador = '';
+    $sqlPeriodo = '';
 
-    if ($operador != null && $operador != 0)
+    if ($operador != null)
         $sqlOperador = " AND p.operador_id = '$operador'";
 
     if($data_inicio != NULL && $data_fim != NULL){
@@ -18,9 +19,6 @@ if (isset($_POST['busca'])) {
     }
     elseif ($data_inicio != NULL && $data_fim == NULL){
         $sqlPeriodo = " AND o.data_inicio >= '$data_inicio'";
-    }
-    elseif ($data_inicio == NULL && $data_fim != NULL){
-        $sqlPeriodo = " AND o.data_fim >= '$data_fim'";
     }
     else{
         $sqlPeriodo = "";
@@ -42,8 +40,6 @@ if (isset($_POST['busca'])) {
     AND p.origem_tipo_id = 1
     AND p.status_pedido_id != 3
     AND p.status_pedido_id != 1
-    AND o.data_inicio >= '$data_inicio'
-    AND o.data_fim <= '$data_fim'
     AND e.evento_status_id != 1
     AND (
       (er.data_reabertura < ee.data_envio) 

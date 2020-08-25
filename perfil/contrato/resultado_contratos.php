@@ -13,6 +13,7 @@ if (isset($_POST['busca'])) {
     $usuario = $_POST['usuario'] ?? NULL;
     $status = $_POST['status'] ?? NULL;
 
+    $sqlOperador = '';
     $sqlProcesso = '';
     $sqlNomeEvento = '';
     $sqlProtocolo = '';
@@ -21,10 +22,10 @@ if (isset($_POST['busca'])) {
     $sqlUsuario = '';
 
     if ($semOperador != null)
-        $sqlProtocolo = " AND p.operador_id IS NULL";
+        $sqlOperador = " AND p.operador_id IS NULL";
 
     if ($protocolo != null)
-    $sqlProtocolo = " AND e.protocolo LIKE '%$protocolo%'";
+        $sqlProtocolo = " AND e.protocolo LIKE '%$protocolo%'";
 
     if ($num_processo != null)
         $sqlProcesso = " AND p.numero_processo LIKE '%$num_processo%'";
@@ -63,7 +64,7 @@ if (isset($_POST['busca'])) {
     OR 
       (er.data_reabertura is null)
     )
-    $sqlProjeto $sqlUsuario $sqlStatus 
+    $sqlProjeto $sqlUsuario $sqlStatus $sqlOperador
     $sqlProtocolo $sqlNomeEvento $sqlProcesso
     GROUP BY e.id";
 
@@ -142,8 +143,9 @@ if (isset($_POST['busca'])) {
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td>
                                             <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
-                                                    data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
-                                                    onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
+                                                    data-toggle="modal" data-target="#modalLocais_Inst"
+                                                    data-name="local"
+                                                    onClick="exibirLocal_Instituicao('<?= $link_api_locais_instituicoes ?>', '#modalLocais_Inst', '#modalTitulo')"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirLocais">
                                                 Ver locais
@@ -153,7 +155,7 @@ if (isset($_POST['busca'])) {
                                             <button type="button" class="btn btn-primary btn-block"
                                                     id="exibirInstituicoes"
                                                     data-toggle="modal" data-target="#modalLocais_Inst"
-                                                    onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
+                                                    onClick="exibirLocal_Instituicao('<?= $link_api_locais_instituicoes ?>', '#modalLocais_Inst', '#modalTitulo')"
                                                     data-name="inst"
                                                     data-id="<?= $evento['id'] ?>"
                                                     name="exibirInstituicoes">
