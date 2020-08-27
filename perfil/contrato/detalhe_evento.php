@@ -260,7 +260,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
 
                             <tr>
                                 <th width="30%">Gênero:</th>
-                                <td><?= $filmes['genero'] ?></td>
+                                <td><?= $filmes['genero'] == NULL ? "Não Cadastrado" :  $filmes['genero']?></td>
                             </tr>
 
                             <th width="30%">Linguagem / Expressão artística:</th>
@@ -284,7 +284,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             </tr>
 
                             <tr>
-                                <th width="30%">Duração:</th>
+                                <th width="30%">Duração(min):</th>
                                 <td><?= $filmes['duracao'] ?> </td>
                             </tr>
 
@@ -415,7 +415,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             </tr>
                             <tr>
                                 <th width="30% ">Observação:</th>
-                                <td><?= $ocorrencia['observacao'] ? "" : "Não cadastrado" ?></td>
+                                <td><?= $ocorrencia['observacao'] == NULL ? "Não cadastrado" : $ocorrencia['observacao'] ?></td>
                             </tr>
 
                             <tr>
@@ -520,7 +520,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                         </tr>
                         <tr>
                             <th width="30%">Observação:</th>
-                            <td><?= $evento['observacao'] ? "" : "Não cadastrado" ?></td>
+                            <td><?= $evento['observacao'] == NULL ? "Não cadastrado" : $evento['observacao'] ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Último status do Pedido:</th>
