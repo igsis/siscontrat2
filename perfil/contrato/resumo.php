@@ -174,10 +174,10 @@ if (isset($_POST['salvar'])) {
             if ($atualizaStatus) {
                 $testaEtapa = $con->query("SELECT pedido_id, data_contrato FROM pedido_etapas WHERE pedido_id = $idPedido")->fetch_array();
                 $data = dataHoraNow();
-                if ($testaEtapa != NULL && $testaEtapa['data_contrato'] == "0000-00-00 00:00:00" || $testaEtapa['data_contrato'] != "0000-00-00 00:00:00") {
-                    $updateEtapa = $con->query("UPDATE pedido_etapas SET data_contrato = '$data' WHERE pedido_id = '$idPedido'");
-                } else if ($testaEtapa == NULL) {
+                if ($testaEtapa == NULL) {
                     $insereEtapa = $con->query("INSERT INTO pedido_etapas (pedido_id, data_contrato) VALUES ('$idPedido', '$data')");
+                } else if ($testaEtapa != NULL && $testaEtapa['data_contrato'] == "0000-00-00 00:00:00" || $testaEtapa['data_contrato'] != "0000-00-00 00:00:00") {
+                    $updateEtapa = $con->query("UPDATE pedido_etapas SET data_contrato = '$data' WHERE pedido_id = '$idPedido'");
                 }
             }
 
@@ -677,9 +677,9 @@ $disableDown = "";
                     <?php
                     //determina se há necessidade de esconder ou não a aba de lider da página e determina se ela será para edição ou cadastro
                     if ($escondeLider == 0) {
-                    $numAtracao = $con->query("SELECT id FROM atracoes WHERE evento_id = $idEvento")->num_rows;
+                    $numAtracao = $con->query("SELECT id FROM atracoes WHERE evento_id = $idEvento AND publicado = 1")->num_rows;
                     $numLider = $con->query("SELECT * FROM lideres WHERE pedido_id = $idPedido")->num_rows;
-                    if ($numLider > 0 && $numLider >= $numAtracao){
+                    if ($numLider > 0 && $numLider == $numAtracao){
                     $disabledImpr = "";
                     ?>
 

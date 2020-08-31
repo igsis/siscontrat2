@@ -170,9 +170,9 @@ $tel = substr($tel, 0, -3);
                         <td>
                             <?php
                             while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-                                $local = $local . $linhaLocal['local'] . ' - ';
+                                $local = $local . $linhaLocal['local'] . '; ';
                             }
-                            $local = substr($local, 0, -3);
+                            $local = substr($local, 0,-2);
                             echo $local;
                             ?>
                         </td>
@@ -203,32 +203,32 @@ $tel = substr($tel, 0, -3);
                     <tr>
                     </tr>
                     <tr>
-                        <th width="30%">Objeto</th>
+                        <th width="30%">Objeto:</th>
                         <td><?= $programa['programa'] ?>-<?= $linguagem['linguagem'] ?>-<?= $programa['edital'] ?></td>
                     </tr>
                     <tr>
-                        <th width="30%">Local</th>
+                        <th width="30%">Local(ais):</th>
                         <td>
                             <?php
                             while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-                                $local = $local . $linhaLocal['local'] . '-';
+                                $local = $local . $linhaLocal['local'] . '; ';
                             }
 
-                            $local = substr($local, 0, -3);
+                            $local = substr($local, 0, -2);
                             echo $local;
                             ?>
                         </td>
                     </tr>
                     <tr>
-                        <th width="30%">Valor</th>
-                        <td><?= $pedido['valor_total'] ?></td>
+                        <th width="30%">Valor:</th>
+                        <td><?= "R$" . $pedido['valor_total'] ?></td>
                     </tr>
                     <tr>
-                        <th width="30%">Forma de Pagamento</th>
+                        <th width="30%">Forma de Pagamento:</th>
                         <td><?=$pedido['forma_pagamento'] ?></td>
                     </tr>
                     <tr>
-                        <th width="30%">Data/Período</th>
+                        <th width="30%">Data/Período:</th>
                         <td><?= retornaPeriodoFormacao($idVigencia) ?></td>
                     </tr>
                     <?php
@@ -255,11 +255,11 @@ $tel = substr($tel, 0, -3);
                     <?php }?>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
-                        <td><?= $dotacao ?></td>
+                        <td><?= $dotacao == NULl ? "Não cadastrado" : $dotacao?></td>
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>
-                        <td><?= $pedido['observacao'] ?></td>
+                        <td><?= $pedido['observacao'] == NULL ? "Não Cadastrado" : $pedido['observacao'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Último status:</th>

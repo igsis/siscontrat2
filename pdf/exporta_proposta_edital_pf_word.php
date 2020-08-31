@@ -36,14 +36,6 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
 }
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
-
-$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
-$queryLocal = mysqli_query($con, $sqlLocal);
-$local = '';
-while ($locais = mysqli_fetch_array($queryLocal)) {
-    $local = $local . '; ' . $locais['local'];
-}
-$local = substr($local, 1);
 $idEvento = $pedido['origem_id'];
 
 $idPessoa = $pessoa['id'];
@@ -150,7 +142,7 @@ echo
     "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
     "<p><strong>Data / Período:</strong> " . $periodo . " - conforme cronograma</p>" .
     "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
-    "<p><strong>Local:</strong> " . $local . "</p>" .
+    "<p><strong>Local(ais):</strong> " . listaLocais($evento['id'], '1') . "</p>" .
     "<p><strong>Valor:</strong> " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . ")</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
     "<p><strong>Justificativa:</strong> " . $pedido['justificativa'] . "</p>" .

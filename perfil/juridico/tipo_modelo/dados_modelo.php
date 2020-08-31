@@ -26,10 +26,10 @@ $update = "UPDATE pedidos SET status_pedido_id = 15 WHERE id = $idPedido";
 if (mysqli_query($con, $update)) {
     $testaEtapa = $con->query("SELECT pedido_id, data_juridico FROM pedido_etapas WHERE pedido_id = $idPedido")->fetch_assoc();
     $data = dataHoraNow();
-    if ($testaEtapa != NULL && $testaEtapa['data_juridico'] == "0000-00-00 00:00:00" || $testaEtapa['data_juridico'] != "0000-00-00 00:00:00") {
-        $updateEtapa = $con->query("UPDATE pedido_etapas SET data_juridico = '$data' WHERE pedido_id = '$idPedido'");
-    } else if ($testaEtapa == NULL) {
+    if ($testaEtapa == NULL) {
         $insereEtapa = $con->query("INSERT INTO pedido_etapas (pedido_id, data_juridico) VALUES ('$idPedido', '$data')");
+    } else if ($testaEtapa != NULL && $testaEtapa['data_juridico'] == "0000-00-00 00:00:00" || $testaEtapa['data_juridico'] != "0000-00-00 00:00:00") {
+        $updateEtapa = $con->query("UPDATE pedido_etapas SET data_juridico = '$data' WHERE pedido_id = '$idPedido'");
     }
 }
 
