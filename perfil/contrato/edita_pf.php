@@ -531,13 +531,13 @@ $pedidos = mysqli_fetch_array($queryPedidos);
                                     <label for="agencia">Agência: *</label>
                                     <input type="text" name="agencia" class="form-control"
                                            placeholder="Digite a Agência" maxlength="12" required
-                                           value="<?= $banco['agencia'] ?>">
+                                           value="<?= $banco['agencia'] ?? NULL ?>">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="conta">Conta: *</label>
                                     <input type="text" name="conta" class="form-control"
                                            placeholder="Digite a Conta" maxlength="12" required
-                                           value="<?= $banco['conta'] ?>">
+                                           value="<?= $banco['conta'] ?? NULL ?>">
                                 </div>
                             </div>
                             <br>

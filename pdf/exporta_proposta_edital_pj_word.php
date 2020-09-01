@@ -85,7 +85,7 @@ echo
     "<p><strong>CNPJ:</strong> " . $pessoa['cnpj'] . "</p>" .
     "<p><strong>CCM:</strong> " . $ccm . "</p>" .
     "<p><strong>Endereço:</strong> " . $endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " . $endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf'] . "</p>" .
-    "<p><strong>Telefone:</strong> " . $tel . "</p>" .
+    "<p><strong>Telefone(s):</strong> " . $tel . "</p>" .
     "<p><strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
     "<p>&nbsp;</p>" .
     "<p><strong>Representante:</strong> " . $representante['nome'] . "</p>" .
@@ -99,7 +99,7 @@ echo
     "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
     "<p><strong>Data / Período:</strong> " . $periodo . " - conforme cronograma</p>" .
     "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
-    "<p><strong>Local:</strong> " . listaLocais($evento['id'], '1') . "</p>" .
+    "<p><strong>Local(ais):</strong> " . listaLocais($evento['id'], '1') . "</p>" .
     "<p><strong>Valor:</strong> " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . ")</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
     "<p><strong>Justificativa:</strong> " . $pedido['justificativa'] . "</p>" .

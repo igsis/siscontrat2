@@ -131,7 +131,7 @@ echo
     "<p><strong>CCM:</strong> " . $ccm . "</p>" .
     "<p><strong>DRT:</strong> " . $drt . "</p>" .
     "<p><strong>Endereço:</strong> " . $endereco . "</p>" .
-    "<p><strong>Telefone:</strong> " . $tel . "</p>" .
+    "<p><strong>Telefone(s):</strong> " . $tel . "</p>" .
     "<p><strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
     "<p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> " . $nit. "</p>" .
     "<p>&nbsp;</p>" .

@@ -146,7 +146,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(12, $l, 'Nome:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
+$pdf->MultiCell(120, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
