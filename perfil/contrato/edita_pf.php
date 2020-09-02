@@ -545,7 +545,7 @@ $pedidos = mysqli_fetch_array($queryPedidos);
                             <br>
                             <input type="hidden" name="idPf" value="<?= $idPf ?>">
                             <input type="hidden" name="idPedido" value="<?= $pedidos['id'] ?>">
-                            <button type="submit" name="edita" class="btn btn-info pull-left" style="margin:  0 5px;">Salvar</button>
+                            <button type="submit" name="edita" class="btn btn-info pull-right" style="margin:  0 5px;">Salvar</button>
                         </form>
                     </div>
                 </div>
@@ -566,23 +566,23 @@ $pedidos = mysqli_fetch_array($queryPedidos);
                 <div class="box box-default">
                     <div class="box-body">
                         <div class="row">
-                            <div class="form-group col-md-3 pull-right">
-                                <form method="POST" action="?perfil=contrato&p=demais_anexos_pf"
-                                      role="form">
-                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id'] ?>">
-                                    <button type="submit" name="idPf" value="<?= $pf['id'] ?>"
-                                            class="btn btn-info btn-block">Demais Anexos
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-6">
                                 <form method="POST" action="?perfil=contrato&p=resumo" role="form">
                                     <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
                                     <input type="hidden" name="idPf" value="<?= $pf['id'] ?>">
                                     <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
                                     <?= $editaOnly ?? NULL ?>
-                                    <button type="submit" name="Voltar" class="btn btn-right pull-right">
+                                    <button type="submit" name="Voltar" class="btn btn-default btn-block">
                                         Voltar
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="form-group col-md-6 pull-right">
+                                <form method="POST" action="?perfil=contrato&p=demais_anexos_pf"
+                                      role="form">
+                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id'] ?>">
+                                    <button type="submit" name="idPf" value="<?= $pf['id'] ?>"
+                                            class="btn btn-info btn-block">Demais Anexos
                                     </button>
                                 </form>
                             </div>

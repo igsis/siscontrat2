@@ -484,7 +484,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                         </tr>
                         <tr>
                             <th width="30%">Valor:</th>
-                            <td><?= "R$" . $evento['valor_total'] ?></td>
+                            <td><?= "R$" . dinheiroParaBr($evento['valor_total']) ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Forma de Pagamento:</th>
