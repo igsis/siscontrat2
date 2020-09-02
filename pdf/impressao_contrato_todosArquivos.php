@@ -32,7 +32,7 @@ if ($zip->open($nome_arquivo, ZipArchive::CREATE) === true) {
 
     if ($idEvento) {
         // arquivos do evento
-        $sql = "SELECT list.documento 
+        $sql = "SELECT arq.arquivo 
                 FROM lista_documentos as list
                 INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
                 WHERE arq.origem_id = " . $pedido['id'] . " AND list.tipo_documento_id = 3

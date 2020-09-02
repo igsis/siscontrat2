@@ -548,7 +548,7 @@ $disableDown = "";
                                 </form> -->
                             </div>
                         <?php endif;
-                        $numArq = $con->query("SELECT list.documento 
+                        $numArq = $con->query("SELECT arq.arquivo  
                                                          FROM lista_documentos as list
                                                          INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
                                                          WHERE arq.origem_id = $idPedido AND list.tipo_documento_id = 3
@@ -568,13 +568,13 @@ $disableDown = "";
                                 <button type="submit" <?= $disableDown ?> class="btn btn-primary btn-block"
                                         style="width: 95%;">Baixar todos os arquivos
                                 </button>
-                                <span style="color: red; text-align: center; display: <?= $display ?>"><strong>Pedido não possuí anexos</strong></span>
+                                <span style="font-size: 16px; ;color: red; text-align: center; display: <?= $display ?>"><strong>Evento/Pedido não possuí anexos</strong></span>
                             </form>
                         </div>
                         <!-- <div class="col-md-3">
                             <form action="?perfil=contrato&p=anexos_pedido" method="post" role="form">
-                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                <input type="hidden" name="idEvento" value="<?= $idEvento ?>">
+                                <input type="hidden" name="idPedido" value="<?//= $idPedido ?>">
+                                <input type="hidden" name="idEvento" value="<?//= $idEvento ?>">
                                 <button type="submit" class="btn btn-primary pull-left btn-block" style="width: 95%">
                                     Abrir anexos do Pedido
                                 </button>
