@@ -4,7 +4,9 @@ $con = bancoMysqli();
 if (isset($_POST['cadastra']) || (isset($_POST['edita']))) {
     $modelo = trim(addslashes($_POST['modelo']));
     $texto = trim(addslashes($_POST['texto']));
+}
 
+if(isset($_POST['cadastra'])){
     $sql = "INSERT INTO penalidades (modelo, texto) VALUES ('$modelo', '$texto')";
 
     if (mysqli_query($con, $sql)) {

@@ -69,16 +69,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']
 
 $idPenal = $_GET['penal'];
 
-$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
-$queryLocal = mysqli_query($con, $sqlLocal);
-$local = '';
-while ($locais = mysqli_fetch_array($queryLocal)) {
-    $local = $local . '; ' . $locais['local'];
-}
-$local = substr($local, 1);
-
 $ano = date('Y');
-
 
 $Observacao = "1) A proponente tem ciência da obrigatoriedade de fazer menção dos créditos PREFEITURA DA CIDADE DE SÃO PAULO, SECRETARIA MUNICIPAL DE CULTURA, em toda divulgação, escrita ou falada, realizada sobre o espetáculo programado, sob pena de cancelamento sumário do evento.
 2) Nos casos de comercialização de qualquer produto artístico-cultural, a proponente assume inteira responsabilidade fiscal e tributária quanto a sua comercialização, isentando a Municipalidade de quaisquer ônus ou encargos, nos termos da O.I. nº 01/2002 – SMC-G.
@@ -175,7 +166,7 @@ if ($evento['tipo_evento_id'] == 1) {
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(12, $l, 'Nome:', 0, 0, 'L');
         $pdf->SetFont('Arial', '', 10);
-        $pdf->MultiCell(40, $l, utf8_decode($dadosLider['nome']), 0, 'L', 0);
+        $pdf->MultiCell(120, $l, utf8_decode($dadosLider['nome']), 0, 'L', 0);
 
         $pdf->SetX($x);
         $pdf->SetFont('Arial', 'B', 10);
@@ -253,9 +244,9 @@ $pdf->MultiCell(50, $l, utf8_decode($cargaHoraria), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11, $l, 'Local:', '0', '0', 'L');
+$pdf->Cell(18, $l, 'Local(ais):', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(165, $l, utf8_decode($local), 0, 'L', 0);
+$pdf->MultiCell(165, $l, utf8_decode(listaLocais($evento['id'],'1')), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);

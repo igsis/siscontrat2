@@ -121,13 +121,13 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                     </table>
                     <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
                     <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
-                    <button type="submit" name="detalhe" class="btn btn-info pull-right">Detalhe Formação
+                    <button type="submit" name="detalhe" class="btn btn-info pull-left">Detalhe Formação
                     </button>
         </form>
         <form action="?perfil=juridico&p=filtrar_formacao&sp=modelo_final_formacao" method="post">
             <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
             <input type="hidden" name="dotacao" value="<?= $dotacao ?>">
-            <button type="submit" name="enviar" class="btn btn-info pull-left">Gravar
+            <button type="submit" name="enviar" class="btn btn-info pull-right">Gravar
             </button>
         </form>
 </div>

@@ -8,6 +8,7 @@ $con = bancoMysqli();
 
 
 //CONSULTA
+$idUser = $_POST['idUser'];
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
@@ -31,14 +32,8 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
         }
     }
 }
+
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
-$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
-$queryLocal = mysqli_query($con, $sqlLocal);
-$local = '';
-while ($locais = mysqli_fetch_array($queryLocal)) {
-    $local = $local . '; ' . $locais['local'];
-}
-$local = substr($local, 1);
 
 if($pessoa['nacionalidade_id'] != NULL){
     $nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id'])['nacionalidade'];
@@ -107,7 +102,7 @@ if($pessoa['passaporte'] != NULL){
               <p>CPF: " . $pessoa['cpf'] . "</p>";
 }
 
-alteraStatusPedidoContratos($idPedido, "proposta");
+alteraStatusPedidoContratos($idPedido, "proposta", $_GET['penal'], $idUser);
 
 header("Content-type: application/vnd.ms-word");
 header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$idPedido.doc");
@@ -142,7 +137,7 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
     de Cultura e Centros Culturais da Secretaria Municipal de Cultura.</p>
 <p><strong>Data / Período:</strong> <?= $periodo ?> - conforme cronograma</p>
 <p><strong>Carga Horária:</strong> <?= $cargaHoraria ?></p>
-<p><strong>Local:</strong> <?= $local ?></p>
+<p><strong>Local(ais):</strong> <?= listaLocais($evento['id'], '1') ?></p>
 <p><strong>Valor:</strong> <?= $pedido['valor_total'] ?> (<?= valorPorExtenso($pedido['valor_total']) ?>)</p>
 <p><strong>Forma de Pagamento:</strong> <?= $pedido['forma_pagamento'] ?></p>
 <p><strong>Justificativa:</strong> <?= $pedido['justificativa'] ?></p>

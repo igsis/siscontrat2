@@ -798,7 +798,7 @@ function qtdApresentacoesPorExtenso($valor = 0)
 }
 
 //atualiza o status do pedido baseado em qual pedido foi feito e faz a insert/update na tabela de contratos
-function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = NULL, $idUsuario = NULL)
+function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = "", $idUsuario = "")
 {
     $con = bancoMysqli();
     if ($tipo == "reserva") {
@@ -808,11 +808,10 @@ function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = NULL, $idUsuar
             $data = dataHoraNow();
 
             //insert/update em pedido_etapas
-            if ($testaEtapa != NULL && $testaEtapa['data_reserva'] == "0000-00-00 00:00:00" || $testaEtapa['data_reserva'] != "0000-00-00 00:00:00") {
-                $updateEtapa = $con->query("UPDATE pedido_etapas SET data_reserva = '$data' WHERE pedido_id = '$idPedido'");
-            }
             if ($testaEtapa == NULL) {
                 $insereEtapa = $con->query("INSERT INTO pedido_etapas (pedido_id, data_reserva) VALUES ('$idPedido', '$data')");
+            } else if ($testaEtapa != NULL && $testaEtapa['data_reserva'] == "0000-00-00 00:00:00" || $testaEtapa['data_reserva'] != "0000-00-00 00:00:00") {
+                $updateEtapa = $con->query("UPDATE pedido_etapas SET data_reserva = '$data' WHERE pedido_id = '$idPedido'");
             }
         }
 
@@ -833,11 +832,10 @@ function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = NULL, $idUsuar
             }
 
             //insert/update em pedido_etapas
-            if ($testaEtapa != NULL && $testaEtapa['data_proposta'] == "0000-00-00 00:00:00" || $testaEtapa['data_proposta'] != "0000-00-00 00:00:00") {
-                $updateEtapa = $con->query("UPDATE pedido_etapas SET data_proposta = '$data' WHERE pedido_id = '$idPedido'");
-            }
             if ($testaEtapa == NULL) {
                 $insereEtapa = $con->query("INSERT INTO pedido_etapas (pedido_id, data_proposta) VALUES ('$idPedido', '$data')");
+            } else if ($testaEtapa != NULL && $testaEtapa['data_proposta'] == "0000-00-00 00:00:00" || $testaEtapa['data_proposta'] != "0000-00-00 00:00:00") {
+                $updateEtapa = $con->query("UPDATE pedido_etapas SET data_proposta = '$data' WHERE pedido_id = '$idPedido'");
             }
         };
     }
@@ -1649,8 +1647,9 @@ function numeroChamados($idEvento, $litar = false)
     }
 }
 
-function retornaChamadosTD($id){
-    if (numeroChamados($id) > 0){
+function retornaChamadosTD($id)
+{
+    if (numeroChamados($id) > 0) {
         $quant = numeroChamados($id);
         return "<td class='text-center'>
                    <button class='btn bg-orange' type='button' 
@@ -1658,7 +1657,7 @@ function retornaChamadosTD($id){
                     {$quant}
                   </button>
                 </td>";
-    }else{
+    } else {
         return "<td>Sem chamados</td>";
     }
 }

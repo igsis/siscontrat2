@@ -35,11 +35,11 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Gênero:</th>
-                                            <td><?= $filme['genero'] ?></td>
+                                            <td><?= $filme['genero'] == NULL ? "Não cadastrado" : $filme['genero']?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Sinopse:</th>
-                                            <td><?= $filme['sinopse'] ?></td>
+                                            <td><?= $filme['sinopse'] == NULL ? "Não cadastrado" : $filme['sinopse'] ?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Duração:</th>
@@ -167,7 +167,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         <?php } ?>
                                         <tr>
                                             <th width="30%">Observação:</th>
-                                            <td><?= $produtor['observacao'] ?></td>
+                                            <td><?= $produtor['observacao'] == NULL ? "Não cadastrado" : $produtor['observacao']?></td>
                                         </tr>
                                     </table>
                                 </div>

@@ -2,12 +2,12 @@
 $con = bancoMysqli();
 
 $sqlEventos = "SELECT e.id FROM eventos AS e
-               INNER JOIN producao_eventos AS pe ON e.id = pe.evento_id WHERE visualizado = 0 GROUP BY e.id;";
+               INNER JOIN producao_eventos AS pe ON e.id = pe.evento_id WHERE visualizado = 0 AND e.publicado = 1 GROUP BY e.id";
 $queryEventos = mysqli_query($con, $sqlEventos);
 $numEventos = mysqli_num_rows($queryEventos);
 
 $sqlAgendao = "SELECT a.id FROM agendoes AS a
-INNER JOIN producao_agendoes AS pa ON a.id = pa.agendao_id WHERE pa.visualizado = 0 GROUP BY a.id;";
+INNER JOIN producao_agendoes AS pa ON a.id = pa.agendao_id WHERE pa.visualizado = 0 AND a.publicado = 1 GROUP BY a.id";
 $queryAgendao = mysqli_query($con, $sqlAgendao);
 $numAgendao= mysqli_num_rows($queryAgendao);
 

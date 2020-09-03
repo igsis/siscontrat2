@@ -218,18 +218,20 @@ include "includes/menu_interno.php";
                                             <?php
                                             $evento = recuperaDados('eventos', 'id', $idEvento);
                                             if ($evento['tipo_evento_id'] == 1) {
+                                                $IN_adicional = "";
                                                 if ($musica || $oficina || $artesCenicas) {
                                                     $sqlAdicional = "AND (" . implode(" OR ", $whereAdicional) . ")";
                                                 } else
                                                     $sqlAdicional = "";
                                                 $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id IN (3,{$tipo}) and publicado = 1 $sqlAdicional";
                                             } else {
+                                                $IN_adicional = "lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1) AND";
                                                 $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
                                             }
                                             $query_arquivos = mysqli_query($con, $sql_arquivos);
                                             while ($arq = mysqli_fetch_array($query_arquivos)) {
                                                 $idDoc = $arq['id'];
-                                                $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = '$idDoc' AND origem_id = '$idPedido' AND publicado = 1";
+                                                $sqlExistentes = "SELECT * FROM arquivos WHERE $IN_adicional lista_documento_id = '$idDoc' AND origem_id = '$idPedido' AND publicado = 1";
                                                 $queryExistentes = mysqli_query($con, $sqlExistentes);
 
                                                 if (mysqli_num_rows($queryExistentes) == 0) {
@@ -265,7 +267,8 @@ include "includes/menu_interno.php";
                                         <br>
                                         <?php
                                         $num_lista = mysqli_num_rows($query_arquivos);
-                                        $num_arquivos = $con->query("SELECT * FROM arquivos WHERE lista_documento_id /*IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1)*/ AND origem_id = '$idPedido' AND publicado = 1")->num_rows;
+                                        //$IN_adicional funciona para impedir que o botão suma sem necessidade, algumas vezes causava conflito de não sumir o botão mesmo tendo sido upado todos os arquivos
+                                        $num_arquivos = $con->query("SELECT * FROM arquivos WHERE $IN_adicional origem_id = '$idPedido' AND publicado = 1")->num_rows;
                                         $num_total = $num_lista - $num_arquivos;
                                         if ($num_total != 0) {
                                             ?>

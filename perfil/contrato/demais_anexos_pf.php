@@ -90,7 +90,7 @@ $idPedido = $_POST['idPedido'];
                                 <div class="table-responsive list_info"><h4><strong>Update de arquivos somente em
                                             PDF!</strong></h4><br>
                                     <?php
-                                    //lista arquivos da pessoa juridica
+                                    //lista arquivos da pessoa fisica
                                     $sql = "SELECT * FROM lista_documentos as list
 			                        INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
                                     WHERE arq.origem_id = '$idPf' AND list.tipo_documento_id = '$tipoPessoa'
@@ -151,13 +151,13 @@ $idPedido = $_POST['idPedido'];
                                                             05MB.</h4>
                                                     </tr>
                                                     <?php
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (2, 3, 4, 25, 31, 51, 60, 62) AND tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                    //$sql_arquivos = "SELECT * FROM lista_documentos WHERE id NOT IN (2, 3, 4, 25, 31, 51, 60, 62) AND tipo_documento_id = '$tipoPessoa' and publicado = 1";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
                                                     $query_arquivos = mysqli_query($con, $sql_arquivos);
                                                     while ($arq = mysqli_fetch_array($query_arquivos)) {
                                                         $idDoc = $arq['id'];
                                                         $sqlExistentes = "SELECT * FROM arquivos WHERE lista_documento_id = '$idDoc' AND origem_id = '$idPf' AND publicado = 1";
                                                         $queryExistentes = mysqli_query($con, $sqlExistentes);
-
                                                         if (mysqli_num_rows($queryExistentes) == 0) {
 
                                                             ?>
@@ -180,12 +180,17 @@ $idPedido = $_POST['idPedido'];
                                                 if (isset($_POST['volta'])) {
                                                     echo "<input type='hidden' name='volta' value='" . $_POST['volta'] . "' />";
                                                 }
-                                                ?>
-                                                <input type='hidden' name='idPf' value='<?= $idPf ?>'/>
-                                                <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                                                <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa; ?>"/>
-                                                <input type="submit" class="btn btn-primary btn-lg btn-block"
-                                                       name="enviar" value='Enviar'>
+                                                $num_lista = mysqli_num_rows($query_arquivos);
+                                                $num_arquivos = $con->query("SELECT * FROM arquivos WHERE lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1) AND origem_id = '$idPf' AND publicado = 1")->num_rows;
+                                                $num_total = $num_lista - $num_arquivos;
+                                                if ($num_total != 0) { ?>
+                                                    <input type='hidden' name='idPf' value='<?= $idPf ?>'/>
+                                                    <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                                                    <input type="hidden" name="tipoPessoa" value="<?= $tipoPessoa; ?>"/>
+                                                    <input type="submit" class="btn btn-primary btn-lg btn-block"
+                                                           name="enviar" value='Enviar'>
+
+                                                <?php } ?>
                                             </form>
                                         </div>
                                     </div>

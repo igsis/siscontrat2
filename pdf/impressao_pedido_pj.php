@@ -65,16 +65,6 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 
 $tel = substr($tel, 0, -3);
 
-$sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
-$local = "";
-$queryLocal = mysqli_query($con, $sqlLocal);
-
-while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-    $local = $local . $linhaLocal['local'] . ' | ';
-}
-
-$local = substr($local, 0, -3);
-
 $duracao = "Não se aplica";
 if ($evento['tipo_evento_id'] == 2) {
     $duracao = 0;
@@ -140,14 +130,14 @@ if ($pedido['numero_processo_mae'] != NULL) {
         "<p>&nbsp;</p>" .
         "<p><strong>Razão Social:</strong> " . $pessoa['razao_social'] . " <br />" .
         "<strong>CNPJ:</strong> " . $pessoa['cnpj'] . "<br />" .
-        "<strong>Telefone:</strong> " . $tel . "<br />" .
+        "<strong>Telefone(s):</strong> " . $tel . "<br />" .
         "<strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
         "<p><strong>Data / Período:</strong> " . retornaPeriodoNovo($idEvento, 'ocorrencias') . $trechoApresentacoes . "</p>" .
         "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
         "<p><strong>Duração: </strong>" . $duracao . "</p>" .
-        "<p align='justify'><strong>Local:</strong> " . $local . "</p>" .
+        "<p align='justify'><strong>Local(ais):</strong> " . listaLocais($idEvento, '1') . "</p>" .
         "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . " ( " . valorPorExtenso($pedido['valor_total']) . " )" . "</p>" .
         "<p align='justify'><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
         "<p align='justify'><strong>Justificativa: </strong> " . $pedido['justificativa'] . "</p>" .

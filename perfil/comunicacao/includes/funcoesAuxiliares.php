@@ -29,7 +29,7 @@ function gravaStatus($status, $tabela, $idEvento)
     return $Valida;
 }
 
-function retornaEventosComunicacao($idUser, $tabela = '', $filtro = '')
+function retornaEventosComunicacao($idUser, $tabela = '')
 {
     $con = bancoMysqli();
 
@@ -87,76 +87,76 @@ function aplicarFiltro($idEvento, $filtro, $tabela)
                 switch ($key) {
                     case 'editado':
                         if ($value) {
-                            if (!in_array("1", $array)) {
+                            if (in_array("1", $array)) {
                                 $valid = true;
                             } else {
                                 $valid = false;
                             }
                         } else {
                             if (in_array("1", $array)) {
-                                $valid = true;
-                            } else {
                                 $valid = false;
+                            } else {
+                                $valid = true;
                             }
                         }
                         break;
                     case 'revisado':
                         if ($value) {
                             if (!in_array("2", $array)) {
-                                $valid = true;
-                            } else {
                                 $valid = false;
+                            } else {
+                                $valid = true;
                             }
                         } else {
                             if (in_array("2", $array)) {
-                                $valid = true;
-                            } else {
                                 $valid = false;
+                            } else {
+                                $valid = true;
                             }
                         }
                         break;
                     case 'site':
                         if ($value) {
                             if (!in_array("3", $array)) {
-                                $valid = true;
-                            } else {
                                 $valid = false;
+                            } else {
+                                $valid = true;
                             }
                         } else {
                             if (in_array("3", $array)) {
-                                $valid = true;
-                            } else {
                                 $valid = false;
+                            } else {
+                                $valid = true;
                             }
                         }
                         break;
                     case 'impresso':
                         if ($value) {
                             if (!in_array("4", $array)) {
-                                $valid = true;
-                            } else {
                                 $valid = false;
+                            } else {
+                                $valid = true;
                             }
                         } else {
                             if (in_array("4", $array)) {
-                                $valid = true;
-                            } else {
                                 $valid = false;
+                            } else {
+                                $valid = true;
                             }
                         }
                         break;
                     case 'foto':
                         if ($value) {
                             if (!in_array("5", $array)) {
-                                $valid = true;
-                            } else {
                                 $valid = false;
+                            } else {
+                                $valid = true;
                             }
                         } else {
                             if (in_array("5", $array)) {
-                                $valid = true;
-                            } else {
                                 $valid = false;
+                            } else {
+                                $valid = true;
                             }
                         }
                         break;
@@ -168,14 +168,16 @@ function aplicarFiltro($idEvento, $filtro, $tabela)
                 }
             }
 
-            if ($resu){
-                return false;
-            }else{
+            if ($resu) {
                 return true;
+            } else {
+                return false;
             }
 
         } elseif (in_array(0, $filtro)) {
             return true;
+        } else {
+            return false;
         }
     } elseif ($filtro == null) {
         return true;

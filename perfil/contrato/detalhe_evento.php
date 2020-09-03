@@ -260,7 +260,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
 
                             <tr>
                                 <th width="30%">Gênero:</th>
-                                <td><?= $filmes['genero'] ?></td>
+                                <td><?= $filmes['genero'] == NULL ? "Não Cadastrado" :  $filmes['genero']?></td>
                             </tr>
 
                             <th width="30%">Linguagem / Expressão artística:</th>
@@ -284,7 +284,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             </tr>
 
                             <tr>
-                                <th width="30%">Duração:</th>
+                                <th width="30%">Duração(min):</th>
                                 <td><?= $filmes['duracao'] ?> </td>
                             </tr>
 
@@ -415,7 +415,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             </tr>
                             <tr>
                                 <th width="30% ">Observação:</th>
-                                <td><?= $ocorrencia['observacao'] ? "" : "Não cadastrado" ?></td>
+                                <td><?= $ocorrencia['observacao'] == NULL ? "Não cadastrado" : $ocorrencia['observacao'] ?></td>
                             </tr>
 
                             <tr>
@@ -441,12 +441,11 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
 
                     if ($linhas > 0) {
                         echo "
-                                    <table class='table table-striped'>
-                                        <thead>
+                                <table class='table table-striped'>
+                                    <thead>
                                             <tr class='bg-info text-bold'>
                                                 <td>Nome do documento</td>
-                                                <td>Data de envio</td>
-                                                <td width='15%'></td>
+                                                <td width='10%'>Data de envio</td>
                                             </tr>
                                         </thead>
                                         <tbody>";
@@ -485,7 +484,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                         </tr>
                         <tr>
                             <th width="30%">Valor:</th>
-                            <td><?= "R$" . $evento['valor_total'] ?></td>
+                            <td><?= "R$" . dinheiroParaBr($evento['valor_total']) ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Forma de Pagamento:</th>
@@ -521,7 +520,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                         </tr>
                         <tr>
                             <th width="30%">Observação:</th>
-                            <td><?= $evento['observacao'] ? "" : "Não cadastrado" ?></td>
+                            <td><?= $evento['observacao'] == NULL ? "Não cadastrado" : $evento['observacao'] ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Último status do Pedido:</th>

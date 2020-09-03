@@ -30,23 +30,13 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 $sqlTestaFilme = "SELECT filme_id FROM filme_eventos WHERE evento_id = $idEvento";
 $queryFilme = mysqli_query($con, $sqlTestaFilme);
 $row = mysqli_num_rows($queryFilme);
-if($row != 0){
+if ($row != 0) {
     $testaFilme = mysqli_fetch_array($queryFilme);
     $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
     $duracao = $filme['duracao'] . " Hora(s).";
-}else{
+} else {
     $duracao = "Não se aplica.";
 }
-
-$sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
-$local = "";
-$queryLocal = mysqli_query($con, $sqlLocal);
-
-while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-    $local = $local . $linhaLocal['local'] . ' | ';
-}
-
-$local = substr($local, 0, -3);
 
 alteraStatusPedidoContratos($idPedido, "reserva");
 ?>
@@ -77,25 +67,25 @@ alteraStatusPedidoContratos($idPedido, "reserva");
 <div align="center">
     <?php
     $conteudo =
-    "<p>&nbsp;</p>".
-    "<p><strong>INTERESSADO:</strong> ". $proponente ."  </span></p>".
-    "<p><strong>ASSUNTO:</strong> ". $objeto ."  </p>".
-    "<p>&nbsp;</p>".
-    "<p><strong>SMC/CAF/SCO</strong></p>".
-    "<p><strong>Senhor Supervisor</strong></p>".
-    "<p>&nbsp;</p>".
-    "<p><b>Objeto:</b>" . $objeto . "</p>".
-    "<p><b>Data/período:</b>" . retornaPeriodoNovo($idEvento, 'ocorrencias'). "</p>".
-    "<p><strong>Duração: </strong>" . $duracao  ."</p>".
-    "<p><b>Local:</b> " . $local . "</p>".
-    "<p><b>Valor:</b> R$ " . dinheiroParaBr($pedido['valor_total']) ." (".valorPorExtenso($pedido['valor_total']). ")</p>".
-    "<p>&nbsp;</p>".
-    "<p>Diante do exposto, autorizo a reserva de recursos proveniente da nota de reserva inclusa no processo " . $pedido['numero_processo_mae'] ." - (Pessoa Física) para a presente contratação.</p>".
-    "<p>&nbsp;</p>".
-    "<p>Após, enviar para SMC/AJ para prosseguimento.</p>".
-    "<p>&nbsp;</p>".
-    "<p>Chefe de Gabinete</p>".  
-    "<p>&nbsp;</p>"
+        "<p>&nbsp;</p>" .
+        "<p><strong>INTERESSADO:</strong> " . $proponente . "  </span></p>" .
+        "<p><strong>ASSUNTO:</strong> " . $objeto . "  </p>" .
+        "<p>&nbsp;</p>" .
+        "<p><strong>SMC/CAF/SCO</strong></p>" .
+        "<p><strong>Senhor Supervisor</strong></p>" .
+        "<p>&nbsp;</p>" .
+        "<p><b>Objeto: </b>" . $objeto . "</p>" .
+        "<p><b>Data/período: </b>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</p>" .
+        "<p><strong>Duração: </strong>" . $duracao . "</p>" .
+        "<p><b>Local(ais):</b> " . listaLocais($evento['id'], '1') . "</p>" .
+        "<p><b>Valor:</b> R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . ")</p>" .
+        "<p>&nbsp;</p>" .
+        "<p>Diante do exposto, autorizo a reserva de recursos proveniente da nota de reserva inclusa no processo " . $pedido['numero_processo_mae'] . " - (Pessoa Física) para a presente contratação.</p>" .
+        "<p>&nbsp;</p>" .
+        "<p>Após, enviar para SMC/AJ para prosseguimento.</p>" .
+        "<p>&nbsp;</p>" .
+        "<p>Chefe de Gabinete</p>" .
+        "<p>&nbsp;</p>"
     ?>
 
     <div id="texto" class="texto"><?php echo $conteudo; ?></div>

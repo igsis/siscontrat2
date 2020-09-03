@@ -89,14 +89,6 @@ $tel = substr($tel, 0, -3);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 
-$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1";
-$queryLocal = mysqli_query($con, $sqlLocal);
-$local = '';
-while ($locais = mysqli_fetch_array($queryLocal)) {
-    $local = $local . '; ' . $locais['local'];
-}
-$local = substr($local, 1);
-
 $ano = date('Y');
 
 if ($pessoa["data_nascimento"] == "0000-00-00") {
@@ -167,7 +159,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(12, $l, 'Nome:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
+$pdf->MultiCell(120, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -269,9 +261,9 @@ $pdf->MultiCell(50, $l, utf8_decode($cargaHoraria), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11, $l, 'Local:', '0', '0', 'L');
+$pdf->Cell(18, $l, 'Local(ais):', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(165, $l, utf8_decode($local), 0, 'L', 0);
+$pdf->MultiCell(165, $l, utf8_decode(listaLocais($evento['id'],'1')), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
