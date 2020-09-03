@@ -30,9 +30,18 @@ if (isset($_POST['_filtros'])) {
         }
     }
 
-    $query = retornaEventosComunicacao($idUser, 'eventos', $filtro);
+    $query = retornaEventosComunicacao($idUser, 'eventos');
 //    $query2 = retornaEventosComunicacao($idUser, 'agendoes', $filtro);
 } else {
+    $sqlInstiuicao = "SELECT ins.id FROM instituicoes ins 
+                            LEFT JOIN locais l ON ins.id = l.instituicao_id
+                            LEFT JOIN local_usuarios lous ON l.id = lous.local_id
+                            LEFT JOIN usuarios us ON lous.usuario_id = us.id
+                       WHERE us.id = {$_SESSION['usuario_id_s']}";
+
+    $queryIns = mysqli_query($con,$sqlInstiuicao);
+    $resultado = mysqli_fetch_all($queryIns,MYSQLI_ASSOC)[0];
+
     $sqlEventos = "SELECT   eve.id AS idEvento, 
                           eve.nome_evento AS nome_evento, 
                           es.status AS status, 
@@ -42,9 +51,8 @@ if (isset($_POST['_filtros'])) {
                 LEFT JOIN evento_status es on eve.evento_status_id = es.id
                 LEFT JOIN local_usuarios ls ON eve.usuario_id = ls.usuario_id
                 LEFT JOIN locais lo ON lo.id = ls.local_id
-                WHERE eve.publicado = 1 AND (eve.evento_status_id = 3 OR eve.evento_status_id = 4) ";
+                WHERE eve.publicado = 1 AND (eve.evento_status_id = 3 OR eve.evento_status_id = 4) AND lo.instituicao_id = {$resultado['id']}";
     $query = mysqli_query($con, $sqlEventos);
-//    $query2 = retornaEventosComunicacao($idUser, 'agendoes');
 }
 ?>
 
