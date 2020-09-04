@@ -58,8 +58,7 @@ $num_arrow = mysqli_num_rows($query);
                                     }
 
                                     //verifica se há ou não data de nascimento
-
-                                    if ($pf['data_nascimento'] == "0000-00-00") {
+                                    if ($pf['data_nascimento'] == "0000-00-00" || $pf['data_nascimento'] == "") {
                                         $dataNascimento = "Não cadastrado";
                                     } else {
                                         $dataNascimento = exibirDataBr($pf['data_nascimento']);

@@ -142,7 +142,9 @@ function semAcento($string)
 //retorna data d/m/y de mysql/date(a-m-d)
 function exibirDataBr($data)
 {
-    if ($data > '1970-01-02') {
+    //este if fazia com que certas datas muito antigas não fossem exibidas
+    //if ($data > '1970-01-02') {
+    if($data > '1900-01-01'){
         $timestamp = strtotime($data);
         return date('d/m/Y', $timestamp);
     } else {

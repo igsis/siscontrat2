@@ -58,7 +58,7 @@ $projeto = recuperaDados('projetos', 'id', $idProjeto);
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="projeto">Projeto *</label>
-                                    <input type="text" id="projeto" name="projeto" required class="form-control" value="<?= $projeto['projeto'] ?>">
+                                    <input type="text" id="projeto" name="projeto" required class="form-control" maxlength="15" value="<?= $projeto['projeto'] ?>">
                                 </div>
                             </div>
                         </div>
