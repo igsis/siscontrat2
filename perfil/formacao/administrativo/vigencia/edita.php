@@ -103,6 +103,7 @@ if (isset($_POST['edita'])) {
                                 <div class="form-group col-md-8">
                                     <label for="descricao">Descrição *</label>
                                     <input type="text" id="descricao" name="descricao" class="form-control" required
+                                           maxlength="45"
                                            value="<?= $vigencia['descricao'] ?>">
                                 </div>
                             </div>

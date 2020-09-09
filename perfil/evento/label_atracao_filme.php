@@ -37,11 +37,11 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Gênero:</th>
-                                            <td><?= $filme['genero'] == NULL ? "Não cadastrado" : $filme['genero']?></td>
+                                            <td><?= checaCampo($filme['genero']) ?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Sinopse:</th>
-                                            <td><?= $filme['sinopse'] == NULL ? "Não cadastrado" : $filme['sinopse']?></td>
+                                            <td><?= checaCampo($filme['sinopse']) ?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Duração:</th>
@@ -109,7 +109,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Links:</th>
-                                            <td><?= $atracao['links'] == null ? "Não cadastrado" : $atracao['links']?></td>
+                                            <td><?= checaCampo($atracao['links']) ?></td>
                                         </tr>
                                         <tr>
                                             <th class="text-center bg-primary" colspan="2">Dados do Produtor</th>
@@ -135,7 +135,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         <?php } ?>
                                         <tr>
                                             <th width="30%">Observação:</th>
-                                            <td><?= $produtor['observacao'] == null ? "Não cadastrado" : $produtor['observacao']?></td>
+                                            <td><?= checaCampo($produtor['observacao']) ?></td>
                                         </tr>
                                     </table>
                                 </div>

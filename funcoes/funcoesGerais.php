@@ -843,6 +843,15 @@ function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = "", $idUsuario
     }
 }
 
+//checa se o campo do parâmetro possuí algum dado, caso não possua, ele retorna "Não cadastrado"
+function checaCampo($campo){
+    if($campo == NULL || $campo == ''){
+        return "Não cadastrado";
+    }else{
+        return $campo;
+    }
+}
+
 function analisaArray($array)
 {
     //imprime o conteúdo de uma array

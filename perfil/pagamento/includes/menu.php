@@ -1,7 +1,13 @@
 <?php
 $pasta = "?perfil=pagamento&p=";
 $idUsuarioDoMenu = $_SESSION['usuario_id_s'];
-$nivelUsuario = recuperaDados('usuario_contratos', 'usuario_id', $idUsuarioDoMenu)['nivel_acesso'];
+$con = bancoMysqli();
+
+$consultaNivelUsuario = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = $idUsuarioDoMenu");
+$nivelUsuario = NULL;
+if($consultaNivelUsuario->num_rows > 0){
+    $nivelUsuario = mysqli_fetch_array($consultaNivelUsuario)['nivel_acesso'];
+}
 ?>
 <aside class="main-sidebar">
     <section class="sidebar">

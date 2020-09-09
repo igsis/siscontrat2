@@ -1,3 +1,6 @@
+<?php
+$con = bancoMysqli();
+?>
 <div class="content-wrapper">
     <section class="content">
         <h2 class="page-header">Cadastro de Dados para Contratação</h2>
@@ -7,7 +10,7 @@
             </div>
 
             <div class="box-body">
-                <form method="POST" action="?perfil=formacao&p=dados_contratacao&sp=listagem" role="form">
+                <form method="POST" action="?perfil=formacao&p=dados_contratacao&sp=editar" role="form">
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="ano">Ano: *</label>
@@ -16,7 +19,8 @@
 
                         <div class="form-group col-md-6">
                             <label for="chamado">Chamado: *</label>
-                            <input type="number" min="1" max="127" id="chamado" name="chamado" max="127" required class="form-control">
+                            <input type="number" min="1" max="127" id="chamado" name="chamado" max="127" required
+                                   class="form-control">
                         </div>
                     </div>
 
@@ -26,7 +30,7 @@
                             <select required value="" name="idPF" id="idPF" class="form-control">
                                 <option>Selecione a pessoa física...</option>
                                 <?php
-                                    geraOpcao('pessoa_fisicas');
+                                geraOpcao('pessoa_fisicas');
                                 ?>
                             </select>
                             <br>
@@ -35,13 +39,13 @@
 
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="classificacao">Classificação Indicativa *</label>
+                            <label for="classificacao">Classificação Indicativa: *</label>
                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                     data-target="#modal-default"><i class="fa fa-info"></i></button>
                             <select required class="form-control" name="classificacao" id="classificacao">
                                 <option value="">Selecione...</option>
                                 <?php
-                                    geraOpcao("classificacao_indicativas");
+                                geraOpcao("classificacao_indicativas");
                                 ?>
                             </select>
                         </div>
@@ -49,7 +53,7 @@
 
                     <div class="row">
                         <div class="form-group col-md-3">
-                            <label for="territorio">Território *</label>
+                            <label for="territorio">Território: *</label>
                             <select class="form-control" name="territorio" id="territorio" required>
                                 <option value="">Selecione o território...</option>
                                 <?php
@@ -59,7 +63,7 @@
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="coordenadoria">Coordenadoria *</label>
+                            <label for="coordenadoria">Coordenadoria: *</label>
                             <select class="form-control" name="coordenadoria" id="coordenadoria" required>
                                 <option value="">Selecione a coordenadoria...</option>
                                 <?php
@@ -69,7 +73,7 @@
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="subprefeitura">Subprefeitura *</label>
+                            <label for="subprefeitura">Subprefeitura: *</label>
                             <select class="form-control" name="subprefeitura" id="subprefeitura" required>
                                 <option value="">Selecione a subprefeitura...</option>
                                 <?php
@@ -79,7 +83,7 @@
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="programa">Programa *</label>
+                            <label for="programa">Programa: *</label>
                             <select class="form-control" name="programa" id="programa" required>
                                 <option value="">Selecione o programa...</option>
                                 <?php
@@ -91,7 +95,7 @@
 
                     <div class="row">
                         <div class="form-group col-md-3">
-                            <label for="linguagem">Linguagem *</label>
+                            <label for="linguagem">Linguagem: *</label>
                             <select class="form-control" name="linguagem" id="linguagem" required>
                                 <option value="">Selecione a linguagem...</option>
                                 <?php
@@ -101,7 +105,7 @@
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="projeto">Projeto *</label>
+                            <label for="projeto">Projeto: *</label>
                             <select class="form-control" name="projeto" id="projeto" required>
                                 <option value="">Selecione o projeto...</option>
                                 <?php
@@ -111,7 +115,7 @@
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="cargo">Cargo *</label>
+                            <label for="cargo">Cargo: *</label>
                             <select class="form-control" name="cargo" id="cargo" required>
                                 <option value="">Selecione o cargo...</option>
                                 <?php
@@ -121,12 +125,16 @@
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="vigencia">Vigência *</label>
+                            <label for="vigencia">Vigência: *</label>
                             <select class="form-control" name="vigencia" id="vigencia" required>
                                 <option value="">Selecione a vigência...</option>
                                 <?php
-                                geraOpcaoPublicado("formacao_vigencias");
-                                ?>
+                                $opcoesVigencia = $con->query("SELECT id, ano, descricao FROM formacao_vigencias WHERE publicado = 1");
+                                if ($opcoesVigencia->num_rows > 0) {
+                                    while ($opcoesArray = mysqli_fetch_array($opcoesVigencia)) { ?>
+                                        <option value="<?= $opcoesArray['id'] ?>"> <?= $opcoesArray['ano'] . " (" . $opcoesArray['descricao'] . ")" ?> </option>
+                                    <?php }
+                                } ?>
                             </select>
                         </div>
                     </div>
@@ -139,40 +147,40 @@
 
                     <div class="row">
                         <div class="form-group col-md-12">
-                        <label for="regiao">Região Preferencial: *</label>
-                        <select class="form-control" name="regiao" id="regiao" required>
-                            <option value="">Selecione uma região...</option>
+                            <label for="regiao">Região Preferencial: *</label>
+                            <select class="form-control" name="regiao" id="regiao" required>
+                                <option value="">Selecione uma região...</option>
                                 <?php
-                                    geraOpcao('regiao_preferencias')
+                                geraOpcao('regiao_preferencias')
                                 ?>
-                        </select>
+                            </select>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="observacao">Observação: </label>
-                            <textarea name="observacao" id="observacao" rows="3" class="form-control"> </textarea>
+                            <textarea name="observacao" id="observacao" rows="3" class="form-control"></textarea>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="fiscal">Fiscal *</label>
+                            <label for="fiscal">Fiscal: *</label>
                             <select name="fiscal" id="fiscal" class="form-control" required>
                                 <option value="">Selecione um fiscal...</option>
                                 <?php
-                                    geraOpcaoUsuario("usuarios", 1, "");
+                                geraOpcaoUsuario("usuarios", 1, "");
                                 ?>
                             </select>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="fiscal">Suplente </label>
+                            <label for="fiscal">Suplente: </label>
                             <select name="suplente" id="suplente" class="form-control">
                                 <option value="">Selecione um suplente...</option>
                                 <?php
-                                    geraOpcaoUsuario("usuarios", 1, "");
+                                geraOpcaoUsuario("usuarios", 1, "");
                                 ?>
                             </select>
                         </div>
@@ -191,9 +199,32 @@
     </section>
 </div>
 
-    <?php @include "../perfil/includes/modal_classificacao.php"?>
+<div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirmação de Exclusão</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir este cargo?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="?perfil=formacao&p=administrativo&sp=cargo&spp=index" method="post">
+                    <input type="hidden" name="idCargo" id="idCargo" value="">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                    </button>
+                    <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Excluir">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <script>
+<?php @include "../perfil/includes/modal_classificacao.php" ?>
+
+<script>
     let ano = $('#ano');
     let vigencia = $('#vigencia');
     let botao = $('#cadastra');
@@ -201,9 +232,9 @@
     isMsgAno.hide();
 
     function maior() {
-        let valorvigencia = $('#vigencia option:selected');
-        valorvigencia = parseInt(valorvigencia.text())
-        if (ano.val() > valorvigencia) {
+        let valorVigencia = $('#vigencia option:selected').text();
+        valorVigencia = parseInt(valorVigencia.substring(0,5))
+        if (ano.val() > valorVigencia) {
             botao.prop('disabled', true);
             isMsgAno.show();
         } else {
@@ -215,7 +246,7 @@
     ano.on('change', maior);
     vigencia.on('change', maior);
 
-    $(document).ready(maior)
+    $(document).ready(maior);
 </script>
 
 

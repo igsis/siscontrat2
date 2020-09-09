@@ -13,7 +13,7 @@ if ($pedido != null) {
         'Número de Parcelas' => $pedido['numero_parcelas'],
         'Data Kit Pagamento' => exibirDataBr($pedido['data_kit_pagamento']),
         'Forma de Pagamento' => $pedido['forma_pagamento'],
-        'Observação' => $pedido['observacao'] == null ? "Não cadastrado" : $pedido['observacao']
+        'Observação' => checaCampo($pedido['observacao'])
     ];
     $idPedido = $pedido['id'];
     $equipamentoValor = "SELECT local.local, valor.valor FROM valor_equipamentos valor
@@ -51,20 +51,14 @@ switch ($pedido['pessoa_tipo_id']) {
         $pfBancos = recuperaDados('pf_bancos', 'pessoa_fisica_id', $pedido['pessoa_fisica_id']);
         $banco = recuperaDados('bancos', 'id', $pfBancos['banco_id'])['banco'];
 
-        if($proponente['ccm'] != NULL || $proponente['ccm'] != "") {
-            $ccm = $proponente['ccm'];
-        }else {
-            $ccm = "Não cadastrado";
-        }
-
         $dadosProponente = [
             'Nome' => $proponente['nome'],
-            'Nome Artístico' => $proponente['nome_artistico'] == null ? "Não cadastrado" : $proponente['nome_artistico'],
-            'Nacionalidade' => $nacionalidade,
+            'Nome Artístico' => checaCampo($proponente['nome_artistico']),
+            'Nacionalidade' => checaCampo($nacionalidade),
             'RG' => $proponente['rg'],
             'Passaporte' => $proponente['passaporte'],
             'CPF' => $proponente['cpf'],
-            'CCM' => $ccm,
+            'CCM' => checaCampo($proponente['ccm']),
             'Data de Nascimento' => exibirDataBr($proponente['data_nascimento']),
             'E-mail' => $proponente['email'],
             'Telefone(s)' => $tel,
@@ -73,15 +67,15 @@ switch ($pedido['pessoa_tipo_id']) {
             'CEP' => $endereco['cep'],
             'Logradouro' => $endereco['logradouro'],
             'Número' => $endereco['numero'],
-            'Complemento' => $endereco['complemento'] == NULL ? "Não cadastrado" : $endereco['complemento'],
+            'Complemento' => checaCampo($endereco['complemento']),
             'Bairro' => $endereco['bairro'],
             'Cidade' => $endereco['cidade'],
             'Estado' => $endereco['uf']
         ];
         $dadosBancarios = [
-            'Banco' => $banco == null ?  "Não Cadastrado" : $banco,
-            'Agência' => $pfBancos['agencia'] == null ? "Não Cadastrado" : $pfBancos['agencia'],
-            'Conta' => $pfBancos['conta'] == null ? "Não Cadastrado" : $pfBancos['conta']
+            'Banco' => checaCampo($banco),
+            'Agência' => checaCampo($pfBancos['agencia']),
+            'Conta' => checaCampo($pfBancos['conta'])
         ];
         break;
 
@@ -96,16 +90,10 @@ switch ($pedido['pessoa_tipo_id']) {
         $representante1 = recuperaDados('representante_legais', 'id', $idRepresentante1);
         $representante2 = recuperaDados('representante_legais', 'id', $idRepresentante2);
 
-        if($proponente['ccm'] != NULL || $proponente['ccm'] != "") {
-            $ccm = $proponente['ccm'];
-        }else{
-            $ccm = "Não cadastrado";
-        }
-
         $dadosProponente = [
             'Razão Social' => $proponente['razao_social'],
             'CNPJ' => $proponente['cnpj'],
-            'CCM' => $ccm,
+            'CCM' => checaCampo($proponente['ccm']),
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
