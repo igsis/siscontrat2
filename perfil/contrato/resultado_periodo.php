@@ -74,13 +74,13 @@ if (isset($_POST['busca'])) {
                         <h3 class="box-title">Listagem</h3
                     </div>
                     <!-- /.box-header -->
-                    <div class="box-body">
+                    <div class="box-body" style="overflow: auto">
                         <table id="tblResultado" class="table table-bordered table-striped table-responsive">
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
                                 <th>Número de processo</th>
-<!--                                <th>Proponente</th>-->
+                                <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
                                 <th>Local(ais)</th>
@@ -129,7 +129,7 @@ if (isset($_POST['busca'])) {
                                             </form>
                                         </td>
                                         <td><?= $evento['numero_processo'] == NULL ? "Não cadastrado" : $evento['numero_processo'] ?></td>
-<!--                                        <td>--><?//= $pessoa ?><!--</td>-->
+                                        <td><?= $pessoa ?></td>
                                         <td><?= $evento['nome_evento'] ?></td>
                                         <td>R$ <?= dinheiroParaBr($evento['valor_total']) ?></td>
                                         <td>
@@ -157,11 +157,11 @@ if (isset($_POST['busca'])) {
                                         <td><?= $evento['status'] ?></td>
                                         <?= retornaChamadosTD($evento['id']) ?>
                                         <?php
-                                            if($evento['operador_id'] != NULL){
-                                                $operador = recuperaDados('usuarios', 'id', $evento['operador_id'])['nome_completo'];
-                                            }else{
-                                                $operador = "Não possui";
-                                            }
+                                        if($evento['operador_id'] != NULL){
+                                            $operador = recuperaDados('usuarios', 'id', $evento['operador_id'])['nome_completo'];
+                                        }else{
+                                            $operador = "Não possui";
+                                        }
                                         ?>
                                         <td><?= $operador ?></td>
                                     </tr>
@@ -175,7 +175,7 @@ if (isset($_POST['busca'])) {
                             <tr>
                                 <th>Protocolo</th>
                                 <th>Número de processo</th>
-<!--                                <th>Proponente</th>-->
+                                <th>Proponente</th>
                                 <th>Nome do evento</th>
                                 <th>Valor</th>
                                 <th>Local(ais)</th>
@@ -214,5 +214,9 @@ if (isset($_POST['busca'])) {
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
+    });
+
+    $(document).ready(function (){
+        $("body").addClass("sidebar-collapse");
     });
 </script>
