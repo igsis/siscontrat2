@@ -203,86 +203,91 @@ include "includes/menu_interno.php";
                                     ?>
                                 </div>
                             </div>
-                            <div id="envioArq" class="box box-success">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Enviar Arquivos</h3>
-                                </div>
-                                <div class="box-body">
-                                    <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho
-                                        máximo do arquivo deve ser 5MB.</h4>
+                            <?php
+                            if($linhas == 0): ?>
+                                <div id="envioArq" class="box box-success">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Enviar Arquivos</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho
+                                            máximo do arquivo deve ser 5MB.</h4>
 
-                                    <form method="POST" enctype="multipart/form-data"
-                                          action="?perfil=evento&p=pedido_anexos" role="form">
-                                        <table class="table text-center table-striped">
-                                            <tbody>
-                                            <?php
-                                            $evento = recuperaDados('eventos', 'id', $idEvento);
-                                            if ($evento['tipo_evento_id'] == 1) {
-                                                $IN_adicional = "";
-                                                if ($musica || $oficina || $artesCenicas) {
-                                                    $sqlAdicional = "AND (" . implode(" OR ", $whereAdicional) . ")";
-                                                } else
-                                                    $sqlAdicional = "";
-                                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id IN (3,{$tipo}) and publicado = 1 $sqlAdicional";
-                                            } else {
-                                                $IN_adicional = "lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1) AND";
-                                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
-                                            }
-                                            $query_arquivos = mysqli_query($con, $sql_arquivos);
-                                            while ($arq = mysqli_fetch_array($query_arquivos)) {
-                                                $idDoc = $arq['id'];
-                                                $sqlExistentes = "SELECT * FROM arquivos WHERE $IN_adicional lista_documento_id = '$idDoc' AND origem_id = '$idPedido' AND publicado = 1";
-                                                $queryExistentes = mysqli_query($con, $sqlExistentes);
-
-                                                if (mysqli_num_rows($queryExistentes) == 0) {
-                                                    ?>
-                                                    <tr>
-                                                        <td>
-                                                            <label><?php echo $arq['documento'] ?></label>
-                                                        </td>
-                                                        <td>
-                                                            <input type='file'
-                                                                   name='arquivo[<?php echo $arq['sigla']; ?>]'>
-                                                        </td>
-                                                    </tr>
-                                                    <!--                                    Aparece com a Parte de envio de arquivos-->
-                                                    <script>
-                                                        document.querySelector('#envioArq').style.display = 'block';
-                                                    </script>
-                                                    <?php
+                                        <form method="POST" enctype="multipart/form-data"
+                                              action="?perfil=evento&p=pedido_anexos" role="form">
+                                            <table class="table text-center table-striped">
+                                                <tbody>
+                                                <?php
+                                                $evento = recuperaDados('eventos', 'id', $idEvento);
+                                                if ($evento['tipo_evento_id'] == 1) {
+                                                    $IN_adicional = "";
+                                                    if ($musica || $oficina || $artesCenicas) {
+                                                        $sqlAdicional = "AND (" . implode(" OR ", $whereAdicional) . ")";
+                                                    } else
+                                                        $sqlAdicional = "";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id IN (3,{$tipo}) and publicado = 1 $sqlAdicional";
                                                 } else {
-                                                    ?>
-                                                    <!--                             REMOVIDO , POIS ESTAVA DANDO CONFLITO QUANDO ERA ANEXADO SOMENTE O ULTIMO ARQUIVO
-
-                                                                                        Sumir com a Parte de envio de arquivos
-                                                                                        <script>
-                                                                                            document.querySelector('#envioArq').style.display = 'none';
-                                                                                        </script>  -->
-                                                    <?php
+                                                    $IN_adicional = "lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1) AND";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
                                                 }
+                                                $query_arquivos = mysqli_query($con, $sql_arquivos);
+                                                while ($arq = mysqli_fetch_array($query_arquivos)) {
+                                                    $idDoc = $arq['id'];
+                                                    $sqlExistentes = "SELECT * FROM arquivos WHERE $IN_adicional lista_documento_id = '$idDoc' AND origem_id = '$idPedido' AND publicado = 1";
+                                                    $queryExistentes = mysqli_query($con, $sqlExistentes);
+
+                                                    if (mysqli_num_rows($queryExistentes) == 0) {
+                                                        ?>
+                                                        <tr>
+                                                            <td>
+                                                                <label><?php echo $arq['documento'] ?></label>
+                                                            </td>
+                                                            <td>
+                                                                <input type='file'
+                                                                       name='arquivo[<?php echo $arq['sigla']; ?>]'>
+                                                            </td>
+                                                        </tr>
+                                                        <!--                                    Aparece com a Parte de envio de arquivos-->
+                                                        <script>
+                                                            document.querySelector('#envioArq').style.display = 'block';
+                                                        </script>
+                                                        <?php
+                                                    } else {
+                                                        ?>
+                                                        <!--                             REMOVIDO , POIS ESTAVA DANDO CONFLITO QUANDO ERA ANEXADO SOMENTE O ULTIMO ARQUIVO
+
+                                                                                            Sumir com a Parte de envio de arquivos
+                                                                                            <script>
+                                                                                                document.querySelector('#envioArq').style.display = 'none';
+                                                                                            </script>  -->
+                                                        <?php
+                                                    }
+                                                }
+                                                ?>
+                                                </tbody>
+                                            </table>
+                                            <br>
+                                            <?php
+                                            $num_lista = mysqli_num_rows($query_arquivos);
+                                            //$IN_adicional funciona para impedir que o botão suma sem necessidade, algumas vezes causava conflito de não sumir o botão mesmo tendo sido upado todos os arquivos
+                                            $num_arquivos = $con->query("SELECT * FROM arquivos WHERE $IN_adicional origem_id = '$idPedido' AND publicado = 1")->num_rows;
+                                            $num_total = $num_lista - $num_arquivos;
+                                            if ($num_total != 0) {
+                                                ?>
+                                                <input type='hidden' name='idPedido' value='<?= $idPedido ?>'/>
+                                                <input type="hidden" name="tipoPessoa"
+                                                       value="3"/>
+                                                <input type="submit" class="btn btn-primary btn-lg btn-block"
+                                                       name="enviarArquivo" value='Enviar'>
+                                                <?php
                                             }
                                             ?>
-                                            </tbody>
-                                        </table>
-                                        <br>
-                                        <?php
-                                        $num_lista = mysqli_num_rows($query_arquivos);
-                                        //$IN_adicional funciona para impedir que o botão suma sem necessidade, algumas vezes causava conflito de não sumir o botão mesmo tendo sido upado todos os arquivos
-                                        $num_arquivos = $con->query("SELECT * FROM arquivos WHERE $IN_adicional origem_id = '$idPedido' AND publicado = 1")->num_rows;
-                                        $num_total = $num_lista - $num_arquivos;
-                                        if ($num_total != 0) {
-                                            ?>
-                                            <input type='hidden' name='idPedido' value='<?= $idPedido ?>'/>
-                                            <input type="hidden" name="tipoPessoa"
-                                                   value="3"/>
-                                            <input type="submit" class="btn btn-primary btn-lg btn-block"
-                                                   name="enviarArquivo" value='Enviar'>
-                                            <?php
-                                        }
-                                        ?>
-                                    </form>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php
+                            endif;
+                            ?>
                         </div>
                     </div>
                     <!-- /.box-body -->
