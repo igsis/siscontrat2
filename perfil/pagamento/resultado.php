@@ -145,119 +145,123 @@ if(isset($_POST['operador'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblResultado" style="text-align: left;font-size: 1em;" class="table table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>Processo</th>
-                                <th>Protocolo</th>
-                                <th>Proponente</th>
-                                <th>Nome do evento</th>
-                                <th>Período</th>
-                                <th>Valor</th>
-                                <th>Status</th>
-                                <th>Chamados</th>
-                                <th>Operador</th>
-                                <th>Kit pagamento</th>
-                                <th>N.E.</th>
-                                <th>PGTO</th>
-                                <th>LIQ.</th>
-                            </tr>
-                            </thead>
-<!--                            <tbody>-->
-                            <?php
-                            if ($num_rows == 0) {
-                                ?>
-                                <tr>
-                                    <th colspan="12"><p align="center">Não foram encontrados registros</p></th>
-                                </tr>
-                                <?php
-                            } else {
-                                while ($evento = mysqli_fetch_array($resultado)) {
-                                    $idPedido = $evento['idPedido'];
-                                    $parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->fetch_assoc();
-                                    if($parcela == NULL) {
-                                        $botao = "integral";
-                                    } else{
-                                        $botao = "parcelado";
-                                    }
-                                    if ($evento['pessoa_tipo_id'] == 2) {
-                                        $idPj = $evento['pessoa_juridica_id'];
-                                        $pj = $con->query("SELECT razao_social FROM pessoa_juridicas WHERE id = '$idPj'")->fetch_assoc();
-                                        $proponente = $pj['razao_social'];
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id="tblResultado" class="table table-responsive table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Processo</th>
+                                        <th>Protocolo</th>
+                                        <th>Proponente</th>
+                                        <th>Nome do evento</th>
+                                        <th>Período</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                        <th>Chamados</th>
+                                        <th>Operador</th>
+                                        <th>Kit pagamento</th>
+                                        <th>N.E.</th>
+                                        <th>PGTO</th>
+                                        <th>LIQ.</th>
+                                    </tr>
+                                    </thead>
+                                    <!--                            <tbody>-->
+                                    <?php
+                                    if ($num_rows == 0) {
+                                        ?>
+                                        <tr>
+                                            <th colspan="12"><p align="center">Não foram encontrados registros</p></th>
+                                        </tr>
+                                        <?php
                                     } else {
-                                        $idPf = $evento['pessoa_fisica_id'];
-                                        $pf = $con->query("SELECT nome FROM pessoa_fisicas WHERE id = '$idPf'")->fetch_assoc();
-                                        $proponente = $pf['nome'];
+                                        while ($evento = mysqli_fetch_array($resultado)) {
+                                            $idPedido = $evento['idPedido'];
+                                            $parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->fetch_assoc();
+                                            if($parcela == NULL) {
+                                                $botao = "integral";
+                                            } else{
+                                                $botao = "parcelado";
+                                            }
+                                            if ($evento['pessoa_tipo_id'] == 2) {
+                                                $idPj = $evento['pessoa_juridica_id'];
+                                                $pj = $con->query("SELECT razao_social FROM pessoa_juridicas WHERE id = '$idPj'")->fetch_assoc();
+                                                $proponente = $pj['razao_social'];
+                                            } else {
+                                                $idPf = $evento['pessoa_fisica_id'];
+                                                $pf = $con->query("SELECT nome FROM pessoa_fisicas WHERE id = '$idPf'")->fetch_assoc();
+                                                $proponente = $pf['nome'];
+                                            }
+                                            ?>
+                                            <tr>
+                                                <td><?= $evento['numero_processo'] ?></td>
+                                                <td><?= $evento['protocolo'] ?></td>
+                                                <td><?= $proponente ?></td>
+                                                <td><?= $evento['nome_evento'] ?></td>
+                                                <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
+                                                <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
+                                                <td><?= $evento['status'] ?></td>
+                                                <?= retornaChamadosTD($evento['id']) ?>
+                                                <?php
+                                                if ($evento['operador_pagamento_id'] == NULL) {
+                                                    $nome = "Não possui";
+                                                } else {
+                                                    $operador = recuperaDados('usuarios', 'id', $evento['operador_pagamento_id']);
+                                                    $nome= $operador['nome_completo'];
+                                                }
+                                                ?>
+                                                <td><?= $nome ?></td>
+                                                <td><?= $evento['data_kit_pagamento'] ? date('d/m/Y', strtotime($evento['data_kit_pagamento'])) : "Não possui" ?></td>
+                                                <?php
+                                                $sqlTesta = "SELECT pedido_id FROM pagamentos WHERE pedido_id = " . $evento['idPedido'];
+                                                $queryTesta = mysqli_query($con,$sqlTesta);
+                                                $num = mysqli_num_rows($queryTesta);
+                                                if($num > 0){
+                                                    $action = "?perfil=pagamento&p=empenho_edita";
+                                                }else{
+                                                    $action = "?perfil=pagamento&p=empenho";
+                                                }
+                                                ?>
+                                                <td>
+                                                    <form method="POST" action="<?=$action?>">
+                                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form method="POST" action="?perfil=pagamento&p=<?= $botao ?>">
+                                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form method="POST" action="?perfil=pagamento&p=liquidacao">
+                                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
                                     }
                                     ?>
+                                    </tbody>
+                                    <tfoot>
                                     <tr>
-                                        <td><?= $evento['numero_processo'] ?></td>
-                                        <td><?= $evento['protocolo'] ?></td>
-                                        <td><?= $proponente ?></td>
-                                        <td><?= $evento['nome_evento'] ?></td>
-                                        <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
-                                        <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                        <td><?= $evento['status'] ?></td>
-                                        <?= retornaChamadosTD($evento['id']) ?>
-                                        <?php
-                                        if ($evento['operador_pagamento_id'] == NULL) {
-                                            $nome = "Não possui";
-                                        } else {
-                                            $operador = recuperaDados('usuarios', 'id', $evento['operador_pagamento_id']);
-                                            $nome= $operador['nome_completo'];
-                                        }
-                                        ?>
-                                        <td><?= $nome ?></td>
-                                        <td><?= $evento['data_kit_pagamento'] ? date('d/m/Y', strtotime($evento['data_kit_pagamento'])) : "Não possui" ?></td>
-                                        <?php
-                                        $sqlTesta = "SELECT pedido_id FROM pagamentos WHERE pedido_id = " . $evento['idPedido'];
-                                        $queryTesta = mysqli_query($con,$sqlTesta);
-                                        $num = mysqli_num_rows($queryTesta);
-                                        if($num > 0){
-                                            $action = "?perfil=pagamento&p=empenho_edita";
-                                        }else{
-                                            $action = "?perfil=pagamento&p=empenho";
-                                        }
-                                        ?>
-                                        <td>
-                                            <form method="POST" action="<?=$action?>">
-                                                <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form method="POST" action="?perfil=pagamento&p=<?= $botao ?>">
-                                                <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form method="POST" action="?perfil=pagamento&p=liquidacao">
-                                                <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
-                                            </form>
-                                        </td>
+                                        <th>Processo</th>
+                                        <th>Protocolo</th>
+                                        <th>Proponente</th>
+                                        <th>Nome do evento</th>
+                                        <th>Período</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                        <th>Chamados</th>
+                                        <th>Operador</th>
+                                        <th>Kit pagamento</th>
+                                        <th>N.E.</th>
+                                        <th>PGTO</th>
+                                        <th>LIQ.</th>
                                     </tr>
-                                    <?php
-                                }
-                            }
-                             ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Processo</th>
-                                    <th>Protocolo</th>
-                                    <th>Proponente</th>
-                                    <th>Nome do evento</th>
-                                    <th>Período</th>
-                                    <th>Valor</th>
-                                    <th>Status</th>
-                                    <th>Chamados</th>
-                                    <th>Operador</th>
-                                    <th>Kit pagamento</th>
-                                    <th>N.E.</th>
-                                    <th>PGTO</th>
-                                    <th>LIQ.</th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                 </div>
@@ -265,3 +269,9 @@ if(isset($_POST['operador'])) {
         </div>
     </section>
 </div>
+
+<script>
+    $(document).ready(function (){
+        $("body").addClass("sidebar-collapse");
+    });
+</script>
