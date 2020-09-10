@@ -324,9 +324,9 @@ $disableDown = "";
                                 ?>
                                 <div class="row">
                                     <div class="col-md-6 from-group">
-                                        <label for="operador">Operador</label>
+                                        <label for="operador">Operador:</label>
                                         <select name="operador" id="operador" class="form-control">
-                                            <option value="">Selecione um operador</option>
+                                            <option value="">Selecione um operador...</option>
                                             <?php
                                             geraOpcao('usuarios u INNER JOIN usuario_contratos uc ON uc.usuario_id = u.id WHERE uc.nivel_acesso = 2', $pedido['operador_id']);
                                             ?>
@@ -338,14 +338,17 @@ $disableDown = "";
                                     ?>
 
                                     <div class="col-md-6 form-group">
-                                        <label for="status">Status Contrato</label>
+                                        <label for="status">Status do Pedido: *</label>
                                         <select name="status" id="status" class="form-control">
-                                            <option value="<?= $pedido['status_pedido_id'] ?>"><?= $nomeStatus['status'] ?></option>
                                             <?php
                                             $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " AND area = 1 ORDER BY ordem";
                                             $queryStatus = mysqli_query($con, $sqlStatus);
-                                            while ($status = mysqli_fetch_array($queryStatus)) {
-                                                echo "<option value='" . $status['id'] . "'>" . $status['status'] . "</option>";
+                                            while ($status = mysqli_fetch_row($queryStatus)) {
+                                                if ($status[0] == $pedido['status_pedido_id']) { ?>
+                                                    <option value="<?= $status[0] ?>" selected> <?= $status[1] ?> </option>
+                                                <?php } else { ?>
+                                                    <option value="<?= $status[0] ?>"> <?= $status[1] ?> </option>
+                                                <?php }
                                             } ?>
                                         </select>
                                     </div>
@@ -573,8 +576,8 @@ $disableDown = "";
                         </div>
                         <!-- <div class="col-md-3">
                             <form action="?perfil=contrato&p=anexos_pedido" method="post" role="form">
-                                <input type="hidden" name="idPedido" value="<?//= $idPedido ?>">
-                                <input type="hidden" name="idEvento" value="<?//= $idEvento ?>">
+                                <input type="hidden" name="idPedido" value="<? //= $idPedido ?>">
+                                <input type="hidden" name="idEvento" value="<? //= $idEvento ?>">
                                 <button type="submit" class="btn btn-primary pull-left btn-block" style="width: 95%">
                                     Abrir anexos do Pedido
                                 </button>
