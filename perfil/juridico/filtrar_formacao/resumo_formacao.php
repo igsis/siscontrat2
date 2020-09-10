@@ -89,7 +89,7 @@ $queryLocal = mysqli_query($con, $sqlLocal);
                         </tr>
                         <tr>
                             <th width="30%">Valor:</th>
-                            <td><?= $query['valor_total'] ?></td>
+                            <td><?= "R$ " . number_format($query['valor_total'], 2, ',', '.') ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Período:</th>

@@ -8,10 +8,7 @@ $query = mysqli_query($con, $sql);
 <div class="content-wrapper">
     <section class="content">
         <h3 class="box-title">Lista de Modelos</h3>
-        <a href="?perfil=juridico&p=admin&sp=cadastra_modelo">
-            <button type="button" class="btn btn-success pull-right">Adicionar um novo modelo</button>
-        </a>
-        <div class="row" align="center">
+                <div class="row" align="center">
             <?php if (isset($mensagem)) {
                 echo $mensagem;
             }; ?>
@@ -20,7 +17,16 @@ $query = mysqli_query($con, $sql);
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Listagem</h3>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <h3 class="box-title">Listagem</h3>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="?perfil=juridico&p=admin&sp=cadastra_modelo" class="btn btn-success pull-right">
+                                    Adicionar um novo modelo
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     <div class="box-body">
                         <table id="tblModelo" class="table table-bordered table-striped">
