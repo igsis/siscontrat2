@@ -4,6 +4,7 @@ require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
 $con = bancoMysqli();
+$conn = bancoPDO();
 
 $sql = "SELECT id, tipo_evento_id, nome_evento, sinopse FROM eventos WHERE publicado = 1 AND tipo_evento_id != 3";
 
@@ -41,8 +42,24 @@ while ($evento = mysqli_fetch_array($query)) {
                 $local = $con->query("SELECT local FROM locais WHERE id = " . $aux['local_id'] . " AND publicado = 1")->fetch_array();
                 $lugar = $local['local'];
 
+                //testa e se necessário retorna as datas de exceção
+                $datas = "";
+                $queryExcecao = "SELECT * FROM ocorrencia_excecoes WHERE atracao_id = {$aux['id']}";
+                $testaExcecao = $con->query($queryExcecao);
+                if ($testaExcecao->num_rows > 0) {
+                    while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
+                        $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
+                    }
+                    $datas = substr($datas, 0, -2);
+                }
+
+                echo var_dump($datas);
+
                 echo "<p align='justify'><b>Ação: </b>" . $acao . "</p>";
                 echo "<p align='justify'><b>Data/Perído: </b>" . $dia . "</p>";
+                if ($datas != ''){
+                    echo "<p align='justify'><b>Datas de exceção: </b>" . $datas . "</p>";
+                }
                 echo "<p align='justify'><b>Horário: </b>" . $hour . "</p>";
                 echo "<p align='justify'><b>Local: </b>" . $lugar . "</p>";
 
