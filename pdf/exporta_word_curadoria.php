@@ -53,8 +53,6 @@ while ($evento = mysqli_fetch_array($query)) {
                     $datas = substr($datas, 0, -2);
                 }
 
-                echo var_dump($datas);
-
                 echo "<p align='justify'><b>Ação: </b>" . $acao . "</p>";
                 echo "<p align='justify'><b>Data/Perído: </b>" . $dia . "</p>";
                 if ($datas != ''){
