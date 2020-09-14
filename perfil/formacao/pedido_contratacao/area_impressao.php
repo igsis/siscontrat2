@@ -8,7 +8,7 @@ $link_vocacional = $http . "rlt_proposta_formacao.php";
 
 $link_facc = $http . "rlt_fac_pf.php";
 
-$link_reserva_vocacional = $http . "impressao_reserva_vocacional.php";
+$link_reserva_vocacional = $http . "rlt_pedido_reserva_vocacional.php";
 
 $link_reserva_sme = $http . "impressao_reserva_sme.php";
 
@@ -95,7 +95,7 @@ $idPf = $pedido['pessoa_fisica_id'];
                     </div>
 
                     <div class="col-md-6">
-                        <form action="<?= $link_reserva_vocacional ?>" target="_blank" method="POST">
+                        <form action="<?= $link_reserva_vocacional ?>" target="_blank" method="GET">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                             <button type="submit" class="btn btn-outline-info center-block">
                                 FORMAÇÃO - Vocacional
