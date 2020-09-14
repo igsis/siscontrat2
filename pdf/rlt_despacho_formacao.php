@@ -71,7 +71,7 @@ $dotacao = $con->query("SELECT acao FROM verbas WHERE id = " . $programa['verba_
         "<p align='justify'>I - À vista dos elementos constantes do presente, em especial da seleção realizada conforme Edital de chamamento para credenciamento de  Artistas-Educadores e Coordenadores Artístico-Pedagógicos do " . $programa['programa'] . " - " . $programa['edital'] . ", para atuar nos equipamentos públicos da Secretaria Municipal de Cultura e nos CEUS (Centros Educacionais Unificados)  da Secretaria Municipal de Educação na edição de 2020, publicado no DOC de  24/10/2019  (link SEI), no uso da competência a mim delegada pela Portaria nº 17/2018 - SMC/G , AUTORIZO com fundamento no artigo 25 “caput”, da Lei Federal nº 8.666/93, a contratação nas condições abaixo estipuladas, observada a legislação vigente e demais cautelas legais:</p>" .
         "<p><strong>Contratado:</strong> " . $pessoa['nome'] . ", CPF (" . $pessoa['cpf'] . ")</p>" .
         "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
-        "<p><strong>Data / Período:</strong> " . retornaPeriodoFormacao($fc['form_vigencia_id']) . "</p>" .
+        "<p><strong>Data / Período:</strong> " . retornaPeriodoFormacao_Emia($fc['form_vigencia_id'], "formacao") . "</p>" .
         "<p><strong>Local(ais):</strong> " . $local . "</p>" .
         "<p><strong>Carga Horária:</strong> " . $carga . " Hora(s)" . "</p>" .
         "<p><strong>Valor:</strong> R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " )" . "</p>" .

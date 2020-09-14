@@ -163,7 +163,7 @@ $tel = substr($tel, 0, -3);
                 <table class="table">
                     <tr>
                         <th width="30%">Data</th>
-                        <td><?= retornaPeriodoFormacao($idVigencia) ?></td>
+                        <td><?= retornaPeriodoFormacao_Emia($idVigencia, "formacao") ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
@@ -229,7 +229,7 @@ $tel = substr($tel, 0, -3);
                     </tr>
                     <tr>
                         <th width="30%">Data/Período:</th>
-                        <td><?= retornaPeriodoFormacao($idVigencia) ?></td>
+                        <td><?= retornaPeriodoFormacao_Emia($idVigencia, "formacao") ?></td>
                     </tr>
                     <?php
 

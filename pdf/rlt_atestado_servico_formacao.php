@@ -67,7 +67,7 @@ while ($parcela = mysqli_fetch_array($query)) {
         "<p>Informamos que os serviços prestados por: " . $pessoa['nome'] . "</p>" .
         "<p><strong>PROCESSO: </strong> " . $pedido['numero_processo'] . " </p>" .
         "<p><strong>Programa:</strong> " . $programa['programa'] . " <strong>Linguagem:</strong> " . $linguagem['linguagem'] . " <strong>Edital:</strong> " . $programa['edital'] . "</p>" .
-        "<P><strong>PERÍODO: </strong>" . retornaPeriodoFormacao($contratacao['form_vigencia_id']) . "</p>" .
+        "<P><strong>PERÍODO: </strong>" . retornaPeriodoFormacao_Emia($contratacao['form_vigencia_id'], "formacao") . "</p>" .
         "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS</p>" .
         "<p>( X ) FORAM REALIZADOS A CONTENTO</p>" .
         "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS A CONTENTO, PELO SEGUINTE MOTIVO:</p>" .
@@ -79,7 +79,7 @@ while ($parcela = mysqli_fetch_array($query)) {
         "<p><strong>RF:</strong> " . $suplente['rf_rg'] . "</p>" .
         "<p>&nbsp;</p>" .
         "<p>Atesto que os serviços prestados discriminados no documento: link SEI, foram executados a contento nos termos previstos no instrumento contratual (ou documento equivalente) no(s) dia(s): " . $datapgt . ", dentro do prazo previsto.</p>" .
-        "<p>O prazo contratual é do dia " . retornaPeriodoFormacao($contratacao['form_vigencia_id']) . ". <p>" .
+        "<p>O prazo contratual é do dia " . retornaPeriodoFormacao_Emia($contratacao['form_vigencia_id'], "formacao") . ". <p>" .
         "<p>&nbsp;</p>" .
         "<p>À área gestora de liquidação e pagamento encaminho para prosseguimento.</p>"
     ?>

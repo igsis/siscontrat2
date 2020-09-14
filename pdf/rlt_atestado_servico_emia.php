@@ -85,7 +85,7 @@ while($parcela = mysqli_fetch_array($query))
         "<p>Informamos que os serviços prestados pelo(a): ".$pessoa['nome']."</p>".
         "<p><strong>Cargo: </strong>" . $cargo['cargo'] ."</p>" .
         "<p><strong>NA: </strong> EMIA </p>".
-        "<P><strong>DIA(S) / HORÁRIO(S): </strong>".retornaPediodoEmia($contratacao['emia_vigencia_id'])."</p>".
+        "<P><strong>DIA(S) / HORÁRIO(S): </strong>".retornaPeriodoFormacao_Emia($contratacao['emia_vigencia_id'], "emia")."</p>".
         "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS</p>".
         "<p>( X ) FORAM REALIZADOS A CONTENTO</p>".
         "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS A CONTENTO, PELO SEGUINTE MOTIVO:</p>".
@@ -100,7 +100,7 @@ while($parcela = mysqli_fetch_array($query))
         "<p><strong>LOTAÇÃO:</strong> EMIA-Escola Municipal de Iniciação Artística</p>".
         "<p><strong>REGISTRO FUNCIONAL:</strong> ".$suplente['rf_rg']."</p>".
         "<p>&nbsp;</p>".
-        "<p>Com base na Folha de Frequência Individual: (Documento SEI link ) atesto que os materiais/serviços prestados discriminados no documento fiscal (Documento SEI link )  foram entregues e/ou executados a contento nos termos previstos no instrumento contratual (ou documento equivalente) no dia: ".$datapgt.", dentro do prazo previsto. O prazo contratual é do dia ".retornaPediodoEmia($contratacao['emia_vigencia_id']).". </p>".
+        "<p>Com base na Folha de Frequência Individual: (Documento SEI link ) atesto que os materiais/serviços prestados discriminados no documento fiscal (Documento SEI link )  foram entregues e/ou executados a contento nos termos previstos no instrumento contratual (ou documento equivalente) no dia: ".$datapgt.", dentro do prazo previsto. O prazo contratual é do dia ".retornaPeriodoFormacao_Emia($contratacao['emia_vigencia_id'], "emia").". </p>".
         "<p>&nbsp;</p>".
         "<p><strong><center>INFORMAÇÕES COMPLEMENTARES</strong></p></center>".
         "<p>À área gestora/de liquidação e pagamento:</p>".

@@ -229,7 +229,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(15, $l, utf8_decode('Período:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(180, $l, utf8_decode(retornaPeriodoFormacao($contratacao['form_vigencia_id'])), 0, 0, 'L');
+$pdf->Cell(180, $l, utf8_decode(retornaPeriodoFormacao_Emia($contratacao['form_vigencia_id'], "formacao")), 0, 0, 'L');
 
 $pdf->Ln(6);
 
@@ -368,7 +368,7 @@ $pdf->Ln(5);
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(160, $l, utf8_decode("O prestador de serviços acima citado é contratado nos termos do Edital " . $programa['edital']
-                                                . ", no período " . retornaPeriodoFormacao($idVigencia)
+                                                . ", no período " . retornaPeriodoFormacao_Emia($idVigencia, "formacao")
                                                 . ", com carga horária total de até: " . $carga
                                                 . " hora(s), na forma abaixo descrita:"), 0, 'L', 0);
 

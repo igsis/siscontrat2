@@ -31,7 +31,7 @@ $carga = $fp['carga_horaria'];
 $dataAtual = date("d/m/Y", strtotime("-3 hours"));
 
 //periodo
-$data = retornaPeriodoFormacao($vigencia);
+$data = retornaPeriodoFormacao_Emia($vigencia, "formacao");
 // local
 $sqlLocal = "SELECT l.local 
 FROM formacao_locais fl 

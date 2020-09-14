@@ -34,7 +34,7 @@ $hoje = date("d/m/Y", strtotime("-3 hours"));
 $diaSemana = diasemana($dataAtual);
 
 //periodo
-$data = retornaPeriodoFormacao($vigencia);
+$data = retornaPeriodoFormacao_Emia($vigencia, "formacao");
 
 // local
 $sqlLocal = "SELECT l.local FROM formacao_locais fl 

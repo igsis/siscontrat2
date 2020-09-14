@@ -66,7 +66,7 @@ $data = date("Y-m-d", strtotime("-3 hours"));
         "<p><strong>CPF:</strong> " . $pessoa['cpf'] . "</p>" .
         "<p><strong>Cargo:</strong> " . $cargo['cargo'] . "</p>" .
         "<p><strong>Local:</strong> " . $local['local'] . "</p>" .
-        "<p><strong>Período:</strong> " . retornaPediodoEmia($contratacao['emia_vigencia_id']) . "</p>" .
+        "<p><strong>Período:</strong> " . retornaPeriodoFormacao_Emia($contratacao['emia_vigencia_id'], "emia") . "</p>" .
         "<p>&nbsp;</p>" .
         "<p align='justify'>Com base na Confirmação de Serviços (Documento SEI link ), atesto que foi efetivamente cumprido " . $horas . " horas de trabalho durante o período supra citado.</p>" .
         "<p align='justify'>Em virtude do detalhamento da Ação em 2019, informamos que o pagamento  no valor de R$ 4.194,72 (quatro mil, cento e noventa e quatro reais e setenta e dois centavos) foi gasto na zona sul de São Paulo, rua Volkswagen, s/nº, Jabaquara, SP.</p>" .

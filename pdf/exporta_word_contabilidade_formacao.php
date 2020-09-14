@@ -41,7 +41,7 @@ if($pessoa['passaporte'] != NULL){
     $cpf_passaporte = "CPF: " . $pessoa['cpf'];    
 }
 
-$periodo = retornaPeriodoFormacao($fc['form_vigencia_id']);
+$periodo = retornaPeriodoFormacao_Emia($fc['form_vigencia_id'], "formacao");
 
 $valor = $pedido['valor_total'];
 $valor_extenso = valorPorExtenso($valor);

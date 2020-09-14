@@ -96,7 +96,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(34, $l, utf8_decode("Período de locação:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode(retornaPediodoEmia($contratacao['emia_vigencia_id'])), 0, 'L', 0);
+$pdf->MultiCell(120, $l, utf8_decode(retornaPeriodoFormacao_Emia($contratacao['emia_vigencia_id'], "emia")), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->MultiCell(200,$l,utf8_decode("PAGAMENTO LIBERÁVEL A PARTIR DE ". exibirDataBr($datapgt) ." MEDIANTE CONFIRMAÇÃO DA UNIDADE PROPONENTE."),0,'L',0);

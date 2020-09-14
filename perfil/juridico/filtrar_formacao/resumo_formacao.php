@@ -29,7 +29,7 @@ $query = $con->query($sql)->fetch_assoc();
 
 // pegar periodo da formação ( atraves do id da vigencia )
 $fc = recuperaDados('formacao_contratacoes', 'id', $query['origem_id']);
-$periodo = retornaPeriodoFormacao($fc['form_vigencia_id']);
+$periodo = retornaPeriodoFormacao_Emia($fc['form_vigencia_id'], "formacao");
 // pegar o local
 $sqlLocal = "SELECT l.local FROM formacao_locais fl 
 INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFormacao'";

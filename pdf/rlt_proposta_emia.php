@@ -191,7 +191,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(22, $l, 'Data/Perido:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(50, $l, utf8_decode(retornaPediodoEmia($contratacao['emia_vigencia_id'])), 0, 0, 'L');
+$pdf->Cell(50, $l, utf8_decode(retornaPeriodoFormacao_Emia($contratacao['emia_vigencia_id'], "emia")), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(25, $l, utf8_decode("Carga Horária:"), '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);

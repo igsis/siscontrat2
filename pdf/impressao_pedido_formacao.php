@@ -31,10 +31,6 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 
 $tel = substr($tel, 0, -3);
 
-$linguagem = recuperaDados('linguagens', 'id', $contratacao['linguagem_id']);
-
-$programa = recuperaDados('programas', 'id', $contratacao['programa_id']);
-
 if ($pessoa['passaporte'] != NULL) {
     $cpf_passaporte = "<strong>Passaporte: </strong> " . $pessoa['passaporte'] . "<br />";
 } else {
@@ -82,8 +78,8 @@ if ($pessoa['passaporte'] != NULL) {
         "<strong>Telefone:</strong> " . $tel . "<br />" .
         "<strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
         "<p>&nbsp;</p>" .
-        "<p><strong>Programa:</strong> " . $programa['programa'] . " <strong>Linguagem:</strong> " . $linguagem['linguagem'] . " <strong>Edital:</strong> " . $programa['edital'] . "</p>" .
-        "<p><strong>Data / Período:</strong> " . retornaPeriodoFormacao($contratacao['form_vigencia_id']) . " - conforme Proposta/Cronograma</p>" .
+        "<p><strong>Objeto:</strong> " . retornaObjetoFormacao_Emia($idFC,"formacao") . "</p>" .
+        "<p><strong>Data / Período:</strong> " . retornaPeriodoFormacao_Emia($contratacao['form_vigencia_id'], "formacao") . " - conforme Proposta/Cronograma</p>" .
         "<p><strong>Carga Horária:</strong> " . $carga . " hora(s)" . "</p>" .
         "<p align='justify'><strong>Local:</strong> " . listaLocaisFormacao($idFC) . "</p>" .
         "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . "  (" . valorPorExtenso($pedido['valor_total']) . " )</p>" .

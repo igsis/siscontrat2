@@ -122,7 +122,7 @@ if (isset($_POST['parcelaEditada'])) {
 
     if (isset($_POST['parcelaEditada']) && $numParcelas != NULL) {
 
-        foreach ($_POST['parcela'] AS $countPost => $parcela) {
+        foreach ($_POST['parcela'] as $countPost => $parcela) {
             $valor = dinheiroDeBr($_POST['valor'][$countPost]) ?? NULL;
             $data_pagamento = $_POST['data_pagamento'][$countPost] ?? NULL;
 
@@ -182,7 +182,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Criar Pedido de Contratação</h2>
+        <h2 class="page-header">Editar Pedido de Contratação</h2>
         <div class="box box-primary">
             <div class="box-header">
                 <h4 class="box-title">Dados para Contratação</h4>
@@ -253,27 +253,21 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="linguagem">Linguagem *</label>
                             <input type="text" name="linguagem" value="<?= $linguagem ?>" disabled
                                    class="form-control">
                         </div>
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="projeto">Projeto *</label>
                             <input type="text" name="projeto" value="<?= $projeto ?>" disabled
                                    class="form-control">
                         </div>
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="cargo">Cargo *</label>
                             <input type="text" name="cargo" value="<?= $cargo ?>" disabled
-                                   class="form-control">
-                        </div>
-
-                        <div class="form-group col-md-3">
-                            <label for="vigencia">Vigência *</label>
-                            <input type="text" name="vigencia" value="<?= $vigencia['ano'] ?>" disabled
                                    class="form-control">
                         </div>
                     </div>
@@ -329,7 +323,8 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                         <div class="form-group col-md-3">
                             <label for="valor">Valor: *</label>
                             <input type="text" name="valor"
-                                   class="form-control" value="<?= dinheiroParaBr($pedido['valor_total'] ?? NULL) ?>" readonly required>
+                                   class="form-control" value="<?= dinheiroParaBr($pedido['valor_total'] ?? NULL) ?>"
+                                   readonly required>
                         </div>
                     </div>
 
@@ -342,7 +337,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
                         <div class="form-group col-md-6">
                             <br>
-                            <a href="?perfil=formacao&p=pedido_contratacao&sp=edita_parcelas&idPedido=<?=$idPedido?>">
+                            <a href="?perfil=formacao&p=pedido_contratacao&sp=edita_parcelas&idPedido=<?= $idPedido ?>">
                                 <button type="button" class="btn btn-info btn-block">Editar parcelas</button>
                             </a>
                         </div>
@@ -433,11 +428,29 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     </div>
             </form>
             <hr/>
+
+            <?php
+            if (retornaPeriodoFormacao_Emia($fc['form_vigencia_id'], "formacao") == "") {
+                $disabled = "disabled";
+                $display = "block";
+            } else {
+                $disabled = "";
+                $display = "none";
+            }
+            ?>
+
+            <div class="row">
+                <div class="col-md-12" style="text-align: center; display: <?=$display?>">
+                    <span style="font-size: 16px; color: red;"><strong>Para acessar a área de impressão é necessário preencher completamente as informações de parcelas de vigência.</strong></span>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-md-12" style="text-align:center">
                     <form action="?perfil=formacao&p=pedido_contratacao&sp=area_impressao" method="post" role="form">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-default" style="width: 35%;">Ir para a área de impressão
+                        <button type="submit" class="btn btn-default" style="width: 35%;" <?= $disabled ?>>Ir para a área
+                                de impressão
                         </button>
                     </form>
                 </div>
