@@ -44,7 +44,7 @@ if (isset($_POST['enviar'])) {
 
                 $titulo = "Evento Fora do Prazo: " . $evento["nome_evento"];
                 $sqlChamado = "INSERT INTO chamados (evento_id, chamado_tipo_id, titulo, justificativa, usuario_id, data) VALUES
-                                                    ('$idEvento', '5', '$titulo', 'Evento Fora do Prazo', '$idUser', '$data')";
+                                                     ('$idEvento', '5', '$titulo', 'Evento Fora do Prazo', '$idUser', '$data')";
                 mysqli_query($con, $sqlChamado);
                 $mensagemPedido = mensagem("warning", "Seu pedido está aguardando aprovação!");
             }
@@ -105,7 +105,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
 
 $datas = "";
 
-//testa e se necessário retorna as datas de excessão
+//testa e se necessário retorna as datas de exceção
 $consultaAtracoes = $con->query("SELECT id FROM ocorrencias WHERE origem_ocorrencia_id = $idEvento AND publicado = 1 AND tipo_ocorrencia_id = " . $evento['tipo_evento_id']);
 if ($consultaAtracoes->num_rows > 0) {
     while ($atracaoIds = mysqli_fetch_array($consultaAtracoes)) {
@@ -206,6 +206,9 @@ $datas = substr($datas, 0, -2);
                                         <?php
                                         if ($evento['tipo_evento_id'] == 1) {
                                             $query_atracao = mysqli_query($con, $sql_atracao);
+                                            //contador de ocorrencia e de atracoes
+                                            $o = 1;
+                                            $a = 1;
                                             while ($atracao = mysqli_fetch_array($query_atracao)) {
 
                                                 $classificacao_indicativa = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
@@ -217,7 +220,7 @@ $datas = substr($datas, 0, -2);
                                                 <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                                                 <div class="form-group col-md-12">
                                                     <div align="center">
-                                                        <h3>Informações sobre a atração</h3>
+                                                        <h3>Informações sobre a atração #<?= $a ?></h3>
                                                         <hr>
                                                     </div>
                                                 </div>
@@ -310,7 +313,7 @@ $datas = substr($datas, 0, -2);
                                                     ?>
                                                     <hr>
                                                     <div class="form-group col-md-12">
-                                                        <strong>Observação:</strong><?= $produtor['observacao'] == null ? "Não cadastrado" : $produtor['observacao']; ?>
+                                                        <strong>Observação:</strong><?= checaCampo($produtor['observacao']) ?>
                                                     </div>
                                                 <?php } ?>
                                                 <?php
@@ -329,7 +332,7 @@ $datas = substr($datas, 0, -2);
 
                                                     <div class="form-group col-md-12">
                                                         <div align="center">
-                                                            <h3>Ocorrências</h3>
+                                                            <h3>Ocorrência #<?= $o ?></h3>
                                                             <hr>
                                                         </div>
                                                     </div>
@@ -372,8 +375,10 @@ $datas = substr($datas, 0, -2);
                                                         <div class="form-group col-md-12">
                                                             <strong>Virada:</strong> <?= $ocorrencia['virada'] == 1 ? "Sim" : "Não"; ?>
                                                         </div>
-                                                    <?php } ?>
-                                                <?php }
+                                                    <?php }
+                                                    $o++;
+                                                }
+                                                $a++;
                                             }
                                         } else {
                                             $query_filme = mysqli_query($con, $sql_filme);
@@ -401,12 +406,12 @@ $datas = substr($datas, 0, -2);
 
 
                                                 <div class="form-group col-md-12">
-                                                    <strong>Gênero: </strong><?= $filme['genero']; ?>
+                                                    <strong>Gênero: </strong><?= checaCampo($filme['genero']) ?>
                                                 </div>
 
 
                                                 <div class="form-group col-md-12">
-                                                    <strong>Sinopse: </strong><?= $filme['sinopse']; ?>
+                                                    <strong>Sinopse: </strong><?= checaCampo($filme['sinopse']) ?>
                                                 </div>
 
 

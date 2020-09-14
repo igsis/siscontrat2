@@ -132,7 +132,7 @@ if (isset($_POST['edit'])) {
                             <div class="form-group col-md-2">
                                 <label for="valor[]">Valor:</label>
                                 <input type="text" id="valor<?= $i ?>" name="valor[]"
-                                       class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcelas['valor'] ?? NULL) ?>">
+                                       class="form-control valor" value="<?= dinheiroParaBr($parcelas['valor'] ?? NULL) ?>">
                             </div>
 
                             <div class="form-group col-md-2">
@@ -186,3 +186,9 @@ if (isset($_POST['edit'])) {
     </section>
 </div>
 
+
+<script>
+    $(document).ready(function () {
+        $('.valor').mask('000,00', {reverse: true});
+    });
+</script>

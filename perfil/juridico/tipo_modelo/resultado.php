@@ -100,7 +100,7 @@ $evento = $con->query($sql)->fetch_array();
                         </tr>
                         <tr>
                             <th width="30%">Valor:</th>
-                            <td><?= "R$" . $evento['valor_total'] ?></td>
+                            <td><?= "R$" . number_format($evento['valor_total'],2,',','.') ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Período:</th>

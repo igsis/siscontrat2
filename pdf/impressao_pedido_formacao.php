@@ -4,7 +4,6 @@ require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
-session_start(['name' => 'sis']);
 
 $idPedido = $_POST['idPedido'];
 
@@ -18,19 +17,13 @@ $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND 
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
-
-$sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFC'";
-$local = "";
-$queryLocal = mysqli_query($con, $sqlLocal);
-
-$idVigencia = $contratacao['form_vigencia_id'];
-
 $carga = null;
-$sqlCarga = "SELECT carga_horaria FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia'";
+$sqlCarga = "SELECT carga_horaria FROM formacao_parcelas WHERE  publicado = 1 AND formacao_vigencia_id = " . $contratacao['form_vigencia_id'];
 $queryCarga = mysqli_query($con, $sqlCarga);
 
-while ($countt = mysqli_fetch_array($queryCarga))
+while ($countt = mysqli_fetch_array($queryCarga)) {
     $carga += $countt['carga_horaria'];
+}
 
 while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
     $tel = $tel . $linhaTel['telefone'] . ' | ';
@@ -38,25 +31,15 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 
 $tel = substr($tel, 0, -3);
 
-$idLinguagem = $contratacao['linguagem_id'];
-$linguagem = recuperaDados('linguagens', 'id', $idLinguagem);
+$linguagem = recuperaDados('linguagens', 'id', $contratacao['linguagem_id']);
 
-$idPrograma = $contratacao['programa_id'];
-$programa = recuperaDados('programas', 'id', $idPrograma);
+$programa = recuperaDados('programas', 'id', $contratacao['programa_id']);
 
-while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-    $local = $local . $linhaLocal['local'] . ' | ';
-}
-
-$local = substr($local, 0, -3);
-
-if($pessoa['passaporte'] != NULL){
+if ($pessoa['passaporte'] != NULL) {
     $cpf_passaporte = "<strong>Passaporte: </strong> " . $pessoa['passaporte'] . "<br />";
-}else{
-    $cpf_passaporte = "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />";    
+} else {
+    $cpf_passaporte = "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />";
 }
-
-$numProcesso = $pedido['numero_processo'] == NULL ? "Não cadastrado" : $pedido['numero_processo'];
 
 ?>
 <html>
@@ -91,7 +74,7 @@ $numProcesso = $pedido['numero_processo'] == NULL ? "Não cadastrado" : $pedido[
         "<p>Solicitamos a contratação a seguir:</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Protocolo nº:</strong> " . $contratacao['protocolo'] . "</p>" .
-        "<p><strong>Processo SEI nº:</strong> " . $numProcesso . "</p>" .
+        "<p><strong>Processo SEI nº:</strong> " . checaCampo($pedido['numero_processo']) . "</p>" .
         "<p><strong>Setor  solicitante:</strong> Supervisão de Formação Cultural</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Nome:</strong> " . $pessoa['nome'] . " <br />" .
@@ -101,8 +84,8 @@ $numProcesso = $pedido['numero_processo'] == NULL ? "Não cadastrado" : $pedido[
         "<p>&nbsp;</p>" .
         "<p><strong>Programa:</strong> " . $programa['programa'] . " <strong>Linguagem:</strong> " . $linguagem['linguagem'] . " <strong>Edital:</strong> " . $programa['edital'] . "</p>" .
         "<p><strong>Data / Período:</strong> " . retornaPeriodoFormacao($contratacao['form_vigencia_id']) . " - conforme Proposta/Cronograma</p>" .
-        "<p><strong>Carga Horária:</strong> " . $carga . " hora(s)" ."</p>" .
-        "<p align='justify'><strong>Local:</strong> " . $local . "</p>" .
+        "<p><strong>Carga Horária:</strong> " . $carga . " hora(s)" . "</p>" .
+        "<p align='justify'><strong>Local:</strong> " . listaLocaisFormacao($idFC) . "</p>" .
         "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . "  (" . valorPorExtenso($pedido['valor_total']) . " )</p>" .
         "<p align='justify'><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
         "<p align='justify'><strong>Justificativa: </strong> " . $pedido['justificativa'] . "</p>" .

@@ -2,7 +2,7 @@
 
 $con = bancoMysqli();
 
-if (isset($_POST['carregar'])){
+if (isset($_POST['carregar'])) {
     $idPc = $_POST['idFC'];
 }
 
@@ -19,7 +19,7 @@ $cargo = recuperaDados('formacao_cargos', 'id', $fc['form_cargo_id'])['cargo'];
 $vigencia = recuperaDados('formacao_vigencias', 'id', $fc['form_vigencia_id']);
 $numParcelas = $vigencia['numero_parcelas'];
 $fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id'])['nome_completo'];
-$suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'];
+$suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'] ?? NULL;
 
 $valor = 00.0;
 
@@ -102,30 +102,37 @@ $valor = dinheiroParaBr($valor);
 
                         <div class="form-group col-md-3">
                             <label for="programa">Programa *</label>
-                            <input type="text" name="programa" required value="<?= $programa ?>" disabled class="form-control">
+                            <input type="text" name="programa" required value="<?= $programa ?>" disabled
+                                   class="form-control">
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="linguagem">Linguagem *</label>
-                            <input type="text" name="linguagem" required value="<?= $linguagem ?>" disabled class="form-control">
-                        </div>
-
-                        <div class="form-group col-md-3">
-                            <label for="projeto">Projeto *</label>
-                            <input type="text" name="projeto" required value="<?= $projeto ?>" disabled class="form-control">
-                        </div>
-
-                        <div class="form-group col-md-3">
-                            <label for="cargo">Cargo *</label>
-                            <input type="text" name="cargo" required value="<?= $cargo ?>" disabled class="form-control">
-                        </div>
-
-                        <div class="form-group col-md-3">
-                            <label for="vigencia">Vigência *</label>
-                            <input type="text" name="vigencia" required value="<?= $vigencia['ano'] ?>" disabled
+                            <input type="text" name="linguagem" required value="<?= $linguagem ?>" disabled
                                    class="form-control">
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="projeto">Projeto *</label>
+                            <input type="text" name="projeto" required value="<?= $projeto ?>" disabled
+                                   class="form-control">
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="cargo">Cargo *</label>
+                            <input type="text" name="cargo" required value="<?= $cargo ?>" disabled
+                                   class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="vigencia">Vigência *</label>
+                            <input type="text" name="vigencia"
+                                   value="<?= $vigencia['ano'] . ' (' . $vigencia['descricao'] . ')' ?>"
+                                   class="form-control" disabled>
                         </div>
                     </div>
 
@@ -140,12 +147,14 @@ $valor = dinheiroParaBr($valor);
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="fiscal">Fiscal *</label>
-                            <input type="text" name="fiscal" required value="<?= $fiscal ?>" disabled class="form-control">
+                            <input type="text" name="fiscal" required value="<?= $fiscal ?>" disabled
+                                   class="form-control">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="fiscal">Suplente </label>
-                            <input type="text" name="suplente" required value="<?= $suplente ?>" disabled class="form-control">
+                            <input type="text" name="suplente" required value="<?= checaCampo($suplente) ?>" disabled
+                                   class="form-control">
                         </div>
                     </div>
 
@@ -163,7 +172,7 @@ $valor = dinheiroParaBr($valor);
                         <div class="form-group col-md-3">
                             <label for="numParcelas">Número de parcelas</label>
                             <input type="text" name="numParcelas" required value="<?= $numParcelas ?>" readonly
-                                   class="form-control" >
+                                   class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
@@ -204,8 +213,8 @@ $valor = dinheiroParaBr($valor);
 
                         <div class="form-group col-md-6">
                             <label for="justificativa">Justificativa: *</label>
-                            <textarea id="justificativa" name="justificativa" required  class="form-control"
-                                      rows="8" ></textarea>
+                            <textarea id="justificativa" name="justificativa" required class="form-control"
+                                      rows="8"></textarea>
                         </div>
                     </div>
 

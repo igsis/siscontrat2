@@ -2,19 +2,19 @@
 $con = bancoMysqli();
 $idPC = $_POST['idPCView'];
 
-$sql = "SELECT f.id AS 'id', 
-               f.ano AS 'ano',
-               f.chamado AS 'chamado',
-               cla.classificacao_indicativa AS 'classificacao',
-               t.territorio AS 'territorio',
-               c.coordenadoria AS 'coordenadoria',
-               s.subprefeitura AS 'subprefeitura',
-               prog.programa AS 'programa',
-               l.linguagem AS 'linguagem',
-               proj.projeto AS 'projeto',
-               fc.cargo AS 'cargo',
+$sql = "SELECT f.id, 
+               f.ano,
+               f.chamado,
+               cla.classificacao_indicativa,
+               t.territorio,
+               c.coordenadoria,
+               s.subprefeitura,
+               prog.programa,
+               l.linguagem,
+               proj.projeto,
+               fc.cargo,
                fv.ano AS 'vigencia',
-               f.observacao AS 'observacao',
+               f.observacao,
                fiscal.nome_completo AS 'fiscal',
                suplente.nome_completo AS 'suplente',       
                f.num_processo_pagto AS 'numpgt'
@@ -29,10 +29,10 @@ $sql = "SELECT f.id AS 'id',
         INNER JOIN formacao_cargos fc ON f.form_cargo_id = fc.id
         INNER JOIN formacao_vigencias fv ON f.form_vigencia_id = fv.id
         INNER JOIN usuarios AS fiscal ON f.fiscal_id = fiscal.id
-        INNER JOIN usuarios AS suplente ON f.suplente_id = suplente.id 
+        LEFT JOIN usuarios AS suplente ON f.suplente_id = suplente.id 
         WHERE f.id = '$idPC' AND f.publicado = 1";
-$fc = $con->query($sql)->fetch_assoc();
 
+$fc = $con->query($sql)->fetch_array();
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -61,7 +61,7 @@ $fc = $con->query($sql)->fetch_assoc();
 
                             <tr>
                                 <th width="30%">Classificacao Indicativa:</th>
-                                <td><?= $fc['classificacao'] ?></td>
+                                <td><?= $fc['classificacao_indicativa'] ?></td>
                             </tr>
 
                             <tr>
@@ -106,7 +106,7 @@ $fc = $con->query($sql)->fetch_assoc();
 
                             <tr>
                                 <th width="30%">Observação:</th>
-                                <td><?= $fc['observacao'] ?></td>
+                                <td><?= checaCampo($fc['observacao']) ?></td>
                             </tr>
 
                             <tr>
@@ -116,17 +116,12 @@ $fc = $con->query($sql)->fetch_assoc();
 
                             <tr>
                                 <th width="30%">Suplente:</th>
-                                <td><?= $fc['suplente'] ?></td>
+                                <td><?= checaCampo($fc['suplente']) ?></td>
                             </tr>
 
                             <tr>
                                 <th width="30%">Número do Processo de Pagamento:</th>
-                                <td><?php if ($fc['numpgt'] == NULL) {
-                                        echo "Não Cadastrado";
-                                    } else {
-                                        echo $fc['numpgt'];
-                                    }
-                                    ?>  </td>
+                                <td><?= checaCampo($fc['numpgt']) ?></td>
                             </tr>
                         </table>
                     </div>

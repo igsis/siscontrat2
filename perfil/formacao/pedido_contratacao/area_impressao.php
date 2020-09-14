@@ -140,9 +140,10 @@ $idPf = $pedido['pessoa_fisica_id'];
 
             </div>
             <div class="box-footer">
-                <a href="?perfil=formacao&p=pedido_contratacao&sp=listagem">
-                    <button type="button" class="btn btn-default">Voltar</button>
-                </a>
+                <form action="?perfil=formacao&p=pedido_contratacao&sp=edita" method="POST">
+                    <input type="hidden" name="idPedido" value="<?=$idPedido?>">
+                    <button type="submit" name="carregar" class="btn btn-default">Voltar</button>
+                </form>
             </div>
         </div>
 

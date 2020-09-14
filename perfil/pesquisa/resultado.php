@@ -102,7 +102,7 @@ if (isset($_POST['busca'])) {
                                                     class="btn btn-link"><?= $evento['protocolo'] ?></button>
                                         </form>
                                     </td>
-                                    <td><?= $evento['numero_processo'] ?></td>
+                                    <td><?= checaCampo($evento['numero_processo']) ?></td>
                                     <td><?= $pessoa ?></td>
                                     <td><?= $tipo ?></td>
                                     <td><?= $evento['nome_evento'] ?></td>

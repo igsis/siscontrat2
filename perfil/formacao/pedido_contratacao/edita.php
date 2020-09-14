@@ -13,6 +13,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $local = $_POST['local'];
     $processoMae = $_POST['processoMae'];
 }
+
 if (isset($_POST['cadastra'])) {
     $idPc = $_POST['idPc'];
     $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
@@ -173,7 +174,7 @@ $cargo = recuperaDados('formacao_cargos', 'id', $fc['form_cargo_id'])['cargo'];
 $vigencia = recuperaDados('formacao_vigencias', 'id', $fc['form_vigencia_id']);
 $numParcelas = $pedido['numero_parcelas'];
 $fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id'])['nome_completo'];
-$suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'];
+$suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'] ?? NULL;
 
 $sqlLocal = "SELECT local_id FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
 $queryLocais = mysqli_query($con, $sqlLocal);
@@ -203,7 +204,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                         <div class="form-group col-md-6">
                             <label for="chamado">Chamado: *</label>
                             <input type="number" min="0" max="127" id="chamado"
-                                   value="<?= $fc['chamado'] ?>" required class="form-control" disabled>
+                                   value="<?= $fc['chamado'] ?>" class="form-control" disabled>
                         </div>
 
                     </div>
@@ -211,7 +212,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     <div class="row">
                         <div class="from-group col-md-12">
                             <label for="pf">Pessoa Física: *</label>
-                            <input type="text" class="form-control" id="pessoa_fisica" required
+                            <input type="text" class="form-control" id="pessoa_fisica"
                                    value="<?= $pessoa_fisica ?>" disabled>
                         </div>
                     </div>
@@ -219,7 +220,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="classificacao">Classificação Indicativa *</label>
-                            <input type="text" name="classificacao" value="<?= $classificacao ?>" disabled required
+                            <input type="text" name="classificacao" value="<?= $classificacao ?>" disabled
                                    class="form-control">
                             </select>
                         </div>
@@ -228,25 +229,25 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label for="territorio">Território *</label>
-                            <input type="text" name="territorio" value="<?= $territorio ?>" disabled required
+                            <input type="text" name="territorio" value="<?= $territorio ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="coordenadoria">Coordenadoria *</label>
-                            <input type="text" name="coordenadoria" value="<?= $coordenadoria ?>" disabled required
+                            <input type="text" name="coordenadoria" value="<?= $coordenadoria ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="subprefeitura">Subprefeitura *</label>
-                            <input type="text" name="subprefeitura" value="<?= $subprefeitura ?>" disabled required
+                            <input type="text" name="subprefeitura" value="<?= $subprefeitura ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="programa">Programa *</label>
-                            <input type="text" name="programa" value="<?= $programa ?>" required disabled
+                            <input type="text" name="programa" value="<?= $programa ?>" disabled
                                    class="form-control">
                         </div>
                     </div>
@@ -254,26 +255,35 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label for="linguagem">Linguagem *</label>
-                            <input type="text" name="linguagem" value="<?= $linguagem ?>" required disabled
+                            <input type="text" name="linguagem" value="<?= $linguagem ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="projeto">Projeto *</label>
-                            <input type="text" name="projeto" value="<?= $projeto ?>" required disabled
+                            <input type="text" name="projeto" value="<?= $projeto ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="cargo">Cargo *</label>
-                            <input type="text" name="cargo" value="<?= $cargo ?>" required disabled
+                            <input type="text" name="cargo" value="<?= $cargo ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="vigencia">Vigência *</label>
-                            <input type="text" name="vigencia" value="<?= $vigencia['ano'] ?>" required disabled
+                            <input type="text" name="vigencia" value="<?= $vigencia['ano'] ?>" disabled
                                    class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="vigencia">Vigência *</label>
+                            <input type="text" name="vigencia"
+                                   value="<?= $vigencia['ano'] . ' (' . $vigencia['descricao'] . ')' ?>"
+                                   class="form-control" disabled>
                         </div>
                     </div>
 
@@ -281,20 +291,20 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                         <div class="form-group col-md-12">
                             <label for="observacao">Observação: </label>
                             <textarea name="observacao" id="observacao" rows="3"
-                                      class="form-control" disabled required><?= $fc['observacao'] ?></textarea>
+                                      class="form-control" disabled><?= $fc['observacao'] ?></textarea>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="fiscal">Fiscal *</label>
-                            <input type="text" name="fiscal" value="<?= $fiscal ?>" disabled required
+                            <input type="text" name="fiscal" value="<?= $fiscal ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="fiscal">Suplente </label>
-                            <input type="text" name="suplente" value="<?= $suplente ?>" disabled required
+                            <input type="text" name="suplente" value="<?= checaCampo($suplente) ?>" disabled
                                    class="form-control">
                         </div>
                     </div>

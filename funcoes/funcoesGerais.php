@@ -142,7 +142,9 @@ function semAcento($string)
 //retorna data d/m/y de mysql/date(a-m-d)
 function exibirDataBr($data)
 {
-    if ($data > '1970-01-02') {
+    //este if fazia com que certas datas muito antigas não fossem exibidas
+    //if ($data > '1970-01-02') {
+    if ($data > '1900-01-01') {
         $timestamp = strtotime($data);
         return date('d/m/Y', $timestamp);
     } else {
@@ -841,6 +843,16 @@ function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = "", $idUsuario
     }
 }
 
+//checa se o campo do parâmetro possuí algum dado, caso não possua, ele retorna "Não cadastrado"
+function checaCampo($campo)
+{
+    if ($campo == NULL || $campo == '') {
+        return "Não cadastrado";
+    } else {
+        return $campo;
+    }
+}
+
 function analisaArray($array)
 {
     //imprime o conteúdo de uma array
@@ -1390,6 +1402,26 @@ function listaLocais($idEvento, $tiraLinha = "")
     return $locais;
 }
 
+//retorna uma string com todos os locais que aquele pedido/contração do módulo de formação possuí
+function listaLocaisFormacao($idContratacao)
+{
+    $con = bancoMysqli();
+
+    $sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = $idContratacao";
+    $local = "";
+    $queryLocal = mysqli_query($con, $sqlLocal);
+
+    while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
+        $local = $local . $linhaLocal['local'] . ' | ';
+    }
+
+    if ($local != "") {
+        return $local = substr($local, 0, (strlen($local) - 3));
+    } else {
+        return $local;
+    }
+}
+
 function listaOcorrenciasContrato($idEvento)
 {
     $con = bancoMysqli();
@@ -1497,7 +1529,7 @@ function retornaPeriodoFormacao($idVigencia)
             return "de " . exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim['data_fim']);
         }
     } else {
-        return "Parcelas não cadastradas";
+        return "(Parcelas não cadastradas)";
     }
 
 }

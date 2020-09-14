@@ -329,6 +329,7 @@ if ($testaBanco->num_rows > 0) {
                                 <div class="col-md-6 form-group">
                                     <label for="nome">Nome: *</label>
                                     <input type="text" class="form-control" name="nome" placeholder="Digite o nome"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}"
                                            maxlength="70" required value="<?= $pf['nome'] ?>">
                                 </div>
                                 <div class="col-md-6 form-group">
