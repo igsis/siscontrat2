@@ -4,12 +4,27 @@ require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
 //CONEXÃO COM BANCO DE DADOS 
-$conexao = bancoMysqli();
+$con = bancoMysqli();
 
 //CONSULTA 
 $id_ped = $_GET['idPedido'];
 
 $ano = date('Y');
+
+$sql = "SELECT p.id, fc.protocolo, fc.ano, p.numero_processo,
+               fc.num_processo_pagto, pf.nome, v.verba, fs.status,
+               p.valor_total, p.justificativa
+            FROM pedidos p 
+            INNER JOIN formacao_contratacoes fc ON fc.id = p.origem_id 
+            INNER JOIN pessoa_fisicas pf ON fc.pessoa_fisica_id = pf.id
+            INNER JOIN verbas v on p.verba_id = v.id 
+            INNER JOIN formacao_status fs on fc.form_status_id = fs.id
+            WHERE  p.id = {$id_ped}";
+
+$query = mysqli_query($con,$sql);
+$pedido = mysqli_fetch_assoc($query);
+
+$valorPorExtenso = valorPorExtenso($pedido['valor_total'])
 
 ?>
 
@@ -36,17 +51,17 @@ $ano = date('Y');
 
 
 <?php
-
+echo var_dump($pedido);
 $sei =
-    "<p><strong>Do processo nº:</strong> </p>" .
+    "<p><strong>Do processo nº:</strong> {$pedido['numero_processo']} </p>" .
     "<p>&nbsp;</p>" .
-    "<p><strong>INTERESSADO:</strong>  </span></p>" .
-    "<p><strong>ASSUNTO:</strong>   </p>" .
+    "<p><strong>INTERESSADO:</strong> {$pedido['nome']} </span></p>" .
+    "<p><strong>ASSUNTO:</strong> {$pedido['justificativa']}  </p>" .
     "<p>&nbsp;</p>" .
     "<p><strong>CONTABILIDADE</strong></p>" .
     "<p><strong>Sr(a). Responsável</strong></p>" .
     "<p>&nbsp;</p>" .
-    "<p>O presente processo trata de , no valor de  conforme solicitação (link da solicitação), foram anexados os documentos necessários exigidos no edital, no período de </p>" .
+    "<p>O presente processo trata de {$pedido['nome']}, no valor de R$ {$pedido['valor_total']} ({$valorPorExtenso})  conforme solicitação (link da solicitação), foram anexados os documentos necessários exigidos no edital, no período de </p>" .
     "<p>&nbsp;</p>" .
     "<p>Assim, solicito a reserva de recursos que deverá onerar a ação 6375  – Dotação 25.10.13.392.3001.6375</p>" .
     "<p>&nbsp;</p>" .
