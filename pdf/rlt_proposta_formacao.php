@@ -25,7 +25,7 @@ class PDF extends FPDF
 }
 
 $idPedido = $_POST['idPedido'];
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$pedido = $con->query("SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 2 AND publicado = 1")->fetch_array();
 $idPf = $pedido['pessoa_fisica_id'];
 $idFC = $pedido['origem_id'];
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);

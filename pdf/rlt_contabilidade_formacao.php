@@ -17,59 +17,11 @@ $data = date("Y-m-d", strtotime("-3 hours"));
 
 $dia = date("d");
 
-$mes = date("m");
+$mes = retornaMes(date("m"));
 
 $ano = date("Y");
 
-switch ($mes) {
-
-    case 1:
-        $mes = "Janeiro";
-        break;
-    case 2:
-        $mes = "Fevereiro";
-        break;
-    case 3:
-        $mes = "Março";
-        break;
-    case 4:
-        $mes = "Abril";
-        break;
-    case 5:
-        $mes = "Maio";
-        break;
-    case 6:
-        $mes = "Junho";
-        break;
-    case 7:
-        $mes = "Julho";
-        break;
-    case 8:
-        $mes = "Agosto";
-        break;
-    case 9:
-        $mes = "Setembro";
-        break;
-    case 10:
-        $mes = "Outubro";
-        break;
-    case 11:
-        $mes = "Novembro";
-        break;
-    case 12:
-        $mes = "Dezembro";
-        break;
-}
-
-$idLinguagem = $contratacao['linguagem_id'];
-$linguagem = recuperaDados('linguagens', 'id', $idLinguagem);
-
-$idPrograma = $contratacao['programa_id'];
-$programa = recuperaDados('programas', 'id', $idPrograma);
-
-$idCoord = $contratacao['coordenadoria_id'];
-$coordenadoria = recuperaDados('coordenadorias','id', $idCoord);
-
+$coordenadoria = recuperaDados('coordenadorias', 'id', $contratacao['coordenadoria_id'])['coordenadoria'];
 
 
 ?>
@@ -100,34 +52,34 @@ $coordenadoria = recuperaDados('coordenadorias','id', $idCoord);
 <div align="center">
     <?php
     $conteudo =
-        "<p>&nbsp;</p>".
-        "<p><strong>Interessado:</strong> ".$pessoa['nome']."</p>".
-        "<p><strong>Programa:</strong> " . $programa['programa'] . " <strong>Linguagem:</strong> " . $linguagem['linguagem'] . " <strong>Edital:</strong> " . $programa['edital'] . "</p>" .
-        "<p>&nbsp;</p>".
-        "<p>Atesto o recebimento em ".exibirDataBr($data).", de toda a documentação: recibo link SEI e arquivos consolidados, previstos na Portaria SF 08/16.</p>".
+        "<p>&nbsp;</p>" .
+        "<p><strong>Interessado:</strong> " . $pessoa['nome'] . "</p>" .
+        "<p><strong>Objeto:</strong> " . retornaObjetoFormacao_Emia($idFC, "formacao") . "</p>" .
+        "<p>&nbsp;</p>" .
+        "<p>Atesto o recebimento em " . exibirDataBr($data) . ", de toda a documentação: recibo link SEI e arquivos consolidados, previstos na Portaria SF 08/16.</p>" .
 
-        "<p>&nbsp;</p>".
-        "<p><strong>SMC - CONTABILIDADE</strong></p>".
-        "<p><strong>Sr.(a) Contador(a)</strong></p>".
-        "<p align='justify'>Encaminho o presente para providências quanto ao pagamento, uma vez que os serviços foram realizados e confirmados a contento conforme documento link SEI.</p>".
-        "<p align='justify'>Em virtude da Regionalização e Georreferenciamento das Despesas Municipais com a nova implantação do Detalhamento da Ação em 2019 no Sistema SOF,  informamos que os valores do presente pagamento foram gastos na região ".$coordenadoria['coordenadoria'].".</p>".
-        "<p>&nbsp;</p>".
+        "<p>&nbsp;</p>" .
+        "<p><strong>SMC - CONTABILIDADE</strong></p>" .
+        "<p><strong>Sr.(a) Contador(a)</strong></p>" .
+        "<p align='justify'>Encaminho o presente para providências quanto ao pagamento, uma vez que os serviços foram realizados e confirmados a contento conforme documento link SEI.</p>" .
+        "<p align='justify'>Em virtude da Regionalização e Georreferenciamento das Despesas Municipais com a nova implantação do Detalhamento da Ação em 2019 no Sistema SOF,  informamos que os valores do presente pagamento foram gastos na região $coordenadoria." . "</p>" .
+        "<p>&nbsp;</p>" .
 
-        "<p>INFORMAÇÕES COMPLEMENTARES</p>".
-        "<hr />".
-        "<p><strong>Nota de Empenho:</strong></p>".
-        "<p><strong>Anexo Nota de Empenho:</strong></p>".
-        "<p><strong>Recibo da Nota de Empenho:</strong></p>".
-        "<p><strong>Pedido de Pagamento:</strong></p>".
-        "<p><strong>Recibo de pagamento:</strong></p>".
-        "<p><strong>Relatório de Horas Trabalhadas:</strong></p>".
-        "<p><strong>NIT/PIS/PASEP:</strong></p>".
-        "<p><strong>Certidões fiscais:</strong></p>".
-        "<p><strong>CCM:</strong></p>".
-        "<p><strong>FACC:</strong></p>".
-        "<p>&nbsp;</p>".
+        "<p>INFORMAÇÕES COMPLEMENTARES</p>" .
+        "<hr />" .
+        "<p><strong>Nota de Empenho:</strong></p>" .
+        "<p><strong>Anexo Nota de Empenho:</strong></p>" .
+        "<p><strong>Recibo da Nota de Empenho:</strong></p>" .
+        "<p><strong>Pedido de Pagamento:</strong></p>" .
+        "<p><strong>Recibo de pagamento:</strong></p>" .
+        "<p><strong>Relatório de Horas Trabalhadas:</strong></p>" .
+        "<p><strong>NIT/PIS/PASEP:</strong></p>" .
+        "<p><strong>Certidões fiscais:</strong></p>" .
+        "<p><strong>CCM:</strong></p>" .
+        "<p><strong>FACC:</strong></p>" .
+        "<p>&nbsp;</p>" .
 
-        "<p>São Paulo, ".$dia." de ".$mes." de ".$ano.".</p>";
+        "<p>São Paulo, $dia de $mes de $ano</p>";
     ?>
 
     <div id="texto" class="texto"><?php echo $conteudo; ?></div>

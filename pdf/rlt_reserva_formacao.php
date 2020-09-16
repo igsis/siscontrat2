@@ -5,11 +5,10 @@ require_once("../funcoes/funcoesGerais.php");
 
 $con = bancoMysqli();
 
-
 $idPedido = $_POST['idPedido'];
 $tipo = $_POST['tipo'];
 
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$pedido = $con->query("SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 2 AND publicado = 1")->fetch_array();
 $idFC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
@@ -64,7 +63,7 @@ switch ($tipo) {
         "<p><strong>Do processo nº:</strong> " . $contratacao['protocolo'] . "</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>INTERESSADO:</strong> " . $pessoa['nome'] . "  </span></p>" .
-        "<p><strong>Programa:</strong> " . $programa . " <strong>Linguagem:</strong> " . $linguagem . " <strong>Edital:</strong> " . $programa . "</p>" .
+        "<p><strong>Objeto:</strong> " . retornaObjetoFormacao_Emia($idFC, "formacao") . "</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>CONTABILIDADE</strong></p>" .
         "<p><strong>Sr(a). Responsável</strong></p>" .

@@ -7,7 +7,7 @@ $con = bancoMysqli();
 
 $idPedido = $_POST['idPedido'];
 
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$pedido = $con->query("SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 2 AND publicado = 1")->fetch_array();
 $idFC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
