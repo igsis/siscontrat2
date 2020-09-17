@@ -1,27 +1,42 @@
 <?php
 $con = bancoMysqli();
 
-if(isset($_POST['editar'])){
-    $idEC = $_POST['idEC'];
+if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
     $cargo = trim(addslashes($_POST['cargo']));
     $justificativa = $_POST['justificativa'];
+}
+
+if (isset($_POST['cadastra'])) {
+    $sqlInsert = "INSERT INTO emia_cargos
+                            (cargo, justificativa)
+                            VALUES
+                            ('$cargo', '$justificativa')";
+    if (mysqli_query($con, $sqlInsert)) {
+        $idEC = recuperaUltimo('emia_cargos');
+        $mensagem = mensagem("success", "Cadastrado com sucesso!");
+    } else {
+        $mensagem = mensagem("danger", "Erro ao cadastrar! Tente novamente.");
+    }
+}
+
+if (isset($_POST['editar'])) {
+    $idEC = $_POST['idEC'];
     $sqlUpdate = "UPDATE emia_cargos SET
                     cargo = '$cargo',
                     justificativa = '$justificativa'
                     WHERE id = '$idEC'";
-    if(mysqli_query($con,$sqlUpdate)){
+    if (mysqli_query($con, $sqlUpdate)) {
         $mensagem = mensagem("success", "Gravado com sucesso!");
-    }else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
-    $ec = recuperaDados('emia_cargos', 'id', $idEC);
 }
 
-if(isset($_POST['edit'])){
+if (isset($_POST['edit'])) {
     $idEC = $_POST['idECEdit'];
-    $ec = recuperaDados('emia_cargos', 'id', $idEC);
 }
 
+$ec = recuperaDados('emia_cargos', 'id', $idEC);
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -42,11 +57,13 @@ if(isset($_POST['edit'])){
                     <div class="row">
                         <div class="col-md-4">
                             <label for="cargo">Cargo: *</label>
-                            <input class="form-control" type="text" required name="cargo" id="cargo" value="<?=$ec['cargo']?>">
+                            <input class="form-control" type="text" required name="cargo" id="cargo"
+                                   value="<?= $ec['cargo'] ?>">
                         </div>
                         <div class="col-md-8">
                             <label for="justificativa">Justificativa: *</label>
-                            <input class="form-control" type="text" required name="justificativa" id="justificativa" value="<?=$ec['justificativa']?>">
+                            <input class="form-control" type="text" required name="justificativa" id="justificativa"
+                                   value="<?= $ec['justificativa'] ?>">
                         </div>
                     </div>
                 </div>
@@ -54,7 +71,7 @@ if(isset($_POST['edit'])){
                     <a href="?perfil=emia&p=administrativo&sp=cargo&spp=listagem">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
-                    <input type="hidden" name="idEC" value="<?=$idEC?>" id="idEC">
+                    <input type="hidden" name="idEC" value="<?= $idEC ?>" id="idEC">
                     <button name="editar" id="editar" type="submit" class="btn btn-primary pull-right">Salvar</button>
             </form>
         </div>

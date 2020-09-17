@@ -11,21 +11,6 @@ if (isset($_POST['excluir'])) {
     }
 }
 
-if (isset($_POST['cadastra'])) {
-    $cargo = $_POST['cargo'];
-    $justificativa = $_POST['justificativa'];
-
-    $sqlInsert = "INSERT INTO emia_cargos
-                            (cargo, justificativa)
-                            VALUES
-                            ('$cargo', '$justificativa')";
-    if (mysqli_query($con, $sqlInsert)) {
-        $mensagem = mensagem("success", "Cadastrado com sucesso!");
-    } else {
-        $mensagem = mensagem("danger", "Erro ao cadastrar! Tente novamente.");
-    }
-}
-
 $sql = "SELECT * FROM emia_cargos WHERE publicado = 1";
 $query = mysqli_query($con, $sql);
 ?>

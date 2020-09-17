@@ -41,7 +41,7 @@ $parcela = $con->query("SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND
                                         <label for="data_pagamento">Data pagamento: </label>
                                         <input type="date" name="data_pagamento[<?= $i ?>]" class="form-control"
                                                placeholder="DD/MM/AAAA" required
-                                               value="<?= $parcela[$i]['data_pagamento']?>">
+                                               value="<?= $parcela[$i]['data_pagamento'] ?? NULL?>">
                                     </div>
                                 </div>
                                 <?php

@@ -1546,7 +1546,7 @@ function retornaPeriodoFormacao_Emia($idVigencia, $modulo)
         $campo = "emia_vigencia_id";
     }
 
-    $testaDataInicio = $con->query("SELECT data_inicio FROM $tabela WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->num_rows;
+    $testaDataInicio = $con->query("SELECT data_inicio FROM $tabela WHERE $campo = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->num_rows;
     if ($testaDataInicio > 0) {
         $data_inicio = $con->query("SELECT data_inicio FROM $tabela WHERE $campo = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'];
         $data_fim = $con->query("SELECT data_fim FROM $tabela WHERE $campo = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array()['data_fim'];

@@ -2,7 +2,6 @@
 $con = bancoMysqli();
 
 if(isset($_POST['cadastra']) || isset($_POST['editar'])){
-    $idEV = $_POST['idEV'] ?? NULL;
     $ano = $_POST['ano'] ?? NULL;
     $desc = trim(addslashes($_POST['desc'])) ?? NULL;
     $numParcela = $_POST['numParcelas'] ?? NULL;
@@ -19,10 +18,10 @@ if (isset($_POST['cadastra'])) {
     } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar! Tente novamente.");
     }
-    $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 }
 
 if (isset($_POST['editar'])) {
+    $idEV = $_POST['idEV'];
     $sqlUpdate = "UPDATE emia_vigencias SET
                     ano = '$ano',
                     descricao = '$desc',
@@ -60,21 +59,19 @@ if (isset($_POST['editar'])) {
             $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
         }
     }
-
-    $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 }
 
 if (isset($_POST['edit'])) {
     $idEV = $_POST['idEVEdit'];
-    $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 }
 
+$ev = recuperaDados('emia_vigencias', 'id', $idEV);
 ?>
 
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2>Cadastro de Vigência</h2>
+            <h2>Editar Vigência</h2>
         </div>
         <div class="box box-primary">
             <div class="row" align="center">

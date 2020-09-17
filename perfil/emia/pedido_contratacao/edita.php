@@ -182,8 +182,8 @@ $sql = "SELECT pf.nome,
         INNER JOIN locais AS l ON l.id = ec.local_id
         INNER JOIN emia_cargos AS c ON c.id = ec.emia_cargo_id
         INNER JOIN emia_vigencias AS v ON v.id = ec.emia_vigencia_id
-        INNER JOIN usuarios AS f ON ec.fiscal_id = f.id
-		INNER JOIN usuarios AS s ON ec.suplente_id = s.id
+        LEFT JOIN usuarios AS f ON ec.fiscal_id = f.id
+		LEFT JOIN usuarios AS s ON ec.suplente_id = s.id
         INNER JOIN verbas AS verba ON p.verba_id = verba.id
         WHERE p.publicado = 1 AND p.id = '$idPedido' AND p.origem_tipo_id = 3";
 $ec = $con->query($sql)->fetch_array();
@@ -250,7 +250,7 @@ $link_proposta = $http . "rlt_proposta_emia.php";
                         <div class="col-md-12">
                             <label for="cronograma">Cronograma: </label>
                             <textarea name="cronograma" id="cronograma" rows="3" type="text" class="form-control"
-                                      disabled><?= $ec['cronograma'] ?></textarea>
+                                      disabled><?= checaCampo($ec['cronograma']) ?></textarea>
                         </div>
                     </div>
                     <br>
@@ -259,7 +259,7 @@ $link_proposta = $http . "rlt_proposta_emia.php";
                         <div class="col-md-12">
                             <label for="observacao">Observação: </label>
                             <textarea name="observacao" id="observacao" rows="3" type="text" class="form-control"
-                                      disabled><?= $ec['observacao'] ?></textarea>
+                                      disabled><?= checaCampo($ec['observacao']) ?></textarea>
                         </div>
                     </div>
                     <br>
@@ -268,14 +268,14 @@ $link_proposta = $http . "rlt_proposta_emia.php";
                         <div class="col-md-6">
                             <label for="fiscal">Fiscal: </label>
                             <select name="fiscal" id="fiscal" class="form-control" disabled>
-                                <option><?= $ec['fiscal'] ?></option>
+                                <option><?= checaCampo($ec['fiscal']) ?></option>
                             </select>
                         </div>
 
                         <div class="col-md-6">
                             <label for="suplente">Suplente: </label>
                             <select name="suplente" id="suplente" class="form-control" disabled>
-                                <option><?= $ec['suplente'] ?></option>
+                                <option><?= checaCampo($ec['suplente']) ?></option>
                             </select>
                         </div>
                     </div>
@@ -306,8 +306,8 @@ $link_proposta = $http . "rlt_proposta_emia.php";
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="dataKit">Data kit pagamento:</label>
-                            <input type="date" name="dataKit" class="form-control" id="datepicker10"
+                            <label for="dataKit">Data kit pagamento: *</label>
+                            <input type="date" name="dataKit" class="form-control" required
                                    placeholder="DD/MM/AAAA" value="<?= $ec['data_kit_pagamento'] ?>">
                         </div>
 
@@ -322,14 +322,14 @@ $link_proposta = $http . "rlt_proposta_emia.php";
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="numeroProcesso">Número do Processo: *</label>
-                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
+                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control" required
                                    data-mask="9999.9999/9999999-9" minlength="19" value="<?= $ec['numero_processo'] ?>">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="numeroProcesso">Número do Processo Mãe: *</label>
-                            <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
-                                   data-mask="9999.9999/9999999-9" minlength="19"
+                            <input type="text" name="processoMae" id="processoMae" class="form-control"
+                                   data-mask="9999.9999/9999999-9" minlength="19" required
                                    value="<?= $ec['numero_processo_mae'] ?>">
                         </div>
                     </div>
@@ -399,16 +399,17 @@ $link_proposta = $http . "rlt_proposta_emia.php";
                     </div>
 
                     <input type="hidden" name="idEc" value="<?= $idPedido ?>" id="idEc">
+                    <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
+                        Salvar
+                    </button>
             </form>
-            <button type="submit" name="edita" id="edita" class="btn btn-primary pull-right">
-                Salvar
-            </button>
+
 
             <div class="col-md-1">
                 <form action="<?= $link_proposta ?>" target="_blank" method="post">
                     <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                     <button type="submit"
-                            class="btn btn-primary center-block" <?= $disabledEmia . " " . $disabledPedido ?>>Gerar
+                            class="btn btn-primary center-block" style="width: 200%" <?= $disabledEmia . " " . $disabledPedido ?>>Gerar
                         Proposta
                     </button>
                 </form>
