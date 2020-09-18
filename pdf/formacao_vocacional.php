@@ -1,23 +1,18 @@
 <?php
-require_once("../include/lib/fpdf/fpdf.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
 // conexão com banco //
 $con = bancoMysqli();
 
-isset($_POST['idFormacao']);
 $idFormacao = $_POST['idFormacao'];
+$idPedido = $_POST['idPedido'];
 
 
-$fc = recuperaDados('formacao_contratacoes','id',$idFormacao);
-$vigencia = $fc['form_vigencia_id'];
-$pessoa = recuperaDados('pessoa_fisicas','id',$fc['pessoa_fisica_id']);
-$linguagem = recuperaDados('linguagens', 'id', $fc['linguagem_id'])['linguagem'];
-$programa = recuperaDados('programas', 'id', $fc['programa_id'])['programa'];
-$edital = recuperaDados('programas', 'id', $fc['programa_id'])['edital'];
-$pedido = recuperaDados('pedidos','id',$fc['pedido_id']);
-$modelo = recuperaDados('juridicos', 'pedido_id', $idFormacao);
+$fc = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
+$pessoa = recuperaDados('pessoa_fisicas', 'id', $fc['pessoa_fisica_id']);
+$pedido = recuperaDados('pedidos', 'id', $fc['pedido_id']);
+$modelo = recuperaDados('juridicos', 'pedido_id', $idPedido);
 $pagamento = $pedido['forma_pagamento'];
 $valorT = $pedido['valor_total'];
 $valor_extenso = valorPorExtenso($valorT);
@@ -26,12 +21,19 @@ $cpf = $pessoa['cpf'];
 $amparo = $modelo['amparo_legal'];
 $dotacao = $modelo['dotacao'];
 $finalizacao = $modelo['finalizacao'];
-$fp = recuperaDados('formacao_parcelas','id',$idFormacao);
-$carga = $fp['carga_horaria'];
+
+$carga = null;
+$sqlCarga = "SELECT carga_horaria FROM formacao_parcelas WHERE formacao_vigencia_id = " . $fc['form_vigencia_id'];
+$queryCarga = mysqli_query($con, $sqlCarga);
+
+while ($countt = mysqli_fetch_array($queryCarga)) {
+    $carga += $countt['carga_horaria'];
+}
+
 $dataAtual = date("d/m/Y", strtotime("-3 hours"));
 
 //periodo
-$data = retornaPeriodoFormacao_Emia($vigencia, "formacao");
+$data = retornaPeriodoFormacao_Emia($fc['form_vigencia_id'], "formacao");
 // local
 $sqlLocal = "SELECT l.local 
 FROM formacao_locais fl 
@@ -45,9 +47,9 @@ while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
 
 $local = substr($local, 0, -3);
 
-if($pessoa['passaporte' != NULL]){
+if ($pessoa['passaporte' != NULL]) {
     $cpf_passaporte = "Passaporte (" . $pessoa['passaporte'] . ")</p>";
-}else{
+} else {
     $cpf_passaporte = "CPF (" . $cpf . ")</p>";
 }
 
@@ -68,35 +70,39 @@ if($pessoa['passaporte' != NULL]){
             text-align: justify;
         }
     </style>
+    <link rel="stylesheet" href="../visual/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="include/dist/ZeroClipboard.min.js"></script>
 </head>
 
-
 <body>
+<br>
 <?php
 $dados =
     "<p>&nbsp;</p>" .
     "<p align='justify'>" . "$amparo" . "</p>" .
     "<p>&nbsp;</p>" .
-    "<p><strong>Contratado:</strong> " . "$nome" . ", $cpf_passaporte" .
-    "<p><strong>Objeto:</strong> " . "$programa" . " " . "$linguagem" . " " . "$edital" . "</p>" .
-    "<p><strong>Data / Período:</strong>" . "$data" . "</p>" .
-    "<p><strong>Locais:</strong> " . "  " . "$local" . "</p>" .
-    "<p><strong>Carga Horária:</strong>"."" . "$carga" . "" .
-    "<p><strong> Valor:</strong> " . "R$ $valorT " . "  " . "($valor_extenso)" . "</p>" .
-    "<p><strong>Forma de Pagamento:</strong> " . "$pagamento" . "</p>" .
-    "<p><strong>Dotação Orçamentária: </strong> " . " $dotacao " . "</p>" .
+    "<p><strong>Contratado:</strong> " . $nome . ", $cpf_passaporte" .
+    "<p><strong>Objeto:</strong> " . retornaObjetoFormacao_Emia($idFormacao, "formacao") . "</p>" .
+    "<p><strong>Data / Período:</strong>" . $data . "</p>" .
+    "<p><strong>Locais:</strong> " .  $local . "</p>" .
+    "<p><strong>Carga Horária: </strong>" . $carga . "</p>" .
+    "<p><strong> Valor: R$</strong> " . $valorT . " (" . $valor_extenso . " ) </p>" .
+    "<p><strong>Forma de Pagamento:</strong> " . $pagamento . "</p>" .
+    "<p><strong>Dotação Orçamentária: </strong> " .  checaCampo($dotacao)  . "</p>" .
     "<p>&nbsp;</p>" .
     "<p align='justify'>" . "$finalizacao" . "</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
-    "<p align='center'>São Paulo, " . "$dataAtual" . "</p>" .
+    "<p align='center'>São Paulo, " . $dataAtual . "</p>" .
     "<p>&nbsp;</p>"
 
 
 ?>
 <div align="center">
-    <div id="dados" class="texto"><?php echo $dados; ?></div>
+    <div id="texto" class="texto"><?php echo $dados; ?></div>
 </div>
 <br>
 <div align="center">
@@ -109,5 +115,13 @@ $dados =
         <button class="btn btn-primary">CLIQUE AQUI PARA ACESSAR O <img src="../visual/images/logo_sei.jpg"></button>
     </a>
 </div>
+
+<script>
+    var client = new ZeroClipboard();
+    client.clip(document.getElementById("botao-copiar"));
+    client.on("aftercopy", function () {
+        alert("Copiado com sucesso!");
+    });
+</script>
 </body>
 </html>

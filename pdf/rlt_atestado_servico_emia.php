@@ -17,7 +17,7 @@ $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
 $nomeFiscal = "";
 $rfFiscal = "";
-if ($contratacao['fiscal_id'] != "") {
+if ($contratacao['fiscal_id'] != 0) {
     $fiscal = recuperaDados('usuarios', 'id', $contratacao['fiscal_id']);
     if ($fiscal) {
         $nomeFiscal = $fiscal['nome_completo'];
@@ -27,7 +27,7 @@ if ($contratacao['fiscal_id'] != "") {
 
 $nomeSuplente = "";
 $rfSuplente = "";
-if ($contratacao['suplente_id'] != "") {
+if ($contratacao['suplente_id'] != 0) {
     $suplente = recuperaDados('usuarios', 'id', $contratacao['suplente_id']);
     if ($suplente) {
         $nomeSuplente = $suplente['nome_completo'];

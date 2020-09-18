@@ -51,8 +51,9 @@ $carga = null;
 $sqlCarga = "SELECT carga_horaria FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia'";
 $queryCarga = mysqli_query($con, $sqlCarga);
 
-while ($countt = mysqli_fetch_array($queryCarga))
+while ($countt = mysqli_fetch_array($queryCarga)) {
     $carga += $countt['carga_horaria'];
+}
 
 $drt = "";
 $testaDrt = $con->query("SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf");
