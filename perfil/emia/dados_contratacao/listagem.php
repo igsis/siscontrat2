@@ -1,57 +1,6 @@
 <?php
 $con = bancoMysqli();
 
-if (isset($_POST['cadastrar'])) {
-    $idPf = $_POST['pf'];
-    $ano = $_POST['ano'];
-    $local = $_POST['local'];
-    $cargo = $_POST['cargo'];
-    $vigencia = $_POST['vigencia'];
-    $cronograma = $_POST['cronograma'];
-    $obs = $_POST['observacao'];
-    $status = "1";
-    $fiscal = $_POST['fiscal'];
-    $suplente = $_POST['suplente'];
-    $usuario = $_SESSION['usuario_id_s'];
-    $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
-
-    $sqlInsert = "INSERT INTO emia_contratacao
-                                    (pessoa_fisica_id, 
-                                     ano, 
-                                     emia_status_id, 
-                                     local_id, 
-                                     emia_cargo_id, 
-                                     emia_vigencia_id, 
-                                     cronograma, 
-                                     observacao, 
-                                     fiscal_id, 
-                                     suplente_id, 
-                                     usuario_id, 
-                                     data_envio)
-                                     VALUES
-                                        ('$idPf',
-                                         '$ano',
-                                         '$status',
-                                         '$local',
-                                         '$cargo',
-                                         '$vigencia',
-                                         '$cronograma',
-                                         '$obs',
-                                         '$fiscal',
-                                         '$suplente',
-                                         '$usuario',
-                                         '$data') ";
-    if (mysqli_query($con, $sqlInsert)) {
-        $mensagem = mensagem('success', 'Cadastrado com Sucesso!');
-        $idContrat = recuperaUltimo('emia_contratacao');
-        $protocolo = geraProtocolo($idContrat) . "-M";
-        $sqlProtocolo = "UPDATE emia_contratacao SET protocolo = '$protocolo' WHERE id = '$idContrat'";
-        $queryProtocolo = mysqli_query($con,$sqlProtocolo);
-    } else {
-        $mensagem = mensagem('danger', 'Erro ao Cadastrar! Tente novamente.');
-    }
-}
-
 if(isset($_POST['despublica'])){
     $idDados = $_POST['idDados'];
     $sqlDespublica = "UPDATE emia_contratacao SET publicado = 0 WHERE id = '$idDados'";

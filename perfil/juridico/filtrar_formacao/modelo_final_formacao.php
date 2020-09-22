@@ -6,32 +6,11 @@ $http = $server . "/pdf/";
 $link_vocacional = $http . "formacao_vocacional.php";
 $link_pia = $http . "formacao_pia.php";
 
-
-isset($_POST['idFormacao']);
-$idFormacao = $_POST['idFormacao'];
-
-if(isset($_POST['enviar'])) {
-    $dotacao = $_POST['dotacao'];
-}
-
-
-$sql = "SELECT * FROM juridicos where pedido_id = '$idFormacao'";
-$query = mysqli_query($con,$sql);
-$num = mysqli_num_rows($query);
-
-if ($num > 0) {
-    $sqlUpdate = "UPDATE juridicos SET pedido_id = $idFormacao,dotacao ='$dotacao'
-    WHERE pedido_id = $idFormacao";
-    $query = mysqli_query($con,$sqlUpdate);
-}
-else {
-    $sqlInsert = "INSERT INTO juridicos(pedido_id, amparo_legal, finalizacao, dotacao)
-        VALUES ('$idFormacao','','','$dotacao')";
-    $query = mysqli_query($con,$sqlInsert);
-
+if(isset($_POST['doc'])){
+    $idFormacao = $_POST['idFormacao'];
+    $idPedido = $_POST['idPedido'];
 }
 ?>
-
 
 <div class="content-wrapper">
     <section class="content">
@@ -41,12 +20,14 @@ else {
                 <div class="row">
                     <div class="col-md-offset-4 col-md-4" align="center">
                         <form action="<?= $link_vocacional ?>" method="post">
-                        <input type="hidden" value="<?= $idFormacao ?>" name="idFormacao">
-                        <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO VOCACIONAL
-                        </button>
+                            <input type="hidden" value="<?= $idFormacao ?>" name="idFormacao">
+                            <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO VOCACIONAL
+                            </button>
                         </form>
                         <form action="<?= $link_pia ?>" method="post">
                             <input type="hidden" value="<?= $idFormacao ?>" name="idFormacao">
+                            <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
                             <button type="submit" class="btn btn-primary btn-lg btn-block"> DESPACHO PIÁ
                             </button>
                         </form>

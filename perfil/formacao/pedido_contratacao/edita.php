@@ -430,18 +430,35 @@ $queryLocais = mysqli_query($con, $sqlLocal);
             <hr/>
 
             <?php
-            if (retornaPeriodoFormacao_Emia($fc['form_vigencia_id'], "formacao") == "") {
-                $disabled = "disabled";
-                $display = "block";
+            $testaParcelasFormacao = $con->query("SELECT * FROM formacao_parcelas WHERE publicado = 1 AND formacao_vigencia_id = " . $fc['form_vigencia_id'])->num_rows;
+            $testaParcelasPedido = $con->query("SELECT * FROM parcelas WHERE publicado = 1 AND pedido_id = " . $idPedido)->num_rows;
+
+            if ($testaParcelasFormacao > 0) {
+                $disabledFormacao = "";
+                $displayFormacao = "display: none;";
             } else {
-                $disabled = "";
-                $display = "none";
+                $displayFormacao = "";
+                $disabledFormacao = "disabled";
+            }
+
+            if ($testaParcelasPedido > 0) {
+                $disabledPedido = "";
+                $displayPedido = "display: none;";
+            } else {
+                $displayPedido = "";
+                $disabledPedido = "disabled";
             }
             ?>
 
             <div class="row">
-                <div class="col-md-12" style="text-align: center; display: <?=$display?>">
-                    <span style="font-size: 16px; color: red;"><strong>Para acessar a área de impressão é necessário preencher completamente as informações de parcelas de vigência.</strong></span>
+                <div class="form-group col-md-12" style="text-align: center;">
+                    <span style="color: red; <?= $displayFormacao ?>"><b>Não há parcelas cadastradas na vigência, lembre-se de cadastra-las para acessar a área de impressão</b></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-12" style="text-align: center;">
+                    <span style="color: red; <?= $displayPedido ?>"><b>Para acessar a área de impressão é necessário cadastrar as parcelas, lembre-se de cadastra-las clicando no botão (Editar parcelas)</b></span>
                 </div>
             </div>
 
@@ -449,8 +466,9 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                 <div class="col-md-12" style="text-align:center">
                     <form action="?perfil=formacao&p=pedido_contratacao&sp=area_impressao" method="post" role="form">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-default" style="width: 35%;" <?= $disabled ?>>Ir para a área
-                                de impressão
+                        <button type="submit" class="btn btn-default"
+                                style="width: 35%;" <?= $disabledFormacao . " " . $disabledPedido ?>>Ir para a área
+                            de impressão
                         </button>
                     </form>
                 </div>

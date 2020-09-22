@@ -2,14 +2,14 @@
 $con = bancoMysqli();
 $idEC = $_POST['idECView'];
 $sql = "SELECT c.id, 
-        c.protocolo AS 'protocolo',
-		p.nome AS 'nome',
-        c.ano  AS 'ano',
-        s.status AS 'status',
-        l.local AS 'local',
-        ec.cargo AS 'cargo',
+        c.protocolo,
+		p.nome,
+        c.ano,
+        s.status,
+        l.local,
+        ec.cargo,
         ev.ano AS 'vigencia',
-        c.cronograma AS 'cronograma',
+        c.cronograma,
         c.observacao AS 'obs',
         fiscal.nome_completo AS 'fiscal',
         suplente.nome_completo AS 'suplente',
@@ -38,63 +38,58 @@ $ec = $con->query($sql)->fetch_assoc();
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
-                            <th width="30%">Protocolo: </th>
-                            <td><?=$ec['protocolo']?></td>
+                            <th width="30%">Protocolo:</th>
+                            <td><?= $ec['protocolo'] ?></td>
                         </tr>
 
                         <tr>
-                            <th width="30%">Pessoa Física: </th>
-                            <td><?=$ec['nome']?></td>
+                            <th width="30%">Pessoa Física:</th>
+                            <td><?= $ec['nome'] ?></td>
                         </tr>
 
                         <tr>
-                            <th width="30%">Status: </th>
-                            <td><?=$ec['status']?></td>
+                            <th width="30%">Status:</th>
+                            <td><?= $ec['status'] ?></td>
                         </tr>
 
                         <tr>
-                            <th width="30%">Local: </th>
-                            <td><?=$ec['local']?></td>
+                            <th width="30%">Local:</th>
+                            <td><?= $ec['local'] ?></td>
                         </tr>
 
                         <tr>
-                            <th width="30%">Cargo: </th>
-                            <td><?=$ec['cargo']?></td>
+                            <th width="30%">Cargo:</th>
+                            <td><?= $ec['cargo'] ?></td>
                         </tr>
 
                         <tr>
-                            <th width="30%">Ano: </th>
-                            <td><?=$ec['ano']?></td>
+                            <th width="30%">Ano:</th>
+                            <td><?= $ec['ano'] ?></td>
                         </tr>
 
                         <tr>
-                            <th width="30%">Cronograma: </th>
-                            <td><?=$ec['cronograma']?></td>
+                            <th width="30%">Cronograma:</th>
+                            <td><?= checaCampo($ec['cronograma']) ?></td>
                         </tr>
 
                         <tr>
-                            <th width="30%">Observação: </th>
-                            <td><?=$ec['obs']?></td>
+                            <th width="30%">Observação:</th>
+                            <td><?= checaCampo($ec['obs']) ?></td>
                         </tr>
 
                         <tr>
-                            <th width="30%">Fiscal: </th>
-                            <td><?=$ec['fiscal'] ?? "Não Cadastrado"?></td>
+                            <th width="30%">Fiscal:</th>
+                            <td><?= checaCampo($ec['fiscal']) ?></td>
                         </tr>
 
                         <tr>
-                            <th width="30%">Suplente: </th>
-                            <td><?=$ec['suplente'] ?? "Não Cadastrado"?></td>
+                            <th width="30%">Suplente:</th>
+                            <td><?= checaCampo($ec['suplente']) ?></td>
                         </tr>
 
                         <tr>
-                            <th width="30%">Numero do Processo de Pagamento: </th>
-                            <td><?php if($ec['num_pgt'] == null){
-                                    echo "Não Cadastrado";
-                                }else{
-                                    echo $ec['num_pgt'];
-                                }
-                                ?></td>
+                            <th width="30%">Numero do Processo de Pagamento:</th>
+                            <td><?= checaCampo($ec['num_pgt']) ?></td>
                         </tr>
                     </table>
                 </div>
@@ -113,6 +108,9 @@ $ec = $con->query($sql)->fetch_assoc();
                 </form>
             </div>
         </div>
+    </section>
+</div>
+
 <div id="despublicacao" class="modal modal-danger modal fade in" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -125,7 +123,7 @@ $ec = $con->query($sql)->fetch_assoc();
                 <label>Tem certeza que deseja excluir?</label>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="idDados" id="idDados" value="<?= $ec['id']?>">
+                <input type="hidden" name="idDados" id="idDados" value="<?= $ec['id'] ?>">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                 </button>
                 <input type="submit" class="btn btn-danger btn-outline" name="despublicar" value="Excluir">
@@ -133,6 +131,4 @@ $ec = $con->query($sql)->fetch_assoc();
             </div>
         </div>
     </div>
-</div>
-</section>
 </div>

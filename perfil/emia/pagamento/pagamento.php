@@ -43,19 +43,19 @@ $link_contabilidade = $http . "rlt_contabilidade_emia.php";
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="protocolo">Protocolo</label>
+                                    <label for="protocolo">Protocolo:</label>
                                     <input type="text" name="protocolo" class="form-control" value="<?= $ec['protocolo'] ?>"
                                            disabled>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="numProcesso">Número do processo</label>
+                                    <label for="numProcesso">Número do Processo:</label>
                                     <input type="text" name="numProcesso" class="form-control" value="<?= $pedido['numero_processo'] ?>"
                                            disabled>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="local">Local</label>
+                                    <label for="local">Local:</label>
                                     <input type="text" name="local" class="form-control" value="<?= $local['local'] ?>" disabled>
                                 </div>
                             </div>

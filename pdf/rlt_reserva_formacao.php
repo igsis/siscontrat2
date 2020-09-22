@@ -1,5 +1,4 @@
 <?php
-
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
@@ -7,25 +6,34 @@ require_once("../funcoes/funcoesGerais.php");
 $con = bancoMysqli();
 
 $idPedido = $_POST['idPedido'];
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$tipo = $_POST['tipo'];
+
+$pedido = $con->query("SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 2 AND publicado = 1")->fetch_array();
 $idFC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
+$pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
-$data = date("Y-m-d", strtotime("-3 hours"));
+$linguagem = recuperaDados('linguagens', 'id', $contratacao['linguagem_id'])['linguagem'];
 
-$dia = date("d");
+$programa = recuperaDados('programas', 'id', $contratacao['programa_id'])['programa'];
 
-$mes = retornaMes(date("m"));
-
-$ano = date("Y");
-
-$coordenadoria = recuperaDados('coordenadorias', 'id', $contratacao['coordenadoria_id'])['coordenadoria'];
-
+switch ($tipo) {
+    case "pia":
+        $texto = "<p>Assim, solicito a reserva de recursos que deverá onerar a ação 6374 – Dotação 25.10.13.392.3001.6374</p>";
+        break;
+    case "sme":
+        $texto = "<p>Assim, solicito a reserva de recursos, que deverá onerar os recursos da Nota de Reserva com Transferência da SME nº 22.671/2019 e para o INSS Patronal a Nota de Reserva com Transferência nº 22.711/2019 SEI (link do SEI)</p>";
+        break;
+    case "vocacional":
+        $texto = "<p>Assim, solicito a reserva de recursos que deverá onerar a ação 6375 – Dotação 25.10.13.392.3001.6375</p>";
+        break;
+    default:
+        $texto = "";
+        break;
+}
 
 ?>
-
 <html>
 <head>
     <meta http-equiv=\"Content-Type\" content=\"text/html. charset=Windows-1252\">
@@ -52,34 +60,20 @@ $coordenadoria = recuperaDados('coordenadorias', 'id', $contratacao['coordenador
 <div align="center">
     <?php
     $conteudo =
+        "<p><strong>Do processo nº:</strong> " . $contratacao['protocolo'] . "</p>" .
         "<p>&nbsp;</p>" .
-        "<p><strong>Interessado:</strong> " . $pessoa['nome'] . "</p>" .
+        "<p><strong>INTERESSADO:</strong> " . $pessoa['nome'] . "  </span></p>" .
         "<p><strong>Objeto:</strong> " . retornaObjetoFormacao_Emia($idFC, "formacao") . "</p>" .
         "<p>&nbsp;</p>" .
-        "<p>Atesto o recebimento em " . exibirDataBr($data) . ", de toda a documentação: recibo link SEI e arquivos consolidados, previstos na Portaria SF 08/16.</p>" .
-
+        "<p><strong>CONTABILIDADE</strong></p>" .
+        "<p><strong>Sr(a). Responsável</strong></p>" .
         "<p>&nbsp;</p>" .
-        "<p><strong>SMC - CONTABILIDADE</strong></p>" .
-        "<p><strong>Sr.(a) Contador(a)</strong></p>" .
-        "<p align='justify'>Encaminho o presente para providências quanto ao pagamento, uma vez que os serviços foram realizados e confirmados a contento conforme documento link SEI.</p>" .
-        "<p align='justify'>Em virtude da Regionalização e Georreferenciamento das Despesas Municipais com a nova implantação do Detalhamento da Ação em 2019 no Sistema SOF,  informamos que os valores do presente pagamento foram gastos na região $coordenadoria." . "</p>" .
+        "<p>O presente processo trata de " . $pessoa['nome'] . ", " . $programa . ", " . $linguagem . " NOS TERMOS DO EDITAL - " . $programa . ", no valor de " . "R$ " . "  " . dinheiroParaBr($pedido['valor_total']) . " ( ". valorPorExtenso($pedido['valor_total']) . " )" .  ", conforme solicitação (link da solicitação), foram anexados os documentos necessários exigidos no edital, no período de " . retornaPeriodoFormacao_Emia($contratacao['form_vigencia_id'], "formacao") . " </p>" .
         "<p>&nbsp;</p>" .
-
-        "<p>INFORMAÇÕES COMPLEMENTARES</p>" .
-        "<hr />" .
-        "<p><strong>Nota de Empenho:</strong></p>" .
-        "<p><strong>Anexo Nota de Empenho:</strong></p>" .
-        "<p><strong>Recibo da Nota de Empenho:</strong></p>" .
-        "<p><strong>Pedido de Pagamento:</strong></p>" .
-        "<p><strong>Recibo de pagamento:</strong></p>" .
-        "<p><strong>Relatório de Horas Trabalhadas:</strong></p>" .
-        "<p><strong>NIT/PIS/PASEP:</strong></p>" .
-        "<p><strong>Certidões fiscais:</strong></p>" .
-        "<p><strong>CCM:</strong></p>" .
-        "<p><strong>FACC:</strong></p>" .
-        "<p>&nbsp;</p>" .
-
-        "<p>São Paulo, $dia de $mes de $ano</p>";
+        $texto .
+    "<p>&nbsp;</p>" .
+    "<p>Após, enviar para SMC/AJ, para prosseguimento.</p>" .
+    "<p>&nbsp;</p>"
     ?>
 
     <div id="texto" class="texto"><?php echo $conteudo; ?></div>

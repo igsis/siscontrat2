@@ -1,13 +1,14 @@
 <?php 
 $con = bancoMysqli();
 
-
-
 if (isset($_POST['cadastra']) || (isset($_POST['edita']))) {
     $amparo = trim(addslashes($_POST['amparo']));
     $finalizacao = trim(addslashes($_POST['finalizacao']));
     $nome = trim(addslashes($_POST['nome']));
+}
 
+
+if(isset($_POST['cadastra'])){
     $sql = "INSERT INTO modelo_juridicos (nome, amparo, finalizacao) VALUES ('$nome', '$amparo', '$finalizacao')";
 
     if (mysqli_query($con, $sql)) {

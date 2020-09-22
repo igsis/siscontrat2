@@ -7,13 +7,6 @@ $idFormacao = $_POST['idFormacao'];
 isset($_POST['tipoModelo']);
 $modelo = $_POST['tipoModelo'];
 
-if(isset($_POST['detalhe'])) {
-    $amparo = $_POST['amparo'];
-    $finalizacao = $_POST['finalizacao'];
-    $dotacao = $_POST['dotacao'];
-}
-
-
 $formacao = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
 $pedido = recuperaDados('pedidos', 'id', $formacao['pedido_id']);
 $idPedido = $pedido['id'];
@@ -23,22 +16,6 @@ $linguagem = recuperaDados('linguagens ', 'id', $formacao['linguagem_id']);
 $programa = recuperaDados('programas', 'id', $formacao['programa_id']);
 $pagamento = recuperaDados('pagamentos', 'pedido_id', $pedido['id']);
 $status = recuperaDados('pedido_status', 'id', $pedido['status_pedido_id']);
-
-/// inserindo dados dentro de juridicos ///
-
-    $sql = "SELECT * FROM juridicos where pedido_id = '$idPedido'";
-    $query = mysqli_query($con, $sql);
-    $num = mysqli_num_rows($query);
-    if ($num > 0) {
-        $sqlUptate = "UPDATE juridicos SET pedido_id = $idPedido, amparo_legal = '$amparo', finalizacao = '$finalizacao', dotacao ='$dotacao'
-    WHERE pedido_id = $idPedido";
-        $sqlUptate = mysqli_query($con, $sqlUptate);
-    } else {
-        $sqlInsert = "INSERT INTO juridicos(pedido_id, amparo_legal, finalizacao, dotacao)
-        VALUES ('$idPedido','$amparo','$finalizacao','$dotacao')";
-        $sqlInsert = mysqli_query($con, $sqlInsert);
-    }
-
 
 //  local //
 $sqlLocal = "SELECT l.local 
@@ -54,9 +31,19 @@ $idVigencia = $formacao['form_vigencia_id'];
 $usuarios = recuperaDados('usuarios', 'id', $formacao['usuario_id']);
 
 // fiscal , suplente //
-$suplente = recuperaDados('usuarios', 'id', $formacao['suplente_id']);
 $fiscal = recuperaDados('usuarios', 'id', $formacao['fiscal_id']);
 
+$nomeSuplente = "";
+$telefoneSuplente = "";
+$emailSuplente = "";
+if ($formacao['suplente_id'] != 0) {
+    $suplente = recuperaDados('usuarios', 'id', $formacao['suplente_id']);
+    if ($suplente) {
+        $nomeSuplente = $suplente['nome_completo'];
+        $telefoneSuplente = $suplente['telefone'];
+        $emailSuplente = $suplente['email'];
+    }
+}
 
 // pegando telefone de pf_telefones //
 $idPf = $formacao ['pessoa_fisica_id'];
@@ -69,6 +56,11 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 }
 $tel = substr($tel, 0, -3);
 
+
+$consultaDotacao = $con->query("SELECT dotacao FROM juridicos WHERE pedido_id = $idPedido");
+if($consultaDotacao->num_rows > 0){
+    $dotacao = mysqli_fetch_array($consultaDotacao)['dotacao'];
+}
 ?>
 
 
@@ -122,15 +114,15 @@ $tel = substr($tel, 0, -3);
                     </tr>
                     <tr>
                         <th width="30%">Suplente:</th>
-                        <td><?= $suplente['nome_completo'] ?></td>
+                        <td><?= checaCampo($nomeSuplente) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $suplente['telefone'] ?></td>
+                        <td><?= checaCampo($telefoneSuplente) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $suplente['email'] ?></td>
+                        <td><?= checaCampo($emailSuplente) ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -172,7 +164,7 @@ $tel = substr($tel, 0, -3);
                             while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
                                 $local = $local . $linhaLocal['local'] . '; ';
                             }
-                            $local = substr($local, 0,-2);
+                            $local = substr($local, 0, -2);
                             echo $local;
                             ?>
                         </td>
@@ -225,7 +217,7 @@ $tel = substr($tel, 0, -3);
                     </tr>
                     <tr>
                         <th width="30%">Forma de Pagamento:</th>
-                        <td><?=$pedido['forma_pagamento'] ?></td>
+                        <td><?= $pedido['forma_pagamento'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Data/Período:</th>
@@ -233,33 +225,33 @@ $tel = substr($tel, 0, -3);
                     </tr>
                     <?php
 
-                    if($pagamento == null || $pagamento == ""){ ?>
+                    if ($pagamento == null || $pagamento == "") { ?>
 
-                    <tr>
-                        <th width="30%">Data de Emissão da N.E:</th>
-                        <td>Não cadastrado</td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Data de Entrega da N.E</th>
-                        <td>Não cadastrado</td>
-                    </tr>
+                        <tr>
+                            <th width="30%">Data de Emissão da N.E:</th>
+                            <td>Não cadastrado</td>
+                        </tr>
+                        <tr>
+                            <th width="30%">Data de Entrega da N.E</th>
+                            <td>Não cadastrado</td>
+                        </tr>
                     <?php } else { ?>
-                    <tr>
-                        <th width="30%">Data de Emissão da N.E:</th>
-                        <td><?= exibirDataBr($pagamento['emissao_nota_empenho']) ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Data de Entrega da N.E</th>
-                        <td><?= exibirDataBr($pagamento['entrega_nota_empenho']) ?></td>
-                    </tr>
-                    <?php }?>
+                        <tr>
+                            <th width="30%">Data de Emissão da N.E:</th>
+                            <td><?= exibirDataBr($pagamento['emissao_nota_empenho']) ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30%">Data de Entrega da N.E</th>
+                            <td><?= exibirDataBr($pagamento['entrega_nota_empenho']) ?></td>
+                        </tr>
+                    <?php } ?>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
-                        <td><?= $dotacao == NULl ? "Não cadastrado" : $dotacao?></td>
+                        <td><?= checaCampo($dotacao) ?? NULL?></td>
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>
-                        <td><?= $pedido['observacao'] == NULL ? "Não Cadastrado" : $pedido['observacao'] ?></td>
+                        <td><?= checaCampo($pedido['observacao']) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Último status:</th>

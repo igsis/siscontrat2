@@ -21,7 +21,7 @@ $sqlPedido = "SELECT * FROM pedidos WHERE origem_tipo_id = 2 AND origem_id = $id
 $pedido = $con->query($sqlPedido)->fetch_array();
 $pf = recuperaDados('pessoa_fisicas', 'id', $formacao['pessoa_fisica_id']);
 $idPedido = $pedido['id'];
-$sql = "SELECT * FROM parcelas where pedido_id = '$idPedido'";
+$sql = "SELECT * FROM parcelas where pedido_id = '$idPedido' AND publicado = 1";
 $query = mysqli_query($con, $sql);
 $num_arrow = mysqli_num_rows($query);
 
