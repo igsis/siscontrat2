@@ -23,7 +23,7 @@ unset($_SESSION['idPedido']);
                                 <div class="form-group col-md-6">
                                     <label for="data_fim">Data Final *</label><br>
                                     <input type="date" name="data_fim" class="form-control" id="datepicker11"
-                                           placeholder="DD/MM/AAAA" onblur="comparaData()" required>
+                                           placeholder="DD/MM/AAAA" onblur="comparaData()">
                                 </div>
                             </div>
 
