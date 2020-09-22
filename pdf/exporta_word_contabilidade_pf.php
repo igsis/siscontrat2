@@ -17,14 +17,6 @@ $pessoa = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 $ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
-$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
-$queryLocal = mysqli_query($con, $sqlLocal);
-$local = '';
-while ($locais = mysqli_fetch_array($queryLocal)) {
-    $local = $local . '; ' . $locais['local'];
-}
-$local = substr($local, 1);
-
 $nome = $pessoa['nome'];
 
 if($pessoa['passaporte'] != NULL){
@@ -62,7 +54,7 @@ echo "<body>";
 echo "<p align='justify'><b>CONTRATANTE:</b> " . "SMC" . "</p>";
 echo "<p align='justify'><b>CONTRATADO(S):</b> Contratação de <b>" . $nome . "</b>, " . $cpf_passaporte . " e demais integrantes relacionados na declaração de exclusividade.</p>";
 echo "<p align='justify'><b>EVENTO/SERV:</b> Apresentação do " . $objeto . ", conforme segue:<br>
-" . $local . " <br></p>";
+" . listaLocais($evento['id'], '1') . " <br></p>";
 echo "<p align='justify'><b>DATA/PERÍODO: </b>" . $periodo . ".</p>";
 echo "<p align='justify'><b>VALOR TOTAL DA CONTRATAÇÃO:</b> " . "R$ $valor" . "  " . "($valor_extenso )" . "<br> Quaisquer despesas aqui não ressalvadas, bem como direitos autorais, serão de responsabilidade do(a) contratado(a).</p>";
 echo "<p align='justify'><b>CONDIÇÕES DE PAGAMENTO: </b>" . "$forma_pag" . ".</p>";

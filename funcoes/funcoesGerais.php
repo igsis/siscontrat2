@@ -1553,7 +1553,7 @@ function retornaPeriodoFormacao_Emia($idVigencia, $modulo)
         if ($data_inicio == $data_fim || $data_fim == "0000-00-00") {
             return exibirDataBr($data_inicio);
         } else {
-            return "de " . exibirDataBr($data_inicio) . " a " . exibirDataBr($data_fim);
+            return "de " . exibirDataBr($data_inicio) . " à " . exibirDataBr($data_fim);
         }
     } else {
         return "(Parcelas não cadastradas)";
