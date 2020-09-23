@@ -56,7 +56,7 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 }
 $tel = substr($tel, 0, -3);
 
-
+$dotacao = "";
 $consultaDotacao = $con->query("SELECT dotacao FROM juridicos WHERE pedido_id = $idPedido");
 if($consultaDotacao->num_rows > 0){
     $dotacao = mysqli_fetch_array($consultaDotacao)['dotacao'];

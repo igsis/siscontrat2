@@ -50,7 +50,7 @@ while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
 
 $local = substr($local, 0, -3);
 
-if ($pessoa['passaporte' != NULL]) {
+if ($pessoa['passaporte'] != NULL) {
     $cpf_passaporte = "Passaporte (" . $pessoa['passaporte'] . ")</p>";
 } else {
     $cpf_passaporte = "CPF (" . $cpf . ")</p>";
