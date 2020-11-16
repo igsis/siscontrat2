@@ -402,7 +402,7 @@ if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
     }
 }
 
-$sqlteste = "SELECT  te.tipo_evento, oco.atracao_id, 
+$sqlteste = "SELECT te.tipo_evento, oco.atracao_id, 
 i.nome, l.local, 
 e.espaco, oco.data_inicio, 
 oco.data_fim, oco.segunda, 
@@ -413,7 +413,7 @@ oco.horario_inicio, oco.horario_fim,
 ri.retirada_ingresso, oco.valor_ingresso, 
 oco.observacao, p.periodo, 
 sub.subprefeitura, virada, 
-oco.libras, oco.audiodescricao 
+oco.libras, oco.audiodescricao, oe.data_excecao 
 FROM ocorrencias as oco
 INNER JOIN locais as l on l.id = oco.local_id
 INNER JOIN tipo_eventos as te on te.id = oco.tipo_ocorrencia_id
@@ -422,7 +422,8 @@ LEFT JOIN espacos as e on e.id = oco.espaco_id
 INNER JOIN retirada_ingressos as ri on ri.id = oco.retirada_ingresso_id
 INNER JOIN periodos as p ON p.id = oco.periodo_id
 INNER JOIN subprefeituras as sub ON sub.id = oco.subprefeitura_id
-WHERE oco.origem_ocorrencia_id = '$idEvento' AND oco.publicado = 1;";
+LEFT JOIN ocorrencia_excecoes as oe ON oco.id = oe.atracao_id
+WHERE oco.origem_ocorrencia_id = '$idEvento' AND oco.publicado = 1";
 
 $queryteste = mysqli_query($con, $sqlteste);
 $teste = mysqli_fetch_all($queryteste);
