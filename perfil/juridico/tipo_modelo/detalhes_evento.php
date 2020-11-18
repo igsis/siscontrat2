@@ -478,7 +478,7 @@ if ($consultaDotacao->num_rows > 0) {
 
                                     //testa e se necessário retorna as datas de exceção
                                     $datas = "";
-                                    $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $ocorrencia['id']);
+                                    $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $oco['id']);
                                     if ($testaExcecao->num_rows > 0) {
                                         while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
                                             $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
