@@ -29,8 +29,6 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
             while ($cargaArray = mysqli_fetch_array($carga)) {
                 $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
             }
-        } else {
-            $cargaHoraria = "Não possuí.";
         }
     }
 }
@@ -44,6 +42,12 @@ $dotacao = $modelo['dotacao'];
 
 $finalizacao = $modelo['finalizacao'];
 $hoje = date("d/m/Y");
+
+if($cargaHoraria == 0){
+    $ch = "Não possuí";
+}else{
+    $ch = $cargaHoraria;
+}
 
 ?>
 
@@ -93,7 +97,7 @@ $dados =
     "<p><strong>Objeto:</strong> " . $nome_evento . "</p>" .
     "<p><strong>Data / Período: </strong>" . "$periodo" . "</p>" .
     "<p><strong>Locais:</strong> " . substr($insts, 0, -2) . " </p>" .
-    "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
+    "<p><strong>Carga Horária:</strong> " . $ch . "</p>" .
     "<p><strong> Valor:</strong> R$ " . $valor . "(" . $valor_extenso . " )</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . $pagamento . "</p>" .
     "<p><strong>Dotação Orçamentária: </strong> " . checaCampo($dotacao) . "</p>" .

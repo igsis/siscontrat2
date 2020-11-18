@@ -29,8 +29,6 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
             while($cargaArray = mysqli_fetch_array($carga)){
                 $cargaHoraria =  $cargaHoraria + (int)$cargaArray['carga_horaria'];
             }
-        }else{
-            $cargaHoraria = "Não possuí.";
         }
     }
 }
@@ -68,6 +66,12 @@ if ($pessoa['ccm'] != "" || $pessoa['ccm'] != NULL) {
     $ccm = "Não Cadastrado.";
 }
 
+if($cargaHoraria == 0){
+    $ch = "Não possuí";
+}else{
+    $ch = $cargaHoraria;
+}
+
 $idPenal = $_GET['penal'];
 alteraStatusPedidoContratos($idPedido, "proposta", $idPenal, $idUser);
 
@@ -98,7 +102,7 @@ echo
     "<p>&nbsp;</p>" .
     "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
     "<p><strong>Data / Período:</strong> " . $periodo . " - conforme cronograma</p>" .
-    "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
+    "<p><strong>Carga Horária:</strong> " . $ch . "</p>" .
     "<p><strong>Local(ais):</strong> " . listaLocais($evento['id'], '1') . "</p>" .
     "<p><strong>Valor:</strong> " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . ")</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .

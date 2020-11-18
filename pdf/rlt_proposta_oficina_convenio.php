@@ -27,8 +27,6 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
             while($cargaArray = mysqli_fetch_array($carga)){
                 $cargaHoraria =  $cargaHoraria + (int)$cargaArray['carga_horaria'];
             }
-        }else{
-            $cargaHoraria = "Não possuí.";
         }
     }
 }
@@ -102,6 +100,12 @@ if($pessoa['passaporte'] != NULL){
               <p>CPF: " . $pessoa['cpf'] . "</p>";
 }
 
+if($cargaHoraria == 0){
+    $ch = "Não possuí";
+}else{
+    $ch = $cargaHoraria;
+}
+
 alteraStatusPedidoContratos($idPedido, "proposta", $_GET['penal'], $idUser);
 
 header("Content-type: application/vnd.ms-word");
@@ -136,7 +140,7 @@ header("Content-Disposition: attachment;Filename=rlt_proposta_oficina_convenio_$
     Contratação artística de oficinas de dança, teatro, circo, literatura e música para realização em Bibliotecas, Casas
     de Cultura e Centros Culturais da Secretaria Municipal de Cultura.</p>
 <p><strong>Data / Período:</strong> <?= $periodo ?> - conforme cronograma</p>
-<p><strong>Carga Horária:</strong> <?= $cargaHoraria ?></p>
+<p><strong>Carga Horária:</strong> <?= $ch ?></p>
 <p><strong>Local(ais):</strong> <?= listaLocais($evento['id'], '1') ?></p>
 <p><strong>Valor:</strong> <?= $pedido['valor_total'] ?> (<?= valorPorExtenso($pedido['valor_total']) ?>)</p>
 <p><strong>Forma de Pagamento:</strong> <?= $pedido['forma_pagamento'] ?></p>

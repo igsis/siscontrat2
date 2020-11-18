@@ -35,12 +35,9 @@ if ($ocorrencias->num_rows > 0) {
                 while ($cargaArray = mysqli_fetch_array($carga)) {
                     $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
                 }
-            } else {
-                $cargaHoraria = "Não possuí.";
             }
         } else if ($linhaOco['tipo_ocorrencia_id'] == 2) {
             $trechoApresentacoes = "";
-            $cargaHoraria = "Não possuí.";
         }
     }
 }else{
@@ -97,7 +94,11 @@ if ($pessoa['passaporte'] != NULL) {
     $cpf_passaporte = "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />";
 }
 
-
+if($cargaHoraria == 0){
+    $ch = "Não possuí";
+}else{
+    $ch = $cargaHoraria;
+}
 ?>
 
 <html>
@@ -143,7 +144,7 @@ if ($pessoa['passaporte'] != NULL) {
         "<p>&nbsp;</p>" .
         "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
         "<p><strong>Data / Período:</strong> " . retornaPeriodoNovo($idEvento, 'ocorrencias') . $trechoApresentacoes . "</p>" .
-        "<p><strong>Carga Horária:</strong> $cargaHoraria </p>" .
+        "<p><strong>Carga Horária:</strong> $ch </p>" .
         "<p><strong>Duração: </strong> $duracao  </p>" .
         "<p align='justify'><strong>Local(ais):</strong> " . listaLocais($idEvento, '1') . "</p>" .
         "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . " ( " . valorPorExtenso($pedido['valor_total']) . " )" . "</p>" .

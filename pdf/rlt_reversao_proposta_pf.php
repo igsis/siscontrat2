@@ -39,13 +39,10 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
     if ($linhaOco['tipo_ocorrencia_id'] == 1) {
         $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
         $carga = $con->query($sqlCarga);
-
         if ($carga->num_rows > 0) {
             while ($cargaArray = mysqli_fetch_array($carga)) {
                 $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
             }
-        } else {
-            $cargaHoraria = "Não possuí.";
         }
     }
 }
@@ -187,7 +184,7 @@ $pdf->Cell(25, $l, utf8_decode(exibirDataBr($pessoa['data_nascimento'])), 0, 0, 
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(26, $l, "Nacionalidade:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(30, $l, utf8_decode($nacionalidade), 0, 0, 'L');
+$pdf->Cell(44, $l, utf8_decode($nacionalidade), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, "CCM:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
@@ -250,7 +247,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(26, $l, utf8_decode('Carga Horária:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(50, $l, utf8_decode($cargaHoraria), 0, 'L', 0);
+$pdf->MultiCell(50, $l, utf8_decode($cargaHoraria == 0 ? "Não Possuí" : $cargaHoraria), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
