@@ -204,13 +204,28 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <?php
-                            if($linhas == 0): ?>
+                            $evento = recuperaDados('eventos', 'id', $idEvento);
+                            if ($evento['tipo_evento_id'] == 1) {
+                                $IN_adicional = "";
+                                if ($musica || $oficina || $artesCenicas) {
+                                    $sqlAdicional = "AND (" . implode(" OR ", $whereAdicional) . ")";
+                                } else
+                                    $sqlAdicional = "";
+                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id IN (3,{$tipo}) and publicado = 1 $sqlAdicional";
+                            } else {
+                                $IN_adicional = "lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1) AND";
+                                $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
+                            }
+                            $query_arquivos = mysqli_query($con, $sql_arquivos);
+                            $numArquivosListagem = mysqli_num_rows($query_arquivos);
+                            if ($linhas < $numArquivosListagem): ?>
                                 <div id="envioArq" class="box box-success">
                                     <div class="box-header with-border">
                                         <h3 class="box-title">Enviar Arquivos</h3>
                                     </div>
                                     <div class="box-body">
-                                        <h4 class="text-center">Nesta página, você envia documentos digitalizados. O tamanho
+                                        <h4 class="text-center">Nesta página, você envia documentos digitalizados. O
+                                            tamanho
                                             máximo do arquivo deve ser 5MB.</h4>
 
                                         <form method="POST" enctype="multipart/form-data"
@@ -218,19 +233,6 @@ include "includes/menu_interno.php";
                                             <table class="table text-center table-striped">
                                                 <tbody>
                                                 <?php
-                                                $evento = recuperaDados('eventos', 'id', $idEvento);
-                                                if ($evento['tipo_evento_id'] == 1) {
-                                                    $IN_adicional = "";
-                                                    if ($musica || $oficina || $artesCenicas) {
-                                                        $sqlAdicional = "AND (" . implode(" OR ", $whereAdicional) . ")";
-                                                    } else
-                                                        $sqlAdicional = "";
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id IN (3,{$tipo}) and publicado = 1 $sqlAdicional";
-                                                } else {
-                                                    $IN_adicional = "lista_documento_id IN (SELECT id FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1) AND";
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '3' and publicado = 1 AND (musica = 1 AND teatro = 1 AND oficina = 1 AND documento NOT LIKE '%Pessoa Jurídica%')";
-                                                }
-                                                $query_arquivos = mysqli_query($con, $sql_arquivos);
                                                 while ($arq = mysqli_fetch_array($query_arquivos)) {
                                                     $idDoc = $arq['id'];
                                                     $sqlExistentes = "SELECT * FROM arquivos WHERE $IN_adicional lista_documento_id = '$idDoc' AND origem_id = '$idPedido' AND publicado = 1";
