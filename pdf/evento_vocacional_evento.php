@@ -18,13 +18,14 @@ $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 $ocorrencias = $con->query("SELECT i.nome, i.sigla, o.atracao_id, o.tipo_ocorrencia_id FROM instituicoes AS i INNER JOIN ocorrencias AS o ON o.instituicao_id = i.id WHERE tipo_ocorrencia_id != 3 AND publicado = 1 AND origem_ocorrencia_id =  $idEvento");
 $insts = "";
 
+$cargaHoraria = 0;
+
 while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
     $insts = $insts . $linhaOco['nome'] . " (" . $linhaOco['sigla'] . ")" . "; ";
 
     if ($linhaOco['tipo_ocorrencia_id'] == 1) {
         $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
         $carga = $con->query($sqlCarga);
-
         if ($carga->num_rows > 0) {
             while ($cargaArray = mysqli_fetch_array($carga)) {
                 $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
