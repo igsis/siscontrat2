@@ -65,7 +65,7 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
     $dias = $domingo . $segunda . $terca . $quarta . $quinta . $sexta . $sabado;
 
     $locais_horarios = $locais_horarios .
-        "<p><strong>(Ocorrencia #$o):</strong> <br>" .
+        "<p><strong>(Ocorrência #$o):</strong> <br>" .
         $linhaOco['nome'] . " (" . $linhaOco['sigla'] . ")" . "<br>" .
         $periodoOco . " (" . substr($dias, 0,-2) . ")" . " às " . exibirHora($linhaOco['horario_inicio']) . "</p>" .
         "<p>&nbsp;</p>";
