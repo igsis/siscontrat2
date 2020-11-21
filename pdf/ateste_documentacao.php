@@ -120,7 +120,7 @@ $sei =
   "<p>&nbsp;</p>".
   "<p>INFORMAÇÕES COMPLEMENTARES</p>".
   "<hr>".  
-  "<p><strong>Nota e Anexo de Empenho: </strong>".$pedido['nota_empenho']."</p>".
+  "<p><strong>Nota e Anexo de Empenho: </strong>" . checaCampo($pedido['nota_empenho']) . "</p>".
   "<p><strong>Kit de Pagamento Assinado:</strong></p>".
   "<p><strong>Certdões Fiscais:</strong></p>".
   "<p><strong>FACC:</strong></p>"
