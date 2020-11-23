@@ -151,6 +151,9 @@ $datas = substr($datas, 0, -2);
                                                 <h3>Informações sobre o evento</h3>
                                                 <hr>
                                             </div>
+                                            <br>
+                                        </div>
+                                        <div class="form-group col-md-12">
                                             <strong>Protocolo: </strong><?= $evento['protocolo'] == null ? "Não possuí" : $evento['protocolo'] ?>
                                         </div>
                                         <div class="form-group col-md-12">
