@@ -13,7 +13,7 @@ $sql = "SELECT c.id, c.justificativa, c.data, u.nome_completo, s.status
         INNER JOIN usuarios AS u ON c.usuario_id = u.id
         INNER JOIN eventos AS e ON c.evento_id = e.id
         INNER JOIN evento_status AS s ON s.id = e.evento_status_id
-        WHERE e.id = 2";;
+        WHERE e.id = $idEvento";
 
 $query = mysqli_query($con, $sql);
 
