@@ -30,7 +30,7 @@ if (isset($_POST['edita'])) {
     $sql = "UPDATE formacao_vigencias SET ano = '$ano', descricao = '$descricao', numero_parcelas = '$num' WHERE id = '$idVigencia'";
 
     if (mysqli_query($con, $sql)) {
-        $mensagem = mensagem("success", "Vigência atualizado com sucesso");
+        $mensagem = mensagem("success", "Vigência atualizada com sucesso");
         gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Ocorreu um erro ao atualizar a vigência. Tente novamente!");
