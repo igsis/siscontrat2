@@ -107,7 +107,7 @@ $num_arrow = mysqli_num_rows($query);
                         <h4 class="modal-title">Confirmação de Exclusão</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Tem certeza que deseja excluir este linguagem?</p>
+                        <p>Tem certeza que deseja excluir esta linguagem?</p>
                     </div>
                     <div class="modal-footer">
                         <form action="?perfil=formacao&p=administrativo&sp=linguagem&spp=index" method="post">
