@@ -27,14 +27,10 @@ if (isset($_POST['pesquisa'])) {
     $sql = "SELECT e.id,
 	               e.nome_evento,
                    e.tipo_evento_id,
-                   s.subprefeitura,
-                   o.valor_ingresso,
-                   a.quantidade_apresentacao,
-                   a.ficha_tecnica
+                   o.valor_ingresso
             FROM eventos AS e
             INNER JOIN ocorrencias AS o ON o.origem_ocorrencia_id = e.id
             LEFT JOIN atracoes a on e.id = a.evento_id
-	        INNER JOIN subprefeituras AS s ON s.id = o.subprefeitura_id
             INNER JOIN usuarios AS u ON e.usuario_id = u.id 
             INNER JOIN projeto_especiais AS pe ON e.projeto_especial_id = pe.id
             WHERE e.evento_status_id = 3 AND o.publicado = 1 AND e.publicado = 1 
@@ -57,7 +53,7 @@ if (isset($_POST['pesquisa'])) {
                         <th>Nome do Evento</th>
                         <th>Local do Evento</th>
                         <th>Classificação(ões) Indicativa(s)</th>
-                        <th>Subprefeitura</th>
+                        <th>Subprefeitura(s)</th>
                         <th>Valor do Ingresso</th>
                         <th>Nº de Atividades</th>
                         <th>Artistas</th>
@@ -67,30 +63,45 @@ if (isset($_POST['pesquisa'])) {
                     <tbody>
                     <?php
                     while ($evento = mysqli_fetch_array($query)) {
+                        $qtApresentacoes = 0;
                         if ($evento['tipo_evento_id'] == 2) {
-                            $sqlClassificacao = "SELECT c.classificacao_indicativa FROM classificacao_indicativas AS c 
+                            $sqlClassificacao = "SELECT fe.id, c.classificacao_indicativa FROM classificacao_indicativas AS c 
                                                  INNER JOIN filmes AS f ON f.classificacao_indicativa_id = c.id  
                                                  INNER JOIN filme_eventos AS fe ON f.id = fe.filme_id  
                                                  WHERE fe.evento_id = " . $evento['id'] . " AND f.publicado = 1";
                             $queryClassificacao = mysqli_query($con, $sqlClassificacao);
-                            $classificao = '';
+                            $classificao = "";
                             $artistas = "Este evento é filme!";
                             while ($classificoes = mysqli_fetch_array($queryClassificacao)) {
-                                $classificao = $classificao . '; ' . $classificoes['classificacao_indicativa'];
+                                $subprefs = "";
+                                $sqlSubprefeituras = "SELECT s.subprefeitura FROM subprefeituras AS s INNER JOIN ocorrencias AS o ON s.id = o.subprefeitura_id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1 AND o.tipo_ocorrencia_id = 2 AND o.atracao_id = " . $classificoes['id'];
+                                $querySubprefeituras = mysqli_query($con, $sqlSubprefeituras);
+                                while ($arraySubprefs = mysqli_fetch_array($querySubprefeituras)) {
+                                    $subprefs = $subprefs . $arraySubprefs['subprefeitura'] . "; ";
+                                }
+                                $classificao = $classificao . $classificoes['classificacao_indicativa'] . '; ';
                             }
 
                         } else {
-                            $sqlClassificacao = "SELECT c.classificacao_indicativa, a.integrantes FROM classificacao_indicativas c INNER JOIN atracoes a ON a.classificacao_indicativa_id = c.id WHERE a.evento_id = " . $evento['id'] . " AND a.publicado = 1";
-                            $queryClassificacao = mysqli_query($con, $sqlClassificacao);
-                            $classificao = '';
+                            $sqlItensAtracao = "SELECT a.id, c.classificacao_indicativa, a.integrantes, a.quantidade_apresentacao FROM classificacao_indicativas c INNER JOIN atracoes a ON a.classificacao_indicativa_id = c.id WHERE a.evento_id = " . $evento['id'] . " AND a.publicado = 1";
+                            $queryItensAtracao = mysqli_query($con, $sqlItensAtracao);
+                            $classificao = "";
                             $artistas = "";
-                            while ($arrayAtracoes = mysqli_fetch_array($queryClassificacao)) {
+                            while ($arrayAtracoes = mysqli_fetch_array($queryItensAtracao)) {
+                                $subprefs = "";
+                                $sqlSubprefeituras = "SELECT s.subprefeitura FROM subprefeituras AS s INNER JOIN ocorrencias AS o ON s.id = o.subprefeitura_id WHERE o.origem_ocorrencia_id = " . $evento['id'] . " AND o.publicado = 1 AND o.tipo_ocorrencia_id = 1 AND o.atracao_id = " . $arrayAtracoes['id'];
+                                $querySubprefeituras = mysqli_query($con, $sqlSubprefeituras);
+                                while ($arraySubprefs = mysqli_fetch_array($querySubprefeituras)) {
+                                    $subprefs = $subprefs . $arraySubprefs['subprefeitura'] . "; ";
+                                }
                                 $classificao = $classificao . $arrayAtracoes['classificacao_indicativa'] . '; ';
                                 $artistas = $artistas . $arrayAtracoes['integrantes'] . '; ';
+                                $qtApresentacoes = $qtApresentacoes + (int)$arrayAtracoes['quantidade_apresentacao'];
                             }
-                            $artistas = substr($artistas, 1);
+                            $artistas = substr($artistas, 0, -2);
                         }
-                        $classificao = substr($classificao, 1);
+                        $subprefs = substr($subprefs, 0, -2);
+                        $classificao = substr($classificao, 0, -2);
 
                         ?>
                         <tr>
@@ -105,9 +116,9 @@ if (isset($_POST['pesquisa'])) {
                                 </button>
                             </td>
                             <td><?= $classificao ?></td>
-                            <td><?= $evento['subprefeitura'] ?></td>
+                            <td><?= $subprefs ?></td>
                             <td><?= $evento['valor_ingresso'] == '0.00' ? 'Grátis' : 'R$ ' . dinheiroParaBr($evento['valor_ingresso']) ?></td>
-                            <td><?= $evento['quantidade_apresentacao'] == '' ? 'Este evento é filme!' : $evento['quantidade_apresentacao'] ?></td>
+                            <td><?= $qtApresentacoes == 0 ? 'Este evento é filme!' : $qtApresentacoes ?></td>
                             <td><?= $artistas ?></td>
                             <td>
                                 <form action="../pdf/exporta_excel_evento_producao.php" target="_blank" method="POST">
@@ -128,7 +139,7 @@ if (isset($_POST['pesquisa'])) {
                         <th>Nome do Evento</th>
                         <th>Local do Evento</th>
                         <th>Classificação(ões) Indicativa(s)</th>
-                        <th>Subprefeitura</th>
+                        <th>Subprefeitura(s)</th>
                         <th>Valor do Ingresso</th>
                         <th>Nº de Atividades</th>
                         <th>Artistas</th>
