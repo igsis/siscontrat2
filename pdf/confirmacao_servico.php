@@ -83,18 +83,41 @@ $sei =
 
 <p>&nbsp;</p>
 
-<div align="center"><button id="botao-copiar" data-clipboard-target="texto"><img src="img/copy-icon.jpg"> CLIQUE AQUI PARA COPIAR O TEXTO</button>
+<div align="center">
+    <button id="botao-copiar" class="btn btn-primary" onclick="copyText(getElementById('texto'))">
+        COPIAR TODO O TEXTO
+        <i class="fa fa-copy"></i>
+    </button>
     <a href="http://sei.prefeitura.sp.gov.br" target="_blank">
         <button>CLIQUE AQUI PARA ACESSAR O <img src="img/sei.jpg"></button>
     </a>
 </div>
 
 <script>
-    var client = new ZeroClipboard();
-    client.clip(document.getElementById("botao-copiar"));
-    client.on("aftercopy", function(){
-        alert("Copiado com sucesso!");
-    });
+    function copyText(element) {
+        var range, selection, worked;
+
+        if (document.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.moveToElementText(element);
+            range.select();
+        } else if (window.getSelection) {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        try {
+            document.execCommand('copy');
+            alert('Copiado com sucesso!');
+            selection.removeAllRanges();
+        } catch (err) {
+            alert('Texto não copiado, tente novamente.');
+            selection.removeAllRanges();
+        }
+    }
 </script>
 
 </body>

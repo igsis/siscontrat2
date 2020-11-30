@@ -133,12 +133,41 @@ $sei =
 <p>&nbsp;</p>
 
 <div align="center">
-    <button id="botao-copiar" class="btn btn-primary"><i class="fa fa-copy"></i> CLIQUE AQUI PARA COPIAR O TEXTO </button>
+    <button id="botao-copiar" class="btn btn-primary" onclick="copyText(getElementById('texto'))">
+        COPIAR TODO O TEXTO
+        <i class="fa fa-copy"></i>
+    </button>
     <a href="http://sei.prefeitura.sp.gov.br" target="_blank">
         <button class="btn btn-primary">CLIQUE AQUI PARA ACESSAR O <img src="../visual/images/logo_sei.jpg"></button>
     </a>
 </div>
 
+<script>
+    function copyText(element) {
+        var range, selection, worked;
+
+        if (document.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.moveToElementText(element);
+            range.select();
+        } else if (window.getSelection) {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        try {
+            document.execCommand('copy');
+            alert('Copiado com sucesso!');
+            selection.removeAllRanges();
+        } catch (err) {
+            alert('Texto não copiado, tente novamente.');
+            selection.removeAllRanges();
+        }
+    }
+</script>
 
 </body>
 </html>
