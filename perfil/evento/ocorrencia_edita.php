@@ -1209,9 +1209,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         });
         dados = {
             id: <?= $idOcorrencia ?>,
-            datas: datas
+            datas: datas.length == 0 ? 0 : datas
         };
-
         $.ajax({
             url: '<?= $urlAjax ?>',
             type: 'POST',
