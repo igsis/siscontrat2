@@ -44,7 +44,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                             <td><?= checaCampo($filme['sinopse']) ?></td>
                                         </tr>
                                         <tr>
-                                            <th width="30%">Duração:</th>
+                                            <th width="30%">Duração (mins):</th>
                                             <td><?= $filme['duracao'] ?></td>
                                         </tr>
                                     </table>
