@@ -33,11 +33,10 @@ if (isset($_POST['_filtros'])) {
     $query = retornaEventosComunicacao($idUser, 'eventos');
 //    $query2 = retornaEventosComunicacao($idUser, 'agendoes', $filtro);
 } else {
-    $sqlInstiuicao = "SELECT ins.id FROM instituicoes ins 
-                            LEFT JOIN locais l ON ins.id = l.instituicao_id
-                            LEFT JOIN local_usuarios lous ON l.id = lous.local_id
-                            LEFT JOIN usuarios us ON lous.usuario_id = us.id
-                       WHERE us.id = {$_SESSION['usuario_id_s']}";
+    $sqlInstiuicao = "SELECT inst.id FROM instituicoes AS inst
+                            LEFT JOIN locais AS lo ON inst.id = lo.instituicao_id
+                            LEFT JOIN local_usuarios AS ls ON ls.local_id = lo.id
+                        WHERE ls.usuario_id = {$_SESSION['usuario_id_s']}";
 
     $queryIns = mysqli_query($con,$sqlInstiuicao);
     $resultado = mysqli_fetch_all($queryIns,MYSQLI_ASSOC)[0];
