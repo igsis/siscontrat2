@@ -80,7 +80,7 @@
 <a href="https://forms.gle/ktjaMbEHmANLuFXi8" class="btn btn-warning rounded-circle" target="_blank"
    style="position:fixed;bottom:40px;right:40px;text-align:center;
    box-shadow: 1px 1px 2px #888;z-index:1000;">
-    <i class="fas fa-exclamation-circle"></i>
+    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
     Deixe sua opnião</a>
 
 <!--  Mask-->
