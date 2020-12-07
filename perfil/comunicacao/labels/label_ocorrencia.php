@@ -66,7 +66,7 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Data de Encerramento:</th>
-                                                        <td><?= $ocorrencia['data_fim'] == null ? "Não é Temporada" : exibirDataBr($ocorrencia['data_fim']) ?></td>
+                                                        <td><?= exibirDataBr($ocorrencia['data_fim']) == null ? "Não é Temporada" : exibirDataBr($ocorrencia['data_fim']) ?></td>
                                                     </tr>
 
                                                     <?php
@@ -232,7 +232,7 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Data de Encerramento:</th>
-                                                        <td><?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada" ?></td>
+                                                        <td><?= exibirDataBr($ocorrencia['data_fim']) == null ? "Não é Temporada" : exibirDataBr($ocorrencia['data_fim']) ?></td>
                                                     </tr>
 
                                                     <?php
@@ -269,7 +269,7 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Valor do Ingresso:</th>
-                                                        <td><?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
+                                                        <td><?= "R$" . dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
                                                     </tr>
                                                     <?php
                                                 }

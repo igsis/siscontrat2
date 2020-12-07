@@ -95,6 +95,8 @@ $l = 7; //DEFINE A ALTURA DA LINHA
 
 $pdf->SetXY($x, 40);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
+$pdf->SetTitle("FACC PJ");
+
 $pdf->SetXY(112, 43);
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(10, $l, utf8_decode('X'), 0, 0, 'L');
