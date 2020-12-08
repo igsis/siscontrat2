@@ -110,7 +110,7 @@ $l = 7; //DEFINE A ALTURA DA LINHA
 
 $pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
-$pdf->SetTitle("Reversao PJ");
+$pdf->SetTitle("Reversão PJ", true);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);

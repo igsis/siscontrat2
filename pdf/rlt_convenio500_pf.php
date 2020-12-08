@@ -38,7 +38,7 @@ $l=8; //DEFINE A ALTURA DA LINHA
 
 $pdf->SetXY( $x , 30 );// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
-$pdf->SetTitle("Convenio 500 PF");
+$pdf->SetTitle("Convênio 500 PF", true);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 12);
