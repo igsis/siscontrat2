@@ -170,7 +170,7 @@ if($consultaDotacao->num_rows > 0){
                         </td>
                     </tr>
                     <tr>
-                        <th width="30%">Produtor responsavel:</th>
+                        <th width="30%">Produtor responsável:</th>
                         <td><?= $pf['nome'] ?></td>
                     </tr>
                     <tr>
@@ -213,7 +213,7 @@ if($consultaDotacao->num_rows > 0){
                     </tr>
                     <tr>
                         <th width="30%">Valor:</th>
-                        <td><?= "R$" . $pedido['valor_total'] ?></td>
+                        <td><?= "R$" . dinheiroParaBr($pedido['valor_total']) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Forma de Pagamento:</th>

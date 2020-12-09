@@ -179,10 +179,10 @@ if ($consultaDotacao->num_rows > 0) {
             </div>
             <?php if ($escondeBotao == 0) { ?>
                 <div class="box-footer">
-                    <form action='?perfil=juridico&p=filtrar_formacao&sp=modelo_final_formacao' method='post'
-                          target="_blank">
+                    <form action='?perfil=juridico&p=filtrar_formacao&sp=modelo_final_formacao' method='post'>
                         <input type='hidden' name='idFormacao' value='<?= $idFormacao ?>'>
                         <input type='hidden' name='idPedido' value='<?= $idPedido ?>'>
+                        <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
                         <button name='doc' class='btn btn-success center-block' style='width: 30%' type='submit'>Gerar
                             documentos
                         </button>

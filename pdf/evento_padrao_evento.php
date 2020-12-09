@@ -92,7 +92,7 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
     <link rel="stylesheet" href="../visual/css/bootstrap.min.css">
     <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="include/dist/ZeroClipboard.min.js"></script>
+    <title>Despacho Padrão</title>
 </head>
 
 <br>

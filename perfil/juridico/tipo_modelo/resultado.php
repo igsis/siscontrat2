@@ -136,7 +136,7 @@ if ($consultaDotacao->num_rows > 0) {
                         <td><?= $pessoa ?></td>
                     </tr>
                     <tr>
-                        <th width="30%">Local:</th>
+                        <th width="30%">Local(ais):</th>
                         <td><?= $local ?></td>
                     </tr>
                     <tr>
@@ -159,7 +159,7 @@ if ($consultaDotacao->num_rows > 0) {
                                           cols="85"><?= $mdl['amparo'] ?></textarea></td>
                         </tr>
                         <tr>
-                            <th width="30%">Dotação Orçamentária</th>
+                            <th width="30%">Dotação Orçamentária:</th>
                             <td><textarea class="form-control" name="dotacao" rows="1"
                                           cols="85"><?= $dotacao ?? NULL ?></textarea></td>
                         </tr>
