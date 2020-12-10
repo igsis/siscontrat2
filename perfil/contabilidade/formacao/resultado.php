@@ -65,7 +65,7 @@ $sql = "SELECT
                                           method="POST">
                                         <input type="hidden" name="idPedido" id="idPedido" value="<?= $pedido['id'] ?>">
                                         <button type="submit"
-                                                class="btn btn-primary"><?= $pedido['numero_processo'] ?></button>
+                                                class="btn btn-link"><?= $pedido['numero_processo'] ?></button>
                                     </form>
                                 </td>
                                 <td><?= $pedido['protocolo'] ?></td>

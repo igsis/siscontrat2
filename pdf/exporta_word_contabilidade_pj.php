@@ -29,6 +29,7 @@ $cnpj = $pessoa['cnpj'];
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 $valor = $pedido['valor_total'];
 $valor_extenso = valorPorExtenso($valor);
+$valor = dinheiroParaBr($valor);
 $forma_pag = $pedido['forma_pagamento'];
 
 $fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);

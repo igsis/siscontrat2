@@ -35,16 +35,17 @@ while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
 $local = substr($local, 0, -3);
 
 $nome = $pessoa['nome'];
-if($pessoa['passaporte'] != NULL){
+if ($pessoa['passaporte'] != NULL) {
     $cpf_passaporte = "Passaporte: " . $pessoa['passaporte'];
-}else{
-    $cpf_passaporte = "CPF: " . $pessoa['cpf'];    
+} else {
+    $cpf_passaporte = "CPF: " . $pessoa['cpf'];
 }
 
 $periodo = retornaPeriodoFormacao_Emia($fc['form_vigencia_id'], "formacao");
 
 $valor = $pedido['valor_total'];
 $valor_extenso = valorPorExtenso($valor);
+$valor = dinheiroParaBr($valor);
 $forma_pag = $pedido['forma_pagamento'];
 
 $fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id']);

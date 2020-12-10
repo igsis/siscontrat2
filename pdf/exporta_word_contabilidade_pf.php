@@ -19,15 +19,16 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 
 $nome = $pessoa['nome'];
 
-if($pessoa['passaporte'] != NULL){
+if ($pessoa['passaporte'] != NULL) {
     $cpf_passaporte = "Passaporte: " . $pessoa['passaporte'];
-}else{
-    $cpf_passaporte = "CPF: " . $pessoa['cpf'];    
+} else {
+    $cpf_passaporte = "CPF: " . $pessoa['cpf'];
 }
 
 $periodo = retornaPeriodoNovo($pedido['origem_id'], 'ocorrencias');
 $valor = $pedido['valor_total'];
 $valor_extenso = valorPorExtenso($valor);
+$valor = dinheiroParaBr($valor);
 $forma_pag = $pedido['forma_pagamento'];
 
 $fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
