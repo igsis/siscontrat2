@@ -63,6 +63,8 @@ $l = 7; //DEFINE A ALTURA DA LINHA
 
 $pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
+$pdf->SetTitle("FFI");
+
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(180, 15, utf8_decode("PREFEITURA  MUNICIPAL DE SÃO PAULO"), 0, 1, 'C');

@@ -66,6 +66,8 @@ $l = 7; //DEFINE A ALTURA DA LINHA
 
 $pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
+$pdf->SetTitle("Pagamento");
+
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 14);
 $pdf->Cell(180, 15, utf8_decode("PEDIDO DE PAGAMENTO"), 0, 1, 'C');
@@ -88,7 +90,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(16, $l, utf8_decode("Assunto:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(140, $l, utf8_decode("Pedido de Pagamento de R$ " . $valorParcela . " ( " . valorPorExtenso($valorParcela) . " )"), 0, 'L', 0);
+$pdf->MultiCell(140, $l, utf8_decode("Pedido de Pagamento de R$ " . dinheiroParaBr($valorParcela) . " ( " . valorPorExtenso($valorParcela) . " )"), 0, 'L', 0);
 
 $pdf->Ln(7);
 
