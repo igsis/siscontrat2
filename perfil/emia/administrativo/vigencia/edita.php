@@ -71,7 +71,7 @@ $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2>Editar Vigência</h2>
+            <h3>Editar Vigência</h3>
         </div>
         <div class="box box-primary">
             <div class="row" align="center">

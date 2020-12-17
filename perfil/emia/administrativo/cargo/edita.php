@@ -41,7 +41,7 @@ $ec = recuperaDados('emia_cargos', 'id', $idEC);
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2>EMIA - Cargos</h2>
+            <h3>EMIA - Cargos</h3>
         </div>
         <div class="box box-primary">
             <div class="row" align="center">
