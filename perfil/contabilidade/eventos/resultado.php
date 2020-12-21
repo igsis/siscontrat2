@@ -103,7 +103,7 @@ $sql = "SELECT p.numero_processo, e.nome_evento, e.protocolo,
                                     </td>
                                     <?php
                                 }else {
-                                    echo "<td>Não Possuí</td>";
+                                    echo "<td>Não possuí</td>";
                                 }
                                 ?>
                                 <td><?= $pedido['protocolo'] ?></td>

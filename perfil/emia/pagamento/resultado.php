@@ -62,7 +62,7 @@ $sql = "SELECT p.id,
                                         <td>
                                             <form action="?perfil=emia&p=pagamento&sp=pagamento" method="post" role="form">
                                                 <input type="hidden" name="idPedido" id="idPedido" value="<?= $ec['id'] ?>">
-                                                <button type="submit" class="btn btn-primary btn-block"><?= $ec['numero_processo'] ?></button>
+                                                <button type="submit" class="btn btn-link btn-block"><?= $ec['numero_processo'] ?></button>
                                             </form>
                                         </td>
                                         <td><?= $ec['protocolo'] ?></td>

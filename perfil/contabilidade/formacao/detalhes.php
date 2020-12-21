@@ -76,7 +76,7 @@ $linguagem = recuperaDados('linguagens', 'id', $fc['linguagem_id'])['linguagem']
                         ?>
 
                         <tr>
-                            <th width="30%">Local(s):</th>
+                            <th width="30%">Local(ais):</th>
                             <td><?= $local ?></td>
                         </tr>
 
