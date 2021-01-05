@@ -135,7 +135,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                                         </div>
                                         <div class='form-group col-md-2'>
                                             <label for='carga_horaria'>Carga Horária</label>
-                                            <input type='number' id='carga_horaria'
+                                            <input type='number' id='carga_horaria' min="0"
                                                    value="<?= $parcelas[$i]['carga_horaria'] ?? '' ?>"
                                                    name='carga_horaria[<?= $i ?>]'
                                                    class='form-control'>

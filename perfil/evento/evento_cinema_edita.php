@@ -119,7 +119,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                     <form method="POST" action="?perfil=evento&p=evento_cinema_edita" role="form">
                         <div class="box-body">
                             <div class="form-group">
-                                <label for="tituloFilme">Título do filme *:</label>
+                                <label for="tituloFilme">Título do filme: *</label>
                                 <input type='text' class='form-control' id='tituloFilme' name='tituloFilme' maxlength='100' value='<?= $row['titulo'] ?>' readonly>
                             </div>
                             <div class="form-group">
@@ -128,7 +128,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label>País de origem *:</label>
+                                    <label>País de origem: *</label>
                                     <select class="form-control" name="paisOrigem" id="paisOrigem"  value="">
                                         <option  value="" >Selecione uma opção... </option>
                                         <?php
@@ -160,7 +160,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="direcao">Direção:</label>
+                                <label for="direcao">Direção: *</label>
                                 <textarea class="form-control" required name="direcao" id="direcao" rows="5"><?= $row['direcao'] ?></textarea>
                             </div>
                             <div class="row">
@@ -175,7 +175,7 @@ $row = recuperaDados("filmes", "id", $idFilme);
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="duracao">Duração (em minutos):</label>
+                                    <label for="duracao">Duração (em minutos): *</label>
                                     <input type="number" class="form-control" name="duracao" min="1" id="duracao" required value="<?= $row['duracao'] ?>">
                                 </div>
                                 <div class="form-group col-md-6">

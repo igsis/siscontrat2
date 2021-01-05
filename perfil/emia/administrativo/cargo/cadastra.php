@@ -1,13 +1,13 @@
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2>EMIA - Cargos</h2>
+            <h3>EMIA - Cargos</h3>
         </div>
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">Cadastro de cargo</h3>
             </div>
-            <form method="post" action="?perfil=emia&p=administrativo&sp=cargo&spp=listagem" role="form">
+            <form method="post" action="?perfil=emia&p=administrativo&sp=cargo&spp=edita" role="form">
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-4">

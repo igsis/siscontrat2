@@ -1,36 +1,39 @@
 <?php
-
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
 
-
-
-$idParcela = $_POST['idParcela'];
 $idPedido = $_POST['idPedido'];
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
-$idEC = $pedido['origem_id'];
+$tipo = $_POST['tipo'];
+
+$pedido = $con->query("SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 2 AND publicado = 1")->fetch_array();
+$idFC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
+$contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
-$contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
-$sqlLocal = "SELECT local FROM locais l INNER JOIN emia_contratacao ec on ec.local_id = l.id WHERE ec.id = '$idEC' AND ec.publicado = 1";
-$local = $con->query($sqlLocal)->fetch_array();
 
-$testaCarga = $con->query("SELECT carga_horaria FROM emia_parcelas WHERE id = $idParcela");
+$linguagem = recuperaDados('linguagens', 'id', $contratacao['linguagem_id'])['linguagem'];
 
-if($testaCarga->num_rows > 0){
-    $horas = mysqli_fetch_array($testaCarga)['carga_horaria'];
-}else{
-    $horas = "(quantidade de horas não cadastrada)";
+$programa = recuperaDados('programas', 'id', $contratacao['programa_id'])['programa'];
+
+switch ($tipo) {
+    case "pia":
+        $texto = "<p>Assim, solicito a reserva de recursos que deverá onerar a ação 6374 – Dotação 25.10.13.392.3001.6374</p>";
+        break;
+    case "sme":
+        $texto = "<p>Assim, solicito a reserva de recursos, que deverá onerar os recursos da Nota de Reserva com Transferência da SME nº 22.671/2019 e para o INSS Patronal a Nota de Reserva com Transferência nº 22.711/2019 SEI (link do SEI)</p>";
+        break;
+    case "vocacional":
+        $texto = "<p>Assim, solicito a reserva de recursos que deverá onerar a ação 6375 – Dotação 25.10.13.392.3001.6375</p>";
+        break;
+    default:
+        $texto = "";
+        break;
 }
 
-$cargo = recuperaDados('emia_cargos', 'id', $contratacao['emia_cargo_id']);
-
-$data = date("Y-m-d", strtotime("-3 hours"));
 ?>
-
 <html>
 <head>
     <meta http-equiv=\"Content-Type\" content=\"text/html. charset=Windows-1252\">
@@ -49,7 +52,7 @@ $data = date("Y-m-d", strtotime("-3 hours"));
     <link rel="stylesheet" href="../visual/css/bootstrap.min.css">
     <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Contabilidade</title>
+    <script src="include/dist/ZeroClipboard.min.js"></script>
 </head>
 
 <body>
@@ -57,22 +60,20 @@ $data = date("Y-m-d", strtotime("-3 hours"));
 <div align="center">
     <?php
     $conteudo =
+        "<p><strong>Do processo nº:</strong> " . $contratacao['protocolo'] . "</p>" .
         "<p>&nbsp;</p>" .
-        "<p><strong>SMC - CONTABILIDADE</strong></p>" .
-        "<p><strong>Sr.(a) Contador(a)</strong></p>" .
+        "<p><strong>INTERESSADO:</strong> " . $pessoa['nome'] . "  </span></p>" .
+        "<p><strong>Objeto:</strong> " . retornaObjetoFormacao_Emia($idFC, "formacao") . "</p>" .
         "<p>&nbsp;</p>" .
+        "<p><strong>CONTABILIDADE</strong></p>" .
+        "<p><strong>Sr(a). Responsável</strong></p>" .
         "<p>&nbsp;</p>" .
-        "<p><strong>Nome:</strong> " . $pessoa['nome'] . "</p>" .
-        "<p><strong>CPF:</strong> " . $pessoa['cpf'] . "</p>" .
-        "<p><strong>Cargo:</strong> " . $cargo['cargo'] . "</p>" .
-        "<p><strong>Local:</strong> " . $local['local'] . "</p>" .
-        "<p><strong>Período:</strong> " . retornaPeriodoFormacao_Emia($contratacao['emia_vigencia_id'], "emia") . "</p>" .
+        "<p>O presente processo trata de " . $pessoa['nome'] . ", " . $programa . ", " . $linguagem . " NOS TERMOS DO EDITAL - " . $programa . ", no valor de " . "R$ " . "  " . dinheiroParaBr($pedido['valor_total']) . " ( ". valorPorExtenso($pedido['valor_total']) . " )" .  ", conforme solicitação (link da solicitação), foram anexados os documentos necessários exigidos no edital, no período de " . retornaPeriodoFormacao_Emia($contratacao['form_vigencia_id'], "formacao") . " </p>" .
         "<p>&nbsp;</p>" .
-        "<p align='justify'>Com base na Confirmação de Serviços (Documento SEI link ), atesto que foi efetivamente cumprido " . $horas . " horas de trabalho durante o período supra citado.</p>" .
-        "<p align='justify'>Em virtude do detalhamento da Ação em 2019, informamos que o pagamento  no valor de R$ 4.194,72 (quatro mil, cento e noventa e quatro reais e setenta e dois centavos) foi gasto na zona sul de São Paulo, rua Volkswagen, s/nº, Jabaquara, SP.</p>" .
-        "<p align='justify'>Encaminhamos o presente para as providências necessárias relativas ao pagamento da parcela do referido processo.</p>" .
-        "<p>&nbsp;</p>" .
-        "<p>&nbsp;</p>"
+        $texto .
+    "<p>&nbsp;</p>" .
+    "<p>Após, enviar para SMC/AJ, para prosseguimento.</p>" .
+    "<p>&nbsp;</p>"
     ?>
 
     <div id="texto" class="texto"><?php echo $conteudo; ?></div>
@@ -120,8 +121,3 @@ $data = date("Y-m-d", strtotime("-3 hours"));
 
 </body>
 </html>
-
-
-
-
-

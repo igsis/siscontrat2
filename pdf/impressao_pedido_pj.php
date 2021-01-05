@@ -90,6 +90,12 @@ if ($pedido['numero_processo_mae'] != NULL) {
 } else {
     $processoMae = NULL;
 }
+
+if($cargaHoraria == 0){
+    $ch = "Não possuí";
+}else{
+    $ch = $cargaHoraria;
+}
 ?>
 
 <html>
@@ -111,6 +117,7 @@ if ($pedido['numero_processo_mae'] != NULL) {
     <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="include/dist/ZeroClipboard.min.js"></script>
+    <title>Pedido de PJ</title>
 </head>
 
 <body>
@@ -135,7 +142,7 @@ if ($pedido['numero_processo_mae'] != NULL) {
         "<p>&nbsp;</p>" .
         "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
         "<p><strong>Data / Período:</strong> " . retornaPeriodoNovo($idEvento, 'ocorrencias') . $trechoApresentacoes . "</p>" .
-        "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
+        "<p><strong>Carga Horária:</strong> " . $ch . "</p>" .
         "<p><strong>Duração: </strong>" . $duracao . "</p>" .
         "<p align='justify'><strong>Local(ais):</strong> " . listaLocais($idEvento, '1') . "</p>" .
         "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . " ( " . valorPorExtenso($pedido['valor_total']) . " )" . "</p>" .
@@ -150,7 +157,7 @@ if ($pedido['numero_processo_mae'] != NULL) {
 <p>&nbsp;</p>
 
 <div align="center">
-    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+    <button id="botao-copiar" class="btn btn-primary" onclick="copyText(getElementById('texto'))">
         COPIAR TODO O TEXTO
         <i class="fa fa-copy"></i>
     </button>
@@ -161,11 +168,30 @@ if ($pedido['numero_processo_mae'] != NULL) {
 </div>
 
 <script>
-    var client = new ZeroClipboard();
-    client.clip(document.getElementById("botao-copiar"));
-    client.on("aftercopy", function () {
-        alert("Copiado com sucesso!");
-    });
+    function copyText(element) {
+        var range, selection, worked;
+
+        if (document.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.moveToElementText(element);
+            range.select();
+        } else if (window.getSelection) {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        try {
+            document.execCommand('copy');
+            alert('Copiado com sucesso!');
+            selection.removeAllRanges();
+        } catch (err) {
+            alert('Texto não copiado, tente novamente.');
+            selection.removeAllRanges();
+        }
+    }
 </script>
 
 </body>

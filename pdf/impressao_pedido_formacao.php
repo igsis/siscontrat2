@@ -7,7 +7,7 @@ $con = bancoMysqli();
 
 $idPedido = $_POST['idPedido'];
 
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$pedido = $con->query("SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 2 AND publicado = 1")->fetch_array();
 $idFC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
@@ -30,10 +30,6 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 }
 
 $tel = substr($tel, 0, -3);
-
-$linguagem = recuperaDados('linguagens', 'id', $contratacao['linguagem_id']);
-
-$programa = recuperaDados('programas', 'id', $contratacao['programa_id']);
 
 if ($pessoa['passaporte'] != NULL) {
     $cpf_passaporte = "<strong>Passaporte: </strong> " . $pessoa['passaporte'] . "<br />";
@@ -82,8 +78,8 @@ if ($pessoa['passaporte'] != NULL) {
         "<strong>Telefone:</strong> " . $tel . "<br />" .
         "<strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
         "<p>&nbsp;</p>" .
-        "<p><strong>Programa:</strong> " . $programa['programa'] . " <strong>Linguagem:</strong> " . $linguagem['linguagem'] . " <strong>Edital:</strong> " . $programa['edital'] . "</p>" .
-        "<p><strong>Data / Período:</strong> " . retornaPeriodoFormacao($contratacao['form_vigencia_id']) . " - conforme Proposta/Cronograma</p>" .
+        "<p><strong>Objeto:</strong> " . retornaObjetoFormacao_Emia($idFC,"formacao") . "</p>" .
+        "<p><strong>Data / Período:</strong> " . retornaPeriodoFormacao_Emia($contratacao['form_vigencia_id'], "formacao") . " - conforme Proposta/Cronograma</p>" .
         "<p><strong>Carga Horária:</strong> " . $carga . " hora(s)" . "</p>" .
         "<p align='justify'><strong>Local:</strong> " . listaLocaisFormacao($idFC) . "</p>" .
         "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . "  (" . valorPorExtenso($pedido['valor_total']) . " )</p>" .
@@ -98,7 +94,7 @@ if ($pessoa['passaporte'] != NULL) {
 <p>&nbsp;</p>
 
 <div align="center">
-    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+    <button id="botao-copiar" class="btn btn-primary" onclick="copyText(getElementById('texto'))">
         COPIAR TODO O TEXTO
         <i class="fa fa-copy"></i>
     </button>
@@ -109,11 +105,30 @@ if ($pessoa['passaporte'] != NULL) {
 </div>
 
 <script>
-    var client = new ZeroClipboard();
-    client.clip(document.getElementById("botao-copiar"));
-    client.on("aftercopy", function () {
-        alert("Copiado com sucesso!");
-    });
+    function copyText(element) {
+        var range, selection, worked;
+
+        if (document.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.moveToElementText(element);
+            range.select();
+        } else if (window.getSelection) {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        try {
+            document.execCommand('copy');
+            alert('Copiado com sucesso!');
+            selection.removeAllRanges();
+        } catch (err) {
+            alert('Texto não copiado, tente novamente.');
+            selection.removeAllRanges();
+        }
+    }
 </script>
 
 </body>

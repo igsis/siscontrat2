@@ -1,3 +1,7 @@
+<?php
+$con = bancoMysqli();
+?>
+
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
@@ -8,7 +12,7 @@
                 <h4 class="box-title">Cadastro de dados para contratação</h4>
             </div>
             <div class="box-body">
-                <form action="?perfil=emia&p=dados_contratacao&sp=listagem" method="POST" role="form">
+                <form action="?perfil=emia&p=dados_contratacao&sp=edita" method="POST" role="form">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="pf">Pessoa Física: *</label>
@@ -48,21 +52,24 @@
                             </select>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="form-group col-md-4">
                             <label for="vigencia">Vigência: *</label>
-                            <select name="vigencia" id="vigencia" class="form-control" required value="">
+                            <select class="form-control" name="vigencia" id="vigencia" required>
                                 <option value="">Selecione a vigência...</option>
                                 <?php
-                                geraOpcaoPublicado('emia_vigencias');
-                                ?>
+                                $opcoesVigencia = $con->query("SELECT id, ano, descricao FROM emia_vigencias WHERE publicado = 1");
+                                if ($opcoesVigencia->num_rows > 0) {
+                                    while ($opcoesArray = mysqli_fetch_array($opcoesVigencia)) { ?>
+                                        <option value="<?= $opcoesArray['id'] ?>"> <?= $opcoesArray['ano'] . " (" . $opcoesArray['descricao'] . ")" ?> </option>
+                                    <?php }
+                                } ?>
                             </select>
                         </div>
                     </div>
-                    <br>
 
                     <div class="row">
-                        <div class="form-group col-md-4 pull-right" id="msgEscondeAno">
-                            <span style="color: red;"><b>Ano escolhido é maior que a vigência!</b></span>
+                        <div class="col-md-12">
+                            <span id="msgEscondeAno" class="pull-right" style="color: red;"><b>Ano escolhido é maior que a vigência!</b></span>
                         </div>
                     </div>
 
@@ -126,9 +133,9 @@
     isMsgAno.hide();
 
     function maior() {
-        let valorvigencia = $('#vigencia option:selected');
-        valorvigencia = parseInt(valorvigencia.text())
-        if (ano.val() > valorvigencia) {
+        let valorVigencia = $('#vigencia option:selected').text();
+        valorVigencia = parseInt(valorVigencia.substring(0, 5))
+        if (ano.val() > valorVigencia) {
             botao.prop('disabled', true);
             isMsgAno.show();
         } else {
@@ -140,5 +147,7 @@
     ano.on('change', maior);
     vigencia.on('change', maior);
 
-    $(document).ready(maior)
+    $(document).ready(maior);
 </script>
+
+

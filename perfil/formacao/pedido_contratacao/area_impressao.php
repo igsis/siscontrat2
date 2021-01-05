@@ -8,11 +8,7 @@ $link_vocacional = $http . "rlt_proposta_formacao.php";
 
 $link_facc = $http . "rlt_fac_pf.php";
 
-$link_reserva_vocacional = $http . "rlt_pedido_reserva_vocacional.php";
-
-$link_reserva_sme = $http . "impressao_reserva_sme.php";
-
-$link_reserva_pia = $http . "impressao_reserva_pia.php";
+$link_reserva = $http . "rlt_reserva_formacao.php";
 
 $link_despacho = $http . "rlt_despacho_formacao.php";
 
@@ -30,6 +26,7 @@ $idPf = $pedido['pessoa_fisica_id'];
                     Qual modelo de documento deseja imprimir?
                 </h4>
             </div>
+
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
@@ -52,6 +49,7 @@ $idPf = $pedido['pessoa_fisica_id'];
                             <h4 align="center">PROPOSTA</h4>
                         </nav>
                     </div>
+
                     <div class="col-md-6">
                         <form action="<?= $link_vocacional ?>" target="_blank" method="POST">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
@@ -61,6 +59,7 @@ $idPf = $pedido['pessoa_fisica_id'];
                         </form>
                         <hr/>
                     </div>
+
                     <div class="col-md-6">
                         <form action="<?= $link_vocacional ?>" target="_blank" method="POST">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
@@ -95,15 +94,17 @@ $idPf = $pedido['pessoa_fisica_id'];
                     </div>
 
                     <div class="col-md-6">
-                        <form action="<?= $link_reserva_vocacional ?>" target="_blank" method="GET">
+                        <form action="<?= $link_reserva ?>" target="_blank" method="POST">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <input type="hidden" name="tipo" value="vocacional">
                             <button type="submit" class="btn btn-outline-info center-block">
                                 FORMAÇÃO - Vocacional
                             </button>
                         </form>
                         <hr/>
-                        <form action="<?= $link_reserva_sme ?>" target="_blank" method="POST">
+                        <form action="<?= $link_reserva ?>" target="_blank" method="POST">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <input type="hidden" name="tipo" value="sme">
                             <button type="submit" class="btn btn-outline-info center-block">
                                 VOCACIONAL/PIÁ - SME
                             </button>
@@ -111,8 +112,9 @@ $idPf = $pedido['pessoa_fisica_id'];
                     </div>
 
                     <div class="col-md-6">
-                        <form action="<?= $link_reserva_pia ?>" target="_blank" method="POST">
+                        <form action="<?= $link_reserva ?>" target="_blank" method="POST">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
+                            <input type="hidden" name="tipo" value="pia">
                             <button type="submit" class="btn btn-outline-info center-block">
                                 FORMAÇÃO - PIÁ
                             </button>
@@ -146,6 +148,5 @@ $idPf = $pedido['pessoa_fisica_id'];
                 </form>
             </div>
         </div>
-
     </section>
 </div>

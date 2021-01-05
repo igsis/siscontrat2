@@ -443,6 +443,23 @@ function retornaObjeto($idPedido)
     return $array['nome_evento'];
 }
 
+function retornaObjetoFormacao_Emia($idContratacao, $modulo)
+{
+    $con = bancoMysqli();
+    if ($modulo == "formacao") {
+        $consultaNomes = $con->query("SELECT p.programa, l.linguagem, p.edital FROM programas AS p 
+                                        INNER JOIN formacao_contratacoes AS fc ON p.id = fc.programa_id
+                                        INNER JOIN linguagens l ON fc.linguagem_id = l.id
+                                        WHERE fc.id = $idContratacao AND fc.publicado = 1");
+        if ($consultaNomes->num_rows > 0) {
+            $nomesArray = mysqli_fetch_array($consultaNomes);
+            return $nomesArray['programa'] . " - " . $nomesArray['linguagem'] . " - " . $nomesArray['edital'];
+        } else {
+            return "";
+        }
+    }
+}
+
 function retornaPeriodo($idEvento)
 {
     $con = bancoMysqli();
@@ -1516,39 +1533,32 @@ function retornaPeriodoNovo($id, $tabela = "ocorrencias")
     }
 }
 
-function retornaPeriodoFormacao($idVigencia)
+function retornaPeriodoFormacao_Emia($idVigencia, $modulo)
 {
     $con = bancoMysqli();
-    $testaDataInicio = $con->query("SELECT data_inicio FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->num_rows;
+    $tabela = "";
+    $campo = "";
+    if ($modulo == "formacao") {
+        $tabela = "formacao_parcelas";
+        $campo = "formacao_vigencia_id";
+    } elseif ($modulo == "emia") {
+        $tabela = "emia_parcelas";
+        $campo = "emia_vigencia_id";
+    }
+
+    $testaDataInicio = $con->query("SELECT data_inicio FROM $tabela WHERE $campo = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->num_rows;
     if ($testaDataInicio > 0) {
-        $data_inicio = $con->query("SELECT data_inicio FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array();
-        $data_fim = $con->query("SELECT data_fim FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array();
-        if ($data_inicio['data_inicio'] == $data_fim['data_fim']) {
-            return exibirDataBr($data_inicio['data_inicio']);
+        $data_inicio = $con->query("SELECT data_inicio FROM $tabela WHERE $campo = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'];
+        $data_fim = $con->query("SELECT data_fim FROM $tabela WHERE $campo = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array()['data_fim'];
+        if ($data_inicio == $data_fim || $data_fim == "0000-00-00") {
+            return exibirDataBr($data_inicio);
         } else {
-            return "de " . exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim['data_fim']);
+            return "de " . exibirDataBr($data_inicio) . " à " . exibirDataBr($data_fim);
         }
     } else {
         return "(Parcelas não cadastradas)";
     }
 
-}
-
-function retornaPediodoEmia($idVigencia)
-{
-    $con = bancoMysqli();
-    $testaDataInicio = $con->query("SELECT data_inicio FROM emia_parcelas WHERE emia_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->num_rows;
-    if ($testaDataInicio > 0) {
-        $data_inicio = $con->query("SELECT data_inicio FROM emia_parcelas WHERE emia_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array();
-        $data_fim = $con->query("SELECT data_fim FROM emia_parcelas WHERE emia_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array();
-        if ($data_inicio['data_inicio'] == $data_fim['data_fim']) {
-            return exibirDataBr($data_inicio['data_inicio']);
-        } else {
-            return "de " . exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim['data_fim']);
-        }
-    } else {
-        return "Parcelas não cadastradas";
-    }
 }
 
 function geraProtocolo($id)

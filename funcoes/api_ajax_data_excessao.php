@@ -13,24 +13,31 @@ if (isset($_POST['datas'])) {
         $sqlIds = "SELECT id FROM ocorrencia_excecoes WHERE atracao_id = '$id'";
         if ($arrayId = mysqli_query($con, $sqlIds)) {
             $idOcorrencia = mysqli_fetch_all($arrayId,MYSQLI_ASSOC);
-            $sql = "INSERT INTO ocorrencia_excecoes (atracao_id, data_excecao) VALUES ";
-            foreach ($datas as $data){
-                if ($cont != 0){
-                    $sql.=", ('$id','$data')";
-                }else{
-                    $sql .="('$id','$data')";
-                    $cont++;
-                }
+            if ($datas === "0") {
+                $sqlDelete = "DELETE FROM ocorrencia_excecoes WHERE atracao_id = '{$id}'";
+                if (mysqli_query($con, $sqlDelete))
+                    gravarLog($sqlDelete);
             }
-            if (mysqli_query($con,$sql)){
-                foreach ($idOcorrencia as $ocorrencia){
-                    $sqlDelete = "DELETE FROM ocorrencia_excecoes WHERE id = '{$ocorrencia['id']}'";
-                    if (mysqli_query($con, $sqlDelete))
-                        gravarLog($sqlDelete);
+            else {
+                $sql = "INSERT INTO ocorrencia_excecoes (atracao_id, data_excecao) VALUES ";
+                foreach ($datas as $data) {
+                    if ($cont != 0) {
+                        $sql .= ", ('$id','$data')";
+                    } else {
+                        $sql .= "('$id','$data')";
+                        $cont++;
+                    }
                 }
-                echo http_response_code(200);
-            }else{
-                echo http_response_code(403);
+                if (mysqli_query($con, $sql)) {
+                    foreach ($idOcorrencia as $ocorrencia) {
+                        $sqlDelete = "DELETE FROM ocorrencia_excecoes WHERE id = '{$ocorrencia['id']}'";
+                        if (mysqli_query($con, $sqlDelete))
+                            gravarLog($sqlDelete);
+                    }
+                    echo http_response_code(200);
+                } else {
+                    echo http_response_code(403);
+                }
             }
         }
         else{

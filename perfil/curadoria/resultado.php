@@ -73,26 +73,31 @@ if (isset($_POST['busca'])) {
                                 ?>
                                 <tr>
                                     <td><?= $evento['protocolo'] ?></td>
-                                    <td>
-                                        <form action="?perfil=curadoria&p=resumo" method="POST">
-                                            <input type="hidden" name="idEvento" value="<?= $evento['id'] ?>">
-                                            <button type="submit" name="carregar" id="carregar"
-                                                    class="btn btn-primary"><?= $evento['numero_processo'] ?? "Não cadastrado" ?></button>
-                                        </form>
-                                    </td>
+                                    <?php if ($evento['numero_processo'] != ""): ?>
+                                        <td>
+                                            <form action="?perfil=curadoria&p=resumo" method="POST">
+                                                <input type="hidden" name="idEvento" value="<?= $evento['id'] ?>">
+                                                <button type="submit" name="carregar" id="carregar"
+                                                        class="btn btn-link"><?= $evento['numero_processo'] ?></button>
+                                            </form>
+                                        </td>
+                                    <?php else: ?>
+                                        <td>Não possuí</td>
+                                    <?php endif; ?>
+
                                     <td><?= $evento['nome_evento'] ?></td>
                                     <td><?= $evento['fiscal'] ?></td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
                                                 data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
-                                                onClick="exibirLocal_Instituicao('<?=$link_api_locais_instituicoes?>', '#modalLocais_Inst', '#modalTitulo')"
+                                                onClick="exibirLocal_Instituicao('<?= $link_api_locais_instituicoes ?>', '#modalLocais_Inst', '#modalTitulo')"
                                                 data-id="<?= $evento['id'] ?>"
                                                 name="exibirLocais">
                                             Ver locais
                                         </button>
                                     </td>
                                     <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
-                                    <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
+                                    <td><?= "R$" . dinheiroParaBr($evento['valor_total']) ?></td>
                                     <?= retornaChamadosTD($evento['id']) ?>
                                 </tr>
                                 <?php

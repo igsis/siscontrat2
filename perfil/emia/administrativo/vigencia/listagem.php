@@ -18,10 +18,15 @@ $query = mysqli_query($con, $sql);
 ?>
 <div class="content-wrapper">
     <section class="content">
-        <div class="page-header">
-            <h2>Listagem de Vigências</h2>
+        <h3 class="box-title">EMIA - Vigências</h3>
+        <a href="?perfil=emia&p=administrativo&sp=vigencia&spp=cadastra" class="text-right btn btn-success"
+           style="float: right">Cadastrar uma nova vigência</a>
+        <div class="row" align="center">
+            <?php if (isset($mensagem)) {
+                echo $mensagem;
+            }; ?>
         </div>
-        <div class="box box-primary">
+        <div class="box">
             <div class="row" align="center">
                 <?php if (isset($mensagem)) {
                     echo $mensagem;
@@ -74,9 +79,6 @@ $query = mysqli_query($con, $sql);
                 <div class="box-footer">
                     <a href="?perfil=emia&p=administrativo&sp=index">
                         <button type="button" class="btn btn-default">Voltar</button>
-                    </a>
-                    <a href="?perfil=emia&p=administrativo&sp=vigencia&spp=cadastra">
-                        <button type="button" class="btn btn-primary pull-right"> Cadastrar uma nova vigência </button>
                     </a>
                 </div>
             </div>

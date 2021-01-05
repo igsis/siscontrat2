@@ -23,7 +23,7 @@ if (isset($_POST['edita'])) {
     $sql = "UPDATE subprefeituras SET subprefeitura = '$subprefeitura' WHERE id = '$idSubprefeitura'";
 
     if (mysqli_query($con, $sql)) {
-        $mensagem = mensagem("success", "Subprefeitura atualizado com sucesso");
+        $mensagem = mensagem("success", "Subprefeitura atualizada com sucesso");
         gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Ocorreu um erro ao atualizar a subprefeitura. Tente novamente!");

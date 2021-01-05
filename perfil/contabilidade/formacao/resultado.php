@@ -60,14 +60,19 @@ $sql = "SELECT
                         while ($pedido = mysqli_fetch_array($query)) {
                             ?>
                             <tr>
-                                <td>
-                                    <form action="?perfil=contabilidade&p=formacao&sp=detalhes" role="form"
-                                          method="POST">
-                                        <input type="hidden" name="idPedido" id="idPedido" value="<?= $pedido['id'] ?>">
-                                        <button type="submit"
-                                                class="btn btn-primary"><?= $pedido['numero_processo'] ?></button>
-                                    </form>
-                                </td>
+                                <?php if ($pedido['numero_processo'] != ""): ?>
+                                    <td>
+                                        <form action="?perfil=contabilidade&p=formacao&sp=detalhes" role="form"
+                                              method="POST">
+                                            <input type="hidden" name="idPedido" id="idPedido"
+                                                   value="<?= $pedido['id'] ?>">
+                                            <button type="submit"
+                                                    class="btn btn-link"><?= $pedido['numero_processo'] ?></button>
+                                        </form>
+                                    </td>
+                                <?php else: ?>
+                                    <td>Não possuí</td>
+                                <?php endif; ?>
                                 <td><?= $pedido['protocolo'] ?></td>
                                 <td><?= $pedido['nome'] ?></td>
                                 <td><?= $pedido['status'] ?></td>

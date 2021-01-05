@@ -1,27 +1,27 @@
-<?php 
-   
-   // INSTALAÇÃO DA CLASSE NA PASTA FPDF.
-   require_once("../include/lib/fpdf/fpdf.php");
-   require_once("../funcoes/funcoesConecta.php");
-   require_once("../funcoes/funcoesGerais.php");
+<?php
 
-   //CONEXÃO COM BANCO DE DADOS 
-   $con = bancoMysqli(); 
-   
-   class PDF extends FPDF
-   {
-       function Header()
-       {
-           // Move to the right
-   
-           // Logo
-           $this->Cell(80);
-           $this->Image('../pdf/logo_smc.jpg', 170, 10);
-   
-           // Line break
-           $this->Ln(20);
-       }
-   }
+// INSTALAÇÃO DA CLASSE NA PASTA FPDF.
+require_once("../include/lib/fpdf/fpdf.php");
+require_once("../funcoes/funcoesConecta.php");
+require_once("../funcoes/funcoesGerais.php");
+
+//CONEXÃO COM BANCO DE DADOS
+$con = bancoMysqli();
+
+class PDF extends FPDF
+{
+    function Header()
+    {
+        // Move to the right
+
+        // Logo
+        $this->Cell(80);
+        $this->Image('../pdf/logo_smc.jpg', 170, 10);
+
+        // Line break
+        $this->Ln(20);
+    }
+}
 
 
 $idPedido = $_POST['idPedido'];
@@ -31,32 +31,34 @@ $pessoa = recuperaDados('pessoa_juridicas', 'id', $idPj);
 
 $rep1 = recuperaDados('representante_legais', 'id', $pessoa['representante_legal1_id']);
 
-if($pessoa['representante_legal2_id'] != NULL){
+if ($pessoa['representante_legal2_id'] != NULL) {
     $rep2 = recuperaDados('representante_legais', 'id', $pessoa['representante_legal2_id']);
 }
 
 $ano = date('Y');
 
 // GERANDO O PDF:
-$pdf = new PDF('P','mm','A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
+$pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
 $pdf->AddPage();
 
-   
-$x=20;
-$l=4.3; //DEFINE A ALTURA DA LINHA   
-   
-   $pdf->SetXY( $x , 35 );// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
-   $pdf->SetX($x);
-   $pdf->SetFont('Arial','B', 12);
-   $pdf->Cell(180,$l,utf8_decode('NORMAS INTERNAS PARA DISPONIBILIZAÇÃO DO USO DOS TEATROS MUNICIPAIS'),0,1,'C');
-  
-   $pdf->Ln();
-  
-   $pdf->SetX($x);
-   $pdf->SetFont('Arial','', 10);
-   $pdf->MultiCell(180,$l,utf8_decode("
+$x = 20;
+$l = 4.3; //DEFINE A ALTURA DA LINHA
+
+$pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
+
+$pdf->SetTitle("Normas Internas PJ");
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 12);
+$pdf->Cell(180, $l, utf8_decode('NORMAS INTERNAS PARA DISPONIBILIZAÇÃO DO USO DOS TEATROS MUNICIPAIS'), 0, 1, 'C');
+
+$pdf->Ln();
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', '', 10);
+$pdf->MultiCell(180, $l, utf8_decode("
 1.	Cumprir rigorosamente as datas e horários estabelecidos em conjunto com a Coordenação do Teatro.
 
 2.	Dar início às apresentações no horário estabelecido com tolerância máxima de 15 minutos, salvo motivo de força maior.
@@ -81,15 +83,15 @@ $l=4.3; //DEFINE A ALTURA DA LINHA
 
 12.	O usuário deverá reparar, de imediato, qualquer dano causado ao Teatro, inclusive no que diz respeito à substituição de lâmpadas queimadas, manutenção de mesa de iluminação e refletores, e substituição de gelatinas, deixando o mesmo nas mesmas condições que o encontrou quando do início do termo do contrato. No caso em que diversos grupos estiverem em cartaz no mesmo período, os custos dos reparos deverão ser rateados entre eles.
 "));
- 
+
 
 //	QUEBRA DE PÁGINA
-$pdf->AddPage('','');
+$pdf->AddPage('', '');
 
-$pdf->SetXY( $x , 35 );// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
+$pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
-   $pdf->SetX($x);
-   $pdf->MultiCell(180,$l,utf8_decode("13.	A Cia. deverá designar uma pessoa para atuar na Bilheteria durante toda a temporada, cabendo a esta a responsabilidade exclusiva pela venda dos ingressos.
+$pdf->SetX($x);
+$pdf->MultiCell(180, $l, utf8_decode("13.	A Cia. deverá designar uma pessoa para atuar na Bilheteria durante toda a temporada, cabendo a esta a responsabilidade exclusiva pela venda dos ingressos.
 
 13.1 A Bilheteria deverá abrir 1 (uma) hora antes do início de cada espetáculo.
 
@@ -117,38 +119,35 @@ $pdf->SetXY( $x , 35 );// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
 21.	O usuário, conjuntamente com a coordenação do Teatro, deverá zelar pela conservação do Teatro e seus bens. 
 "));
-   
-   $pdf->Ln();
 
-   $pdf->SetX($x);
-   $pdf->Cell(180,$l,utf8_decode("São Paulo, _________ de _____________________________ de ").$ano.".",0,0,'L');
-   
-   $pdf->Ln();  
-   
+$pdf->Ln();
+
+$pdf->SetX($x);
+$pdf->Cell(180, $l, utf8_decode("São Paulo, _________ de _____________________________ de ") . $ano . ".", 0, 0, 'L');
+
+$pdf->Ln();
+
 //RODAPÉ PERSONALIZADO
-   $pdf->SetXY($x,238);
-   $pdf->Cell(100, 4, utf8_decode("Nome: " . $rep1['nome']), 'T', 1, 'L'); 
-   
-   $pdf->SetX($x);
-   $pdf->Cell(100, 4, utf8_decode("RG: " . $rep1['rg']), 0, 1, 'L');
+$pdf->SetXY($x, 238);
+$pdf->Cell(100, 4, utf8_decode("Nome: " . $rep1['nome']), 'T', 1, 'L');
 
-   $pdf->SetX($x);
-   $pdf->Cell(100, 4,utf8_decode("CPF: " . $rep1['cpf']),0,1,'L');
+$pdf->SetX($x);
+$pdf->Cell(100, 4, utf8_decode("RG: " . $rep1['rg']), 0, 1, 'L');
 
-   if($pessoa['representante_legal2_id'] != NULL){
-    $pdf->SetXY($x,262);
-        $pdf->Cell(100, 4,utf8_decode("Nome: " . $rep2['nome']),'T',1,'L');
+$pdf->SetX($x);
+$pdf->Cell(100, 4, utf8_decode("CPF: " . $rep1['cpf']), 0, 1, 'L');
 
-        $pdf->SetX($x);
-        $pdf->Cell(100, 4,utf8_decode("RG: " . $rep2['rg']),0, 1,'L');
+if ($pessoa['representante_legal2_id'] != NULL) {
+    $pdf->SetXY($x, 262);
+    $pdf->Cell(100, 4, utf8_decode("Nome: " . $rep2['nome']), 'T', 1, 'L');
 
-        $pdf->SetX($x);
-        $pdf->Cell(100, 4,utf8_decode("CPF: " . $rep2['cpf']),0,1,'L');
-   }
-   
-   
+    $pdf->SetX($x);
+    $pdf->Cell(100, 4, utf8_decode("RG: " . $rep2['rg']), 0, 1, 'L');
 
-   
+    $pdf->SetX($x);
+    $pdf->Cell(100, 4, utf8_decode("CPF: " . $rep2['cpf']), 0, 1, 'L');
+}
+
 
 $pdf->Output();
 

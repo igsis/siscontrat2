@@ -194,7 +194,7 @@ include "includes/validacoes.php";
                                 <table class="table">
                                     <?php foreach ($resumoEvento as $campo => $dado) { ?>
                                         <tr>
-                                            <th width="30%"><?= $campo ?></th>
+                                            <th width="30%"><?= $campo ?>:</th>
                                             <?php
                                             if ($campo == "Evento Público") {
                                                 if ($dado == 0) {

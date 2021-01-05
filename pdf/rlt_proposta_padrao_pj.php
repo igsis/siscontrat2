@@ -43,8 +43,6 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
             while ($cargaArray = mysqli_fetch_array($carga)) {
                 $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
             }
-        } else {
-            $cargaHoraria = "Não possuí.";
         }
     }
 }
@@ -114,6 +112,8 @@ $x = 20;
 $l = 7; //DEFINE A ALTURA DA LINHA
 
 $pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
+
+$pdf->SetTitle("Proposta PJ");
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
@@ -240,7 +240,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(26, $l, utf8_decode('Carga Horária:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(50, $l, utf8_decode($cargaHoraria), 0, 'L', 0);
+$pdf->MultiCell(50, $l, utf8_decode($cargaHoraria == 0 ? "Não possuí" : $cargaHoraria), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);

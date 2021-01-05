@@ -8,7 +8,7 @@ $con = bancoMysqli();
 require_once("../include/phpexcel/Classes/PHPExcel.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
-session_start(['name' => 'sis']);
+
 
 $idPedido = $_POST['idPedido'];
 
@@ -78,7 +78,7 @@ $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue("C2", "Função")
     ->setCellValue("D2", "Linguagem")
     ->setCellValue("E2", "E-mail")
-    ->setCellValue("F2", "Telefones do Proponente")
+    ->setCellValue("F2", "Telefone(s) do Proponente")
     ->setCellValue("G2", "Status do Pedido");
 
 // Definimos o estilo da fonte

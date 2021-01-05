@@ -708,7 +708,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Datas de excessão</h4>
+                <h4 class="modal-title">Datas de exceção</h4>
             </div>
             <form>
                 <div class="modal-body" id="body-datas">
@@ -721,7 +721,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                         <div class="alert alert-danger alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                             <p>
-                                <i class="icon fa fa-ban"></i> Data de excessão deve ser menor que data inicio e maior que a data de encerramento!
+                                <i class="icon fa fa-ban"></i> Data de exceção deve ser maior que data inicio e menor que a data de encerramento!
                             </p>
                         </div>
                     </div>
@@ -946,7 +946,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
     retiradaIngresso.addEventListener("change", () => {
         let valorIngressos = document.querySelector('#valor_ingresso');
-        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11) {
+        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11 || retiradaIngresso.value == 1) {
             valorIngressos.value = '0,00';
             valorIngressos.readOnly = true;
         } else {
@@ -1209,9 +1209,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         });
         dados = {
             id: <?= $idOcorrencia ?>,
-            datas: datas
+            datas: datas.length == 0 ? 0 : datas
         };
-
         $.ajax({
             url: '<?= $urlAjax ?>',
             type: 'POST',

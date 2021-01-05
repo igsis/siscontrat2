@@ -63,7 +63,7 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Data de Encerramento:</th>
-                                                        <td><?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada" ?></td>
+                                                        <td><?= exibirDataBr($ocorrencia['data_fim']) == null ? "Não é Temporada" : exibirDataBr($ocorrencia['data_fim']) ?></td>
                                                     </tr>
 
                                                     <?php
@@ -174,11 +174,12 @@
                 <?php }
             } else {
                 foreach ($filmes as $filme) {
-                    $idFilme = $filme['idFilmeEvento'];
-                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco
-                                    INNER JOIN eventos eve ON eve.id = oco.origem_ocorrencia_id
-                                    INNER JOIN filme_eventos fe ON eve.id = fe.evento_id
-                                    WHERE eve.id = '{$idEvento}' AND oco.tipo_ocorrencia_id= 2 AND oco.publicado = 1 AND fe.id = '{$idFilme}';";
+                    $idFilme = $filme['id'];
+                    $idFilmeEvento = $filme['idFilmeEvento'];
+                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco 
+                                      INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id 
+                                      WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1 AND oco.tipo_ocorrencia_id = 2 AND fe.evento_id = $idEvento AND oco.atracao_id = $idFilmeEvento";
+
                     $ocorrencias = $con->query($sqlOcorrencia);
                     ?>
                     <div class="panel box box-primary">

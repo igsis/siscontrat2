@@ -101,8 +101,11 @@ $usuario = recuperaDados('usuarios', 'id', $evento['usuario_id']);
 $contratacao = $evento['contratacao'] == 1 ? 'Sim' : 'Não';
 $evento_status = recuperaDados('evento_status', 'id', $evento['evento_status_id']);
 $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
-$sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
-
+$sql_filme = "SELECT fe.id AS 'idFilmeEvento', f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao 
+              FROM filme_eventos fe 
+              INNER JOIN eventos e on fe.evento_id = e.id 
+              INNER JOIN filmes f ON f.id = fe.filme_id 
+              WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
 $datas = "";
 
 //testa e se necessário retorna as datas de exceção
@@ -151,6 +154,9 @@ $datas = substr($datas, 0, -2);
                                                 <h3>Informações sobre o evento</h3>
                                                 <hr>
                                             </div>
+                                            <br>
+                                        </div>
+                                        <div class="form-group col-md-12">
                                             <strong>Protocolo: </strong><?= $evento['protocolo'] == null ? "Não possuí" : $evento['protocolo'] ?>
                                         </div>
                                         <div class="form-group col-md-12">
@@ -382,16 +388,16 @@ $datas = substr($datas, 0, -2);
                                             }
                                         } else {
                                             $query_filme = mysqli_query($con, $sql_filme);
-                                            $contador = 1;
+                                            $o = 1;
+                                            $f = 1;
                                             while ($filme = mysqli_fetch_array($query_filme)) {
-
-                                                $idFilme = $filme['id'];
-                                                $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = 1";
+                                                $idFilmeEvento = $filme['idFilmeEvento'];
+                                                $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND atracao_id = $idFilmeEvento AND publicado = 1 AND tipo_ocorrencia_id = 2";
                                                 ?>
                                                 <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                                                 <div class="form-group col-md-12">
                                                     <div align="center">
-                                                        <h3>Informações sobre a atração</h3>
+                                                        <h3>Informações sobre o filme #<?= $f ?></h3>
                                                         <hr>
                                                     </div>
                                                 </div>
@@ -427,7 +433,7 @@ $datas = substr($datas, 0, -2);
                                                     ?>
                                                     <div class="form-group col-md-12">
                                                         <div align="center">
-                                                            <h3>Ocorrência #<?= $contador ?></h3>
+                                                            <h3>Ocorrência #<?= $o ?></h3>
                                                             <hr>
                                                         </div>
                                                     </div>
@@ -461,14 +467,11 @@ $datas = substr($datas, 0, -2);
                                                             <strong>Virada:</strong> <?= $ocorrencia['virada'] == 1 ? "Sim" : "Não"; ?>
                                                         </div>
                                                     <?php }
-                                                    $contador++;
-                                                    ?>
-
-                                                <?php }
+                                                    $o++;
+                                                }
+                                                $f++;
                                             }
-                                        }
-
-                                        ?>
+                                        } ?>
                                         <div class="box-footer" align="center">
                                             <a href="?perfil=evento">
                                                 <button type="button" class="btn btn-default">Voltar</button>

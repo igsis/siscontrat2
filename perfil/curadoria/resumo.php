@@ -91,7 +91,7 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
 
                         <tr>
                             <th width="30%">Valor:</th>
-                            <td><?= "R$" . $pedido['valor_total'] ?></td>
+                            <td><?= "R$" . dinheiroParaBr($pedido['valor_total']) ?></td>
                         </tr>
 
                         <tr>

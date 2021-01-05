@@ -340,6 +340,7 @@ $disableDown = "";
                                     <div class="col-md-6 form-group">
                                         <label for="status">Status do Pedido: *</label>
                                         <select name="status" id="status" class="form-control">
+                                            <option value="<?= $pedido['status_pedido_id'] ?>"><?= $nomeStatus['status'] ?></option>
                                             <?php
                                             $sqlStatus = "SELECT id, status FROM pedido_status WHERE id NOT IN (1,3) AND id != " . $pedido['status_pedido_id'] . " AND area = 1 ORDER BY ordem";
                                             $queryStatus = mysqli_query($con, $sqlStatus);

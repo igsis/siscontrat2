@@ -13,7 +13,7 @@ class PDF extends FPDF{
 }
 
 $idPedido = $_POST['idPedido'];
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$pedido = $con->query("SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 2 AND publicado = 1")->fetch_array();
 $idFC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
@@ -89,7 +89,7 @@ if($pessoa['passaporte'] != NULL){
     $pdf->SetX($x);
     $pdf->Cell(8,$l,utf8_decode("RG:"),0,0,'L');
     $pdf->SetFont('Arial', '',11);
-    $pdf->Cell(40,$l,utf8_decode($pessoa['rg'] == NULL ? "Não cadastrado" : $pessoa['rg']),0,0,'L');
+    $pdf->Cell(40,$l,utf8_decode(checaCampo($pessoa['rg'])),0,0,'L');
 
     $pdf->Ln();
 
