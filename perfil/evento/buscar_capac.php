@@ -15,22 +15,22 @@ include "includes/menu_principal.php";
                           role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="idCapac">Código de Cadastro no CAPAC</label>
+                                <div class="col-md-12 col-sm-12 form-group">
+                                    <label for="idCapac">Código de Cadastro no CAPAC:</label>
                                     <input type="number" name="idCapac" id="idCapac" class="form-control">
                                 </div>
-
-                                <div class="col-md-4 form-group">
-                                    <label for="nome">Nome do Evento</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 col-sm-12 form-group">
+                                    <label for="nome">Nome do Evento:</label>
                                     <input type="text" name="nome" id="nome" class="form-control">
                                 </div>
-                                
                                 <div class="col-md-4 form-group">
-                                    <label for="publico">Representatividade</label>
+                                    <label for="publico">Público:</label>
                                     <select name="publico" id="publico" class="form-control">
                                         <option value="">Selecione uma opção...</option>
                                         <?php
-                                            geraOpcao('publicos');
+                                        geraOpcao('publicos');
                                         ?>
                                     </select>
                                 </div>
