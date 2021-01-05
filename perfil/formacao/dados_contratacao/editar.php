@@ -1,10 +1,10 @@
 <?php
 $con = bancoMysqli();
 
-if (isset($_POST['editar'])) {
-    $idPC = $_POST['idFC'];
+if (isset($_POST['cadastra']) || isset($_POST['editar'])) {
     $idPF = $_POST['idPF'];
     $ano = $_POST['ano'];
+    $status = "1";
     $chamado = $_POST['chamado'];
     $classificacao_indicativa = $_POST['classificacao'];
     $territorio = $_POST['territorio'];
@@ -14,12 +14,72 @@ if (isset($_POST['editar'])) {
     $linguagem = $_POST['linguagem'];
     $projeto = $_POST['projeto'];
     $cargo = $_POST['cargo'];
-    $regiao = $_POST['regiao'];
     $vigencia = $_POST['vigencia'];
-    $observacao = $_POST['observacao'];
+    $observacao = trim(addslashes($_POST['observacao']));
     $fiscal = $_POST['fiscal'];
-    $suplente = $_POST['suplente'];
+    $suplente = $_POST['suplente'] ?? NULL;
+    $usuario = $_SESSION['usuario_id_s'];
+    $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
+    $regiao = $_POST['regiao'];
+}
 
+if (isset($_POST['cadastra'])) {
+    $sqlInsert = "INSERT INTO formacao_contratacoes (
+                                   pessoa_fisica_id, 
+                                   ano, 
+                                   form_status_id, 
+                                   chamado, 
+                                   classificacao, 
+                                   territorio_id, 
+                                   coordenadoria_id, 
+                                   subprefeitura_id, 
+                                   programa_id, 
+                                   linguagem_id, 
+                                   projeto_id, 
+                                   form_cargo_id, 
+                                   form_vigencia_id, 
+                                   observacao, 
+                                   fiscal_id, 
+                                   suplente_id,  
+                                   usuario_id, 
+                                   data_envio,
+                                   regiao_preferencia_id
+                                   )
+                                   VALUES(
+                                          '$idPF',
+                                          '$ano',
+                                          '$status',
+                                          '$chamado',
+                                          '$classificacao_indicativa',
+                                          '$territorio',
+                                          '$coordenadoria',
+                                          '$subprefeitura',
+                                          '$programa',
+                                          '$linguagem',
+                                          '$projeto',
+                                          '$cargo',
+                                          '$vigencia',
+                                          '$observacao',
+                                          '$fiscal',
+                                          '$suplente',
+                                          '$usuario',
+                                          '$data',
+                                          '$regiao')";
+    if (mysqli_query($con, $sqlInsert)) {
+        $mensagem = mensagem("success", "Gravado com sucesso!");
+        $idPC = recuperaUltimo('formacao_contratacoes');
+        $protocolo = geraProtocolo($idPC) . '-F';
+        $sqlProtcolo = "UPDATE formacao_contratacoes SET
+                                        protocolo = '$protocolo' 
+                                        WHERE id = '$idPC'";
+        $queryProtocolo = mysqli_query($con, $sqlProtcolo);
+    } else {
+        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+    }
+}
+
+if (isset($_POST['editar'])) {
+    $idPC = $_POST['idFC'];
     $sqlUpdate = "UPDATE formacao_contratacoes SET
                                  pessoa_fisica_id = '$idPF',
                                  ano = '$ano',
@@ -44,16 +104,13 @@ if (isset($_POST['editar'])) {
     } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
     }
-    $fc = recuperaDados('formacao_contratacoes', 'id', $idPC);
 }
 
 if (isset($_POST['edit'])) {
     $idPC = $_POST['idPCEdit'];
-    $fc = recuperaDados('formacao_contratacoes', 'id', $idPC);
 }
 
-$_SESSION['idPc'] = $idPC;
-
+$fc = recuperaDados('formacao_contratacoes', 'id', $idPC);
 ?>
 
 <div class="content-wrapper">
@@ -90,7 +147,7 @@ $_SESSION['idPc'] = $idPC;
                             <label for="pf">Pessoa Física: *</label>
                             <select required name="idPF" id="idPF" class="form-control">
                                 <?php
-                                    geraOpcao('pessoa_fisicas', $fc['pessoa_fisica_id']);
+                                geraOpcao('pessoa_fisicas', $fc['pessoa_fisica_id']);
                                 ?>
                             </select>
                             <br>
@@ -99,12 +156,12 @@ $_SESSION['idPc'] = $idPC;
 
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="classificacao">Classificação Indicativa *</label>
+                            <label for="classificacao">Classificação Indicativa: *</label>
                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                     data-target="#modal-default"><i class="fa fa-info"></i></button>
                             <select class="form-control" name="classificacao" id="classificacao" required>
                                 <?php
-                                    geraOpcao("classificacao_indicativas", $fc['classificacao']);
+                                geraOpcao("classificacao_indicativas", $fc['classificacao']);
                                 ?>
                             </select>
                         </div>
@@ -112,34 +169,34 @@ $_SESSION['idPc'] = $idPC;
 
                     <div class="row">
                         <div class="form-group col-md-3">
-                            <label for="territorio">Território *</label>
+                            <label for="territorio">Território: *</label>
                             <select class="form-control" name="territorio" id="territorio" required>
                                 <?php
-                                    geraOpcao("territorios", $fc['territorio_id']);
+                                geraOpcao("territorios", $fc['territorio_id']);
                                 ?>
                             </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="coordenadoria">Coordenadoria *</label>
+                            <label for="coordenadoria">Coordenadoria: *</label>
                             <select class="form-control" name="coordenadoria" id="coordenadoria" required>
                                 <?php
-                                    geraOpcao("coordenadorias", $fc['coordenadoria_id']);
+                                geraOpcao("coordenadorias", $fc['coordenadoria_id']);
                                 ?>
                             </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="subprefeitura">Subprefeitura *</label>
+                            <label for="subprefeitura">Subprefeitura: *</label>
                             <select class="form-control" name="subprefeitura" id="subprefeitura" required>
                                 <?php
-                                    geraOpcao("subprefeituras", $fc['subprefeitura_id']);
+                                geraOpcao("subprefeituras", $fc['subprefeitura_id']);
                                 ?>
                             </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="programa">Programa *</label>
+                            <label for="programa">Programa: *</label>
                             <select class="form-control" name="programa" id="programa" required>
                                 <?php
                                 geraOpcao("programas", $fc['programa_id']);
@@ -150,25 +207,25 @@ $_SESSION['idPc'] = $idPC;
 
                     <div class="row">
                         <div class="form-group col-md-3">
-                            <label for="linguagem">Linguagem *</label>
+                            <label for="linguagem">Linguagem: *</label>
                             <select class="form-control" name="linguagem" id="linguagem" required>
                                 <?php
-                                    geraOpcao("linguagens", $fc['linguagem_id']);
+                                geraOpcao("linguagens", $fc['linguagem_id']);
                                 ?>
                             </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="projeto">Projeto *</label>
+                            <label for="projeto">Projeto: *</label>
                             <select class="form-control" name="projeto" id="projeto" required>
                                 <?php
-                                    geraOpcao("projetos", $fc['projeto_id']);
+                                geraOpcao("projetos", $fc['projeto_id']);
                                 ?>
                             </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="cargo">Cargo *</label>
+                            <label for="cargo">Cargo: *</label>
                             <select class="form-control" name="cargo" id="cargo" required>
                                 <?php
                                 geraOpcao("formacao_cargos", $fc['form_cargo_id']);
@@ -177,13 +234,22 @@ $_SESSION['idPc'] = $idPC;
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="vigencia">Vigência *</label>
+                            <label for="vigencia">Vigência: *</label>
                             <select class="form-control" name="vigencia" id="vigencia" required>
                                 <?php
-                                geraOpcao("formacao_vigencias", $fc['form_vigencia_id']);
-                                ?>
+                                $opcoesVigencia = $con->query("SELECT id, ano, descricao FROM formacao_vigencias WHERE publicado = 1");
+                                if ($opcoesVigencia->num_rows > 0) {
+                                    while ($opcoesArray = mysqli_fetch_row($opcoesVigencia)) {
+                                        if ($opcoesArray[0] == $fc['form_vigencia_id']) { ?>
+                                            <option value="<?= $opcoesArray[0] ?>"
+                                                    selected> <?= $opcoesArray[1] . " (" . $opcoesArray[2] . ")" ?> </option>
+                                        <?php } else { ?>
+                                            <option value="<?= $opcoesArray[0] ?>"> <?= $opcoesArray[1] . " (" . $opcoesArray[2] . ")" ?> </option>
+                                        <?php }
+                                    }
+                                } ?>
                             </select>
-                    </div>
+                        </div>
 
                     </div>
 
@@ -218,7 +284,7 @@ $_SESSION['idPc'] = $idPC;
                             <select name="fiscal" id="fiscal" class="form-control" required>
                                 <option>Selecione um fiscal...</option>
                                 <?php
-                                     geraOpcaoUsuario('usuarios', 1, $fc['fiscal_id']);
+                                geraOpcaoUsuario('usuarios', 1, $fc['fiscal_id']);
                                 ?>
                             </select>
                         </div>
@@ -228,44 +294,49 @@ $_SESSION['idPc'] = $idPC;
                             <select name="suplente" id="suplente" class="form-control">
                                 <option>Selecione um suplente...</option>
                                 <?php
-                                     geraOpcaoUsuario('usuarios', 1, $fc['suplente_id']);
+                                geraOpcaoUsuario('usuarios', 1, $fc['suplente_id']);
                                 ?>
                             </select>
                         </div>
                     </div>
                 </div>
+
                 <div class="box-footer">
                     <a href="?perfil=formacao&p=dados_contratacao&sp=listagem">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
-                    <input type="hidden" name="idFC" value="<?=$idPC?>" id="idFC">
+                    <input type="hidden" name="idFC" value="<?= $idPC ?>" id="idFC">
                     <button type="submit" name="editar" id="editar" class="btn btn-primary pull-right">
                         Salvar
                     </button>
-                    <a href="?perfil=formacao&p=pedido_contratacao&sp=cadastra">
-                        <button type="button" class="btn btn-default pull-right">Gerar pedido de contratação</button>
-                    </a>
-                </div>
+            </form>
+            <hr>
+            <form action="?perfil=formacao&p=pedido_contratacao&sp=cadastra" method="POST">
+                <input type="hidden" name="idFC" value="<?= $idPC ?>">
+                <button style="width: 30%" type="submit" name="carregar" class="btn btn-success center-block">Gerar
+                    pedido de contratação
+                </button>
             </form>
         </div>
-
-    </section>
+</div>
+</section>
 </div>
 
-    <?php @include "../perfil/includes/modal_classificacao.php"?>
+
+<?php @include "../perfil/includes/modal_classificacao.php" ?>
 
 
-    <script>
+<script>
     let ano = $('#ano');
     let vigencia = $('#vigencia');
-    let botao = $('#editar');
+    let botao = $('#cadastra');
     var isMsgAno = $('#msgEscondeAno');
     isMsgAno.hide();
 
     function maior() {
-        let valorvigencia = $('#vigencia option:selected');
-        valorvigencia = parseInt(valorvigencia.text())
-        if (ano.val() > valorvigencia) {
+        let valorVigencia = $('#vigencia option:selected').text();
+        valorVigencia = parseInt(valorVigencia.substring(0, 5))
+        if (ano.val() > valorVigencia) {
             botao.prop('disabled', true);
             isMsgAno.show();
         } else {
@@ -277,5 +348,5 @@ $_SESSION['idPc'] = $idPC;
     ano.on('change', maior);
     vigencia.on('change', maior);
 
-    $(document).ready(maior)
+    $(document).ready(maior);
 </script>

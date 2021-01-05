@@ -7,33 +7,34 @@ $http = $server . "/pdf/";
 $linkResumo = $http . "rlt_formacao_pf.php";
 $link_facc = $http . "rlt_fac_pf.php";
 
-if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
-    $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
+if(isset($_POST['carregar'])){
+    $idPf = $_POST['idPf'];
 }
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
-    $nome = addslashes($_POST['nome']);
-    $nomeArtistico = addslashes($_POST['nomeArtistico']);
-    $rg = $_POST['rg'] ?? NULL;
+    $nome = trim(addslashes($_POST['nome']));
+    $nomeArtistico = isset($_POST['nomeArtistico']) ? trim(addslashes($_POST['nomeArtistico'])) : "";
+    $rg =  isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
-    $ccm = $_POST['ccm'] ?? NULL;
+    $ccm = isset($_POST['ccm']) ? trim($_POST['ccm']) : NULL;
     $dtNascimento = $_POST['dtNascimento'] ?? NULL;
     $nacionalidade = $_POST['nacionalidade'];
     $cep = $_POST['cep'];
-    $logradouro = addslashes($_POST['rua']);
+    $logradouro = trim(addslashes($_POST['rua']));
     $numero = $_POST['numero'];
-    $complemento = $_POST['complemento'] ?? NULL;
-    $bairro = addslashes($_POST['bairro']);
-    $cidade = addslashes($_POST['cidade']);
-    $uf = $_POST['estado'];
-    $email = $_POST['email'];
+    $complemento = trim($_POST['complemento']) ?? NULL;
+    $bairro = trim(addslashes($_POST['bairro']));
+    $cidade = trim(addslashes($_POST['cidade']));
+    $uf = trim($_POST['estado']);
+    $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
-    $nit = $_POST['nit'] ?? NULL;
-    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $drt = isset($_POST['drt']) ? trim($_POST['drt']) : NULL;
+    $nit = trim($_POST['nit']) ?? NULL;
+    $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $banco = $_POST['banco'] ?? NULL;
-    $agencia = $_POST['agencia'] ?? NULL;
-    $conta = $_POST['conta'] ?? NULL;
+    $agencia = isset($_POST['agencia']) ? trim($_POST['agencia']) : NULL;
+    $conta = isset($_POST['conta']) ? trim($_POST['conta']) : NULL;
     $data = date("y-m-d h:i:s", strtotime("-3 hours"));
 }
 if (isset($_POST['cadastra'])) {
@@ -65,6 +66,13 @@ if (isset($_POST['cadastra'])) {
             $sqlObs = "INSERT INTO pf_observacoes (pessoa_fisica_id, observacao) VALUES ('$idPf','$observacao')";
             if (!mysqli_query($con, $sqlObs)) {
                 $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlObs;
+            }
+        }
+
+        if ($drt != NULL) {
+            $sqlDRT = "INSERT INTO siscontrat.`drts` (pessoa_fisica_id, drt, publicado)  VALUES ('$idPf','$drt',1)";
+            if (!mysqli_query($con, $sqlDRT)) {
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlDRT;
             }
         }
 
@@ -161,6 +169,22 @@ if (isset($_POST['edita'])) {
             }
         }
 
+        //edita drt
+        if ($drt != NULL) {
+            $drt_existe = verificaExiste("drts", "pessoa_fisica_id", $idPf, 0);
+            if ($drt_existe['numero'] > 0) {
+                $sqlNit = "UPDATE drts SET drt = '$drt' WHERE pessoa_fisica_id = '$idPf'";
+                if (!mysqli_query($con, $sqlNit)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlNit;
+                }
+            } else {
+                $sqlNit = "INSERT INTO siscontrat.`drts` (pessoa_fisica_id, drt, publicado)  VALUES ('$idPf','$drt',1)";
+                if (!mysqli_query($con, $sqlNit)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlNit;
+                }
+            }
+        }
+
         //edita banco
         if ($banco != NULL) {
             $banco_existe = verificaExiste("pf_bancos", "pessoa_fisica_id", $idPf, 0);
@@ -199,98 +223,77 @@ if (isset($_POST['edita'])) {
     }
 }
 
-if (isset($_POST['carregar'])) {
+if (isset($_POST['selecionar']) || isset($_POST['Voltar'])) {
     $idPf = $_POST['idPf'];
 }
-
-if (isset($_POST["enviar"])) {
-    $idPf = $_POST['idPessoa'];
-    $tipoPessoa = 6;
-
-    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
-
-    $query_arquivos = mysqli_query($con, $sql_arquivos);
-
-    while ($arq = mysqli_fetch_array($query_arquivos)) {
-        $y = $arq['id'];
-        $x = $arq['sigla'];
-        $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
-        $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
-
-        if ($f_size > 5242880) {
-            $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
-
-        } else {
-            if ($nome_arquivo != "") {
-                $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
-                $new_name = date("YmdHis", strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
-                $hoje = date("Y-m-d H:i:s", strtotime("-3 hours"));
-                $dir = '../uploadsdocs/'; //Diretório para uploads
-                if ($y != 141) {
-                    $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-                }else{
-                    $allowedExts = array(".png", ".PNG", ".JPG", ".jpg"); //Extensões permitidas
-                }
-                $ext = strtolower(substr($nome_arquivo, -4));
-
-                if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
-                {
-                    if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPf', '$y', '$new_name', '$hoje', '1'); ";
-                        $query = mysqli_query($con, $sql_insere_arquivo);
-
-                        if ($query) {
-                            $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                            echo "<script>
-                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
-                            </script>";
-                            gravarLog($sql_insere_arquivo);
-                        } else {
-                            $mensagem = mensagem("danger", "Erro ao gravar no banco");
-                        }
-                    } else {
-                        $mensagem = mensagem("danger", "Erro no upload");
-                    }
-                } else {
-                    echo "<script>
-                            swal(\"Erro no upload! Anexar documentos somente no formato PDF.\", \"\", \"error\");                             
-                        </script>";
-                }
-            }
-        }
-    }
-}
-
-if (isset($_POST['apagar'])) {
-    $idArquivo = $_POST['idArquivo'];
-    $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
-    if (mysqli_query($con, $sql_apagar_arquivo)) {
-        $arq = recuperaDados("arquivos", $idArquivo, "id");
-        $mensagem = mensagem("success", "Arquivo " . $arq['arquivo'] . "apagado com sucesso!");
-        gravarLog($sql_apagar_arquivo);
-    } else {
-        $mensagem = mensagem("danger", "Erro ao apagar o arquivo. Tente novamente!");
-    }
-}
-
-$_SESSION['idPf'] = $idPf;
 
 $sqlTelefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 
 $pf = recuperaDados("pessoa_fisicas", "id", $idPf);
-$endereco = recuperaDados("pf_enderecos", "pessoa_fisica_id", $idPf);
-$nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
-$observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
-$banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
+$testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id = $idPf");
 
-$foto = "SELECT arquivo FROM arquivos WHERE lista_documento_id = 141 AND publicado = 1 AND origem_id = '$idPf'";
-$foto = $con->query($foto)->fetch_assoc()['arquivo'];
-if ($foto == null) {
-    $foto = "avatar_default.png";
-    $fotoImg = "../visual/images/$foto";
+if ($testaEnderecos->num_rows > 0) {
+    while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
+        $cep = $enderecoArray['cep'];
+        $logradouro = $enderecoArray['logradouro'];
+        $numero = $enderecoArray['numero'];
+        $complemento = $enderecoArray['complemento'];
+        $cidade = $enderecoArray['cidade'];
+        $bairro = $enderecoArray['bairro'];
+        $uf = $enderecoArray['uf'];
+    }
 } else {
-    $fotoImg = "../uploadsdocs/$foto";
+    $cep = NULL;
+    $logradouro = NULL;
+    $numero = NULL;
+    $complemento = NULL;
+    $cidade = NULL;
+    $bairro = NULL;
+    $uf = NULL;
+}
+
+$testaNit = $con->query("SELECT nit FROM nits WHERE pessoa_fisica_id = $idPf");
+
+if ($testaNit->num_rows > 0) {
+    while ($nitArray = mysqli_fetch_array($testaNit)) {
+        $nit = $nitArray['nit'];
+    }
+} else {
+    $nit = NULL;
+}
+
+$testaDRT = $con->query("SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf");
+
+if ($testaDRT->num_rows > 0) {
+    while ($drtArray = mysqli_fetch_array($testaDRT)) {
+        $drt = $drtArray['drt'];
+    }
+} else {
+    $drt = NULL;
+}
+
+$testaObs = $con->query("SELECT * FROM pf_observacoes WHERE pessoa_fisica_id = $idPf");
+
+if ($testaObs->num_rows > 0) {
+    while ($obsArray = mysqli_fetch_array($testaObs)) {
+        $obs = $obsArray['observacao'];
+    }
+} else {
+    $obs = NULL;
+}
+
+$testaBanco = $con->query("SELECT * FROM pf_bancos WHERE publicado = 1 AND pessoa_fisica_id = $idPf");
+if ($testaBanco->num_rows > 0) {
+    while ($bancoArray = mysqli_fetch_array($testaBanco)) {
+        $agencia = $bancoArray['agencia'];
+        $conta = $bancoArray['conta'];
+        $banco = $bancoArray['banco_id'];
+    }
+} else {
+    $agencia = NULL;
+    $conta = NULL;
+    $banco = NULL;
 }
 ?>
 
@@ -319,11 +322,6 @@ if ($foto == null) {
                         <div class="row">
                             <h3 class="box-title col-sm-12 col-md-6">Pessoa física</h3>
                         </div>
-                        <div class="row" style="margin-top: 20px">
-                            <div class="col-xs-6 col-md-6 col-md-offset-5 col-xs-offset-5">
-                                <img src="<?= $fotoImg ?>" alt="<?= $foto ?>" class="img-circle img-responsive" style="max-width: 10rem;">
-                            </div>
-                        </div>
                     </div>
                     <div class="box-body">
                         <form action="?perfil=formacao&p=pessoa_fisica&sp=edita" method="post">
@@ -331,6 +329,7 @@ if ($foto == null) {
                                 <div class="col-md-6 form-group">
                                     <label for="nome">Nome: *</label>
                                     <input type="text" class="form-control" name="nome" placeholder="Digite o nome"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}"
                                            maxlength="70" required value="<?= $pf['nome'] ?>">
                                 </div>
                                 <div class="col-md-6 form-group">
@@ -343,15 +342,10 @@ if ($foto == null) {
                             <div class="row">
                                 <?php
                                 if (empty($pf['cpf'])) { ?>
-                                    <div class="col-md-12">
+                                    <div class="form-group col-md-6">
                                         <label for="passaporte">Passaporte: </label>
-                                        <input type="text" name="passaporte" disabled value="<?= $pf['passaporte'] ?>" class="form-control">
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <?php anexosNaPagina(116, $idPf, "modal-passaporte", "Passaporte"); ?>
+                                        <input type="text" name="passaporte" readonly value="<?= $pf['passaporte'] ?>"
+                                               class="form-control">
                                     </div>
                                     <?php
                                 } else {
@@ -389,42 +383,17 @@ if ($foto == null) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    if (!empty($pf['cpf'])){
-                                    anexosNaPagina(116, $idPf, "modal-rg", "RG");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(117, $idPf, "modal-cpf", "CPF");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(118, $idPf, "modal-ccm", "FDC - CCM");
-                                    }
-                                    ?>
-                                </div>
-                            </div>
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="cep">CEP: *</label>
                                     <input type="text" class="form-control" name="cep" id="cep" maxlength="9"
                                            placeholder="Digite o CEP" required data-mask="00000-000"
-                                           value="<?= $endereco['cep'] ?>">
+                                           value="<?= $cep ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
-                                </div>
-
-                                <div class="form-group col-md-6">
-                                    <?php
-                                    anexosNaPagina(141, $idPf, "modal-foto", "Foto 3x4");
-                                    ?>
                                 </div>
                             </div>
                             <div class="row">
@@ -432,42 +401,39 @@ if ($foto == null) {
                                     <label for="rua">Rua: *</label>
                                     <input type="text" class="form-control" name="rua" id="rua"
                                            placeholder="Digite o endereço" maxlength="200" readonly
-                                           value="<?= $endereco['logradouro'] ?>">
+                                           value="<?= $logradouro ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
+                                    <i>(se não houver, marcar 0)</i>
                                     <input type="number" name="numero" class="form-control"
-                                           placeholder="Digite o número" min="0" required value="<?= $endereco['numero'] ?>">
+                                           placeholder="Digite o número" min="0" required
+                                           value="<?= $numero ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="complemento">Complemento: </label>
                                     <input type="text" name="complemento" class="form-control" maxlength="20"
-                                           placeholder="Digite o complemento" value="<?= $endereco['complemento'] ?>">
+                                           placeholder="Digite o complemento" value="<?= $complemento ?>">
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="bairro">Bairro: *</label>
                                     <input type="text" class="form-control" name="bairro" id="bairro"
                                            placeholder="Digite o Bairro" maxlength="80" readonly
-                                           value="<?= $endereco['bairro'] ?>">
+                                           value="<?= $bairro ?>">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="cidade">Cidade: *</label>
                                     <input type="text" class="form-control" name="cidade" id="cidade"
                                            placeholder="Digite a cidade" maxlength="50" readonly
-                                           value="<?= $endereco['cidade'] ?>">
+                                           value="<?= $cidade ?>">
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
                                     <input type="text" class="form-control" name="estado" id="estado" maxlength="2"
                                            placeholder="Digite o estado ex: (SP)" readonly
-                                           value="<?= $endereco['uf'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(120, $idPf, "modal-endereco", "Comprovante de endereço");
-                                    ?>
+                                           value="<?= $uf ?>">
                                 </div>
                             </div>
                             <hr/>
@@ -480,7 +446,7 @@ if ($foto == null) {
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
                                     <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
-                                           class="form-control"
+                                           class="form-control" data-mask="(00) 00000-0000"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
                                 </div>
@@ -490,14 +456,16 @@ if ($foto == null) {
                                     if (isset($arrayTelefones[1])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
+                                               pattern=".{14,15}" title="14 a 15 caracteres"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
                                         <?php
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
+                                               pattern=".{14,15}" title="14 a 15 caracteres"
                                                id="telefone1" name="telefone1">
                                         <?php
                                     }
@@ -508,7 +476,8 @@ if ($foto == null) {
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
+                                               pattern=".{14,15}" title="14 a 15 caracteres"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
 
@@ -517,7 +486,8 @@ if ($foto == null) {
                                         ?>
 
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control"
+                                               class="form-control" data-mask="(00) 00000-0000"
+                                               pattern=".{14,15}"  title="14 a 15 caracteres"
                                                id="telefone2" name="telefone2">
 
                                         <?php
@@ -527,15 +497,16 @@ if ($foto == null) {
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
-                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
+                                           placeholder="Digite o NIT" value="<?= $nit ?>">
                                 </div>
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    anexosNaPagina(119, $idPf, "modal-nit", "NIT");
-                                    ?>
+
+                                <div class="form-group col-md-6">
+                                    <label for="drt">DRT: </label>
+                                    <input type="text" name="drt" class="form-control telefone" maxlength="15"
+                                           placeholder="Digite o DRT" value="<?= $drt ?? "" ?>">
                                 </div>
                             </div>
 
@@ -543,16 +514,17 @@ if ($foto == null) {
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
                                     <textarea name="observacao" rows="3"
-                                              class="form-control"><?= $observacao['observacao'] ?></textarea>
+                                              class="form-control"><?= $obs ?></textarea>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="banco">Banco</label>
-                                    <select name="banco" id="banco" class="form-control" required>
+                                    <select name="banco" id="banco" class="form-control">
+                                        <option value="">Selecione um banco...</option>
                                         <?php
-                                        geraOpcao('bancos', $banco['banco_id']);
+                                        geraOpcao('bancos', $banco);
                                         ?>
                                     </select>
                                 </div>
@@ -560,40 +532,13 @@ if ($foto == null) {
                                 <div class="form-group col-md-4">
                                     <label for="agencia">Agência</label>
                                     <input type="text" id="agencia" name="agencia" class="form-control"
-                                           value="<?= $banco['agencia'] ?>" required>
+                                           value="<?= $agencia ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="conta">Conta</label>
                                     <input type="text" id="conta" name="conta" class="form-control"
-                                           value="<?= $banco['conta'] ?>" required>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 122 AND origem_id = '$idPf' AND publicado = 1";
-                                    $queryFACC = mysqli_query($con, $sqlFACC);
-                                    ?>
-
-                                    <label>Gerar FACC</label><br>
-                                    <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
-                                       class="btn btn-primary btn-block">Clique aqui para
-                                        gerar a FACC
-                                    </a>
-                                </div>
-
-                                <div class="form-group col-md-5">
-                                    <label>&nbsp;</label><br>
-                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                        no campo correspondente.</p>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(46, $idPf, "modal-facc", "FACC");
-                                    ?>
+                                           value="<?= $conta ?>">
                                 </div>
                             </div>
 
@@ -601,66 +546,45 @@ if ($foto == null) {
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
 
                                 <div class="row">
-                                    <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
+                                    <button type="submit" name="edita" class="btn btn-primary pull-right">Gravar</button>
 
-                                    <a href="?perfil=formacao">
+                                    <a href="?perfil=formacao&p=pessoa_fisica&sp=lista">
                                         <button type="button" class="btn btn-default pull-left">Voltar</button>
-                                    </a>
-
-                                    <a href="<?= $linkResumo ?>" target="_blank">
-                                        <button type="button" name="pdf" id="pdf" class="btn btn-primary center-block"
-                                                style="align-items: center;">Imprimir resumo
-                                        </button>
                                     </a>
                                 </div>
                         </form>
                     </div>
+                    <hr>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <form method="POST" action='?perfil=formacao&p=pessoa_fisica&sp=pf_demais_anexos'
+                                  role="form">
+                                <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                                <button type="submit" class="btn btn-info pull-right btn-block">Demais
+                                    Anexos
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <form method="post" action="<?= $linkResumo ?> " role="form" target="_blank">
+                                <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                                <button type="submit" class="btn btn-info btn-block">Imprimir resumo
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <form method="POST" action="<?= $link_facc ?>" role="form" target="_blank">
+                                <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                                <button type="submit" class="btn btn-info pull-right btn-block">Clique aqui para
+                                    gerar a FACC
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <?php
-        modalUploadArquivoUnico("modal-rg", "?perfil=formacao&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "6");
-        modalUploadArquivoUnico("modal-foto", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "6");
-        modalUploadArquivoUnico("modal-cpf", "?perfil=formacao&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "6");
-        modalUploadArquivoUnico("modal-ccm", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "6");
-        modalUploadArquivoUnico("modal-nit", "?perfil=formacao&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "6");
-        modalUploadArquivoUnico("modal-facc", "?perfil=formacao&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "6");
-        modalUploadArquivoUnico("modal-endereco", "?perfil=formacao&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "6");
-        ?>
     </section>
 </div>
-
-<div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Confirmação de Exclusão</h4>
-            </div>
-            <div class="modal-body text-center">
-                <p>Tem certeza que deseja excluir este arquivo?</p>
-            </div>
-            <div class="modal-footer">
-                <form action="?perfil=formacao&p=pessoa_fisica&sp=edita" method="post">
-                    <input type="hidden" name="idArquivo" id="idArquivo" value="">
-                    <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
-                    <input type="hidden" name="apagar" id="apagar">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
-                    </button>
-                    <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Apagar">
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-    $('#exclusao').on('show.bs.modal', function (e) {
-        let nome = $(e.relatedTarget).attr('data-nome');
-        let id = $(e.relatedTarget).attr('data-id');
-
-        $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
-        $(this).find('#idArquivo').attr('value', `${id}`);
-    })
-</script>

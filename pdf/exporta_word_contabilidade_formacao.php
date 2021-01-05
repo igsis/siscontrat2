@@ -35,12 +35,17 @@ while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
 $local = substr($local, 0, -3);
 
 $nome = $pessoa['nome'];
-$cpf = $pessoa['cpf'];
+if ($pessoa['passaporte'] != NULL) {
+    $cpf_passaporte = "Passaporte: " . $pessoa['passaporte'];
+} else {
+    $cpf_passaporte = "CPF: " . $pessoa['cpf'];
+}
 
-$periodo = retornaPeriodoFormacao($fc['form_vigencia_id']);
+$periodo = retornaPeriodoFormacao_Emia($fc['form_vigencia_id'], "formacao");
 
 $valor = $pedido['valor_total'];
 $valor_extenso = valorPorExtenso($valor);
+$valor = dinheiroParaBr($valor);
 $forma_pag = $pedido['forma_pagamento'];
 
 $fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id']);
@@ -65,7 +70,7 @@ echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">";
 echo "<body>";
 
 echo "<p align='justify'><b>CONTRATANTE:</b> " . "SMC" . "</p>";
-echo "<p align='justify'><b>CONTRATADO(S):</b> Contratação de <b>" . "$nome" . "</b>, CPF " . "$cpf" . " e demais integrantes relacionados na declaração de exclusividade.</p>";
+echo "<p align='justify'><b>CONTRATADO(S):</b> Contratação de <b>" . "$nome" . "</b>, " . $cpf_passaporte . " e demais integrantes relacionados na declaração de exclusividade.</p>";
 echo "<p align='justify'><b>EVENTO/SERV:</b> Apresentação do " . "$objeto" . ", conforme segue:<br>
 " . "$local" . " <br></p>";
 echo "<p align='justify'><b>DATA/PERÍODO: </b>" . "$periodo" . ".</p>";

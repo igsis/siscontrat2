@@ -7,7 +7,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $empenho = trim(addslashes($_POST['numEmpenho']));
     $dataEntrega = $_POST['data_entrega'];
     $dataEmissao = $_POST['data_emissao'];
-    $idUser = $_SESSION['idUser'];
+    $idUser = $_SESSION['usuario_id_s'];
 }
 
 if (isset($_POST['cadastra'])) {
@@ -78,7 +78,7 @@ $pedido = $con->query("SELECT e.protocolo, p.numero_processo FROM pedidos AS p I
                         <div class="col-md-12">
                             <label for="numEmpenho">Numero da Nota de Empenho: *</label>
                             <input type="text" class="form-control" name="numEmpenho" id="numEmpenho"
-                                   value="<?= $empenho['nota_empenho'] ?>">
+                                   value="<?= $empenho['nota_empenho'] ?>" required>
                         </div>
                     </div>
                     <br>
@@ -87,16 +87,21 @@ $pedido = $con->query("SELECT e.protocolo, p.numero_processo FROM pedidos AS p I
                         <div class="col-md-6">
                             <label for="data_inicio">Data de Emissão da Nota de Empenho: *</label>
                             <input type="date" class="form-control" name="data_emissao" placeholder="DD/MM/AAAA"
-                                   value="<?= $empenho['emissao_nota_empenho'] ?>"
-                                   id="data_fim">
+                                   value="<?= $empenho['emissao_nota_empenho'] ?>" required
+                                   id="data_inicio">
                         </div>
 
                         <div class="col-md-6">
                             <label for="data_fim"> Data de Entrega da Nota de Empenho: *</label>
                             <input type="date" class="form-control" name="data_entrega" placeholder="DD/MM/AAAA"
-                                   value="<?= $empenho['entrega_nota_empenho'] ?>"
+                                   value="<?= $empenho['entrega_nota_empenho'] ?>" required
                                    id="data_fim">
                         </div>
+                    </div>
+                    <div class="row" id="msg">
+                                <div class="form-group col-md-12">
+                                    <span class="pull-right" style="color: red;"><b>Data de emissão precisa ser maior que a de entrega!</b></span>
+                                </div>
                     </div>
 
             </div>
@@ -108,7 +113,7 @@ $pedido = $con->query("SELECT e.protocolo, p.numero_processo FROM pedidos AS p I
                             <button type="button" class="btn btn-default">Voltar</button>
                         </a>
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-primary pull-right" name="edita">Salvar</button>
+                        <button type="submit" class="btn btn-primary pull-right" name="edita" id="cadastra">Salvar</button>
                         </form>
                     </div>
                 </div>
@@ -126,3 +131,23 @@ $pedido = $con->query("SELECT e.protocolo, p.numero_processo FROM pedidos AS p I
     </section>
 </div>
 
+<script>
+$('#msg').hide();
+function comparaData() {
+        var isMsg = $('#msg');
+        var dataInicio = document.querySelector('#data_inicio').value;
+        var dataFim = document.querySelector('#data_fim').value;
+
+        if (dataInicio != "" && dataFim != "") {
+            if (dataFim < dataInicio) {
+                $('#cadastra').attr("disabled", true);
+                isMsg.show();
+            } else {
+                $('#cadastra').attr("disabled", false);
+                isMsg.hide();
+            }
+        }
+}
+   $('#data_inicio').on('change', comparaData);
+   $('#data_fim').on('change', comparaData);
+</script>

@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 if (isset($_POST['cadastra'])) {
     $ano = $_POST['ano'];
@@ -30,7 +30,7 @@ if (isset($_POST['edita'])) {
     $sql = "UPDATE formacao_vigencias SET ano = '$ano', descricao = '$descricao', numero_parcelas = '$num' WHERE id = '$idVigencia'";
 
     if (mysqli_query($con, $sql)) {
-        $mensagem = mensagem("success", "Vigência atualizado com sucesso");
+        $mensagem = mensagem("success", "Vigência atualizada com sucesso");
         gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Ocorreu um erro ao atualizar a vigência. Tente novamente!");
@@ -45,7 +45,7 @@ $vigencia = recuperaDados('formacao_vigencias', 'id', $idVigencia);
 
 if (isset($_POST['edita'])) {
     $parcelas = $_POST['parcela'];
-    $valores = dinheiroDeBr($_POST['valor']);
+    $valores = $_POST['valor'];
     $data_inicios = $_POST['data_inicio'];
     $data_fins = $_POST['data_fim'];
     $data_pagamentos = $_POST['data_pagamento'];
@@ -103,14 +103,15 @@ if (isset($_POST['edita'])) {
                                 <div class="form-group col-md-8">
                                     <label for="descricao">Descrição *</label>
                                     <input type="text" id="descricao" name="descricao" class="form-control" required
+                                           maxlength="45"
                                            value="<?= $vigencia['descricao'] ?>">
                                 </div>
                             </div>
 
                             <?php
                             for ($i = 1; $i < $vigencia['numero_parcelas'] + 1; $i++) {
-                                $sql = "SELECT * FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND numero_parcelas = '$i'";
-                                $parcela = mysqli_fetch_array(mysqli_query($con, $sql));
+                                $testaParcela = $con->query("SELECT * FROM formacao_parcelas WHERE formacao_vigencia_id = '$idVigencia' AND numero_parcelas = '$i'");
+                                $parcelaArray = mysqli_fetch_array($testaParcela);
                                 ?>
                                 <hr>
                                 <div class="row">
@@ -122,37 +123,36 @@ if (isset($_POST['edita'])) {
 
                                     <div class="form-group col-md-2">
                                         <label for="valor[]">Valor:</label>
-                                        <input type="text" id="valor[]" name="valor[]"
-                                               class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcela['valor']) ?>">
+                                        <input type="text" id="valor<?= $i ?>" name="valor[]"
+                                               class="form-control valor" value="<?= dinheiroParaBr($parcelaArray['valor'] ?? NULL) ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_inicio">Data inicial:</label>
-                                        <input type="date" name="data_inicio[]" class="form-control" id="datepicker10"
-                                               placeholder="DD/MM/AAAA" value="<?= $parcela['data_inicio'] ?? NULL ?>">
+                                        <input type="date" name="data_inicio[]" class="form-control" id="data_inicio<?= $i ?>"
+                                               placeholder="DD/MM/AAAA" value="<?= $parcelaArray['data_inicio'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_fim">Data final: </label>
-                                        <input type="date" name="data_fim[]" class="form-control" id="datepicker11"
-                                               placeholder="DD/MM/AAAA" value="<?= $parcela['data_fim'] ?? NULL ?>">
+                                        <input type="date" name="data_fim[]" class="form-control" id="data_fim<?= $i ?>"
+                                               placeholder="DD/MM/AAAA" value="<?= $parcelaArray['data_fim'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="data_pagamento">Data pagamento: </label>
                                         <input type="date" name="data_pagamento[]" class="form-control"
-                                               id="datepicker12" placeholder="DD/MM/AAAA" value="<?= $parcela['data_pagamento'] ?? NULL ?>">
+                                               id="data_pagamento<?= $i ?>" placeholder="DD/MM/AAAA" value="<?= $parcelaArray['data_pagamento'] ?? NULL ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="carga[]">Carga horária: </label>
-                                        <input type="number" name="carga[]" class="form-control" id="carga[]"
-                                               value="<?= $parcela['carga_horaria'] ?? NULL ?>" min="1">
+                                        <input type="number" name="carga[]" class="form-control" id="carga<?= $i ?>"
+                                               value="<?= $parcelaArray['carga_horaria'] ?? NULL ?>" min="1">
                                     </div>
                                 </div>
-                                <?php
-                            }
-                            ?>
+
+                            <?php } ?>
                         </div>
                         <div class="box-footer">
                             <a href="?perfil=formacao&p=administrativo&sp=vigencia&spp=index">
@@ -170,3 +170,9 @@ if (isset($_POST['edita'])) {
         </div>
     </section>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('.valor').mask('000,00', {reverse: true});
+    });
+</script>

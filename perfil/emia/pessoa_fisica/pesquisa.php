@@ -13,7 +13,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
     $idPedido = $_POST['idPedido'] ?? NULL;
     $idAtracao = $_POST['idAtracao'] ?? NULL;
 
-    $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
+    $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='carregar' value='Selecionar'>";
     $botaoAdd = "<button class='btn btn-primary' name='adicionar' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
@@ -47,8 +47,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                         $resultado .= "<td>
                                      <form action='?perfil=emia&p=pessoa_fisica&sp=edita' method='post'>
                                         <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
-                                        <input type='hidden' name='idAtracao' value='$idAtracao'>
-                                        <input type='hidden' name='idPedido' value='$idPedido'>
                                         $botaoSelecionar                                        
                                      </form>
                                </td>";
@@ -63,8 +61,6 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                       </td>
                       <td>
                         <form method='post' action='?perfil=emia&p=pessoa_fisica&sp=cadastra'>
-                            <input type='hidden' name='idAtracao' value='$idAtracao'>
-                            <input type='hidden' name='idPedido' value='$idPedido'>
                             <input type='hidden' name='documentacao' value='$procurar'>
                             <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
                             $botaoAdd

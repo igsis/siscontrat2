@@ -11,30 +11,20 @@ if (isset($_POST['excluir'])) {
     }
 }
 
-if (isset($_POST['cadastra'])) {
-    $cargo = $_POST['cargo'];
-    $justificativa = $_POST['justificativa'];
-
-    $sqlInsert = "INSERT INTO emia_cargos
-                            (cargo, justificativa)
-                            VALUES
-                            ('$cargo', '$justificativa')";
-    if (mysqli_query($con, $sqlInsert)) {
-        $mensagem = mensagem("success", "Cadastrado com sucesso!");
-    } else {
-        $mensagem = mensagem("danger", "Erro ao cadastrar! Tente novamente.");
-    }
-}
-
 $sql = "SELECT * FROM emia_cargos WHERE publicado = 1";
 $query = mysqli_query($con, $sql);
 ?>
 <div class="content-wrapper">
     <section class="content">
-        <div class="page-header">
-            <h2>EMIA - Cargos</h2>
+        <h3 class="box-title">EMIA - Cargos</h3>
+        <a href="?perfil=emia&p=administrativo&sp=cargo&spp=cadastra" class="text-right btn btn-success"
+           style="float: right">Cadastrar um novo cargo</a>
+        <div class="row" align="center">
+            <?php if (isset($mensagem)) {
+                echo $mensagem;
+            }; ?>
         </div>
-        <div class="box box-primary">
+        <div class="box">
             <div class="row" align="center">
                 <?php if (isset($mensagem)) {
                     echo $mensagem;
@@ -66,8 +56,6 @@ $query = mysqli_query($con, $sql);
                         </form>
                         </td>";
                         echo "<td>
-                        <form action='?perfil=emia&p=administrativo&sp=cargo&spp=listagem' method='POST'>
-                        <input type='hidden' name='idECDelete' id='idECDelete' value='" . $ec['id'] . "'>
                         <button type='button' name='excluir' id='excluir' class='btn btn-block btn-danger' 
                         data-target='#exclusao' data-toggle='modal' data-id='" . $ec['id'] . "'>
                         <span class='glyphicon glyphicon-trash'></span></button>
@@ -90,9 +78,6 @@ $query = mysqli_query($con, $sql);
                     <a href="?perfil=emia&p=administrativo&sp=index">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
-                    <a href="?perfil=emia&p=administrativo&sp=cargo&spp=cadastra">
-                        <button type="button" class="btn btn-primary pull-right"> Cadastrar um novo cargo </button>
-                    </a>
                 </div>
             </div>
         </div>
@@ -108,11 +93,10 @@ $query = mysqli_query($con, $sql);
                         <p>Tem certeza que deseja excluir o cargo?</p>
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" name="idECDelete" id="idECDelete" value="<?= $ec['id'] ?>">
-                        <input type="hidden" name="excluir" id="excluir">
+                        <input type="hidden" name="idECDelete" id="idECDelete" value="">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                         </button>
-                        <input type="submit" class="btn btn-danger btn-outline" name="exclui" value="Excluir">
+                        <input type="submit" class="btn btn-danger btn-outline" name="excluir" value="Excluir">
                         </form>
                     </div>
                 </div>

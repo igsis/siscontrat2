@@ -56,12 +56,12 @@ unset($_SESSION['idPedido']);
                                     </select>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label for="operador_id">Operador de contrato</label>
-                                    <select name="operador_id" id="operador_id" class="form-control">
+                                    <label for="status">Pedido status</label>
+                                    <select name="status" id="status" class="form-control">
                                         <option value="">Selecione uma opção...</option>
-                                        <?php
-                                        geraOpcao('usuario_contratos');
-                                        ?>
+                                            <?php
+                                            geraOpcaoStatus();
+                                            ?>
                                     </select>
                                 </div>
                             </div>

@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$idUsuario = $_SESSION['idUser'];
+$idUsuario = $_SESSION['usuario_id_s'];
 $idEvento = isset($_SESSION['idEvento']) ?? null;
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])){
@@ -9,7 +9,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])){
     $projeto_especial_id = $_POST['projetoEspecial'];
     $artistas = addslashes($_POST['ficha_tecnica']);
     $sinopse =  addslashes($_POST['sinopse']);
-    $usuario = $_SESSION['idUser'];
+    $usuario = $_SESSION['usuario_id_s'];
     $fomento = $_POST['fomento'];
     $idFomento = $_POST['tipoFomento'] ?? null;
     $qtdApresentacao = $_POST['qtdApresentacao'];
@@ -59,7 +59,7 @@ if(isset($_POST['edita'])){
         $ehIgual = false;
     }
 
-    $sql = "UPDATE agendoes SET nome_evento = '$nomeEvento', espaco_publico = '$tipoLugar', projeto_especial_id = '$projeto_especial_id', classificacao_indicativa_id = '$classificacao', links = '$links', ficha_tecnica = '$artistas', sinopse = '$sinopse', quantidade_apresentacao = '$qtdApresentacao', fomento = '$fomento'";
+    $sql = "UPDATE agendoes SET nome_evento = '$nomeEvento', espaco_publico = '$tipoLugar', projeto_especial_id = '$projeto_especial_id', classificacao_indicativa_id = '$classificacao', links = '$links', ficha_tecnica = '$artistas', sinopse = '$sinopse', quantidade_apresentacao = '$qtdApresentacao', fomento = '$fomento' WHERE id = $idEvento";
 
     if(mysqli_query($con,$sql)){
         $mensagem = mensagem("success","Gravado com sucesso!");

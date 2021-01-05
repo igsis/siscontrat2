@@ -1,55 +1,57 @@
 <?php
 $con = bancoMysqli();
 
+$link_api = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_docs_pagamentos.php';
+
 $idPedido = $_POST['idPedido'];
 $botao = false;
 
-if(isset($_POST['operador'])){
+if (isset($_POST['operador'])) {
     $operador = $_POST['operador'];
     $data_kit_pagamento = $_POST['data_kit_pagamento'];
     $sql = "UPDATE pedidos SET operador_pagamento_id = '$operador', data_kit_pagamento = '$data_kit_pagamento' WHERE id = '$idPedido'";
     $cadastra = $con->query($sql);
-    if($cadastra){
+    if ($cadastra) {
         $botao = true;
         $existeEtapa = $con->query("SELECT pedido_id, data_pagamento FROM pedido_etapas WHERE pedido_id = '$idPedido'")->fetch_assoc();
         $now = dataHoraNow();
-        if($existeEtapa != NULL && $existeEtapa['data_pagamento'] == NULL){
+        if ($existeEtapa != NULL && $existeEtapa['data_pagamento'] == "0000-00-00 00:00:00") {
             $con->query("UPDATE pedido_etapas SET data_pagamento = '$now' WHERE pedido_id = '$idPedido'");
         }
-        if($existeEtapa == NULL){
+        if ($existeEtapa == NULL) {
             $con->query("INSERT INTO pedido_etapas (pedido_id,data_pagamento) VALUES ('$idPedido','$now')");
         }
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
-    } else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar.");
     }
 }
 
-if(isset($_POST['cadastrar'])){
+if (isset($_POST['cadastrar'])) {
     $cadastra = $con->query("UPDATE pedidos SET status_pedido_id = 19 WHERE id = '$idPedido'");
-    if($cadastra){
+    if ($cadastra) {
         $botao = true;
         $existeEtapa = $con->query("SELECT pedido_id, data_pagamento FROM pedido_etapas WHERE pedido_id = '$idPedido'")->fetch_assoc();
         $now = dataHoraNow();
-        if($existeEtapa != NULL && $existeEtapa['data_pagamento'] == NULL){
+        if ($existeEtapa != NULL && $existeEtapa['data_pagamento'] == "0000-00-00 00:00:00") {
             $con->query("UPDATE pedido_etapas SET data_pagamento = '$now' WHERE pedido_id = '$idPedido'");
         }
-        if($existeEtapa == NULL){
+        if ($existeEtapa == NULL) {
             $con->query("INSERT INTO pedido_etapas (pedido_id,data_pagamento) VALUES ('$idPedido','$now')");
         }
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
-    } else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar.");
     }
 }
 
-if(isset($_POST['concluir'])){
+if (isset($_POST['concluir'])) {
     $cadastra = $con->query("UPDATE pedidos SET status_pedido_id = 21 WHERE id = '$idPedido'");
-    if($cadastra){
+    if ($cadastra) {
         $botao = true;
         $mensagem = mensagem("success", "Evento concluído com sucesso!");
         echo "<meta http-equiv='refresh' content='3;url=?perfil=pagamento' />";
-    } else{
+    } else {
         $mensagem = mensagem("danger", "Erro ao concluir evento.");
     }
 }
@@ -77,8 +79,14 @@ if ($pedido['pessoa_tipo_id'] == 2) {
     $proponente = $con->query("SELECT nome FROM pessoa_fisicas WHERE id = '$idPf'")->fetch_assoc()['nome'];
 }
 
-$idUser = $_SESSION['idUser'];
-$acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idUser'")->fetch_array();
+$idUser = $_SESSION['usuario_id_s'];
+$testaAcesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idUser'");
+if ($testaAcesso->num_rows == 0) {
+    $acesso = 0;
+} else {
+    $acessoArray = mysqli_fetch_array($testaAcesso);
+    $acesso = $acessoArray['nivel_acesso'];
+}
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -94,7 +102,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
             </div>
             <div class="box-body">
                 <?php
-                if($acesso['nivel_acesso'] == 1 || $acesso['nivel_acesso'] == 2) {
+                if ($acesso == 1 || $acesso == 2) {
                     ?>
                     <div class="row">
                         <form action="#" method="post" role="form">
@@ -148,7 +156,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label>Período:</label> <?= retornaPeriodo($pedido['id']) ?>
+                        <label>Período:</label> <?= retornaPeriodoNovo($pedido['id'], 'ocorrencias') ?>
                     </div>
                 </div>
                 <div class="row">
@@ -176,93 +184,26 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
                         <th>Nº Parcela</th>
                         <th>Valor</th>
                         <th>Data de pagamento</th>
+                        <th>Documentos</th>
                     </tr>
                     </thead>
-<!--                    <tbody>-->
+                    <!--                    <tbody>-->
                     <?php
-                    $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/";
-                    if ($pedido['pessoa_tipo_id'] == 2) {
-                        $link1 = $server . "pagamento_integral_pj.php";
-                    } else{
-                        $link1 = $server . "pagamento_integral_pf.php";
-                    }
-                    $link2 = $server . "recibo_pagamento.php";
-                    $link3 = $server . "ateste_documentacao.php";
-                    $link4 = $server . "confirmacao_servico.php";
-                    $link5 = $server . "declaracao_simples.php";
-                    $link6 = $server . "ateste_documentacao.php";
-                    $link7 = $server . "emissao_nf.php";
-                    $link8 = $server . "email_empresas.php?modelo=empresas";
-                    $link9 = $server . "minuta.php";
                     $sqlParcela = $con->query("SELECT id, numero_parcelas, valor, data_pagamento FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1 GROUP BY numero_parcelas ORDER BY numero_parcelas");
-                    while($parcela = mysqli_fetch_array($sqlParcela)){
+                    while ($parcela = mysqli_fetch_array($sqlParcela)) {
                         ?>
                         <tr>
                             <td><?= $parcela['numero_parcelas'] ?></td>
                             <td><?= dinheiroParaBr($parcela['valor']) ?></td>
                             <td><?= exibirDataBr($parcela['data_pagamento']) ?></td>
-                            <td>
-                                <form action="<?= $link1 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Pedido Pagamento
-                                    </button>
-                                </form>
+                            <td width="15%">
+                                <button type="button" class="btn btn-primary btn-block" id="exibirDocumentos"
+                                        data-toggle="modal" data-target="#modalDocumento"
+                                        data-id="<?= $parcela['id'] ?>"
+                                        name="exibirDocumentos"><span class="glyphicon glyphicon-paperclip"></span>
+
+                                </button>
                             </td>
-                            <td>
-                                <form action="<?= $link2 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Recibo</button>
-                                </form>
-                            </td>
-                            <td>
-                                <form action="<?= $link3 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Ateste</button>
-                                </form>
-                            </td>
-                            <td>
-                                <form action="<?= $link4 ?>" method="post" target="_blank" role="form">
-                                    <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                    <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Confirmação serviço
-                                    </button>
-                                </form>
-                            </td>
-                            <?php
-                            if ($pedido['pessoa_tipo_id'] == 2) {
-                                ?>
-                                <td>
-                                    <form action="<?= $link5 ?>" method="post" target="_blank" role="form">
-                                        <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Declaração</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form action="<?= $link6 ?>" method="post" target="_blank" role="form">
-                                        <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Documentação</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form action="<?= $link7 ?>" method="post" target="_blank" role="form">
-                                        <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Nota Fiscal</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form action="<?= $link8 ?>" method="post" target="_blank" role="form">
-                                        <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email Kit</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form action="<?= $link9 ?>" method="post" target="_blank" role="form">
-                                        <input type="hidden" name="idParcela" value="<?= $parcela['id'] ?>">
-                                        <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $idPedido ?>">Email NE</button>
-                                    </form>
-                                </td>
-                                <?php
-                            }
-                            ?>
                         </tr>
                         <?php
                     }
@@ -272,7 +213,7 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
 
             </div>
             <div class="box-footer">
-                <form action="#" method="post" role="form">
+                <form action="?perfil=pagamento&p=integral" method="post" role="form">
                     <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                     <button type="submit" class="btn btn-warning pull-left" name="concluir">Concluir evento</button>
                     <button type="submit" class="btn btn-primary pull-right" name="cadastrar">Gravar</button>
@@ -282,3 +223,38 @@ $acesso = $con->query("SELECT * FROM usuario_pagamentos WHERE usuario_id = '$idU
 
     </section>
 </div>
+
+<div id="modalDocumento" class="modal modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Lista de Documentos</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered">
+                    <tbody id="conteudoModal">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const link = `<?=$link_api?>`;
+    const tipo = `<?=$pedido['pessoa_tipo_id']?>`;
+    const idPedido = `<?=$idPedido?>`;
+    $('#modalDocumento').on('show.bs.modal', function (e) {
+        $('#modalDocumento').find('#conteudoModal').empty();
+        let id = $(e.relatedTarget).attr('data-id');
+        $.ajax({
+            method: "GET",
+            url: link + "?idParcela=" + id + "&tipo=" + tipo + "&idPedido=" + idPedido
+        })
+            .done(function (content) {
+                $('#modalDocumento').find('#conteudoModal').append(`<tr><td>${content}</td></tr>`);
+            });
+    })
+</script>

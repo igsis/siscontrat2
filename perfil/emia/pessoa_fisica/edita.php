@@ -7,33 +7,30 @@ $http = $server . "/pdf/";
 $linkResumo = $http . "rlt_emia_pf.php";
 $link_facc = $http . "rlt_fac_pf.php";
 
-if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
-    $idPf = $_POST['idPf'] ?? $_POST['idProponente'];
-}
-
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
-    $nome = addslashes($_POST['nome']);
-    $nomeArtistico = addslashes($_POST['nomeArtistico']);
-    $rg = $_POST['rg'] ?? NULL;
+    $nome = trim(addslashes($_POST['nome']));
+    $nomeArtistico = trim(addslashes($_POST['nomeArtistico'])) ? "" : NULL;
+    $rg = isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
-    $ccm = $_POST['ccm'] ?? NULL;
+    $ccm = isset($_POST['ccm']) ? trim($_POST['ccm']) : NULL;
     $dtNascimento = $_POST['dtNascimento'] ?? NULL;
     $nacionalidade = $_POST['nacionalidade'];
     $cep = $_POST['cep'];
-    $logradouro = addslashes($_POST['rua']);
+    $logradouro = trim(addslashes($_POST['rua']));
     $numero = $_POST['numero'];
-    $complemento = $_POST['complemento'] ?? NULL;
-    $bairro = addslashes($_POST['bairro']);
-    $cidade = addslashes($_POST['cidade']);
-    $uf = $_POST['estado'];
-    $email = $_POST['email'];
+    $complemento = trim($_POST['complemento']) ?? NULL;
+    $bairro = trim(addslashes($_POST['bairro']));
+    $cidade = trim(addslashes($_POST['cidade']));
+    $uf = trim($_POST['estado']);
+    $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
-    $nit = $_POST['nit'] ?? NULL;
-    $observacao = addslashes($_POST['observacao']) ?? NULL;
+    $drt = isset($_POST['drt']) ? trim($_POST['drt']) : NULL;
+    $nit = trim($_POST['nit']) ?? NULL;
+    $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $banco = $_POST['banco'] ?? NULL;
-    $agencia = $_POST['agencia'] ?? NULL;
-    $conta = $_POST['conta'] ?? NULL;
+    $agencia = isset($_POST['agencia']) ? trim($_POST['agencia']) : NULL;
+    $conta = isset($_POST['conta']) ? trim($_POST['conta']) : NULL;
     $data = date("y-m-d h:i:s", strtotime("-3 hours"));
 }
 if (isset($_POST['cadastra'])) {
@@ -41,14 +38,14 @@ if (isset($_POST['cadastra'])) {
     $sql = "INSERT INTO siscontrat.`pessoa_fisicas` (nome, nome_artistico, rg, passaporte, cpf, ccm, data_nascimento, nacionalidade_id, email, ultima_atualizacao) VALUES('$nome','$nomeArtistico','$rg','$passaporte','$cpf','$ccm','$dtNascimento','$nacionalidade','$email','$data')";
     if (mysqli_query($con, $sql)) {
         $idPf = recuperaUltimo("pessoa_fisicas");
-        // cadastrar o telefone de pf
+// cadastrar o telefone de pf
         foreach ($telefones AS $telefone) {
             if (!empty($telefone)) {
                 $sqlTel = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone, publicado) VALUES ('$idPf','$telefone',1)";
                 mysqli_query($con, $sqlTel);
             }
         }
-        // cadastrar endereco de pf
+// cadastrar endereco de pf
         $sqlEndereco = "INSERT INTO pf_enderecos (pessoa_fisica_id, logradouro, numero, complemento, bairro, cidade, uf, cep) VALUES ('$idPf','$logradouro','$numero', '$complemento', '$bairro', '$cidade', '$uf', '$cep')";
         if (!mysqli_query($con, $sqlEndereco)) {
             $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlEndereco;
@@ -68,36 +65,38 @@ if (isset($_POST['cadastra'])) {
             }
         }
 
+        if ($drt != NULL) {
+            $sqlDRT = "INSERT INTO siscontrat.`drts` (pessoa_fisica_id, drt, publicado)  VALUES ('$idPf','$drt',1)";
+            if (!mysqli_query($con, $sqlDRT)) {
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlDRT;
+            }
+        }
         if ($nit != NULL) {
             $sqlNit = "INSERT INTO siscontrat.`nits` (pessoa_fisica_id, nit, publicado)  VALUES ('$idPf','$nit',1)";
             if (!mysqli_query($con, $sqlNit)) {
                 $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlNit;
             }
         }
-
-        $mensagem .= mensagem("success", "Cadastrado com sucesso!");
-        //gravarLog($sql);
-    } else {
-        $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sql;
-        //gravarLog($sql);
     }
+
+    $mensagem .= mensagem("success", "Cadastrado com sucesso!");
 }
 
 if (isset($_POST['edita'])) {
     $mensagem = "";
     $idPf = $_POST['idPf'];
-    $sql = "UPDATE siscontrat.`pessoa_fisicas` SET 
-                   nome = '$nome',
-                   nome_artistico = '$nomeArtistico',
-                   rg = '$rg',
-                   passaporte = '$passaporte',
-                   cpf = '$cpf',
-                   ccm = '$ccm',
-                   data_nascimento = '$dtNascimento',
-                   nacionalidade_id = '$nacionalidade',
-                   email = '$email',
-                   ultima_atualizacao = '$data'
-                   WHERE id = '$idPf'";
+    $sql = "UPDATE siscontrat.`pessoa_fisicas` SET
+    nome = '$nome',
+    nome_artistico = '$nomeArtistico',
+    rg = '$rg',
+    passaporte = '$passaporte',
+    cpf = '$cpf',
+    ccm = '$ccm',
+    data_nascimento = '$dtNascimento',
+    nacionalidade_id = '$nacionalidade',
+    email = '$email',
+    ultima_atualizacao = '$data'
+    WHERE id = '$idPf'";
 
     if (mysqli_query($con, $sql)) {
         //edita telefone
@@ -144,23 +143,6 @@ if (isset($_POST['edita'])) {
                 }
             }
         }
-
-        //edita nit
-        if ($nit != NULL) {
-            $nit_existe = verificaExiste("nits", "pessoa_fisica_id", $idPf, 0);
-            if ($nit_existe['numero'] > 0) {
-                $sqlNit = "UPDATE nits SET nit = '$nit' WHERE pessoa_fisica_id = '$idPf'";
-                if (!mysqli_query($con, $sqlNit)) {
-                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlNit;
-                }
-            } else {
-                $sqlNit = "INSERT INTO siscontrat.`nits` (pessoa_fisica_id, nit, publicado)  VALUES ('$idPf','$nit',1)";
-                if (!mysqli_query($con, $sqlNit)) {
-                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlNit;
-                }
-            }
-        }
-
         //edita banco
         if ($banco != NULL) {
             $banco_existe = verificaExiste("pf_bancos", "pessoa_fisica_id", $idPf, 0);
@@ -176,7 +158,36 @@ if (isset($_POST['edita'])) {
                 }
             }
         }
-
+        //edita nit
+        if ($nit != NULL) {
+            $nit_existe = verificaExiste("nits", "pessoa_fisica_id", $idPf, 0);
+            if ($nit_existe['numero'] > 0) {
+                $sqlNit = "UPDATE nits SET nit = '$nit' WHERE pessoa_fisica_id = '$idPf'";
+                if (!mysqli_query($con, $sqlNit)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlNit;
+                }
+            } else {
+                $sqlNit = "INSERT INTO siscontrat.`nits` (pessoa_fisica_id, nit, publicado)  VALUES ('$idPf','$nit',1)";
+                if (!mysqli_query($con, $sqlNit)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlNit;
+                }
+            }
+        }
+        //edita drt
+        if ($drt != NULL) {
+            $drt_existe = verificaExiste("drts", "pessoa_fisica_id", $idPf, 0);
+            if ($drt_existe['numero'] > 0) {
+                $sqlNit = "UPDATE drts SET drt = '$drt' WHERE pessoa_fisica_id = '$idPf'";
+                if (!mysqli_query($con, $sqlNit)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlNit;
+                }
+            } else {
+                $sqlNit = "INSERT INTO siscontrat.`drts` (pessoa_fisica_id, drt, publicado)  VALUES ('$idPf','$drt',1)";
+                if (!mysqli_query($con, $sqlNit)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlNit;
+                }
+            }
+        }
         //edita observação
         if ($observacao != NULL) {
             $obs_existe = verificaExiste("pf_observacoes", "pessoa_fisica_id", $idPf, 0);
@@ -203,65 +214,6 @@ if (isset($_POST['carregar'])) {
     $idPf = $_POST['idPf'];
 }
 
-if (isset($_POST["enviar"])) {
-    $idPf = $_POST['idPessoa'];
-    $tipoPessoa = $_POST['tipoPessoa'];
-
-    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = '$tipoPessoa' and publicado = 1";
-
-    $query_arquivos = mysqli_query($con, $sql_arquivos);
-
-    while ($arq = mysqli_fetch_array($query_arquivos)) {
-        $y = $arq['id'];
-        $x = $arq['sigla'];
-        $nome_arquivo = isset($_FILES['arquivo']['name'][$x]) ? $_FILES['arquivo']['name'][$x] : null;
-        $f_size = isset($_FILES['arquivo']['size'][$x]) ? $_FILES['arquivo']['size'][$x] : null;
-
-        if ($f_size > 5242880) {
-            $mensagem = mensagem("danger", "<strong>Erro! Tamanho de arquivo excedido! Tamanho máximo permitido: 05 MB.</strong>");
-
-        } else {
-            if ($nome_arquivo != "") {
-                $nome_temporario = $_FILES['arquivo']['tmp_name'][$x];
-                $new_name = date("YmdHis", strtotime("-3 hours")) . "_" . semAcento($nome_arquivo); //Definindo um novo nome para o arquivo
-                $hoje = date("Y-m-d H:i:s", strtotime("-3 hours"));
-                $dir = '../uploadsdocs/'; //Diretório para uploads
-                if ($y == 59) {
-                    $allowedExts = array(".png", ".PNG", ".JPG", ".jpg"); //Extensões permitidas
-                }
-                else{
-                    $allowedExts = array(".pdf", ".PDF"); //Extensões permitidas
-                }
-                $ext = strtolower(substr($nome_arquivo, -4));
-
-                if (in_array($ext, $allowedExts)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
-                {
-                    if (move_uploaded_file($nome_temporario, $dir . $new_name)) {
-                        $sql_insere_arquivo = "INSERT INTO `arquivos` (`origem_id`, `lista_documento_id`, `arquivo`, `data`, `publicado`) VALUES ('$idPf', '$y', '$new_name', '$hoje', '1'); ";
-                        $query = mysqli_query($con, $sql_insere_arquivo);
-
-                        if ($query) {
-                            $mensagem = mensagem("success", "Arquivo recebido com sucesso");
-                            echo "<script>
-                                swal('Clique nos arquivos após efetuar o upload e confira a exibição do documento!', '', 'warning');                             
-                            </script>";
-                            gravarLog($sql_insere_arquivo);
-                        } else {
-                            $mensagem = mensagem("danger", "Erro ao gravar no banco");
-                        }
-                    } else {
-                        $mensagem = mensagem("danger", "Erro no upload");
-                    }
-                } else {
-                    echo "<script>
-                            swal(\"Erro no upload! Anexar documentos somente no formato PDF.\", \"\", \"error\");                             
-                        </script>";
-                }
-            }
-        }
-    }
-}
-
 if (isset($_POST['apagar'])) {
     $idArquivo = $_POST['idArquivo'];
     $sql_apagar_arquivo = "UPDATE arquivos SET publicado = 0 WHERE id = '$idArquivo'";
@@ -274,25 +226,75 @@ if (isset($_POST['apagar'])) {
     }
 }
 
-$_SESSION['idPf'] = $idPf;
 
 $sqlTelefones = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
 $arrayTelefones = $conn->query($sqlTelefones)->fetchAll();
 
 $pf = recuperaDados("pessoa_fisicas", "id", $idPf);
-$endereco = recuperaDados("pf_enderecos", "pessoa_fisica_id", $idPf);
-$nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
-$observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
-$banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
+$testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id = $idPf");
 
-$foto = "SELECT arquivo FROM arquivos WHERE lista_documento_id = 59 AND publicado = 1 AND origem_id = '$idPf'";
-$foto = $con->query($foto)->fetch_assoc()['arquivo'];
-if ($foto == null) {
-    $foto = "avatar_default.png";
-    $fotoImg = "../visual/images/$foto";
+if ($testaEnderecos->num_rows > 0) {
+    while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
+        $cep = $enderecoArray['cep'];
+        $logradouro = $enderecoArray['logradouro'];
+        $numero = $enderecoArray['numero'];
+        $complemento = $enderecoArray['complemento'];
+        $cidade = $enderecoArray['cidade'];
+        $bairro = $enderecoArray['bairro'];
+        $uf = $enderecoArray['uf'];
+    }
 } else {
-    $fotoImg = "../uploadsdocs/$foto";
+    $cep = NULL;
+    $logradouro = NULL;
+    $numero = NULL;
+    $complemento = NULL;
+    $cidade = NULL;
+    $bairro = NULL;
+    $uf = NULL;
 }
+$testaNit = $con->query("SELECT nit FROM nits WHERE pessoa_fisica_id = $idPf");
+
+if ($testaNit->num_rows > 0) {
+    while ($nitArray = mysqli_fetch_array($testaNit)) {
+        $nit = $nitArray['nit'];
+    }
+} else {
+    $nit = NULL;
+}
+
+$testaDRT = $con->query("SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf");
+
+if ($testaDRT->num_rows > 0) {
+    while ($drtArray = mysqli_fetch_array($testaDRT)) {
+        $drt = $drtArray['drt'];
+    }
+} else {
+    $drt = NULL;
+}
+
+$testaObs = $con->query("SELECT * FROM pf_observacoes WHERE pessoa_fisica_id = $idPf");
+
+if ($testaObs->num_rows > 0) {
+    while ($obsArray = mysqli_fetch_array($testaObs)) {
+        $obs = $obsArray['observacao'];
+    }
+} else {
+    $obs = NULL;
+}
+
+$testaBanco = $con->query("SELECT * FROM pf_bancos WHERE publicado = 1 AND pessoa_fisica_id = $idPf");
+if ($testaBanco->num_rows > 0) {
+    while ($bancoArray = mysqli_fetch_array($testaBanco)) {
+        $agencia = $bancoArray['agencia'];
+        $conta = $bancoArray['conta'];
+        $banco = $bancoArray['banco_id'];
+    }
+} else {
+    $agencia = NULL;
+    $conta = NULL;
+    $banco = NULL;
+}
+
 ?>
 
 <script language="JavaScript">
@@ -304,11 +306,8 @@ if ($foto == null) {
     }
 </script>
 
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-
     <section class="content">
-        <!-- START FORM-->
         <h2 class="page-header">Edição de pessoa física</h2>
         <div class="row">
             <div class="col-md-12">
@@ -319,11 +318,6 @@ if ($foto == null) {
                     <div class="box-header">
                         <div class="row">
                             <h3 class="box-title col-sm-12 col-md-6">Pessoa física</h3>
-                        </div>
-                        <div class="row" style="margin-top: 20px">
-                            <div class="col-xs-6 col-md-6 col-md-offset-5 col-xs-offset-5">
-                                <img src="<?= $fotoImg ?>" alt="<?= $foto ?>" class="img-circle img-responsive" style="max-width: 10rem;">
-                            </div>
                         </div>
                     </div>
                     <div class="box-body">
@@ -344,15 +338,10 @@ if ($foto == null) {
                             <div class="row">
                                 <?php
                                 if (empty($pf['cpf'])) { ?>
-                                    <div class="col-md-12">
-                                        <label for="passaporte">Passaporte: </label>
-                                        <input type="text" name="passaporte" disabled value="<?= $pf['passaporte'] ?>" class="form-control">
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
                                     <div class="col-md-6">
-                                        <?php anexosNaPagina(62, $idPf, "modal-passaporte", "Passaporte"); ?>
+                                        <label for="passaporte">Passaporte: </label>
+                                        <input type="text" name="passaporte" readonly value="<?= $pf['passaporte'] ?>"
+                                               class="form-control">
                                     </div>
                                     <?php
                                 } else {
@@ -375,6 +364,7 @@ if ($foto == null) {
                                     <?php
                                 }
                                 ?>
+
                                 <div class="form-group col-md-3">
                                     <label for="dtNascimento">Data de Nascimento: *</label>
                                     <input type="date" class="form-control" id="dtNascimento" name="dtNascimento"
@@ -390,41 +380,17 @@ if ($foto == null) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    if (!empty($pf['cpf'])){
-                                    anexosNaPagina(1, $idPf, "modal-rg", "RG");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(2, $idPf, "modal-cpf", "CPF");
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(30, $idPf, "modal-ccm", "FDC - CCM");
-                                    }
-                                    ?>
-                                </div>
-                            </div>
                             <hr/>
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="cep">CEP: *</label>
                                     <input type="text" class="form-control" name="cep" id="cep" maxlength="9"
                                            placeholder="Digite o CEP" required data-mask="00000-000"
-                                           value="<?= $endereco['cep'] ?>">
+                                           value="<?= $cep ?>">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>&nbsp;</label><br>
                                     <input type="button" class="btn btn-primary" value="Carregar">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <?php
-                                    anexosNaPagina(46,$idPf,"modal-foto","Foto 3x4*");
-                                    ?>
                                 </div>
                             </div>
                             <div class="row">
@@ -432,42 +398,38 @@ if ($foto == null) {
                                     <label for="rua">Rua: *</label>
                                     <input type="text" class="form-control" name="rua" id="rua"
                                            placeholder="Digite o endereço" maxlength="200" readonly
-                                           value="<?= $endereco['logradouro'] ?>">
+                                           value="<?= $logradouro ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="numero">Número: *</label>
+                                    <i>(se não houver, marcar 0)</i>
                                     <input type="number" name="numero" class="form-control"
-                                           placeholder="Digite o número" min="1" required value="<?= $endereco['numero'] ?>">
+                                           placeholder="Digite o número" min="0" required value="<?= $numero ?>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="complemento">Complemento: </label>
                                     <input type="text" name="complemento" class="form-control" maxlength="20"
-                                           placeholder="Digite o complemento" value="<?= $endereco['complemento'] ?>">
+                                           placeholder="Digite o complemento" value="<?= $complemento ?>">
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="bairro">Bairro: *</label>
                                     <input type="text" class="form-control" name="bairro" id="bairro"
                                            placeholder="Digite o Bairro" maxlength="80" readonly
-                                           value="<?= $endereco['bairro'] ?>">
+                                           value="<?= $bairro ?>">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="cidade">Cidade: *</label>
                                     <input type="text" class="form-control" name="cidade" id="cidade"
                                            placeholder="Digite a cidade" maxlength="50" readonly
-                                           value="<?= $endereco['cidade'] ?>">
+                                           value="<?= $cidade ?>">
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-4">
                                     <label for="estado">Estado: *</label>
                                     <input type="text" class="form-control" name="estado" id="estado" maxlength="2"
                                            placeholder="Digite o estado ex: (SP)" readonly
-                                           value="<?= $endereco['uf'] ?>">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(3, $idPf, "modal-endereco", "Comprovante de endereço");
-                                    ?>
+                                           value="<?= $uf ?>">
                                 </div>
                             </div>
                             <hr/>
@@ -527,15 +489,16 @@ if ($foto == null) {
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
-                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
+                                           placeholder="Digite o NIT" value="<?= $nit ?>">
                                 </div>
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    anexosNaPagina(27, $idPf, "modal-nit", "NIT");
-                                    ?>
+
+                                <div class="form-group col-md-6">
+                                    <label for="drt">DRT: </label>
+                                    <input type="text" name="drt" class="form-control telefone" maxlength="15"
+                                           placeholder="Digite o DRT" value="<?= $drt ?>">
                                 </div>
                             </div>
 
@@ -543,16 +506,17 @@ if ($foto == null) {
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
                                     <textarea name="observacao" rows="3"
-                                              class="form-control"><?= $observacao['observacao'] ?></textarea>
+                                              class="form-control"><?= $obs ?></textarea>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="banco">Banco</label>
-                                    <select name="banco" id="banco" class="form-control" required>
+                                    <select name="banco" id="banco" class="form-control">
+                                        <option value="">Selecione um banco...</option>
                                         <?php
-                                        geraOpcao('bancos', $banco['banco_id']);
+                                        geraOpcao('bancos', $banco);
                                         ?>
                                     </select>
                                 </div>
@@ -560,108 +524,46 @@ if ($foto == null) {
                                 <div class="form-group col-md-4">
                                     <label for="agencia">Agência</label>
                                     <input type="text" id="agencia" name="agencia" class="form-control"
-                                           value="<?= $banco['agencia'] ?>" required>
+                                           value="<?= $agencia ?>">
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="conta">Conta</label>
                                     <input type="text" id="conta" name="conta" class="form-control"
-                                           value="<?= $banco['conta'] ?>" required>
+                                           value="<?= $conta ?>">
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <?php
-                                    $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
-                                    $queryFACC = mysqli_query($con, $sqlFACC);
-                                    ?>
-
-                                    <label>Gerar FACC</label><br>
-                                    <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
-                                       class="btn btn-primary btn-block">Clique aqui para
-                                        gerar a FACC
-                                    </a>
-                                </div>
-
-                                <div class="form-group col-md-5">
-                                    <label>&nbsp;</label><br>
-                                    <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
-                                        documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
-                                        no campo correspondente.</p>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php
-                                    anexosNaPagina(42, $idPf, "modal-facc", "FACC");
-                                    ?>
-                                </div>
-                            </div>
-
                             <div class="box-footer">
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
 
                                 <div class="row">
                                     <button type="submit" name="edita" class="btn btn-info pull-right">Gravar</button>
-
-                                    <a href="?perfil=emia">
-                                        <button type="button" class="btn btn-default pull-left">Voltar</button>
-                                    </a>
-
-                                    <a href="<?= $linkResumo ?>" target="_blank">
-                                        <button type="button" name="pdf" id="pdf" class="btn btn-primary center-block"
-                                                style="align-items: center;">Imprimir resumo
-                                        </button>
-                                    </a>
-                                </div>
                         </form>
+                        <a href="?perfil=emia">
+                            <button type="button" class="btn btn-default pull-left">Voltar</button>
+                        </a>
+
+                        <a href="<?= $linkResumo . "?idPf=" . $idPf ?>" target="_blank">
+                            <button type="button" name="pdf" id="pdf" class="btn btn-primary center-block"
+                                    style="align-items: center;">Imprimir resumo
+                            </button>
+                        </a>
+                    </div>
+                    <br>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="?perfil=emia&p=pessoa_fisica&sp=demais_anexos" method="POST">
+                                <input type="hidden" name="idPf" value="<?= $idPf ?>">
+                                <button class="btn btn-success center-block btn-block" style="width:35%"
+                                        type="submit">Demais Anexos
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <?php
-        modalUploadArquivoUnico("modal-rg", "?perfil=emia&p=pessoa_fisica&sp=edita", "RG", "rg", $idPf, "1");
-        modalUploadArquivoUnico("modal-foto", "?perfil=emia&p=pessoa_fisica&sp=edita", "Foto 3x4", "foto", $idPf, "1");
-        modalUploadArquivoUnico("modal-cpf", "?perfil=emia&p=pessoa_fisica&sp=edita", "CPF", "cpf", $idPf, "1");
-        modalUploadArquivoUnico("modal-ccm", "?perfil=emia&p=pessoa_fisica&sp=edita", "FDC - CCM", "ccm", $idPf, "1");
-        modalUploadArquivoUnico("modal-nit", "?perfil=emia&p=pessoa_fisica&sp=edita", "NIT", "pis_pasep_", $idPf, "1");
-        modalUploadArquivoUnico("modal-facc", "?perfil=emia&p=pessoa_fisica&sp=edita", "FACC", "faq", $idPf, "1");
-        modalUploadArquivoUnico("modal-endereco", "?perfil=emia&p=pessoa_fisica&sp=edita", "Comprovante de endereço", "residencia", $idPf, "1");
-        ?>
-
-    </section>
 </div>
-
-<div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Confirmação de Exclusão</h4>
-            </div>
-            <div class="modal-body text-center">
-                <p>Tem certeza que deseja excluir este arquivo?</p>
-            </div>
-            <div class="modal-footer">
-                <form action="?perfil=emia&p=pessoa_fisica&sp=edita" method="post">
-                    <input type="hidden" name="idArquivo" id="idArquivo" value="">
-                    <input type="hidden" name="idPf" id="idPf" value="<?= $idPf ?>">
-                    <input type="hidden" name="apagar" id="apagar">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
-                    </button>
-                    <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Apagar">
-                </form>
-            </div>
-        </div>
-    </div>
+</section>
 </div>
-
-<script type="text/javascript">
-    $('#exclusao').on('show.bs.modal', function (e) {
-        let nome = $(e.relatedTarget).attr('data-nome');
-        let id = $(e.relatedTarget).attr('data-id');
-
-        $(this).find('p').text(`Tem certeza que deseja excluir o arquivo ${nome} ?`);
-        $(this).find('#idArquivo').attr('value', `${id}`);
-    })
-</script>

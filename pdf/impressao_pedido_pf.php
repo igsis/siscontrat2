@@ -9,50 +9,51 @@ $idPedido = $_POST['idPedido'];
 
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 $evento = recuperaDados('eventos', 'id', $pedido['origem_id']);
-$ocorrencia = recuperaDados('ocorrencias', 'origem_ocorrencia_id', $evento['id']);
+$ocorrencias = $con->query("SELECT i.nome, o.atracao_id, o.tipo_ocorrencia_id FROM ocorrencias AS o INNER JOIN instituicoes AS i ON o.instituicao_id = i.id WHERE o.tipo_ocorrencia_id != 3 AND o.publicado = 1 AND o.origem_ocorrencia_id =  " . $evento['id']);
+
+$setores = "";
+$qtsApresentacao = 0;
+$cargaHoraria = 0;
+
+if ($ocorrencias->num_rows > 0) {
+    while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
+        $setores = $setores . $linhaOco['nome'] . '; ';
+
+        if ($linhaOco['tipo_ocorrencia_id'] == 1) {
+            $atracoes = $con->query("SELECT quantidade_apresentacao FROM atracoes WHERE publicado = 1 AND evento_id = " . $evento['id'] . " AND id = " . $linhaOco['atracao_id']);
+
+            while ($atracao = mysqli_fetch_array($atracoes)) {
+                $qtsApresentacao = $qtsApresentacao + (int)$atracao['quantidade_apresentacao'];
+            }
+
+            $trechoApresentacoes = ", totalizando $qtsApresentacao apresentações conforme proposta/cronograma";
+
+            $sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = " . $linhaOco['atracao_id'];
+            $carga = $con->query($sqlCarga);
+
+            if ($carga->num_rows > 0) {
+                while ($cargaArray = mysqli_fetch_array($carga)) {
+                    $cargaHoraria = $cargaHoraria + (int)$cargaArray['carga_horaria'];
+                }
+            }
+        } else if ($linhaOco['tipo_ocorrencia_id'] == 2) {
+            $trechoApresentacoes = "";
+        }
+    }
+}else{
+    $trechoApresentacoes = "";
+}
+
+$setores = substr($setores, 0);
+
 $idEvento = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
-
-$sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
-$local = "";
-$queryLocal = mysqli_query($con, $sqlLocal);
-
-$idAtracao = $ocorrencia['atracao_id'];
-
-$atracao = recuperaDados('atracoes', 'id', $idAtracao);
-
-$sqlCarga = "SELECT carga_horaria FROM oficinas WHERE atracao_id = '$idAtracao'";
-$carga = $con->query($sqlCarga)->fetch_array();
-
-if($carga['carga_horaria'] != 0 || $carga['carga_horaria'] != NULL){
-    $cargaHoraria =  $carga['carga_horaria'] . " hora(s)";
-}else{
-    $cargaHoraria = "Não possuí.";
-}
-$sqlTestaFilme = "SELECT filme_id FROM filme_eventos WHERE evento_id = $idEvento";
-$queryFilme = mysqli_query($con, $sqlTestaFilme);
-$row = mysqli_num_rows($queryFilme);
-if($row != 0){
-    $testaFilme = mysqli_fetch_array($queryFilme);
-    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $testaFilme['filme_id'])->fetch_array();
-    $duracao = $filme['duracao'] . " Hora(s).";
-}else{
-    $duracao = "Não se aplica.";
-}
-
-$sqlInstituicao = "SELECT i.nome FROM instituicoes AS i INNER JOIN ocorrencias AS o ON i.id = o.instituicao_id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
-$instituicao = $con->query($sqlInstituicao)->fetch_array();
-
-$objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
-
-$fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
-$suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
 
 while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
     $tel = $tel . $linhaTel['telefone'] . ' | ';
@@ -60,11 +61,23 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 
 $tel = substr($tel, 0, -3);
 
-while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-    $local = $local . $linhaLocal['local'] . ' | ';
-}
+$objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
-$local = substr($local, 0, -3);
+$fiscal = recuperaDados('usuarios', 'id', $evento['fiscal_id']);
+$suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
+
+$duracao = "Não se aplica";
+if ($evento['tipo_evento_id'] == 2) {
+    $duracao = 0;
+    $sqlTestaFilme = "SELECT filme_id FROM filme_eventos WHERE evento_id = $idEvento";
+    $queryFilme = mysqli_query($con, $sqlTestaFilme);
+
+    while ($idFilmes = mysqli_fetch_array($queryFilme)) {
+        $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $idFilmes['filme_id'])->fetch_array();
+        $duracao = $duracao + (int)$filme['duracao'];
+    }
+    $duracao = $duracao . " Minuto(s)";
+}
 
 if ($pedido['numero_processo_mae'] != NULL) {
     $processoMae = "<p><strong>Processo SEI de reserva global:</strong> " . $pedido['numero_processo_mae'] . "</p>";
@@ -72,6 +85,20 @@ if ($pedido['numero_processo_mae'] != NULL) {
     $processoMae = NULL;
 }
 
+
+$numProcesso = $pedido['numero_processo'] == NULL ? "Não cadastrado" : $pedido['numero_processo'];
+
+if ($pessoa['passaporte'] != NULL) {
+    $cpf_passaporte = "<strong>Passaporte: </strong> " . $pessoa['passaporte'] . "<br />";
+} else {
+    $cpf_passaporte = "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />";
+}
+
+if($cargaHoraria == 0){
+    $ch = "Não possuí";
+}else{
+    $ch = $cargaHoraria;
+}
 ?>
 
 <html>
@@ -93,6 +120,7 @@ if ($pedido['numero_processo_mae'] != NULL) {
     <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="include/dist/ZeroClipboard.min.js"></script>
+    <title>Pedido de PF</title>
 </head>
 
 <body>
@@ -106,21 +134,21 @@ if ($pedido['numero_processo_mae'] != NULL) {
         "<p>Solicitamos a contratação a seguir:</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Protocolo:</strong> " . $evento['protocolo'] . "</p>" .
-        "<p><strong>Processo SEI nº:</strong> " . $pedido['numero_processo'] . "</p>" .
+        "<p><strong>Processo SEI nº:</strong> " . $numProcesso . "</p>" .
         $processoMae .
-        "<p><strong>Setor  solicitante:</strong> " . $instituicao['nome'] . "</p>" .
+        "<p><strong>Setor(es)  solicitante(s):</strong> $setores </p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Nome:</strong> " . $pessoa['nome'] . " <br />" .
-        "<strong>CPF:</strong> " . $pessoa['cpf'] . "<br />" .
-        "<strong>Telefone:</strong> " . $tel . "<br />" .
+        $cpf_passaporte .
+        "<strong>Telefone(s):</strong> " . $tel . "<br />" .
         "<strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
-        "<p><strong>Data / Período:</strong> " . retornaPeriodoNovo($idEvento,'ocorrencias') . ", totalizando " . $atracao['quantidade_apresentacao'] . " apresentações conforme proposta/cronograma.</p>" .
-        "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
-        "<p><strong>Duração: </strong>" . $duracao  ."</p>".
-        "<p align='justify'><strong>Local:</strong> " . $local . "</p>" .
-        "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . " ( ". valorPorExtenso($pedido['valor_total']) . " )"  . "</p>" .
+        "<p><strong>Data / Período:</strong> " . retornaPeriodoNovo($idEvento, 'ocorrencias') . $trechoApresentacoes . "</p>" .
+        "<p><strong>Carga Horária:</strong> $ch </p>" .
+        "<p><strong>Duração: </strong> $duracao  </p>" .
+        "<p align='justify'><strong>Local(ais):</strong> " . listaLocais($idEvento, '1') . "</p>" .
+        "<p><strong>Valor: </strong> R$ " . dinheiroParaBr($pedido['valor_total']) . " ( " . valorPorExtenso($pedido['valor_total']) . " )" . "</p>" .
         "<p align='justify'><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
         "<p align='justify'><strong>Justificativa: </strong> " . $pedido['justificativa'] . "</p>" .
         "<p align='justify'>Nos termos do art. 6º do decreto 54.873/2014, fica designado como fiscal desta contratação artística o(a) servidor(a) " . $fiscal['nome_completo'] . ", RF " . $fiscal['rf_rg'] . " e, como substituto, " . $suplente['nome_completo'] . ", RF " . $suplente['rf_rg'] . ". Diante do exposto, solicitamos autorização para prosseguimento do presente." . "</p>";
@@ -132,7 +160,7 @@ if ($pedido['numero_processo_mae'] != NULL) {
 <p>&nbsp;</p>
 
 <div align="center">
-    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+    <button id="botao-copiar" class="btn btn-primary" onclick="copyText(getElementById('texto'))">
         COPIAR TODO O TEXTO
         <i class="fa fa-copy"></i>
     </button>
@@ -143,11 +171,30 @@ if ($pedido['numero_processo_mae'] != NULL) {
 </div>
 
 <script>
-    var client = new ZeroClipboard();
-    client.clip(document.getElementById("botao-copiar"));
-    client.on("aftercopy", function () {
-        alert("Copiado com sucesso!");
-    });
+    function copyText(element) {
+        var range, selection, worked;
+
+        if (document.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.moveToElementText(element);
+            range.select();
+        } else if (window.getSelection) {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        try {
+            document.execCommand('copy');
+            alert('Copiado com sucesso!');
+            selection.removeAllRanges();
+        } catch (err) {
+            alert('Texto não copiado, tente novamente.');
+            selection.removeAllRanges();
+        }
+    }
 </script>
 
 </body>

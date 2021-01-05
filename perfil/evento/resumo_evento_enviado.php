@@ -3,9 +3,8 @@ include "includes/menu_principal.php";
 $con = bancoMysqli();
 
 
-
-$idUser = $_SESSION['idUser'];
-$sessions = ['login', 'nome', 'idUser'];
+$idUser = $_SESSION['usuario_id_s'];
+$sessions = ['login_s', 'nome_s', 'usuario_id_s', 'perfil_s'];
 
 foreach ($_SESSION as $key => $session) {
     if (in_array($key, $sessions)) {
@@ -25,7 +24,7 @@ $evento = recuperaDados('eventos', 'id', $idEvento);
 
 $tipoEvento = $evento['tipo_evento_id'];
 
-$data = date("Y-m-d H:i:s",strtotime("-3 hours"));
+$data = date("Y-m-d H:i:s", strtotime("-3 hours"));
 
 if (isset($_POST['enviar'])) {
     $fora = $_POST['fora'];
@@ -36,39 +35,58 @@ if (isset($_POST['enviar'])) {
         $protocolo = geraProtocolo($idEvento) . "-C";
     }
 
-    if($evento['contratacao'] == 1){
+    if ($evento['contratacao'] == 1) {
         if ($fora == 1) {
-            $sqlPedido = "UPDATE pedidos SET status_pedido_id = 1 WHERE origem_tipo_id = $tipoEvento AND origem_id = '$idEvento'";
+            $sqlPedido = "UPDATE pedidos SET status_pedido_id = 1 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
             $sqlEvento = "UPDATE eventos SET evento_status_id = 2 WHERE id = '$idEvento'";
             if (mysqli_query($con, $sqlPedido)) {
                 mysqli_query($con, $sqlEvento);
 
-                $titulo = "Evento Fora do Prazo: ".$evento["nome_evento"];
+                $titulo = "Evento Fora do Prazo: " . $evento["nome_evento"];
                 $sqlChamado = "INSERT INTO chamados (evento_id, chamado_tipo_id, titulo, justificativa, usuario_id, data) VALUES
-                                                    ('$idEvento', '5', '$titulo', 'Evento Fora do Prazo', '$idUser', '$data')";
+                                                     ('$idEvento', '5', '$titulo', 'Evento Fora do Prazo', '$idUser', '$data')";
                 mysqli_query($con, $sqlChamado);
                 $mensagemPedido = mensagem("warning", "Seu pedido está aguardando aprovação!");
             }
         } else {
-            $sqlPedido = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_tipo_id = $tipoEvento AND origem_id = '$idEvento'";
+            $sqlPedido = "UPDATE pedidos SET status_pedido_id = 2 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
             if (mysqli_query($con, $sqlPedido)) {
                 $mensagemPedido = mensagem("success", "Pedido aprovado!");
 
                 $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3 WHERE id = '$idEvento'";
                 mysqli_query($con, $sqlEnviaEvento);
 
-
                 $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
                 $queryEnvia = mysqli_query($con, $sqlEnvia);
-                $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-                $queryEnvio = mysqli_query($con,$sqlEnvio);
+
+                $consultaEvento = $con->query("SELECT id, evento_id FROM producao_eventos WHERE evento_id = $idEvento");
+                if ($consultaEvento->num_rows == 0) {
+                    $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
+                    mysqli_query($con, $sqlEnvio);
+                } else {
+                    $idProducaoEvento = mysqli_fetch_array($consultaEvento)['id'];
+                    $sqlEnvio = "UPDATE producao_eventos SET data = '$data' WHERE id = $idProducaoEvento";
+                    mysqli_query($con, $sqlEnvio);
+                }
+
                 $mensagem = mensagem("success", "Evento enviado com sucesso!");
             }
         }
 
-    }else{
+    } else {
         $sqlEnviaEvento = "UPDATE eventos SET protocolo = '$protocolo', evento_status_id = 3 WHERE id = '$idEvento'";
         mysqli_query($con, $sqlEnviaEvento);
+        $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data') ";
+        $con->query($sqlEnvia);
+        $consultaEvento = $con->query("SELECT id, evento_id FROM producao_eventos WHERE evento_id = $idEvento");
+        if ($consultaEvento->num_rows == 0) {
+            $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
+            mysqli_query($con, $sqlEnvio);
+        } else {
+            $idProducaoEvento = mysqli_fetch_array($consultaEvento)['id'];
+            $sqlEnvio = "UPDATE producao_eventos SET data = '$data' WHERE id = $idProducaoEvento";
+            mysqli_query($con, $sqlEnvio);
+        }
         $mensagem = mensagem("success", "Evento enviado com sucesso!");
     }
 }
@@ -83,7 +101,27 @@ $usuario = recuperaDados('usuarios', 'id', $evento['usuario_id']);
 $contratacao = $evento['contratacao'] == 1 ? 'Sim' : 'Não';
 $evento_status = recuperaDados('evento_status', 'id', $evento['evento_status_id']);
 $sql_atracao = "SELECT * FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
-$sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao FROM filme_eventos fe INNER JOIN eventos e on fe.evento_id = e.id INNER JOIN filmes f ON f.id = fe.filme_id WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
+$sql_filme = "SELECT fe.id AS 'idFilmeEvento', f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.duracao 
+              FROM filme_eventos fe 
+              INNER JOIN eventos e on fe.evento_id = e.id 
+              INNER JOIN filmes f ON f.id = fe.filme_id 
+              WHERE e.id = $idEvento AND e.publicado = 1 AND f.publicado = 1";
+$datas = "";
+
+//testa e se necessário retorna as datas de exceção
+$consultaAtracoes = $con->query("SELECT id FROM ocorrencias WHERE origem_ocorrencia_id = $idEvento AND publicado = 1 AND tipo_ocorrencia_id = " . $evento['tipo_evento_id']);
+if ($consultaAtracoes->num_rows > 0) {
+    while ($atracaoIds = mysqli_fetch_array($consultaAtracoes)) {
+        $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $atracaoIds['id']);
+        if ($testaExcecao->num_rows > 0) {
+            while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
+                $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
+            }
+        }
+    }
+}
+
+$datas = substr($datas, 0, -2);
 ?>
 
 <div class="content-wrapper">
@@ -116,7 +154,10 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                 <h3>Informações sobre o evento</h3>
                                                 <hr>
                                             </div>
-                                            <strong>Protocolo: </strong><?= $evento['protocolo'] ?>
+                                            <br>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <strong>Protocolo: </strong><?= $evento['protocolo'] == null ? "Não possuí" : $evento['protocolo'] ?>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <strong>Nome do Evento: </strong><?= $evento ['nome_evento']; ?>
@@ -124,6 +165,13 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                         <div class="form-group col-md-12">
                                             <strong>Período: </strong><?= retornaPeriodoNovo($idEvento, 'ocorrencias'); ?>
                                         </div>
+
+                                        <?php if ($datas != "") : ?>
+                                            <div class="form-group col-md-12">
+                                                <strong>Data(s) de Exceção: </strong><?= $datas ?>
+                                            </div>
+                                        <?php endif; ?>
+
                                         <div class="form-group col-md-12">
                                             <strong>Tipo evento: </strong><?= $tipo_evento['tipo_evento']; ?>
                                         </div>
@@ -164,18 +212,21 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                         <?php
                                         if ($evento['tipo_evento_id'] == 1) {
                                             $query_atracao = mysqli_query($con, $sql_atracao);
+                                            //contador de ocorrencia e de atracoes
+                                            $o = 1;
+                                            $a = 1;
                                             while ($atracao = mysqli_fetch_array($query_atracao)) {
 
                                                 $classificacao_indicativa = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id']);
 
                                                 $idAtracao = $atracao['id'];
-                                                $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = 1";
+                                                $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND atracao_id = $idAtracao AND publicado = 1";
 
                                                 ?>
                                                 <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                                                 <div class="form-group col-md-12">
                                                     <div align="center">
-                                                        <h3>Informações sobre a atração</h3>
+                                                        <h3>Informações sobre a atração #<?= $a ?></h3>
                                                         <hr>
                                                     </div>
                                                 </div>
@@ -268,7 +319,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                     ?>
                                                     <hr>
                                                     <div class="form-group col-md-12">
-                                                        <strong>Observação:</strong><?= $produtor['observacao']; ?>
+                                                        <strong>Observação:</strong><?= checaCampo($produtor['observacao']) ?>
                                                     </div>
                                                 <?php } ?>
                                                 <?php
@@ -278,8 +329,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                     $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
                                                     $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']);
                                                     $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
-                                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
-
+                                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'] ?? NULL;
                                                     ?>
 
 
@@ -288,7 +338,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
 
                                                     <div class="form-group col-md-12">
                                                         <div align="center">
-                                                            <h3>Ocorrências</h3>
+                                                            <h3>Ocorrência #<?= $o ?></h3>
                                                             <hr>
                                                         </div>
                                                     </div>
@@ -302,7 +352,8 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                         <strong>Espaço: </strong><?= $espaco ?? "Não possui" ?>
                                                     </div>
                                                     <div class="form-group col-md-12">
-                                                        <strong>Valor do ingresso: </strong>R$<?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>
+                                                        <strong>Valor do
+                                                            ingresso: </strong>R$<?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>
                                                     </div>
                                                     <?php
                                                     if ($ocorrencia['horario_inicio'] != NULL) {
@@ -330,21 +381,23 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                         <div class="form-group col-md-12">
                                                             <strong>Virada:</strong> <?= $ocorrencia['virada'] == 1 ? "Sim" : "Não"; ?>
                                                         </div>
-                                                    <?php } ?>
-                                                <?php }
+                                                    <?php }
+                                                    $o++;
+                                                }
+                                                $a++;
                                             }
                                         } else {
                                             $query_filme = mysqli_query($con, $sql_filme);
-                                            $contador = 1;
+                                            $o = 1;
+                                            $f = 1;
                                             while ($filme = mysqli_fetch_array($query_filme)) {
-
-                                                $idFilme = $filme['id'];
-                                                $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND publicado = 1";
+                                                $idFilmeEvento = $filme['idFilmeEvento'];
+                                                $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND atracao_id = $idFilmeEvento AND publicado = 1 AND tipo_ocorrencia_id = 2";
                                                 ?>
                                                 <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                                                 <div class="form-group col-md-12">
                                                     <div align="center">
-                                                        <h3>Informações sobre a atração</h3>
+                                                        <h3>Informações sobre o filme #<?= $f ?></h3>
                                                         <hr>
                                                     </div>
                                                 </div>
@@ -359,12 +412,12 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
 
 
                                                 <div class="form-group col-md-12">
-                                                    <strong>Gênero: </strong><?= $filme['genero']; ?>
+                                                    <strong>Gênero: </strong><?= checaCampo($filme['genero']) ?>
                                                 </div>
 
 
                                                 <div class="form-group col-md-12">
-                                                    <strong>Sinopse: </strong><?= $filme['sinopse']; ?>
+                                                    <strong>Sinopse: </strong><?= checaCampo($filme['sinopse']) ?>
                                                 </div>
 
 
@@ -380,7 +433,7 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                     ?>
                                                     <div class="form-group col-md-12">
                                                         <div align="center">
-                                                            <h3>Ocorrência #<?= $contador ?></h3>
+                                                            <h3>Ocorrência #<?= $o ?></h3>
                                                             <hr>
                                                         </div>
                                                     </div>
@@ -414,14 +467,11 @@ $sql_filme = "SELECT f.id, f.titulo, f.ano_producao, f.genero, f.sinopse, f.dura
                                                             <strong>Virada:</strong> <?= $ocorrencia['virada'] == 1 ? "Sim" : "Não"; ?>
                                                         </div>
                                                     <?php }
-                                                    $contador++;
-                                                    ?>
-
-                                                <?php }
+                                                    $o++;
+                                                }
+                                                $f++;
                                             }
-                                        }
-
-                                        ?>
+                                        } ?>
                                         <div class="box-footer" align="center">
                                             <a href="?perfil=evento">
                                                 <button type="button" class="btn btn-default">Voltar</button>

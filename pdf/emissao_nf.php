@@ -9,25 +9,24 @@ $con = bancoMysqli();
 
 //CONSULTA
 $idPedido = $_POST['idPedido'];
-
-$pedido = $con->query("SELECT p.numero_processo, pj.razao_social, p.valor_total, e.nome_evento, pg.nota_empenho, pg.entrega_nota_empenho, e.id AS idEvento
+$query = "SELECT p.numero_processo, pj.razao_social, p.valor_total, e.nome_evento, pg.nota_empenho, pg.entrega_nota_empenho, e.id AS idEvento
 FROM pedidos p
 INNER JOIN pessoa_juridicas pj on p.pessoa_juridica_id = pj.id
 INNER JOIN eventos as e ON p.origem_id = e.id
 INNER JOIN pagamentos pg on p.id = pg.pedido_id
-WHERE p.publicado = 1 AND e.publicado = 1 AND p.origem_tipo_id = 1 AND p.id = '$idPedido'
-")->fetch_array();
+WHERE p.publicado = 1 AND e.publicado = 1 AND p.origem_tipo_id = 1 AND p.id = '$idPedido'";
+$pedido = $con->query($query)->fetch_array();
 
-$parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1");
-if($parcela == NULL){
+$parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1")->fetch_array();
+if($parcela['id'] == NULL){
     $valor = $pedido['valor_total'];
 } else {
-    $idParcela = $_POST['idParcela'];
+    $idParcela = $parcela['id'];
     $parc = $con->query("SELECT valor FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1 AND id = '$idParcela'")->fetch_assoc();
     $valor = $parc['valor'];
 }
 
-$dataAtual = date('Y-m-d H:i:s');
+$dataAtual = date('Y-m-d H:i:s', strtotime("-3 hours"));
 
 // GERANDO O WORD:
 header("Content-type: application/vnd.ms-word");

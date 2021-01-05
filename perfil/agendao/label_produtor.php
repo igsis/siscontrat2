@@ -43,7 +43,7 @@ if($idProdutor != NULL){
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label>Observação:</label> <?= $produtor['observacao'] ?>
+                                    <label>Observação:</label> <?= $produtor['observacao'] == NULL ? "Não cadastrado" : $produtor['observacao']?>
                                 </div>
                             </div>
                             <?php

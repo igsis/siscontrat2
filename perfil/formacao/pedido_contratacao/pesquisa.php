@@ -6,16 +6,33 @@
                 <h3 class="box-title">Exportar pedido para Excel</h3>
             </div>
             <div class="box-body">
-                <form role="form" action="?perfil=formacao&p=pedido_contratacao&sp=exporta" method="POST">
+                <form role="form" action="?perfil=formacao&p=pedido_contratacao&sp=resultado_exporta" method="POST">
                     <div class="row">
 
-                        <div class="col-md-12">
-                            <label for="ano">Ano: *</label>
-                            <input type="number" required min="2018" class="form-control" name="ano" id="ano">
+                        <div class="col-md-6">
+                            <label for="protocolo">Protocolo: </label>
+                            <input type="text" class="form-control" name="protocolo">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="processo">Número de Processo: </label>
+                            <input type="text" class="form-control" name="processo">
                         </div>
 
                     </div>
                     <br>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="proponente">Proponente: </label>
+                            <select name="proponente" class="form-control">
+                                <option value="">Selecione um proponente...</option>
+                                <?php
+                                geraOpcao('pessoa_fisicas', "");
+                                ?>
+                            </select>
+                        </div>
+                    </div>
             </div>
             <div class="box-footer">
                 <button name="pesquisa" id="pesquisa" type="submit" class="btn btn-primary pull-right">Pesquisar

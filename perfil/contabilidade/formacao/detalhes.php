@@ -21,7 +21,7 @@ $sql = "SELECT  p.id,
         FROM pedidos AS p
         INNER JOIN formacao_contratacoes AS fc ON fc.id = p.origem_id
         INNER JOIN pessoa_fisicas AS pf ON pf.id = p.pessoa_fisica_id
-        WHERE p.id = '$idPedido' AND p.publicado = '1'";
+        WHERE p.id = '$idPedido' AND p.publicado = '1' AND p.origem_tipo_id = 2";
 $pedido = $con->query($sql)->fetch_assoc();
 
 $fc = recuperaDados('formacao_contratacoes', 'id', $pedido['origem_id']);
@@ -72,17 +72,17 @@ $linguagem = recuperaDados('linguagens', 'id', $fc['linguagem_id'])['linguagem']
                         while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
                             $local = $local . $linhaLocal['local'] . ' | ';
                         }
-                        $local = substr($local, 0, -3);
+                        $local = substr($local, 0, -2);
                         ?>
 
                         <tr>
-                            <th width="30%">Local(s):</th>
+                            <th width="30%">Local(ais):</th>
                             <td><?= $local ?></td>
                         </tr>
 
                         <tr>
                             <th width="30%">Valor:</th>
-                            <td><?= $pedido['valor_total'] ?></td>
+                            <td><?= "R$" . dinheiroParaBr($pedido['valor_total']) ?></td>
                         </tr>
 
                         <tr>
@@ -128,7 +128,7 @@ $linguagem = recuperaDados('linguagens', 'id', $fc['linguagem_id'])['linguagem']
 
                         <tr>
                             <th width="30%">Observação:</th>
-                            <td><?= $pedido['observacao'] ?></td>
+                            <td><?= checaCampo($pedido['observacao']) ?></td>
                         </tr>
 
                         <tr>

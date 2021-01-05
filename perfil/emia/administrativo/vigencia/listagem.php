@@ -3,6 +3,8 @@ $con = bancoMysqli();
 if (isset($_POST['excluir'])) {
     $idEV = $_POST['idEVDelete'];
 
+    $deleteParcelas = $con->query("UPDATE emia_parcelas SET publicado = 0 WHERE emia_vigencia_id = $idEV");
+
     $sqlDelete = "UPDATE emia_vigencias SET publicado = 0 WHERE id = '$idEV'";
     if (mysqli_query($con, $sqlDelete)) {
         $mensagem = mensagem("success", "Vigência excluida com sucesso");
@@ -16,10 +18,15 @@ $query = mysqli_query($con, $sql);
 ?>
 <div class="content-wrapper">
     <section class="content">
-        <div class="page-header">
-            <h2>Listagem de Vigências</h2>
+        <h3 class="box-title">EMIA - Vigências</h3>
+        <a href="?perfil=emia&p=administrativo&sp=vigencia&spp=cadastra" class="text-right btn btn-success"
+           style="float: right">Cadastrar uma nova vigência</a>
+        <div class="row" align="center">
+            <?php if (isset($mensagem)) {
+                echo $mensagem;
+            }; ?>
         </div>
-        <div class="box box-primary">
+        <div class="box">
             <div class="row" align="center">
                 <?php if (isset($mensagem)) {
                     echo $mensagem;
@@ -51,8 +58,6 @@ $query = mysqli_query($con, $sql);
                         </form>
                         </td>";
                         echo "<td>
-                        <form action='?perfil=emia&p=administrativo&sp=vigencia&spp=listagem' method='POST'>
-                        <input type='hidden' name='idEVDelete' id='idEVDelete' value='" . $ev['id'] . "'>
                         <button type='button' name='excluir' id='excluir' class='btn btn-block btn-danger' 
                         data-target='#exclusao' data-toggle='modal' data-id='" . $ev['id'] . "'>
                         <span class='glyphicon glyphicon-trash'></span></button>
@@ -75,9 +80,6 @@ $query = mysqli_query($con, $sql);
                     <a href="?perfil=emia&p=administrativo&sp=index">
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
-                    <a href="?perfil=emia&p=administrativo&sp=vigencia&spp=cadastra">
-                        <button type="button" class="btn btn-primary pull-right"> Cadastrar uma nova vigência </button>
-                    </a>
                 </div>
             </div>
         </div>
@@ -93,11 +95,10 @@ $query = mysqli_query($con, $sql);
                         <p>Tem certeza que deseja excluir a vigência?</p>
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" name="idEVDelete" id="idEVDelete" value="<?= $ev['id'] ?>">
-                        <input type="hidden" name="excluir" id="excluir">
+                        <input type="hidden" name="idEVDelete" id="idEVDelete" value="">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                         </button>
-                        <input type="submit" class="btn btn-danger btn-outline" name="exclui" value="Excluir">
+                        <input type="submit" class="btn btn-danger btn-outline" name="excluir" value="Excluir">
                         </form>
                     </div>
                 </div>

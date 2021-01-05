@@ -14,6 +14,7 @@
                                 <div class="form-group col-md-12">
                                     <label for="titulo">Linguagem *</label>
                                     <input type="text" id="linguagem" name="linguagem" class="form-control"
+                                           maxlength="20"
                                            required>
                                 </div>
                             </div>

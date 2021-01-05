@@ -100,7 +100,7 @@ include "includes/menu_interno.php";
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="contratados">Quantidade de contratados *</label><br/>
-                                    <input class="form-control" type="number" name="contratados" id="contratados"
+                                    <input class="form-control" min="1" type="number" name="contratados" id="contratados"
                                                   value="<?= $exposicao['numero_contratados'] ?>" required>
                                 </div>
                                 

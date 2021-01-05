@@ -8,14 +8,13 @@ unset($_SESSION['idPf']);
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $sql = "SELECT eve.id AS idEvento, eve.protocolo, eve.nome_evento, es.status
         FROM eventos as eve
         INNER JOIN evento_status es on eve.evento_status_id = es.id
         WHERE publicado = 1 AND evento_status_id between 3 AND 4 AND contratacao = 0  
         AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
 $query = mysqli_query($con, $sql);
-
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -45,10 +44,11 @@ $query = mysqli_query($con, $sql);
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
-                                <th width="15%">Objeto</th>
+                                <th>Objeto</th>
                                 <th>Local</th>
-                                <th width="17%">Período</th>
+                                <th>Período</th>
                                 <th>Status</th>
+                                <th>Chamados</th>
                                 <th>Visualizar</th>
                             </tr>
                             </thead>
@@ -57,15 +57,23 @@ $query = mysqli_query($con, $sql);
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
                                 $idEvento = $evento['idEvento'];
-                                $locais = listaLocais($idEvento);
-
-                                // $locais = listaLocais($evento['idAtracao']);
                                 echo "<tr>";
                                 echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $evento['nome_evento'] . "</td>";
-                                echo "<td>" . $locais. "</td>";
+                                ?>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                            data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                            onClick="exibirLocal_Instituicao('<?= 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php' ?>', '#modalLocais_Inst', '#modalTitulo')"
+                                            data-id="<?= $idEvento ?>"
+                                            name="exibirLocais">
+                                        Ver locais
+                                    </button>
+                                </td>
+                            <?php
                                 echo "<td>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</td>";
                                 echo "<td>" . $evento['status'] . "</td>";
+                                print_r(retornaChamadosTD($evento['idEvento']));
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=resumo_evento_enviado\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $idEvento . "'>
@@ -83,6 +91,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Local</th>
                                 <th>Período</th>
                                 <th>Status</th>
+                                <th>Chamados</th>
                                 <th>Visualizar</th>
                             </tr>
                             </tfoot>

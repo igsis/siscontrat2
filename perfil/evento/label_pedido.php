@@ -13,9 +13,8 @@ if ($pedido != null) {
         'Número de Parcelas' => $pedido['numero_parcelas'],
         'Data Kit Pagamento' => exibirDataBr($pedido['data_kit_pagamento']),
         'Forma de Pagamento' => $pedido['forma_pagamento'],
-        'Observação' => $pedido['observacao']
+        'Observação' => checaCampo($pedido['observacao'])
     ];
-
     $idPedido = $pedido['id'];
     $equipamentoValor = "SELECT local.local, valor.valor FROM valor_equipamentos valor
                          INNER JOIN locais local ON local.id = valor.local_id WHERE pedido_id = '$idPedido'";
@@ -38,46 +37,45 @@ switch ($pedido['pessoa_tipo_id']) {
     case 1:
         $tipo = "Pessoa Física";
         $sqlTelefones = "SELECT telefone FROM pf_telefones WHERE pessoa_fisica_id = '" . $pedido['pessoa_fisica_id'] . "' AND publicado = '1'";
-        $telefones = $con->query($sqlTelefones)->fetch_all();
+        $tel = "";
+        $telefones = $con->query($sqlTelefones);
+        while ($linhaTel = mysqli_fetch_array($telefones)) {
+            if($linhaTel['telefone'] != ""){
+                $tel = $tel . $linhaTel['telefone'] . ' | ';
+            }
+        }
+        $tel = substr($tel, 0, -3);
         $proponente = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
         $nacionalidade = recuperaDados('nacionalidades', 'id', $proponente['nacionalidade_id'])['nacionalidade'];
         $endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $pedido['pessoa_fisica_id']);
         $pfBancos = recuperaDados('pf_bancos', 'pessoa_fisica_id', $pedido['pessoa_fisica_id']);
         $banco = recuperaDados('bancos', 'id', $pfBancos['banco_id'])['banco'];
 
-        if($proponente['ccm'] != NULL || $proponente['ccm'] != "") {
-            $ccm = $proponente['ccm'];
-        }else{
-            $ccm = "Não cadastrado";
-        }
-
         $dadosProponente = [
             'Nome' => $proponente['nome'],
-            'Nome Artístico' => $proponente['nome_artistico'],
-            'Nacionalidade' => $nacionalidade,
+            'Nome Artístico' => checaCampo($proponente['nome_artistico']),
+            'Nacionalidade' => checaCampo($nacionalidade),
             'RG' => $proponente['rg'],
             'Passaporte' => $proponente['passaporte'],
             'CPF' => $proponente['cpf'],
-            'CCM' => $ccm,
+            'CCM' => checaCampo($proponente['ccm']),
             'Data de Nascimento' => exibirDataBr($proponente['data_nascimento']),
             'E-mail' => $proponente['email'],
-            'Telefone #1' => $telefones[0][0] ?? "Não Cadastrado",
-            'Telefone #2' => $telefones[1][0] ?? "Não Cadastrado",
-            'Telefone #3' => $telefones[2][0] ?? "Não Cadastrado",
+            'Telefone(s)' => $tel,
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
             'Logradouro' => $endereco['logradouro'],
             'Número' => $endereco['numero'],
-            'Complemento' => $endereco['complemento'],
+            'Complemento' => checaCampo($endereco['complemento']),
             'Bairro' => $endereco['bairro'],
             'Cidade' => $endereco['cidade'],
             'Estado' => $endereco['uf']
         ];
         $dadosBancarios = [
-            'Banco' => $banco,
-            'Agência' => $pfBancos['agencia'],
-            'Conta' => $pfBancos['conta']
+            'Banco' => checaCampo($banco),
+            'Agência' => checaCampo($pfBancos['agencia']),
+            'Conta' => checaCampo($pfBancos['conta'])
         ];
         break;
 
@@ -92,16 +90,10 @@ switch ($pedido['pessoa_tipo_id']) {
         $representante1 = recuperaDados('representante_legais', 'id', $idRepresentante1);
         $representante2 = recuperaDados('representante_legais', 'id', $idRepresentante2);
 
-        if($proponente['ccm'] != NULL || $proponente['ccm'] != "") {
-            $ccm = $proponente['ccm'];
-        }else{
-            $ccm = "Não cadastrado";
-        }
-
         $dadosProponente = [
             'Razão Social' => $proponente['razao_social'],
             'CNPJ' => $proponente['cnpj'],
-            'CCM' => $ccm,
+            'CCM' => checaCampo($proponente['ccm']),
         ];
         $dadosEndereco = [
             'CEP' => $endereco['cep'],
@@ -218,6 +210,9 @@ $parcelado = false;
                         </div>
                     </div>
                 </div>
+                <?php
+                    if($idRepresentante2 != NULL || $idRepresentante2 != ""){
+                ?>
                 <div class="panel box box-primary">
                     <div class="box-header with-border">
                         <h4 class="box-title">
@@ -242,6 +237,7 @@ $parcelado = false;
                         </div>
                     </div>
                 </div>
+                <?php } ?>
             </div>
         <?php } ?>
     </div>

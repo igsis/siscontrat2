@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 if (isset($_POST['cadastra'])) {
     $programa = addslashes($_POST['programa']);
@@ -29,7 +29,7 @@ if (isset($_POST['edita'])) {
     $sql = "UPDATE programas SET programa = '$programa', edital = '$edital', verba_id = '$idVerba', descricao = '$descricao' WHERE id = '$idPrograma'";
 
     if (mysqli_query($con, $sql)) {
-        $mensagem = mensagem("success", "Programa atualizada com sucesso");
+        $mensagem = mensagem("success", "Programa atualizado com sucesso");
         gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Ocorreu um erro ao atualizar o programa. Tente novamente!");

@@ -1,11 +1,13 @@
 <?php
 $con = bancoMysqli();
 
-if (isset($_POST['cadastra'])) {
-    $ano = $_POST['ano'];
-    $desc = $_POST['desc'];
-    $numParcela = $_POST['numParcelas'];
+if(isset($_POST['cadastra']) || isset($_POST['editar'])){
+    $ano = $_POST['ano'] ?? NULL;
+    $desc = trim(addslashes($_POST['desc'])) ?? NULL;
+    $numParcela = $_POST['numParcelas'] ?? NULL;
+}
 
+if (isset($_POST['cadastra'])) {
     $sqlInsert = "INSERT INTO emia_vigencias
                             (ano, descricao,numero_parcelas)
                             VALUES
@@ -13,42 +15,22 @@ if (isset($_POST['cadastra'])) {
     if (mysqli_query($con, $sqlInsert)) {
         $mensagem = mensagem("success", "Cadastrado com sucesso!");
         $idEV = recuperaUltimo('emia_vigencias');
-
     } else {
         $mensagem = mensagem("danger", "Erro ao cadastrar! Tente novamente.");
     }
-    $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 }
 
 if (isset($_POST['editar'])) {
     $idEV = $_POST['idEV'];
-    $ano = $_POST['ano'];
-    $desc = $_POST['desc'];
-    $numParcela = $_POST['numParcelas'];
-
-    $sql = "DELETE FROM emia_parcelas WHERE emia_vigencia_id = '$idEV'";
-    mysqli_query($con, $sql);
-
     $sqlUpdate = "UPDATE emia_vigencias SET
                     ano = '$ano',
                     descricao = '$desc',
                     numero_parcelas = '$numParcela'
                     WHERE id = '$idEV'";
 
-    if (mysqli_query($con, $sqlUpdate)) {
-        $mensagem = mensagem("success", "Gravado com sucesso!");
-    } else {
-        $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
-    }
-    $ev = recuperaDados('emia_vigencias', 'id', $idEV);
-}
+    $sql = "DELETE FROM emia_parcelas WHERE emia_vigencia_id = '$idEV'";
+    mysqli_query($con, $sql);
 
-if (isset($_POST['edit']))
-    $idEV = $_POST['idEVEdit'];
-    $ev = recuperaDados('emia_vigencias', 'id', $idEV);
-
-
-if(isset($_POST['editar'])){
     $parcelas = $_POST['parcela'];
     $valores = dinheiroDeBr($_POST['valor']);
     $data_inicios = $_POST['data_inicio'];
@@ -57,7 +39,7 @@ if(isset($_POST['editar'])){
     $mes_refs = $_POST['mes_ref'];
     $cargas = $_POST['carga'];
 
-    $i = $ev['numero_parcelas'];
+    $i = $numParcela;
 
     for ($count = 0; $count < $i; $count++) {
         $parcela = $parcelas[$count] ?? NULL;
@@ -71,16 +53,25 @@ if(isset($_POST['editar'])){
         $sql = "INSERT INTO emia_parcelas (emia_vigencia_id, numero_parcelas, valor, data_inicio, data_fim, data_pagamento, mes_referencia_id, carga_horaria)
                                        VALUES ('$idEV', '$parcela', '$valor', '$data_inicio', '$data_fim', '$data_pagamento', '$mes_ref', '$carga')";
 
-        mysqli_query($con, $sql);
+        if(mysqli_query($con, $sql)){
+            $mensagem = mensagem("success", "Gravado com sucesso!");
+        }else{
+            $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
+        }
     }
 }
 
+if (isset($_POST['edit'])) {
+    $idEV = $_POST['idEVEdit'];
+}
+
+$ev = recuperaDados('emia_vigencias', 'id', $idEV);
 ?>
 
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2>Cadastro de Vigência</h2>
+            <h3>Editar Vigência</h3>
         </div>
         <div class="box box-primary">
             <div class="row" align="center">
@@ -130,26 +121,26 @@ if(isset($_POST['editar'])){
                             <div class="form-group col-md-12">
                                 <label for="parcela[]">Parcela:</label>
                                 <input type="number" readonly class="form-control" value="<?= $i ?>"
-                                       name="parcela[]" id="parcela[]">
+                                       name="parcela[]" id="parcela[<?= $i ?>]">
                             </div>
                         </div>
-                    <div class="row">
 
+                    <div class="row">
                             <div class="form-group col-md-2">
                                 <label for="valor[]">Valor:</label>
-                                <input type="text" id="valor[]" name="valor[]"
-                                       class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcelas['valor']) ?>">
+                                <input type="text" id="valor<?= $i ?>" name="valor[]"
+                                       class="form-control valor" value="<?= dinheiroParaBr($parcelas['valor'] ?? NULL) ?>">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label for="data_inicio">Data inicial:</label>
-                                <input type="date" name="data_inicio[]" class="form-control" id="datepicker10"
+                                <input type="date" name="data_inicio[]" class="form-control" id="data_inicio<?=$i?>"
                                        placeholder="DD/MM/AAAA" value="<?= $parcelas['data_inicio'] ?? NULL ?>">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label for="data_fim">Data final: </label>
-                                <input type="date" name="data_fim[]" class="form-control" id="datepicker11"
+                                <input type="date" name="data_fim[]" class="form-control" id="data_fim<?= $i ?>"
                                        placeholder="DD/MM/AAAA" value="<?= $parcelas['data_fim'] ?? NULL ?>">
                             </div>
 
@@ -157,18 +148,18 @@ if(isset($_POST['editar'])){
                             <div class="form-group col-md-2">
                                 <label for="data_pagamento">Data pagamento: </label>
                                 <input type="date" name="data_pagamento[]" class="form-control"
-                                       id="datepicker12" placeholder="DD/MM/AAAA" value="<?= $parcelas['data_pagamento'] ?? NULL ?>">
+                                       id="data_pagamento<?= $i ?>" placeholder="DD/MM/AAAA" value="<?= $parcelas['data_pagamento'] ?? NULL ?>">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label for="carga[]">Carga horária: </label>
-                                <input type="number" name="carga[]" class="form-control" id="carga[]"
+                                <input type="number" name="carga[]" class="form-control" id="carga<?= $i ?>"
                                        value="<?= $parcelas['carga_horaria'] ?? NULL ?>"  min="1">
                             </div>
 
                         <div class="form-group col-md-2">
                             <label for="mes_ref[]">Mês Referencia: *</label>
-                            <select name="mes_ref[]" id="mes_ref[]" class="form-control">
+                            <select name="mes_ref[]" id="mes_ref<?= $i ?>" class="form-control">
                                 <?php
                                     geraOpcaoParcelas("emia_meses", $parcelas['mes_referencia_id']);
                                 ?>
@@ -176,11 +167,8 @@ if(isset($_POST['editar'])){
                         </div>
 
                         </div>
-                        <hr>
-                        <?php
-                    }
-                    ?>
-
+                <?php } ?>
+                            
                 </div>
                 <div class="box-footer">
                     <a href="?perfil=emia&p=administrativo&sp=vigencia&spp=listagem">
@@ -195,3 +183,9 @@ if(isset($_POST['editar'])){
     </section>
 </div>
 
+
+<script>
+    $(document).ready(function () {
+        $('.valor').mask('000,00', {reverse: true});
+    });
+</script>

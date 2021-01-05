@@ -2,6 +2,52 @@
 include "includes/menu_principal.php";
 
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_cep.php';
+
+$con = bancoMysqli();
+
+if (isset($_POST['cadastraLocal'])) {
+    $idInstituicao = $_POST['instituicao'] ?? NULL;
+    $local = addslashes($_POST['local']);
+    $cep = $_POST['cep'];
+    $rua = addslashes($_POST['rua']);
+    $numero = $_POST['numero'];
+    $complemento = $_POST['complemento'] ?? NULL;
+    $bairro = addslashes($_POST['bairro']);
+    $cidade = addslashes($_POST['cidade']);
+    $estado = addslashes($_POST['estado']);
+    $zona = addslashes($_POST['zona']);
+
+    $existe = 0;
+    $sqLocais = "SELECT * FROM locais WHERE instituicao_id = '$idInstituicao'";
+    $queryLocais = mysqli_query($con, $sqLocais);
+    while ($locais = mysqli_fetch_array($queryLocais)) {
+        if ($locais['local'] == $local) {
+            $existe = 1;
+        }
+    }
+
+    if ($existe != 0) {
+    } else {
+        $sql = "INSERT INTO locais (instituicao_id, local, logradouro, numero, complemento, bairro, cidade, uf, cep, zona_id, publicado)
+                VALUES ('$idInstituicao', '$local', '$rua', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$zona', 1)";
+
+        if (mysqli_query($con, $sql)) {
+            gravarLog($sql);
+            $mensagem = mensagem("success", "Adição de local efetuado com sucesso");
+            $fechar = "<script defer='defer'>
+                        window.onload = function() {
+                            setTimeout(window.close ,8000);  
+                        }
+                    </script>";
+
+            echo $fechar;
+
+        } else {
+            $mensagem = mensagem("danger", "Erro na adição de local! Tente novamente.");
+        }
+    }
+}
+
 ?>
 <div class="content-wrapper">
     <!-- Main content -->
@@ -16,15 +62,20 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_ce
                         <h3 class="box-title">Local</h3>
                     </div>
                     <!-- /.box-header -->
+                    <div class="row" align="center">
+                        <?php if (isset($mensagem)) {
+                            echo $mensagem;
+                        }; ?>
+                    </div>
                     <!-- form start -->
-                    <form method="POST" action="?perfil=evento&p=index"
+                    <form method="POST" action="?perfil=evento&p=adicionar_local"
                           role="form">
                         <div class="box-body">
 
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="cep">Instituição: *</label>
-                                    <select name="instituicao" id="instituicao" class="form-control" required>
+                                    <select name="instituicao" id="instituicao" class="form-control" required readonly>
                                         <option value="6">Outros</option>
                                     </select>
                                 </div>
@@ -70,13 +121,13 @@ $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_verifica_ce
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-5">
                                     <label for="rua">Rua: *</label>
                                     <input type="text" class="form-control" name="rua" id="rua"
                                            placeholder="Digite a rua" maxlength="200" readonly>
                                 </div>
-                                <div class="form-group col-md-1">
-                                    <label for="numero">Número: *</label>
+                                <div class="form-group col-md-2">
+                                    <label for="numero">Número:*</label>
                                     <input type="number" name="numero" class="form-control" placeholder="Ex.: 10"
                                            required min="0">
                                 </div>

@@ -25,7 +25,7 @@ $sqlCarregar = "SELECT
                 WHERE eve.id = '$idEvento'";
 $resumoCarregamento = $con->query($sqlCarregar)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
-include "includes/menu_interno.php";
+
 ?>
 
 <div class="content-wrapper">
@@ -134,16 +134,15 @@ include "includes/menu_interno.php";
                         <div class="modal-body">
                             <p>Tem certeza que deseja vetar este evento?</p>
                             <input type="hidden" name="titulo" value="<?=$evento['nome_evento']?>">
-                            <label for="motivo">Motivo da Vetação:</label>
+                            <label for="motivo">Motivo da Vetação: *</label>
                             <select name="motivo" class="form-control" required>
                                 <option value="">Selecione o Motivo</option>
                                 <?php
-                                $sql = "SELECT * FROM chamado_tipos WHERE id <> 4";
+                                $sql = "SELECT * FROM chamado_tipos WHERE id IN (1, 2, 7, 10)";
                                 $query = mysqli_query($con,$sql);
                                 while($chamado = mysqli_fetch_array($query)){ ?>
                                     <option value="<?=$chamado['id']?>"><?=$chamado['tipo']?></option>
-                                <?php }
-                                ?>
+                                <?php } ?>
                             </select>
                             <label for="justificativa">Justificativa:</label>
                             <textarea name="justificativa" id="justificativa" class="form-control" rows="3" required></textarea>

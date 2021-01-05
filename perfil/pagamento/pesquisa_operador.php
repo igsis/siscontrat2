@@ -17,13 +17,13 @@ unset($_SESSION['idPedido']);
                                 <div class="form-group col-md-4">
                                     <label for="data_inicio">Data Início *</label> <br>
                                     <input type="date" name="data_inicio" class="form-control" id="datepicker10"
-                                           placeholder="DD/MM/AAAA" onblur="comparaData()">
+                                           placeholder="DD/MM/AAAA" onblur="comparaData()" required>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="data_fim">Data Final *</label><br>
                                     <input type="date" name="data_fim" class="form-control" id="datepicker11"
-                                           placeholder="DD/MM/AAAA" onblur="comparaData()">
+                                           placeholder="DD/MM/AAAA" onblur="comparaData()" >
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -31,7 +31,7 @@ unset($_SESSION['idPedido']);
                                     <select name="operador_id" id="operador" class="form-control">
                                         <option value="0">Selecione uma opção...</option>
                                         <?php
-                                        geraOpcao('usuarios u INNER JOIN usuario_pagamentos up on up.usuario_id = u.id');
+                                        geraOpcao('usuarios AS u INNER JOIN usuario_contratos AS c ON c.usuario_id = u.id');
                                         ?>
                                     </select>
                                 </div>

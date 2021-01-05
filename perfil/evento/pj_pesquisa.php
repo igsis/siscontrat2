@@ -28,7 +28,7 @@ if (isset($_POST['procurar'])){
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
-            $actionEdita = "?perfil=evento&p=pedido_edita";
+            $actionEdita = "?perfil=evento&p=pedido_proponente";
             $actionCadastra = "?perfil=evento&p=pj_cadastro";
     }else{
             $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";

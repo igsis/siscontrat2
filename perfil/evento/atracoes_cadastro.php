@@ -97,7 +97,7 @@
                                 <div class="form-group col-md-6">
                                     <label for="quantidade_apresentacao">Quantidade de Apresentação *</label>
                                     <input type="number" class="form-control" min="1" id="quantidade_apresentacao"
-                                           name="quantidade_apresentacao" maxlength="2" required>
+                                           name="quantidade_apresentacao" max="100" maxlength="2" required>
                                 </div>
                                 <?php
                                 $_SESSION['idEvento'] = $idEvento;
@@ -108,8 +108,7 @@
                                         <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não
                                             houver valor</i>
                                         <input type="text" id="valor_individual" name="valor_individual"
-                                               class="form-control" required
-                                               onKeyPress="return(moeda(this,'.',',',event))">
+                                               class="form-control" required>
                                     </div>
                                     <?php
                                 }
@@ -119,6 +118,11 @@
                                     <?php
                                 }
                                 ?>
+                            </div>
+                            <div class="row" id="msg">
+                                <div class="col-md-12">
+                                    <span style="color: red;" class="pull-right"><b>Valor máximo permitido 999.999,99</b></span>
+                                </div>
                             </div>
                         </div>
 
@@ -225,8 +229,28 @@
 
     $('.acoes').on('change', validaAcoes);
 
+    $('#msg').hide();
+
+    function limitaValor(){
+        var msg = $('#msg');
+        var maxLength = $('#valor_individual').val().length;
+        var btn = $('#cadastra');
+        btn.attr('disabled', true);
+        if (maxLength > 10) {
+            msg.show();
+            btn.attr('disabled', true);
+        }else{
+            msg.hide();
+            validaAcoes();
+        };
+    }
+
+    $('#valor_individual').keyup(limitaValor);
+
     $(document).ready(function () {
         validaAcoes();
+
+        $('#valor_individual').mask('00.000,00',{reverse: true})
     })
 
 </script>

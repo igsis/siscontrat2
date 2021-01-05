@@ -15,10 +15,10 @@ $pedido = $con->query("SELECT e.id AS idEvento, p.numero_processo, e.nome_evento
     INNER JOIN representante_legais rl on pj.representante_legal1_id = rl.id
     WHERE p.publicado = 1 AND p.id = '$idPedido'")->fetch_assoc();
 
-$periodo = retornaPeriodo($pedido['idEvento']);
+$periodo = retornaPeriodoNovo($pedido['idEvento'], 'ocorrencias');
+
 
 $modeloEmail = $_GET['modelo'];
-
 switch ($modeloEmail) {
     case 'empresas':
         $item4 = "<p align=\"justify\">d) Declaração do Simples Nacional (para ser assinada pelo(a) representante legal, somente em caso de Empresa optante pelo Simples Nacional).</p>";
@@ -35,7 +35,7 @@ switch ($modeloEmail) {
 }
 
 $dataAtual = dataHoraNow();
-session_start();
+session_start(['name' => 'sis']);
 
 // GERANDO O WORD:
 header("Content-type: application/vnd.ms-word");
@@ -60,7 +60,7 @@ header("Content-Disposition: attachment;Filename=$dataAtual - Processo SEI ".$pe
 <p>&nbsp;</p>
 <p align="justify">Atenciosamente,</p>
 <br>
-<p><?=$_SESSION['nome']?><br>
+<p><?=$_SESSION['nome_s']?><br>
     SMC / Pagamentos Artísticos<br>
     Tel: (11) 3397-0191</p>
 </body>

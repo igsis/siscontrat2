@@ -4,7 +4,7 @@ $pasta = "?perfil=formacao&p=administrativo&sp=";
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu" data-widget="tree">
-            <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
+            <li><a href="http://<?=$_SERVER['HTTP_HOST']?>/siscontrat/inicio"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">Administrativo</li>
             <li><a href="<?= $pasta ?>cargo&spp=index"><i class="fa fa-circle-o"></i>
                     <span>Cargo</span></a></li>

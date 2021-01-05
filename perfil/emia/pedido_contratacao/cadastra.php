@@ -2,13 +2,14 @@
 
 $con = bancoMysqli();
 
-$idEc = $_SESSION['idPedido'];
+$idEc = $_POST['idDados'];
 
 $sql = "SELECT pf.nome,
 		       ec.ano,
                l.local,
                c.cargo,
                v.ano AS 'vigencia',
+               v.descricao,
                v.id,
                ec.cronograma,
                ec.observacao,
@@ -21,8 +22,8 @@ $sql = "SELECT pf.nome,
         INNER JOIN locais AS l ON l.id = ec.local_id
         INNER JOIN emia_cargos AS c ON c.id = ec.emia_cargo_id
         INNER JOIN emia_vigencias AS v ON v.id = ec.emia_vigencia_id
-        INNER JOIN usuarios AS f ON ec.fiscal_id = f.id
-		INNER JOIN usuarios AS s ON ec.suplente_id = s.id
+        LEFT JOIN usuarios AS f ON ec.fiscal_id = f.id
+		LEFT JOIN usuarios AS s ON ec.suplente_id = s.id
         WHERE ec.publicado = 1 AND ec.id = '$idEc'";
 $ec = $con->query($sql)->fetch_array();
 
@@ -51,12 +52,12 @@ $valor = dinheiroParaBr($valor);
                         <div class="col-md-6">
                             <label for="pf">Pessoa Física: *</label>
                             <input type="hidden" name="pf" id="pf" value="<?=$ec['pessoa_fisica_id']?>">
-                            <input type="text" value="<?=$ec['nome']?>"disabled class="form-control">
+                            <input type="text" value="<?=$ec['nome']?>" class="form-control">
                         </div>
 
                         <div class="col-md-6">
                             <label for="ano">Ano: *</label>
-                            <input name="ano" id="ano" type="number" required class="form-control"
+                            <input name="ano" id="ano" type="number" class="form-control"
                                    value="<?= $ec['ano'] ?>" disabled>
                         </div>
                     </div>
@@ -72,15 +73,15 @@ $valor = dinheiroParaBr($valor);
 
                         <div class="col-md-4">
                             <label for="cargo">Cargo: *</label>
-                            <select name="cargo" id="cargo" class="form-control" required disabled>
+                            <select name="cargo" id="cargo" class="form-control" disabled>
                                 <option><?= $ec['cargo'] ?></option>
                             </select>
                         </div>
 
                         <div class="col-md-4">
                             <label for="vigencia">Vigência: *</label>
-                            <select name="vigencia" id="vigencia" class="form-control" required disabled>
-                                <option><?= $ec['vigencia'] ?></option>
+                            <select name="vigencia" id="vigencia" class="form-control" disabled>
+                                <option><?= $ec['vigencia'] . " (" . $ec['descricao'] . ")" ?></option>
                             </select>
                         </div>
                     </div>
@@ -90,7 +91,7 @@ $valor = dinheiroParaBr($valor);
                         <div class="col-md-12">
                             <label for="cronograma">Cronograma: </label>
                             <textarea name="cronograma" id="cronograma" rows="3" type="text" class="form-control"
-                                      disabled><?= $ec['cronograma'] ?></textarea>
+                                      disabled><?= checaCampo($ec['cronograma']) ?></textarea>
                         </div>
                     </div>
                     <br>
@@ -99,7 +100,7 @@ $valor = dinheiroParaBr($valor);
                         <div class="col-md-12">
                             <label for="observacao">Observação: </label>
                             <textarea name="observacao" id="observacao" rows="3" type="text" class="form-control"
-                                      disabled><?= $ec['observacao'] ?></textarea>
+                                      disabled><?= checaCampo($ec['observacao']) ?></textarea>
                         </div>
                     </div>
                     <br>
@@ -108,14 +109,14 @@ $valor = dinheiroParaBr($valor);
                         <div class="col-md-6">
                             <label for="fiscal">Fiscal: </label>
                             <select name="fiscal" id="fiscal" class="form-control" disabled>
-                                <option><?= $ec['fiscal'] ?></option>
+                                <option><?= checaCampo($ec['fiscal']) ?></option>
                             </select>
                         </div>
 
                         <div class="col-md-6">
                             <label for="suplente">Suplente: </label>
                             <select name="suplente" id="suplente" class="form-control" disabled>
-                                <option><?= $ec['suplente'] ?></option>
+                                <option><?= checaCampo($ec['suplente']) ?></option>
                             </select>
                         </div>
                     </div>
@@ -146,23 +147,31 @@ $valor = dinheiroParaBr($valor);
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-4">
                                 <label for="dataKit">Data kit pagamento:</label>
                                 <input type="date" name="dataKit" class="form-control" id="datepicker10"
                                        placeholder="DD/MM/AAAA" required>
                             </div>
 
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-4">
                                 <label for="numeroProcesso">Número do Processo: *</label>
                                 <input type="text" name="numeroProcesso" id="numProcesso" class="form-control"
                                        data-mask="9999.9999/9999999-9" minlength="19" required>
                             </div>
+
+                            <div class="form-group col-md-4">
+                            <label for="processoMae">Número do Processo Mãe: *</label>
+                            <input type="text" name="processoMae" id="processoMae" required class="form-control"
+                                   data-mask="9999.9999/9999999-9" minlength="19">
+                        </div>
                         </div>
 
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="forma_pagamento">Forma de pagamento: </label>
                                 <textarea id="forma_pagamento" name="forma_pagamento" class="form-control"
+                                          readonly
+                                          placeholder="A FORMA DE PAGAMENTO É PREENCHIDA AUTOMATICAMENTE APÓS A CRIAÇÃO DO PEDIDO/EDIÇÃO DAS PARCELAS"
                                           rows="8"></textarea>
                             </div>
 
@@ -184,7 +193,7 @@ $valor = dinheiroParaBr($valor);
 
 
                 <div class="box-footer">
-                    <input type="hidden" name="idEc" value="<?= $idEc ?>" id="idPc">
+                    <input type="hidden" name="idEc" value="<?= $idEc ?>">
                     <button type="submit" name="cadastra" id="cadastra" class="btn btn-primary pull-right">
                         Cadastrar
                     </button>

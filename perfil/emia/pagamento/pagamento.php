@@ -7,7 +7,7 @@ $pedido = $con->query($sqlPedido)->fetch_array();
 $ec = recuperaDados('emia_contratacao', 'id', $pedido['origem_id']);
 $pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 
-$sql = "SELECT * FROM parcelas where pedido_id = '$idPedido'";
+$sql = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1";
 $query = mysqli_query($con, $sql);
 
 $idLocal = $ec['local_id'];
@@ -43,29 +43,32 @@ $link_contabilidade = $http . "rlt_contabilidade_emia.php";
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="protocolo">Protocolo</label>
+                                    <label for="protocolo">Protocolo:</label>
                                     <input type="text" name="protocolo" class="form-control" value="<?= $ec['protocolo'] ?>"
                                            disabled>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="numProcesso">Número do processo</label>
+                                    <label for="numProcesso">Número do Processo:</label>
                                     <input type="text" name="numProcesso" class="form-control" value="<?= $pedido['numero_processo'] ?>"
                                            disabled>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="local">Local</label>
+                                    <label for="local">Local:</label>
                                     <input type="text" name="local" class="form-control" value="<?= $local['local'] ?>" disabled>
                                 </div>
                             </div>
                         </div>
-                        <div class="box-footer">
-                            <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button">
-                                <button type="button" class="btn btn-primary center-block">Gerar FACC</button>
-                            </a>
-                        </div>
                     </form>
+
+                        <div class="box-footer">
+                            <form action="<?= $link_facc ?>" method="POST" target="_blank">
+                                <input type="hidden" name="idPf" value="<?=$idPf?>">
+                                <button type="submit" class="btn btn-primary center-block">Gerar FACC</button>
+                            </form>
+                        </div>
+
 
                     <table id="tblParcela" class="table table-bordered table-striped">
                         <thead>

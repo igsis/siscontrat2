@@ -73,14 +73,10 @@ $num_arrow = mysqli_num_rows($query);
                                             </form>
                                         </td>
                                         <td>
-                                            <form method='POST' id='formExcliuir'>
-                                                <input type="hidden" name='idTerritorio' id="idTerritorio"
-                                                       value="<?= $territorio['id'] ?>">
-                                                <button type="button" class="btn btn-danger btn-block" id="excluiTerritorio"
-                                                        data-toggle="modal" data-target="#exclusao" name="excluiTerritorio"
-                                                        data-id="<?= $territorio['id'] ?>"><span
-                                                            class='glyphicon glyphicon-trash'></span></button>
-                                            </form>
+                                            <button type="button" class="btn btn-danger btn-block" id="excluiTerritorio"
+                                                    data-toggle="modal" data-target="#exclusao" name="excluiTerritorio"
+                                                    data-id="<?= $territorio['id'] ?>"><span
+                                                        class='glyphicon glyphicon-trash'></span></button>
                                         </td>
                                     </tr>
                                     <?php
@@ -116,7 +112,6 @@ $num_arrow = mysqli_num_rows($query);
                     <div class="modal-footer">
                         <form action="?perfil=formacao&p=administrativo&sp=territorio&spp=index" method="post">
                             <input type="hidden" name="idTerritorio" id="idTerritorio" value="">
-                            <input type="hidden" name="apagar" id="apagar">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                             </button>
                             <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Excluir">

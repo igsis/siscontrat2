@@ -11,10 +11,9 @@ $sqlAgendaoNovo = "SELECT
 		a.nome_evento AS 'nome',
         a.data_envio AS 'data_envio',
         env.visualizado AS 'visualizado'
-		from agendoes AS a
-        JOIN agendao_ocorrencias AS ao ON ao.id = a.id
+		FROM agendoes AS a
         INNER JOIN producao_agendoes AS env ON env.agendao_id = a.id
-        WHERE a.publicado = 1 AND env.visualizado = 0 AND evento_status_id = 3";
+        WHERE a.publicado = 1 AND env.visualizado = 0 AND a.evento_status_id = 3";
 $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
 ?>
 
@@ -71,8 +70,9 @@ $queryAgendaoNovo = mysqli_query($con, $sqlAgendaoNovo);
 
                                 <?php
                                 echo "<td>" . $agendaoNovo['nome'] . "</td>";
-                                echo "<td>" . $local . "</td>";
-                                echo "<td>" . $espaco . "</td>";
+                                echo "<td>" . $local . "</td>"; ?>
+                                <td> <?= $espaco == "" ? "Não possuí" : $espaco ?></td>
+                                <?php
                                 echo "<td>" . retornaPeriodoNovo($agendaoNovo['id'], 'agendao_ocorrencias') . "</td>";
                                 echo "<td>" . exibirDataBr($agendaoNovo['data_envio']) . "</td>";
                                 echo "<td>

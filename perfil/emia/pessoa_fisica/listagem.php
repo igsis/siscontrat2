@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$sql = "SELECT id, nome, cpf, data_nascimento, email FROM pessoa_fisicas";
+$sql = "SELECT id, nome, cpf, passaporte,data_nascimento, email FROM pessoa_fisicas";
 $query = mysqli_query($con, $sql);
 
 ?>
@@ -23,37 +23,60 @@ $query = mysqli_query($con, $sql);
                     <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>CPF</th>
+                        <th>CPF/Passaporte</th>
                         <th>Data de Nascimento</th>
                         <th>Email</th>
-                        <th>Editar</th>
+                        <th width="10%">Demais Anexos</th>
+                        <th width="5%">Editar</th>
                     </tr>
                     </thead>
+                    <tbody>
                     <?php
-                    echo "<tbody>";
                     while ($dados = mysqli_fetch_array($query)) {
-                        echo "<tr>";
-                        echo "<td>" . $dados['nome'] . "</td>";
-                        echo "<td>" . $dados['cpf'] . "</td>";
-                        echo "<td>" . exibirDataBr($dados['data_nascimento']) . "</td>";
-                        echo "<td>" . $dados['email'] . "</td>";
-                        echo "<td>
-                        <form action='?perfil=emia&p=pessoa_fisica&sp=edita' method='POST'>
-                        <input type='hidden' name='idPf' id='idPf' value='" . $dados['id'] . "'>
-                        <button type='submit' name='carregar' id='carregar'  class='btn btn-block btn-primary'><span class='glyphicon glyphicon-edit'></span></button>
-                        </form>
-                        </td>";
-                        echo "</tr>";
+                    if ($dados['passaporte'] != NULL) {
+                        $doc = $dados['passaporte'];
+                    } else {
+                        $doc = $dados['cpf'];
                     }
-                    echo "</tbody>";
+
+                    if($dados['data_nascimento'] == "0000-00-00"){
+                        $dataNascimento = "Não cadastrado";
+                    }else{
+                        $dataNascimento = exibirDataBr($dados['data_nascimento']);
+                    }
+
                     ?>
+
+                    <tr>
+                        <td> <?= $dados['nome'] ?> </td>
+                        <td> <?= $doc == NULL ? "Não cadastrado" : $doc ?> </td>
+                        <td> <?= $dataNascimento ?> </td>
+                        <td> <?= $dados['email'] ?> </td>
+                        <td>
+                            <form action='?perfil=emia&p=pessoa_fisica&sp=demais_anexos' method='POST'>
+                                <input type='hidden' name='idPf' id='idPf' value=" <?= $dados['id'] ?> ">
+                                <button type='submit' class='btn btn-block btn-info'><span
+                                            class='glyphicon glyphicon-list-alt'></span></button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action='?perfil=emia&p=pessoa_fisica&sp=edita' method='POST'>
+                                <input type='hidden' name='idPf' id='idPf' value="<?= $dados['id'] ?>">
+                                <button type='submit' name='carregar' id='carregar' class='btn btn-block btn-primary'>
+                                    <span class='glyphicon glyphicon-edit'></span></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <?php } ?>
+                    </tbody>
                     <tfoot>
                     <tr>
                         <th>Nome</th>
-                        <th>CPF</th>
+                        <th>CPF/Passaporte</th>
                         <th>Data de Nascimento</th>
                         <th>Email</th>
-                        <th>Editar</th>
+                        <th width="10%">Demais Anexos</th>
+                        <th width="5%">Editar</th>
                     </tr>
                     </tfoot>
                 </table>
@@ -62,7 +85,8 @@ $query = mysqli_query($con, $sql);
                         <button type="button" class="btn btn-default">Voltar</button>
                     </a>
                     <a href="?perfil=emia&p=pessoa_fisica&sp=pesquisa">
-                        <button type="button" class="btn btn-primary pull-right"> Cadastrar uma nova pessoa física</button>
+                        <button type="button" class="btn btn-primary pull-right"> Cadastrar uma nova pessoa física
+                        </button>
                     </a>
                 </div>
             </div>

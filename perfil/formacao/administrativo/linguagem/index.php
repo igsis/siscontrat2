@@ -73,14 +73,10 @@ $num_arrow = mysqli_num_rows($query);
                                             </form>
                                         </td>
                                         <td>
-                                            <form method='POST' id='formExcliuir'>
-                                                <input type="hidden" name='idLinguagem' id="idLinguagem"
-                                                       value="<?= $linguagem['id'] ?>">
-                                                <button type="button" class="btn btn-danger btn-block" id="excluiLinguagem"
-                                                        data-toggle="modal" data-target="#exclusao" name="excluiLinguagem"
-                                                        data-id="<?= $linguagem['id'] ?>"><span
-                                                            class='glyphicon glyphicon-trash'></span></button>
-                                            </form>
+                                            <button type="button" class="btn btn-danger btn-block" id="excluiLinguagem"
+                                                    data-toggle="modal" data-target="#exclusao" name="excluiLinguagem"
+                                                    data-id="<?= $linguagem['id'] ?>"><span
+                                                        class='glyphicon glyphicon-trash'></span></button>
                                         </td>
                                     </tr>
                                     <?php
@@ -111,12 +107,11 @@ $num_arrow = mysqli_num_rows($query);
                         <h4 class="modal-title">Confirmação de Exclusão</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Tem certeza que deseja excluir este linguagem?</p>
+                        <p>Tem certeza que deseja excluir esta linguagem?</p>
                     </div>
                     <div class="modal-footer">
                         <form action="?perfil=formacao&p=administrativo&sp=linguagem&spp=index" method="post">
                             <input type="hidden" name="idLinguagem" id="idLinguagem" value="">
-                            <input type="hidden" name="apagar" id="apagar">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                             </button>
                             <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Excluir">

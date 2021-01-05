@@ -1,6 +1,17 @@
 <?php
 $con = bancoMysqli();
 
+if(isset($_POST['excluir'])){
+    $idPedido = $_POST['idPedido'];
+    $apagarPedido = $con->query("UPDATE pedidos SET publicado = 0 WHERE id = $idPedido AND origem_tipo_id = 2");
+
+    if($apagarPedido){
+        $mensagem = mensagem("success", "Pedido excluído com sucesso!");
+    }else{
+        $mensagem = mensagem("danger", "Erro ao excluir pedido");
+    }
+}
+
 $sql = "SELECT p.id, p.origem_id,fc.protocolo, fc.ano, p.numero_processo,fc.num_processo_pagto, pf.nome, v.verba, fs.status, fc.form_status_id 
             FROM pedidos p 
             INNER JOIN formacao_contratacoes fc ON fc.id = p.origem_id 
@@ -43,6 +54,7 @@ $num_arrow = mysqli_num_rows($query);
                                 <th>Ano</th>
                                 <th>Verba</th>
                                 <th>Status</th>
+                                <th>Apagar</th>
                             </tr>
                             </thead>
 
@@ -92,6 +104,9 @@ $num_arrow = mysqli_num_rows($query);
                                         <td><?= $row['ano'] ?></td>
                                         <td><?= $row['verba'] ?></td>
                                         <td><?= $row['status'] ?></td>
+                                        <td>
+                                            <button type="button" data-toggle="modal" data-target="#modalExclusao" data-id="<?=$row['id']?>" class='btn btn-block btn-danger'><span class='glyphicon glyphicon-trash'></span></button>
+                                        </td>
                                     </tr>
                                     <?php
                                 }
@@ -108,6 +123,7 @@ $num_arrow = mysqli_num_rows($query);
                                 <th>Ano</th>
                                 <th>Verba</th>
                                 <th>Status</th>
+                                <th>Apagar</th>
                             </tr>
                             </tfoot>
                         </table>
@@ -116,7 +132,7 @@ $num_arrow = mysqli_num_rows($query);
             </div>
         </div>
         <!-- MODAL -->
-        <div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
+        <div id="modalExclusao" class="modal modal-danger modal fade in" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
                 <div class="modal-content">
@@ -125,12 +141,11 @@ $num_arrow = mysqli_num_rows($query);
                         <h4 class="modal-title">Confirmação de Exclusão</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Tem certeza que deseja excluir este cargo?</p>
+                        <p>Tem certeza que deseja excluir este pedido?</p>
                     </div>
                     <div class="modal-footer">
-                        <form action="?perfil=formacao&p=administrativo&sp=cargo&spp=index" method="post">
-                            <input type="hidden" name="idCargo" id="idCargo" value="">
-                            <input type="hidden" name="apagar" id="apagar">
+                        <form action="?perfil=formacao&p=pedido_contratacao&sp=listagem" method="post">
+                            <input type="hidden" name="idPedido" id="idPedido" value="">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
                             </button>
                             <input class="btn btn-danger btn-outline" type="submit" name="excluir" value="Excluir">
@@ -145,10 +160,10 @@ $num_arrow = mysqli_num_rows($query);
 </div>
 
 <script type="text/javascript">
-    $('#exclusao').on('show.bs.modal', function (e) {
+    $('#modalExclusao').on('show.bs.modal', function (e) {
         let id = $(e.relatedTarget).attr('data-id');
 
-        $(this).find('#idCargo').attr('value', `${id}`);
+        $(this).find('#idPedido').attr('value', `${id}`);
     })
 </script>
 

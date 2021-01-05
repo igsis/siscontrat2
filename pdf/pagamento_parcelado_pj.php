@@ -48,7 +48,7 @@ $pjEstadoCivil = $pj["EstadoCivil"];
 $pjNacionalidade = $pj["Nacionalidade"];
 $pjRG = $pj["RG"];
 $pjCPF = $pj["CPF"];
-$pjCCM = $pj["CCM"];
+$pjCCM = $pj["CCM"] == null ? "Não cadastrado" : $pj["CCM"];
 $pjOMB = $pj["OMB"];
 $pjDRT = $pj["DRT"];
 $pjFuncao = $pj["Funcao"];

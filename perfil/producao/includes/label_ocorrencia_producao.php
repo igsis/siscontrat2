@@ -14,6 +14,7 @@
                 foreach ($atracoes as $atracao) {
                     $sqlOcorrencia = "SELECT * FROM ocorrencias WHERE atracao_id = '" . $atracao['id'] . "' AND publicado = '1' AND tipo_ocorrencia_id = '1'";
                     $ocorrencias = $con->query($sqlOcorrencia);
+                    $numOco = $ocorrencias->num_rows;
                     ?>
                     <div class="panel box box-primary">
                         <div class="box-header with-border">
@@ -29,15 +30,25 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <?php
-                                        if ($ocorrencias->num_rows > 0) {
+                                        if ($numOco > 0) {
                                             $i = 1;
                                             foreach ($ocorrencias as $ocorrencia) {
                                                 $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
                                                 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
                                                 $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
-                                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'] ?? NULL;
                                                 $subPrefeitura = recuperaDados('subprefeituras', 'id', $ocorrencia['subprefeitura_id']);
                                                 $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
+
+                                                //testa e se necessário retorna as datas de exceção
+                                                $datas = "";
+                                                $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $ocorrencia['id']);
+                                                if ($testaExcecao->num_rows > 0) {
+                                                    while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
+                                                        $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
+                                                    }
+                                                    $datas = substr($datas, 0, -2);
+                                                }
                                                 ?>
                                                 <tr>
                                                     <th class="text-center bg-primary" colspan="2">Ocorrência
@@ -52,8 +63,16 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Data de Encerramento:</th>
-                                                        <td><?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada" ?></td>
+                                                        <td><?= exibirDataBr($ocorrencia['data_fim']) == null ? "Não é Temporada" : exibirDataBr($ocorrencia['data_fim']) ?></td>
                                                     </tr>
+
+                                                    <?php
+                                                    if ($datas != ""): ?>
+                                                        <tr>
+                                                            <th width="30%">Data de Exceção:</th>
+                                                            <td><?= $datas ?></td>
+                                                        </tr>
+                                                    <?php endif; ?>
 
                                                     <tr>
                                                         <th width="30%">Hora de Início:</th>
@@ -81,7 +100,7 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Valor do Ingresso:</th>
-                                                        <td><?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
+                                                        <td><?= "R$" . dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -127,7 +146,7 @@
                                                 <?php } ?>
                                                 <tr>
                                                     <th width="30%">Observação:</th>
-                                                    <td><?= $ocorrencia['observacao'] ?></td>
+                                                    <td><?= checaCampo($ocorrencia['observacao']) ?></td>
                                                 </tr>
                                                 <?php
                                                 $i++;
@@ -154,9 +173,13 @@
                     </div>
                 <?php }
             } else {
-                foreach ($filmes as $filme){
-                    $idFilme = $filme['idFilmeEvento'];
-                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1 AND oco.tipo_ocorrencia_id = 2 AND oco.atracao_id = '$idFilme'";
+                foreach ($filmes as $filme) {
+                    $idFilme = $filme['id'];
+                    $idFilmeEvento = $filme['idFilmeEvento'];
+                    $sqlOcorrencia = "SELECT * FROM ocorrencias oco 
+                                      INNER JOIN filme_eventos fe ON fe.evento_id = oco.origem_ocorrencia_id 
+                                      WHERE fe.filme_id = '$idFilme' AND oco.publicado = 1 AND oco.tipo_ocorrencia_id = 2 AND fe.evento_id = $idEvento AND oco.atracao_id = $idFilmeEvento";
+
                     $ocorrencias = $con->query($sqlOcorrencia);
                     ?>
                     <div class="panel box box-primary">
@@ -179,9 +202,21 @@
                                                 $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
                                                 $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
                                                 $local = recuperaDados('locais', 'id', $ocorrencia['local_id'])['local'];
-                                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                                if ($ocorrencia['espaco_id']):
+                                                    $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
+                                                endif;
                                                 $subPrefeitura = recuperaDados('subprefeituras', 'id', $ocorrencia['subprefeitura_id']);
                                                 $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
+
+                                                //testa e se necessário retorna as datas de exceção
+                                                $datas = "";
+                                                $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $ocorrencia['id']);
+                                                if ($testaExcecao->num_rows > 0) {
+                                                    while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
+                                                        $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
+                                                    }
+                                                    $datas = substr($datas, 0, -2);
+                                                }
                                                 ?>
                                                 <tr>
                                                     <th class="text-center bg-primary" colspan="2">Ocorrência
@@ -196,8 +231,16 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Data de Encerramento:</th>
-                                                        <td><?= $ocorrencia['data_fim'] == null ? exibirDataBr($ocorrencia['data_fim']) : "Não é Temporada" ?></td>
+                                                        <td><?= $ocorrencia['data_fim'] == "0000-00-00" ? "Não é Temporada" : exibirDataBr($ocorrencia['data_fim']) ?></td>
                                                     </tr>
+
+                                                    <?php
+                                                    if ($datas != ""): ?>
+                                                        <tr>
+                                                            <th width="30%">Data de Exceção:</th>
+                                                            <td><?= $datas ?></td>
+                                                        </tr>
+                                                    <?php endif; ?>
 
                                                     <tr>
                                                         <th width="30%">Hora de Início:</th>
@@ -225,7 +268,7 @@
                                                     ?>
                                                     <tr>
                                                         <th width="30%">Valor do Ingresso:</th>
-                                                        <td><?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
+                                                        <td><?= "R$" . dinheiroParaBr($ocorrencia['valor_ingresso']) ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -271,7 +314,7 @@
                                                 <?php } ?>
                                                 <tr>
                                                     <th width="30%">Observação:</th>
-                                                    <td><?= $ocorrencia['observacao'] ?></td>
+                                                    <td><?= checaCampo($ocorrencia['observacao']) ?></td>
                                                 </tr>
                                                 <?php
                                                 $i++;

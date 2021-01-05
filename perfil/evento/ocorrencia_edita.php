@@ -6,6 +6,7 @@ $idOrigem = $_SESSION['idOrigem'];
 
 $evento = recuperaDados('eventos', 'id', $idEvento);
 $url = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_locais_espacos.php';
+$urlAjax = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_ajax_data_excessao.php';
 
 include "includes/menu_interno.php";
 
@@ -105,7 +106,6 @@ if (isset($_POST['cadastra'])) {
         //gravarLog($sql);
         echo $sql;
     }
-
 }
 
 if (isset($_POST['edita'])) {
@@ -135,7 +135,7 @@ if (isset($_POST['edita'])) {
                             observacao = '$observacao'
                             WHERE id = '$idOcorrencia'";
 
-    If (mysqli_query($con, $sql)) {
+    if (mysqli_query($con, $sql)) {
         $mensagem = mensagem("success", "Gravado com sucesso!");
         //gravarLog($sql);
     } else {
@@ -145,8 +145,15 @@ if (isset($_POST['edita'])) {
 }
 
 if (isset($_POST['carregar'])) {
+    if (isset($_POST['idFilme'])) {
+        $idFilme = $_POST['idFilme'];
+    }
     $idOcorrencia = $_POST['idOcorrencia'];
 }
+
+if (isset($_POST['idFilme'])):
+    $idFilme = $_POST['idFilme'];
+endif;
 
 $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 ?>
@@ -220,7 +227,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
         validaDiaSemana();
     }
+
     $(document).ready(comparaData)
+
     function comparaData() {
         var isMsgData = $('#msgEscondeData');
         isMsgData.hide();
@@ -304,37 +313,44 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <div class="form-group col-md-6">
                                     <label>
                                         <input type="checkbox" name="domingo" id="diasemana07"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['domingo']) ?>> Domingo
+                                               value="1"
+                                               class="semana" <?php checarOcorrencia($ocorrencia['domingo']) ?>> Domingo
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="segunda" id="diasemana01"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['segunda']) ?>> Segunda
+                                               value="1"
+                                               class="semana" <?php checarOcorrencia($ocorrencia['segunda']) ?>> Segunda
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="terca" id="diasemana02"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['terca']) ?>> Terça
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['terca']) ?>>
+                                        Terça
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="quarta" id="diasemana03"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['quarta']) ?>> Quarta
+                                               value="1"
+                                               class="semana" <?php checarOcorrencia($ocorrencia['quarta']) ?>> Quarta
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="quinta" id="diasemana04"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['quinta']) ?>> Quinta
+                                               value="1"
+                                               class="semana" <?php checarOcorrencia($ocorrencia['quinta']) ?>> Quinta
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="sexta" id="diasemana05"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['sexta']) ?>> Sexta
+                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['sexta']) ?>>
+                                        Sexta
                                         &nbsp;
                                     </label>
                                     <label>
                                         <input type="checkbox" name="sabado" id="diasemana06"
-                                               value="1" class="semana" <?php checarOcorrencia($ocorrencia['sabado']) ?>> Sábado
+                                               value="1"
+                                               class="semana" <?php checarOcorrencia($ocorrencia['sabado']) ?>> Sábado
                                         &nbsp;
                                     </label>
                                 </div>
@@ -356,11 +372,20 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </label>
                                 <label>
                                     <input type="checkbox" name="audiodescricao" id="audiodescricao"
-                                           value="1" <?= $ocorrencia['audiodescricao'] == 1 ? "checked" : NULL ?>> Audiodescrição
+                                           value="1" <?= $ocorrencia['audiodescricao'] == 1 ? "checked" : NULL ?>>
+                                    Audiodescrição
                                     &nbsp;
                                 </label>
                             </div>
-
+                            <?php if (isset($ocorrencia['data_fim']) && $ocorrencia['data_fim'] != "0000-00-00"): ?>
+                                <div class="row" style="margin-bottom: 15px">
+                                    <div class="col-md-12">
+                                        <button id="dtExc" class="btn btn-info" type="button">
+                                            Data de exceção
+                                        </button>
+                                    </div>
+                                </div>
+                            <?php endif ?>
                             <div class="row" id="msgEsconde" style="display: none;">
                                 <div class="form-group col-md-6">
                                     <span style="color: red;">Selecione ao menos um dia da semana!</span>
@@ -375,63 +400,64 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <?php
-                                if($evento['tipo_evento_id'] == 2){
-                                    $filmeEvento = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $idEvento)->fetch_array();
-                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $filmeEvento['filme_id'])->fetch_array();
+                                if ($evento['tipo_evento_id'] == 2 && isset($idFilme)) {
+                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = $idFilme")->fetch_array();
+                                    $readonly = "readonly";
                                     ?>
                                     <script type="text/javascript">
-                                                                    
-                                     $('#horaInicio').on('change', function() {
-                                            $('#horaFim').attr("readonly",true);
-                                            var horainicio = $('#horaInicio').val();                                      
+
+                                        $('#horaInicio').on('change', function () {
+                                            var horainicio = $('#horaInicio').val();
                                             var hora = parseInt(horainicio.split(':', 1));
                                             var minuto = parseInt(horainicio[3] + horainicio[4]);
                                             var duracao = <?=$filme['duracao']?>;
-                                            while(duracao >= 60){
+                                            while (duracao >= 60) {
                                                 duracao -= 60;
                                                 hora += 1;
                                             }
                                             var minutoFinal = minuto + duracao;
-                                            if(minutoFinal >= 60){
-                                               minutoFinal -= 60;
-                                               hora += 1;
+                                            if (minutoFinal >= 60) {
+                                                minutoFinal -= 60;
+                                                hora += 1;
                                             }
-                                            if(minutoFinal == 0 && minutoFinal != 00){
+                                            if (minutoFinal == 0 && minutoFinal != "00") {
                                                 minutoFinal = minutoFinal + "0";
                                             }
-                                            if(minutoFinal < 10){
+                                            if (minutoFinal < 10) {
                                                 minutoFinal = "0" + minutoFinal;
                                             }
-                                            if(hora == 0 && minutoFinal != 00){
+                                            if (hora == 0 && minutoFinal != "00") {
                                                 hora = hora + "0";
                                             }
-                                            if(hora < 10){
+                                            if (hora < 10) {
                                                 hora = "0" + hora;
                                             }
-                                            if(hora == 000){
+                                            if (hora == "00") {
+                                                hora = "00";
+                                            }
+                                            if (hora == "000") {
                                                 hora = "00";
                                             }
 
                                             var resultado = hora + ":" + minutoFinal + ":00";
-                    
-                                            
+
+
                                             $('#horaFim').val(resultado);
                                             $('#horaFim').attr("value", resultado);
-                                                               
-                                                               
-                    
-                                            
-                                    });
-                                    </script>
-                                <?php }else{
 
+
+                                        });
+                                    </script>
+                                <?php } else {
+                                    $readonly = "";
                                 }
-                            ?>
+                                ?>
 
                                 <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
                                     <input type="time" name="horaFim" class="form-control" id="horaFim" required
-                                           value="<?= $ocorrencia['horario_fim'] ?>" placeholder="hh:mm"/>
+                                           value="<?= $ocorrencia['horario_fim'] ?>"
+                                           placeholder="hh:mm" <?= $readonly ?>/>
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -448,8 +474,8 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                     <label for="valor_ingresso">Valor Ingresso*</label> <br>
                                     <input type="text" name="valor_ingresso" class="form-control"
                                            value="<?= dinheiroParaBr($ocorrencia['valor_ingresso']) ?>" required
-                                           id="valor_ingresso"
-                                           placeholder="Em reais" onkeypress="return(moeda(this, '.', ',', event))"/>
+                                           id="valor_ingresso" maxlength="5"
+                                           placeholder="Em reais">
                                 </div>
                             </div>
 
@@ -461,7 +487,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label for="instituicao">Instituição *</label>
+                                    <label for="instituicao">Instituição * </label>
                                     <select class="form-control" name="instituicao" id="instituicao" required>
                                         <option value="">Selecione uma opção...</option>
 
@@ -472,6 +498,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <div class="form-group col-md-4">
+                                    <a class="link-adc" target="_blank" href="?perfil=evento&p=adicionar_local">
+                                        <button type="button" class="fa fa-plus btn-success pull-right"></button>
+                                    </a>
                                     <label for="local">Local *</label>
                                     <select class="form-control" id="local" name="local" required>
                                         <!-- Populando pelo js -->
@@ -479,6 +508,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 </div>
 
                                 <div class="form-group col-md-4">
+                                    <a class="link-adc" target="_blank" href="?perfil=evento&p=adicionar_espaco">
+                                        <button type="button" class="fa fa-plus btn-success pull-right"></button>
+                                    </a>
                                     <label for="espaco">Espaço *</label>
                                     <select class="form-control" id="espaco" name="espaco">
                                         <!-- Populando pelo js -->
@@ -519,6 +551,7 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
                                 <button type="button" class="btn btn-default" name="voltar">Voltar</button>
                             </a>
                             <input type="hidden" name="idOcorrencia" value="<?= $idOcorrencia ?>">
+                            <?= isset($idFilme) ? "<input type='hidden' name='idFilme' value='{$idFilme}'>" : '' ?>
                             <button type="submit" name="edita" id="edita" class="btn btn-info pull-right">Gravar
                             </button>
                         </div>
@@ -669,121 +702,165 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     </div>
 </div>
 
+<div id="ModalDtExec" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Datas de exceção</h4>
+            </div>
+            <form>
+                <div class="modal-body" id="body-datas">
+                    <div class="row" style="margin-bottom: 15px;">
+                        <div class="col-md-12">
+                            <button type="button" id="btData" class="btn btn-success">Adicionar Data</button>
+                        </div>
+                    </div>
+                    <div class="mensagemData">
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <p>
+                                <i class="icon fa fa-ban"></i> Data de exceção deve ser maior que data inicio e menor que a data de encerramento!
+                            </p>
+                        </div>
+                    </div>
+                    <div id="datas">
 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <button type="button" id="saveData" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
 
-    function insti_local() {
-        const urlModal = `<?=$url?>`;
+    var links_adc = document.querySelectorAll(".link-adc")
 
-        var idInstituicaoModal = $('#instituicaoModal').val();
+    let datas = document.querySelector('#datas');
+    $(document).ready(function () {
+        $('#valor_ingresso').mask('00,00', {reverse: true})
+    });
 
-        $.post(urlModal, {
-            instituicao_id: idInstituicaoModal,
-        })
-            .done(function (data) {
-                $('#SelectLocal option').remove();
-                $('#SelectLocal').append('<option value="">Selecione uma opção...</option>');
 
-                for (let local of data) {
-                    $('#SelectLocal').append(`<option value='${local.id}'>${local.local}</option>`).focus();
-                }
-            })
-            .fail(function () {
-                swal("danger", "Erro ao gravar");
-            });
+    //function insti_local() {
+    //    const urlModal = `<?//=$url?>//`;
+    //
+    //    var idInstituicaoModal = $('#instituicaoModal').val();
+    //
+    //    $.post(urlModal, {
+    //        instituicao_id: idInstituicaoModal,
+    //    })
+    //        .done(function (data) {
+    //            $('#SelectLocal option').remove();
+    //            $('#SelectLocal').append('<option value="">Selecione uma opção...</option>');
+    //
+    //            for (let local of data) {
+    //                $('#SelectLocal').append(`<option value='${local.id}'>${local.local}</option>`).focus();
+    //            }
+    //        })
+    //        .fail(function () {
+    //            swal("danger", "Erro ao gravar");
+    //        });
+    //
+    //}
 
-    }
+    // function cadastraLocal() {
+    //     var instituicao = $("#instituicoes").val();
+    //     var local = $("input[name='localModal']").val();
+    //     var cep = $("input[name='cep']").val();
+    //     var rua = $("input[name='rua']").val();
+    //     var num = $("input[name='numero']").val();
+    //     var complemento = $("input[name='complemento']").val();
+    //     var bairro = $("input[name='bairro']").val();
+    //     var cidade = $("input[name='cidade']").val();
+    //     var estado = $("input[name='estado']").val();
+    //     var zona = $("#zona").val();
+    //
+    //     $('#modaLocal').slideUp();
+    //
+    //     $.post('?perfil=evento&p=index', {
+    //         cadastraLocal: 1,
+    //         instituicao: instituicao,
+    //         local: local,
+    //         cep: cep,
+    //         rua: rua,
+    //         numero: num,
+    //         complemento: complemento,
+    //         bairro: bairro,
+    //         cidade: cidade,
+    //         estado: estado,
+    //         zona: zona
+    //     })
+    //         .done(function (data) {
+    //             let res = $(data).find('#resposta').text();
+    //
+    //             if (res == 0) {
+    //                 swal('Esse local já existe! Procure-o na lista novamente.', '', 'warning')
+    //                     .then(() => {
+    //                         $('#modaLocal').slideDown('slow');
+    //                     });
+    //             } else if (res == 1) {
+    //                 swal("Solicitação de novo local enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
+    //                     .then(() => {
+    //                         $('#modaLocal').modal('hide');
+    //                     });
+    //             } else {
+    //                 console.log(res);
+    //                 swal("Erro na solicitação! Tente novamente.", "", "danger")
+    //                     .then(() => {
+    //                         $('#modaLocal').slideDown('slow');
+    //                     });
+    //             }
+    //
+    //         })
+    //         .fail(function () {
+    //             swal("danger", "Erro ao gravar");
+    //         });
+    // }
 
-    function cadastraLocal() {
-        var instituicao = $("#instituicoes").val();
-        var local = $("input[name='localModal']").val();
-        var cep = $("input[name='cep']").val();
-        var rua = $("input[name='rua']").val();
-        var num = $("input[name='numero']").val();
-        var complemento = $("input[name='complemento']").val();
-        var bairro = $("input[name='bairro']").val();
-        var cidade = $("input[name='cidade']").val();
-        var estado = $("input[name='estado']").val();
-        var zona = $("#zona").val();
-
-        $('#modaLocal').slideUp();
-
-        $.post('?perfil=evento&p=index', {
-            cadastraLocal: 1,
-            instituicao: instituicao,
-            local: local,
-            cep: cep,
-            rua: rua,
-            numero: num,
-            complemento: complemento,
-            bairro: bairro,
-            cidade: cidade,
-            estado: estado,
-            zona: zona
-        })
-            .done(function (data) {
-                let res = $(data).find('#resposta').text();
-
-                if (res == 0) {
-                    swal('Esse local já existe! Procure-o na lista novamente.', '', 'warning')
-                        .then(() => {
-                            $('#modaLocal').slideDown('slow');
-                        });
-                } else if (res == 1) {
-                    swal("Solicitação de novo local enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
-                        .then(() => {
-                            $('#modaLocal').modal('hide');
-                        });
-                } else {
-                    console.log(res);
-                    swal("Erro na solicitação! Tente novamente.", "", "danger")
-                        .then(() => {
-                            $('#modaLocal').slideDown('slow');
-                        });
-                }
-
-            })
-            .fail(function () {
-                swal("danger", "Erro ao gravar");
-            });
-    }
-
-    function cadastraEspaco() {
-
-        var local = $("#SelectLocal").val();
-        var espaco = $("input[name='espaco']").val();
-
-        $('#modalEspaco').slideUp();
-
-        $.post('?perfil=evento&p=index', {
-            cadastraEspaco: 1,
-            espaco: espaco,
-            local: local
-        })
-            .done(function (data) {
-                let res = $(data).find('#resposta').text();
-
-                if (res == 0) {
-                    swal('Esse espaço já existe! Procure-o na lista novamente.', '', 'warning')
-                        .then(() => {
-                            $('#modalEspaco').slideDown('slow');
-                        });
-                } else if (res == 1) {
-                    swal("Solicitação de novo espaço enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
-                        .then(() => {
-                            $('#modalEspaco').modal('hide');
-                        });
-                } else {
-                    swal("Erro na solicitação! Tente novamente.", "", "error")
-                        .then(() => {
-                            $('#modalEspaco').slideDown('slow');
-                        });
-                }
-            })
-            .fail(function () {
-                swal("danger", "Erro ao gravar");
-            });
-    }
+    // function cadastraEspaco() {
+    //
+    //     var local = $("#SelectLocal").val();
+    //     var espaco = $("input[name='espaco']").val();
+    //
+    //     $('#modalEspaco').slideUp();
+    //
+    //     $.post('?perfil=evento&p=index', {
+    //         cadastraEspaco: 1,
+    //         espaco: espaco,
+    //         local: local
+    //     })
+    //         .done(function (data) {
+    //             let res = $(data).find('#resposta').text();
+    //
+    //             if (res == 0) {
+    //                 swal('Esse espaço já existe! Procure-o na lista novamente.', '', 'warning')
+    //                     .then(() => {
+    //                         $('#modalEspaco').slideDown('slow');
+    //                     });
+    //             } else if (res == 1) {
+    //                 swal("Solicitação de novo espaço enviada com sucesso!", "Após o administrador verificar sua solicitação, seja ela aprovada ou não você receberá uma notificação em seu e-mail.", "success")
+    //                     .then(() => {
+    //                         $('#modalEspaco').modal('hide');
+    //                     });
+    //             } else {
+    //                 swal("Erro na solicitação! Tente novamente.", "", "error")
+    //                     .then(() => {
+    //                         $('#modalEspaco').slideDown('slow');
+    //                     });
+    //             }
+    //         })
+    //         .fail(function () {
+    //             swal("danger", "Erro ao gravar");
+    //         });
+    // }
 
     let data_fim = document.querySelector("input[name='data_fim']");
 
@@ -801,7 +878,13 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     let instituicao = document.querySelector('#instituicao');
     let local_id = <?=$ocorrencia['local_id']?>;
 
+
     if (instituicao.value != '') {
+        if (instituicao.value == 6) {
+            hideOrShow(links_adc, "block")
+        } else {
+            hideOrShow(links_adc, "none")
+        }
         getLocais(instituicao.value, local_id)
     }
 
@@ -809,6 +892,11 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
         let idInstituicao = $('#instituicao option:checked').val();
         getLocais(idInstituicao, '')
         getEspacos('', '') // Se alterar o primeiro ele limpa o local e o espaço
+        if (idInstituicao != 6) {
+            hideOrShow(links_adc, "none");
+        } else {
+            hideOrShow(links_adc, "block")
+        }
 
     })
 
@@ -858,10 +946,10 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
 
     retiradaIngresso.addEventListener("change", () => {
         let valorIngressos = document.querySelector('#valor_ingresso');
-        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11){
+        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11 || retiradaIngresso.value == 1) {
             valorIngressos.value = '0,00';
             valorIngressos.readOnly = true;
-        }else {
+        } else {
             valorIngressos.readOnly = false;
         }
     });
@@ -995,10 +1083,9 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             }
         });
     }
-</script>
 
-<script>
     let msgHora = $('#msgEscondeHora');
+
     // msgHora.hide();
 
     function validaHora() {
@@ -1010,13 +1097,72 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
             horaFim = parseInt(horaFim.split(":")[0].toString() + horaFim.split(":")[1].toString());
 
             if (horaFim < horaInicio) {
-                msgHora.show();
-                $('#edita').attr("disabled", true);
+                if (horaFim != 1200) {
+                    msgHora.show();
+                    $('#edita').attr("disabled", true);
+                } else {
+                    msgHora.hide();
+                    $('#edita').attr("disabled", false);
+                }
             } else {
                 msgHora.hide();
                 $('#edita').attr("disabled", false);
             }
         }
+    }
+
+    function criarInputData(valor = 0) {
+        let row = document.createElement('div');
+        row.classList.add('row');
+        row.style.display = 'flex';
+        row.style.alignItems = 'end';
+        row.style.justifyContent = 'end';
+
+        let col8 = document.createElement('div');
+        col8.classList.add('col-md-10');
+
+        let col4 = document.createElement('div');
+        col4.classList.add('col-md-2');
+        col4.style.marginTop = '5%';
+
+        let remove = document.createElement('button');
+        remove.classList.add('btn');
+        remove.classList.add('btn-danger');
+        remove.classList.add('apData');
+        remove.setAttribute('type', 'button')
+        remove.setAttribute('onClick', 'removerLinha(this)');
+
+        let icone = document.createElement('i');
+        icone.classList.add('fa');
+        icone.classList.add('fa-fw');
+        icone.classList.add('fa-trash-o');
+
+        let label = document.createElement('label');
+        label.textContent = "Data:";
+
+        let input = document.createElement('input');
+        input.setAttribute('type', 'date');
+        input.setAttribute('onChange','validaData(this)')
+        input.classList.add('dataEx');
+        input.classList.add('form-control');
+        if (valor) {
+            input.value = valor;
+        }
+
+        remove.appendChild(icone);
+        col4.appendChild(remove);
+
+        col8.appendChild(label);
+        col8.appendChild(input);
+
+        row.appendChild(col8);
+        row.appendChild(col4);
+
+        datas = document.querySelector('#datas');
+
+        datas.appendChild(row);
+
+
     }
 
     function validaDiaSemana() {
@@ -1047,4 +1193,118 @@ $ocorrencia = recuperaDados('ocorrencias', 'id', $idOcorrencia);
     }
 
     var diaSemana = $('.semana').change(validaDiaSemana)
+
+    let btnDataE = document.querySelector('#btData');
+    let divDatas = document.querySelector('#datas');
+
+    btnDataE.addEventListener('click', criarInputData);
+
+    let saveDate = document.querySelector('#saveData');
+    saveDate.addEventListener("click", function (event) {
+        event.preventDefault();
+        let data = document.querySelectorAll('.dataEx');
+        let datas = [];
+        data.forEach(function (item) {
+            datas.push(item.value);
+        });
+        dados = {
+            id: <?= $idOcorrencia ?>,
+            datas: datas.length == 0 ? 0 : datas
+        };
+        $.ajax({
+            url: '<?= $urlAjax ?>',
+            type: 'POST',
+            data: dados,
+            async: true,
+            success: function (response) {
+                $('#ModalDtExec').modal('toggle');
+                Swal.fire({
+                    title: '<strong>Datas cadastradas com sucesso!</strong>',
+                    icon: 'success',
+                })
+            },
+            error: function (response) {
+                console.log("Deu erro");
+            }
+        });
+
+    });
+
+    $('#dtExc').click(function () {
+        let dados = {
+            idOcorrencia: <?= $idOcorrencia ?>,
+        };
+        $.ajax({
+            url: '<?= $urlAjax ?>',
+            type: "POST",
+            data: dados,
+            async: true,
+            success: function (response) {
+                result = JSON.parse(response);
+                resultado = result.map(function (obj) {
+                    return Object.keys(obj).map(function (chave) {
+                        return obj[chave];
+                    })
+                });
+
+                document.querySelector('#datas').remove();
+
+                let datas = document.createElement('div');
+                datas.id = "datas";
+
+                document.querySelector('#body-datas').appendChild(datas);
+
+                resultado.forEach(function (x) {
+                    criarInputData(x);
+                })
+
+                $('#ModalDtExec').modal('show');
+            },
+            error: function (xhr) {
+
+            }
+        });
+    });
+
+    function removerLinha(btnE) {
+        let divPai = btnE.parentNode;
+        let divAvo = divPai.parentNode;
+
+        divAvo.remove();
+    }
+
+    function hideOrShow(array, acao) {
+        for (ob of array) {
+            ob.style.display = acao;
+        }
+    }
+
+    window.onload = function () {
+        let instuicao = $('#instituicao').val();
+        document.querySelector(".mensagemData").style.display = 'none';
+
+        if (instuicao != 6) {
+            hideOrShow(links_adc, "none");
+        } else {
+            hideOrShow(links_adc, "block");
+        }
+    }
+
+    function validaData(txtData){
+        let dataEx = new Date(txtData.value);
+        let dataIni = new Date(document.querySelector('#datepicker10').value);
+        let dataEnc = new Date(document.querySelector('#datepicker11').value);
+        let mensagem = document.querySelector(".mensagemData");
+        let button = document.querySelector("#saveData");
+
+        if (dataEx.getTime() > dataIni.getTime() && dataEx.getTime() < dataEnc.getTime()) {
+            mensagem.style.display = "none";
+            button.disabled = false;
+        }
+        else {
+            mensagem.style.display = "block";
+            button.disabled = true;
+        }
+    }
+
 </script>

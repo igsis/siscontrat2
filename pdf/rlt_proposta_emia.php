@@ -25,34 +25,55 @@ class PDF extends FPDF
 }
 
 $idPedido = $_POST['idPedido'];
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$pedido = $con->query("SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 3 AND publicado = 1")->fetch_array();
 $idPf = $pedido['pessoa_fisica_id'];
 $idEC = $pedido['origem_id'];
 $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
-$nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id']);
+if ($pessoa['nacionalidade_id'] != NULL) {
+    $nacionalidade = recuperaDados('nacionalidades', 'id', $pessoa['nacionalidade_id'])['nacionalidade'];
+} else {
+    $nacionalidade = "Não cadastrado";
+}
 
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
-$idLocal = $contratacao['local_id'];
-$sqlLocal = "SELECT local FROM locais WHERE id = '$idLocal'";
+while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
+    $tel = $tel . $linhaTel['telefone'] . ' | ';
+}
+
+$tel = substr($tel, 0, -3);
+
+$sqlLocal = "SELECT local FROM locais WHERE id = " . $contratacao['local_id'];
 $local = $con->query($sqlLocal)->fetch_array();
 
 $ano = date('Y');
 
-$idVigencia = $contratacao['emia_vigencia_id'];
-
-$carga = null;
-$sqlCarga = "SELECT carga_horaria FROM emia_parcelas WHERE emia_vigencia_id = '$idVigencia'";
-$queryCarga = mysqli_query($con,$sqlCarga);
+$carga = NULL;
+$sqlCarga = "SELECT carga_horaria FROM emia_parcelas WHERE emia_vigencia_id = " . $contratacao['emia_vigencia_id'];
+$queryCarga = mysqli_query($con, $sqlCarga);
 
 while ($countt = mysqli_fetch_array($queryCarga))
     $carga += $countt['carga_horaria'];
 
-$sqlDRT = "SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf";
-$drt = $con->query($sqlDRT)->fetch_array();
+$enderecoArray = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
+if ($enderecoArray == NULL) {
+    $endereco = "Não cadastrado";
+} else {
+    $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " . $enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+}
+
+$testaDrt = $con->query("SELECT drt FROM drts WHERE pessoa_fisica_id = $idPf");
+if ($testaDrt->num_rows > 0) {
+    while ($drtArray = mysqli_fetch_array($testaDrt)) {
+        $drt = $drtArray['drt'];
+    }
+} else {
+    $drt = "Não cadastrado";
+}
 
 $Observacao = "Todas as atividades dos programas da Supervisão de Formação são inteiramente gratuitas e é terminantemente proibido cobrar por elas sob pena de multa e rescisão de contrato.";
 $sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 20";
@@ -69,11 +90,13 @@ $l = 7; //DEFINE A ALTURA DA LINHA
 
 $pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
+$pdf->SetTitle("Proposta EMIA");
+
 $pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(10,5,'(A)',0,0,'L');
-$pdf->SetFont('Arial','B', 12);
-$pdf->Cell(170,5,'CONTRATADO',0,1,'C');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(10, 5, '(A)', 0, 0, 'L');
+$pdf->SetFont('Arial', 'B', 12);
+$pdf->Cell(170, 5, 'CONTRATADO', 0, 1, 'C');
 
 $pdf->Ln(5);
 
@@ -81,23 +104,30 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(12, $l, 'Nome:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
+$pdf->MultiCell(120, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(27, $l, utf8_decode("Nome Artístico:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode($pessoa['nome_artistico']), 0, 'L', 0);
+$pdf->MultiCell(120, $l, utf8_decode(checaCampo($pessoa['nome_artistico'])), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(50, $l, utf8_decode($pessoa['rg']), 0, 0, 'L');
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(5, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
+if ($pessoa['passaporte'] != NULL) {
+    $pdf->Cell(21, $l, utf8_decode('Passaporte:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(50, $l, utf8_decode($pessoa['passaporte']), 0, 0, 'L');
+
+} else {
+    $pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(50, $l, utf8_decode(checaCampo($pessoa['rg'])), 0, 0, 'L');
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(45, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
+}
 
 $pdf->Ln(7);
 
@@ -109,33 +139,25 @@ $pdf->Cell(25, $l, utf8_decode(exibirDataBr($pessoa['data_nascimento'])), 0, 0, 
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(26, $l, "Nacionalidade:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(30, $l, utf8_decode($nacionalidade['nacionalidade']),0, 0, 'L');
+$pdf->Cell(30, $l, utf8_decode($nacionalidade), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, "CCM:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(30, $l, utf8_decode($pessoa['ccm']),0 ,0, 'L');
+$pdf->Cell(30, $l, utf8_decode(checaCampo($pessoa['ccm'])), 0, 0, 'L');
 
 $pdf->Ln(7);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(10,$l,'DRT:',0,0,'L');
+$pdf->Cell(10, $l, 'DRT:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40,$l,utf8_decode($drt['drt']), 0,'L',0);
-
-$endereco = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
+$pdf->MultiCell(40, $l, utf8_decode($drt), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(18, $l, utf8_decode("Endereço:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(160, $l, utf8_decode($endereco['logradouro'] . ", " . $endereco['numero'] . " " . $endereco['complemento'] . " / - " .$endereco['bairro'] . " - " . $endereco['cidade'] . " / " . $endereco['uf']), 0, 'L', 0);
-
-while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
-    $tel = $tel . $linhaTel['telefone'] . ' | ';
-}
-
-$tel = substr($tel, 0, -3);
+$pdf->MultiCell(160, $l, utf8_decode($endereco), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -150,17 +172,17 @@ $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(168, $l, utf8_decode($pessoa['email']), 0, 'L', 0);
 
 $pdf->SetX($x);
-$pdf->Cell(180,5,'','B',1,'C');
+$pdf->Cell(180, 5, '', 'B', 1, 'C');
 
 $pdf->Ln(5);
 
 $pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(10,10,'(B)',0,0,'L');
-$pdf->SetFont('Arial','B', 12);
-$pdf->Cell(160,10,'PROPOSTA',0,0,'C');
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(10,10,utf8_decode($contratacao['protocolo']),0,1,'R');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(10, 10, '(B)', 0, 0, 'L');
+$pdf->SetFont('Arial', 'B', 12);
+$pdf->Cell(160, 10, 'PROPOSTA', 0, 0, 'C');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(10, 10, utf8_decode($contratacao['protocolo']), 0, 1, 'R');
 
 $pdf->Ln(6);
 
@@ -168,7 +190,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(22, $l, 'Data/Perido:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(50, $l, utf8_decode(retornaPediodoEmia($contratacao['emia_vigencia_id'])), 0, 0, 'L');
+$pdf->Cell(50, $l, utf8_decode(retornaPeriodoFormacao_Emia($contratacao['emia_vigencia_id'], "emia")), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(25, $l, utf8_decode("Carga Horária:"), '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
@@ -178,7 +200,7 @@ $pdf->Ln(7);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(16, $l, 'Local(s):', '0', '0', 'L');
+$pdf->Cell(11, $l, 'Local:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(165, $l, utf8_decode($local['local']), 0, 'L', 0);
 
@@ -198,64 +220,79 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(22, $l, 'Justificativa:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(155, $l, utf8_decode($pedido['justificativa']));
+$pdf->MultiCell(155, $l, utf8_decode(checaCampo($pedido['justificativa'])));
 
 //RODAPÉ PERSONALIZADO
-$pdf->SetXY($x,262);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,utf8_decode($pessoa['nome']),'T',1,'L');
+$pdf->SetXY($x, 262);
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
 
 $pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
+$pdf->SetFont('Arial', '', 10);
+if ($pessoa['passaporte'] != NULL) {
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+} else {
+    $rg = "RG: " . checaCampo($pessoa['rg']);
+    $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
+}
 
-$pdf->AddPage('','');
+$pdf->AddPage('', '');
 
 $pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(10,$l,'(C)',0,0,'L');
-$pdf->SetFont('Arial','B', 10);
-$pdf->Cell(160,$l,utf8_decode('OBSERVAÇÃO'),0,1,'C');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(10, $l, '(C)', 0, 0, 'L');
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(160, $l, utf8_decode('OBSERVAÇÃO'), 0, 1, 'C');
 
 $pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(155, $l, utf8_decode($Observacao),0, 'J', 0);
+$pdf->MultiCell(155, $l, utf8_decode($Observacao), 0, 'J', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(0, 4, utf8_decode($penalidades['texto']),0, 'J', 0);
+$pdf->MultiCell(0, 4, utf8_decode($penalidades['texto']), 0, 'J', 0);
 
 $pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(180,$l,utf8_decode("Data: _________ / _________ / " . $ano) . ".",0,0,'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(180, $l, utf8_decode("Data: _________ / _________ / " . $ano) . ".", 0, 0, 'L');
 
-$pdf->SetXY($x,262);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,utf8_decode($pessoa['nome']),'T',1,'L');
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
-
-$pdf->AddPage('','');
+$pdf->SetXY($x, 262);
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
 
 $pdf->SetX($x);
-$pdf->SetFont('Arial','B', 12);
-$pdf->MultiCell(180,5,"CRONOGRAMA",0,'C',0);
+$pdf->SetFont('Arial', '', 10);
+if ($pessoa['passaporte'] != NULL) {
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+} else {
+    $rg = "RG: " . checaCampo($pessoa['rg']);
+    $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
+}
+
+$pdf->AddPage('', '');
 
 $pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->MultiCell(140,5,utf8_decode($contratacao['cronograma']),0,'L',0);
-
-$pdf->SetXY($x,262);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,utf8_decode($pessoa['nome']),'T',1,'L');
+$pdf->SetFont('Arial', 'B', 12);
+$pdf->MultiCell(180, 5, "CRONOGRAMA", 0, 'C', 0);
 
 $pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->MultiCell(140, 5, utf8_decode(checaCampo($contratacao['cronograma'])), 0, 'L', 0);
+
+$pdf->SetXY($x, 262);
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', '', 10);
+if ($pessoa['passaporte'] != NULL) {
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+} else {
+    $rg = "RG: " . checaCampo($pessoa['rg']);
+    $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
+}
 
 $pdf->Output();
 ?>

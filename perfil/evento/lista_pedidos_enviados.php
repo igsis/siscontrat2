@@ -1,6 +1,8 @@
 <?php
 include "includes/menu_principal.php";
 
+$link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php';
+
 unset($_SESSION['idEvento']);
 unset($_SESSION['idPj']);
 unset($_SESSION['idPf']);
@@ -8,7 +10,7 @@ unset($_SESSION['idPf']);
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 $sql = "SELECT eve.id AS id, eve.protocolo, ped.numero_processo, ped.pessoa_tipo_id, ped.pessoa_juridica_id, ped.pessoa_fisica_id, eve.nome_evento, ped.valor_total, pst.status 
         FROM eventos AS eve
         INNER JOIN pedidos AS ped ON eve.id = ped.origem_id
@@ -50,6 +52,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Valor</th>
                                 <th width="17%">Período</th>
                                 <th>Status</th>
+                                <th>Chamado</th>
                                 <th>Visualizar</th>
                             </tr>
                             </thead>
@@ -58,10 +61,10 @@ $query = mysqli_query($con, $sql);
                             echo "<tbody>";
                             while ($evento = mysqli_fetch_array($query)) {
                                 $idEvento = $evento['id'];
-                                if($evento['pessoa_tipo_id'] == 1){
+                                if ($evento['pessoa_tipo_id'] == 1) {
                                     $pf = recuperaDados('pessoa_fisicas', 'id', $evento['pessoa_fisica_id']);
                                     $proponente = $pf['nome'];
-                                }else if($evento['pessoa_tipo_id' == 2]){
+                                } else if ($evento['pessoa_tipo_id' == 2]) {
                                     $pj = recuperaDados('pessoa_juridicas', 'id', $evento['pessoa_juridica_id']);
                                     $proponente = $pj['razao_social'];
                                 }
@@ -69,19 +72,26 @@ $query = mysqli_query($con, $sql);
                                 $sql_atracao = "SELECT * FROM atracoes atr INNER JOIN categoria_atracoes cat ON cat.id = atr.categoria_atracao_id WHERE evento_id = '$idEvento' AND atr.publicado = 1";
                                 $query_atracao = mysqli_query($con, $sql_atracao);
 
-                                $locais = listaLocais($evento['id']);
-
-                                // $locais = listaLocais($evento['idAtracao']);
                                 echo "<tr>";
                                 echo "<td>" . $evento['protocolo'] . "</td>";
                                 echo "<td>" . $proponente . "</td>";
                                 echo "<td>";
-                                    echo $evento['nome_evento'];
-                                echo "</td>";
-                                echo "<td>" . $locais. "</td>";
+                                echo $evento['nome_evento'];
+                                echo "</td>"; ?>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                            data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                            onClick="exibirLocal_Instituicao('<?= $link_api_locais_instituicoes ?>', '#modalLocais_Inst', '#modalTitulo')"
+                                            data-id="<?= $idEvento ?>"
+                                            name="exibirLocais">
+                                        Ver locais
+                                    </button>
+                                </td>
+                                <?php
                                 echo "<td>" . dinheiroParaBr($evento['valor_total']) . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</td>";
                                 echo "<td>" . $evento['status'] . "</td>";
+                                print_r(retornaChamadosTD($evento['id']));
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=resumo_evento_enviado\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $idEvento . "'>
@@ -93,16 +103,17 @@ $query = mysqli_query($con, $sql);
                             echo "</tbody>";
                             ?>
                             <tfoot>
-                                <tr>
-                                    <th>Protocolo</th>
-                                    <th>Proponente</th>
-                                    <th>Objeto</th>
-                                    <th>Local</th>
-                                    <th>Valor</th>
-                                    <th>Período</th>
-                                    <th>Status</th>
-                                    <th>Visualizar</th>
-                                </tr>
+                            <tr>
+                                <th>Protocolo</th>
+                                <th>Proponente</th>
+                                <th>Objeto</th>
+                                <th>Local</th>
+                                <th>Valor</th>
+                                <th>Período</th>
+                                <th>Status</th>
+                                <th>Chamado</th>
+                                <th>Visualizar</th>
+                            </tr>
                             </tfoot>
                         </table>
                     </div>
@@ -131,8 +142,8 @@ $query = mysqli_query($con, $sql);
             },
             "responsive": true,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
 </script>

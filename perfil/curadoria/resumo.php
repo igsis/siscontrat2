@@ -54,7 +54,7 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
 
                         <tr>
                             <th width="30%">Número do Processo:</th>
-                            <td><?= $pedido['numero_processo'] ?></td>
+                            <td><?= $pedido['numero_processo'] ?? "Não cadastrado" ?></td>
                         </tr>
 
                         <tr>
@@ -91,7 +91,7 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
 
                         <tr>
                             <th width="30%">Valor:</th>
-                            <td><?= $pedido['valor_total'] ?></td>
+                            <td><?= "R$" . dinheiroParaBr($pedido['valor_total']) ?></td>
                         </tr>
 
                         <tr>
@@ -141,7 +141,7 @@ $suplente = recuperaDados('usuarios', 'id', $pedido['suplente_id'])['nome_comple
 
                         <tr>
                             <th width="30%">Observação:</th>
-                            <td><?= $pedido['observacao'] ?></td>
+                            <td><?= $pedido['observacao'] == NULL ? "Não cadastrado" : $pedido['observacao'] ?></td>
                         </tr>
 
                         <?php

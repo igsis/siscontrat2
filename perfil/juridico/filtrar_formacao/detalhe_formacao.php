@@ -4,58 +4,50 @@ $con = bancoMysqli();
 
 isset($_POST['idFormacao']);
 $idFormacao = $_POST['idFormacao'];
+isset($_POST['tipoModelo']);
+$modelo = $_POST['tipoModelo'];
 
-$sql = "SELECT p.numero_processo,
-            p.forma_pagamento,
-            p.valor_total,
-            p.data_kit_pagamento,
-            p.origem_id,
-            pf.nome,
-            pf.email,
-            ci.classificacao_indicativa,
-            l.linguagem,
-            fc.protocolo,
-            fc.observacao,
-            pro.programa,
-            pro.edital,
-            fc.observacao,
-            pag.emissao_nota_empenho,
-            pag.entrega_nota_empenho,
-            fs.status,
-            fc.data_envio
-            
-
-        FROM pedidos as p
-        INNER JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
-        INNER JOIN formacao_contratacoes fc on p.id = fc.pedido_id
-        INNER JOIN classificacao_indicativas ci on fc.classificacao = ci.id
-        INNER JOIN linguagens l on fc.linguagem_id = l.id
-        INNER JOIN programas pro on fc.programa_id = pro.id
-        INNER JOIN pagamentos pag on pag.pedido_id = p.id
-        INNER JOIN formacao_status fs on fs.id = fc.form_status_id
-        WHERE p.publicado = 1 AND p.origem_tipo_id = 2 AND fc.id = $idFormacao";
-$query = $con->query($sql)->fetch_assoc();
-
-$usuarios = recuperaDados('usuarios', 'id', $idFormacao);
-
-// fiscal , suplente //
-$suplente = recuperaDados('usuarios', 'id', $idFormacao);
+$formacao = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
+$pedido = recuperaDados('pedidos', 'id', $formacao['pedido_id']);
+$idPedido = $pedido['id'];
+$pf = recuperaDados('pessoa_fisicas', 'id', $formacao['pessoa_fisica_id']);
+$ci = recuperaDados('classificacao_indicativas', 'id', $formacao['classificacao']);
+$linguagem = recuperaDados('linguagens ', 'id', $formacao['linguagem_id']);
+$programa = recuperaDados('programas', 'id', $formacao['programa_id']);
+$pagamento = recuperaDados('pagamentos', 'pedido_id', $pedido['id']);
+$status = recuperaDados('pedido_status', 'id', $pedido['status_pedido_id']);
 
 //  local //
-$sqlLocal = "SELECT l.local FROM formacao_locais fl 
+$sqlLocal = "SELECT l.local 
+FROM formacao_locais fl 
 INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = '$idFormacao'";
 $local = "";
 $queryLocal = mysqli_query($con, $sqlLocal);
 
 // pegando a vigencia
-$f = recuperaDados('formacao_contratacoes', 'id', $idFormacao);
-$idVigencia = $f['form_vigencia_id'];
+$idVigencia = $formacao['form_vigencia_id'];
 
+// usuarios //
+$usuarios = recuperaDados('usuarios', 'id', $formacao['usuario_id']);
+
+// fiscal , suplente //
+$fiscal = recuperaDados('usuarios', 'id', $formacao['fiscal_id']);
+
+$nomeSuplente = "";
+$telefoneSuplente = "";
+$emailSuplente = "";
+if ($formacao['suplente_id'] != 0) {
+    $suplente = recuperaDados('usuarios', 'id', $formacao['suplente_id']);
+    if ($suplente) {
+        $nomeSuplente = $suplente['nome_completo'];
+        $telefoneSuplente = $suplente['telefone'];
+        $emailSuplente = $suplente['email'];
+    }
+}
 
 // pegando telefone de pf_telefones //
-$pedido = recuperaDados('pedidos', 'id', $idFormacao);
-$idPf = $pedido['pessoa_fisica_id'];
-$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf'";
+$idPf = $formacao ['pessoa_fisica_id'];
+$sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
 $tel = "";
 $queryTelefone = mysqli_query($con, $sqlTelefone);
 
@@ -63,10 +55,12 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
     $tel = $tel . $linhaTel['telefone'] . ' | ';
 }
 $tel = substr($tel, 0, -3);
-////
 
-$fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
-
+$dotacao = "";
+$consultaDotacao = $con->query("SELECT dotacao FROM juridicos WHERE pedido_id = $idPedido");
+if($consultaDotacao->num_rows > 0){
+    $dotacao = mysqli_fetch_array($consultaDotacao)['dotacao'];
+}
 ?>
 
 
@@ -84,23 +78,19 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Enviado em:</th>
-                        <td><?= $query['data_envio'] ?></td>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <td></td>
+                        <td><?= exibirDataHoraBr($formacao['data_envio']) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Usuário que cadastrou a formação:</th>
-                        <td><?= $query['nome'] ?></td>
+                        <td><?= $usuarios ['nome_completo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $tel ?> </td>
+                        <td><?= $usuarios['telefone'] ?> </td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $query['email'] ?></td>
+                        <td><?= $usuarios ['email'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -124,15 +114,15 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Suplente:</th>
-                        <td><?= $suplente['nome_completo'] ?></td>
+                        <td><?= checaCampo($nomeSuplente) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $suplente['telefone'] ?></td>
+                        <td><?= checaCampo($telefoneSuplente) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $suplente['email'] ?></td>
+                        <td><?= checaCampo($emailSuplente) ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -140,15 +130,15 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                     <tr>
                         <th width="30%">Ficha técnica:</th>
-                        <td><?= $query ['nome'] ?></td>
+                        <td><?= $pf ['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Faixa ou indicação etária:</th>
-                        <td><?= $query['classificacao_indicativa'] ?></td>
+                        <td><?= $ci['classificacao_indicativa'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Linguagem / Expressão artística:</th>
-                        <td><?= $query['linguagem'] ?></td>
+                        <td><?= $linguagem['linguagem'] ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -156,7 +146,6 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                     </tr>
                 </table>
                 <h1>Especificidades</h1>
-                <h3>Ocorrências</h3>
                 <br>
                 <tr>
                     <td></td>
@@ -165,106 +154,118 @@ $fcHora = recuperaDados('formacao_parcelas','id',$idFormacao);
                 <br>
                 <table class="table">
                     <tr>
-                        <th width="30%">Evento de temporada</th>
-                    </tr>
-                    <tr>
                         <th width="30%">Data</th>
-                        <td><?= retornaPeriodoFormacao($idVigencia) ?></td>
+                        <td><?= retornaPeriodoFormacao_Emia($idVigencia, "formacao") ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Local</th>
                         <td>
                             <?php
                             while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-                                $local = $local . $linhaLocal['local'] . ' - ';
+                                $local = $local . $linhaLocal['local'] . '; ';
                             }
-
-                            $local = substr($local, 0, -3);
+                            $local = substr($local, 0, -2);
                             echo $local;
                             ?>
                         </td>
                     </tr>
                     <tr>
-                        <th width="30%">Produtor responsavel:</th>
-                        <td><?= $query['nome'] ?></td>
+                        <th width="30%">Produtor responsável:</th>
+                        <td><?= $pf['nome'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Email:</th>
-                        <td><?= $query['email'] ?></td>
+                        <td><?= $pf['email'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
                         <td><?= $tel ?></td>
                     </tr>
                 </table>
-                <h1>Arquivos Comunicação/Produção anexos</h1>
                 <h3>Pedidos de contratação</h3>
                 <table class="table">
                     <tr>
                         <th width="30%">Protocolo:</th>
-                        <td><?= $query['protocolo'] ?></td>
+                        <td><?= $formacao['protocolo'] ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Número do processo:</th>
-                        <td><?= $query['numero_processo'] ?></td>
+                        <td><?= $pedido['numero_processo'] ?></td>
                     </tr>
                     <tr>
                     </tr>
                     <tr>
-                        <th width="30%">Objeto</th>
-                        <td><?= $query['programa'] ?>-<?= $query['linguagem'] ?>-<?= $query['edital'] ?></td>
+                        <th width="30%">Objeto:</th>
+                        <td><?= $programa['programa'] ?>-<?= $linguagem['linguagem'] ?>-<?= $programa['edital'] ?></td>
                     </tr>
                     <tr>
-                        <th width="30%">Local</th>
+                        <th width="30%">Local(ais):</th>
                         <td>
                             <?php
                             while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-                                $local = $local . $linhaLocal['local'] . '-';
+                                $local = $local . $linhaLocal['local'] . '; ';
                             }
 
-                            $local = substr($local, 0, -3);
+                            $local = substr($local, 0, -2);
                             echo $local;
                             ?>
                         </td>
                     </tr>
                     <tr>
-                        <th width="30%">Valor</th>
-                        <td><?= $query['valor_total'] ?></td>
+                        <th width="30%">Valor:</th>
+                        <td><?= "R$" . dinheiroParaBr($pedido['valor_total']) ?></td>
                     </tr>
                     <tr>
-                        <th width="30%">Forma de Pagamento</th>
-                        <td><?= $query['forma_pagamento'] ?></td>
+                        <th width="30%">Forma de Pagamento:</th>
+                        <td><?= $pedido['forma_pagamento'] ?></td>
                     </tr>
                     <tr>
-                        <th width="30%">Data</th>
-                        <td><?= $query['data_kit_pagamento'] ?></td>
+                        <th width="30%">Data/Período:</th>
+                        <td><?= retornaPeriodoFormacao_Emia($idVigencia, "formacao") ?></td>
                     </tr>
-                    <tr>
-                        <th width="30%">Data de Emissão da N.E:</th>
-                        <td><?= $query['emissao_nota_empenho'] ?></td>
-                    </tr>
-                    <tr>
-                        <th width="30%">Data de Entrega da N.E</th>
-                        <td><?= $query['entrega_nota_empenho'] ?></td>
-                    </tr>
+                    <?php
+
+                    if ($pagamento == null || $pagamento == "") { ?>
+
+                        <tr>
+                            <th width="30%">Data de Emissão da N.E:</th>
+                            <td>Não cadastrado</td>
+                        </tr>
+                        <tr>
+                            <th width="30%">Data de Entrega da N.E</th>
+                            <td>Não cadastrado</td>
+                        </tr>
+                    <?php } else { ?>
+                        <tr>
+                            <th width="30%">Data de Emissão da N.E:</th>
+                            <td><?= exibirDataBr($pagamento['emissao_nota_empenho']) ?></td>
+                        </tr>
+                        <tr>
+                            <th width="30%">Data de Entrega da N.E</th>
+                            <td><?= exibirDataBr($pagamento['entrega_nota_empenho']) ?></td>
+                        </tr>
+                    <?php } ?>
                     <tr>
                         <th width="30%">Dotação Orçamentária:</th>
-                        <td></td>
+                        <td><?= checaCampo($dotacao) ?? NULL?></td>
                     </tr>
                     <tr>
                         <th width="30%">Observação:</th>
-                        <td><?= $query['observacao'] ?></td>
+                        <td><?= checaCampo($pedido['observacao']) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Último status:</th>
-                        <td><?= $query['status'] ?></td>
+                        <td><?= $status['status'] ?></td>
                     </tr>
                 </table>
                 <br/>
                 <div class="pull-left">
-                    <a href="?perfil=juridico">
-                        <button type="button" class="btn btn-default">Voltar a pesquisa</button>
-                    </a>
+                    <form action="?perfil=juridico&p=filtrar_formacao&sp=resumo_formacao" method="post">
+                        <input type="hidden" name="idFormacao" value="<?= $idFormacao ?>">
+                        <input type="hidden" name="tipoModelo" value="<?= $modelo ?>">
+                        <button type="submit" class="btn btn-default pull-right">Voltar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -1,0 +1,68 @@
+<?php
+$con = bancoMysqli();
+$idPj = $_SESSION['idPj'];
+$cpf = $_POST['documentacao'];
+$tipoRepresentante = $_POST['tipoRepresentante'];
+$idPedido = $_POST['idPedido'];
+
+?>
+
+<div class="content-wrapper">
+    <section class="content">
+        <h2 class="page-header">Cadastro de Representante</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Informações Representante</h3>
+                    </div>
+                    <form method="POST" action="?perfil=contrato&p=representante_edita" role="form">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="nome">Nome: </label>
+                                    <input type="text" class="form-control" id="nome" name="nome"
+                                           maxlength="70" required>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label for="rg">RG: </label>
+                                    <input type="text" class="form-control" id="rg" name="rg" required maxlength="12">
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label for="cpf">CPF: </label>
+                                    <input type="text" class="form-control" id="cpf" name="cpf" required value="<?= $cpf; ?>" readonly>
+                                </div>
+                            </div>
+                            <input type="hidden" name="tipoRepresentante" value="<?= $tipoRepresentante ?>">
+                            <input type="hidden" name="idPj" value="<?= $idPj ?>">
+                            <input type='hidden' value='<?=$idPedido?>' name='idPedido'>
+                            <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
+                                Cadastrar
+                            </button>
+                    </form>
+                    <form action="?perfil=contrato&p=edita_pj" method="post">
+                        <input type="hidden" name="idPedido" value="<?=$idPedido?>">
+                        <button type="submit" name="idPj" id="idPj" value="<?= $idPj ?>" class="btn btn-default">Voltar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<script>
+    $("#voltar").on("click", function () {
+
+        var nome = document.querySelector("#nome");
+        var rg = document.querySelector("#rg");
+        var cpf = document.querySelector("#cpf");
+
+        nome.required = false;
+        rg.required = false;
+        cpf.required = false;
+
+    })
+</script>

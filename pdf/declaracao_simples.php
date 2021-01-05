@@ -31,6 +31,8 @@ $l=6; //DEFINE A ALTURA DA LINHA
    
 $pdf->SetXY( $x , 15 );// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
+$pdf->SetTitle("Declaração Simples", true);
+
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 14);
 $pdf->Cell(180,5,utf8_decode("DECLARAÇÃO SIMPLES"),0,1,'C');

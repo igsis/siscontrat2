@@ -5,13 +5,9 @@ require_once("../include/lib/fpdf/fpdf.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
+class PDF extends FPDF{}
 
 $con = bancoMysqli();
-
-
-class PDF extends FPDF
-{
-}
 
 $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
@@ -25,6 +21,12 @@ $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
 $ano = date('Y');
 
+if($pessoa['passaporte'] != NULL){
+    $trecho_rg_cpf_passaporte = ", Passaporte: " . $pessoa['passaporte'];
+}else{
+    $rg = $pessoa['rg'] == NULL ? "(Não cadastrado)" : $pessoa['rg'];
+    $trecho_rg_cpf_passaporte = ", RG: " . $rg . ", CPF: " . $pessoa['cpf'];
+}
 
 // GERANDO O PDF:
 $pdf = new PDF('P','mm','A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
@@ -37,6 +39,8 @@ $l=8; //DEFINE A ALTURA DA LINHA
 
 $pdf->SetXY( $x , 30 );// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
+$pdf->SetTitle("Exclusividade PF");
+
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 12);
 $pdf->Cell(180,5,utf8_decode('DECLARAÇÃO DE EXCLUSIVIDADE'),0,1,'C');
@@ -45,7 +49,7 @@ $pdf->Ln(3);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 11);
-$pdf->MultiCell(167,$l,utf8_decode("Eu, ".$pessoa['nome'].", RG ".$pessoa['rg'].", CPF ".$pessoa['cpf'].", sob penas da lei, sob as penas da Lei, que não sou servidor público municipal e que não me encontro em impedimento para contratar com a Prefeitura do Município de São Paulo / Secretaria Municipal de Cultura, mediante recebimento de cachê e/ou bilheteria, quando for o caso."));
+$pdf->MultiCell(167,$l,utf8_decode("Eu, ".$pessoa['nome'] . $trecho_rg_cpf_passaporte .", sob penas da lei, sob as penas da Lei, que não sou servidor público municipal e que não me encontro em impedimento para contratar com a Prefeitura do Município de São Paulo / Secretaria Municipal de Cultura, mediante recebimento de cachê e/ou bilheteria, quando for o caso."));
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 11);
@@ -83,11 +87,17 @@ $pdf->Cell(100,4,utf8_decode($pessoa['nome']),'T',1,'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"RG: ".$pessoa['rg'],0,1,'L');
 
-$pdf->SetX($x);
-$pdf->SetFont('Arial','', 10);
-$pdf->Cell(100,4,"CPF: ".$pessoa['cpf'],0,0,'L');
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+}else{
+    $rg = $pessoa['rg'] == NULL ? "Não cadastrado" : $pessoa['rg'];
+    $rg = "RG: " . $rg;
+    $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(100, 4, "CPF: " . $pessoa['cpf'], 0, 0, 'L');    
+}
 
 
 $pdf->Output();

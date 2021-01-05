@@ -1,5 +1,4 @@
 <?php
-//include para contratos
 include "../perfil/producao/includes/menu.php";
 
 if (isset($_GET['p'])) {

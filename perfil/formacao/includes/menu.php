@@ -4,7 +4,7 @@ $pasta = "?perfil=formacao&p=";
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu" data-widget="tree">
-            <li><a href="?secao=perfil"><i class="fa fa-home"></i><span>Home</span></a></li>
+            <li><a href="http://<?=$_SERVER['HTTP_HOST']?>/siscontrat/inicio"><i class="fa fa-home"></i><span>Home</span></a></li>
             <li class="header">FORMAÇÃO</li>
             <li><a href="<?= $pasta ?>administrativo&sp=index"><i class="fa fa-circle-o"></i>
                     <span>Acesso administrativo</span></a></li>
@@ -53,7 +53,7 @@ $pasta = "?perfil=formacao&p=";
             <li><a href="<?= $pasta ?>pagamento&sp=index"><i class="fa fa-circle-o"></i>
                     <span>Pagamento</span></a></li>
 
-            <li><a href="#"><i class="fa fa-circle-o"></i>
+            <li><a href="<?=$pasta?>&p=conclusao&sp=pesquisa"><i class="fa fa-circle-o"></i>
                     <span>Concluir processo</span></a></li>
             <?php
             include "../perfil/includes/menu_mais.php";

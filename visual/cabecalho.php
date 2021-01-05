@@ -1,15 +1,11 @@
 <?php
 ini_set('session.gc_maxlifetime', 60*60); // 60 minutos
-session_start();
+session_start(['name' => 'sis']);
 date_default_timezone_set('GMT');
-if(!isset ($_SESSION['login']) == true) //verifica se há uma sessão, se não, volta para área de login
+if(!isset ($_SESSION['login_s'])) //verifica se há uma sessão, se não, volta para área de login
 {
-    unset($_SESSION['login']);
-    header('location:../index.php');
-}
-else
-{
-    $logado = $_SESSION['login'];
+    $location = "http://{$_SERVER['HTTP_HOST']}/siscontrat/inicio/logout";
+    header("Location: $location");
 }
 
 ?>
@@ -72,6 +68,7 @@ else
       <link rel="stylesheet" href="css\smoothness_jquery-ui.css">
       <!-- Toastr -->
       <script src="plugins/toastr/toastr.min.js"></script>
+
       <style>
           .ui-menu-item{
               text-align: center !important;
@@ -192,13 +189,13 @@ else
               padding-bottom: 30px;
               font-size: 12pt;
           }
-          #topico-filtro{
+          .topico-filtro{
               display: flex;
               flex-direction: column;
 
           }
 
-          #topico-filtro span#titulo-filtro{
+          .topico-filtro span#titulo-filtro{
               font-weight: bold;
           }
           .lateral{
@@ -206,7 +203,7 @@ else
               flex-direction: column;
           }
 
-          div.lateral label{
+          div.form-check label{
               font-weight: normal;
           }
 

@@ -44,8 +44,8 @@ header("Content-Disposition: attachment;Filename=$dataAtual - Processo SEI ".$pe
 <p align="justify">b) presta serviços para os quais foi instituída e os coloca à disposição do grupo de pessoas a que se destinam;</p>
 <p align="justify">c) não remunera, por qualquer forma, seus dirigentes por serviços prestados;</p>
 <p align="justify">d) aplica integralmente seus recursos na manutenção e desenvolvimento de seus objetivos sociais;</p>
-<p align="justify">f) conserva em boa ordem, pelo prazo de 5 (cinco) anos, contado da data da emissão, os documentos que comprovam a origem de suas receitas e a efetivação de suas despesas, bem como a realização de quaisquer outros atos ou operações que venham a modificar sua situação patrimonial; e,</p>
-<p align="justify">g) apresenta anualmente Declaração de Informações Econômico-Fiscais da Pessoa Jurídica (DIPJ), em conformidade com o disposto em ato da Secretaria da Receita Federal do Brasil (RFB);</p>
+<p align="justify">e) conserva em boa ordem, pelo prazo de 5 (cinco) anos, contado da data da emissão, os documentos que comprovam a origem de suas receitas e a efetivação de suas despesas, bem como a realização de quaisquer outros atos ou operações que venham a modificar sua situação patrimonial; e,</p>
+<p align="justify">f) apresenta anualmente Declaração de Informações Econômico-Fiscais da Pessoa Jurídica (DIPJ), em conformidade com o disposto em ato da Secretaria da Receita Federal do Brasil (RFB);</p>
 <br>
 <p align="justify">II - o signatário é representante legal desta entidade, assumindo o compromisso de informar à RFB e à unidade pagadora, imediatamente, eventual desenquadramento da presente situação e está ciente de que a falsidade na prestação dessas informações, sem prejuízo do disposto no art. 32 da Lei nº 9.430, de 1996, o sujeitará, com as demais pessoas que para ela concorrem, às penalidades previstas na legislação criminal e tributária, relativas à falsidade ideológica (art. 299 do Decreto-Lei nº 2.848, de 7 de dezembro de 1940 - Código Penal) e ao crime contra a ordem tributária (art. 1º da Lei nº 8.137, de 27 de dezembro de 1990).</p>
 <br>

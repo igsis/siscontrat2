@@ -1,6 +1,6 @@
 <?php
 $con = bancoMysqli();
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
 if (isset($_POST['cadastra'])) {
     $linguagem = addslashes($_POST['linguagem']);
@@ -58,7 +58,7 @@ $linguagem = recuperaDados('linguagens', 'id', $idLinguagem);
                                 <div class="form-group col-md-12">
                                     <label for="titulo">Linguagem *</label>
                                     <input type="text" id="linguagem" name="linguagem" class="form-control"
-                                           required
+                                           required maxlength="20"
                                            value="<?= $linguagem['linguagem'] ?>">
                                 </div>
                             </div>

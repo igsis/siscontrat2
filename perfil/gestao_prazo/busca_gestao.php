@@ -1,6 +1,7 @@
 <?php
-include "includes/menu_interno.php";
 $con = bancoMysqli();
+
+$link_api_locais_instituicoes = 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_listar_locais_instituicoes.php';
 
 if (isset($_POST['aprovar'])) {
     $idEvento = $_POST['idEvento'];
@@ -10,9 +11,16 @@ if (isset($_POST['aprovar'])) {
         $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data')";
         mysqli_query($con, $sqlEnvia);
-        $idUser = $_SESSION['idUser'];
-        $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-        mysqli_query($con, $sqlEnvio);
+        $idUser = $_SESSION['usuario_id_s'];
+        $consultaEvento = $con->query("SELECT id, evento_id FROM producao_eventos WHERE evento_id = $idEvento");
+        if($consultaEvento->num_rows == 0){
+            $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
+            mysqli_query($con, $sqlEnvio);
+        }else{
+            $idProducaoEvento = mysqli_fetch_array($consultaEvento)['id'];
+            $sqlEnvio = "UPDATE producao_eventos SET data = '$data' WHERE id = $idProducaoEvento";
+            mysqli_query($con, $sqlEnvio);
+        }
         $mensagem = mensagem("success", "Evento aprovado com sucesso!");
 
         if ($evento['tipo_evento_id'] == 1) {
@@ -37,7 +45,7 @@ if (isset($_POST['vetar'])) {
         $motivo = $_POST['motivo'];
         $justificativa = $_POST['justificativa'];
         $titulo = "Motivo da Não Aprovação: " . $_POST['titulo'];
-        $idUser = $_SESSION['idUser'];
+        $idUser = $_SESSION['usuario_id_s'];
         $data = $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
         $sqlChamado = "INSERT INTO chamados (evento_id, 
                                              chamado_tipo_id, 
@@ -111,23 +119,28 @@ $query = mysqli_query($con, $sql);
                                 $local = substr($local, 1);
 
                                 //operador
-                                $testa = $con->query("SELECT operador_id FROM pedidos WHERE origem_id = $idEvento")->fetch_array();
-                                $idUsuario = $testa['operador_id'];
-                                if ($idUsuario != 0) {
-                                    $operadorAux = "AND usuario_id = $idUsuario";
-                                    $sqlOperador = "SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idUsuario $operadorAux";
-                                    $operador = $con->query($sqlOperador)->fetch_array();
+                                $testaOperador = $con->query("SELECT operador_id FROM pedidos WHERE origem_id = $idEvento")->fetch_array();
+                                $idOperador = $testaOperador['operador_id'] ?? NULL;
+                                if ($idOperador > 0) {
+                                    $operador = $con->query("SELECT u.nome_completo FROM usuarios AS u INNER JOIN usuario_contratos uc ON u.id = uc.usuario_id WHERE u.id = $idOperador AND usuario_id = $idOperador")->fetch_array()['nome_completo'];
+                                } else {
+                                    $operador = "Não cadastrado";
                                 }
                                 echo "<tr>";
-                                echo "<td>" . $eventos['nome_evento'] . "</td>";
-                                echo "<td>" . $local . "</td>";
+                                echo "<td>" . $eventos['nome_evento'] . "</td>"; ?>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-block" id="exibirLocais"
+                                            data-toggle="modal" data-target="#modalLocais_Inst" data-name="local"
+                                            onClick="exibirLocal_Instituicao('<?= $link_api_locais_instituicoes ?>', '#modalLocais_Inst', '#modalTitulo')"
+                                            data-id="<?= $eventos['id'] ?>"
+                                            name="exibirLocais">
+                                        Ver locais
+                                    </button>
+                                </td>
+                                <?php
                                 echo "<td>" . retornaPeriodoNovo($eventos['id'], 'ocorrencias') . "</td>";
                                 echo "<td>" . $eventos['fiscal'] . "</td>";
-                                if (isset($operador['nome_completo'])) {
-                                    echo "<td>" . $operador['nome_completo'] . "</td>";
-                                } else {
-                                    echo "<td> </td>";
-                                }
+                                echo "<td>" . $operador . "</td>";
                                 echo "<td>
                                                 <form method='POST' action='?perfil=gestao_prazo&p=detalhes_gestao' role='form'>
                                                 <input type='hidden' name='idEvento' value='" . $eventos['id'] . "'>

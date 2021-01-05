@@ -7,6 +7,10 @@ $idEvento = $_SESSION['idEvento'];
 $_SESSION['idOrigem'] = $_POST['idOrigem'];
 $idAtracao = $_SESSION['idOrigem'];
 
+if (isset($_POST['idFilme'])) {
+    $idFilme = $_POST['idFilme'];
+}
+
 $evento = recuperaDados('eventos', 'id', $idEvento);
 
 $tipoEvento = $evento['tipo_evento_id'];
@@ -181,7 +185,7 @@ $tipoEvento = $evento['tipo_evento_id'];
                                     </label>
                                     <label>
                                         <input type="checkbox" name="sexta" id="diasemana05"
-                                               value="1"  class="semana"> Sexta
+                                               value="1" class="semana"> Sexta
                                         &nbsp;
                                     </label>
                                     <label>
@@ -205,13 +209,12 @@ $tipoEvento = $evento['tipo_evento_id'];
                                         &nbsp;
                                     </label>
                                     <label>
-                                        <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1"> Audiodescrição
+                                        <input type="checkbox" name="audiodescricao" id="audiodescricao" value="1">
+                                        Audiodescrição
                                         &nbsp;
                                     </label>
                                 </div>
                             </div>
-
-
                             <div class="row" id="msgEsconde">
                                 <div class="form-group col-md-6">
                                     <span style="color: red;">Selecione ao menos um dia da semana!</span>
@@ -224,67 +227,71 @@ $tipoEvento = $evento['tipo_evento_id'];
                                            placeholder="hh:mm"/>
                                 </div>
 
-                                
 
-
-                            <?php
-                                if($tipoEvento == 2){
-                                    $filmeEvento = $con->query("SELECT filme_id FROM filme_eventos WHERE evento_id =" . $idEvento)->fetch_array();
-                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = " . $filmeEvento['filme_id'])->fetch_array();
+                                <?php
+                                if ($tipoEvento == 2 && isset($idFilme)) {
+                                    $filme = $con->query("SELECT duracao FROM filmes WHERE id = $idFilme")->fetch_array();
+                                    $readonly = "readonly";
                                     ?>
                                     <script type="text/javascript">
-                                                                    
-                                        $('#horaInicio').on('change', function() {
-                                            $('#horaFim').attr("readonly",true);
-                                            var horainicio = $('#horaInicio').val();                                      
+
+                                        $('#horaInicio').on('change', function () {
+                                            var horainicio = $('#horaInicio').val();
                                             var hora = parseInt(horainicio.split(':', 1));
                                             var minuto = parseInt(horainicio[3] + horainicio[4]);
                                             var duracao = <?=$filme['duracao']?>;
 
-                                            while(duracao >= 60){
+                                            while (duracao >= 60) {
                                                 duracao -= 60;
                                                 hora += 1;
                                             }
 
                                             var minutoFinal = minuto + duracao;
 
-                                            if(minutoFinal >= 60){
-                                               minutoFinal -= 60;
-                                               hora += 1;
+                                            if (minutoFinal >= 60) {
+                                                minutoFinal -= 60;
+                                                hora += 1;
                                             }
-                                            if(minutoFinal == 0 && minutoFinal != 00){
+                                            //impede que haja 3 digitos 0 no campo de hora, exemplo  000:00
+                                            if (minutoFinal == 0 && minutoFinal != '00') {
                                                 minutoFinal = minutoFinal + "0";
                                             }
-                                            if(minutoFinal < 10){
+                                            if (minutoFinal < 10) {
                                                 minutoFinal = "0" + minutoFinal;
                                             }
-                                            if(hora == 0 && minutoFinal != 00){
+                                            if (hora == 0 && minutoFinal != '00') {
                                                 hora = hora + "0";
                                             }
-                                            if(hora < 10){
+                                            if (hora < 10) {
                                                 hora = "0" + hora;
                                             }
-                                            if(hora == 00){
+                                            if (hora == "00") {
+                                                hora = "00";
+                                            }
+                                            if (hora == "000") {
                                                 hora = "00";
                                             }
 
                                             var resultado = hora + ":" + minutoFinal + ":00";
-                    
-                                            
+
+
                                             $('#horaFim').val(resultado);
                                             $('#horaFim').attr("value", resultado);
-                                                               
-                                            
-                                    });
+
+
+                                        });
                                     </script>
-                                <?php }
-                            ?>
+                                <?php } else {
+                                    $readonly = "";
+                                }
+                                ?>
 
 
-                                 <div class="form-group col-md-3">
+                                <div class="form-group col-md-3">
                                     <label for="horaFim">Hora Fim*</label> <br>
-                                    <input type="time" name="horaFim" class="form-control" id="horaFim" required value=""
-                                           placeholder="hh:mm"/>
+                                    <input type="time" name="horaFim" class="form-control" id="horaFim" required
+                                           value=""
+                                           placeholder="hh:mm" <?= $readonly ?>/>
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -300,8 +307,8 @@ $tipoEvento = $evento['tipo_evento_id'];
                                 <div class="form-group col-md-3">
                                     <label for="valor_ingresso">Valor Ingresso*</label> <br>
                                     <input type="text" name="valor_ingresso" class="form-control" required
-                                           id="valor_ingresso"
-                                           placeholder="Em reais" onkeypress="return(moeda(this, '.', ',', event))"/>
+                                           id="valor_ingresso" maxlength="5"
+                                           placeholder="Em reais">
                                 </div>
                             </div>
 
@@ -321,17 +328,21 @@ $tipoEvento = $evento['tipo_evento_id'];
                                         ?>
                                     </select>
                                 </div>
-
                                 <div class="form-group col-md-4">
+                                    <a class="link-adc" target="_blank" href="?perfil=evento&p=adicionar_local">
+                                        <button type="button" class="fa fa-plus btn-success pull-right"></button>
+                                    </a>
                                     <label for="local">Local *</label>
                                     <select class="form-control" id="local" name="local" required>
                                         <!-- Populando pelo js -->
                                     </select>
-
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="espaco">Espaço</label>
+                                    <a class="link-adc" target="_blank" href="?perfil=evento&p=adicionar_espaco">
+                                        <button type="button" class="fa fa-plus btn-success pull-right"></button>
+                                    </a>
+                                    <label for="espaco">Espaço *</label>
                                     <select class="form-control" id="espaco" name="espaco">
                                         <!-- Populando pelo js -->
                                     </select>
@@ -367,10 +378,11 @@ $tipoEvento = $evento['tipo_evento_id'];
                         </div>
 
                         <div class="box-footer">
-                            <a href="?perfil=evento&p=<?=$tipoEvento == 1 ? "atracoes_lista" : "evento_cinema_lista"?>">
+                            <a href="?perfil=evento&p=<?= $tipoEvento == 1 ? "atracoes_lista" : "evento_cinema_lista" ?>">
                                 <button type="button" class="btn btn-default" id="voltar" name="voltar">Voltar</button>
                             </a>
                             <input type="hidden" name="idOrigem" value="<?= $_POST['idOrigem'] ?>">
+                            <?= isset($idFilme) ? "<input type='hidden' name='idFilme' value='" . $idFilme . "'>" : ''; ?>
                             <button type="submit" name="cadastra" id="cadastra" class="btn btn-info pull-right">
                                 Cadastrar
                             </button>
@@ -382,7 +394,14 @@ $tipoEvento = $evento['tipo_evento_id'];
     </section>
 </div>
 
+
 <script type="text/javascript">
+
+    var links_adc = document.querySelectorAll(".link-adc")
+
+    $(document).ready(function () {
+        $('#valor_ingresso').mask('00,00', {reverse: true})
+    });
 
     function insti_local() {
         const urlModal = `<?=$url?>`;
@@ -515,7 +534,13 @@ $tipoEvento = $evento['tipo_evento_id'];
                     ;
                 }
             })
+        if (idInstituicao != 6) {
+            hideOrShow(links_adc, "none");
+        } else {
+            hideOrShow(links_adc, "block")
+        }
     })
+
 
     let local = document.querySelector('#local');
 
@@ -588,10 +613,10 @@ $tipoEvento = $evento['tipo_evento_id'];
 
     retiradaIngresso.addEventListener("change", () => {
         let valorIngressos = document.querySelector('#valor_ingresso');
-        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11){
+        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11 || retiradaIngresso.value == 1) {
             valorIngressos.value = '0,00';
             valorIngressos.readOnly = true;
-        }else {
+        } else {
             valorIngressos.readOnly = false;
         }
     });
@@ -760,4 +785,20 @@ $tipoEvento = $evento['tipo_evento_id'];
     }
 
     var diaSemana = $('.semana').change(validaDiaSemana)
+
+    function hideOrShow(array, acao) {
+        for (ob of array) {
+            ob.style.display = acao;
+        }
+    }
+
+    window.onload = function () {
+        let instuicao = $('#instituicao').val();
+
+        if (instuicao != 6) {
+            hideOrShow(links_adc, "none");
+        } else {
+            hideOrShow(links_adc, "block");
+        }
+    }
 </script>

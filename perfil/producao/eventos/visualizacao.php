@@ -1,10 +1,9 @@
 <?php
 $con = bancoMysqli();
 
-$_SESSION['idEvento'] = $_POST['idEvento'];
-$idUser = $_SESSION['idUser'];
+$idUser = $_SESSION['usuario_id_s'];
 
-$idEvento = $_SESSION['idEvento'];
+$idEvento = $_POST['idEvento'];
 
 $sqlEvento = "SELECT
                 eve.nome_evento AS 'Nome do Evento:',
@@ -28,7 +27,9 @@ $sqlEvento = "SELECT
 
 $resumoEvento = $con->query($sqlEvento)->fetch_assoc();
 $evento = recuperaDados('eventos', 'id', $idEvento);
-$view = recuperaDados('producao_eventos', 'id', $idEvento);
+$pedido = recuperaDados('pedidos', 'origem_id', $idEvento);
+$idPedido = $pedido['origem_id'] ?? NULL;
+$view = recuperaDados('producao_eventos', 'evento_id', $idEvento);
 
 ?>
 
@@ -44,13 +45,11 @@ $view = recuperaDados('producao_eventos', 'id', $idEvento);
         <div class="box-body">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs pull-right">
-                    <?php if ($evento['contratacao'] == 1) { ?>
-                        <li><a href="#pedido" data-toggle="tab"> Pedido de Contratação </a></li>
-                    <?php } ?>
+
                     <li><a href="#ocorrencia" data-toggle="tab"> Ocorrência </a></li>
                     <li>
                         <a href="#atracao" data-toggle="tab">
-                            <?= $evento['tipo_evento_id' == 1] ? "Atração" : "Filme" ?>
+                            <?= $evento['tipo_evento_id'] == 1 ? "Atração" : "Filme" ?>
                         </a>
                     </li>
                     <li class="active"><a href="#evento" data-toggle="tab"> Eventos </a></li>
@@ -98,6 +97,55 @@ $view = recuperaDados('producao_eventos', 'id', $idEvento);
                                         <?php } ?>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Anexos de Comunicação e Produção</h3>
+                            </div>
+                            <div class="box-body">
+                                <?php
+                                $sql = "SELECT *
+                                            FROM lista_documentos as list
+                                            INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
+                                            WHERE arq.origem_id = '$idPedido' AND list.tipo_documento_id = 8
+                                            AND arq.publicado = '1' ORDER BY arq.id";
+                                $query = mysqli_query($con, $sql);
+                                $linhas = mysqli_num_rows($query);
+
+                                if ($linhas > 0):
+                                    ?>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr class='bg-info text-bold'>
+                                                <td>Tipo de arquivo</td>
+                                                <td>Nome do documento</td>
+                                                <td>Data de envio</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            while ($arquivo = mysqli_fetch_array($query)) {
+                                                ?>
+                                                <tr>
+                                                    <td class='list_description'><?= $arquivo['documento'] ?></td>
+                                                    <td class='list_description'><a
+                                                                href='../uploadsdocs/<?= $arquivo['arquivo'] ?>'
+                                                                target='_blank'>
+                                                            <?= mb_strimwidth($arquivo['arquivo'], 15, 25, "...") ?></a>
+                                                    </td>
+                                                    <td class='list_description'>(<?= exibirDataBr($arquivo['data']) ?>
+                                                        )
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

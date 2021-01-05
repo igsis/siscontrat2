@@ -31,7 +31,7 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
-        $actionEdita = "?perfil=evento&p=pedido_edita";
+        $actionEdita = "?perfil=evento&p=pedido_proponente";
         $actionCadastra = "?perfil=evento&p=pf_cadastro";
 
     } else if($idPedido != null) {

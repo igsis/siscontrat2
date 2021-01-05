@@ -13,14 +13,14 @@ class PDF extends FPDF{
 }
 
 $idPedido = $_POST['idPedido'];
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$pedido = $con->query("SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 2 AND publicado = 1")->fetch_array();
 $idFC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $empenho = recuperaDados('pagamentos', 'pedido_id', $idPedido);
 
-$data = date("Y-m-d", strtotime("-3 hours"));
+$data = dataHoraNow();
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -78,23 +78,33 @@ $pdf->Cell(165,$l,utf8_decode($pessoa['nome']),'T',0,'L');
 $pdf->Ln();
 
 $pdf->SetX($x);
-$pdf->Cell(7,$l,utf8_decode("RG:"),0,0,'L');
-$pdf->SetFont('Arial', '',11);
-$pdf->Cell(40,$l,utf8_decode($pessoa['rg']),0,0,'L');
 
-$pdf->Ln();
+if($pessoa['passaporte'] != NULL){
+    $pdf->Cell(23,$l,utf8_decode("Passaporte:"),0,0,'L');
+    $pdf->SetFont('Arial', '',11);
+    $pdf->Cell(40,$l,utf8_decode($pessoa['passaporte']),0,0,'L');  
+
+    $pdf->Ln();
+}else{
+    $pdf->SetX($x);
+    $pdf->Cell(8,$l,utf8_decode("RG:"),0,0,'L');
+    $pdf->SetFont('Arial', '',11);
+    $pdf->Cell(40,$l,utf8_decode(checaCampo($pessoa['rg'])),0,0,'L');
+
+    $pdf->Ln();
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', 11);
+    $pdf->Cell(10,$l,utf8_decode("CPF:"),0,0,'L');
+    $pdf->SetFont('Arial', '',11);
+    $pdf->Cell(40,$l,utf8_decode($pessoa['cpf']),0,0,'L');
+
+    $pdf->Ln();
+}
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(9,$l,utf8_decode("CPF:"),0,0,'L');
-$pdf->SetFont('Arial', '',11);
-$pdf->Cell(40,$l,utf8_decode($pessoa['cpf']),0,0,'L');
-
-$pdf->Ln();
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(13,$l,utf8_decode("E-mail:"),0,0,'L');
+$pdf->Cell(14,$l,utf8_decode("E-mail:"),0,0,'L');
 $pdf->SetFont('Arial', '',11);
 $pdf->Cell(40,$l,utf8_decode($pessoa['email']),0,0,'L');
 

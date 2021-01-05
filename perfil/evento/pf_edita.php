@@ -14,17 +14,7 @@ if (isset($_POST['idPf']) || isset($_POST['idProponente'])) {
 
 if (isset($_POST['editProponente'])) {
     $idPedido = $_SESSION['idPedido'];
-    $voltar = "<form action='?perfil=evento&p=pedido_edita&label=proponente' method='post'>
-                    <input type='hidden' name='idProponente' value='$idPf'>
-                    <input type='hidden' name='tipoPessoa' value='$tipoPessoa'>
-                        <button type='submit' name='idPedido' id='idPedido' value='$idPedido' class='btn btn-default'>Voltar</button>
-                    </form>";
-} else {
-    $voltar = "<form action='?perfil=evento&p=pf_pesquisa' method='post'>
-                        <button type='submit' class='btn btn-default'>Voltar</button>
-                    </form>";
 }
-
 
 if (isset($_POST['cadastraLider'])) {
     $idPedido = $_POST['idPedido'];
@@ -45,8 +35,8 @@ if (isset($_POST['cadastraLider'])) {
 
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
     $nome = trim(addslashes($_POST['nome']));
-    $nomeArtistico = trim(addslashes($_POST['nomeArtistico']));
-    $rg =  isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
+    $nomeArtistico = trim(addslashes($_POST['nomeArtistico'])) ?? NULL;
+    $rg = isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
     $ccm = isset($_POST['ccm']) ? trim($_POST['ccm']) : NULL;
@@ -75,7 +65,7 @@ if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_PO
     if (mysqli_query($con, $sql)) {
         $idPf = recuperaUltimo("pessoa_fisicas");
 // cadastrar o telefone de pf
-        foreach ($telefones AS $telefone) {
+        foreach ($telefones as $telefone) {
             if (!empty($telefone)) {
                 $sqlTel = "INSERT INTO pf_telefones (pessoa_fisica_id, telefone, publicado) VALUES ('$idPf','$telefone',1)";
                 mysqli_query($con, $sqlTel);
@@ -451,7 +441,11 @@ $nits = recuperaDados("nits", "pessoa_fisica_id", $idPf);
 $observacao = recuperaDados("pf_observacoes", "pessoa_fisica_id", $idPf);
 $banco = recuperaDados("pf_bancos", "pessoa_fisica_id", $idPf);
 
+if ($evento['tipo_evento_id'] == 1){
 $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = '$idEvento'")->fetch_array();
+}else{
+    $atracao = null;
+}
 
 include "includes/menu_interno.php";
 ?>
@@ -488,7 +482,8 @@ include "includes/menu_interno.php";
                                 <div class="col-md-6 form-group">
                                     <label for="nome">Nome: *</label>
                                     <input type="text" class="form-control" name="nome" placeholder="Digite o nome"
-                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}" title="Apenas letras"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}"
+                                           title="Apenas letras"
                                            maxlength="70" required value="<?= $pf['nome'] ?>">
                                 </div>
                                 <div class="col-md-6 form-group">
@@ -500,17 +495,17 @@ include "includes/menu_interno.php";
                             </div>
                             <div class="row">
                                 <?php
-                                if (empty($pf['cpf'])) {?>
+                                if (empty($pf['cpf'])) { ?>
                                     <div class="form-group col-md-12">
                                         <label for="passaporte">Passaporte:</label>
                                         <input type="text" class="form-control" name="passaporte" maxlength="70"
-                                               value="<?= $pf['passaporte'] ?>" disabled>
+                                               value="<?= $pf['passaporte'] ?>" readonly>
                                     </div>
 
                                     <div class="form-group col-md-6">
-                                    <?php
-                                    anexosNaPagina(1, $idPf, "modal-passaporte", "Passaporte");
-                                    ?>
+                                        <?php
+                                        anexosNaPagina(1, $idPf, "modal-passaporte", "Passaporte");
+                                        ?>
                                     </div>
                                 <?php } else {
                                     ?>
@@ -613,7 +608,7 @@ include "includes/menu_interno.php";
                                 <div class="form-group col-md-2">
                                     <label for="telefone">Telefone #1 * </label>
                                     <input type="text" onkeyup="mascara( this, mtel );" maxlength="15" required
-                                           class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                           class="form-control" pattern=".{14,15}" title="14 a 15 caracteres"
                                            data-mask="(00) 00000-0000"
                                            id="telefone" name="telefone[<?= $arrayTelefones[0]['id'] ?>]"
                                            value="<?= $arrayTelefones[0]['telefone']; ?>">
@@ -624,7 +619,7 @@ include "includes/menu_interno.php";
                                     if (isset($arrayTelefones[1])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               class="form-control" pattern=".{14,15}" title="14 a 15 caracteres"
                                                data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone[<?= $arrayTelefones[1]['id'] ?>]"
                                                value="<?= $arrayTelefones[1]['telefone']; ?>">
@@ -632,7 +627,7 @@ include "includes/menu_interno.php";
                                     } else {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               class="form-control" pattern=".{14,15}" title="14 a 15 caracteres"
                                                data-mask="(00) 00000-0000"
                                                id="telefone1" name="telefone1">
                                         <?php
@@ -644,7 +639,7 @@ include "includes/menu_interno.php";
                                     <?php if (isset($arrayTelefones[2])) {
                                         ?>
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
-                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               class="form-control" pattern=".{14,15}" title="14 a 15 caracteres"
                                                data-mask="(00) 00000-0000"
                                                id="telefone2" name="telefone[<?= $arrayTelefones[2]['id'] ?>]"
                                                value="<?= $arrayTelefones[2]['telefone']; ?>">
@@ -655,7 +650,7 @@ include "includes/menu_interno.php";
 
                                         <input type="text" onkeyup="mascara( this, mtel );" maxlength="15"
                                                data-mask="(00) 00000-0000"
-                                               class="form-control" pattern=".{14,15}"  title="14 a 15 caracteres"
+                                               class="form-control" pattern=".{14,15}" title="14 a 15 caracteres"
                                                id="telefone2" name="telefone2">
 
                                         <?php
@@ -671,26 +666,83 @@ include "includes/menu_interno.php";
                                     <div class="form-group col-md-6">
                                         <label for="drt">DRT: </label>
                                         <input type="text" name="drt" class="form-control telefone" maxlength="15"
-                                               placeholder="Digite o DRT" value="<?= $drts['drt'] ?>">
+                                               placeholder="Digite o DRT" value="<?= $drts['drt'] ?? "" ?>">
                                     </div>
                                     <?php
                                 }
                                 ?>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
-                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?>">
+                                           placeholder="Digite o NIT" value="<?= $nits['nit'] ?? "" ?>">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="observacao">Observação: </label>
-                                    <textarea name="observacao" rows="3" class="form-control"><?= $observacao['observacao'] ?></textarea>
+                                    <textarea name="observacao" rows="3"
+                                              class="form-control"><?= $observacao['observacao'] ?? "" ?></textarea>
                                 </div>
                             </div>
                             <?php
-                            if($atracao['valor_individual'] > 0 || $evento['tipo_evento_id'] == 2) {
+                            if ($atracao != null) {
+                                if ($atracao['valor_individual'] > 0) {
+                                    ?>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="banco">Banco:</label>
+                                            <select id="banco" name="banco" class="form-control">
+                                                <option value="">Selecione um banco...</option>
+                                                <?php
+                                                geraOpcao("bancos", $banco['banco_id']);
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="agencia">Agência:</label>
+                                            <input type="text" name="agencia" class="form-control"
+                                                   placeholder="Digite a Agência" maxlength="12"
+                                                   value="<?= $banco['agencia'] ?>">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="conta">Conta:</label>
+                                            <input type="text" name="conta" class="form-control"
+                                                   placeholder="Digite a Conta" maxlength="12"
+                                                   value="<?= $banco['conta'] ?>">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-md-3">
+                                            <?php
+                                            $sqlFACC = "SELECT * FROM arquivos WHERE lista_documento_id = 51 AND origem_id = '$idPf' AND publicado = 1";
+                                            $queryFACC = mysqli_query($con, $sqlFACC);
+                                            ?>
+
+                                            <label>Gerar FACC</label><br>
+                                            <a href="<?= $link_facc . "?id=" . $idPf ?>" target="_blank" type="button"
+                                               class="btn btn-primary btn-block">Clique aqui para
+                                                gerar a FACC
+                                            </a>
+                                        </div>
+
+                                        <div class="form-group col-md-5">
+                                            <label>&nbsp;</label><br>
+                                            <p>A FACC deve ser impressa, datada e assinada nos campos indicados no
+                                                documento. Logo após, deve-se digitaliza-la e então anexa-la ao sistema
+                                                no campo correspondente.</p>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <?php
+                                            anexosNaPagina(42, $idPf, "modal-facc", "FACC");
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                            }else{
                                 ?>
                                 <hr/>
                                 <div class="row">
@@ -699,7 +751,11 @@ include "includes/menu_interno.php";
                                         <select id="banco" name="banco" class="form-control">
                                             <option value="">Selecione um banco...</option>
                                             <?php
-                                            geraOpcao("bancos", $banco['banco_id']);
+                                            if (isset($banco)){
+                                                geraOpcao("bancos", $banco['banco_id']);
+                                            }else{
+                                                geraOpcao("bancos");
+                                            }
                                             ?>
                                         </select>
                                     </div>
@@ -707,13 +763,13 @@ include "includes/menu_interno.php";
                                         <label for="agencia">Agência:</label>
                                         <input type="text" name="agencia" class="form-control"
                                                placeholder="Digite a Agência" maxlength="12"
-                                               value="<?= $banco['agencia'] ?>">
+                                               value="<?= isset($banco)? $banco['agencia'] : '' ?>">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="conta">Conta:</label>
                                         <input type="text" name="conta" class="form-control"
                                                placeholder="Digite a Conta" maxlength="12"
-                                               value="<?= $banco['conta'] ?>">
+                                               value="<?= isset($banco) ? $banco['conta'] : '' ?>">
                                     </div>
                                 </div>
 
@@ -751,7 +807,6 @@ include "includes/menu_interno.php";
                                 <button type="submit" name="edita" class="btn btn-info pull-right">Alterar</button>
 
                         </form>
-                        <?= $voltar ?>
                     </div>
                 </div>
                 <!-- /.box-body -->
@@ -788,16 +843,9 @@ include "includes/menu_interno.php";
                             if (($pedidos['pessoa_tipo_id'] == 1) && ($pedidos['pessoa_fisica_id'] == $idPf)) {
 
                                 ?>
-                                <form method="POST" action="?perfil=evento&p=pedido_edita" role="form">
-                                    <input type="hidden" name="pessoa_tipo_id" value="1">
-                                    <input type="hidden" name="idPedido" value="<?= $pedidos['id']; ?>">
-                                    <input type="hidden" name="idProponente" value="<?= $pf['id'] ?>">
-                                    <input type="hidden" name="tipoPessoa" value="1">
-                                    <input type="hidden" name="tipoEvento" value="<?= $evento['tipo_evento_id'] ?>">
-                                    <button type="submit" name="carregar" class="btn btn-info btn-block">Ir ao pedido de
-                                        contratação
-                                    </button>
-                                </form>
+                                <a href="?perfil=evento&p=pedido_proponente" class="btn btn-info btn-block">
+                                    Ir ao pedido de contratação
+                                </a>
 
                                 <?php
                             } else {
