@@ -17,7 +17,7 @@ include "includes/menu_principal.php";
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 form-group">
                                     <label for="protocolo">Protocolo de Cadastro no CAPAC:</label>
-                                    <input type="number" name="protocolo" id="protocolo" class="form-control">
+                                    <input type="text" name="protocolo" id="protocolo" class="form-control" data-mask="00000000.00000-E">
                                 </div>
                             </div>
                             <div class="row">
@@ -47,3 +47,10 @@ include "includes/menu_principal.php";
         </div>
     </section>
 </div>
+
+
+<script>
+    $(document).ready(function (){
+        $('#protocolo').mask('99999999.99999-E');
+    });
+</script>

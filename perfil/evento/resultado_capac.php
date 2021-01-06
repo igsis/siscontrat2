@@ -2,48 +2,40 @@
 include "includes/menu_principal.php";
 $con = bancoCapac();
 
-$idCapac = $_POST['protocolo'] ?? null;
+$protocolo = $_POST['protocolo'] ?? null;
 $nomeEvento = $_POST['nome'] ?? null;
 $publico = $_POST['publico'] ?? null;
 
-$sqlIdCapac = '';
+$sqlProtocolo = '';
 $sqlNomeEvento = '';
 $sqlPublico = '';
 
-if($idCapac != null){
-    $sqlIdCapac = " AND e.id = '$idCapac'";
+if($protocolo != null){
+    $sqlProtocolo = " AND e.protocolo = '$protocolo'";
 }
 if($nomeEvento != null){
     $sqlNomeEvento = " AND e.nome_evento = '$nomeEvento'";
 }
 if($publico != null){
-    $sqlPublico = " AND ep.publico_id = '$publico'";
+    $sqlPublico = " AND p.id = '$publico'";
 }
 
-//$sql = "SELECT
-//	        e.id,
-//	        e.nome_evento,
-//	        e.data_cadastro,
-//	        (SELECT GROUP_CONCAT(' ',p.publico) FROM capac_new.evento_publico AS ep
-//	            INNER JOIN capac_new.publicos AS p ON ep.publico_id = p.id
-//	            WHERE ep.evento_id = e.id
-//            ) AS 'publico'
-//        FROM capac_new.eventos AS e
-//        WHERE e.publicado = 2 $sqlIdCapac $sqlNomeEvento $sqlPublico";
-
-$sql = "SELECT 	e.nome_evento,
+$sql = "
+SELECT 	e.id,
+        e.nome_evento,
 		e.protocolo,
-        DATE_FORMAT(e.data_cadastro, '%d/%m/%Y'),
-        p.publico
+        DATE_FORMAT(e.data_cadastro, '%d/%m/%Y')  as 'data_cadastro',
+        (SELECT GROUP_CONCAT(' ',p.publico) FROM capac_new.evento_publico AS ep
+	            INNER JOIN capac_new.publicos AS p ON ep.publico_id = p.id
+	            WHERE ep.evento_id = e.id
+            ) AS publico
 FROM capac_new.eventos AS e
 LEFT JOIN capac_new.evento_publico AS ep ON e.id = ep.evento_id
 LEFT JOIN capac_new.publicos AS p ON p.id = ep.publico_id
-WHERE e.publicado = 2 AND protocolo != ''";
+WHERE e.publicado = 2 AND protocolo != '' $sqlPublico $sqlProtocolo $sqlNomeEvento GROUP BY e.id";
 
-
-var_dump($sql);
 $query = mysqli_query($con, $sql);
-$numRows = mysqli_num_rows($query);
+//$numRows = mysqli_num_rows($query);
 ?>
 
 <div class="content-wrapper">
@@ -68,24 +60,19 @@ $numRows = mysqli_num_rows($query);
                         </thead>
                         <tbody>
                         <?php
-                        while ($evento = mysqli_fetch_array($query)){
-                            ?>
-                            <tr>
-                                <td><?= $evento['id'] ?></td>
-                                <td><?= $evento['nome_evento'] ?></td>
-                                <td><?= exibirDataHoraBr($evento['data_cadastro']) ?></td>
-                                <td><?= $evento['publico'] ?></td>
-                                <td>
-                                    <form action="?perfil=evento&p=resumo_capac" method="POST">
-                                        <input type="hidden" id="idCapac" name="idCapac" value="<?= $evento['id'] ?>">
-                                        <button type="submit" name="buscar" id="buscar" class="btn btn-block btn-info">
-                                            <span class="glyphicon glyphicon-folder-open"></span>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <?php
-                        }
+                            while ($evento = mysqli_fetch_array($query)){
+                                ?>
+                                    <tr>
+                                        <td><?= $evento['protocolo'] ?></td>
+                                        <td><?= $evento['nome_evento'] ?></td>
+                                        <td><?= $evento['data_cadastro'] ?></td>
+                                        <td><?= $evento['publico'] ?></td>
+                                        <td>
+                                            <a href="#?id=<?= $evento['id'] ?>" class="btn btn-info">Abrir</a>
+                                        </td>
+                                    </tr>
+                        <?php
+                            }
                         ?>
                         </tbody>
                         <tfoot>
