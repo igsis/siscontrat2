@@ -16,8 +16,8 @@ include "includes/menu_principal.php";
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 form-group">
-                                    <label for="idCapac">Código de Cadastro no CAPAC:</label>
-                                    <input type="number" name="idCapac" id="idCapac" class="form-control">
+                                    <label for="protocolo">Protocolo de Cadastro no CAPAC:</label>
+                                    <input type="number" name="protocolo" id="protocolo" class="form-control">
                                 </div>
                             </div>
                             <div class="row">

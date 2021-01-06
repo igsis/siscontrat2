@@ -2,7 +2,7 @@
 include "includes/menu_principal.php";
 $con = bancoCapac();
 
-$idCapac = $_POST['idCapac'] ?? null;
+$idCapac = $_POST['protocolo'] ?? null;
 $nomeEvento = $_POST['nome'] ?? null;
 $publico = $_POST['publico'] ?? null;
 
@@ -20,17 +20,28 @@ if($publico != null){
     $sqlPublico = " AND ep.publico_id = '$publico'";
 }
 
-$sql = "SELECT
-	        e.id,
-	        e.nome_evento,
-	        e.data_cadastro,
-	        (SELECT GROUP_CONCAT(' ',p.publico) FROM capac_new.evento_publico AS ep
-	            INNER JOIN capac_new.publicos AS p ON ep.publico_id = p.id
-	            WHERE ep.evento_id = e.id
-            ) AS 'publico'
-        FROM capac_new.eventos AS e
-        WHERE e.publicado = 2 $sqlIdCapac $sqlNomeEvento $sqlPublico";
+//$sql = "SELECT
+//	        e.id,
+//	        e.nome_evento,
+//	        e.data_cadastro,
+//	        (SELECT GROUP_CONCAT(' ',p.publico) FROM capac_new.evento_publico AS ep
+//	            INNER JOIN capac_new.publicos AS p ON ep.publico_id = p.id
+//	            WHERE ep.evento_id = e.id
+//            ) AS 'publico'
+//        FROM capac_new.eventos AS e
+//        WHERE e.publicado = 2 $sqlIdCapac $sqlNomeEvento $sqlPublico";
 
+$sql = "SELECT 	e.nome_evento,
+		e.protocolo,
+        DATE_FORMAT(e.data_cadastro, '%d/%m/%Y'),
+        p.publico
+FROM capac_new.eventos AS e
+LEFT JOIN capac_new.evento_publico AS ep ON e.id = ep.evento_id
+LEFT JOIN capac_new.publicos AS p ON p.id = ep.publico_id
+WHERE e.publicado = 2 AND protocolo != ''";
+
+
+var_dump($sql);
 $query = mysqli_query($con, $sql);
 $numRows = mysqli_num_rows($query);
 ?>
@@ -48,11 +59,11 @@ $numRows = mysqli_num_rows($query);
                     <table id="tblCapac" class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Código</th>
+                                <th>Protocolo</th>
                                 <th>Nome do Evento</th>
                                 <th>Data do cadastro</th>
-                                <th>Representatividade</th>
-                                <th>Abrir</th>
+                                <th>Público</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,14 +90,17 @@ $numRows = mysqli_num_rows($query);
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Código</th>
+                                <th>Protocolo</th>
                                 <th>Nome do Evento</th>
                                 <th>Data do cadastro</th>
-                                <th>Representatividade</th>
-                                <th>Abrir</th>
+                                <th>Público</th>
+                                <th></th>
                             </tr>
                         </tfoot>
                     </table>
+                    </div>
+                    <div class="box-footer">
+                        <button onclick="window.history.back();" class="btn btn-primary">Voltar</button>
                     </div>
                 </div>
             </div>
