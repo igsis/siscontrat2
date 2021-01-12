@@ -26,6 +26,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $email = trim($_POST['email']);
     $telefones = $_POST['telefone'];
     $drt = isset($_POST['drt']) ? trim($_POST['drt']) : NULL;
+    $omb = isset($_POST['omb']) ? trim($_POST['omb']) : NULL;
     $nit = trim($_POST['nit']) ?? NULL;
     $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $banco = $_POST['banco'] ?? NULL;
@@ -75,6 +76,12 @@ if (isset($_POST['cadastra'])) {
             $sqlNit = "INSERT INTO siscontrat.`nits` (pessoa_fisica_id, nit, publicado)  VALUES ('$idPf','$nit',1)";
             if (!mysqli_query($con, $sqlNit)) {
                 $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlNit;
+            }
+        }
+        if ($omb != NULL) {
+            $sqlOmb = "INSERT INTO siscontrat.`ombs` (pessoa_fisica_id, omb, publicado)  VALUES ('$idPf','$omb',1)";
+            if (!mysqli_query($con, $sqlOmb)) {
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlOmb;
             }
         }
     }
@@ -188,6 +195,21 @@ if (isset($_POST['edita'])) {
                 }
             }
         }
+        //edita drt
+        if ($omb != NULL) {
+            $omb_existe = verificaExiste("ombs", "pessoa_fisica_id", $idPf, 0);
+            if ($omb_existe['numero'] > 0) {
+                $sqlOmb = "UPDATE ombs SET omb = '$omb' WHERE pessoa_fisica_id = '$idPf'";
+                if (!mysqli_query($con, $sqlOmb)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlOmb;
+                }
+            } else {
+                $sqlOmb = "INSERT INTO siscontrat.`ombs` (pessoa_fisica_id, omb, publicado)  VALUES ('$idPf','$omb',1)";
+                if (!mysqli_query($con, $sqlOmb)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlOmb;
+                }
+            }
+        }
         //edita observação
         if ($observacao != NULL) {
             $obs_existe = verificaExiste("pf_observacoes", "pessoa_fisica_id", $idPf, 0);
@@ -270,6 +292,16 @@ if ($testaDRT->num_rows > 0) {
     }
 } else {
     $drt = NULL;
+}
+
+$testaOMB = $con->query("SELECT omb FROM ombs WHERE pessoa_fisica_id = $idPf");
+
+if ($testaOMB->num_rows > 0) {
+    while ($ombArray = mysqli_fetch_array($testaOMB)) {
+        $omb = $ombArray['omb'];
+    }
+} else {
+    $omb = NULL;
 }
 
 $testaObs = $con->query("SELECT * FROM pf_observacoes WHERE pessoa_fisica_id = $idPf");
@@ -489,16 +521,20 @@ if ($testaBanco->num_rows > 0) {
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
                                            placeholder="Digite o NIT" value="<?= $nit ?>">
                                 </div>
-
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
                                     <label for="drt">DRT: </label>
                                     <input type="text" name="drt" class="form-control telefone" maxlength="15"
                                            placeholder="Digite o DRT" value="<?= $drt ?>">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="drt">OMB: </label>
+                                    <input type="text" name="omb" class="form-control telefone" maxlength="15"
+                                           placeholder="Digite o OMB" value="<?= $omb ?>">
                                 </div>
                             </div>
 
