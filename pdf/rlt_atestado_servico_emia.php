@@ -6,6 +6,7 @@ require_once("../funcoes/funcoesGerais.php");
 
 $con = bancoMysqli();
 
+$dataAtual = date("d/m/Y");
 
 $idParcela = $_POST['idParcela'];
 $idPedido = $_POST['idPedido'];
@@ -43,12 +44,7 @@ $mes = retornaMes(date('m'));
 $ano = date('Y');
 $semana = date('w');
 
-$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela' AND publicado = 1";
-$query = mysqli_query($con, $sqlParcelas);
-while ($parcela = mysqli_fetch_array($query)) {
-    $datapgt = exibirDataBr($parcela['data_pagamento']);
-}
-
+$parcela = $con->query("SELECT * FROM emia_parcelas WHERE id = '$idParcela' AND publicado = 1")->fetch_assoc();
 ?>
 
 <html>
@@ -77,8 +73,11 @@ while ($parcela = mysqli_fetch_array($query)) {
 <div align="center">
     <?php
     $conteudo =
-        "<p><strong><u><center>ATESTADO DE CONFIRMAÇÃO DE SERVIÇOS</strong></p></u></center>" .
+        "<p><strong><u><center>Anexo I da Portaria SF nº 170, de 31 agosto de 2020</strong></p></u></center>" .
         "<p>&nbsp;</p>" .
+        "<p><strong>Recebimento da Documentação</strong></p> " .
+        "<p>&nbsp;</p>" .
+        "<p>Atesto:</p> " .
         "<p>Informamos que os serviços prestados pelo(a): " . $pessoa['nome'] . "</p>" .
         "<p><strong>Cargo: </strong>" . $cargo['cargo'] . "</p>" .
         "<p><strong>NA: </strong> EMIA </p>" .

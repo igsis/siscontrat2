@@ -68,7 +68,7 @@ $pdf->MultiCell(120, $l, utf8_decode($pessoa['nome']), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(14, $l, 'Cargo:', 0, 0, 'L');
+$pdf->Cell(14, $l, 'Objeto:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 11);
 $pdf->MultiCell(180, $l, utf8_decode($cargo['cargo']), 0, 'L', 0);
 
