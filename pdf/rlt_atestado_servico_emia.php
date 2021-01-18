@@ -4,50 +4,10 @@ require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
 
-$con = bancoMysqli();
-
-
-$idParcela = $_POST['idParcela'];
-$idPedido = $_POST['idPedido'];
-$pedido = $con->query("SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 3 AND publicado = 1")->fetch_array();
-$idEC = $pedido['origem_id'];
-$idPf = $pedido['pessoa_fisica_id'];
-$contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
-
-$nomeFiscal = "";
-$rfFiscal = "";
-if ($contratacao['fiscal_id'] != 0) {
-    $fiscal = recuperaDados('usuarios', 'id', $contratacao['fiscal_id']);
-    if ($fiscal) {
-        $nomeFiscal = $fiscal['nome_completo'];
-        $rfFiscal = $fiscal['rf_rg'];
-    }
-}
-
-$nomeSuplente = "";
-$rfSuplente = "";
-if ($contratacao['suplente_id'] != 0) {
-    $suplente = recuperaDados('usuarios', 'id', $contratacao['suplente_id']);
-    if ($suplente) {
-        $nomeSuplente = $suplente['nome_completo'];
-        $rfSuplente = $suplente['rf_rg'];
-    }
-}
-
-
-$cargo = recuperaDados('emia_cargos', 'id', $contratacao['emia_cargo_id']);
-
-$dia = date('d');
+$con = bancoMysqli();$dia = date('d');
 $mes = retornaMes(date('m'));
 $ano = date('Y');
 $semana = date('w');
-
-$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela' AND publicado = 1";
-$query = mysqli_query($con, $sqlParcelas);
-while ($parcela = mysqli_fetch_array($query)) {
-    $datapgt = exibirDataBr($parcela['data_pagamento']);
-}
 
 ?>
 
@@ -65,6 +25,14 @@ while ($parcela = mysqli_fetch_array($query)) {
             font-family: Arial, Helvetica, sans-serif;
             text-align: justify;
         }
+        .infos {
+            width: 100%;
+            border: solid;
+            padding: 50px;
+            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: justify;
+        }
     </style>
     <link rel="stylesheet" href="../visual/css/bootstrap.min.css">
     <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
@@ -77,32 +45,38 @@ while ($parcela = mysqli_fetch_array($query)) {
 <div align="center">
     <?php
     $conteudo =
-        "<p><strong><u><center>ATESTADO DE CONFIRMAÇÃO DE SERVIÇOS</strong></p></u></center>" .
+        "<p><center><strong>DEC/Escola Municipal de Iniciação Artística</strong></center></p>" .
+        "<p><center>Viaduto do Chá, 15, - Bairro Centro - São Paulo/SP - CEP 01020-900</center></p>" .
+        "<p><center>Telefone:</center></p>" .
+        "<p><center>Ateste de recebimento da documentação</center></p>" .
         "<p>&nbsp;</p>" .
-        "<p>Informamos que os serviços prestados pelo(a): " . $pessoa['nome'] . "</p>" .
-        "<p><strong>Cargo: </strong>" . $cargo['cargo'] . "</p>" .
-        "<p><strong>NA: </strong> EMIA </p>" .
-        "<P><strong>DIA(S) / HORÁRIO(S): </strong>" . retornaPeriodoFormacao_Emia($contratacao['emia_vigencia_id'], "emia") . "</p>" .
-        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS</p>" .
-        "<p>( X ) FORAM REALIZADOS A CONTENTO</p>" .
-        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS A CONTENTO, PELO SEGUINTE MOTIVO:</p>" .
+        "<p><center>Anexo I da Portaria SF nº 170, de 31 agosto de 2020</center></p>" .
+        "<p><center>Modelo de recebimento da documentação e ateste total/parcial de nota fiscal dentro/fora do prazo</center></p>" .
         "<p>&nbsp;</p>" .
-        "<p><strong>DADOS DO SERVIDOR (A) QUE ESTÁ CONFIRMANDO OU NÃO A REALIZAÇÃO DOS SERVIÇOS:</strong></p>" .
-        "<p><strong>NOME LEGÍVEL:</strong> " . checaCampo($nomeFiscal) . "</p>" .
-        "<p><strong>TELEFONE DE CONTATO:</strong> (11) 5017-2192</p>" .
-        "<p><strong>LOTAÇÃO:</strong> EMIA-Escola Municipal de Iniciação Artística</p>" .
-        "<p><strong>REGISTRO FUNCIONAL: </strong>" . checaCampo($rfFiscal) . "</p>" .
-        "<p><strong>SUPLENTE:</strong> " . checaCampo($nomeSuplente) . "</p>" .
-        "<p><strong>TELEFONE DE CONTATO:</strong> (11) 5017-2192</p>" .
-        "<p><strong>LOTAÇÃO:</strong> EMIA-Escola Municipal de Iniciação Artística</p>" .
-        "<p><strong>REGISTRO FUNCIONAL:</strong> " . checaCampo($rfSuplente) . "</p>" .
+        "<p><strong>Recebimento da Documentação</strong>" .
+        "<p>Atesto:</p>" .
+        "<p>( X ) o recebimento em ___/___/_____  de <strong>toda a documentação</strong> [INSERIR NÚMERO SEI DA NOTA FISCAL E ARQUIVOS CONSOLIDADOS] prevista na Portaria SF nº 170/2020.</p>" .
+        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) o recebimento em ___/___/_____ da <b>documentação</b> [INSERIR NÚMERO SEI DA NOTA FISCAL E ARQUIVOS CONSOLIDADOS] prevista na Portaria SF nº 170/2020, <b>ressalvado</b> (s) [RELACIONAR OS DOCUMENTOS IRREGULARES].</p>" .
         "<p>&nbsp;</p>" .
-        "<p>Com base na Folha de Frequência Individual: (Documento SEI link ) atesto que os materiais/serviços prestados discriminados no documento fiscal (Documento SEI link )  foram entregues e/ou executados a contento nos termos previstos no instrumento contratual (ou documento equivalente) no dia: " . $datapgt . ", dentro do prazo previsto. O prazo contratual é do dia " . retornaPeriodoFormacao_Emia($contratacao['emia_vigencia_id'], "emia") . ". </p>" .
+        "<p><strong>Recebimento de material e/ou serviços</strong>" .
+        "<p>Atesto:</p>" .
+        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados a <b>contento</b> nos termos previstos no instrumento contratual (ou documento equivalente) no dia ___/___/_____, dentro do prazo previsto.</p>" .
+        "<p>O prazo contratual é do dia ___/___/_____ até o dia ___/___/_____.</p>" .
         "<p>&nbsp;</p>" .
-        "<p><strong><center>INFORMAÇÕES COMPLEMENTARES</strong></p></center>" .
-        "<p>À área gestora/de liquidação e pagamento:</p>" .
+        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados <b>parcialmente</b>, nos termos previstos no instrumento contratual (ou documentos equivalente), do dia ___/___/_____, dentro do prazo previsto.</p>" .
+        "<p>O prazo contratual é do dia ___/___/_____ até o dia ___/___/_____.</p>" .
+        "<p>&nbsp;</p>" .
+        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados a contendo nos termos previstos no instrumento contratual( ou documento equivalente) no dia ___/___/_____, <strong>com atraso</strong> de ___ dias.</p>" .
+        "<p>O prazo contratual é do dia ___/___/_____ até o dia ___/___/_____.</p>" .
+        "<p>&nbsp;</p>" .
+        "<p style='background: lightgrey;'><strong>INFORMAÇÕES COMPLEMENTARES</strong></p>" .
+        "<div class='infos'></div>" .
+        "<p>&nbsp;</p>" .
+        "<p>À área gestora / de liquidação e pagamento.</p>" .
+        "<p>Em virtude do detalhamento da Ação em 2019, informamos que o pagamento no valor de R$ 4.194,72 (quatro mil, cento e noventa e quatro reais e setenta e dois centavos) foi gasto na zona sul de São Paulo, rua Volkswagen, s/nº, Jabaquara, SP.</p>" .
         "<p>Encaminho para prosseguimento.</p>" .
-        "<p>São Paulo,  $dia  de  $mes  de  $ano.  </p>"
+        "<p>&nbsp;</p>" .
+        "<p><center>São Paulo,  $dia  de  $mes  de  $ano.</center></p>"
     ?>
 
     <div id="texto" class="texto"><?php echo $conteudo; ?></div>
@@ -150,5 +124,3 @@ while ($parcela = mysqli_fetch_array($query)) {
 
 </body>
 </html>
-
-

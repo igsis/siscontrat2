@@ -80,7 +80,6 @@ $link_contabilidade = $http . "rlt_contabilidade_emia.php";
                             <th></th>
                             <th style="text-align:center">Gerar</th>
                             <th></th>
-                            <th></th>
                         </tr>
                         </thead>
 
@@ -125,14 +124,6 @@ $link_contabilidade = $http . "rlt_contabilidade_emia.php";
                                         </form>
                                     </th>
 
-                                    <th style="text-align:center">
-                                        <form action="<?= $link_contabilidade ?>" method="post" target="_blank">
-                                            <input type="hidden" value="<?= $parcela['id'] ?>" name="idParcela">
-                                            <input type="hidden" value="<?=$idPedido?>" name="idPedido">
-                                            <button type="submit" class="btn btn-primary">Contabilidade</button>
-                                        </form>
-                                    </th>
-
                                 </tr>
                                 <?php
                         }
@@ -147,7 +138,6 @@ $link_contabilidade = $http . "rlt_contabilidade_emia.php";
                             <th></th>
                             <th></th>
                             <th style="text-align:center">Gerar</th>
-                            <th></th>
                             <th></th>
                         </tr>
                         </tfoot>
