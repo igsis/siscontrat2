@@ -4,7 +4,9 @@ require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
 
-$con = bancoMysqli();$dia = date('d');
+$con = bancoMysqli();
+
+$dia = date('d');
 $mes = retornaMes(date('m'));
 $ano = date('Y');
 $semana = date('w');
