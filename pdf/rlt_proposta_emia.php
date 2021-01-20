@@ -178,10 +178,6 @@ $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(13, $l, 'C.B.O.:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(43, $l, utf8_decode($cbo), 0, 0, 'L');
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(15, $l, utf8_decode('Função:'), 0, 0, 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(30, $l, "", 0, 0, 'L');
 
 $pdf->Ln(7);
 
