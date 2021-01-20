@@ -168,20 +168,25 @@ if (isset($_POST['adicionar'])) {
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control" maxlength="45"
                                            placeholder="Digite o NIT">
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label for="drt">DRT: </label>
                                     <input type="text" name="drt" class="form-control telefone" maxlength="15"
                                            placeholder="Digite o DRT">
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="drt">OMB: </label>
+                                <div class="form-group col-md-3">
+                                    <label for="omb">OMB: </label>
                                     <input type="text" name="omb" class="form-control telefone" maxlength="15"
                                            placeholder="Digite o OMB">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="cbo">C.B.O.: </label>
+                                    <input type="text" name="cbo" class="form-control telefone" maxlength="15"
+                                           placeholder="Digite o CBO">
                                 </div>
                             </div>
 

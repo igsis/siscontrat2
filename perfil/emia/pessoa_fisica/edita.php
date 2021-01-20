@@ -27,6 +27,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $telefones = $_POST['telefone'];
     $drt = isset($_POST['drt']) ? trim($_POST['drt']) : NULL;
     $omb = isset($_POST['omb']) ? trim($_POST['omb']) : NULL;
+    $cbo = isset($_POST['cbo']) ? trim($_POST['cbo']) : NULL;
     $nit = trim($_POST['nit']) ?? NULL;
     $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
     $banco = $_POST['banco'] ?? NULL;
@@ -82,6 +83,12 @@ if (isset($_POST['cadastra'])) {
             $sqlOmb = "INSERT INTO siscontrat.`ombs` (pessoa_fisica_id, omb, publicado)  VALUES ('$idPf','$omb',1)";
             if (!mysqli_query($con, $sqlOmb)) {
                 $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlOmb;
+            }
+        }
+        if ($cbo != NULL) {
+            $sqlCbo = "INSERT INTO siscontrat.`cbos` (pessoa_fisica_id, cbo, publicado)  VALUES ('$idPf','$cbo',1)";
+            if (!mysqli_query($con, $sqlCbo)) {
+                $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.") . $sqlCbo;
             }
         }
     }
@@ -195,7 +202,7 @@ if (isset($_POST['edita'])) {
                 }
             }
         }
-        //edita drt
+        //edita omb
         if ($omb != NULL) {
             $omb_existe = verificaExiste("ombs", "pessoa_fisica_id", $idPf, 0);
             if ($omb_existe['numero'] > 0) {
@@ -207,6 +214,21 @@ if (isset($_POST['edita'])) {
                 $sqlOmb = "INSERT INTO siscontrat.`ombs` (pessoa_fisica_id, omb, publicado)  VALUES ('$idPf','$omb',1)";
                 if (!mysqli_query($con, $sqlOmb)) {
                     $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlOmb;
+                }
+            }
+        }
+        //edita cbo
+        if ($cbo != NULL) {
+            $cbo_existe = verificaExiste("cbos", "pessoa_fisica_id", $idPf, 0);
+            if ($cbo_existe['numero'] > 0) {
+                $sqlCbo = "UPDATE cbos SET cbo = '$cbo' WHERE pessoa_fisica_id = '$idPf'";
+                if (!mysqli_query($con, $sqlCbo)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Tente novamente.[B]") . $sqlCbo;
+                }
+            } else {
+                $sqlCbo = "INSERT INTO siscontrat.`cbos` (pessoa_fisica_id, cbo, publicado)  VALUES ('$idPf','$cbo',1)";
+                if (!mysqli_query($con, $sqlCbo)) {
+                    $mensagem .= mensagem("danger", "Erro ao gravar! Primeiro registre uma atracao, para entao fazer seu pedido.") . $sqlCbo;
                 }
             }
         }
@@ -302,6 +324,16 @@ if ($testaOMB->num_rows > 0) {
     }
 } else {
     $omb = NULL;
+}
+
+$testaCBO = $con->query("SELECT cbo FROM cbos WHERE pessoa_fisica_id = $idPf");
+
+if ($testaCBO->num_rows > 0) {
+    while ($cboArray = mysqli_fetch_array($testaCBO)) {
+        $cbo = $cboArray['cbo'];
+    }
+} else {
+    $cbo = NULL;
 }
 
 $testaObs = $con->query("SELECT * FROM pf_observacoes WHERE pessoa_fisica_id = $idPf");
@@ -521,20 +553,25 @@ if ($testaBanco->num_rows > 0) {
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label for="nit">NIT: </label>
                                     <input type="text" name="nit" class="form-control telefone" maxlength="45"
                                            placeholder="Digite o NIT" value="<?= $nit ?>">
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label for="drt">DRT: </label>
                                     <input type="text" name="drt" class="form-control telefone" maxlength="15"
                                            placeholder="Digite o DRT" value="<?= $drt ?>">
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="drt">OMB: </label>
+                                <div class="form-group col-md-3">
+                                    <label for="omb">OMB: </label>
                                     <input type="text" name="omb" class="form-control telefone" maxlength="15"
                                            placeholder="Digite o OMB" value="<?= $omb ?>">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="cbo">C.B.O.: </label>
+                                    <input type="text" name="cbo" class="form-control telefone" maxlength="15"
+                                           placeholder="Digite o CBO" value="<?= $cbo ?>">
                                 </div>
                             </div>
 

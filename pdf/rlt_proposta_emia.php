@@ -84,6 +84,15 @@ if ($testaOmb->num_rows > 0) {
     $omb = "Não cadastrado";
 }
 
+$testaCbo = $con->query("SELECT cbo FROM cbos WHERE pessoa_fisica_id = $idPf");
+if ($testaCbo->num_rows > 0) {
+    while ($cboArray = mysqli_fetch_array($testaCbo)) {
+        $cbo = $cboArray['cbo'];
+    }
+} else {
+    $cbo = "Não cadastrado";
+}
+
 $Observacao = "Todas as atividades dos programas da Supervisão de Formação são inteiramente gratuitas e é terminantemente proibido cobrar por elas sob pena de multa e rescisão de contrato.";
 $sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 20";
 $penalidades = $con->query($sqlPenalidade)->fetch_array();
@@ -168,7 +177,7 @@ $pdf->Cell(50, $l, utf8_decode($drt), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(13, $l, 'C.B.O.:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(43, $l, "", 0, 0, 'L');
+$pdf->Cell(43, $l, utf8_decode($cbo), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(15, $l, utf8_decode('Função:'), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
