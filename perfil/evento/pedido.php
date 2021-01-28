@@ -36,6 +36,7 @@ if($evento['tipo_evento_id']==1) {
     $sql_atracao = "SELECT id, nome_atracao FROM atracoes WHERE evento_id = '$idEvento' AND publicado = 1";
     $query_atracao = mysqli_query($con, $sql_atracao);
     $nome_atracao = "";
+    $num_atracao = mysqli_num_rows($query_atracao);
     while ($arr = mysqli_fetch_array($query_atracao)) {
         $nome_atracao = $nome_atracao . $arr['nome_atracao'] . " <br> ";
     }
@@ -93,6 +94,7 @@ include "includes/menu_interno.php";
                             unset($_SESSION['idPedido']);
                             ?>
                             <div class="row">
+                                <?php if($num_atracao == 1){ ?>
                                 <div class="form-group col-md-offset-3 col-md-3">
                                     <form method="POST" action="?perfil=evento&p=pf_pesquisa" role="form">
                                         <button type="submit" name="pessoa_fisica"
@@ -100,7 +102,8 @@ include "includes/menu_interno.php";
                                         </button>
                                     </form>
                                 </div>
-                                <div class="form-group col-md-3">
+                                <?php } ?>
+                                <div class="form-group col-md-3 <?= $num_atracao > 1 ? 'col-md-offset-4' : '' ?>">
                                     <form method="POST" action="?perfil=evento&p=pj_pesquisa" role="form">
                                         <button type="submit" name="pesquisar_pessoa_juridica"
                                                 class="btn btn-block btn-primary btn-lg">Pessoa Jurídica
