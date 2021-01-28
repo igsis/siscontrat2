@@ -98,7 +98,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
 
                         <div class="box-body">
                             <?php for ($i = 0; $i < $nParcelas; $i++):
-                                if (isset($oficina)): ?>
+                                // if (isset($oficina)): ?>
                                     <input type="hidden" name="oficina" value="1">
                                     <div class='row'>
                                         <div class='form-group col-md-1'>
@@ -141,29 +141,29 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                                                    class='form-control'>
                                         </div>
                                     </div>
-                                <?php else: ?>
-                                    <div class='row'>
-                                        <div class='form-group col-md-2'>
-                                            <label for='parcela'>Parcela </label>
-                                            <input type='number' name="parcela[<?= $i ?>]" value="<?= $i + 1 ?>"
-                                                   class='form-control' readonly>
-                                        </div>
-                                        <div class='form-group col-md-3'>
-                                            <label for='valor'>Valor *</label>
-                                            <input type='text' name='valor[<?= $i ?>]' class='form-control valor'
-                                                   value="<?= isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : '' ?>"
-                                                   required
-                                                   placeholder="Valor em reais"
-                                                   maxlength="10">
-                                        </div>
-                                        <div class='form-group col-md-4'>
-                                            <label for='data_pagamento'>Data Kit Pagamento *</label>
-                                            <input type='date' id='data_pagamento' required
-                                                   value="<?= $parcelas[$i]['data_pagamento'] ?? '' ?>"
-                                                   name='data_pagamento[<?= $i ?>]' class='form-control dataPagamento'>
-                                        </div>
-                                    </div>
-                                <?php endif;
+                                <?php //else: ?>
+<!--                                    <div class='row'>-->
+<!--                                        <div class='form-group col-md-2'>-->
+<!--                                            <label for='parcela'>Parcela </label>-->
+<!--                                            <input type='number' name="parcela[--><?//= $i ?><!--]" value="--><?//= $i + 1 ?><!--"-->
+<!--                                                   class='form-control' readonly>-->
+<!--                                        </div>-->
+<!--                                        <div class='form-group col-md-3'>-->
+<!--                                            <label for='valor'>Valor *</label>-->
+<!--                                            <input type='text' name='valor[--><?//= $i ?><!--]' class='form-control valor'-->
+<!--                                                   value="--><?//= isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : '' ?><!--"-->
+<!--                                                   required-->
+<!--                                                   placeholder="Valor em reais"-->
+<!--                                                   maxlength="10">-->
+<!--                                        </div>-->
+<!--                                        <div class='form-group col-md-4'>-->
+<!--                                            <label for='data_pagamento'>Data Kit Pagamento *</label>-->
+<!--                                            <input type='date' id='data_pagamento' required-->
+<!--                                                   value="--><?//= $parcelas[$i]['data_pagamento'] ?? '' ?><!--"-->
+<!--                                                   name='data_pagamento[--><?//= $i ?><!--]' class='form-control dataPagamento'>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+                                <?php //endif;
                             endfor; ?>
                             <div class="row">
                                 <div class="col-md-offset-3 col-md-3">
