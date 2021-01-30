@@ -1689,6 +1689,20 @@ function numeroChamados($idEvento, $litar = false)
     }
 }
 
+function recuperaChamadoEvento($id){
+
+    $con = bancoPDO();
+    $sql = "SELECT ev.nome_evento, er.data_reabertura
+            FROM eventos ev
+            LEFT JOIN evento_reaberturas er ON ev.id = er.evento_id
+            WHERE ev.evento_status_id = 1 
+            AND (ev.fiscal_id = '{$id}' OR ev.suplente_id = '{$id}' OR ev.usuario_id = '{$id}')
+            AND data_reabertura != ''  AND ev.publicado = 1
+            ORDER BY er.data_reabertura";
+
+    return $con->query($sql);
+}
+
 function retornaChamadosTD($id)
 {
     if (numeroChamados($id) > 0) {
