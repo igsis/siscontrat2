@@ -70,6 +70,9 @@ $notificacao = recuperaChamadoEvento($_SESSION['usuario_id_s']);
       <link rel="stylesheet" href="css\smoothness_jquery-ui.css">
       <!-- Toastr -->
       <script src="plugins/toastr/toastr.min.js"></script>
+      <!-- Select2 -->
+      <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
+      <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 
       <style>
           .ui-menu-item{
