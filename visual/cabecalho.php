@@ -276,7 +276,7 @@ $notificacao = recuperaChamadoEvento($_SESSION['usuario_id_s']);
                         </a>
                         <ul class="dropdown-menu">
                             <?php if ($notificacao->rowCount()){ ?>
-                                <li class="header">Você tem <?= $notificacao->rowCount() ?> eventos que forão reabertos</li>
+                                <li class="header">Você tem <?= $notificacao->rowCount() ?> eventos que foram reabertos</li>
                                 <li>
                                     <!-- inner menu: contains the actual data -->
                                     <ul class="menu">
