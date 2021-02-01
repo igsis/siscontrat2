@@ -99,7 +99,7 @@ $ec = recuperaDados('emia_contratacao', 'id', $idEC);
                     <div class="row">
                         <div class="col-md-6">
                             <label for="pf">Pessoa Física: *</label>
-                            <select name="pf" id="pf" class="form-control" required>
+                            <select name="pf" id="pf" class="form-control select2bs4" required>
                                 <option value="">Selecione uma pessoa física...</option>
                                 <?php
                                 geraOpcao('pessoa_fisicas', $ec['pessoa_fisica_id']);
@@ -118,7 +118,7 @@ $ec = recuperaDados('emia_contratacao', 'id', $idEC);
                     <div class="row">
                         <div class="col-md-4">
                             <label for="local">Local: *</label>
-                            <select name="local" id="local" required class="form-control">
+                            <select name="local" id="local" required class="form-control select2bs4">
                                 <option value="">Selecione um local...</option>
                                 <?php
                                 geraOpcao('locais', $ec['local_id']);
@@ -183,7 +183,7 @@ $ec = recuperaDados('emia_contratacao', 'id', $idEC);
                     <div class="row">
                         <div class="col-md-6">
                             <label for="fiscal">Fiscal: </label>
-                            <select name="fiscal" id="fiscal" class="form-control">
+                            <select name="fiscal" id="fiscal" class="form-control select2bs4">
                                 <option value="">Selecione um fiscal...</option>
                                 <?php
                                 geraOpcaoUsuario("usuarios", 1, $ec['fiscal_id']);
@@ -193,7 +193,7 @@ $ec = recuperaDados('emia_contratacao', 'id', $idEC);
 
                         <div class="col-md-6">
                             <label for="suplente">Suplente: </label>
-                            <select name="suplente" id="suplente" class="form-control">
+                            <select name="suplente" id="suplente" class="form-control select2bs4">
                                 <option value="">Selecione um suplente...</option>
                                 <?php
                                 geraOpcaoUsuario("usuarios", 1, $ec['suplente_id']);
