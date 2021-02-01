@@ -62,8 +62,7 @@ $ec = recuperaDados('emia_cargos', 'id', $idEC);
                         </div>
                         <div class="col-md-8">
                             <label for="justificativa">Justificativa: *</label>
-                            <input class="form-control" type="text" required name="justificativa" id="justificativa"
-                                   value="<?= $ec['justificativa'] ?>">
+                            <textarea name="justificativa" id="justificativa" class="form-control" rows="1"><?= $ec['justificativa'] ?></textarea>
                         </div>
                     </div>
                 </div>
