@@ -62,7 +62,7 @@ $ec = recuperaDados('emia_cargos', 'id', $idEC);
                         </div>
                         <div class="col-md-8">
                             <label for="justificativa">Justificativa: *</label>
-                            <textarea name="justificativa" id="justificativa" class="form-control" rows="1"><?= $ec['justificativa'] ?></textarea>
+                            <textarea name="justificativa" id="justificativa" class="form-control" rows="5"><?= $ec['justificativa'] ?></textarea>
                         </div>
                     </div>
                 </div>
