@@ -20,10 +20,16 @@ if ($ocorrencias->num_rows > 0) {
         $setores = $setores . $linhaOco['nome'] . '; ';
 
         if ($linhaOco['tipo_ocorrencia_id'] == 1) {
-            $atracoes = $con->query("SELECT quantidade_apresentacao FROM atracoes WHERE publicado = 1 AND evento_id = " . $evento['id'] . " AND id = " . $linhaOco['atracao_id']);
+            $atracoes = $con->query("SELECT quantidade_apresentacao, nome_atracao, produtor_id FROM atracoes WHERE publicado = 1 AND evento_id = " . $evento['id'] . " AND id = " . $linhaOco['atracao_id']);
 
+            $lista_produtor = "";
             while ($atracao = mysqli_fetch_array($atracoes)) {
                 $qtsApresentacao = $qtsApresentacao + (int)$atracao['quantidade_apresentacao'];
+
+                $produtores = $con->query("SELECT * FROM produtores WHERE id = '{$atracao['produtor_id']}'");
+                $produtor = mysqli_fetch_array($produtores);
+                $lista_produtor = $lista_produtor.
+                    $atracao['nome_atracao']."<br> <b>Nome:</b> ".$produtor['nome']."<br> <b>Telefone:</b> ".$produtor['telefone1'] . " | " . $produtor['telefone2'] . "<br> <b>E-mail:</b> ". $produtor['email'];
             }
 
             $trechoApresentacoes = ", totalizando $qtsApresentacao apresentações conforme proposta/cronograma";
@@ -142,6 +148,9 @@ if($cargaHoraria == 0){
         $cpf_passaporte .
         "<strong>Telefone(s):</strong> " . $tel . "<br />" .
         "<strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
+        "<p>&nbsp;</p>" .
+        "<p><strong>Produtor:</strong></p>" .
+        "<p>$lista_produtor</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
         "<p><strong>Data / Período:</strong> " . retornaPeriodoNovo($idEvento, 'ocorrencias') . $trechoApresentacoes . "</p>" .
