@@ -75,6 +75,24 @@ if ($testaDrt->num_rows > 0) {
     $drt = "Não cadastrado";
 }
 
+$testaOmb = $con->query("SELECT omb FROM ombs WHERE pessoa_fisica_id = $idPf");
+if ($testaOmb->num_rows > 0) {
+    while ($ombArray = mysqli_fetch_array($testaOmb)) {
+        $omb = $ombArray['omb'];
+    }
+} else {
+    $omb = "Não cadastrado";
+}
+
+$testaCbo = $con->query("SELECT cbo FROM cbos WHERE pessoa_fisica_id = $idPf");
+if ($testaCbo->num_rows > 0) {
+    while ($cboArray = mysqli_fetch_array($testaCbo)) {
+        $cbo = $cboArray['cbo'];
+    }
+} else {
+    $cbo = "Não cadastrado";
+}
+
 $Observacao = "Todas as atividades dos programas da Supervisão de Formação são inteiramente gratuitas e é terminantemente proibido cobrar por elas sob pena de multa e rescisão de contrato.";
 $sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 20";
 $penalidades = $con->query($sqlPenalidade)->fetch_array();
@@ -114,28 +132,9 @@ $pdf->MultiCell(120, $l, utf8_decode(checaCampo($pessoa['nome_artistico'])), 0, 
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-if ($pessoa['passaporte'] != NULL) {
-    $pdf->Cell(21, $l, utf8_decode('Passaporte:'), 0, 0, 'L');
-    $pdf->SetFont('Arial', '', 10);
-    $pdf->Cell(50, $l, utf8_decode($pessoa['passaporte']), 0, 0, 'L');
-
-} else {
-    $pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
-    $pdf->SetFont('Arial', '', 10);
-    $pdf->Cell(50, $l, utf8_decode(checaCampo($pessoa['rg'])), 0, 0, 'L');
-    $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
-    $pdf->SetFont('Arial', '', 10);
-    $pdf->Cell(45, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
-}
-
-$pdf->Ln(7);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, $l, 'Data de Nascimento:', 0, 0, 'L');
+$pdf->Cell(22, $l, 'Estado Civil:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(25, $l, utf8_decode(exibirDataBr($pessoa['data_nascimento'])), 0, 0, 'L');
+$pdf->Cell(38, $l, utf8_decode(exibirDataBr($pessoa['data_nascimento'])), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(26, $l, "Nacionalidade:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
@@ -149,9 +148,38 @@ $pdf->Ln(7);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
+if ($pessoa['passaporte'] != NULL) {
+    $pdf->Cell(21, $l, utf8_decode('Passaporte:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(50, $l, utf8_decode($pessoa['passaporte']), 0, 0, 'L');
+
+} else {
+    $pdf->Cell(7, $l, utf8_decode('RG:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(53, $l, utf8_decode(checaCampo($pessoa['rg'])), 0, 0, 'L');
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(9, $l, utf8_decode('CPF:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(47, $l, utf8_decode($pessoa['cpf']), 0, 0, 'L');
+}
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(10, $l, "OBM:", 0, 0, 'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(30, $l, utf8_decode($omb), 0, 0, 'L');
+
+$pdf->Ln(7);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(10, $l, 'DRT:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(40, $l, utf8_decode($drt), 0, 'L', 0);
+$pdf->Cell(50, $l, utf8_decode($drt), 0, 0, 'L');
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(13, $l, 'C.B.O.:', 0, 0, 'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(43, $l, utf8_decode($cbo), 0, 0, 'L');
+
+$pdf->Ln(7);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -163,13 +191,25 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(21, $l, 'Telefone(s):', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($tel), 0, 'L', 0);
-
-$pdf->SetX($x);
+$pdf->Cell(78, $l, utf8_decode($tel), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode($pessoa['email']), 0, 'L', 0);
+$pdf->Cell(30, $l, utf8_decode($pessoa['email']), 0, 0, 'L');
+
+$pdf->Ln(7);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(63, $l, utf8_decode('Inscrição no INSS ou nº PIS / PASEP:'), '0', '0', 'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(48, $l, "", 0, 0, 'L');
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(35, $l, 'Data de Nascimento:', 0, 0, 'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(25, $l, utf8_decode(exibirDataBr($pessoa['data_nascimento'])), 0, 0, 'L');
+
+$pdf->Ln(7);
 
 $pdf->SetX($x);
 $pdf->Cell(180, 5, '', 'B', 1, 'C');
@@ -184,7 +224,15 @@ $pdf->Cell(160, 10, 'PROPOSTA', 0, 0, 'C');
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(10, 10, utf8_decode($contratacao['protocolo']), 0, 1, 'R');
 
-$pdf->Ln(6);
+$pdf->Ln(1);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(22, $l, 'Objeto:', 0, 0, 'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(50, $l, "", 0, 0, 'L');
+
+$pdf->Ln(7);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);

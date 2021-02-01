@@ -5,7 +5,7 @@ $idPf = $_POST['idPf'];
 
 
 if (isset($_POST["enviar"])) {
-    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = 1 and publicado = 1";
+    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id IN (1, 11) and publicado = 1";
     $query_arquivos = mysqli_query($con, $sql_arquivos);
     while ($arq = mysqli_fetch_array($query_arquivos)) {
         $y = $arq['id'];
@@ -88,7 +88,7 @@ if (isset($_POST['apagar'])) {
                                     <?php
                                     $sql = "SELECT * FROM lista_documentos as list
 			                        INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
-                                    WHERE arq.origem_id = '$idPf' AND list.tipo_documento_id = 1
+                                    WHERE arq.origem_id = '$idPf' AND list.tipo_documento_id IN (1, 11)
                                     AND arq.publicado = '1' ORDER BY arq.id";
                                     $query = mysqli_query($con, $sql);
                                     $linhas = mysqli_num_rows($query);
@@ -146,7 +146,7 @@ if (isset($_POST['apagar'])) {
                                                             05MB.</h4>
                                                     </tr>
                                                     <?php
-                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id = 1 and publicado = 1";
+                                                    $sql_arquivos = "SELECT * FROM lista_documentos WHERE tipo_documento_id IN (1, 11) and publicado = 1";
                                                     $query_arquivos = mysqli_query($con, $sql_arquivos);
                                                     while ($arq = mysqli_fetch_array($query_arquivos)) {
                                                         $idDoc = $arq['id'];

@@ -33,13 +33,14 @@ if (isset($_POST['cadastraLider'])) {
 }
 
 
+
 if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
     $nome = trim(addslashes($_POST['nome']));
     $nomeArtistico = trim(addslashes($_POST['nomeArtistico'])) ?? NULL;
     $rg = isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
-    $ccm = isset($_POST['ccm']) ? trim($_POST['ccm']) : NULL;
+    $pis_nit = isset($_POST['pis_nit']) ? trim($_POST['pis_nit']) : NULL;
     $dtNascimento = $_POST['dtNascimento'] ?? NULL;
     $nacionalidade = $_POST['nacionalidade'];
     $cep = $_POST['cep'];
@@ -61,7 +62,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita']) || isset($_POST['cadastr
 }
 if (isset($_POST['cadastra']) || isset($_POST['cadastraComLider']) || isset($_POST['atualizaPf'])) {
     $mensagem = "";
-    $sql = "INSERT INTO siscontrat.`pessoa_fisicas` (nome, nome_artistico, rg, passaporte, cpf, ccm, data_nascimento, nacionalidade_id, email, ultima_atualizacao) VALUES('$nome','$nomeArtistico','$rg','$passaporte','$cpf','$ccm','$dtNascimento','$nacionalidade','$email','$data')";
+    $sql = "INSERT INTO siscontrat.`pessoa_fisicas` (nome, nome_artistico, rg, passaporte, cpf, pis_nit, data_nascimento, nacionalidade_id, email, ultima_atualizacao) VALUES('$nome','$nomeArtistico','$rg','$passaporte','$cpf','$pis_nit','$dtNascimento','$nacionalidade','$email','$data')";
     if (mysqli_query($con, $sql)) {
         $idPf = recuperaUltimo("pessoa_fisicas");
 // cadastrar o telefone de pf
@@ -162,7 +163,7 @@ if (isset($_POST['edita'])) {
     rg = '$rg',
     passaporte = '$passaporte',
     cpf = '$cpf',
-    ccm = '$ccm',
+    pis_nit = '$pis_nit',
     data_nascimento = '$dtNascimento',
     nacionalidade_id = '$nacionalidade',
     email = '$email',
@@ -520,10 +521,9 @@ include "includes/menu_interno.php";
                                                value="<?= $pf['cpf'] ?>" readonly>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <label for="ccm">CCM:</label>
-                                        <input type="text" name="ccm" class="form-control"
-                                               placeholder="Digite o CCM"
-                                               maxlength="11" value="<?= $pf['ccm'] ?>">
+                                        <label for="pis_nit">PIS / NIT: *</label>
+                                        <input type="text" name="pis_nit" id="pis_nit" class="form-control"
+                                               placeholder="Digite PIS ou NIT" maxlength="11" required value="<?= $pf['pis_nit'] ?>">
                                     </div>
                                     <?php
                                 }

@@ -101,6 +101,22 @@
 <script type="text/javascript" src="js/autocomplete.js"></script>
 <script src="js/jquery-ui.js"></script>
 
+<!-- Select2 -->
+<script src="plugins/select2/js/select2.full.min.js"></script>
+<script src="plugins/select2/js/i18n/pt-BR.js" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function (){
+        //Initialize Select2 Elements
+        $('.select2').select2();
+
+        $('.select2bs4').select2({
+            theme: 'bootstrap4',
+            language: 'pt-BR'
+        });
+    });
+</script>
+
 <script>
     function exibirChamados(id){
         const modalId= '#modalChamadosEventos';

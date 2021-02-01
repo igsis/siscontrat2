@@ -16,7 +16,7 @@
                         </div>
                         <div class="col-md-8">
                             <label for="justificativa">Justificativa: *</label>
-                            <input class="form-control" type="text" required name="justificativa" id="justificativa">
+                            <textarea name="justificativa" id="justificativa" class="form-control" rows="5"></textarea>
                         </div>
                     </div>
                 </div>

@@ -186,6 +186,6 @@ $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 
 <script>
     $(document).ready(function () {
-        $('.valor').mask('000,00', {reverse: true});
+        $('.valor').mask('00.000,00', {reverse: true});
     });
 </script>

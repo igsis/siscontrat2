@@ -267,6 +267,9 @@ $mensagem2 = mensagem("warning", "Há ocorrências duplicadas. Ocorrências dest
                             </tfoot>
                         </table>
                     </div>
+                    <div class="box-footer">
+                        <button type="button" class="btn btn-default" id="voltar" name="voltar" onclick="window.history.back();">Voltar</button>
+                    </div>
                 </div>
             </div>
         </div>
