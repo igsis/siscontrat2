@@ -111,11 +111,14 @@ $ev = recuperaDados('emia_vigencias', 'id', $idEV);
                         <h3 class="box-title">Cadastre as parcelas</h3>
                     </div>
                     <br>
-
                     <?php
+                    $valorTotal = 0.00;
+                    $cargaHoraria = 0;
                     for ($i = 1; $i < $ev['numero_parcelas'] + 1; $i++) {
                         $sql = "SELECT * FROM emia_parcelas WHERE emia_vigencia_id = '$idEV' AND numero_parcelas = '$i' AND publicado = '1'";
                         $parcelas = mysqli_fetch_array(mysqli_query($con, $sql));
+                        $valorTotal= $valorTotal + $parcelas['valor'];
+                        $cargaHoraria = $cargaHoraria + $parcelas['carga_horaria'];
                         ?>
                         <div class="row">
                             <div class="form-group col-md-12">
@@ -129,7 +132,7 @@ $ev = recuperaDados('emia_vigencias', 'id', $idEV);
                             <div class="form-group col-md-2">
                                 <label for="valor[]">Valor:</label>
                                 <input type="text" id="valor<?= $i ?>" name="valor[]"
-                                       class="form-control valor" value="<?= dinheiroParaBr($parcelas['valor'] ?? NULL) ?>">
+                                       class="form-control valor" value="<?= dinheiroParaBr($parcelas['valor'] ?? NULL) ?>" onchange="atualizarValorFinal(this)" >
                             </div>
 
                             <div class="form-group col-md-2">
@@ -153,8 +156,8 @@ $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 
                             <div class="form-group col-md-2">
                                 <label for="carga[]">Carga horária: </label>
-                                <input type="number" name="carga[]" class="form-control" id="carga<?= $i ?>"
-                                       value="<?= $parcelas['carga_horaria'] ?? NULL ?>"  min="1">
+                                <input type="number" name="carga[]" class="form-control carga" id="carga<?= $i ?>"
+                                       value="<?= $parcelas['carga_horaria'] ?? 0 ?>"  min="1" onchange="atualizarCarga()">
                             </div>
 
                         <div class="form-group col-md-2">
@@ -168,7 +171,7 @@ $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 
                         </div>
                 <?php } ?>
-                            
+                   <p>O valor total das parcelas é de <b>R$ <span id="valorTotal"><?= dinheiroParaBr($valorTotal) ?></span></b>  e o total da carga horária é <b><span id="cargaTotal"><?= $cargaHoraria ?></span> horas</b></p>
                 </div>
                 <div class="box-footer">
                     <a href="?perfil=emia&p=administrativo&sp=vigencia&spp=listagem">
@@ -185,7 +188,43 @@ $ev = recuperaDados('emia_vigencias', 'id', $idEV);
 
 
 <script>
+    let cargaTotal = document.querySelector('#cargaTotal');
+    let valorTotal = document.querySelector('#valorTotal');
+
     $(document).ready(function () {
         $('.valor').mask('00.000,00', {reverse: true});
     });
+
+    function atualizarCarga(){
+        let cargas =  document.querySelectorAll('.carga');
+        let cargaFinal = 0;
+        cargas.forEach((carga) =>{
+            cargaFinal = parseInt(carga.value) + cargaFinal;
+            cargaTotal.innerHTML = cargaFinal;
+        });
+
+    }
+
+    function atualizarValorFinal(){
+        let valorFinal = 0.0;
+        let valores = document.querySelectorAll('.valor');
+
+        valores.forEach((valor) =>{
+           let novoValor = limpaValor(valor.value);
+
+           valorFinal+= novoValor;
+        });
+
+        valorTotal.innerHTML = valorFinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
+    }
+
+    function limpaValor(valor){
+        valor = valor.replace('.','');
+        valor = valor.replace(',','.');
+        return parseFloat(valor);
+    }
+
+
+
 </script>
