@@ -390,7 +390,7 @@ if ($testaBanco->num_rows > 0) {
                                 <div class="col-md-6 form-group">
                                     <label for="nome">Nome: *</label>
                                     <input type="text" class="form-control" name="nome" placeholder="Digite o nome"
-                                           maxlength="70" required value="<?= $pf['nome'] ?>">
+                                           maxlength="70" style="text-transform: uppercase;"  required value="<?= $pf['nome'] ?>">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="nomeArtistico">Nome Artistico:</label>

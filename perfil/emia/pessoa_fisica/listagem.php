@@ -1,6 +1,8 @@
 <?php
 $con = bancoMysqli();
-$sql = "SELECT id, nome, cpf, passaporte,data_nascimento, email FROM pessoa_fisicas";
+
+//só retorna se os nomes tiverem em maiúsculo
+$sql = "SELECT id, nome, cpf, passaporte,data_nascimento, email FROM pessoa_fisicas WHERE nome=BINARY UPPER(nome) ";
 $query = mysqli_query($con, $sql);
 
 ?>
