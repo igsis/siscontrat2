@@ -40,7 +40,7 @@ if (isset($_POST['adicionar'])) {
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: *</label>
                                     <input type="text" class="form-control" name="nome" placeholder="Digite o nome"
-                                           maxlength="70" required>
+                                           maxlength="70" onkeyup="this.value = this.value.toUpperCase();" required>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="nomeArtistico">Nome Artistico:</label>
