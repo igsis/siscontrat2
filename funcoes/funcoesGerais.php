@@ -1717,3 +1717,12 @@ function retornaChamadosTD($id)
         return "<td>Sem chamados</td>";
     }
 }
+
+function instituicaoSolicitante($evento_id) {
+    $con = bancoMysqli();
+    return $con->query("
+        SELECT i.nome FROM eventos as eve
+        INNER JOIN usuarios u on eve.usuario_id = u.id
+        INNER JOIN instituicoes i on u.instituicao_id = i.id
+        WHERE eve.id = '$evento_id'")->fetch_row()[0];
+}
