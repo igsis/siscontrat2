@@ -27,6 +27,7 @@ if (isset($_POST['editar'])) {
                     descricao = '$desc',
                     numero_parcelas = '$numParcela'
                     WHERE id = '$idEV'";
+    mysqli_query($con, $sqlUpdate);
 
     $sql = "DELETE FROM emia_parcelas WHERE emia_vigencia_id = '$idEV'";
     mysqli_query($con, $sql);
