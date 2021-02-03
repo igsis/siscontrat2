@@ -7,6 +7,7 @@ require_once("../funcoes/funcoesGerais.php");
 
 
 $con = bancoMysqli();
+setlocale(LC_ALL, 'pt_BR.utf-8');
 
 
 class PDF extends FPDF
@@ -94,9 +95,8 @@ if ($testaCbo->num_rows > 0) {
 }
 
 $Observacao = "Todas as atividades dos programas da Supervisão de Formação são inteiramente gratuitas e é terminantemente proibido cobrar por elas sob pena de multa e rescisão de contrato.";
-$sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 20";
+$sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 31";
 $penalidades = $con->query($sqlPenalidade)->fetch_array();
-
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -256,7 +256,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(11, $l, 'Valor:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode("R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " )"), 0, 'L', 0);
+$pdf->MultiCell(168, $l, utf8_decode("R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " ) "), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -264,6 +264,7 @@ $pdf->Cell(38, $l, 'Forma de Pagamento:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(122, $l, utf8_decode($pedido['forma_pagamento']));
 
+$pdf->Ln(3);
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(22, $l, 'Justificativa:', '0', '0', 'L');
@@ -290,17 +291,16 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(10, $l, '(C)', 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(160, $l, utf8_decode('OBSERVAÇÃO'), 0, 1, 'C');
+$pdf->Cell(160, $l, utf8_decode('CONDIÇÕES GERAIS'), 0, 1, 'C');
 
 $pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(155, $l, utf8_decode($Observacao), 0, 'J', 0);
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(0, 4, utf8_decode($penalidades['texto']), 0, 'J', 0);
+
+
+$pdf->Ln(20);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
@@ -327,7 +327,7 @@ $pdf->MultiCell(180, 5, "CRONOGRAMA", 0, 'C', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(140, 5, utf8_decode(checaCampo($contratacao['cronograma'])), 0, 'L', 0);
+$pdf->MultiCell(140, 5, str_replace("?", "-", utf8_decode($contratacao['cronograma'])), 0, 'L', 0);
 
 $pdf->SetXY($x, 262);
 $pdf->SetFont('Arial', '', 10);
