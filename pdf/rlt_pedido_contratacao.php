@@ -42,9 +42,10 @@ $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'
 $fiscal = $con->query("SELECT nome_completo, rf_rg FROM usuarios WHERE id = '{$evento['fiscal_id']}'")->fetch_assoc();
 $suplente = $con->query("SELECT nome_completo, rf_rg FROM usuarios WHERE id = '{$evento['suplente_id']}'")->fetch_assoc();
 
+$lista_produtor = 1;
 ?>
 
-<html>
+<html lang="PT">
 <head>
     <meta http-equiv=\"Content-Type\" content=\"text/html. charset=Windows-1252\">
     <style>
@@ -68,7 +69,38 @@ $suplente = $con->query("SELECT nome_completo, rf_rg FROM usuarios WHERE id = '{
 <br>
 <div align="center">
     <div id="texto" class="texto">
-        <p class="text-center"><strong>PEDIDO DE  CONTRATAÇÃO DE PESSOA <?= $tipo ?></strong></p>
+        <h6 class="text-center"><strong>PEDIDO DE  CONTRATAÇÃO DE PESSOA <?= $tipo ?></strong></h6>
+        <p>&nbsp;</p>
+        <p><strong>Sr(a) </strong></p>
+        <p>Solicitamos a contratação a seguir:</p>
+        <p>&nbsp;</p>
+        <p><strong>Protocolo:</strong> <?= $evento['protocolo'] ?></p>
+        <p><strong>Processo SEI nº:</strong> <?= $pedido['numero_processo'] ?></p>
+        <p><strong>Processo SEI de reserva global:</strong> <?= $pedido['numero_processo_mae'] ?></p>
+        <p><strong>Setor  solicitante:</strong> <?= instituicaoSolicitante($evento['id']) ?> </p>
+        <p><strong>Nome:</strong> <?= $pessoa['nome'] ?> <br />
+
+            <strong>Telefone(s):</strong> <?= $tel ?> <br>
+            <strong>E-mail:</strong> <?= $email ?> </p>
+
+        <p>&nbsp;</p>
+        <p><strong>Produtor:</strong></p>
+        <p><?= $lista_produtor ?></p>
+        <p>&nbsp;</p>
+        <p><strong>Objeto:</strong> <?= $objeto ?></p>
+
+        <p><strong>Data / Período:</strong> <?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?>, totalizando $qtsApresentacao apresentações conforme proposta/cronograma.</p>
+        <p><strong>Duração: </strong> $duracao  </p>
+
+        <p class="text-justify"><strong>Local(ais):</strong> <?= listaLocais($evento['id'], '1') ?></p>
+        <p><strong>Valor: </strong> R$ <?= dinheiroParaBr($pedido['valor_total']) . " ( " .valorPorExtenso($pedido['valor_total']) . ")" ?>
+
+        <p class="text-justify"><strong>Forma de pagamento</strong> <?=  $pedido['forma_pagamento'] ?></p>
+        <p class="text-justify"><strong>Justificativa</strong> <?= $pedido['justificativa'] ?></p>
+
+
+        <p class="text-justify">Nos termos do art. 6º do decreto 54.873/2014, fica designado como fiscal desta contratação artística o(a) servidor(a) <?= $fiscal['nome_completo'] . ", RF " . $fiscal['rf_rg'] . " e, como substituto, " . $suplente['nome_completo'] . ", RF " . $suplente['rf_rg']  ?>. Diante do exposto, solicitamos autorização para prosseguimento do presente.</p
+
     </div>
 </div>
 
