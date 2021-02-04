@@ -6,9 +6,7 @@ $idUser = $_SESSION['usuario_id_s'];
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
 
-$linkpf_pc = $http . "impressao_pedido_pf.php";
-
-$linkpj_pc = $http . "impressao_pedido_pj.php";
+$link_pedido_contratacao = $http . "rlt_pedido_contratacao.php";
 
 $linkpf_edital = $http . "exporta_proposta_edital_pf_word.php?penal=";
 
@@ -61,7 +59,6 @@ $idPedido = $_POST['idPedido'];
 $pedido = recuperaDados('pedidos', 'id', $idPedido);
 
 if ($pedido['pessoa_tipo_id'] == 1) {
-    $link_pc = $linkpf_pc;
     $link_edital = $linkpf_edital;
     $link_reversao = $link_reversao_pf;
     $link_proposta_padrao = $link_proposta_padrao_pf;
@@ -73,7 +70,6 @@ if ($pedido['pessoa_tipo_id'] == 1) {
     $idPessoa = $pedido['pessoa_fisica_id'];
     $link_normas = $link_normas_pf;
 } else if ($pedido['pessoa_tipo_id'] == 2) {
-    $link_pc = $linkpj_pc;
     $link_edital = $linkpj_edital;
     $link_reversao = $link_reversao_pj;
     $link_proposta_padrao = $link_proposta_padrao_pj;
@@ -98,7 +94,7 @@ if ($pedido['pessoa_tipo_id'] == 1) {
                         <h3 class="box-title">PEDIDO</h3>
                     </div>
                     <div class="box-body">
-                        <form action="<?= $link_pc ?>" target="_blank" method="post">
+                        <form action="<?= $link_pedido_contratacao ?>" target="_blank" method="post">
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                             <button type="submit" class="btn btn-primary center-block">Pedido de Contratação</button>
                         </form>
