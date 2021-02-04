@@ -107,6 +107,7 @@ $query = mysqli_query($con, $sql);
                             <tr>
                                 <th>Nome da atração</th>
                                 <th>Produtor</th>
+                                <th>Integrantes</th>
                                 <th>Especificidade</th>
                                 <th>Ocorrência</th>
                                 <th>Editar</th>
@@ -151,6 +152,16 @@ $query = mysqli_query($con, $sql);
                                         </form>
                                     </td>";
                                 }
+
+                                /*
+                                 * Integrantes
+                                 */
+                                ?>
+                                <td>
+                                    <button class="btn btn-block btn-primary">Add Integrante</button>
+                                </td>
+
+                                <?php
                                 /*
                                  * Especificidades
                                  */
