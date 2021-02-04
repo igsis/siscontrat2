@@ -158,7 +158,10 @@ $query = mysqli_query($con, $sql);
                                  */
                                 ?>
                                 <td>
-                                    <button class="btn btn-block btn-primary">Add Integrante</button>
+                                    <form action="?perfil=evento&p=integrantes_lista" method="post" role="form">
+                                        <input type="hidden" name="idAtracao" value="<?= $atracao['idAtracao'] ?>">
+                                        <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-plus"></i> Integrante</button>
+                                    </form>
                                 </td>
 
                                 <?php
