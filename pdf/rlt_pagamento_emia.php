@@ -21,6 +21,9 @@ $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
 
+$datas = recuperaDados('emia_parcelas', 'emia_vigencia_id', $contratacao['emia_vigencia_id']);
+
+
 $enderecoArray = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
 if ($enderecoArray == NULL) {
     $endereco = "Não cadastrado";
@@ -44,12 +47,9 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 
 $tel = substr($tel, 0, -3);
 
-$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela' AND publicado = 1";
+$sqlParcelas = "SELECT * FROM emia_parcelas WHERE id = '{$idParcela}' AND publicado = 1";
 $query = mysqli_query($con, $sqlParcelas);
-while ($parcela = mysqli_fetch_array($query)) {
-    $valorParcela = $parcela['valor'];
-    $datapgt = $parcela['data_pagamento'];
-}
+$parcela = mysqli_fetch_array($query);
 
 $sqlLocal = "SELECT local FROM locais l INNER JOIN emia_contratacao ec on ec.local_id = l.id WHERE ec.id = '$idEC' AND ec.publicado = 1";
 $local = $con->query($sqlLocal)->fetch_array();
@@ -90,7 +90,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(16, $l, utf8_decode("Assunto:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(140, $l, utf8_decode("Pedido de Pagamento de R$ " . dinheiroParaBr($valorParcela) . " ( " . valorPorExtenso($valorParcela) . " )"), 0, 'L', 0);
+$pdf->MultiCell(140, $l, utf8_decode("Pedido de Pagamento de R$ " . dinheiroParaBr($parcela['valor']) . " ( " . valorPorExtenso($parcela['valor']) . " )"), 0, 'L', 0);
 
 $pdf->Ln(7);
 
@@ -104,10 +104,10 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(34, $l, utf8_decode("Período de locação:"), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(120, $l, utf8_decode(retornaPeriodoFormacao_Emia($contratacao['emia_vigencia_id'], "emia")), 0, 'L', 0);
+$pdf->MultiCell(120, $l, utf8_decode("de " . exibirDataBr($parcela['data_inicio']) . " à " . exibirDataBr($parcela['data_fim'])), 0, 'L', 0);
 
 $pdf->SetX($x);
-$pdf->MultiCell(200, $l, utf8_decode("PAGAMENTO LIBERÁVEL A PARTIR DE " . exibirDataBr($datapgt) . " MEDIANTE CONFIRMAÇÃO DA UNIDADE PROPONENTE."), 0, 'L', 0);
+$pdf->MultiCell(200, $l, utf8_decode("PAGAMENTO LIBERÁVEL A PARTIR DE " . exibirDataBr($parcela['data_pagamento']) . " MEDIANTE CONFIRMAÇÃO DA UNIDADE PROPONENTE."), 0, 'L', 0);
 
 $pdf->Ln(5);
 

@@ -5,10 +5,7 @@ require_once("../include/lib/fpdf/fpdf.php");
 require_once("../funcoes/funcoesConecta.php");
 require_once("../funcoes/funcoesGerais.php");
 
-
 $con = bancoMysqli();
-setlocale(LC_ALL, 'pt_BR.utf-8');
-
 
 class PDF extends FPDF
 {
