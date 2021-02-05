@@ -473,9 +473,7 @@ $datas = substr($datas, 0, -2);
                                             }
                                         } ?>
                                         <div class="box-footer" align="center">
-                                            <a href="?perfil=evento">
-                                                <button type="button" class="btn btn-default">Voltar</button>
-                                            </a>
+                                            <button type="button" class="btn btn-default" onclick="window.history.back()">Voltar</button>
                                         </div>
                                     </div>
                                 </div>
