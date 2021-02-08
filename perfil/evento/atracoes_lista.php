@@ -131,6 +131,7 @@ $query = mysqli_query($con, $sql);
                             }
 
                             while ($atracao = mysqli_fetch_array($query)) {
+                                $integrantes = $con->query("SELECT * FROM atracao_integrante WHERE atracao_id = {$atracao['idAtracao']}")->num_rows;
                                 echo "<tr>";
                                 echo "<td>" . $atracao['nome_atracao'] . "</td>";
                                 if ($atracao['produtor_id'] > 0) {
@@ -157,12 +158,21 @@ $query = mysqli_query($con, $sql);
                                  * Integrantes
                                  */
                                 ?>
-                                <td>
-                                    <form action="?perfil=evento&p=integrantes_lista" method="post" role="form">
-                                        <input type="hidden" name="idAtracao" value="<?= $atracao['idAtracao'] ?>">
-                                        <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-plus"></i> Integrante</button>
-                                    </form>
-                                </td>
+                                <?php if ($integrantes): ?>
+                                    <td>
+                                        <form action="?perfil=evento&p=integrantes_lista" method="post" role="form">
+                                            <input type="hidden" name="idAtracao" value="<?= $atracao['idAtracao'] ?>">
+                                            <button type="submit" class="btn btn-block btn-primary">Lista Integrantes</button>
+                                        </form>
+                                    </td>
+                                <?php else: ?>
+                                    <td>
+                                        <form action="?perfil=evento&p=integrantes_pesquisa" method="post" role="form">
+                                            <input type="hidden" name="idAtracao" value="<?= $atracao['idAtracao'] ?>">
+                                            <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-plus"></i> Integrante</button>
+                                        </form>
+                                    </td>
+                                <?php endif; ?>
 
                                 <?php
                                 /*
