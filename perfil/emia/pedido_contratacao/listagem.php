@@ -14,6 +14,7 @@ if(isset($_POST['deletar'])){
 $sql = "SELECT p.id,
 		       ec.protocolo,
                p.numero_processo,
+               p.origem_id,
                pf.nome,
                l.local,
                ec.ano,
