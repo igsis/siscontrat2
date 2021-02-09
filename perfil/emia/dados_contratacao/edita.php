@@ -1,7 +1,7 @@
 <?php
 $con = bancoMysqli();
 
-if (isset($_POST['cadastrar'])) {
+if (isset($_POST['cadastrar']) || isset($_POST['editar'])){
     $idPf = $_POST['pf'];
     $ano = $_POST['ano'];
     $local = $_POST['local'];
@@ -14,6 +14,9 @@ if (isset($_POST['cadastrar'])) {
     $suplente = $_POST['suplente'] ?? NULL;
     $usuario = $_SESSION['usuario_id_s'];
     $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
+}
+
+if (isset($_POST['cadastrar'])) {
 
     $sqlInsert = "INSERT INTO emia_contratacao
                                     (pessoa_fisica_id, 
