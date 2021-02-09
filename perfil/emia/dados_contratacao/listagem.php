@@ -1,9 +1,9 @@
 <?php
 $con = bancoMysqli();
 
-if(isset($_POST['despublica'])){
-    $idDados = $_POST['idDados'];
-    $sqlDespublica = "UPDATE emia_contratacao SET publicado = 0 WHERE id = '$idDados'";
+if(isset($_POST['deletar'])){
+    $idContrat = $_POST['idContratacao'];
+    $sqlDespublica = "UPDATE emia_contratacao SET publicado = 0 WHERE id = '{$idContrat}'";
     if(mysqli_query($con,$sqlDespublica)){
         $mensagem = mensagem("success", "Excluido com Sucesso!");
     }else{
@@ -46,6 +46,7 @@ $querySelect = mysqli_query($con, $sqlSelect);
                         <th>Cargo</th>
                         <th width="5%">Visualizar</th>
                         <th width="5%">Editar</th>
+                        <th width="5%">Apagar</th>
                     </tr>
                     </thead>
                     <?php
@@ -70,7 +71,11 @@ $querySelect = mysqli_query($con, $sqlSelect);
                             <button type='submit' name='edit' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-edit'> </span></button>
                             </form>
                                 </td>";
-
+                        echo "<td>
+                                  <button type='button' name='apagar' id='apaga' data-target='#modalExclusao' data-toggle='modal' data-id='" . $dados['id'] . "' class='btn btn-block btn-danger'>
+                                  <span class='glyphicon glyphicon-trash'></span>
+                                  </button>
+                                </td>";
                         echo "</tbody>";
                     }
                     ?>
@@ -97,7 +102,27 @@ $querySelect = mysqli_query($con, $sqlSelect);
         </div>
     </section>
 </div>
-
+<div id="modalExclusao" class="modal modal-danger modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirmação de Exclusão</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir a contratação?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="?perfil=emia&p=dados_contratacao&sp=listagem" method="POST">
+                    <input type="hidden" name="idContratacao" id="idContratacao" value="">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                    </button>
+                    <input type="submit" class="btn btn-danger btn-outline" name="deletar" value="Excluir">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
@@ -113,4 +138,10 @@ $querySelect = mysqli_query($con, $sqlSelect);
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
+
+    $('#modalExclusao').on('show.bs.modal', function (e) {
+        let id = $(e.relatedTarget).attr('data-id');
+
+        $(this).find('#idContratacao').attr('value', `${id}`);
+    })
 </script>

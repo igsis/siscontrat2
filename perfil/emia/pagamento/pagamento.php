@@ -7,7 +7,12 @@ $pedido = $con->query($sqlPedido)->fetch_array();
 $ec = recuperaDados('emia_contratacao', 'id', $pedido['origem_id']);
 $pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 
-$sql = "SELECT * FROM emia_parcelas WHERE emia_vigencia_id = '{$pedido['origem_id']}'";
+$sql = "SELECT em.* FROM emia_parcelas AS em
+        INNER JOIN emia_contratacao AS ec
+        ON em.emia_vigencia_id = ec.emia_vigencia_id
+        INNER JOIN pedidos AS p 
+        ON ec.id = p.origem_id
+        WHERE p.id = '{$idPedido}'";
 $query = mysqli_query($con, $sql);
 
 $idLocal = $ec['local_id'];
