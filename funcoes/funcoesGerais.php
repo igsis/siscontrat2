@@ -457,6 +457,14 @@ function retornaObjetoFormacao_Emia($idContratacao, $modulo)
         } else {
             return "";
         }
+    } else{
+        $cst = $con->query("
+            SELECT e.cargo
+            FROM emia_contratacao ec 
+            INNER JOIN pedidos p on ec.pedido_id = p.id
+            INNER JOIN emia_cargos e on ec.emia_cargo_id = e.id
+            WHERE p.id = '$idContratacao'")->fetch_assoc();
+        return $cst['cargo'] . " da EMIA, da faixa etária de 05 a 12 anos.";
     }
 }
 

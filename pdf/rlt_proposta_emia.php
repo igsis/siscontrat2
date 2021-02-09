@@ -33,6 +33,7 @@ if ($pessoa['nacionalidade_id'] != NULL) {
 } else {
     $nacionalidade = "Não cadastrado";
 }
+$objeto = retornaObjetoFormacao_Emia($idPedido,"emia");
 
 
 $sqlTelefone = "SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$idPf' AND publicado = 1";
@@ -221,9 +222,9 @@ $pdf->Cell(10, 10, utf8_decode($contratacao['protocolo']), 0, 1, 'R');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(22, $l, 'Objeto:', 0, 0, 'L');
+$pdf->Cell(14, $l, 'Objeto:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(50, $l, "", 0, 1, 'L');
+$pdf->Cell(50, $l, utf8_decode($objeto), 0, 1, 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
