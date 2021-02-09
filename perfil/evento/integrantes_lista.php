@@ -4,20 +4,42 @@ include "includes/menu_interno.php";
 $con = bancoMysqli();
 $conn = bancoPDO();
 
-$atracao_id = $_POST['idAtracao'];
+$atracao_id = $_GET['atracao'] = $_POST['idAtracao'];
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
+    $cpf_passaporte = $_POST['cpf_passaporte'];
+    $nome = trim(addslashes($_POST['nome']));
+    $rg = trim(addslashes($_POST['rg']));
+    $funcao = trim(addslashes($_POST['funcao']));
+
     if (isset($_POST['cadastra'])) {
-        //
+
+        if (isset($_POST['integrante_id'])) {
+            $id = $_POST['integrante_id'];
+        } else {
+            $add_integrante = $con->query("INSERT INTO integrantes (`nome`, `rg`, `cpf_passaporte`) VALUES ('$nome', '$rg', '$cpf_passaporte')");
+            if ($add_integrante) {
+                $id = $con->insert_id;
+            }
+        }
+
+        $atracao_integrante = $con->query("INSERT INTO atracao_integrante (`atracao_id`, `integrante_id`, `funcao`) VALUES ('$atracao_id', '$id', '$funcao')");
+
+        $mensagem = mensagem("success", "Integrante <strong>$nome</strong> adicionado com sucesso");
     } elseif (isset($_POST['edita'])) {
-        //
+        $id = $_POST['integrante_id'];
+
+        $con->query("UPDATE integrantes SET nome = '$nome', rg = '$rg', cpf_passaporte = '$cpf_passaporte' WHERE id = '$id'");
+        $con->query("UPDATE atracao_integrante SET funcao = '$funcao' WHERE atracao_id = '$atracao_id' AND integrante_id = '$id'");
+
+        $mensagem = mensagem("success", "Integrante <strong>$nome</strong> atualizado com sucesso");
     }
 }
 
 $sqlIntegrantes = "SELECT i.*, ai.funcao FROM atracao_integrante AS ai
                     INNER JOIN integrantes AS i ON ai.integrante_id = i.id
                     WHERE atracao_id = '$atracao_id'";
-$integrantes = $con->query($sqlIntegrantes);
+$integrantes = $con->query($sqlIntegrantes)->fetch_all(MYSQLI_ASSOC);
 
 ?>
 
@@ -54,14 +76,23 @@ $integrantes = $con->query($sqlIntegrantes);
                                 </tr>
                             </thead>
                             <tbody>
+                                <?php foreach ($integrantes as $integrante): ?>
                                 <tr>
-                                    <td>Um Nome Teste</td>
-                                    <td>123.123.123-33</td>
-                                    <td>1234556789</td>
-                                    <td>Técnico de Som</td>
-                                    <td>Btn Editar</td>
+                                    <td><?= $integrantes['nome'] ?></td>
+                                    <td><?= $integrantes['cpf_passaporte'] ?></td>
+                                    <td><?= $integrantes['rg'] ?></td>
+                                    <td><?= $integrantes['funcao'] ?></td>
+                                    <td>
+                                        <form action="?perfil=evento&p=integrantes_cadastro&atracao<?= $atracao_id ?>"
+                                              method="post">
+                                            <input type="hidden" name="integrante_id" value="<?= $integrante['id'] ?>">
+                                            <input type="hidden" name="documento" value="<?= $integrante['cpf_passaporte'] ?>">
+                                            <input type="hidden" name="_method" value="edita">
+                                        </form>
+                                    </td>
                                     <td>Btn Apagar</td>
                                 </tr>
+                                <?php endforeach;?>
                             </tbody>
                             <tfoot>
                                 <tr>

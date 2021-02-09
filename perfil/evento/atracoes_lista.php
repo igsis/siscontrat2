@@ -160,14 +160,14 @@ $query = mysqli_query($con, $sql);
                                 ?>
                                 <?php if ($integrantes): ?>
                                     <td>
-                                        <form action="?perfil=evento&p=integrantes_lista" method="post" role="form">
+                                        <form action="?perfil=evento&p=integrantes_lista&atracao=<?= $atracao['idAtracao'] ?>" method="post" role="form">
                                             <input type="hidden" name="idAtracao" value="<?= $atracao['idAtracao'] ?>">
                                             <button type="submit" class="btn btn-block btn-primary">Lista Integrantes</button>
                                         </form>
                                     </td>
                                 <?php else: ?>
                                     <td>
-                                        <form action="?perfil=evento&p=integrantes_pesquisa" method="post" role="form">
+                                        <form action="?perfil=evento&p=integrantes_pesquisa&atracao=<?= $atracao['idAtracao'] ?>" method="post" role="form">
                                             <input type="hidden" name="idAtracao" value="<?= $atracao['idAtracao'] ?>">
                                             <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-plus"></i> Integrante</button>
                                         </form>

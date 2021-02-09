@@ -2,145 +2,69 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
-$idAtracao = null;
-$idPedido = null;
+if (!isset($_GET['atracao'])) {
+    echo "<script>window.location.href = '?perfil=evento&p=atracoes_lista'</script>";
+}
+
+$atracao_id = $_GET['atracao'];
 $exibir = ' ';
 $resultado = "<td></td>";
 $procurar = NULL;
 $tipoDocumento = null;
 
 if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
-    $idPedido = $_POST['idPedido'] ?? NULL;
-    $idAtracao = $_POST['idAtracao'] ?? NULL;
-    $idPf = $_POST['idProponente'] ?? NULL;
-
-    if ($idPf != NULL && $idPedido != null) {
-        $botaoSelecionar = "<input type='submit' name='trocaPf' class='btn btn-primary' value='Selecionar como novo proponente'>";
-        $botaoAdd = "<button class='btn btn-primary' name='adicionaPf' type='submit'>
+    $botaoAdd = "<button class='btn btn-primary' name='adicionar' id='adicionar' type='submit'>
                                 <i class='glyphicon glyphicon-plus'>        
                                 </i>Adicionar
                             </button>";
-        $actionEdita = "?perfil=evento&p=pedido_proponente";
-        $actionCadastra = "?perfil=evento&p=pf_cadastro";
-
-    } else if($idPedido != null) {
-        $botaoSelecionar = "<input type='submit' name='cadastraLider' class='btn btn-primary' value='Selecionar'>";
-        $botaoAdd = "<button class='btn btn-primary' name='adicionarLider' type='submit'>
-                                <i class='glyphicon glyphicon-plus'>        
-                                </i>Adicionar
-                            </button>";
-        $actionEdita = "?perfil=evento&p=pf_edita";
-        $actionCadastra = "?perfil=evento&p=pf_cadastro";
-    }else{
-        $botaoSelecionar = "<input type='submit' class='btn btn-primary' name='selecionar' value='Selecionar'>";
-        $botaoAdd = "<button class='btn btn-primary' name='adicionar' id='adicionar' type='submit'>
-                                <i class='glyphicon glyphicon-plus'>        
-                                </i>Adicionar
-                            </button>";
-        $actionEdita = "?perfil=evento&p=pf_edita";
-        $actionCadastra = "?perfil=evento&p=pf_cadastro";
-    }
+    $actionCadastra = "?perfil=evento&p=integrantes_cadastro";
 
     $procurar = $_POST['procurar'] ?? $_POST['passaporte'];
     $tipoDocumento = $_POST['tipoDocumento'] ?? false;
 
     if ($procurar != NULL) {
-        if ($tipoDocumento == 1) {
+        $queryCPF = "SELECT  `id`, `nome`, `rg`, `cpf_passaporte`
+                         FROM `integrantes`
+                         WHERE `cpf_passaporte` = '$procurar'";
 
-            $queryCPF = "SELECT  id, nome, cpf_passaporte, rg
-                         FROM siscontrat.`pessoa_fisicas`
-                         WHERE cpf = '$procurar'";
+        if ($result = mysqli_query($con, $queryCPF)) {
+            $resultCPF = mysqli_num_rows($result);
 
-            if ($result = mysqli_query($con, $queryCPF)) {
-                $resultCPF = mysqli_num_rows($result);
+            if ($resultCPF > 0) {
 
-                if ($resultCPF > 0) {
+                $exibir = true;
+                $resultado = "";
 
-                    $exibir = true;
-                    $resultado = "";
+                foreach ($result as $integrante) {
 
-                    foreach ($result as $pessoa) {
-
-                        $resultado .= "<tr>";
-                        $resultado .= "<td>" . $pessoa['nome'] . "</td>";
-                        $resultado .= "<td>" . $pessoa['cpf'] . "</td>";
-                        $resultado .= "<td>" . $pessoa['email'] . "</td>";
-                        $resultado .= "<td>
-                                     <form action='$actionEdita' method='post'>
-                                        <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
-                                        <input type='hidden' name='idAtracao' value='$idAtracao'>
-                                        <input type='hidden' name='idPedido' value='$idPedido'>
-                                        $botaoSelecionar                                        
+                    $resultado .= "<tr>";
+                    $resultado .= "<td>" . $integrante['nome'] . "</td>";
+                    $resultado .= "<td>" . $integrante['cpf_passaporte'] . "</td>";
+                    $resultado .= "<td>" . $integrante['rg'] . "</td>";
+                    $resultado .= "<td>
+                                     <form action='$actionCadastra' method='post'>
+                                        <input type='hidden' name='integrante_id' value='" . $integrante['id'] . "'>
+                                        <input type='hidden' name='atracao_id' value='$atracao_id'>
+                                        <input type='hidden' name='_method' value='cadastra'>
+                                        $botaoAdd                                        
                                      </form>
                                </td>";
-                        $resultado .= "</tr>";
-                    }
+                    $resultado .= "</tr>";
+                }
 
 
-                } else {
-                    $exibir = false;
-                    $resultado = "<td colspan='4'>
+            } else {
+                $exibir = false;
+                $resultado = "<td colspan='4'>
                         <span style='margin: 50% 40%;'>Sem resultados</span>
                       </td>
                       <td>
                         <form method='post' action='$actionCadastra'>
-                            <input type='hidden' name='idAtracao' value='$idAtracao'>
-                            <input type='hidden' name='idPedido' value='$idPedido'>
-                            <input type='hidden' name='documentacao' value='$procurar'>
-                            <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
+                            <input type='hidden' name='atracao_id' value='$atracao_id'>
+                            <input type='hidden' name='documento' value='$procurar'>
                             $botaoAdd
                         </form>
                       </td>";
-                }
-            }
-        } else {
-            if ($tipoDocumento == 2) {
-
-                $queryPassaporte = "SELECT id,nome,passaporte,email
-                            FROM siscontrat.`pessoa_fisicas`
-                            WHERE passaporte = '$procurar'";
-
-                if ($result = mysqli_query($con, $queryPassaporte)) {
-
-                    $resultPassaporte = mysqli_num_rows($result);
-
-                    if ($resultPassaporte > 0) {
-
-                        $exibir = true;
-                        $resultado = "";
-
-                        foreach ($result as $pessoa) {
-                            $resultado .= "<tr>";
-                            $resultado .= "<td>" . $pessoa['nome'] . "</td>";
-                            $resultado .= "<td>" . $pessoa['passaporte'] . "</td>";
-                            $resultado .= "<td>" . $pessoa['email'] . "</td>";
-                            $resultado .= "<td>
-                                     <form action='$actionEdita' method='post'>
-                                        <input type='hidden' name='idPf' value='" . $pessoa['id'] . "'>
-                                        <input type='hidden' name='idPedido' value='$idPedido'>
-                                        $botaoSelecionar
-                                     </form>
-                               </td>";
-                            $resultado .= "</tr>";
-                        }
-                    } else {
-                        $exibir = false;
-                        $resultado = "<td colspan='4'>
-                        <span style='margin: 50% 40%;'>Sem resultados</span>
-                      </td>
-                      <td>
-                        <form method='post' action='$actionCadastra'>
-                            <input type='hidden' name='documentacao' value='$procurar'>
-                            <input type='hidden' name='tipoDocumento' value='$tipoDocumento'>
-                            <input type='hidden' name='idPedido' value='$idPedido'>
-                            $botaoAdd
-                            </button>
-                        </form>
-                      </td>";
-
-                    }
-
-                }
             }
         }
     }
@@ -165,7 +89,8 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form action="?perfil=evento&p=pf_pesquisa" method="post" id="formulario">
+                        <form action="?perfil=evento&p=integrantes_pesquisa&atracao=<?= $atracao_id ?>" method="post" id="formulario">
+
                             <label for="tipoDocumento">Tipo de documento: </label>
                             <label class="radio-inline">
                                 <input type="radio" name="tipoDocumento" value="1" checked>CPF
@@ -173,63 +98,46 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                             <label class="radio-inline">
                                 <input type="radio" name="tipoDocumento" value="2">Passaporte
                             </label>
-                            <div class="form-group">
-                                <label for="procurar">Pesquisar:</label>
-                                <div class="input-group">
-                                    <label for="cpf" id="textoDocumento">CPF *</label>
-                                    <input type="text" class="form-control" minlength=14 name="procurar"
-                                           value="<?= $procurar ?>" id="cpf" data-mask="000.000.000-00" minlength="14">
-                                    <input type="text" class="form-control" name="passaporte" id="passaporte"
-                                           value="<?= $procurar ?>" maxlength="10">
 
-                                    <span class="input-group-btn">
-                                        <p>&nbsp;</p>
-                                        <p>&nbsp;</p>
-                                        <input type="hidden" name="idPedido" value="<?= $idPedido ?? NULL ?>">
-                                        <input type="hidden" name="idAtracao" value="<?= $idAtracao ?? NULL ?>">
-                                        <input type="hidden" name="idProponente" value="<?= $idPf ?? NULL ?>">
-                                        <button class="btn btn-default" type="submit"><i
-                                                    class="glyphicon glyphicon-search"></i> Procurar</button>
-                                    </span>
+
+
+                            <div class="form-group">
+                                <label for="">Pesquisar:</label>
+                                <div class="form-group">
+                                    <label for="cpf" id="textoDocumento">CPF *</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" minlength=14 name="procurar"
+                                               value="<?= $procurar ?>" id="cpf" data-mask="000.000.000-00" minlength="14">
+                                        <input type="text" class="form-control" name="passaporte" id="passaporte"
+                                               value="<?= $procurar ?>" maxlength="10">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="submit">
+                                                <i class="glyphicon glyphicon-search"></i> Procurar
+                                            </button>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </form>
 
                         <div class="panel panel-default">
-                            <!-- Default panel contents -->
-                            <!-- Table -->
                             <table class="table">
                                 <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th id="trocaDoc">CPF</th>
-                                    <th>RG</th>
-                                </tr>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th id="trocaDoc">CPF / Passaporte</th>
+                                        <th>RG</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <?php
-                                if ($exibir) {
-                                    echo $resultado;
-                                } elseif (!$exibir) {
-                                    echo $resultado;
-                                } else {
-                                    echo $resultado;
-                                }
-                                ?>
+                                    <?= $resultado ?>
                                 </tbody>
                             </table>
                         </div>
-
-
                     </div>
-                    <!-- /.box-body -->
                 </div>
-                <!-- /.box -->
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
-        <!-- END ACCORDION & CAROUSEL-->
 
     </section>
     <!-- /.content -->
