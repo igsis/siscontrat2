@@ -233,13 +233,11 @@ $pdf->Cell(50, $l, utf8_decode(retornaPeriodoFormacao_Emia($contratacao['emia_vi
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(25, $l, utf8_decode("Carga Horária:"), '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(168, $l, utf8_decode($carga), 0, 1, 'L');
-
-$pdf->SetX($x);
+$pdf->Cell(23, $l, utf8_decode($carga." horas"), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(11, $l, 'Local:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(165, $l, utf8_decode($local['local']), 0, 'L', 0);
+$pdf->Cell(60, $l, utf8_decode($local['local']), 0, '1', 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -247,21 +245,23 @@ $pdf->Cell(11, $l, 'Valor:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(168, $l, utf8_decode("R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " ) "), 0, 'L', 0);
 
+$pdf->Ln();
+
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(38, 5, 'Forma de Pagamento:', 0, 1, 'L');
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(180, 5, utf8_decode($pedido['forma_pagamento']));
+$pdf->MultiCell(180, 4, utf8_decode($pedido['forma_pagamento']));
 
 $pdf->Ln();
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(22, 5, 'Justificativa:', '0', '1', 'L');
+$pdf->Cell(22, 4, 'Justificativa:', '0', '1', 'L');
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(180, 5, utf8_decode(checaCampo($pedido['justificativa'])));
+$pdf->MultiCell(180, 4, utf8_decode(checaCampo($pedido['justificativa'])));
 
 //RODAPÉ PERSONALIZADO
 $pdf->SetXY($x, 268);
