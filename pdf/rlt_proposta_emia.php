@@ -101,9 +101,9 @@ $pdf->AddPage();
 
 
 $x = 20;
-$l = 7; //DEFINE A ALTURA DA LINHA
+$l = 5; //DEFINE A ALTURA DA LINHA
 
-$pdf->SetXY($x, 35);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
+$pdf->SetXY($x, 30);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
 $pdf->SetTitle("Proposta EMIA");
 
@@ -113,7 +113,7 @@ $pdf->Cell(10, 5, '(A)', 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 12);
 $pdf->Cell(170, 5, 'CONTRATADO', 0, 1, 'C');
 
-$pdf->Ln(5);
+$pdf->Ln();
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -141,7 +141,7 @@ $pdf->Cell(10, $l, "CCM:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(30, $l, utf8_decode(checaCampo($pessoa['ccm'])), 0, 0, 'L');
 
-$pdf->Ln(7);
+$pdf->Ln();
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -164,7 +164,7 @@ $pdf->Cell(10, $l, "OBM:", 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(30, $l, utf8_decode($omb), 0, 0, 'L');
 
-$pdf->Ln(7);
+$pdf->Ln();
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -176,7 +176,7 @@ $pdf->Cell(13, $l, 'C.B.O.:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(43, $l, utf8_decode($cbo), 0, 0, 'L');
 
-$pdf->Ln(7);
+$pdf->Ln();
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -194,7 +194,7 @@ $pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(30, $l, utf8_decode($pessoa['email']), 0, 0, 'L');
 
-$pdf->Ln(7);
+$pdf->Ln();
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -202,16 +202,14 @@ $pdf->Cell(63, $l, utf8_decode('Inscrição no INSS ou nº PIS / PASEP:'), '0', 
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(48, $l, "", 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, $l, 'Data de Nascimento:', 0, 0, 'L');
+$pdf->Cell(36, $l, 'Data de Nascimento:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(25, $l, utf8_decode(exibirDataBr($pessoa['data_nascimento'])), 0, 0, 'L');
+$pdf->Cell(24, $l, utf8_decode(exibirDataBr($pessoa['data_nascimento'])), 0, 0, 'L');
 
-$pdf->Ln(7);
+$pdf->Ln();
 
 $pdf->SetX($x);
 $pdf->Cell(180, 5, '', 'B', 1, 'C');
-
-$pdf->Ln(5);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
@@ -221,15 +219,11 @@ $pdf->Cell(160, 10, 'PROPOSTA', 0, 0, 'C');
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(10, 10, utf8_decode($contratacao['protocolo']), 0, 1, 'R');
 
-$pdf->Ln(1);
-
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(22, $l, 'Objeto:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(50, $l, "", 0, 0, 'L');
-
-$pdf->Ln(7);
+$pdf->Cell(50, $l, "", 0, 1, 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -239,9 +233,7 @@ $pdf->Cell(50, $l, utf8_decode(retornaPeriodoFormacao_Emia($contratacao['emia_vi
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(25, $l, utf8_decode("Carga Horária:"), '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(168, $l, utf8_decode($carga), 0, 0, 'L');
-
-$pdf->Ln(7);
+$pdf->Cell(168, $l, utf8_decode($carga), 0, 1, 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
@@ -257,19 +249,22 @@ $pdf->MultiCell(168, $l, utf8_decode("R$ " . dinheiroParaBr($pedido['valor_total
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(38, $l, 'Forma de Pagamento:', 0, 0, 'L');
+$pdf->Cell(38, 5, 'Forma de Pagamento:', 0, 1, 'L');
+$pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(122, $l, utf8_decode($pedido['forma_pagamento']));
+$pdf->MultiCell(180, 5, utf8_decode($pedido['forma_pagamento']));
 
-$pdf->Ln(3);
+$pdf->Ln();
+
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(22, $l, 'Justificativa:', '0', '0', 'L');
+$pdf->Cell(22, 5, 'Justificativa:', '0', '1', 'L');
+$pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(155, $l, utf8_decode(checaCampo($pedido['justificativa'])));
+$pdf->MultiCell(180, 5, utf8_decode(checaCampo($pedido['justificativa'])));
 
 //RODAPÉ PERSONALIZADO
-$pdf->SetXY($x, 262);
+$pdf->SetXY($x, 268);
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
 
@@ -290,20 +285,17 @@ $pdf->Cell(10, $l, '(C)', 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(160, $l, utf8_decode('CONDIÇÕES GERAIS'), 0, 1, 'C');
 
-$pdf->Ln(5);
-
 $pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
+$pdf->SetFont('Arial', '', 8);
 $pdf->MultiCell(0, 4, utf8_decode($penalidades['texto']), 0, 'J', 0);
 
-
-$pdf->Ln(20);
+$pdf->Ln();
 
 $pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(180, $l, utf8_decode("Data: _________ / _________ / " . $ano) . ".", 0, 0, 'L');
+$pdf->SetFont('Arial', '', 8);
+$pdf->Cell(180, $l, utf8_decode("Data: _________ / _________ / " . $ano) . ".", 0, 0, 'C');
 
-$pdf->SetXY($x, 262);
+$pdf->SetXY($x, 268);
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
 
@@ -324,7 +316,7 @@ $pdf->MultiCell(180, 5, "CRONOGRAMA", 0, 'C', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(140, 5, str_replace("?", "-", utf8_decode($contratacao['cronograma'])), 0, 'L', 0);
+$pdf->MultiCell(180, $l, str_replace("?", "-", utf8_decode($contratacao['cronograma'])), 0, 'J', 0);
 
 $pdf->SetXY($x, 262);
 $pdf->SetFont('Arial', '', 10);
