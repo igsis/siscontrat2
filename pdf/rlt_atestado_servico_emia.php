@@ -11,6 +11,14 @@ $mes = retornaMes(date('m'));
 $ano = date('Y');
 $semana = date('w');
 
+$idParcela = $_POST['idParcela'];
+
+$parcela = recuperaDados('emia_parcelas','id',$idParcela);
+
+$dataPagamento = date("d/m/Y", strtotime($parcela['data_pagamento']));
+$dataInicio = date("d/m/Y", strtotime($parcela['data_inicio']));
+$dataFim = date("d/m/Y", strtotime($parcela['data_fim']));
+
 ?>
 
 <html>
@@ -57,13 +65,13 @@ $semana = date('w');
         "<p>&nbsp;</p>" .
         "<p><strong>Recebimento da Documentação</strong>" .
         "<p>Atesto:</p>" .
-        "<p>( X ) o recebimento em ___/___/_____  de <strong>toda a documentação</strong> [INSERIR NÚMERO SEI DA NOTA FISCAL E ARQUIVOS CONSOLIDADOS] prevista na Portaria SF nº 170/2020.</p>" .
+        "<p>( X ) o recebimento em {$dataPagamento}  de <strong>toda a documentação</strong> [INSERIR NÚMERO SEI DA NOTA FISCAL E ARQUIVOS CONSOLIDADOS] prevista na Portaria SF nº 170/2020.</p>" .
         "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) o recebimento em ___/___/_____ da <b>documentação</b> [INSERIR NÚMERO SEI DA NOTA FISCAL E ARQUIVOS CONSOLIDADOS] prevista na Portaria SF nº 170/2020, <b>ressalvado</b> (s) [RELACIONAR OS DOCUMENTOS IRREGULARES].</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Recebimento de material e/ou serviços</strong>" .
         "<p>Atesto:</p>" .
-        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados a <b>contento</b> nos termos previstos no instrumento contratual (ou documento equivalente) no dia ___/___/_____, dentro do prazo previsto.</p>" .
-        "<p>O prazo contratual é do dia ___/___/_____ até o dia ___/___/_____.</p>" .
+        "<p>( X ) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados a <b>contento</b> nos termos previstos no instrumento contratual (ou documento equivalente) no dia ___/___/_____, dentro do prazo previsto.</p>" .
+        "<p>O prazo contratual é do dia {$dataInicio} até o dia {$dataFim}.</p>" .
         "<p>&nbsp;</p>" .
         "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados <b>parcialmente</b>, nos termos previstos no instrumento contratual (ou documentos equivalente), do dia ___/___/_____, dentro do prazo previsto.</p>" .
         "<p>O prazo contratual é do dia ___/___/_____ até o dia ___/___/_____.</p>" .
