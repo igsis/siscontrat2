@@ -42,7 +42,7 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 
 $tel = substr($tel, 0, -3);
 
-$ano = date('Y', strtotime("-3 hours"));
+$ano = date('Y', strtotime($parcela['data_pagamento']));
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();

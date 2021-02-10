@@ -21,8 +21,7 @@ $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
 
-$datas = recuperaDados('emia_parcelas', 'emia_vigencia_id', $contratacao['emia_vigencia_id']);
-
+$datas = recuperaDados('emia_parcelas', 'id', $idParcela);
 
 $enderecoArray = recuperaDados('pf_enderecos', 'pessoa_fisica_id', $idPf);
 if ($enderecoArray == NULL) {
@@ -54,7 +53,7 @@ $parcela = mysqli_fetch_array($query);
 $sqlLocal = "SELECT local FROM locais l INNER JOIN emia_contratacao ec on ec.local_id = l.id WHERE ec.id = '$idEC' AND ec.publicado = 1";
 $local = $con->query($sqlLocal)->fetch_array();
 
-$ano = date('Y', strtotime("-3 hours"));
+$ano = date('Y', strtotime($datas['data_pagamento']));
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
