@@ -5,8 +5,6 @@ $idEvento = $_SESSION['idEvento'];
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $nome_atracao = trim(addslashes($_POST['nome_atracao']));
-    $ficha_tecnica = trim(addslashes($_POST['ficha_tecnica']));
-    $integrantes = trim(addslashes($_POST['integrantes']));
     $classificacao_indicativa_id = $_POST['classificacao_indicativa_id'];
     $release_comunicacao = trim(addslashes($_POST['release_comunicacao']));
     $links = trim(addslashes($_POST['links']));
@@ -14,7 +12,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $valor_individual = dinheiroDeBr($_POST['valor_individual']);
 }
 if (isset($_POST['cadastra'])) {
-    $sql_atracoes = "INSERT INTO atracoes(evento_id, nome_atracao, ficha_tecnica, integrantes, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$idEvento','$nome_atracao', '$ficha_tecnica', '$integrantes', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
+    $sql_atracoes = "INSERT INTO atracoes(evento_id, nome_atracao, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$idEvento','$nome_atracao', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
     if (mysqli_query($con, $sql_atracoes)) {
         $idAtracao = recuperaUltimo("atracoes");
         $mensagem = mensagem("success", "Cadastrado com sucesso! Retornando a listagem de atrações");
@@ -66,7 +64,7 @@ if (isset($_POST['cadastra'])) {
 
 if (isset($_POST['edita'])) {
     $idAtracao = $_POST['idAtracao'];
-    $sql_atracoes = "UPDATE atracoes SET nome_atracao = '$nome_atracao', ficha_tecnica = '$ficha_tecnica', integrantes = '$integrantes', classificacao_indicativa_id = '$classificacao_indicativa_id', release_comunicacao = '$release_comunicacao', links = '$links', quantidade_apresentacao = '$quantidade_apresentacao', valor_individual = '$valor_individual' WHERE id = '$idAtracao'";
+    $sql_atracoes = "UPDATE atracoes SET nome_atracao = '$nome_atracao', classificacao_indicativa_id = '$classificacao_indicativa_id', release_comunicacao = '$release_comunicacao', links = '$links', quantidade_apresentacao = '$quantidade_apresentacao', valor_individual = '$valor_individual' WHERE id = '$idAtracao'";
     if (mysqli_query($con, $sql_atracoes)) {
 
         $sql = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
@@ -153,31 +151,6 @@ include "includes/menu_interno.php";
                                     <?php
                                     geraCheckBox('acoes', 'acao', 'acao_atracao', 'col-md-6', 'atracao_id', 'acao_id', $idAtracao);
                                     ?>
-                                </div>
-                            </div>
-
-                            <div class="row ">
-                                <div class="form-group col-md-6">
-                                    <label for="ficha_tecnica">Ficha técnica completa *</label><br/>
-                                    <i>Esse campo deve conter a listagem de pessoas envolvidas no espetáculo, como
-                                        elenco, técnicos, e outros profissionais envolvidos na realização do mesmo.</i>
-                                    <p align="justify"><span
-                                                style="color: gray; "><strong><i>Elenco de exemplo:</strong><br/>Lúcio Silva (guitarra e vocal)<br/>Fabio Sá (baixo)<br/>Marco da Costa (bateria)<br/>Eloá Faria (figurinista)<br/>Leonardo Kuero (técnico de som)</span></i>
-                                    </p>
-                                    <textarea id="ficha_tecnica" name="ficha_tecnica" class="form-control" rows="8"
-                                              required><?= $atracao['ficha_tecnica'] ?></textarea>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="integrantes">Integrantes *</label><br/>
-                                    <i>Esse campo deve conter a listagem de pessoas envolvidas no espetáculo <span
-                                                style="color: #FF0000; ">incluindo o líder do grupo</span>.<br/>Apenas o
-                                        <span style="color: #FF0000; ">nome civil, RG e CPF</span> de quem irá se
-                                        apresentar, excluindo técnicos.</i>
-                                    <p align="justify"><span
-                                                style="color: gray; "><strong><i>Elenco de exemplo:</strong><br/>Ana Cañas RG 00000000-0 CPF 000.000.000-00<br/>Lúcio Maia RG 00000000-0 CPF 000.000.000-00<br/>Fabá Jimenez RG 00000000-0 CPF 000.000.000-00<br/>Fabio Sá RG 00000000-0 CPF 000.000.000-00<br/>Marco da Costa RG 00000000-0 CPF 000.000.000-00</span></i>
-                                    </p>
-                                    <textarea id="integrantes" name="integrantes" class="form-control" rows="8"
-                                              required><?= $atracao['integrantes'] ?></textarea>
                                 </div>
                             </div>
 
