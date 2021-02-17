@@ -2,12 +2,17 @@
 $con = bancoMysqli();
 $idPedido = $_POST['idPedido'];
 
-$sqlPedido = "SELECT * FROM pedidos WHERE origem_tipo_id = 3 AND id = $idPedido";
+$sqlPedido = "SELECT * FROM pedidos WHERE origem_tipo_id = 3 AND id = '{$idPedido}'";
 $pedido = $con->query($sqlPedido)->fetch_array();
 $ec = recuperaDados('emia_contratacao', 'id', $pedido['origem_id']);
 $pf = recuperaDados('pessoa_fisicas', 'id', $pedido['pessoa_fisica_id']);
 
-$sql = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND publicado = 1";
+$sql = "SELECT em.* FROM emia_parcelas AS em
+        INNER JOIN emia_contratacao AS ec
+        ON em.emia_vigencia_id = ec.emia_vigencia_id
+        INNER JOIN pedidos AS p 
+        ON ec.id = p.origem_id
+        WHERE p.id = '{$idPedido}'";
 $query = mysqli_query($con, $sql);
 
 $idLocal = $ec['local_id'];

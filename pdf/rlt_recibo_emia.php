@@ -20,6 +20,8 @@ $idEC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
+$parcela = recuperaDados('emia_parcelas','id', $idParcela);
+
 
 $cargo = recuperaDados('emia_cargos', 'id', $contratacao['emia_cargo_id']);
 
@@ -40,7 +42,7 @@ while ($linhaTel = mysqli_fetch_array($queryTelefone)) {
 
 $tel = substr($tel, 0, -3);
 
-$ano = date('Y', strtotime("-3 hours"));
+$ano = date('Y', strtotime($parcela['data_pagamento']));
 
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
@@ -117,16 +119,11 @@ $pdf->Cell(13, $l, 'Email:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 11);
 $pdf->MultiCell(168, $l, utf8_decode($pessoa['email']), 0, 'L', 0);
 
-$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela' AND publicado = 1";
-$query = mysqli_query($con, $sqlParcelas);
-while ($parcela = mysqli_fetch_array($query)) {
-    $valorParcela = $parcela['valor'];
-}
 
 $pdf->Ln(16);
 
 $pdf->SetX($x);
-$pdf->MultiCell(180, $l, utf8_decode("Atesto que recebi da Prefeitura do Múnicípio de São Paulo - Secretaria Municipal de Cultura a importância de R$ " . dinheiroParaBr($valorParcela) . " (" . valorPorExtenso($valorParcela) . " ) referente ao período " . retornaPeriodoFormacao_Emia($contratacao['emia_vigencia_id'], "emia") . " da " . $cargo['cargo']), 0, 'L', 0);
+$pdf->MultiCell(180, $l, utf8_decode("Atesto que recebi da Prefeitura do Múnicípio de São Paulo - Secretaria Municipal de Cultura a importância de R$ " . dinheiroParaBr($parcela['valor']) . " (" . valorPorExtenso($parcela['valor']) . " ) referente ao período de " . exibirDataBr($parcela['data_inicio']) . " à " . exibirDataBr($parcela['data_fim']) . " como " . $cargo['cargo'] . "."), 0, 'L', 0);
 
 $pdf->Ln(16);
 
