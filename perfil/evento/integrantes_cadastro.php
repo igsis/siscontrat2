@@ -2,7 +2,7 @@
 include "includes/menu_interno.php";
 $con = bancoMysqli();
 
-$atracao_id = $_POST['atracao_id'];
+$atracao_id = $_POST['idAtracao'] ?? $_GET['atracao'];
 
 $method = $_POST['_method'];
 
@@ -10,7 +10,16 @@ if (!isset($_POST['integrante_id'])) {
     $cpf_passaporte = $_POST['documento'];
 } else {
     $id = $_POST['integrante_id'];
-    $integrante = $con->query("SELECT * FROM integrantes WHERE id = '$id'")->fetch_assoc();
+
+    if ($method == "cadastra") {
+        $integrante = $con->query("SELECT * FROM integrantes WHERE id = '$id'")->fetch_assoc();
+    } else {
+        $sql = "SELECT i.*, ai.funcao FROM atracao_integrante AS ai
+            INNER JOIN integrantes AS i ON ai.integrante_id = i.id
+            WHERE atracao_id = '$atracao_id' and integrante_id = '$id'";
+        $integrante = $con->query($sql)->fetch_assoc();
+    }
+
     $cpf_passaporte = $integrante['cpf_passaporte'];
 }
 ?>
@@ -37,7 +46,7 @@ if (!isset($_POST['integrante_id'])) {
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="cpf">CPF / Passaporte: *</label>
-                                    <input type="text" id="cpf" name="cpf_passaporte" value="<?= $cpf_passaporte ?>"
+                                    <input type="text" name="cpf_passaporte" value="<?= $cpf_passaporte ?>"
                                            class="form-control" readonly>
                                 </div>
 
@@ -58,11 +67,15 @@ if (!isset($_POST['integrante_id'])) {
 
                             <div class="form-group">
                                 <label for="funcao">Função: *</label>
-                                <input type="text" name="funcao" class="form-control" id="funcao">
+                                <input type="text" name="funcao" class="form-control" id="funcao" value="<?= $integrante['funcao'] ?? ''?>" required>
                             </div>
                         </div>
                         <div class="box-footer">
-                            <button class="btn btn-success pull-right">Adicionar</button>
+                            <?php if ($method == "edita"): ?>
+                                <a href="?perfil=evento&p=integrantes_lista&atracao=<?= $atracao_id ?>"
+                                   class="btn btn-default">Voltar</a>
+                            <?php endif; ?>
+                            <button class="btn btn-success pull-right"><?= $method == "cadastra" ? "Adicionar" : "Editar" ?></button>
                         </div>
                     </form>
                 </div>

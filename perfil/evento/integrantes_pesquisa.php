@@ -36,19 +36,31 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                 $resultado = "";
 
                 foreach ($result as $integrante) {
+                    $sqlConsultaIntegrante = "SELECT integrante_id FROM atracao_integrante
+                                                WHERE integrante_id = '{$integrante['id']}' AND atracao_id = '$atracao_id'";
+                    $cadastrado = $con->query($sqlConsultaIntegrante)->num_rows;
 
                     $resultado .= "<tr>";
                     $resultado .= "<td>" . $integrante['nome'] . "</td>";
                     $resultado .= "<td>" . $integrante['cpf_passaporte'] . "</td>";
                     $resultado .= "<td>" . $integrante['rg'] . "</td>";
-                    $resultado .= "<td>
-                                     <form action='$actionCadastra' method='post'>
-                                        <input type='hidden' name='integrante_id' value='" . $integrante['id'] . "'>
-                                        <input type='hidden' name='atracao_id' value='$atracao_id'>
-                                        <input type='hidden' name='_method' value='cadastra'>
-                                        $botaoAdd                                        
-                                     </form>
-                               </td>";
+                    if ($cadastrado) {
+                        $resultado .= "<td>
+                                             <span class='label label-danger'>
+                                                <i class='glyphicon glyphicon-lock'>        
+                                                </i> Já cadastrado nesta Atração
+                                            </span>
+                                       </td>";
+                    } else {
+                        $resultado .= "<td>
+                                         <form action='$actionCadastra' method='post'>
+                                            <input type='hidden' name='integrante_id' value='" . $integrante['id'] . "'>
+                                            <input type='hidden' name='idAtracao' value='$atracao_id'>
+                                            <input type='hidden' name='_method' value='cadastra'>
+                                            $botaoAdd                                        
+                                         </form>
+                                   </td>";
+                    }
                     $resultado .= "</tr>";
                 }
 
@@ -60,8 +72,9 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                       </td>
                       <td>
                         <form method='post' action='$actionCadastra'>
-                            <input type='hidden' name='atracao_id' value='$atracao_id'>
+                            <input type='hidden' name='idAtracao' value='$atracao_id'>
                             <input type='hidden' name='documento' value='$procurar'>
+                            <input type='hidden' name='_method' value='cadastra'>
                             $botaoAdd
                         </form>
                       </td>";
@@ -134,6 +147,10 @@ if (isset($_POST['procurar']) || isset($_POST['passaporte'])) {
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div class="box-footer">
+                        <a href="?perfil=evento&p=integrantes_lista&atracao=<?= $atracao_id ?>"
+                           class="btn btn-default">Voltar</a>
                     </div>
                 </div>
             </div>

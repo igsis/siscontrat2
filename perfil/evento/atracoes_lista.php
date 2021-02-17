@@ -289,7 +289,7 @@ $query = mysqli_query($con, $sql);
                                     </form>
                                 </td>";
                                 echo "<td width='5%'>                                        
-                                        <buttonn class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-ocorrencia-id='" . $atracao['idAtracao'] . "' data-tittle='Apagar Atração' data-message='Você deseja mesmo apagar essa atração?' onclick ='passarId(" . $atracao['idAtracao'] . ")'><span class='glyphicon glyphicon-trash'></span></buttonn>
+                                        <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-ocorrencia-id='" . $atracao['idAtracao'] . "' data-tittle='Apagar Atração' data-message='Você deseja mesmo apagar essa atração?' onclick ='passarId(" . $atracao['idAtracao'] . ")'><span class='glyphicon glyphicon-trash'></span></button>
                                   </td>";
                                 echo "</tr>";
                             }
