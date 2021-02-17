@@ -1,6 +1,9 @@
 <?php
 /**
  * Conteúdo da label "#atracao" do arquivo "finalizar.php"
+ * @var array $evento
+ * @var int $idEvento
+ * @var mysqli $con
  */
 
 if ($evento['tipo_evento_id'] == 2) {
@@ -69,6 +72,10 @@ if ($evento['tipo_evento_id'] == 2) {
                     $categoria = recuperaDados('acoes', 'id', $acaoId)['acao'];
                     $classificacao = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id'])['classificacao_indicativa'];
                     $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
+                    $sqlIntegrantes = "SELECT i.*, ai.funcao FROM atracao_integrante AS ai
+                                        INNER JOIN integrantes AS i ON ai.integrante_id = i.id
+                                        WHERE atracao_id = '{$atracao['id']}'";
+                    $integrantes = $con->query($sqlIntegrantes)->fetch_all(MYSQLI_ASSOC);
                     ?>
                     <div class="panel box box-primary">
                         <div class="box-header with-border">
@@ -84,59 +91,75 @@ if ($evento['tipo_evento_id'] == 2) {
                                 <div class="table-responsive">
                                     <table class="table">
                                         <tr>
-                                            <th width="30%">Nome da Atração:</th>
+                                            <th width="20%">Nome da Atração:</th>
                                             <td><?= $atracao['nome_atracao'] ?></td>
                                         </tr>
                                         <tr>
-                                            <th width="30%">Categoria da Atração:</th>
+                                            <th width="20%">Categoria da Atração:</th>
                                             <td><?= $categoria ?></td>
                                         </tr>
                                         <tr>
-                                            <th width="30%">Ficha Técnica:</th>
-                                            <td><?= $atracao['ficha_tecnica'] ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th width="30%">Integrantes:</th>
-                                            <td><?= $atracao['integrantes'] ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th width="30%">Classificação Indicativa:</th>
+                                            <th width="20%">Classificação Indicativa:</th>
                                             <td><?= $classificacao ?></td>
                                         </tr>
                                         <tr>
-                                            <th width="30%">Release:</th>
+                                            <th width="20%">Release:</th>
                                             <td><?= $atracao['release_comunicacao'] ?></td>
                                         </tr>
                                         <tr>
-                                            <th width="30%">Links:</th>
+                                            <th width="20%">Links:</th>
                                             <td><?= checaCampo($atracao['links']) ?></td>
                                         </tr>
                                         <tr>
                                             <th class="text-center bg-primary" colspan="2">Dados do Produtor</th>
                                         </tr>
                                         <tr>
-                                            <th width="30%">Nome:</th>
+                                            <th width="20%">Nome:</th>
                                             <td><?= $produtor['nome'] ?></td>
                                         </tr>
                                         <tr>
-                                            <th width="30%">Email:</th>
+                                            <th width="20%">Email:</th>
                                             <td><?= $produtor['email'] ?></td>
                                         </tr>
                                         <tr>
-                                            <th width="30%">Telefone #1:</th>
+                                            <th width="20%">Telefone #1:</th>
                                             <td><?= $produtor['telefone1'] ?></td>
                                         </tr>
                                         <?php
                                         if ($produtor['telefone2'] != null) { ?>
                                             <tr>
-                                                <th width="30%">Telefone #2:</th>
+                                                <th width="20%">Telefone #2:</th>
                                                 <td><?= $produtor['telefone2'] ?></td>
                                             </tr>
                                         <?php } ?>
                                         <tr>
-                                            <th width="30%">Observação:</th>
+                                            <th width="20%">Observação:</th>
                                             <td><?= checaCampo($produtor['observacao']) ?></td>
                                         </tr>
+                                        <tr>
+                                            <th class="text-center bg-primary" colspan="2">Dados dos Integrantes</th>
+                                        </tr>
+                                        <?php foreach ($integrantes as $key => $integrante): ?>
+                                            <tr>
+                                                <th colspan="2" class="bg-gray-light"><?= "#".($key+1) ?></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Nome:</th>
+                                                <td><?= $integrante['nome'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>CPF:</th>
+                                                <td><?= $integrante['cpf_passaporte'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>RG:</th>
+                                                <td><?= $integrante['rg'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Função:</th>
+                                                <td><?= $integrante['funcao'] ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     </table>
                                 </div>
                             </div>
