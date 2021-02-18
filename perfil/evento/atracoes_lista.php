@@ -107,6 +107,7 @@ $query = mysqli_query($con, $sql);
                             <tr>
                                 <th>Nome da atração</th>
                                 <th>Produtor</th>
+                                <th>Integrantes</th>
                                 <th>Especificidade</th>
                                 <th>Ocorrência</th>
                                 <th>Editar</th>
@@ -130,6 +131,7 @@ $query = mysqli_query($con, $sql);
                             }
 
                             while ($atracao = mysqli_fetch_array($query)) {
+                                $integrantes = $con->query("SELECT * FROM atracao_integrante WHERE atracao_id = {$atracao['idAtracao']}")->num_rows;
                                 echo "<tr>";
                                 echo "<td>" . $atracao['nome_atracao'] . "</td>";
                                 if ($atracao['produtor_id'] > 0) {
@@ -151,6 +153,28 @@ $query = mysqli_query($con, $sql);
                                         </form>
                                     </td>";
                                 }
+
+                                /*
+                                 * Integrantes
+                                 */
+                                ?>
+                                <?php if ($integrantes): ?>
+                                    <td>
+                                        <form action="?perfil=evento&p=integrantes_lista&atracao=<?= $atracao['idAtracao'] ?>" method="post" role="form">
+                                            <input type="hidden" name="idAtracao" value="<?= $atracao['idAtracao'] ?>">
+                                            <button type="submit" class="btn btn-block btn-primary">Lista Integrantes</button>
+                                        </form>
+                                    </td>
+                                <?php else: ?>
+                                    <td>
+                                        <form action="?perfil=evento&p=integrantes_pesquisa&atracao=<?= $atracao['idAtracao'] ?>" method="post" role="form">
+                                            <input type="hidden" name="idAtracao" value="<?= $atracao['idAtracao'] ?>">
+                                            <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-plus"></i> Integrante</button>
+                                        </form>
+                                    </td>
+                                <?php endif; ?>
+
+                                <?php
                                 /*
                                  * Especificidades
                                  */
@@ -265,7 +289,7 @@ $query = mysqli_query($con, $sql);
                                     </form>
                                 </td>";
                                 echo "<td width='5%'>                                        
-                                        <buttonn class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-ocorrencia-id='" . $atracao['idAtracao'] . "' data-tittle='Apagar Atração' data-message='Você deseja mesmo apagar essa atração?' onclick ='passarId(" . $atracao['idAtracao'] . ")'><span class='glyphicon glyphicon-trash'></span></buttonn>
+                                        <button class='btn btn-block btn-danger' data-toggle='modal' data-target='#apagar' data-ocorrencia-id='" . $atracao['idAtracao'] . "' data-tittle='Apagar Atração' data-message='Você deseja mesmo apagar essa atração?' onclick ='passarId(" . $atracao['idAtracao'] . ")'><span class='glyphicon glyphicon-trash'></span></button>
                                   </td>";
                                 echo "</tr>";
                             }
