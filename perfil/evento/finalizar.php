@@ -1,6 +1,13 @@
 <?php
 include "includes/menu_interno.php";
 
+/**
+ * @var int $idEvento
+ * @var mysqli $con
+ * @var array $evento
+ * @var array $erros
+ * @var array $errosArqs
+ */
 
 /*$ocorrencias_rept = false;*/
 

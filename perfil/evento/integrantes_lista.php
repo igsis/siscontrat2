@@ -129,6 +129,9 @@ $integrantes = $con->query($sqlIntegrantes)->fetch_all(MYSQLI_ASSOC);
                         </table>
                     </div>
                     <!-- /.box-body -->
+                    <div class="box-footer">
+                        <a href="?perfil=evento&p=atracoes_lista" class="btn btn-default">Voltar</a>
+                    </div>
                 </div>
                 <!-- /.box -->
             </div>

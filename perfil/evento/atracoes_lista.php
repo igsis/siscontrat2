@@ -131,7 +131,7 @@ $query = mysqli_query($con, $sql);
                             }
 
                             while ($atracao = mysqli_fetch_array($query)) {
-                                $integrantes = $con->query("SELECT * FROM atracao_integrante WHERE atracao_id = {$atracao['idAtracao']}")->num_rows;
+                                $integrantes = $con->query("SELECT atracao_id FROM atracao_integrante WHERE atracao_id = {$atracao['idAtracao']}")->num_rows;
                                 echo "<tr>";
                                 echo "<td>" . $atracao['nome_atracao'] . "</td>";
                                 if ($atracao['produtor_id'] > 0) {
