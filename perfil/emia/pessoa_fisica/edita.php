@@ -9,7 +9,7 @@ $link_facc = $http . "rlt_fac_pf.php";
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $nome = trim(addslashes($_POST['nome']));
-    $nomeArtistico = trim(addslashes($_POST['nomeArtistico'])) ? "" : NULL;
+    $nomeArtistico = trim(addslashes($_POST['nomeArtistico'])) ?? NULL;
     $rg = isset($_POST['rg']) ? trim($_POST['rg']) : NULL;
     $cpf = $_POST['cpf'] ?? NULL;
     $passaporte = $_POST['passaporte'] ?? NULL;
