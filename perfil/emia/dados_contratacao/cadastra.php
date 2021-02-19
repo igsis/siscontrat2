@@ -97,7 +97,7 @@ $con = bancoMysqli();
                             <select name="fiscal" id="fiscal" class="form-control select2bs4">
                                 <option value="">Selecione um fiscal...</option>
                                 <?php
-                                geraOpcaoUsuario("usuarios", 1, "");
+                                geraOpcaoUsuario("usuarios", 1, "8");
                                 ?>
                             </select>
                         </div>
@@ -107,7 +107,7 @@ $con = bancoMysqli();
                             <select name="suplente" id="suplente" class="form-control select2bs4">
                                 <option value="">Selecione um suplente...</option>
                                 <?php
-                                geraOpcaoUsuario("usuarios", 1, "");
+                                geraOpcaoUsuario("usuarios", 1, "11");
                                 ?>
                             </select>
                         </div>
