@@ -92,6 +92,8 @@ if ($testaCbo->num_rows > 0) {
     $cbo = "Não cadastrado";
 }
 
+$nit = $con->query("SELECT nit FROM nits WHERE pessoa_fisica_id = '$idPf'")->fetch_assoc()['nit'];
+
 $Observacao = "Todas as atividades dos programas da Supervisão de Formação são inteiramente gratuitas e é terminantemente proibido cobrar por elas sob pena de multa e rescisão de contrato.";
 $sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 31";
 $penalidades = $con->query($sqlPenalidade)->fetch_array();
@@ -201,7 +203,7 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(63, $l, utf8_decode('Inscrição no INSS ou nº PIS / PASEP:'), '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(48, $l, "", 0, 0, 'L');
+$pdf->Cell(48, $l, utf8_decode($nit), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(36, $l, 'Data de Nascimento:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
