@@ -295,13 +295,17 @@ include "includes/menu_interno.php";
         var msg = $('#msgEsconde');
         var checked = false;
         var btnCadastra = $('#cadastra');
+        let fichaTecnica = $('#row-ficha');
+
 
         for (let x = 0; x < acoes.length; x++) {
             if (acoes[x].checked) {
                 if (acoes[8].checked) {
                     desabilitaCheckBox(acoes);
-                } else {
+                    fichaTecnica.hide()
+                } else if (!acoes[8].checked) {
                     acoes[8].disabled = true;
+                    fichaTecnica.show()
                 }
                 checked = true;
             }
@@ -345,6 +349,7 @@ include "includes/menu_interno.php";
 
     $(document).ready(function () {
         validaAcoes();
+
         $('#valor_individual').mask('00.000,00',{reverse: true})
     })
 
