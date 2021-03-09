@@ -20,6 +20,7 @@ $idEC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 $contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
+$cargo = $con->query("SELECT cargo FROM emia_cargos WHERE id = '{$contratacao['emia_cargo_id']}'")->fetch_assoc()['cargo'];
 
 $datas = recuperaDados('emia_parcelas', 'id', $idParcela);
 
@@ -92,6 +93,12 @@ $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(140, $l, utf8_decode("Pedido de Pagamento de R$ " . dinheiroParaBr($parcela['valor']) . " ( " . valorPorExtenso($parcela['valor']) . " )"), 0, 'L', 0);
 
 $pdf->Ln(7);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(13, $l, utf8_decode("Objeto:"), 0, 0, 'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->MultiCell(200, $l, utf8_decode("Oficineiro de $cargo da EMIA, da faixa etária de 05 a 12 anos."), 0, 'L', 0);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
