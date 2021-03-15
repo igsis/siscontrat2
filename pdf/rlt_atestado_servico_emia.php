@@ -18,7 +18,6 @@ $parcela = recuperaDados('emia_parcelas','id',$idParcela);
 $dataPagamento = date("d/m/Y", strtotime($parcela['data_pagamento']));
 $dataInicio = date("d/m/Y", strtotime($parcela['data_inicio']));
 $dataFim = date("d/m/Y", strtotime($parcela['data_fim']));
-
 ?>
 
 <html>
@@ -55,17 +54,11 @@ $dataFim = date("d/m/Y", strtotime($parcela['data_fim']));
 <div align="center">
     <?php
     $conteudo =
-        "<p><center><strong>DEC/Escola Municipal de Iniciação Artística</strong></center></p>" .
-        "<p><center>Viaduto do Chá, 15, - Bairro Centro - São Paulo/SP - CEP 01020-900</center></p>" .
-        "<p><center>Telefone:</center></p>" .
-        "<p><center>Ateste de recebimento da documentação</center></p>" .
-        "<p>&nbsp;</p>" .
-        "<p><center>Anexo I da Portaria SF nº 170, de 31 agosto de 2020</center></p>" .
-        "<p><center>Modelo de recebimento da documentação e ateste total/parcial de nota fiscal dentro/fora do prazo</center></p>" .
-        "<p>&nbsp;</p>" .
         "<p><strong>Recebimento da Documentação</strong>" .
         "<p>Atesto:</p>" .
         "<p>( X ) o recebimento em {$dataPagamento}  de <strong>toda a documentação</strong> [INSERIR NÚMERO SEI DA NOTA FISCAL E ARQUIVOS CONSOLIDADOS] prevista na Portaria SF nº 170/2020.</p>" .
+        "<p>O prazo contratual é do dia {$dataInicio} até o dia {$dataFim}.</p>" .
+        "<p>&nbsp;</p>" .
         "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) o recebimento em ___/___/_____ da <b>documentação</b> [INSERIR NÚMERO SEI DA NOTA FISCAL E ARQUIVOS CONSOLIDADOS] prevista na Portaria SF nº 170/2020, <b>ressalvado</b> (s) [RELACIONAR OS DOCUMENTOS IRREGULARES].</p>" .
         "<p>&nbsp;</p>" .
         "<p><strong>Recebimento de material e/ou serviços</strong>" .
@@ -80,7 +73,20 @@ $dataFim = date("d/m/Y", strtotime($parcela['data_fim']));
         "<p>O prazo contratual é do dia ___/___/_____ até o dia ___/___/_____.</p>" .
         "<p>&nbsp;</p>" .
         "<p style='background: lightgrey;'><strong>INFORMAÇÕES COMPLEMENTARES</strong></p>" .
-        "<div class='infos'></div>" .
+        "<table border='1' width='100%' style='border-style: solid'>
+            <tr>
+                <td>
+                <p>Nota de Empenho:<br>
+                    Anexo Nota de Empenho:<br> 
+                    Recibo da Nota de Empenho:<br> 
+                    Pedido de Pagamento:<br>
+                    Recibo de pagamento:<br> 
+                    NIT/PIS/PASEP:<br> 
+                    Certidões fiscais:
+                </p>
+                </td>
+            </tr>
+        </table>".
         "<p>&nbsp;</p>" .
         "<p>À área gestora / de liquidação e pagamento.</p>" .
         "<p>Em virtude do detalhamento da Ação em 2019, informamos que o pagamento no valor de R$ 4.194,72 (quatro mil, cento e noventa e quatro reais e setenta e dois centavos) foi gasto na zona sul de São Paulo, rua Volkswagen, s/nº, Jabaquara, SP.</p>" .
