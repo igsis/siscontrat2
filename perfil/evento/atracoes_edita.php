@@ -153,7 +153,20 @@ include "includes/menu_interno.php";
                                     ?>
                                 </div>
                             </div>
-
+                            <div class="row" id="row-ficha">
+                                <div class="form-group col-md-12">
+                                    <label for="ficha_tecnica">Ficha técnica completa *</label><br/>
+                                    <i>Esse campo deve conter a listagem de pessoas envolvidas no espetáculo, como
+                                        elenco, técnicos, e outros profissionais envolvidos na realização do
+                                        mesmo.</i>
+                                    <p align="justify">
+                                        <span style="color: gray; ">
+                                            <strong><i>Elenco de exemplo:</strong><br/>Lúcio Silva (guitarra e vocal)<br/>Fabio Sá (baixo)<br/>Marco da Costa (bateria)<br/>Eloá Faria (figurinista)<br/>Leonardo Kuero (técnico de som)</span></i>
+                                    </p>
+                                    <textarea id="ficha_tecnica" name="ficha_tecnica" class="form-control"
+                                              rows="8" required></textarea>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label for="classificacao_indicativa_id">Classificação indicativa * </label>
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
@@ -352,5 +365,7 @@ include "includes/menu_interno.php";
 
         $('#valor_individual').mask('00.000,00',{reverse: true})
     })
+
+    
 
 </script>

@@ -29,16 +29,22 @@ $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
 if (isset($_POST['enviar'])) {
     $fora = $_POST['fora'];
 
-    if ($evento['tipo_evento_id'] == 1) {
+    if ($evento['tipo_evento_id'] == 1 && $evento['protocolo'] == NULL) {
         $protocolo = geraProtocolo($idEvento) . "-E";
-    } else if ($evento['tipo_evento_id'] == 2) {
+    } else if ($evento['tipo_evento_id'] == 2 && $evento['protocolo'] == NULL) {
         $protocolo = geraProtocolo($idEvento) . "-C";
     }
 
     if ($evento['contratacao'] == 1) {
         if ($fora == 1) {
-            $sqlPedido = "UPDATE pedidos SET status_pedido_id = 1 WHERE origem_tipo_id = 1 AND origem_id = '$idEvento'";
-            $sqlEvento = "UPDATE eventos SET evento_status_id = 2 WHERE id = '$idEvento'";
+            if (isset($protocolo)) {
+                $addQuery = " protocolo = '{$protocolo}' ";
+            }
+            else {
+                $addQuery = "";
+            }
+            $sqlPedido = "UPDATE pedidos SET status_pedido_id = '1' WHERE origem_tipo_id = '1' AND origem_id = '$idEvento'";
+            $sqlEvento = "UPDATE eventos SET evento_status_id = '2' {$addQuery} WHERE id = '$idEvento'";
             if (mysqli_query($con, $sqlPedido)) {
                 mysqli_query($con, $sqlEvento);
 
