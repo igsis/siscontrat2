@@ -10,6 +10,35 @@ unset($_SESSION['idPf']);
 $con = bancoMysqli();
 $conn = bancoPDO();
 
+if (isset($_POST['excluir'])) {
+    $evento = $_POST['idEvento'];
+    $sqlExclusao = "UPDATE eventos SET publicado = 0 WHERE id = '{$evento}'";
+    if (mysqli_query($con, $sqlExclusao)){
+        $mensagem = mensagem("success", "Evento excluído com sucesso!");
+
+        $sqlDeletaAtracao = "UPDATE atracoes SET publicado = 0 WHERE evento_id = '$evento'";
+        if (mysqli_query($con, $sqlDeletaAtracao)){
+            $sqlAtracoesDeletadas = "SELECT * FROM atracoes WHERE publicado = 0 AND evento_id = '$evento'";
+            $queryAtracoesDeletadas = mysqli_query($con, $sqlAtracoesDeletadas);
+
+            while ($atracaoDeletada = mysqli_fetch_array($queryAtracoesDeletadas)) {
+                $idAtracao = $atracaoDeletada['id'];
+
+                $sqlDeletaOcorrencia = "UPDATE ocorrencias SET publicado = 0 WHERE origem_ocorrencia_id = '$idAtracao'";
+                mysqli_query($con, $sqlDeletaOcorrencia);
+            }
+
+            $sqlDeletaPedido = "UPDATE pedidos SET publicado = 0 WHERE origem_tipo_id = 1 AND origem_id = '$evento'";
+            mysqli_query($con, $sqlDeletaPedido);
+
+            gravarLog($sqlDeletaPedido);
+            //gravarLog($sqlDeletaOcorrencia); A TABELA LOG NÃO TA NA MODELAGEM
+            gravarLog($sqlDeletaAtracao);
+        }
+    }
+}
+
+
 $idUser = $_SESSION['usuario_id_s'];
 $sql = "SELECT eve.id AS id, eve.protocolo, eve.evento_status_id, ped.numero_processo, ped.pessoa_tipo_id, ped.pessoa_juridica_id, ped.pessoa_fisica_id, eve.nome_evento, ped.valor_total, pst.status 
         FROM eventos AS eve
@@ -93,21 +122,18 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . $evento['status'] . "</td>";
                                 print_r(retornaChamadosTD($evento['id']));
                                 echo "<td>";
-                                echo"<form method=\"POST\" action=\"?perfil=evento&p=resumo_evento_enviado\" role=\"form\">
-                                    <input type='hidden' name='idEvento' value='" . $idEvento . "'>
-                                    <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
+                                echo"<form method='POST' action='?perfil=evento&p=resumo_evento_enviado' role='form'>
+                                    <input type='hidden' name='idEvento' value='" . $evento['id'] . "'>
+                                    <button type='submit' name='carregar' class='btn btn-block btn-primary'><span class='glyphicon glyphicon-eye-open'></span></button>
                                     </form>";
                                 if ($evento['evento_status_id'] == 5 || $evento['evento_status_id'] == 6) {
-                                    echo "<form method='post' id='formExcluir'>
-                                        <input type='hidden' name='idEvento' value='{$evento['idEvento']}'>
-                                        <button type='button' class='btn btn-block btn-danger'
+                                    echo "<button type='button' class='btn btn-block btn-danger'
                                                                  id='excluiEvento'
                                                                  data-toggle='modal' data-target='#exclusao'
                                                                  name='excluiEvento'
                                                                  data-name='{$evento['nome_evento']}'
-                                                                 data-id='{$evento['idEvento']}'><span
-                                                    class='glyphicon glyphicon-trash'></span></button>
-                                    </form>";
+                                                                 data-id='{$evento['id']}'><span
+                                                    class='glyphicon glyphicon-trash'></span></button>";
                                 }
                                 echo"</td>";
                                 echo "</tr>";
@@ -143,6 +169,30 @@ $query = mysqli_query($con, $sql);
     <!-- /.content -->
 </div>
 
+<!--.modal-->
+<div id="exclusao" class="modal modal-danger modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <!--Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirmação de Exclusão</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir este evento?</p>
+            </div>
+            <div class="modal-footer">
+                <form method="post">
+                    <input type="hidden" name="idEvento" id="idEvent" value="">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                    </button>
+                    <input class=" btn btn-danger btn-outline" type="submit" name="excluir" value="Apagar">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
@@ -158,4 +208,12 @@ $query = mysqli_query($con, $sql);
                 "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
         });
     });
+
+    $('#exclusao').on('show.bs.modal', function (e) {
+        let evento = $(e.relatedTarget).attr('data-name');
+        let id = $(e.relatedTarget).attr('data-id');
+
+        $(this).find('p').text(`Tem certeza que deseja excluir o evento ${evento} ?`);
+        $(this).find('#idEvent').attr('value', `${id}`);
+    })
 </script>
