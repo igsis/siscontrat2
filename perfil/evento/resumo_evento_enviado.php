@@ -29,25 +29,23 @@ $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
 if (isset($_POST['enviar'])) {
     $fora = $_POST['fora'];
 
-    if ($evento['tipo_evento_id'] == 1 && $evento['protocolo'] == NULL) {
+    if ($evento['tipo_evento_id'] == 1 && $evento['protocolo'] == null) {
         $protocolo = geraProtocolo($idEvento) . "-E";
-    } else if ($evento['tipo_evento_id'] == 2 && $evento['protocolo'] == NULL) {
+    } else if ($evento['tipo_evento_id'] == 2 && $evento['protocolo'] == null) {
         $protocolo = geraProtocolo($idEvento) . "-C";
     }
 
     if ($evento['contratacao'] == 1) {
         if ($fora == 1) {
             if (isset($protocolo)) {
-                $addQuery = " protocolo = '{$protocolo}' ";
+                $addQuery = ", protocolo = '{$protocolo}' ";
             }
             else {
                 $addQuery = "";
             }
             $sqlPedido = "UPDATE pedidos SET status_pedido_id = '1' WHERE origem_tipo_id = '1' AND origem_id = '$idEvento'";
             $sqlEvento = "UPDATE eventos SET evento_status_id = '2' {$addQuery} WHERE id = '$idEvento'";
-            if (mysqli_query($con, $sqlPedido)) {
-                mysqli_query($con, $sqlEvento);
-
+            if (mysqli_query($con, $sqlPedido) && mysqli_query($con, $sqlEvento)) {
                 $titulo = "Evento Fora do Prazo: " . $evento["nome_evento"];
                 $sqlChamado = "INSERT INTO chamados (evento_id, chamado_tipo_id, titulo, justificativa, usuario_id, data) VALUES
                                                      ('$idEvento', '5', '$titulo', 'Evento Fora do Prazo', '$idUser', '$data')";

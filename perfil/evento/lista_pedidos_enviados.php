@@ -11,11 +11,11 @@ $con = bancoMysqli();
 $conn = bancoPDO();
 
 $idUser = $_SESSION['usuario_id_s'];
-$sql = "SELECT eve.id AS id, eve.protocolo, ped.numero_processo, ped.pessoa_tipo_id, ped.pessoa_juridica_id, ped.pessoa_fisica_id, eve.nome_evento, ped.valor_total, pst.status 
+$sql = "SELECT eve.id AS id, eve.protocolo, eve.evento_status_id, ped.numero_processo, ped.pessoa_tipo_id, ped.pessoa_juridica_id, ped.pessoa_fisica_id, eve.nome_evento, ped.valor_total, pst.status 
         FROM eventos AS eve
         INNER JOIN pedidos AS ped ON eve.id = ped.origem_id
         INNER JOIN pedido_status AS pst ON ped.status_pedido_id = pst.id
-        WHERE eve.publicado = 1 AND ped.publicado = 1 AND (ped.origem_tipo_id = 1 OR ped.origem_tipo_id = 2) AND evento_status_id between 3 AND 4 AND contratacao = 1 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
+        WHERE eve.publicado = 1 AND ped.publicado = 1 AND (ped.origem_tipo_id = 1 OR ped.origem_tipo_id = 2) AND evento_status_id between 3 AND 6 AND contratacao = 1 AND (suplente_id = '$idUser' OR fiscal_id = '$idUser' OR usuario_id = '$idUser')";
 $query = mysqli_query($con, $sql);
 ?>
 
@@ -53,7 +53,7 @@ $query = mysqli_query($con, $sql);
                                 <th width="17%">Período</th>
                                 <th>Status</th>
                                 <th>Chamado</th>
-                                <th>Visualizar</th>
+                                <th>Ações</th>
                             </tr>
                             </thead>
 
@@ -92,12 +92,24 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</td>";
                                 echo "<td>" . $evento['status'] . "</td>";
                                 print_r(retornaChamadosTD($evento['id']));
-                                echo "<td>
-                                    <form method=\"POST\" action=\"?perfil=evento&p=resumo_evento_enviado\" role=\"form\">
+                                echo "<td>";
+                                echo"<form method=\"POST\" action=\"?perfil=evento&p=resumo_evento_enviado\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $idEvento . "'>
                                     <button type=\"submit\" name='carregar' class=\"btn btn-block btn-primary\"><span class='glyphicon glyphicon-eye-open'></span></button>
-                                    </form>
-                                </td>";
+                                    </form>";
+                                if ($evento['evento_status_id'] == 5 || $evento['evento_status_id'] == 6) {
+                                    echo "<form method='post' id='formExcluir'>
+                                        <input type='hidden' name='idEvento' value='{$evento['idEvento']}'>
+                                        <button type='button' class='btn btn-block btn-danger'
+                                                                 id='excluiEvento'
+                                                                 data-toggle='modal' data-target='#exclusao'
+                                                                 name='excluiEvento'
+                                                                 data-name='{$evento['nome_evento']}'
+                                                                 data-id='{$evento['idEvento']}'><span
+                                                    class='glyphicon glyphicon-trash'></span></button>
+                                    </form>";
+                                }
+                                echo"</td>";
                                 echo "</tr>";
                             }
                             echo "</tbody>";

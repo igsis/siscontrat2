@@ -7,12 +7,13 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $nome_atracao = trim(addslashes($_POST['nome_atracao']));
     $classificacao_indicativa_id = $_POST['classificacao_indicativa_id'];
     $release_comunicacao = trim(addslashes($_POST['release_comunicacao']));
+    $ficha_tecnica = $_POST['ficha_tecnica'] != '' ?trim(addslashes($_POST['ficha_tecnica'])) : NULL;
     $links = trim(addslashes($_POST['links']));
     $quantidade_apresentacao = $_POST['quantidade_apresentacao'];
     $valor_individual = dinheiroDeBr($_POST['valor_individual']);
 }
 if (isset($_POST['cadastra'])) {
-    $sql_atracoes = "INSERT INTO atracoes(evento_id, nome_atracao, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual, publicado) VALUES ('$idEvento','$nome_atracao', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '1')";
+    $sql_atracoes = "INSERT INTO atracoes(evento_id, nome_atracao, classificacao_indicativa_id, release_comunicacao, links, quantidade_apresentacao, valor_individual,ficha_tecnica, publicado) VALUES ('$idEvento','$nome_atracao', '$classificacao_indicativa_id', '$release_comunicacao', '$links', '$quantidade_apresentacao', '$valor_individual', '$ficha_tecnica' ,'1')";
     if (mysqli_query($con, $sql_atracoes)) {
         $idAtracao = recuperaUltimo("atracoes");
         $mensagem = mensagem("success", "Cadastrado com sucesso! Retornando a listagem de atrações");
@@ -64,7 +65,7 @@ if (isset($_POST['cadastra'])) {
 
 if (isset($_POST['edita'])) {
     $idAtracao = $_POST['idAtracao'];
-    $sql_atracoes = "UPDATE atracoes SET nome_atracao = '$nome_atracao', classificacao_indicativa_id = '$classificacao_indicativa_id', release_comunicacao = '$release_comunicacao', links = '$links', quantidade_apresentacao = '$quantidade_apresentacao', valor_individual = '$valor_individual' WHERE id = '$idAtracao'";
+    $sql_atracoes = "UPDATE atracoes SET nome_atracao = '$nome_atracao', classificacao_indicativa_id = '$classificacao_indicativa_id', release_comunicacao = '$release_comunicacao', links = '$links', quantidade_apresentacao = '$quantidade_apresentacao', valor_individual = '$valor_individual', ficha_tecnica = '$ficha_tecnica' WHERE id = '$idAtracao'";
     if (mysqli_query($con, $sql_atracoes)) {
 
         $sql = "SELECT * FROM pedidos WHERE origem_tipo_id = 1 AND origem_id = '$idEvento' AND publicado = 1";
@@ -164,7 +165,7 @@ include "includes/menu_interno.php";
                                             <strong><i>Elenco de exemplo:</strong><br/>Lúcio Silva (guitarra e vocal)<br/>Fabio Sá (baixo)<br/>Marco da Costa (bateria)<br/>Eloá Faria (figurinista)<br/>Leonardo Kuero (técnico de som)</span></i>
                                     </p>
                                     <textarea id="ficha_tecnica" name="ficha_tecnica" class="form-control"
-                                              rows="8" required></textarea>
+                                              rows="8" required><?= $atracao["ficha_tecnica"] ?></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -365,7 +366,4 @@ include "includes/menu_interno.php";
 
         $('#valor_individual').mask('00.000,00',{reverse: true})
     })
-
-    
-
 </script>
