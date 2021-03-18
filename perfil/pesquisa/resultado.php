@@ -9,8 +9,8 @@ if (isset($_POST['busca'])) {
     $nomeEvento = $_POST['nomeEvento'] ?? NULL;
     $usuario = $_POST['usuario'] ?? NULL;
     $projeto = $_POST['projeto'] ?? NULL;
-    $valorInicial = $_POST['valor_inicial'] ?? NULL;
-    $valorFinal = $_POST['valor_final'] ?? NULL;
+    $valorInicial = dinheiroDeBr($_POST['valor_inicial']) ?? NULL;
+    $valorFinal = dinheiroDeBr($_POST['valor_final']) ?? NULL;
 
     $sqlProtocolo = '';
     $sqlNomeEvento = '';
@@ -29,9 +29,15 @@ if (isset($_POST['busca'])) {
         $sqlProjeto = " AND e.projeto_especial_id = '$projeto'";
     if ($usuario != null && $usuario != 0)
         $sqlUsuario = " AND fiscal_id = '$usuario' OR suplente_id = '$usuario' OR usuario_id = '$usuario'";
-    if ($valorInicial != NULL && $valorInicial != 0 || $valorFinal != NULL && $valorFinal != 0) {
-        $sqlValor = " AND p.valor_total between '$valorInicial' AND '$valorFinal'";
-    } else {
+    if ($valorInicial != NULL && $valorInicial != 0) {
+        if ($valorFinal != NULL && $valorFinal != 0){
+            $sqlValor = " AND p.valor_total between '$valorInicial' AND '$valorFinal'";
+        } else {
+            $sqlValor = " AND p.valor_total >= '$valorInicial'";
+        }
+    } elseif ($valorFinal != NULL && $valorFinal != 0){
+        $sqlValor = " AND p.valor_total <= '$valorFinal'";
+    }else {
         $sqlValor = "";
     }
     if ($numProcesso != null)
@@ -81,6 +87,7 @@ $http = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/resumo_evento.ph
                                 <th>Período</th>
                                 <th>Valor</th>
                                 <th>Status</th>
+                                <th>Chamados</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -103,7 +110,7 @@ $http = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/resumo_evento.ph
                                                     class="btn btn-link"><?= $evento['protocolo'] ?></button>
                                         </form>
                                     </td>
-                                    <td><a href="<?=$http.$evento['id']?>" target='_blank'><?= $evento['numero_processo'] ?></a></td>
+                                    <td><?= checaCampo($evento['numero_processo']) ?></td>
                                     <td><?= $pessoa ?></td>
                                     <td><?= $tipo ?></td>
                                     <td><?= $evento['nome_evento'] ?></td>
@@ -117,9 +124,9 @@ $http = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/resumo_evento.ph
                                         </button>
                                     </td>
                                     <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
-                                    <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
+                                    <td><?= "R$" . dinheiroParaBr($evento['valor_total']) ?></td>
                                     <td><?= $evento['status'] ?></td>
-
+                                    <?= retornaChamadosTD($evento['id']) ?>
                                 </tr>
                                 <?php
                             }
@@ -136,6 +143,7 @@ $http = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/resumo_evento.ph
                                 <th>Período</th>
                                 <th>Valor</th>
                                 <th>Status</th>
+                                <th>Chamados</th>
                             </tr>
                             </tfoot>
                         </table>

@@ -215,7 +215,7 @@ while ($linha = mysqli_fetch_array($query)) {
     }
 
     if ($linha['fomento'] != 0) {
-        $consultaFomento = $con->query("SELECT fomento_id FROM evento_fomento WHERE evento_id = " . $linha['id'])->fetch_array();
+        $consultaFomento = $con->query("SELECT fomento_id FROM agendao_fomento WHERE evento_id = " . $linha['id'])->fetch_array();
         $fomento = $con->query("SELECT fomento FROM fomentos WHERE id = " . $consultaFomento['fomento_id'])->fetch_array()['fomento'];
     } else {
         $fomento = "Não possuí";

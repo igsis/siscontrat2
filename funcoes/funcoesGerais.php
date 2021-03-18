@@ -12,13 +12,13 @@ function habilitarErro()
 function saudacao()
 {
     $hora = date('H', strtotime("-3 hours"));
-    if (($hora > 12) AND ($hora <= 18)) {
+    if (($hora > 12) and ($hora <= 18)) {
         return "Boa tarde";
-    } else if (($hora > 18) AND ($hora <= 23)) {
+    } else if (($hora > 18) and ($hora <= 23)) {
         return "Boa noite";
-    } else if (($hora >= 0) AND ($hora <= 4)) {
+    } else if (($hora >= 0) and ($hora <= 4)) {
         return "Boa noite";
-    } else if (($hora > 4) AND ($hora <= 12)) {
+    } else if (($hora > 4) and ($hora <= 12)) {
         return "Bom dia";
     }
 }
@@ -142,7 +142,9 @@ function semAcento($string)
 //retorna data d/m/y de mysql/date(a-m-d)
 function exibirDataBr($data)
 {
-    if ($data > '1970-01-02') {
+    //este if fazia com que certas datas muito antigas não fossem exibidas
+    //if ($data > '1970-01-02') {
+    if ($data > '1900-01-01') {
         $timestamp = strtotime($data);
         return date('d/m/Y', $timestamp);
     } else {
@@ -441,6 +443,31 @@ function retornaObjeto($idPedido)
     return $array['nome_evento'];
 }
 
+function retornaObjetoFormacao_Emia($idContratacao, $modulo)
+{
+    $con = bancoMysqli();
+    if ($modulo == "formacao") {
+        $consultaNomes = $con->query("SELECT p.programa, l.linguagem, p.edital FROM programas AS p 
+                                        INNER JOIN formacao_contratacoes AS fc ON p.id = fc.programa_id
+                                        INNER JOIN linguagens l ON fc.linguagem_id = l.id
+                                        WHERE fc.id = $idContratacao AND fc.publicado = 1");
+        if ($consultaNomes->num_rows > 0) {
+            $nomesArray = mysqli_fetch_array($consultaNomes);
+            return $nomesArray['programa'] . " - " . $nomesArray['linguagem'] . " - " . $nomesArray['edital'];
+        } else {
+            return "";
+        }
+    } else{
+        $cst = $con->query("
+            SELECT e.cargo
+            FROM emia_contratacao ec 
+            INNER JOIN pedidos p on ec.pedido_id = p.id
+            INNER JOIN emia_cargos e on ec.emia_cargo_id = e.id
+            WHERE p.id = '$idContratacao'")->fetch_assoc();
+        return $cst['cargo'] . " da EMIA, da faixa etária de 05 a 12 anos.";
+    }
+}
+
 function retornaPeriodo($idEvento)
 {
     $con = bancoMysqli();
@@ -462,7 +489,7 @@ function retornaPeriodo($idEvento)
     $array_fim = mysqli_fetch_array($query_data_fim);
 
     $data_fim = $array_fim['data_fim'] ?? "";
-    if ($data_fim == '0000-00-00' OR $data_fim == NULL) {
+    if ($data_fim == '0000-00-00' or $data_fim == NULL) {
         return "dia " . exibirDataBr($data_inicio);
     } else {
         return "de " . exibirDataBr($data_inicio) . " até " . exibirDataBr($data_fim);
@@ -489,7 +516,7 @@ function testaPeriodo($idOcorrencia)
 
     $data_fim = $ocorrencia['data_fim'];
 
-    if ($data_fim == '0000-00-00' OR $data_fim == NULL) {
+    if ($data_fim == '0000-00-00' or $data_fim == NULL) {
         return false;
     } else {
         return true;
@@ -601,7 +628,7 @@ function retornaModulos($perfil)
     $campoFetch = mysqli_fetch_array($query);
     $nome = "";
     while ($fieldinfo = mysqli_fetch_field($query)) {
-        if (($campoFetch[$fieldinfo->name] == 1) AND ($fieldinfo->name != 'id')) {
+        if (($campoFetch[$fieldinfo->name] == 1) and ($fieldinfo->name != 'id')) {
             $descricao = recuperaModulo($fieldinfo->name);
             $nome = $nome . ";\n + " . $descricao['nome'];
         }
@@ -618,7 +645,7 @@ function listaModulos($perfil)
     $query = mysqli_query($con, $sql);
     $campoFetch = mysqli_fetch_array($query);
     while ($fieldinfo = mysqli_fetch_field($query)) {
-        if (($campoFetch[$fieldinfo->name] == 1) AND ($fieldinfo->name != 'id')) {
+        if (($campoFetch[$fieldinfo->name] == 1) and ($fieldinfo->name != 'id')) {
             $descricao = recuperaModulo($fieldinfo->name);
             echo "<tr>";
             echo "<td class='list_description'><b>" . $descricao['nome'] . "</b></td>";
@@ -798,7 +825,7 @@ function qtdApresentacoesPorExtenso($valor = 0)
 }
 
 //atualiza o status do pedido baseado em qual pedido foi feito e faz a insert/update na tabela de contratos
-function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = NULL, $idUsuario = NULL)
+function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = "", $idUsuario = "")
 {
     $con = bancoMysqli();
     if ($tipo == "reserva") {
@@ -808,11 +835,10 @@ function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = NULL, $idUsuar
             $data = dataHoraNow();
 
             //insert/update em pedido_etapas
-            if ($testaEtapa != NULL && $testaEtapa['data_reserva'] == "0000-00-00 00:00:00" || $testaEtapa['data_reserva'] != "0000-00-00 00:00:00") {
-                $updateEtapa = $con->query("UPDATE pedido_etapas SET data_reserva = '$data' WHERE pedido_id = '$idPedido'");
-            }
             if ($testaEtapa == NULL) {
                 $insereEtapa = $con->query("INSERT INTO pedido_etapas (pedido_id, data_reserva) VALUES ('$idPedido', '$data')");
+            } else if ($testaEtapa != NULL && $testaEtapa['data_reserva'] == "0000-00-00 00:00:00" || $testaEtapa['data_reserva'] != "0000-00-00 00:00:00") {
+                $updateEtapa = $con->query("UPDATE pedido_etapas SET data_reserva = '$data' WHERE pedido_id = '$idPedido'");
             }
         }
 
@@ -822,7 +848,7 @@ function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = NULL, $idUsuar
             $testaEtapa = $con->query("SELECT pedido_id, data_proposta FROM pedido_etapas WHERE pedido_id = $idPedido")->fetch_array();
             $data = dataHoraNow();
 
-            if($idPenal && $idUsuario != NULL){
+            if ($idPenal && $idUsuario != NULL) {
                 //update/insert de penalidade
                 $consultaContratos = $con->query("SELECT pedido_id FROM contratos WHERE pedido_id = $idPedido");
                 if ($consultaContratos->num_rows > 0) {
@@ -833,13 +859,22 @@ function alteraStatusPedidoContratos($idPedido, $tipo, $idPenal = NULL, $idUsuar
             }
 
             //insert/update em pedido_etapas
-            if ($testaEtapa != NULL && $testaEtapa['data_proposta'] == "0000-00-00 00:00:00" || $testaEtapa['data_proposta'] != "0000-00-00 00:00:00") {
-                $updateEtapa = $con->query("UPDATE pedido_etapas SET data_proposta = '$data' WHERE pedido_id = '$idPedido'");
-            }
             if ($testaEtapa == NULL) {
                 $insereEtapa = $con->query("INSERT INTO pedido_etapas (pedido_id, data_proposta) VALUES ('$idPedido', '$data')");
+            } else if ($testaEtapa != NULL && $testaEtapa['data_proposta'] == "0000-00-00 00:00:00" || $testaEtapa['data_proposta'] != "0000-00-00 00:00:00") {
+                $updateEtapa = $con->query("UPDATE pedido_etapas SET data_proposta = '$data' WHERE pedido_id = '$idPedido'");
             }
         };
+    }
+}
+
+//checa se o campo do parâmetro possuí algum dado, caso não possua, ele retorna "Não cadastrado"
+function checaCampo($campo)
+{
+    if ($campo == NULL || $campo == '') {
+        return "Não cadastrado";
+    } else {
+        return $campo;
     }
 }
 
@@ -1392,6 +1427,26 @@ function listaLocais($idEvento, $tiraLinha = "")
     return $locais;
 }
 
+//retorna uma string com todos os locais que aquele pedido/contração do módulo de formação possuí
+function listaLocaisFormacao($idContratacao)
+{
+    $con = bancoMysqli();
+
+    $sqlLocal = "SELECT l.local FROM formacao_locais fl INNER JOIN locais l on fl.local_id = l.id WHERE form_pre_pedido_id = $idContratacao";
+    $local = "";
+    $queryLocal = mysqli_query($con, $sqlLocal);
+
+    while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
+        $local = $local . $linhaLocal['local'] . ' | ';
+    }
+
+    if ($local != "") {
+        return $local = substr($local, 0, (strlen($local) - 3));
+    } else {
+        return $local;
+    }
+}
+
 function listaOcorrenciasContrato($idEvento)
 {
     $con = bancoMysqli();
@@ -1426,7 +1481,7 @@ function retornaPeriodoNovo($id, $tabela = "ocorrencias")
         $query_anterior01 = mysqli_query($con, $sql_posterior01);
         $data = mysqli_fetch_array($query_anterior01);
         // $num = mysqli_num_rows($query_anterior01);
-        if (($data['data_fim'] != '0000-00-00') OR ($data['data_fim'] != NULL)) {
+        if (($data['data_fim'] != '0000-00-00') or ($data['data_fim'] != NULL)) {
             //se existe uma data final e que é diferente de NULO
             $dataFinal01 = $data['data_fim'];
         }
@@ -1460,7 +1515,7 @@ function retornaPeriodoNovo($id, $tabela = "ocorrencias")
             $query_anterior01 = mysqli_query($con, $sql_posterior01);
             $data = mysqli_fetch_array($query_anterior01);
             $num = mysqli_num_rows($query_anterior01);
-            if (($data['data_fim'] != '0000-00-00') OR ($data['data_fim'] != NULL)) {
+            if (($data['data_fim'] != '0000-00-00') or ($data['data_fim'] != NULL)) {
                 //se existe uma data final e que é diferente de NULO
                 $dataFinal01 = $data['data_fim'];
             }
@@ -1486,39 +1541,32 @@ function retornaPeriodoNovo($id, $tabela = "ocorrencias")
     }
 }
 
-function retornaPeriodoFormacao($idVigencia)
+function retornaPeriodoFormacao_Emia($idVigencia, $modulo)
 {
     $con = bancoMysqli();
-    $testaDataInicio = $con->query("SELECT data_inicio FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->num_rows;
-    if ($testaDataInicio > 0) {
-        $data_inicio = $con->query("SELECT data_inicio FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array();
-        $data_fim = $con->query("SELECT data_fim FROM formacao_parcelas WHERE formacao_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array();
-        if ($data_inicio['data_inicio'] == $data_fim['data_fim']) {
-            return exibirDataBr($data_inicio['data_inicio']);
-        } else {
-            return "de " . exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim['data_fim']);
-        }
-    } else {
-        return "Parcelas não cadastradas";
+    $tabela = "";
+    $campo = "";
+    if ($modulo == "formacao") {
+        $tabela = "formacao_parcelas";
+        $campo = "formacao_vigencia_id";
+    } elseif ($modulo == "emia") {
+        $tabela = "emia_parcelas";
+        $campo = "emia_vigencia_id";
     }
 
-}
-
-function retornaPediodoEmia($idVigencia)
-{
-    $con = bancoMysqli();
-    $testaDataInicio = $con->query("SELECT data_inicio FROM emia_parcelas WHERE emia_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->num_rows;
+    $testaDataInicio = $con->query("SELECT data_inicio FROM $tabela WHERE $campo = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->num_rows;
     if ($testaDataInicio > 0) {
-        $data_inicio = $con->query("SELECT data_inicio FROM emia_parcelas WHERE emia_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array();
-        $data_fim = $con->query("SELECT data_fim FROM emia_parcelas WHERE emia_vigencia_id = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array();
-        if ($data_inicio['data_inicio'] == $data_fim['data_fim']) {
-            return exibirDataBr($data_inicio['data_inicio']);
+        $data_inicio = $con->query("SELECT data_inicio FROM $tabela WHERE $campo = $idVigencia AND publicado = 1 ORDER BY data_inicio ASC LIMIT 0,1")->fetch_array()['data_inicio'];
+        $data_fim = $con->query("SELECT data_fim FROM $tabela WHERE $campo = $idVigencia AND publicado = 1 ORDER BY data_fim DESC LIMIT 0,1")->fetch_array()['data_fim'];
+        if ($data_inicio == $data_fim || $data_fim == "0000-00-00") {
+            return exibirDataBr($data_inicio);
         } else {
-            return "de " . exibirDataBr($data_inicio['data_inicio']) . " a " . exibirDataBr($data_fim['data_fim']);
+            return "de " . exibirDataBr($data_inicio) . " à " . exibirDataBr($data_fim);
         }
     } else {
-        return "Parcelas não cadastradas";
+        return "(Parcelas não cadastradas)";
     }
+
 }
 
 function geraProtocolo($id)
@@ -1626,4 +1674,63 @@ function recuperaUsuarioCapac($campoZ)
     $usuario = recuperaDadosCapac("usuario", $campoZ, "id");
     $nomeUsuario = $usuario['nome'];
     return $nomeUsuario;
+}
+
+function numeroChamados($idEvento, $litar = false)
+{
+    $con = bancoPDO();
+    $query = "SELECT 	ct.`tipo`,
+                        ch.`titulo`,
+                        ch.`justificativa`,
+                        ch.`data`
+            FROM chamados AS ch
+            LEFT JOIN chamado_tipos AS ct ON ch.chamado_tipo_id = ct.id
+            WHERE ch.evento_id = {$idEvento}";
+
+    $resultado = $con->query($query);
+    if ($litar) {
+        $result = $resultado->fetchAll();
+        return $result;
+    } else {
+        $rows = $resultado->rowCount();
+        return $rows;
+    }
+}
+
+function recuperaChamadoEvento($id){
+
+    $con = bancoPDO();
+    $sql = "SELECT ev.nome_evento, er.data_reabertura
+            FROM eventos ev
+            LEFT JOIN evento_reaberturas er ON ev.id = er.evento_id
+            WHERE ev.evento_status_id = 1 
+            AND (ev.fiscal_id = '{$id}' OR ev.suplente_id = '{$id}' OR ev.usuario_id = '{$id}')
+            AND data_reabertura != ''  AND ev.publicado = 1
+            ORDER BY er.data_reabertura";
+
+    return $con->query($sql);
+}
+
+function retornaChamadosTD($id)
+{
+    if (numeroChamados($id) > 0) {
+        $quant = numeroChamados($id);
+        return "<td class='text-center'>
+                   <button class='btn bg-orange' type='button' 
+                    onclick='exibirChamados({$id})'>
+                    {$quant}
+                  </button>
+                </td>";
+    } else {
+        return "<td>Sem chamados</td>";
+    }
+}
+
+function instituicaoSolicitante($evento_id) {
+    $con = bancoMysqli();
+    return $con->query("
+        SELECT i.nome FROM eventos as eve
+        INNER JOIN usuarios u on eve.usuario_id = u.id
+        INNER JOIN instituicoes i on u.instituicao_id = i.id
+        WHERE eve.id = '$evento_id'")->fetch_row()[0];
 }

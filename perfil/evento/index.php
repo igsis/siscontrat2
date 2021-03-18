@@ -40,11 +40,7 @@ $linha = $query->num_rows;
             <div class="col-md-12">
                 <div class="box box-solid">
                     <div class="box-header">
-                        <div class="box-tools pull-right">
-                            <small class="label bg-green-active">Usuário</small>
-                            <small class="label bg-primary">Fiscal</small>
-                            <small class="label bg-yellow-active">Suplente</small>
-                        </div>
+
                     </div>
                     <div class="box-body">
                         <div class="box-group" id="accordionEventos">
@@ -67,12 +63,18 @@ $linha = $query->num_rows;
 
                                     $locais = listaLocais($evento['id'], '1');
 
-                                    if ($evento['fiscal_id'] == $idUser)
+                                    if ($evento['fiscal_id'] == $idUser){
                                         $corRepresentativa = 'box-primary';
-                                    else if ($evento['suplente_id'] == $idUser)
+                                        $legenda = '<small class="label bg-primary">Fiscal</small>';
+                                    }
+                                    else if ($evento['suplente_id'] == $idUser){
                                         $corRepresentativa = 'box-warning';
-                                    else if ($evento['usuario_id'] == $idUser)
+                                        $legenda = '<small class="label bg-yellow-active">Suplente</small>';
+                                    }
+                                    else if ($evento['usuario_id'] == $idUser){
                                         $corRepresentativa = 'box-success';
+                                        $legenda ='<small class="label bg-green-active">Usuário</small>';
+                                    }
 
                                     ?>
                                     <div class="panel box <?= $corRepresentativa ?>">
@@ -83,6 +85,9 @@ $linha = $query->num_rows;
                                                     <?= $evento['nome_evento'] ?>
                                                 </a>
                                             </h4>
+                                            <div class="box-tools pull-right" style="margin-top: 5px">
+                                                <?= $legenda ?>
+                                            </div>
                                         </div>
                                         <div id="collapse<?= $evento['id'] ?>" class="panel-collapse collapse">
                                             <div class="box-body">

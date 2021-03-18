@@ -1,4 +1,17 @@
-<?php include "includes/menu_interno.php"; ?>
+<?php
+include "includes/menu_interno.php";
+
+/**
+ * @var int $idEvento
+ * @var mysqli $con
+ */
+
+$_SESSION['idEvento'] = $idEvento;
+$evento = $con->query("SELECT contratacao FROM eventos WHERE id ='$idEvento'")->fetch_array();
+
+$sqlConsultaAcoes = "SELECT acao, descricao FROM acoes WHERE publicado = '1' ORDER BY 1";
+$acoes = $con->query($sqlConsultaAcoes)->fetch_all(MYSQLI_ASSOC);
+?>
 
 <div class="content-wrapper">
     <section class="content">
@@ -32,9 +45,8 @@
                                     ?>
                                 </div>
                             </div>
-                            
-                            <div class="row">
-                                <div class="form-group col-md-6">
+                            <div class="row" id="row-ficha">
+                                <div class="form-group col-md-12">
                                     <label for="ficha_tecnica">Ficha técnica completa *</label><br/>
                                     <i>Esse campo deve conter a listagem de pessoas envolvidas no espetáculo, como
                                         elenco, técnicos, e outros profissionais envolvidos na realização do
@@ -46,20 +58,7 @@
                                     <textarea id="ficha_tecnica" name="ficha_tecnica" class="form-control"
                                               rows="8" required></textarea>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="integrantes">Integrantes *</label><br/>
-                                    <i>Esse campo deve conter a listagem de pessoas envolvidas no espetáculo <span
-                                                style="color: #FF0000; ">incluindo o líder do grupo</span>.<br/>Apenas
-                                        o <span style="color: #FF0000; ">nome civil, RG e CPF</span> de quem irá se
-                                        apresentar, excluindo técnicos.</i>
-                                    <p align="justify"><span
-                                                style="color: gray; "><strong><i>Elenco de exemplo:</strong><br/>Ana Cañas RG 00000000-0 CPF 000.000.000-00<br/>Lúcio Maia RG 00000000-0 CPF 000.000.000-00<br/>Fabá Jimenez RG 00000000-0 CPF 000.000.000-00<br/>Fabio Sá RG 00000000-0 CPF 000.000.000-00<br/>Marco da Costa RG 00000000-0 CPF 000.000.000-00</span></i>
-                                    </p>
-                                    <textarea id="integrantes" name="integrantes" class="form-control"
-                                              rows="8" required></textarea>
-                                </div>
                             </div>
-
                             <div class="form-group">
                                 <label for="classificacao_indicativa_id">Classificação indicativa * </label>
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
@@ -99,25 +98,16 @@
                                     <input type="number" class="form-control" min="1" id="quantidade_apresentacao"
                                            name="quantidade_apresentacao" max="100" maxlength="2" required>
                                 </div>
-                                <?php
-                                $_SESSION['idEvento'] = $idEvento;
-                                $evento = $con->query("SELECT contratacao FROM eventos WHERE id ='$idEvento'")->fetch_array();
-                                if ($evento['contratacao'] == 1) {
-                                    ?>
+                                <?php if ($evento['contratacao'] == 1): ?>
                                     <div class="form-group col-md-6">
                                         <label for="valor_individual">Valor *</label> <i>Preencher 0,00 quando não
                                             houver valor</i>
                                         <input type="text" id="valor_individual" name="valor_individual"
                                                class="form-control" required>
                                     </div>
-                                    <?php
-                                }
-                                else{
-                                    ?>
+                                <?php else: ?>
                                     <input type="hidden" name="valor_individual" value="0,00">
-                                    <?php
-                                }
-                                ?>
+                                <?php endif; ?>
                             </div>
                             <div class="row" id="msg">
                                 <div class="col-md-12">
@@ -155,17 +145,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <?php
-                    $sqlConsultaAcoes = "SELECT acao, descricao FROM acoes WHERE publicado = '1' ORDER BY 1";
-                    foreach ($con->query($sqlConsultaAcoes)->fetch_all(MYSQLI_ASSOC) as $acao) {
-                        ?>
+                    <?php foreach ($acoes as $acao): ?>
                         <tr>
                             <td><?= $acao['acao'] ?></td>
                             <td><?= $acao['descricao'] ?></td>
                         </tr>
-                        <?php
-                    }
-                    ?>
+                    <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -199,13 +184,17 @@
         var msg = $('#msgEsconde');
         var checked = false;
         var btnCadastra = $('#cadastra');
+        let fichaTecnica = $('#row-ficha');
+
 
         for (let x = 0; x < acoes.length; x++) {
             if (acoes[x].checked) {
                 if (acoes[8].checked) {
                     desabilitaCheckBox(acoes);
-                } else {
+                    fichaTecnica.hide()
+                } else if (!acoes[8].checked) {
                     acoes[8].disabled = true;
+                    fichaTecnica.show()
                 }
                 checked = true;
             }
@@ -242,7 +231,7 @@
         }else{
             msg.hide();
             validaAcoes();
-        };
+        }
     }
 
     $('#valor_individual').keyup(limitaValor);

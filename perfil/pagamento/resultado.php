@@ -1,7 +1,7 @@
 <?php
 $con = bancoMysqli();
 /* ************** geral ************** */
-if (isset($_POST['geral'])){
+if (isset($_POST['geral'])) {
     $protocolo = $_POST['protocolo'] ?? NULL;
     $num_processo = $_POST['num_processo'] ?? NULL;
     $nome_evento = $_POST['nome_evento'] ?? NULL;
@@ -32,7 +32,7 @@ if (isset($_POST['geral'])){
         $sqlOperador = " AND p.operador_pagamento_id = '$operador_id'";
     if ($status != null) {
         $sqlStatus = " AND p.status_pedido_id = '$status'";
-    }        
+    }
 
     $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento, p.operador_id, p.operador_pagamento_id
     FROM eventos e 
@@ -49,7 +49,7 @@ if (isset($_POST['geral'])){
     $sqlProjeto $sqlUsuario $sqlOperador
     $sqlProtocolo $sqlNomeEvento $sqlProcesso $sqlStatus
     GROUP BY e.id";
-    
+
     $resultado = $con->query($sql);
     $num_rows = mysqli_num_rows($resultado);
     // echo $sql;
@@ -57,17 +57,15 @@ if (isset($_POST['geral'])){
 /* ************** /.geral ************** */
 
 /* ************** periodo ************** */
-if(isset($_POST['periodo'])){
+if (isset($_POST['periodo'])) {
     $data_inicio = $_POST['data_inicio'] ?? NULL;
     $data_fim = $_POST['data_fim'] ?? NULL;
 
-    if($data_fim != NULL && $data_fim != NULL){
+    if ($data_fim != NULL && $data_fim != NULL) {
         $sqlPeriodo = " AND o.data_inicio BETWEEN '$data_inicio' AND '$data_fim'";
-    }
-    elseif ($data_fim != NULL && $data_fim == NULL){
+    } elseif ($data_fim != NULL && $data_fim == NULL) {
         $sqlPeriodo = " AND o.data_inicio >= '$data_inicio'";
-    }
-    else{
+    } else {
         $sqlPeriodo = "";
 
     }
@@ -96,20 +94,20 @@ if(isset($_POST['periodo'])){
 /* ************** /.periodo ************** */
 
 /* ************** operador ************** */
-if(isset($_POST['operador'])) {
+if (isset($_POST['operador'])) {
     $data_inicio = $_POST['data_inicio'] ?? NULL;
     $data_fim = $_POST['data_fim'] ?? NULL;
     $operador_id = $_POST['operador_id'] ?? NULL;
 
-    if($data_fim != NULL || $data_fim != NULL){
+    if ($data_fim != NULL || $data_fim != NULL) {
         $sqlDatas = " AND p.data_kit_pagamento between '$data_inicio' AND '$data_fim'";
-    }else{
+    } else {
         $sqlDatas = "";
     }
 
     if ($operador_id != null && $operador_id != 0) {
         $sqlOperador = " AND p.operador_pagamento_id = '$operador_id'";
-    } else{
+    } else {
         $sqlOperador = "";
     }
     $sql = "SELECT e.id, p.id AS idPedido, e.protocolo, p.numero_processo, p.operador_pagamento_id, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, e.nome_evento, p.valor_total, ps.status, u.nome_completo, p.data_kit_pagamento,  p.operador_id
@@ -145,116 +143,121 @@ if(isset($_POST['operador'])) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblResultado" style="text-align: left;font-size: 90%;" class="table table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>Processo</th>
-                                <th>Protocolo</th>
-                                <th>Proponente</th>
-                                <th>Nome do evento</th>
-                                <th>Período</th>
-                                <th>Valor</th>
-                                <th>Status</th>
-                                <th>Operador</th>
-                                <th>Kit pagamento</th>
-                                <th>N.E.</th>
-                                <th>PGTO</th>
-                                <th>LIQ.</th>
-                            </tr>
-                            </thead>
-<!--                            <tbody>-->
-                            <?php
-                            if ($num_rows == 0) {
-                                ?>
-                                <tr>
-                                    <th colspan="12"><p align="center">Não foram encontrados registros</p></th>
-                                </tr>
-                                <?php
-                            } else {
-                                while ($evento = mysqli_fetch_array($resultado)) {
-                                    $idPedido = $evento['idPedido'];
-                                    $parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->fetch_assoc();
-                                    if($parcela == NULL) {
-                                        $botao = "integral";
-                                    } else{
-                                        $botao = "parcelado";
-                                    }
-                                    if ($evento['pessoa_tipo_id'] == 2) {
-                                        $idPj = $evento['pessoa_juridica_id'];
-                                        $pj = $con->query("SELECT razao_social FROM pessoa_juridicas WHERE id = '$idPj'")->fetch_assoc();
-                                        $proponente = $pj['razao_social'];
-                                    } else {
-                                        $idPf = $evento['pessoa_fisica_id'];
-                                        $pf = $con->query("SELECT nome FROM pessoa_fisicas WHERE id = '$idPf'")->fetch_assoc();
-                                        $proponente = $pf['nome'];
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id="tblResultado" class="table table-responsive table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Processo</th>
+                                        <th>Protocolo</th>
+                                        <th>Proponente</th>
+                                        <th>Nome do evento</th>
+                                        <th>Período</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                        <th>Chamados</th>
+                                        <th>Operador</th>
+                                        <th>Kit pagamento</th>
+                                        <th>N.E.</th>
+                                        <th>PGTO</th>
+                                        <th>LIQ.</th>
+                                    </tr>
+                                    </thead>
+                                    <!--                            <tbody>-->
+                                    <?php
+                                    while ($evento = mysqli_fetch_array($resultado)) {
+                                        $idPedido = $evento['idPedido'];
+                                        $parcela = $con->query("SELECT id FROM parcelas WHERE pedido_id = '$idPedido'")->fetch_assoc();
+                                        if ($parcela == NULL) {
+                                            $botao = "integral";
+                                        } else {
+                                            $botao = "parcelado";
+                                        }
+                                        if ($evento['pessoa_tipo_id'] == 2) {
+                                            $idPj = $evento['pessoa_juridica_id'];
+                                            $pj = $con->query("SELECT razao_social FROM pessoa_juridicas WHERE id = '$idPj'")->fetch_assoc();
+                                            $proponente = $pj['razao_social'];
+                                        } else {
+                                            $idPf = $evento['pessoa_fisica_id'];
+                                            $pf = $con->query("SELECT nome FROM pessoa_fisicas WHERE id = '$idPf'")->fetch_assoc();
+                                            $proponente = $pf['nome'];
+                                        }
+                                        ?>
+                                        <tr>
+                                            <td><?= checaCampo($evento['numero_processo']) ?></td>
+                                            <td><?= $evento['protocolo'] ?></td>
+                                            <td><?= $proponente ?></td>
+                                            <td><?= $evento['nome_evento'] ?></td>
+                                            <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
+                                            <td><?= "R$" . dinheiroParaBr($evento['valor_total']) ?></td>
+                                            <td><?= $evento['status'] ?></td>
+                                            <?= retornaChamadosTD($evento['id']) ?>
+                                            <?php
+                                            if ($evento['operador_pagamento_id'] == NULL) {
+                                                $nome = "Não possui";
+                                            } else {
+                                                $operador = recuperaDados('usuarios', 'id', $evento['operador_pagamento_id']);
+                                                $nome = $operador['nome_completo'];
+                                            }
+                                            ?>
+                                            <td><?= $nome ?></td>
+                                            <td><?= $evento['data_kit_pagamento'] ? date('d/m/Y', strtotime($evento['data_kit_pagamento'])) : "Não possui" ?></td>
+                                            <?php
+                                            $sqlTesta = "SELECT pedido_id FROM pagamentos WHERE pedido_id = " . $evento['idPedido'];
+                                            $queryTesta = mysqli_query($con, $sqlTesta);
+                                            $num = mysqli_num_rows($queryTesta);
+                                            if ($num > 0) {
+                                                $action = "?perfil=pagamento&p=empenho_edita";
+                                            } else {
+                                                $action = "?perfil=pagamento&p=empenho";
+                                            }
+                                            ?>
+                                            <td>
+                                                <form method="POST" action="<?= $action ?>">
+                                                    <button type="submit" class="btn btn-primary btn-block"
+                                                            name="idPedido" value="<?= $evento['idPedido'] ?>"><i
+                                                                class="fa fa-arrow-circle-right"></i></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form method="POST" action="?perfil=pagamento&p=<?= $botao ?>">
+                                                    <button type="submit" class="btn btn-primary btn-block"
+                                                            name="idPedido" value="<?= $evento['idPedido'] ?>"><i
+                                                                class="fa fa-arrow-circle-right"></i></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form method="POST" action="?perfil=pagamento&p=liquidacao">
+                                                    <button type="submit" class="btn btn-primary btn-block"
+                                                            name="idPedido" value="<?= $evento['idPedido'] ?>"><i
+                                                                class="fa fa-arrow-circle-right"></i></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <?php
                                     }
                                     ?>
+                                    </tbody>
+                                    <tfoot>
                                     <tr>
-                                        <td><?= $evento['numero_processo'] ?></td>
-                                        <td><?= $evento['protocolo'] ?></td>
-                                        <td><?= $proponente ?></td>
-                                        <td><?= $evento['nome_evento'] ?></td>
-                                        <td><?= retornaPeriodoNovo($evento['id'], 'ocorrencias') ?></td>
-                                        <td><?= dinheiroParaBr($evento['valor_total']) ?></td>
-                                        <td><?= $evento['status'] ?></td>
-                                        <?php
-                                        if ($evento['operador_pagamento_id'] == NULL) {
-                                            $nome = "Não possui";
-                                        } else {
-                                            $operador = recuperaDados('usuarios', 'id', $evento['operador_pagamento_id']);
-                                            $nome= $operador['nome_completo'];
-                                        }
-                                        ?>
-                                        <td><?= $nome ?></td>
-                                        <td><?= $evento['data_kit_pagamento'] ? date('d/m/Y', strtotime($evento['data_kit_pagamento'])) : "Não possui" ?></td>
-                                        <?php
-                                        $sqlTesta = "SELECT pedido_id FROM pagamentos WHERE pedido_id = " . $evento['idPedido'];
-                                        $queryTesta = mysqli_query($con,$sqlTesta);
-                                        $num = mysqli_num_rows($queryTesta);
-                                        if($num > 0){
-                                            $action = "?perfil=pagamento&p=empenho_edita";
-                                        }else{
-                                            $action = "?perfil=pagamento&p=empenho";
-                                        }
-                                        ?>
-                                        <td>
-                                            <form method="POST" action="<?=$action?>">
-                                                <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form method="POST" action="?perfil=pagamento&p=<?= $botao ?>">
-                                                <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form method="POST" action="?perfil=pagamento&p=liquidacao">
-                                                <button type="submit" class="btn btn-primary btn-block" name="idPedido" value="<?= $evento['idPedido'] ?>"><i class="fa fa-arrow-circle-right"></i></button>
-                                            </form>
-                                        </td>
+                                        <th>Processo</th>
+                                        <th>Protocolo</th>
+                                        <th>Proponente</th>
+                                        <th>Nome do evento</th>
+                                        <th>Período</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                        <th>Chamados</th>
+                                        <th>Operador</th>
+                                        <th>Kit pagamento</th>
+                                        <th>N.E.</th>
+                                        <th>PGTO</th>
+                                        <th>LIQ.</th>
                                     </tr>
-                                    <?php
-                                }
-                            }
-                             ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Processo</th>
-                                    <th>Protocolo</th>
-                                    <th>Proponente</th>
-                                    <th>Nome do evento</th>
-                                    <th>Período</th>
-                                    <th>Valor</th>
-                                    <th>Status</th>
-                                    <th>Operador</th>
-                                    <th>Kit pagamento</th>
-                                    <th>N.E.</th>
-                                    <th>PGTO</th>
-                                    <th>LIQ.</th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                 </div>
@@ -262,3 +265,26 @@ if(isset($_POST['operador'])) {
         </div>
     </section>
 </div>
+
+<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#tblResultado').DataTable({
+            "language": {
+                "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
+            },
+            "responsive": true,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("body").addClass("sidebar-collapse");
+    });
+</script>

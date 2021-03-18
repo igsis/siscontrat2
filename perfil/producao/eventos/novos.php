@@ -36,7 +36,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                     </div>
 
                     <div class="box-body">
-                        <table id="tblEventosNovos" class="table table-bordered table-striped">
+                        <table id="tblEventosNovos" class="table table-bordered table-striped table-responsive">
                             <thead>
                             <tr>
                                 <th>Protocolo</th>
@@ -44,6 +44,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                                 <th>Locais</th>
                                 <th>Espaços</th>
                                 <th>Periodo</th>
+                                <th>Chamados</th>
                                 <th>Data do Envio</th>
                                 <th>Usuário</th>
                                 <th>Visualizar</th>
@@ -81,6 +82,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                                     </td>
                                     <td><?= $espaco == NULL ? "Não possuí" : $espaco ?></td>
                                     <td><?= retornaPeriodoNovo($eventoNovo['id'], 'ocorrencias') ?></td>
+                                    <?= retornaChamadosTD($eventoNovo['id']) ?>
                                     <td><?= exibirDataBr($dataEnvio) ?></td>
                                     <td><?= $eventoNovo['usuario'] ?></td>
                                     <td>
@@ -105,6 +107,7 @@ $queryEvento = mysqli_query($con, $sqlEvento);
                                 <th>Locais</th>
                                 <th>Espaços</th>
                                 <th>Periodo</th>
+                                <th>Chamados</th>
                                 <th>Data do Envio</th>
                                 <th>Usuário</th>
                                 <th>Visualizar</th>

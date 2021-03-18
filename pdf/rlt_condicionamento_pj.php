@@ -18,18 +18,6 @@ $periodo = retornaPeriodoNovo($pedido['origem_id'],'ocorrencias');
 $idRepresentante = $pessoa['representante_legal1_id'];
 $representante = recuperaDados('representante_legais', 'id', $idRepresentante);
 
-$idEvento = $pedido['origem_id'];
-
-$sqlLocal = "SELECT l.local FROM locais AS l INNER JOIN ocorrencias AS o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = '$idEvento' AND o.publicado = 1";
-$local = "";
-$queryLocal = mysqli_query($con, $sqlLocal);
-
-while ($linhaLocal = mysqli_fetch_array($queryLocal)) {
-    $local = $local . $linhaLocal['local'] . ' | ';
-}
-
-$local = substr($local, 0, -3);
-
 $ano = date('Y', strtotime('-3 Hours'));
 
 $dataAtual = date('d/m/Y', strtotime('-3 Hours'));
@@ -47,7 +35,7 @@ header("Content-Disposition: attachment;Filename=$dataAtual - Processo SEI " . $
 <p align="center">DECLARAÇÃO</p>
 <br>
 <p align='justify'>DECLARO para os devidos fins, que a empresa <?=$pessoa['razao_social']?>, CNPJ: <?=$pessoa['cnpj']?>, sediada na <?=$enderecos['logradouro']?>, <?=$enderecos['numero']?>/ <?=$enderecos['complemento']?> - <?=$enderecos['bairro']?> - <?=$enderecos['cidade']?> / <?=$enderecos['uf']?>,
-    está ciente e de acordo que o pagamento dos serviços a serem prestados, referente a <?=$objeto?>, <?=$periodo?>, no local(ais) <?=$local?>,
+    está ciente e de acordo que o pagamento dos serviços a serem prestados, referente a <?=$objeto?>, <?=$periodo?>, no(s) local(ais) <?=listaLocais($evento['id'], '1')?>,
     ficará condicionado à apresentação do documento, abaixo listado, regularizado: </p>
 <br>
 <p align='justify'><?=$dataAtual?></p>

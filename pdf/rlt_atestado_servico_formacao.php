@@ -6,34 +6,32 @@ require_once("../funcoes/funcoesGerais.php");
 
 $con = bancoMysqli();
 
-
 $idParcela = $_POST['idParcela'];
 $idPedido = $_POST['idPedido'];
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
+$pedido = $con->query("SELECT * FROM pedidos WHERE id = $idPedido AND origem_tipo_id = 2 AND publicado = 1")->fetch_array();
 $idFC = $pedido['origem_id'];
 $idPf = $pedido['pessoa_fisica_id'];
 $contratacao = recuperaDados('formacao_contratacoes', 'id', $idFC);
 $pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
 
 $fiscal = recuperaDados('usuarios', 'id', $contratacao['fiscal_id']);
-$suplente = recuperaDados('usuarios', 'id', $contratacao['suplente_id']);
 
-$idLinguagem = $contratacao['linguagem_id'];
-$linguagem = recuperaDados('linguagens', 'id', $idLinguagem);
-
-$idPrograma = $contratacao['programa_id'];
-$programa = recuperaDados('programas', 'id', $idPrograma);
-
-
-$idVigencia = $contratacao['form_vigencia_id'];
+$nomeSuplente = "";
+$rfSuplente = "";
+if($contratacao['suplente_id'] != 0){
+    $suplente = recuperaDados('usuarios', 'id', $contratacao['suplente_id']);
+    if($suplente){
+        $nomeSuplente = $suplente['nome_completo'];
+        $rfSuplente = $suplente['rf_rg'];
+    }
+}
 
 $sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela' AND publicado = 1";
 $query = mysqli_query($con, $sqlParcelas);
 while ($parcela = mysqli_fetch_array($query)) {
-    if ($parcela['valor'] > 0) {
-        $datapgt = exibirDataBr($parcela['data_pagamento']);
-    }
+    $datapgt = exibirDataBr($parcela['data_pagamento']);
 }
+
 ?>
 
 <html>
@@ -66,8 +64,8 @@ while ($parcela = mysqli_fetch_array($query)) {
         "<p>&nbsp;</p>" .
         "<p>Informamos que os serviços prestados por: " . $pessoa['nome'] . "</p>" .
         "<p><strong>PROCESSO: </strong> " . $pedido['numero_processo'] . " </p>" .
-        "<p><strong>Programa:</strong> " . $programa['programa'] . " <strong>Linguagem:</strong> " . $linguagem['linguagem'] . " <strong>Edital:</strong> " . $programa['edital'] . "</p>" .
-        "<P><strong>PERÍODO: </strong>" . retornaPeriodoFormacao($contratacao['form_vigencia_id']) . "</p>" .
+        "<p><strong>Objeto:</strong> " . retornaObjetoFormacao_Emia($idFC, "formacao") . "</p>" .
+        "<P><strong>PERÍODO: </strong>" . retornaPeriodoFormacao_Emia($contratacao['form_vigencia_id'], "formacao") . "</p>" .
         "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS</p>" .
         "<p>( X ) FORAM REALIZADOS A CONTENTO</p>" .
         "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS A CONTENTO, PELO SEGUINTE MOTIVO:</p>" .
@@ -75,11 +73,11 @@ while ($parcela = mysqli_fetch_array($query)) {
         "<p><strong>DADOS DO SERVIDOR (A) QUE ESTÁ CONFIRMANDO OU NÃO A REALIZAÇÃO DOS SERVIÇOS:</strong></p>" .
         "<p><strong>FISCAL:</strong> " . $fiscal['nome_completo'] . "</p>" .
         "<p><strong>RF:</strong> " . $fiscal['rf_rg'] . "</p>" .
-        "<p><strong>SUPLENTE:</strong> " . $suplente['nome_completo'] . "</p>" .
-        "<p><strong>RF:</strong> " . $suplente['rf_rg'] . "</p>" .
+        "<p><strong>SUPLENTE:</strong> " . checaCampo($nomeSuplente) . "</p>" .
+        "<p><strong>RF:</strong> " . checaCampo($rfSuplente) . "</p>" .
         "<p>&nbsp;</p>" .
         "<p>Atesto que os serviços prestados discriminados no documento: link SEI, foram executados a contento nos termos previstos no instrumento contratual (ou documento equivalente) no(s) dia(s): " . $datapgt . ", dentro do prazo previsto.</p>" .
-        "<p>O prazo contratual é do dia " . retornaPeriodoFormacao($contratacao['form_vigencia_id']) . ". <p>" .
+        "<p>O prazo contratual é do dia " . retornaPeriodoFormacao_Emia($contratacao['form_vigencia_id'], "formacao") . ". <p>" .
         "<p>&nbsp;</p>" .
         "<p>À área gestora de liquidação e pagamento encaminho para prosseguimento.</p>"
     ?>
@@ -90,7 +88,7 @@ while ($parcela = mysqli_fetch_array($query)) {
 <p>&nbsp;</p>
 
 <div align="center">
-    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+    <button id="botao-copiar" class="btn btn-primary" onclick="copyText(getElementById('texto'))">
         COPIAR TODO O TEXTO
         <i class="fa fa-copy"></i>
     </button>
@@ -101,11 +99,30 @@ while ($parcela = mysqli_fetch_array($query)) {
 </div>
 
 <script>
-    var client = new ZeroClipboard();
-    client.clip(document.getElementById("botao-copiar"));
-    client.on("aftercopy", function () {
-        alert("Copiado com sucesso!");
-    });
+    function copyText(element) {
+        var range, selection, worked;
+
+        if (document.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.moveToElementText(element);
+            range.select();
+        } else if (window.getSelection) {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        try {
+            document.execCommand('copy');
+            alert('Copiado com sucesso!');
+            selection.removeAllRanges();
+        } catch (err) {
+            alert('Texto não copiado, tente novamente.');
+            selection.removeAllRanges();
+        }
+    }
 </script>
 
 </body>

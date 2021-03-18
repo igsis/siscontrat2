@@ -3,8 +3,8 @@ include "includes/menu_principal.php";
 $con = bancoMysqli();
 
 if (isset($_POST['filtrar'])) {
-    $datainicio = $_POST['inicio'] ?? NULL;
-    $datafim = $_POST['final'] ?? null;
+    $datainicio = $_POST['data_inicio'] ?? null;
+    $datafim = $_POST['data_fim'] ?? null;
     $local = $_POST['local'] ?? null;
     $usuario = $_POST['inserido'] ?? null;
     $projeto = $_POST['projetoEspecial'] ?? null;
@@ -12,15 +12,23 @@ if (isset($_POST['filtrar'])) {
     $sqlLocal = '';
     $sqlUsuario = '';
     $sqlProjeto = '';
+    $sqlInicio = '';
+    $sqlFim = '';
 
     if ($local != null)
-        $sqlLocal = " AND l.local = '$local'";
+        $sqlLocal = " AND o.local_id = '$local'";
 
     if ($usuario != null)
         $sqlUsuario = " AND u.nome_completo = '$usuario'";
 
     if ($projeto != null)
         $sqlProjeto = " AND a.projeto_especial_id = '$projeto'";
+
+    if ($datainicio != null)
+        $sqlInicio = " AND o.data_inicio >= '$datainicio'";
+
+    if ($datafim != null)
+        $sqlFim = " AND o.data_fim <= '$datafim'";
 
     $sqlAgendao = "SELECT a.id, a.nome_evento, c.classificacao_indicativa,
                           s.subprefeitura, o.valor_ingresso,
@@ -33,8 +41,7 @@ if (isset($_POST['filtrar'])) {
                    INNER JOIN projeto_especiais AS pe ON a.projeto_especial_id = pe.id
                    INNER JOIN locais AS l ON o.local_id = l.id
                    WHERE a.publicado = 1 AND o.publicado = 1 AND a.evento_status_id = 3
-                   AND o.data_inicio >= '$datainicio' AND o.data_fim <= '$datafim'
-                   $sqlUsuario $sqlProjeto $sqlLocal
+                   $sqlUsuario $sqlProjeto $sqlLocal $sqlInicio $sqlFim
                    GROUP BY a.id";
 
     $queryAgendao = mysqli_query($con, $sqlAgendao);
@@ -50,7 +57,7 @@ if (isset($_POST['filtrar'])) {
                 <div class="box-header">
                     <h3 class="box-title">Resultado da pesquisa</h3>    
                 </div>
-                <div class="box box-primary">
+                <div class="box">
                     <div class="box-body">
                         <table id="tblAgendao" class="table table-bordered table-striped table-responsive">
                             <thead>
@@ -122,3 +129,20 @@ if (isset($_POST['filtrar'])) {
         </div>
     </section>
 </div>
+
+<script defer src="../visual/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script defer src="../visual/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#tblAgendao').DataTable({
+            "language": {
+                "url": 'bower_components/datatables.net/Portuguese-Brasil.json'
+            },
+            "responsive": true,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6 text-right'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7 text-right'p>>",
+        });
+    });
+</script>

@@ -6,52 +6,18 @@ require_once("../funcoes/funcoesGerais.php");
 
 $con = bancoMysqli();
 
-
-$idParcela = $_POST['idParcela'];
-$idPedido = $_POST['idPedido'];
-$pedido = recuperaDados('pedidos', 'id', $idPedido);
-$idEC = $pedido['origem_id'];
-$idPf = $pedido['pessoa_fisica_id'];
-$contratacao = recuperaDados('emia_contratacao', 'id', $idEC);
-$pessoa = recuperaDados('pessoa_fisicas', 'id', $idPf);
-
-$fiscal = recuperaDados('usuarios', 'id', $contratacao['fiscal_id']);
-$suplente = recuperaDados('usuarios', 'id', $contratacao['suplente_id']);
-
-$cargo = recuperaDados('emia_cargos', 'id', $contratacao['emia_cargo_id']);
-
 $dia = date('d');
-$mes = date('m');
+$mes = retornaMes(date('m'));
 $ano = date('Y');
 $semana = date('w');
 
-switch ($mes){
+$idParcela = $_POST['idParcela'];
 
-    case 1: $mes = "Janeiro"; break;
-    case 2: $mes = "Fevereiro"; break;
-    case 3: $mes = "Março"; break;
-    case 4: $mes = "Abril"; break;
-    case 5: $mes = "Maio"; break;
-    case 6: $mes = "Junho"; break;
-    case 7: $mes = "Julho"; break;
-    case 8: $mes = "Agosto"; break;
-    case 9: $mes = "Setembro"; break;
-    case 10: $mes = "Outubro"; break;
-    case 11: $mes = "Novembro"; break;
-    case 12: $mes = "Dezembro"; break;
+$parcela = recuperaDados('emia_parcelas','id',$idParcela);
 
-}
-
-$sqlParcelas = "SELECT * FROM parcelas WHERE pedido_id = '$idPedido' AND id = '$idParcela' AND publicado = 1";
-$query = mysqli_query($con,$sqlParcelas);
-while($parcela = mysqli_fetch_array($query))
-{
-    if($parcela['valor'] > 0)
-    {
-        $datapgt = exibirDataBr($parcela['data_pagamento']);
-    }
-}
-
+$dataPagamento = date("d/m/Y", strtotime($parcela['data_pagamento']));
+$dataInicio = date("d/m/Y", strtotime($parcela['data_inicio']));
+$dataFim = date("d/m/Y", strtotime($parcela['data_fim']));
 ?>
 
 <html>
@@ -68,11 +34,19 @@ while($parcela = mysqli_fetch_array($query))
             font-family: Arial, Helvetica, sans-serif;
             text-align: justify;
         }
+        .infos {
+            width: 100%;
+            border: solid;
+            padding: 50px;
+            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: justify;
+        }
     </style>
     <link rel="stylesheet" href="../visual/css/bootstrap.min.css">
     <link rel="stylesheet" href="../visual/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="include/dist/ZeroClipboard.min.js"></script>
+    <title>Atestado de Serviço</title>
 </head>
 
 <body>
@@ -80,32 +54,45 @@ while($parcela = mysqli_fetch_array($query))
 <div align="center">
     <?php
     $conteudo =
-        "<p><strong><u><center>ATESTADO DE CONFIRMAÇÃO DE SERVIÇOS</strong></p></u></center>".
-        "<p>&nbsp;</p>".
-        "<p>Informamos que os serviços prestados pelo(a): ".$pessoa['nome']."</p>".
-        "<p><strong>Cargo: </strong>" . $cargo['cargo'] ."</p>" .
-        "<p><strong>NA: </strong> EMIA </p>".
-        "<P><strong>DIA(S) / HORÁRIO(S): </strong>".retornaPediodoEmia($contratacao['emia_vigencia_id'])."</p>".
-        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS</p>".
-        "<p>( X ) FORAM REALIZADOS A CONTENTO</p>".
-        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) NÃO FORAM REALIZADOS A CONTENTO, PELO SEGUINTE MOTIVO:</p>".
-        "<p>&nbsp;</p>".
-        "<p><strong>DADOS DO SERVIDOR (A) QUE ESTÁ CONFIRMANDO OU NÃO A REALIZAÇÃO DOS SERVIÇOS:</strong></p>".
-        "<p><strong>NOME LEGÍVEL:</strong> ".$fiscal['nome_completo']."</p>".
-        "<p><strong>TELEFONE DE CONTATO:</strong> (11) 5017-2192</p>".
-        "<p><strong>LOTAÇÃO:</strong> EMIA-Escola Municipal de Iniciação Artística</p>".
-        "<p><strong>REGISTRO FUNCIONAL: </strong>".$fiscal['rf_rg']."</p>".
-        "<p><strong>SUPLENTE:</strong> ".$suplente['nome_completo']."</p>".
-        "<p><strong>TELEFONE DE CONTATO:</strong> (11) 5017-2192</p>".
-        "<p><strong>LOTAÇÃO:</strong> EMIA-Escola Municipal de Iniciação Artística</p>".
-        "<p><strong>REGISTRO FUNCIONAL:</strong> ".$suplente['rf_rg']."</p>".
-        "<p>&nbsp;</p>".
-        "<p>Com base na Folha de Frequência Individual: (Documento SEI link ) atesto que os materiais/serviços prestados discriminados no documento fiscal (Documento SEI link )  foram entregues e/ou executados a contento nos termos previstos no instrumento contratual (ou documento equivalente) no dia: ".$datapgt.", dentro do prazo previsto. O prazo contratual é do dia ".retornaPediodoEmia($contratacao['emia_vigencia_id']).". </p>".
-        "<p>&nbsp;</p>".
-        "<p><strong><center>INFORMAÇÕES COMPLEMENTARES</strong></p></center>".
-        "<p>À área gestora/de liquidação e pagamento:</p>".
-        "<p>Encaminho para prosseguimento.</p>".
-        "<p>São Paulo, ".$dia." de ".$mes." de ".$ano.".</p>"
+        "<p><strong>Recebimento da Documentação</strong>" .
+        "<p>Atesto:</p>" .
+        "<p>( X ) o recebimento em {$dataPagamento}  de <strong>toda a documentação</strong> [INSERIR NÚMERO SEI DA NOTA FISCAL E ARQUIVOS CONSOLIDADOS] prevista na Portaria SF nº 170/2020.</p>" .
+        "<p>O prazo contratual é do dia {$dataInicio} até o dia {$dataFim}.</p>" .
+        "<p>&nbsp;</p>" .
+        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) o recebimento em ___/___/_____ da <b>documentação</b> [INSERIR NÚMERO SEI DA NOTA FISCAL E ARQUIVOS CONSOLIDADOS] prevista na Portaria SF nº 170/2020, <b>ressalvado</b> (s) [RELACIONAR OS DOCUMENTOS IRREGULARES].</p>" .
+        "<p>&nbsp;</p>" .
+        "<p><strong>Recebimento de material e/ou serviços</strong>" .
+        "<p>Atesto:</p>" .
+        "<p>( X ) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados a <b>contento</b> nos termos previstos no instrumento contratual (ou documento equivalente) no dia ___/___/_____, dentro do prazo previsto.</p>" .
+        "<p>O prazo contratual é do dia {$dataInicio} até o dia {$dataFim}.</p>" .
+        "<p>&nbsp;</p>" .
+        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados <b>parcialmente</b>, nos termos previstos no instrumento contratual (ou documentos equivalente), do dia ___/___/_____, dentro do prazo previsto.</p>" .
+        "<p>O prazo contratual é do dia ___/___/_____ até o dia ___/___/_____.</p>" .
+        "<p>&nbsp;</p>" .
+        "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados a contendo nos termos previstos no instrumento contratual( ou documento equivalente) no dia ___/___/_____, <strong>com atraso</strong> de ___ dias.</p>" .
+        "<p>O prazo contratual é do dia ___/___/_____ até o dia ___/___/_____.</p>" .
+        "<p>&nbsp;</p>" .
+        "<p style='background: lightgrey;'><strong>INFORMAÇÕES COMPLEMENTARES</strong></p>" .
+        "<table border='1' width='100%' style='border-style: solid'>
+            <tr>
+                <td>
+                <p>Nota de Empenho:<br>
+                    Anexo Nota de Empenho:<br> 
+                    Recibo da Nota de Empenho:<br> 
+                    Pedido de Pagamento:<br>
+                    Recibo de pagamento:<br> 
+                    NIT/PIS/PASEP:<br> 
+                    Certidões fiscais:
+                </p>
+                </td>
+            </tr>
+        </table>".
+        "<p>&nbsp;</p>" .
+        "<p>À área gestora / de liquidação e pagamento.</p>" .
+        "<p>Em virtude do detalhamento da Ação em 2019, informamos que o pagamento no valor de R$ 4.194,72 (quatro mil, cento e noventa e quatro reais e setenta e dois centavos) foi gasto na zona sul de São Paulo, rua Volkswagen, s/nº, Jabaquara, SP.</p>" .
+        "<p>Encaminho para prosseguimento.</p>" .
+        "<p>&nbsp;</p>" .
+        "<p><center>São Paulo,  $dia  de  $mes  de  $ano.</center></p>"
     ?>
 
     <div id="texto" class="texto"><?php echo $conteudo; ?></div>
@@ -114,7 +101,7 @@ while($parcela = mysqli_fetch_array($query))
 <p>&nbsp;</p>
 
 <div align="center">
-    <button id="botao-copiar" class="btn btn-primary" data-clipboard-target="texto">
+    <button id="botao-copiar" class="btn btn-primary" onclick="copyText(getElementById('texto'))">
         COPIAR TODO O TEXTO
         <i class="fa fa-copy"></i>
     </button>
@@ -125,14 +112,31 @@ while($parcela = mysqli_fetch_array($query))
 </div>
 
 <script>
-    var client = new ZeroClipboard();
-    client.clip(document.getElementById("botao-copiar"));
-    client.on("aftercopy", function () {
-        alert("Copiado com sucesso!");
-    });
+    function copyText(element) {
+        var range, selection, worked;
+
+        if (document.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.moveToElementText(element);
+            range.select();
+        } else if (window.getSelection) {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        try {
+            document.execCommand('copy');
+            alert('Copiado com sucesso!');
+            selection.removeAllRanges();
+        } catch (err) {
+            alert('Texto não copiado, tente novamente.');
+            selection.removeAllRanges();
+        }
+    }
 </script>
 
 </body>
 </html>
-
-

@@ -1,7 +1,7 @@
 <div class="content-wrapper">
     <section class="content">
         <div class="page-header">
-            <h2 class="page-title">EMIA - Cadastro de Vigência</h2>
+            <h3 class="page-title">EMIA - Cadastro de Vigência</h3>
         </div>
         <div class="box box-primary">
             <div class="box-header with-border">

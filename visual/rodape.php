@@ -51,6 +51,38 @@
     </div>
 </div>
 
+<!--  MODAL PARA LISTAGEM DE CHAMADOS DE EVENTOS -->
+<div id="modalChamadosEventos" class="modal modal fade in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modalTitulo">Lista de Chamados</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Datas</th>
+                            <th>Tipo</th>
+                            <th>Titulo</th>
+                            <th>Justificativo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="conteudoModal">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="https://forms.gle/ktjaMbEHmANLuFXi8" class="btn btn-warning rounded-circle" target="_blank"
+   style="position:fixed;bottom:40px;right:40px;text-align:center;
+   box-shadow: 1px 1px 2px #888;z-index:1000;">
+    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+    Deixe sua opnião</a>
+
 <!--  Mask-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
 <!-- FastClick -->
@@ -69,6 +101,59 @@
 <script type="text/javascript" src="js/autocomplete.js"></script>
 <script src="js/jquery-ui.js"></script>
 
+<!-- Select2 -->
+<script src="plugins/select2/js/select2.full.min.js"></script>
+<script src="plugins/select2/js/i18n/pt-BR.js" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function (){
+        //Initialize Select2 Elements
+        $('.select2').select2();
+
+        $('.select2bs4').select2({
+            theme: 'bootstrap4',
+            language: 'pt-BR'
+        });
+    });
+</script>
+
+<script>
+    function exibirChamados(id){
+        const modalId= '#modalChamadosEventos';
+        const conteudo = '#conteudoModal';
+        $.ajax({
+            method: "GET",
+            url: "<?= 'http://' . $_SERVER['HTTP_HOST'] . '/siscontrat2/funcoes/api_chamado_evento.php' ?>?idEvento="+id,
+        })
+            .done(function (content) {
+                $(modalId).find(conteudo).empty();
+                content = JSON.parse(content);
+
+                content.forEach((item) =>{
+                    let linha = document.createElement('tr');
+
+                    let data = new Date(`${item.data}`);
+
+                    linha.appendChild(criaColuna(`${data.toLocaleDateString()}`));
+                    linha.appendChild(criaColuna(`${item.tipo}`));
+                    linha.appendChild(criaColuna(`${item.titulo}`));
+                    linha.appendChild(criaColuna(`${item.justificativa}`));
+
+                    document.querySelector(`${modalId} ${conteudo}`).appendChild(linha);
+
+                });
+
+                // $(modalId).find(conteudo).append(`<tr><td>${content}</td></tr>`);
+                $(modalId).modal();
+            });
+    }
+
+    function criaColuna(text){
+        let coluna = document.createElement("td");
+        coluna.innerHTML = `${text}`;
+        return coluna;
+    }
+</script>
 
 <!-- page script -->
 <script>

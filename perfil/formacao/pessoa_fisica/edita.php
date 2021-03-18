@@ -329,6 +329,7 @@ if ($testaBanco->num_rows > 0) {
                                 <div class="col-md-6 form-group">
                                     <label for="nome">Nome: *</label>
                                     <input type="text" class="form-control" name="nome" placeholder="Digite o nome"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}"
                                            maxlength="70" required value="<?= $pf['nome'] ?>">
                                 </div>
                                 <div class="col-md-6 form-group">
@@ -547,7 +548,7 @@ if ($testaBanco->num_rows > 0) {
                                 <div class="row">
                                     <button type="submit" name="edita" class="btn btn-primary pull-right">Gravar</button>
 
-                                    <a href="?perfil=formacao">
+                                    <a href="?perfil=formacao&p=pessoa_fisica&sp=lista">
                                         <button type="button" class="btn btn-default pull-left">Voltar</button>
                                     </a>
                                 </div>
@@ -570,6 +571,7 @@ if ($testaBanco->num_rows > 0) {
                                 <input type="hidden" name="idPf" value="<?= $idPf ?>">
                                 <button type="submit" class="btn btn-info btn-block">Imprimir resumo
                                 </button>
+                            </form>
                         </div>
 
                         <div class="form-group col-md-4">

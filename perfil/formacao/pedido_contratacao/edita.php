@@ -13,6 +13,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $local = $_POST['local'];
     $processoMae = $_POST['processoMae'];
 }
+
 if (isset($_POST['cadastra'])) {
     $idPc = $_POST['idPc'];
     $fc = recuperaDados('formacao_contratacoes', 'id', $idPc);
@@ -121,7 +122,7 @@ if (isset($_POST['parcelaEditada'])) {
 
     if (isset($_POST['parcelaEditada']) && $numParcelas != NULL) {
 
-        foreach ($_POST['parcela'] AS $countPost => $parcela) {
+        foreach ($_POST['parcela'] as $countPost => $parcela) {
             $valor = dinheiroDeBr($_POST['valor'][$countPost]) ?? NULL;
             $data_pagamento = $_POST['data_pagamento'][$countPost] ?? NULL;
 
@@ -173,7 +174,7 @@ $cargo = recuperaDados('formacao_cargos', 'id', $fc['form_cargo_id'])['cargo'];
 $vigencia = recuperaDados('formacao_vigencias', 'id', $fc['form_vigencia_id']);
 $numParcelas = $pedido['numero_parcelas'];
 $fiscal = recuperaDados('usuarios', 'id', $fc['fiscal_id'])['nome_completo'];
-$suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'];
+$suplente = recuperaDados('usuarios', 'id', $fc['suplente_id'])['nome_completo'] ?? NULL;
 
 $sqlLocal = "SELECT local_id FROM formacao_locais WHERE form_pre_pedido_id = '$idPc'";
 $queryLocais = mysqli_query($con, $sqlLocal);
@@ -181,7 +182,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
 <div class="content-wrapper">
     <section class="content">
-        <h2 class="page-header">Criar Pedido de Contratação</h2>
+        <h2 class="page-header">Editar Pedido de Contratação</h2>
         <div class="box box-primary">
             <div class="box-header">
                 <h4 class="box-title">Dados para Contratação</h4>
@@ -203,7 +204,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                         <div class="form-group col-md-6">
                             <label for="chamado">Chamado: *</label>
                             <input type="number" min="0" max="127" id="chamado"
-                                   value="<?= $fc['chamado'] ?>" required class="form-control" disabled>
+                                   value="<?= $fc['chamado'] ?>" class="form-control" disabled>
                         </div>
 
                     </div>
@@ -211,7 +212,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     <div class="row">
                         <div class="from-group col-md-12">
                             <label for="pf">Pessoa Física: *</label>
-                            <input type="text" class="form-control" id="pessoa_fisica" required
+                            <input type="text" class="form-control" id="pessoa_fisica"
                                    value="<?= $pessoa_fisica ?>" disabled>
                         </div>
                     </div>
@@ -219,7 +220,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="classificacao">Classificação Indicativa *</label>
-                            <input type="text" name="classificacao" value="<?= $classificacao ?>" disabled required
+                            <input type="text" name="classificacao" value="<?= $classificacao ?>" disabled
                                    class="form-control">
                             </select>
                         </div>
@@ -228,52 +229,55 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label for="territorio">Território *</label>
-                            <input type="text" name="territorio" value="<?= $territorio ?>" disabled required
+                            <input type="text" name="territorio" value="<?= $territorio ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="coordenadoria">Coordenadoria *</label>
-                            <input type="text" name="coordenadoria" value="<?= $coordenadoria ?>" disabled required
+                            <input type="text" name="coordenadoria" value="<?= $coordenadoria ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="subprefeitura">Subprefeitura *</label>
-                            <input type="text" name="subprefeitura" value="<?= $subprefeitura ?>" disabled required
+                            <input type="text" name="subprefeitura" value="<?= $subprefeitura ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-3">
                             <label for="programa">Programa *</label>
-                            <input type="text" name="programa" value="<?= $programa ?>" required disabled
+                            <input type="text" name="programa" value="<?= $programa ?>" disabled
                                    class="form-control">
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="linguagem">Linguagem *</label>
-                            <input type="text" name="linguagem" value="<?= $linguagem ?>" required disabled
+                            <input type="text" name="linguagem" value="<?= $linguagem ?>" disabled
                                    class="form-control">
                         </div>
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="projeto">Projeto *</label>
-                            <input type="text" name="projeto" value="<?= $projeto ?>" required disabled
+                            <input type="text" name="projeto" value="<?= $projeto ?>" disabled
                                    class="form-control">
                         </div>
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="cargo">Cargo *</label>
-                            <input type="text" name="cargo" value="<?= $cargo ?>" required disabled
+                            <input type="text" name="cargo" value="<?= $cargo ?>" disabled
                                    class="form-control">
                         </div>
+                    </div>
 
-                        <div class="form-group col-md-3">
+                    <div class="row">
+                        <div class="form-group col-md-12">
                             <label for="vigencia">Vigência *</label>
-                            <input type="text" name="vigencia" value="<?= $vigencia['ano'] ?>" required disabled
-                                   class="form-control">
+                            <input type="text" name="vigencia"
+                                   value="<?= $vigencia['ano'] . ' (' . $vigencia['descricao'] . ')' ?>"
+                                   class="form-control" disabled>
                         </div>
                     </div>
 
@@ -281,20 +285,20 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                         <div class="form-group col-md-12">
                             <label for="observacao">Observação: </label>
                             <textarea name="observacao" id="observacao" rows="3"
-                                      class="form-control" disabled required><?= $fc['observacao'] ?></textarea>
+                                      class="form-control" disabled><?= $fc['observacao'] ?></textarea>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="fiscal">Fiscal *</label>
-                            <input type="text" name="fiscal" value="<?= $fiscal ?>" disabled required
+                            <input type="text" name="fiscal" value="<?= $fiscal ?>" disabled
                                    class="form-control">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="fiscal">Suplente </label>
-                            <input type="text" name="suplente" value="<?= $suplente ?>" disabled required
+                            <input type="text" name="suplente" value="<?= checaCampo($suplente) ?>" disabled
                                    class="form-control">
                         </div>
                     </div>
@@ -319,7 +323,8 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                         <div class="form-group col-md-3">
                             <label for="valor">Valor: *</label>
                             <input type="text" name="valor"
-                                   class="form-control" value="<?= dinheiroParaBr($pedido['valor_total'] ?? NULL) ?>" readonly required>
+                                   class="form-control" value="<?= dinheiroParaBr($pedido['valor_total'] ?? NULL) ?>"
+                                   readonly required>
                         </div>
                     </div>
 
@@ -332,7 +337,7 @@ $queryLocais = mysqli_query($con, $sqlLocal);
 
                         <div class="form-group col-md-6">
                             <br>
-                            <a href="?perfil=formacao&p=pedido_contratacao&sp=edita_parcelas&idPedido=<?=$idPedido?>">
+                            <a href="?perfil=formacao&p=pedido_contratacao&sp=edita_parcelas&idPedido=<?= $idPedido ?>">
                                 <button type="button" class="btn btn-info btn-block">Editar parcelas</button>
                             </a>
                         </div>
@@ -423,11 +428,47 @@ $queryLocais = mysqli_query($con, $sqlLocal);
                     </div>
             </form>
             <hr/>
+
+            <?php
+            $testaParcelasFormacao = $con->query("SELECT * FROM formacao_parcelas WHERE publicado = 1 AND formacao_vigencia_id = " . $fc['form_vigencia_id'])->num_rows;
+            $testaParcelasPedido = $con->query("SELECT * FROM parcelas WHERE publicado = 1 AND pedido_id = " . $idPedido)->num_rows;
+
+            if ($testaParcelasFormacao > 0) {
+                $disabledFormacao = "";
+                $displayFormacao = "display: none;";
+            } else {
+                $displayFormacao = "";
+                $disabledFormacao = "disabled";
+            }
+
+            if ($testaParcelasPedido > 0) {
+                $disabledPedido = "";
+                $displayPedido = "display: none;";
+            } else {
+                $displayPedido = "";
+                $disabledPedido = "disabled";
+            }
+            ?>
+
+            <div class="row">
+                <div class="form-group col-md-12" style="text-align: center;">
+                    <span style="color: red; <?= $displayFormacao ?>"><b>Não há parcelas cadastradas na vigência, lembre-se de cadastra-las para acessar a área de impressão</b></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-12" style="text-align: center;">
+                    <span style="color: red; <?= $displayPedido ?>"><b>Para acessar a área de impressão é necessário cadastrar as parcelas, lembre-se de cadastra-las clicando no botão (Editar parcelas)</b></span>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-md-12" style="text-align:center">
                     <form action="?perfil=formacao&p=pedido_contratacao&sp=area_impressao" method="post" role="form">
                         <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
-                        <button type="submit" class="btn btn-default" style="width: 35%;">Ir para a área de impressão
+                        <button type="submit" class="btn btn-default"
+                                style="width: 35%;" <?= $disabledFormacao . " " . $disabledPedido ?>>Ir para a área
+                            de impressão
                         </button>
                     </form>
                 </div>

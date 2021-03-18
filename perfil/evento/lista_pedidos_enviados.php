@@ -52,6 +52,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Valor</th>
                                 <th width="17%">Período</th>
                                 <th>Status</th>
+                                <th>Chamado</th>
                                 <th>Visualizar</th>
                             </tr>
                             </thead>
@@ -90,6 +91,7 @@ $query = mysqli_query($con, $sql);
                                 echo "<td>" . dinheiroParaBr($evento['valor_total']) . "</td>";
                                 echo "<td>" . retornaPeriodoNovo($idEvento, 'ocorrencias') . "</td>";
                                 echo "<td>" . $evento['status'] . "</td>";
+                                print_r(retornaChamadosTD($evento['id']));
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=evento&p=resumo_evento_enviado\" role=\"form\">
                                     <input type='hidden' name='idEvento' value='" . $idEvento . "'>
@@ -109,6 +111,7 @@ $query = mysqli_query($con, $sql);
                                 <th>Valor</th>
                                 <th>Período</th>
                                 <th>Status</th>
+                                <th>Chamado</th>
                                 <th>Visualizar</th>
                             </tr>
                             </tfoot>

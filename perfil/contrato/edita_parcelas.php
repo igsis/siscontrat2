@@ -5,16 +5,21 @@ $idEvento = $_GET['id'];
 $pedido = $con->query("SELECT id, numero_parcelas, valor_total FROM pedidos WHERE origem_id = $idEvento AND origem_tipo_id = 1 AND publicado = 1")->fetch_array();
 $idPedido = $pedido['id'];
 
-$consultaAcoes = $con->query("SELECT acao_id FROM atracoes AS a 
+$tipoEvento = $con->query("SELECT tipo_evento_id FROM eventos WHERE id = $idEvento AND publicado = 1")->fetch_array()['tipo_evento_id'];
+if($tipoEvento == 1){
+    $consultaAcoes = $con->query("SELECT acao_id FROM atracoes AS a 
                                     INNER JOIN eventos AS e ON a.evento_id = e.id 
                                     INNER JOIN acao_atracao aa on a.id = aa.atracao_id 
                                     WHERE e.id = $idEvento");
-while ($acoesArray = mysqli_fetch_array($consultaAcoes)) {
-    if ($acoesArray['acao_id'] == 8) {
-        $oficina = 1;
-    } else {
-        $oficina = 0;
+    while ($acoesArray = mysqli_fetch_array($consultaAcoes)) {
+        if ($acoesArray['acao_id'] == 8) {
+            $oficina = 1;
+        } else {
+            $oficina = 0;
+        }
     }
+}else{
+    $oficina = 0;
 }
 
 $parcela = $con->query("SELECT p.id, p.valor, p.data_pagamento, pc.data_inicio, pc.data_fim, pc.carga_horaria 
@@ -94,7 +99,7 @@ $parcela = $con->query("SELECT p.id, p.valor, p.data_pagamento, pc.data_inicio, 
                                         <div class="form-group col-md-4">
                                             <label for="valor[]">Valor:</label>
                                             <input type="text" name="valor[<?= $i ?>]"
-                                                   class="form-control valor" maxlength="10"
+                                                   class="form-control valor"
                                                    value="<?= dinheiroParaBr($parcela[$i]['valor'] ?? NULL)?>" required>
                                         </div>
 
@@ -117,9 +122,10 @@ $parcela = $con->query("SELECT p.id, p.valor, p.data_pagamento, pc.data_inicio, 
                                             id="valorTotal" data-id="<?=$pedido['valor_total']?>"> <?= dinheiroParaBr($pedido['valor_total']) ?></span>
                                 </div>
 
+                                <!-- populado pelo JS -->
                                 <div class="col-md-4">
                                     <strong> Valor somado das parcelas: </strong> R$ <span
-                                            id="totalSomado"> <?= dinheiroParaBr($pedido['valor_total']) ?></span>
+                                            id="totalSomado"></span>
                                 </div>
 
                                 <div class="col-md-2">
@@ -177,7 +183,7 @@ $parcela = $con->query("SELECT p.id, p.valor, p.data_pagamento, pc.data_inicio, 
 
         var diferenca = total - sum;
 
-        valorSomado.text(sum.toFixed(2));
+        valorSomado.text(sum.toLocaleString('pt-br', {minimumFractionDigits: 2}));
 
         if (diferenca != 0) {
             btnGravar.attr('disabled', true);
@@ -189,11 +195,11 @@ $parcela = $con->query("SELECT p.id, p.valor, p.data_pagamento, pc.data_inicio, 
             msgValorErrado.hide();
         }
     }
-
+    $(document).ready(valores);
     $('.valor').keyup(valores);
 
     $(document).ready(function () {
-        $('.valor').mask('00.000,00', {reverse: true});
-    });
+        $('.valor').mask('000.000,00', {reverse: true});
+        });
 </script>
 

@@ -29,21 +29,11 @@ while ($linhaOco = mysqli_fetch_array($ocorrencias)) {
             while($cargaArray = mysqli_fetch_array($carga)){
                 $cargaHoraria =  $cargaHoraria + (int)$cargaArray['carga_horaria'];
             }
-        }else{
-            $cargaHoraria = "Não possuí.";
         }
     }
 }
 $objeto = retornaTipo($evento['tipo_evento_id']) . " - " . $evento['nome_evento'];
 
-
-$sqlLocal = "SELECT l.local FROM locais l INNER JOIN ocorrencias o ON o.local_id = l.id WHERE o.origem_ocorrencia_id = " . $evento['id'] ." AND o.publicado = 1";
-$queryLocal = mysqli_query($con, $sqlLocal);
-$local = '';
-while ($locais = mysqli_fetch_array($queryLocal)) {
-    $local = $local . '; ' . $locais['local'];
-}
-$local = substr($local, 1);
 $idEvento = $pedido['origem_id'];
 
 $idPessoa = $pessoa['id'];
@@ -119,6 +109,12 @@ if($pessoa['nome_artistico'] == NULL || $pessoa['nome_artistico'] == ""){
     $nomeArtistico = $pessoa['nome_artistico'];
 }
 
+if($cargaHoraria == 0){
+    $ch = "Não possuí";
+}else{
+    $ch = $cargaHoraria;
+}
+
 $idPenal = $_GET['penal'];
 alteraStatusPedidoContratos($idPedido, "proposta", $idPenal, $idUser);
 
@@ -139,7 +135,7 @@ echo
     "<p><strong>CCM:</strong> " . $ccm . "</p>" .
     "<p><strong>DRT:</strong> " . $drt . "</p>" .
     "<p><strong>Endereço:</strong> " . $endereco . "</p>" .
-    "<p><strong>Telefone:</strong> " . $tel . "</p>" .
+    "<p><strong>Telefone(s):</strong> " . $tel . "</p>" .
     "<p><strong>E-mail:</strong> " . $pessoa['email'] . "</p>" .
     "<p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> " . $nit. "</p>" .
     "<p>&nbsp;</p>" .
@@ -149,8 +145,8 @@ echo
     "<p>&nbsp;</p>" .
     "<p><strong>Objeto:</strong> " . $objeto . "</p>" .
     "<p><strong>Data / Período:</strong> " . $periodo . " - conforme cronograma</p>" .
-    "<p><strong>Carga Horária:</strong> " . $cargaHoraria . "</p>" .
-    "<p><strong>Local:</strong> " . $local . "</p>" .
+    "<p><strong>Carga Horária:</strong> " . $ch . "</p>" .
+    "<p><strong>Local(ais):</strong> " . listaLocais($evento['id'], '1') . "</p>" .
     "<p><strong>Valor:</strong> " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . ")</p>" .
     "<p><strong>Forma de Pagamento:</strong> " . $pedido['forma_pagamento'] . "</p>" .
     "<p><strong>Justificativa:</strong> " . $pedido['justificativa'] . "</p>" .

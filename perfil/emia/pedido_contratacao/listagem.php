@@ -14,6 +14,7 @@ if(isset($_POST['deletar'])){
 $sql = "SELECT p.id,
 		       ec.protocolo,
                p.numero_processo,
+               p.origem_id,
                pf.nome,
                l.local,
                ec.ano,
@@ -62,7 +63,7 @@ $query = mysqli_query($con, $sql);
                         echo "<td> 
                                 <form method='POST' action='?perfil=emia&p=pedido_contratacao&sp=edita' role='form'>
                                     <input type='hidden' name='idEc' value='" . $dados['id'] . "'>
-                                    <button type='submit' name='carregar' class='btn btn-block btn-primary'><span>" . $dados['protocolo'] . "</span></button>
+                                    <button type='submit' name='carregar' class='btn btn-block btn-link'><span>" . $dados['protocolo'] . "</span></button>
                                 </form> 
                               </td>";
                         echo "<td>" . $dados['numero_processo'] . "</td>";

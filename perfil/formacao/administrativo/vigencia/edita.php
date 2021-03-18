@@ -30,7 +30,7 @@ if (isset($_POST['edita'])) {
     $sql = "UPDATE formacao_vigencias SET ano = '$ano', descricao = '$descricao', numero_parcelas = '$num' WHERE id = '$idVigencia'";
 
     if (mysqli_query($con, $sql)) {
-        $mensagem = mensagem("success", "Vigência atualizado com sucesso");
+        $mensagem = mensagem("success", "Vigência atualizada com sucesso");
         gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Ocorreu um erro ao atualizar a vigência. Tente novamente!");
@@ -103,6 +103,7 @@ if (isset($_POST['edita'])) {
                                 <div class="form-group col-md-8">
                                     <label for="descricao">Descrição *</label>
                                     <input type="text" id="descricao" name="descricao" class="form-control" required
+                                           maxlength="45"
                                            value="<?= $vigencia['descricao'] ?>">
                                 </div>
                             </div>
@@ -123,7 +124,7 @@ if (isset($_POST['edita'])) {
                                     <div class="form-group col-md-2">
                                         <label for="valor[]">Valor:</label>
                                         <input type="text" id="valor<?= $i ?>" name="valor[]"
-                                               class="form-control" onKeyPress="return(moeda(this,'.',',',event))" value="<?= dinheiroParaBr($parcelaArray['valor'] ?? NULL) ?>">
+                                               class="form-control valor" value="<?= dinheiroParaBr($parcelaArray['valor'] ?? NULL) ?>">
                                     </div>
 
                                     <div class="form-group col-md-2">
@@ -169,3 +170,9 @@ if (isset($_POST['edita'])) {
         </div>
     </section>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('.valor').mask('000,00', {reverse: true});
+    });
+</script>

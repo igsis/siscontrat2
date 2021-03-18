@@ -50,7 +50,6 @@ $sql = "select fc.protocolo,p.numero_processo, pf.nome, fc.id,ps.status
                     <?php
                     if ($query = mysqli_query($con, $sql)) {
                         while ($formacao = mysqli_fetch_array($query)) {
-                            $_SESSION['formacaoId'] = $formacao['id'];
                             ?>
                             <tr>
                                 <?php

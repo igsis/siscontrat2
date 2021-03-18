@@ -8,6 +8,8 @@ if(!isset ($_SESSION['login_s'])) //verifica se há uma sessão, se não, volta 
     header("Location: $location");
 }
 
+$notificacao = recuperaChamadoEvento($_SESSION['usuario_id_s']);
+
 ?>
 <html lang="pt-br">
   <head>
@@ -68,6 +70,9 @@ if(!isset ($_SESSION['login_s'])) //verifica se há uma sessão, se não, volta 
       <link rel="stylesheet" href="css\smoothness_jquery-ui.css">
       <!-- Toastr -->
       <script src="plugins/toastr/toastr.min.js"></script>
+      <!-- Select2 -->
+      <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
+      <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 
       <style>
           .ui-menu-item{
@@ -259,5 +264,41 @@ if(!isset ($_SESSION['login_s'])) //verifica se há uma sessão, se não, volta 
             <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- Messages: style can be found in dropdown.less-->
+
+                    <li class="dropdown notifications-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <?php if ($notificacao->rowCount()){
+                               ?>
+                                <i class="fa fa-bell-o"></i>
+                                <span class="label label-danger"><?= $notificacao->rowCount() ?></span>
+                            <?php
+                            } ?>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <?php if ($notificacao->rowCount()){ ?>
+                                <li class="header">Você tem <?= $notificacao->rowCount() ?> eventos que foram reabertos</li>
+                                <li>
+                                    <!-- inner menu: contains the actual data -->
+                                    <ul class="menu">
+                                        <?php foreach ($notificacao->fetchAll(PDO::FETCH_OBJ) as $notify){ ?>
+                                            <li>
+                                                <a href="#">
+                                                    <?= $notify->nome_evento ?> - Reaberto em: <?= $notify->data_reabertura ?>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                </li>
+                                <li class="footer"><a href="?perfil=evento&p=evento_lista">Veja Todos</a></li>
+                            <?php } else {?>
+                                <li class="header">Você não tem nenhum evento reaberto</li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </nav>
     </header>

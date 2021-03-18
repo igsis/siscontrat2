@@ -35,14 +35,14 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Gênero:</th>
-                                            <td><?= $filme['genero'] ?></td>
+                                            <td><?= checaCampo($filme['genero']) ?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Sinopse:</th>
-                                            <td><?= $filme['sinopse'] ?></td>
+                                            <td><?= checaCampo($filme['sinopse']) ?></td>
                                         </tr>
                                         <tr>
-                                            <th width="30%">Duração:</th>
+                                            <th width="30%">Duração(mins):</th>
                                             <td><?= $filme['duracao'] ?></td>
                                         </tr>
                                     </table>
@@ -100,7 +100,8 @@ if ($evento['tipo_evento_id'] == 2) {
                                                 <div class="row linha-btnFicha">
                                                     <input type="hidden" id="idAtr" value="<?= $atracao['id'] ?>">
                                                     <div class="col-md-2 col-md-offset-5">
-                                                        <button class="btn btn-success btn-small btnModal">Editar ficha tecnica
+                                                        <button class="btn btn-success btn-small btnModal">Editar ficha
+                                                            tecnica
                                                         </button>
                                                     </div>
                                                 </div>
@@ -119,7 +120,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                             <td>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                       <span> <?= $atracao['release_comunicacao'] ?> </span>
+                                                        <span> <?= $atracao['release_comunicacao'] ?> </span>
                                                     </div>
                                                     <div class="row linha-btnRelease">
                                                         <input type="hidden" id="id" value="<?= $atracao['id'] ?>">
@@ -141,7 +142,14 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Links:</th>
-                                            <td><a href="<?= $atracao['links'] ?>"><?= $atracao['links'] ?></a></td>
+                                            <td>
+                                                <?php
+                                                if ($atracao['links'] != "") { ?>
+                                                    <a href="<?= $atracao['links'] ?>"><?= checaCampo($atracao['links']) ?></a>
+                                                <?php } else { ?>
+                                                    <?= "Não Cadastrado" ?>
+                                                <?php } ?>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th class="text-center bg-primary" colspan="2">Dados do Produtor</th>
@@ -167,7 +175,7 @@ if ($evento['tipo_evento_id'] == 2) {
                                         <?php } ?>
                                         <tr>
                                             <th width="30%">Observação:</th>
-                                            <td><?= $produtor['observacao'] ?></td>
+                                            <td><?= $produtor['observacao'] == NULL ? "Não cadastrado" : $produtor['observacao'] ?></td>
                                         </tr>
                                     </table>
                                 </div>

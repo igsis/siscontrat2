@@ -113,6 +113,7 @@ function buscaId($tabela, $valor)
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome: *</label>
                                     <input type="text" class="form-control" name="nome" placeholder="Digite o nome"
+                                           pattern="[a-zA-ZàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇáéíóúýÁÉÍÓÚÝ ]{1,70}"
                                            maxlength="70" required value="<?= isset($pf) ? $pf['nome'] : '' ?>">
                                 </div>
                                 <div class="form-group col-md-6">

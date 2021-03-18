@@ -55,7 +55,7 @@ if($pedido['pessoa_tipo_id'] == 1){
             echo $telefone['telefone']. " | ";
         } ?></p>
     <p><strong>E-mail:</strong> <?= $pf['email'] ?></p>
-    <p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> <?= $pf['nit'] ?></p>
+    <p><strong>Inscrição no INSS ou nº PIS / PASEP:</strong> <?= checaCampo($pf['nit']) ?></p>
     <p><strong>Data de Nascimento:</strong> <?= exibirDataBr($pf['data_nascimento']) ?></p>
 <?php
 } else{

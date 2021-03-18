@@ -98,12 +98,12 @@ $sql = "SELECT p.numero_processo, e.nome_evento, e.protocolo,
                                             <input type="hidden" name="idPedido" id="idPedido"
                                                    value="<?= $pedido['id'] ?>">
                                             <button type="submit"
-                                                    class="btn btn-primary btn-block" name="carrega"><?= $pedido['numero_processo'] ?></button>
+                                                    class="btn btn-link btn-block" name="carrega"><?= $pedido['numero_processo'] ?></button>
                                         </form>
                                     </td>
                                     <?php
                                 }else {
-                                    echo "<td>Não Possuí</td>";
+                                    echo "<td>Não possuí</td>";
                                 }
                                 ?>
                                 <td><?= $pedido['protocolo'] ?></td>

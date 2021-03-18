@@ -30,9 +30,17 @@ if (isset($_POST['_filtros'])) {
         }
     }
 
-    $query = retornaEventosComunicacao($idUser, 'eventos', $filtro);
+    $query = retornaEventosComunicacao($idUser, 'eventos');
 //    $query2 = retornaEventosComunicacao($idUser, 'agendoes', $filtro);
 } else {
+    $sqlInstiuicao = "SELECT inst.id FROM instituicoes AS inst
+                            LEFT JOIN locais AS lo ON inst.id = lo.instituicao_id
+                            LEFT JOIN local_usuarios AS ls ON ls.local_id = lo.id
+                        WHERE ls.usuario_id = {$_SESSION['usuario_id_s']}";
+
+    $queryIns = mysqli_query($con,$sqlInstiuicao);
+    $resultado = mysqli_fetch_all($queryIns,MYSQLI_ASSOC)[0];
+
     $sqlEventos = "SELECT   eve.id AS idEvento, 
                           eve.nome_evento AS nome_evento, 
                           es.status AS status, 
@@ -42,9 +50,8 @@ if (isset($_POST['_filtros'])) {
                 LEFT JOIN evento_status es on eve.evento_status_id = es.id
                 LEFT JOIN local_usuarios ls ON eve.usuario_id = ls.usuario_id
                 LEFT JOIN locais lo ON lo.id = ls.local_id
-                WHERE eve.publicado = 1 AND (eve.evento_status_id = 3 OR eve.evento_status_id = 4) ";
+                WHERE eve.publicado = 1 AND (eve.evento_status_id = 3 OR eve.evento_status_id = 4) AND lo.instituicao_id = {$resultado['id']}";
     $query = mysqli_query($con, $sqlEventos);
-//    $query2 = retornaEventosComunicacao($idUser, 'agendoes');
 }
 ?>
 
@@ -185,7 +192,7 @@ if (isset($_POST['_filtros'])) {
                                     <div class="panel panel-default">
                                         <!-- Default panel contents -->
                                         <div class="panel-heading">Legendas</div>
-                                        <table class="table">
+                                        <table class="table table-responsive">
                                             <tbody id="legendas-tbody">
                                             <tr>
                                                 <td>
@@ -222,13 +229,14 @@ if (isset($_POST['_filtros'])) {
 
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tblEvento" class="table table-bordered table-striped">
+                        <table id="tblEvento" class="table table-bordered table-striped table-responsive">
                             <thead>
                             <tr>
                                 <th>Nome do Evento</th>
                                 <th>Enviado por</th>
                                 <th>Início/Termino</th>
                                 <th>Status</th>
+                                <th>Chamado</th>
                                 <th>Operação</th>
                             </tr>
                             </thead>
@@ -253,6 +261,7 @@ if (isset($_POST['_filtros'])) {
                                                 <?php geraLegendas($evento['idEvento'], 'eventos', 'comunicacoes'); ?>
                                             </div>
                                         </td>
+                                        <?= retornaChamadosTD($evento['idEvento']) ?>
                                         <td>
                                             <form method="post" action="?perfil=comunicacao&p=comunicacao">
                                                 <input type="hidden" name="evento" value="<?= $evento['idEvento'] ?>">
@@ -303,6 +312,7 @@ if (isset($_POST['_filtros'])) {
                                 <th>Enviado por</th>
                                 <th>Início/Termino</th>
                                 <th>Status</th>
+                                <th>Chamado</th>
                                 <th>Operação</th>
                             </tr>
                             </tfoot>

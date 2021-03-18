@@ -8,15 +8,16 @@ if (isset($_POST['idPedido'])) {
 }
 
 
-$sql = "select u.nome_completo, c.justificativa, u.id, c.data, es.status, e.id,e.nome_evento
-from chamados as c
-inner join usuarios as u on c.usuario_id = u.id
-inner join eventos as e on e.id = c.evento_id
-inner join evento_status as es on es.id = e.evento_status_id WHERE e.id = $idEvento";
+$sql = "SELECT c.id, c.justificativa, c.data, u.nome_completo, s.status
+        FROM chamados AS c
+        INNER JOIN usuarios AS u ON c.usuario_id = u.id
+        INNER JOIN eventos AS e ON c.evento_id = e.id
+        INNER JOIN evento_status AS s ON s.id = e.evento_status_id
+        WHERE e.id = $idEvento";
 
 $query = mysqli_query($con, $sql);
-$num_rows = mysqli_num_rows($query);
 
+$nomeEvento = $con->query("SELECT nome_evento FROM eventos WHERE id = $idEvento AND tipo_evento_id != 3 AND publicado = 1")->fetch_array()['nome_evento'];
 ?>
 
 <div class="content-wrapper">
@@ -24,7 +25,7 @@ $num_rows = mysqli_num_rows($query);
     <section class="content">
 
         <!-- START FORM-->
-        <h3 class="box-title">Resultado de busca</h3>
+        <h3 class="box-title">Chamados do Evento: <?= $nomeEvento ?></h3>
         <div class="row" align="center">
 
         </div>
@@ -48,29 +49,24 @@ $num_rows = mysqli_num_rows($query);
                             </thead>
                             <tbody>
                             <?php
-                            if ($num_rows == 0) { ?>
+                            while ($dados = mysqli_fetch_array($query)) {
+                                ?>
                                 <tr>
-                                    <th colspan="7"><p align="center">Não foram encontrados registros</p></th>
+                                    <td><?= $dados['id'] ?></td>
+                                    <td>
+                                        <form action="?perfil=contrato&p=chamado_edita" method="post" role="form">
+                                            <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
+                                            <input type="hidden" name="idPedido" id="idPedido" value="<?= $idPedido ?>">
+                                            <input type="hidden" name="idChamado" value="<?= $dados['id'] ?>">
+                                            <button type="submit" class="btn btn-link"
+                                                    name="load"><?= $dados['justificativa'] ?></button>
+                                        </form>
+                                    </td>
+                                    <td><?= exibirDataBr($dados['data']) ?></td>
+                                    <td><?= $dados['nome_completo'] ?></td>
+                                    <td><?= $dados['status'] ?></td>
                                 </tr>
-                            <?php } else {
-                                while ($dados = mysqli_fetch_array($query)) {
-                                    ?>
-                                    <tr>
-                                        <td><?= $dados['id'] ?></td>
-                                        <td>
-                                            <form action="?perfil=contrato&p=chamado_edita" method="post" role="form">
-                                                <input type="hidden" name="idEvento" id="idEvento" value="<?=$idEvento?>">
-                                                <input type="hidden" name="idPedido" id="idPedido" value="<?=$idPedido?>">
-                                                <button type="submit" class="btn btn-link" name="load"><?= $dados['justificativa'] ?> - <?= $dados['nome_evento'] ?></button>
-                                            </form>
-                                        </td>
-                                        <td><?= $dados['data'] ?></td>
-                                        <td><?= $dados['nome_completo'] ?></td>
-                                        <td><?= $dados['status'] ?></td>
-                                    </tr>
-                                <?php }
-                            }
-                            ?>
+                            <?php } ?>
                             </tbody>
                             <tfoot>
                             <tr>
@@ -79,7 +75,6 @@ $num_rows = mysqli_num_rows($query);
                                 <th>Data do Envio</th>
                                 <th>Usuário</th>
                                 <th>Status</th>
-                            </tr>
                             </tr>
                             </tfoot>
                         </table>

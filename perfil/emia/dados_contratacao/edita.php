@@ -1,19 +1,62 @@
 <?php
 $con = bancoMysqli();
 
-if (isset($_POST['editar'])) {
-    $idEC = $_POST['idEC'];
+if (isset($_POST['cadastrar']) || isset($_POST['editar'])){
     $idPf = $_POST['pf'];
     $ano = $_POST['ano'];
     $local = $_POST['local'];
     $cargo = $_POST['cargo'];
     $vigencia = $_POST['vigencia'];
-    $cronograma = trim(addslashes($_POST['cronograma']));
-    $obs = trim(addslashes($_POST['observacao']));
+    $cronograma = trim(addslashes($_POST['cronograma'])) ?? NULL;
+    $obs = trim(addslashes($_POST['observacao'])) ?? NULL;
     $status = "1";
-    $fiscal = $_POST['fiscal'] ?? null;
-    $suplente = $_POST['suplente'] ?? null;
+    $fiscal = $_POST['fiscal'] ?? NULL;
+    $suplente = $_POST['suplente'] ?? NULL;
     $usuario = $_SESSION['usuario_id_s'];
+    $data = date("Y-m-d H:i:s", strtotime("-3 hours"));
+}
+
+if (isset($_POST['cadastrar'])) {
+
+    $sqlInsert = "INSERT INTO emia_contratacao
+                                    (pessoa_fisica_id, 
+                                     ano, 
+                                     emia_status_id, 
+                                     local_id, 
+                                     emia_cargo_id, 
+                                     emia_vigencia_id, 
+                                     cronograma, 
+                                     observacao, 
+                                     fiscal_id, 
+                                     suplente_id, 
+                                     usuario_id, 
+                                     data_envio)
+                                     VALUES
+                                        ('$idPf',
+                                         '$ano',
+                                         '$status',
+                                         '$local',
+                                         '$cargo',
+                                         '$vigencia',
+                                         '$cronograma',
+                                         '$obs',
+                                         '$fiscal',
+                                         '$suplente',
+                                         '$usuario',
+                                         '$data') ";
+    if (mysqli_query($con, $sqlInsert)) {
+        $mensagem = mensagem('success', 'Cadastrado com Sucesso!');
+        $idEC = recuperaUltimo('emia_contratacao');
+        $protocolo = geraProtocolo($idEC) . "-M";
+        $sqlProtocolo = "UPDATE emia_contratacao SET protocolo = '$protocolo' WHERE id = '$idEC'";
+        $queryProtocolo = mysqli_query($con, $sqlProtocolo);
+    } else {
+        $mensagem = mensagem('danger', 'Erro ao Cadastrar! Tente novamente.');
+    }
+}
+
+if (isset($_POST['editar'])) {
+    $idEC = $_POST['idEC'];
 
     $sqlUpdate = "UPDATE emia_contratacao SET
                     pessoa_fisica_id = '$idPf',
@@ -32,14 +75,12 @@ if (isset($_POST['editar'])) {
     } else {
         $mensagem = mensagem("danger", "Erro aos salvar! Tente novamente.");
     }
-    $ec = recuperaDados('emia_contratacao', 'id', $idEC);
 }
 
 if (isset($_POST['edit'])) {
     $idEC = $_POST['idECEdit'];
-    $ec = recuperaDados('emia_contratacao', 'id', $idEC);
 }
-
+$ec = recuperaDados('emia_contratacao', 'id', $idEC);
 
 ?>
 <div class="content-wrapper">
@@ -61,7 +102,7 @@ if (isset($_POST['edit'])) {
                     <div class="row">
                         <div class="col-md-6">
                             <label for="pf">Pessoa Física: *</label>
-                            <select name="pf" id="pf" class="form-control" required>
+                            <select name="pf" id="pf" class="form-control select2bs4" required>
                                 <option value="">Selecione uma pessoa física...</option>
                                 <?php
                                 geraOpcao('pessoa_fisicas', $ec['pessoa_fisica_id']);
@@ -80,7 +121,7 @@ if (isset($_POST['edit'])) {
                     <div class="row">
                         <div class="col-md-4">
                             <label for="local">Local: *</label>
-                            <select name="local" id="local" required class="form-control">
+                            <select name="local" id="local" required class="form-control select2bs4">
                                 <option value="">Selecione um local...</option>
                                 <?php
                                 geraOpcao('locais', $ec['local_id']);
@@ -100,16 +141,30 @@ if (isset($_POST['edit'])) {
 
                         <div class="col-md-4">
                             <label for="vigencia">Vigência: *</label>
-                            <select name="vigencia" id="vigencia" class="form-control" required>
-                                <option value="">Selecione a vigência...</option>
+                            <select class="form-control" name="vigencia" id="vigencia" required>
                                 <?php
-                                geraOpcao('emia_vigencias', $ec['emia_vigencia_id']);
-                                ?>
+                                $opcoesVigencia = $con->query("SELECT id, ano, descricao FROM emia_vigencias WHERE publicado = 1");
+                                if ($opcoesVigencia->num_rows > 0) {
+                                    while ($opcoesArray = mysqli_fetch_row($opcoesVigencia)) {
+                                        if ($opcoesArray[0] == $ec['emia_vigencia_id']) { ?>
+                                            <option value="<?= $opcoesArray[0] ?>"
+                                                    selected> <?= $opcoesArray[1] . " (" . $opcoesArray[2] . ")" ?> </option>
+                                        <?php } else { ?>
+                                            <option value="<?= $opcoesArray[0] ?>"> <?= $opcoesArray[1] . " (" . $opcoesArray[2] . ")" ?> </option>
+                                        <?php }
+                                    }
+                                } ?>
                             </select>
                         </div>
                     </div>
-                    <br>
 
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span id="msgEscondeAno" class="pull-right" style="color: red;"><b>Ano escolhido é maior que a vigência!</b></span>
+                        </div>
+                    </div>
+
+                    <br>
                     <div class="row">
                         <div class="col-md-12">
                             <label for="cronograma">Cronograma: </label>
@@ -131,7 +186,7 @@ if (isset($_POST['edit'])) {
                     <div class="row">
                         <div class="col-md-6">
                             <label for="fiscal">Fiscal: </label>
-                            <select name="fiscal" id="fiscal" class="form-control">
+                            <select name="fiscal" id="fiscal" class="form-control select2bs4">
                                 <option value="">Selecione um fiscal...</option>
                                 <?php
                                 geraOpcaoUsuario("usuarios", 1, $ec['fiscal_id']);
@@ -141,7 +196,7 @@ if (isset($_POST['edit'])) {
 
                         <div class="col-md-6">
                             <label for="suplente">Suplente: </label>
-                            <select name="suplente" id="suplente" class="form-control">
+                            <select name="suplente" id="suplente" class="form-control select2bs4">
                                 <option value="">Selecione um suplente...</option>
                                 <?php
                                 geraOpcaoUsuario("usuarios", 1, $ec['suplente_id']);
@@ -151,16 +206,18 @@ if (isset($_POST['edit'])) {
                     </div>
             </div>
             <div class="box-footer">
-                    <a href="?perfil=emia&p=dados_contratacao&sp=listagem">
-                        <button type="button" class="btn btn-default">Voltar</button>
-                    </a>
-                    <input type="hidden" name="idEC" value="<?= $idEC ?>" id="idEC">
-                    <button type="submit" class="btn btn-primary pull-right" name="editar" id="editar">Salvar</button>
+                <a href="?perfil=emia&p=dados_contratacao&sp=listagem">
+                    <button type="button" class="btn btn-default">Voltar</button>
+                </a>
+                <input type="hidden" name="idEC" value="<?= $idEC ?>" id="idEC">
+                <button type="submit" class="btn btn-primary pull-right" name="editar" id="editar">Salvar</button>
                 </form>
                 <hr>
                 <form action="?perfil=emia&p=pedido_contratacao&sp=cadastra" method="POST">
-                    <input type="hidden" name="idDados" value="<?=$idEC?>">
-                    <button type="submit" style="width: 30%" class="btn btn-success center-block">Gerar pedido de contratação</button>
+                    <input type="hidden" name="idDados" value="<?= $idEC ?>">
+                    <button type="submit" style="width: 30%" class="btn btn-success center-block">Gerar pedido de
+                        contratação
+                    </button>
                 </form>
             </div>
 
@@ -171,14 +228,14 @@ if (isset($_POST['edit'])) {
 <script>
     let ano = $('#ano');
     let vigencia = $('#vigencia');
-    let botao = $('#editar');
+    let botao = $('#cadastra');
     var isMsgAno = $('#msgEscondeAno');
     isMsgAno.hide();
 
     function maior() {
-        let valorvigencia = $('#vigencia option:selected');
-        valorvigencia = parseInt(valorvigencia.text())
-        if (ano.val() > valorvigencia) {
+        let valorVigencia = $('#vigencia option:selected').text();
+        valorVigencia = parseInt(valorVigencia.substring(0, 5))
+        if (ano.val() > valorVigencia) {
             botao.prop('disabled', true);
             isMsgAno.show();
         } else {
@@ -190,5 +247,5 @@ if (isset($_POST['edit'])) {
     ano.on('change', maior);
     vigencia.on('change', maior);
 
-    $(document).ready(maior)
+    $(document).ready(maior);
 </script>

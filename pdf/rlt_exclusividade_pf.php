@@ -39,6 +39,8 @@ $l=8; //DEFINE A ALTURA DA LINHA
 
 $pdf->SetXY( $x , 30 );// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
+$pdf->SetTitle("Exclusividade PF");
+
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 12);
 $pdf->Cell(180,5,utf8_decode('DECLARAÇÃO DE EXCLUSIVIDADE'),0,1,'C');

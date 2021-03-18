@@ -98,7 +98,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
 
                         <div class="box-body">
                             <?php for ($i = 0; $i < $nParcelas; $i++):
-                                if (isset($oficina)): ?>
+                                // if (isset($oficina)): ?>
                                     <input type="hidden" name="oficina" value="1">
                                     <div class='row'>
                                         <div class='form-group col-md-1'>
@@ -135,35 +135,35 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
                                         </div>
                                         <div class='form-group col-md-2'>
                                             <label for='carga_horaria'>Carga Horária</label>
-                                            <input type='number' id='carga_horaria'
+                                            <input type='number' id='carga_horaria' min="0"
                                                    value="<?= $parcelas[$i]['carga_horaria'] ?? '' ?>"
                                                    name='carga_horaria[<?= $i ?>]'
                                                    class='form-control'>
                                         </div>
                                     </div>
-                                <?php else: ?>
-                                    <div class='row'>
-                                        <div class='form-group col-md-2'>
-                                            <label for='parcela'>Parcela </label>
-                                            <input type='number' name="parcela[<?= $i ?>]" value="<?= $i + 1 ?>"
-                                                   class='form-control' readonly>
-                                        </div>
-                                        <div class='form-group col-md-3'>
-                                            <label for='valor'>Valor *</label>
-                                            <input type='text' name='valor[<?= $i ?>]' class='form-control valor'
-                                                   value="<?= isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : '' ?>"
-                                                   required
-                                                   placeholder="Valor em reais"
-                                                   maxlength="10">
-                                        </div>
-                                        <div class='form-group col-md-4'>
-                                            <label for='data_pagamento'>Data Kit Pagamento *</label>
-                                            <input type='date' id='data_pagamento' required
-                                                   value="<?= $parcelas[$i]['data_pagamento'] ?? '' ?>"
-                                                   name='data_pagamento[<?= $i ?>]' class='form-control dataPagamento'>
-                                        </div>
-                                    </div>
-                                <?php endif;
+                                <?php //else: ?>
+<!--                                    <div class='row'>-->
+<!--                                        <div class='form-group col-md-2'>-->
+<!--                                            <label for='parcela'>Parcela </label>-->
+<!--                                            <input type='number' name="parcela[--><?//= $i ?><!--]" value="--><?//= $i + 1 ?><!--"-->
+<!--                                                   class='form-control' readonly>-->
+<!--                                        </div>-->
+<!--                                        <div class='form-group col-md-3'>-->
+<!--                                            <label for='valor'>Valor *</label>-->
+<!--                                            <input type='text' name='valor[--><?//= $i ?><!--]' class='form-control valor'-->
+<!--                                                   value="--><?//= isset($parcelas[$i]['valor']) ? dinheiroParaBr($parcelas[$i]['valor']) : '' ?><!--"-->
+<!--                                                   required-->
+<!--                                                   placeholder="Valor em reais"-->
+<!--                                                   maxlength="10">-->
+<!--                                        </div>-->
+<!--                                        <div class='form-group col-md-4'>-->
+<!--                                            <label for='data_pagamento'>Data Kit Pagamento *</label>-->
+<!--                                            <input type='date' id='data_pagamento' required-->
+<!--                                                   value="--><?//= $parcelas[$i]['data_pagamento'] ?? '' ?><!--"-->
+<!--                                                   name='data_pagamento[--><?//= $i ?><!--]' class='form-control dataPagamento'>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+                                <?php //endif;
                             endfor; ?>
                             <div class="row">
                                 <div class="col-md-offset-3 col-md-3">
@@ -231,7 +231,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
         //let valOriginal = document.querySelector('#valorTotal').textContent;
         //let valRegistrado = document.querySelector('#totalRegistrado').textContent;
         $("#totalRegistrado").text(sum.toFixed(2));
-        console.log("TOTAL: " + total);
+        //console.log("TOTAL: " + total);
         if (sum == total) {
             alerta.css("display", "block");
             btnGravar.attr('disabled', false);
@@ -244,7 +244,7 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
 
     let dataInicio = new Date("<?= $dataInicio[0]['data_inicio'] ?>");
 
-    $(".dataPagamento").keyup(function (e) {
+    $(".dataPagamento").change(function (e) {
         let dataParcela = new Date(this.value);
         if (dataInicio >= dataParcela) {
             linha_erro.css("display", "block");
@@ -262,6 +262,6 @@ $dataInicio = $con->query($sqlData)->fetch_all(MYSQLI_ASSOC);
     }
 
     $(document).ready(function () {
-        $('.valor').mask('00.000,00',{reverse: true})
+        $('.valor').mask('000.000,00',{reverse: true})
     })
 </script>

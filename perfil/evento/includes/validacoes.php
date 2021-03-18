@@ -44,6 +44,28 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
 
                 if (mysqli_num_rows($queryLider) == 0) {
                     array_push($erros, "Líder não cadastrado na atração: <b>" . $atracao['nome_atracao'] . '</b>');
+                } else if (mysqli_num_rows($queryLider) > 0) {
+                    while ($arrayLider = mysqli_fetch_array($queryLider)) {
+                        $consultaDocLider = $con->query("SELECT ld.id, ld.documento, a.arquivo
+                                                                FROM lista_documentos ld
+                                                                LEFT JOIN (SELECT arq.arquivo, arq.lista_documento_id, list.sigla FROM lista_documentos as list
+				                                                           INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
+				                                                           WHERE arq.origem_id = " . $arrayLider['pessoa_fisica_id'] . " AND list.tipo_documento_id = 1
+				                                                AND arq.publicado = '1' ORDER BY arq.id) a ON ld.id = a.lista_documento_id
+                                                                WHERE ld.tipo_documento_id = 1 AND ld.publicado = 1
+                                                                AND ld.sigla IN ('rg','cpf', 'drt', 'currlider')");
+                        if ($consultaDocLider->num_rows > 0) {
+                            while ($arrayDoc = mysqli_fetch_array($consultaDocLider)) {
+                                if ($arrayDoc['arquivo'] == NULL) {
+                                    $nomeLider = $con->query("SELECT nome FROM pessoa_fisicas WHERE id = " . $arrayLider['pessoa_fisica_id'])->fetch_array()['nome'];
+                                    array_push($errosArqs, $arrayDoc['documento'] . " do Lider ''<strong>$nomeLider</strong>''" . " não enviado");
+                                }
+                            }
+                        } else {
+                            $nomeLider = $con->query("SELECT nome FROM pessoa_fisicas WHERE id = " . $arrayLider['pessoa_fisica_id'])->fetch_array()['nome'];
+                            array_push($errosArqs, "Todos os documentos do lider ''$nomeLider'' não enviado");
+                        }
+                    }
                 }
 
             }
@@ -380,7 +402,7 @@ if ($pedidos != NULL && $evento['contratacao'] == 1 && $numPedidos > 0) {
     }
 }
 
-$sqlteste = "SELECT  te.tipo_evento, oco.atracao_id, 
+$sqlteste = "SELECT te.tipo_evento, oco.atracao_id, 
 i.nome, l.local, 
 e.espaco, oco.data_inicio, 
 oco.data_fim, oco.segunda, 
@@ -391,7 +413,7 @@ oco.horario_inicio, oco.horario_fim,
 ri.retirada_ingresso, oco.valor_ingresso, 
 oco.observacao, p.periodo, 
 sub.subprefeitura, virada, 
-oco.libras, oco.audiodescricao 
+oco.libras, oco.audiodescricao, oe.data_excecao 
 FROM ocorrencias as oco
 INNER JOIN locais as l on l.id = oco.local_id
 INNER JOIN tipo_eventos as te on te.id = oco.tipo_ocorrencia_id
@@ -400,7 +422,8 @@ LEFT JOIN espacos as e on e.id = oco.espaco_id
 INNER JOIN retirada_ingressos as ri on ri.id = oco.retirada_ingresso_id
 INNER JOIN periodos as p ON p.id = oco.periodo_id
 INNER JOIN subprefeituras as sub ON sub.id = oco.subprefeitura_id
-WHERE oco.origem_ocorrencia_id = '$idEvento' AND oco.publicado = 1;";
+LEFT JOIN ocorrencia_excecoes as oe ON oco.id = oe.atracao_id
+WHERE oco.origem_ocorrencia_id = '$idEvento' AND oco.publicado = 1";
 
 $queryteste = mysqli_query($con, $sqlteste);
 $teste = mysqli_fetch_all($queryteste);

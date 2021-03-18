@@ -12,8 +12,15 @@ if (isset($_POST['aprovar'])) {
         $sqlEnvia = "INSERT INTO evento_envios (evento_id, data_envio) VALUES ('$idEvento', '$data')";
         mysqli_query($con, $sqlEnvia);
         $idUser = $_SESSION['usuario_id_s'];
-        $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
-        mysqli_query($con, $sqlEnvio);
+        $consultaEvento = $con->query("SELECT id, evento_id FROM producao_eventos WHERE evento_id = $idEvento");
+        if($consultaEvento->num_rows == 0){
+            $sqlEnvio = "INSERT INTO producao_eventos (evento_id, usuario_id, data) VALUES ('$idEvento','$idUser','$data')";
+            mysqli_query($con, $sqlEnvio);
+        }else{
+            $idProducaoEvento = mysqli_fetch_array($consultaEvento)['id'];
+            $sqlEnvio = "UPDATE producao_eventos SET data = '$data' WHERE id = $idProducaoEvento";
+            mysqli_query($con, $sqlEnvio);
+        }
         $mensagem = mensagem("success", "Evento aprovado com sucesso!");
 
         if ($evento['tipo_evento_id'] == 1) {

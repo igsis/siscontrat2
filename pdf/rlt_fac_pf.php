@@ -125,6 +125,8 @@ $pdf->AddPage();
 $x = 20;
 $l = 7; //DEFINE A ALTURA DA LINHA
 
+$pdf->SetTitle("FACC PF");
+
 $pdf->SetXY($x, 40);// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
 $pdf->SetXY(113, 40);

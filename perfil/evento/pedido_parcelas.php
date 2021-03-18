@@ -326,15 +326,10 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12">
                                     <label for="forma_pagamento">Forma de pagamento *</label><br/>
                                     <textarea id="forma_pagamento" name="forma_pagamento" class="form-control" required
                                               rows="8"><?= $pedido['forma_pagamento'] ?></textarea>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="justificativa">Justificativa *</label><br/>
-                                    <textarea id="justificativa" name="justificativa" class="form-control"
-                                              required rows="8"><?= $pedido['justificativa'] ?></textarea>
                                 </div>
                             </div>
                             <div class="row">
@@ -347,11 +342,27 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
                             <input type="hidden" name="idPedido" value="<?= $idPedido ?>">
                         </div>
                         <!-- /.box-body -->
-                        <div class="box-footer">
-                            <input name="gravar" type="submit" class="pull-right btn btn-primary" id="btnGravar"
-                                   value="Gravar"
+                    </div>
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Justicativa da Contratação</h3>
                         </div>
-                        <!-- /.box-footer-->
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="justificativa">Justificativa *</label><br/>
+                                    <textarea id="justificativa" name="justificativa" class="form-control"
+                                              required rows="8"><?= $pedido['justificativa'] ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <div class="box-footer">
+                                <input name="gravar" type="submit" class="pull-right btn btn-primary" id="btnGravar"
+                                       value="Gravar"
+                            </div>
+                            <!-- /.box-footer-->
+                        </div>
                     </div>
                 </form>
                 <!-- /.box -->
@@ -440,6 +451,6 @@ $data_kit = mysqli_fetch_row(mysqli_query($con, $query_data))[0];
     $(document).ready(formParcela());
 
     $(document).ready(function () {
-        $('#valor_total').mask('000.000,00',{reverse:true});
+        $('#valor_total').mask('000.000,00', {reverse: true});
     })
 </script>

@@ -32,19 +32,21 @@ if ($zip->open($nome_arquivo, ZipArchive::CREATE) === true) {
 
     if ($idEvento) {
         // arquivos do evento
-        $sql = "SELECT arq.* FROM arquivos AS arq 
-        INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
-        WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='3'";
+        $sql = "SELECT arq.arquivo 
+                FROM arquivos as arq
+                INNER JOIN lista_documentos as ld ON arq.lista_documento_id = ld.id
+                WHERE arq.origem_id = " . $pedido['id'] . " AND ld.tipo_documento_id = 3
+                AND arq.publicado = 1";
         $query = mysqli_query($con, $sql);
         while ($arquivo = mysqli_fetch_array($query)) {
             $file = $path . $arquivo['arquivo'];
             $file2 = $arquivo['arquivo'];
             $zip->addFile($file, "evento/" . $file2);
         }
-        // arquivivos produção
-        $sql_com_prod = "SELECT arq.* FROM arquivos AS arq 
+        // arquivos produção
+        $sql_com_prod = "SELECT arq.arquivo FROM arquivos AS arq 
         INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
-        WHERE arq.publicado = '1' AND origem_id = '$idEvento' AND ld.tipo_documento_id='8'";
+        WHERE arq.publicado = 1 AND origem_id = '$idEvento' AND ld.tipo_documento_id = 8";
         $query_com_prod = mysqli_query($con, $sql_com_prod);
         while ($arquivo = mysqli_fetch_array($query_com_prod)) {
             $file = $path . $arquivo['arquivo'];
@@ -54,25 +56,25 @@ if ($zip->open($nome_arquivo, ZipArchive::CREATE) === true) {
     }
     // arquivos pf
     if ($tipo_pessoa == 1) {
-        $sql_pf = "SELECT arq.* FROM arquivos AS arq 
+        $sql_pf = "SELECT arq.arquivo FROM arquivos AS arq 
         INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
-        WHERE arq.publicado = '1' AND origem_id = '$idPf' AND ld.tipo_documento_id='1'";
+        WHERE arq.publicado = 1 AND origem_id = '$idPf' AND ld.tipo_documento_id = 1";
         $query_pf = mysqli_query($con, $sql_pf);
-        foreach ($query_pf as $arquivo) {
-            $file = $path . $arquivo['arquivo'];
-            $file2 = $arquivo['arquivo'];
+        while ($arquivo_pf = mysqli_fetch_array($query_pf)) {
+            $file = $path . $arquivo_pf['arquivo'];
+            $file2 = $arquivo_pf['arquivo'];
             $zip->addFile($file, "pf/" . $file2);
         }
     }
     // arquivos pj
     if ($tipo_pessoa == 2) {
-        $sql_pj = "SELECT arq.* FROM arquivos AS arq 
+        $sql_pj = "SELECT arq.arquivo FROM arquivos AS arq 
         INNER JOIN lista_documentos ld on arq.lista_documento_id = ld.id 
-        WHERE arq.publicado = '1' AND origem_id = '$idPj' AND ld.tipo_documento_id='2'";
+        WHERE arq.publicado = 1 AND origem_id = '$idPj' AND ld.tipo_documento_id = 2";
         $query_pj = mysqli_query($con, $sql_pj);
-        foreach ($query_pj as $arquivo) {
-            $file = $path . $arquivo['arquivo'];
-            $file2 = $arquivo['arquivo'];
+        while ($arquivo_pj = mysqli_fetch_array($query_pj)) {
+            $file = $path . $arquivo_pj['arquivo'];
+            $file2 = $arquivo_pj['arquivo'];
             $zip->addFile($file, "pj/" . $file2);
         }
     }

@@ -613,7 +613,7 @@ $tipoEvento = $evento['tipo_evento_id'];
 
     retiradaIngresso.addEventListener("change", () => {
         let valorIngressos = document.querySelector('#valor_ingresso');
-        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11) {
+        if (retiradaIngresso.value == 2 || retiradaIngresso.value == 7 || retiradaIngresso.value == 5 || retiradaIngresso.value == 11 || retiradaIngresso.value == 1) {
             valorIngressos.value = '0,00';
             valorIngressos.readOnly = true;
         } else {

@@ -39,7 +39,7 @@ u.email,
 u.telefone,
 e.suplente_id,
 e.sinopse,
-p.id,
+p.id as 'idPedido',
 p.status_pedido_id
 
 
@@ -61,27 +61,27 @@ if ($evento ['pessoa_tipo_id'] == 1) {
     $pessoa = "Jurídica";
 }
 
-if ($evento['nome_responsavel'] != "") {
-    $nomeResp = $evento['nome_responsavel'];
-} else {
-    $nomeResp = "Não cadastrado";
-}
-
-if ($evento['tel_responsavel'] != "") {
-    $telResp = $evento['tel_responsavel'];
-} else {
-    $telResp = "Não cadastrado";
-}
-
-
 $suplente = recuperaDados('usuarios', 'id', $evento['suplente_id']);
 $evento_pub = recuperaDados('evento_publico', 'evento_id', $idEvento);
 $publico = recuperaDados('publicos', 'id', $evento_pub['publico_id']);
-$pagamento = recuperaDados('pagamentos', 'pedido_id', $evento['id']);
-$dotacao = recuperaDados('juridicos', 'pedido_id', $evento['id']);
 $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']);
 
+$consultaPagamento = $con->query("SELECT emissao_nota_empenho, entrega_nota_empenho FROM pagamentos WHERE pedido_id = " . $evento['idPedido']);
+$dataEmissao = "";
+$dataEntrega = "";
+if ($consultaPagamento->num_rows > 0) {
+    $pagamento = recuperaDados('pagamentos', 'pedido_id', $evento['id']);
+    if ($pagamento) {
+        $dataEmissao = exibirDataBr($pagamento['emissao_nota_empenho']);
+        $dataEntrega = exibirDataBr($pagamento['entrega_nota_empenho']);
+    }
+}
 
+$dotacao = "";
+$consultaDotacao = $con->query("SELECT dotacao FROM juridicos WHERE pedido_id = " . $evento['idPedido']);
+if ($consultaDotacao->num_rows > 0) {
+    $dotacao = mysqli_fetch_array($consultaDotacao)['dotacao'];
+}
 ?>
 
 
@@ -138,11 +138,11 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                     </tr>
                     <tr>
                         <th width="30%">Reponsável pelo evento:</th>
-                        <td><?= $nomeResp ?></td>
+                        <td><?= checaCampo($evento['nome_responsavel']) ?></td>
                     </tr>
                     <tr>
                         <th width="30%">Telefone:</th>
-                        <td><?= $telResp ?></td>
+                        <td><?= checaCampo($evento['tel_responsavel']) ?></td>
                     </tr>
                     <tr>
                         <th><br/></th>
@@ -233,11 +233,12 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                 <td><?= $atracao['telefone1'] ?> </td>
                             </tr>
 
-                            <tr>
-                                <th width="30%">Telefone 2:</th>
-                                <td><?= $atracao['telefone2'] ? "" : "Não cadastrado" ?></td>
-                            </tr>
-
+                            <?php if ($atracao['telefone2'] != "") { ?>
+                                <tr>
+                                    <th width="30%">Telefone 2:</th>
+                                    <td><?= checaCampo($atracao['telefone2']) ?></td>
+                                </tr>
+                            <?php } ?>
                             <tr>
                                 <th><br/></th>
                                 <td></td>
@@ -262,7 +263,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
 
                             <tr>
                                 <th width="30%">Gênero:</th>
-                                <td><?= $filmes['genero'] ?></td>
+                                <td><?= checaCampo($filmes['genero']) ?></td>
                             </tr>
 
                             <th width="30%">Linguagem / Expressão artística:</th>
@@ -286,7 +287,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             </tr>
 
                             <tr>
-                                <th width="30%">Duração:</th>
+                                <th width="30%">Duração(min):</th>
                                 <td><?= $filmes['duracao'] ?> </td>
                             </tr>
 
@@ -330,14 +331,25 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id'])['retirada_ingresso'];
                             $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['nome'];
                             $local = recuperaDados('locais', 'id', $ocorrencia['local_id']);
-                            if ($ocorrencia['espaco_id'] == 0 && $ocorrencia['espaco_id'] == NULL) {
-                                $espaco = "Não cadastrado";
+                            if ($ocorrencia['espaco_id'] == 0) {
+                                $espaco = "Não possui";
                             } else {
-                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id']);
+                                $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'];
                             }
                             $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
                             $nomeAtracao = recuperaDados('atracoes', 'id', $ocorrencia['atracao_id'])['nome_atracao'];
                             $produtor = recuperaDados('produtores', 'id', $ocorrencia['produtor_id'])['nome'];
+
+                            //testa e se necessário retorna as datas de exceção
+                            $datas = "";
+                            $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $ocorrencia['id']);
+                            if ($testaExcecao->num_rows > 0) {
+                                while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
+                                    $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
+                                }
+                                $datas = substr($datas, 0, -2);
+                            }
+
                             ?>
                             <tr>
                                 <th>Atração:</th>
@@ -357,6 +369,14 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                     <th width="30%">Data de Encerramento:</th>
                                     <td><?= $ocorrencia['data_fim'] == "0000-00-00" ? "Não é Temporada" : exibirDataBr($ocorrencia['data_fim']) ?></td>
                                 </tr>
+
+                                <?php
+                                if ($datas != ""): ?>
+                                    <tr>
+                                        <th width="30%">Data de Exceção:</th>
+                                        <td><?= $datas ?></td>
+                                    </tr>
+                                <?php endif; ?>
 
                                 <tr>
                                     <th width="30%">Hora de Início:</th>
@@ -413,11 +433,11 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             </tr>
                             <tr>
                                 <th width="30 % ">Espaço:</th>
-                                <td><?= $espaco['espaco'] ?></td>
+                                <td><?= $espaco ?></td>
                             </tr>
                             <tr>
                                 <th width="30% ">Observação:</th>
-                                <td><?= $ocorrencia['observacao'] ? "" : "Não cadastrado" ?></td>
+                                <td><?= checaCampo($ocorrencia['observacao']) ?></td>
                             </tr>
 
                             <tr>
@@ -447,14 +467,24 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                                                        AND oco.atracao_id = " . $filmes['idFilmeEvento']);
                                 while ($oco = mysqli_fetch_array($sqlOcorrenciaFilme)) {
                                     $retiradaIngresso = recuperaDados('retirada_ingressos', 'id', $oco['retirada_ingresso_id'])['retirada_ingresso'];
-                                    if ($oco['espaco_id'] == 0 && $oco['espaco_id'] == NULL) {
-                                        $espaco = "Não cadastrado";
+                                    if ($oco['espaco_id'] == 0) {
+                                        $espaco = "Não possui";
                                     } else {
-                                        $espaco = recuperaDados('espacos', 'id', $oco['espaco_id']);
+                                        $espaco = recuperaDados('espacos', 'id', $oco['espaco_id'])['espaco'];
                                     }
                                     $instituicao = recuperaDados('instituicoes', 'id', $oco['instituicao_id'])['nome'];
                                     $local = recuperaDados('locais', 'id', $oco['local_id'])['local'];
                                     $periodo = recuperaDados('periodos', 'id', $oco['periodo_id']);
+
+                                    //testa e se necessário retorna as datas de exceção
+                                    $datas = "";
+                                    $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $oco['id']);
+                                    if ($testaExcecao->num_rows > 0) {
+                                        while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
+                                            $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
+                                        }
+                                        $datas = substr($datas, 0, -2);
+                                    }
 
                                     ?>
 
@@ -479,6 +509,14 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                             <td><?= $oco['data_fim'] == "0000-00-00" ? "Não é Temporada" : exibirDataBr($oco['data_fim']) ?></td>
                                         </tr>
 
+                                        <?php
+                                        if ($datas != ""): ?>
+                                            <tr>
+                                                <th width="30%">Data de Exceção:</th>
+                                                <td><?= $datas ?></td>
+                                            </tr>
+                                        <?php endif; ?>
+
                                         <tr>
                                             <th width="30%">Hora de Início:</th>
                                             <td><?= date("H:i", strtotime($oco['horario_inicio'])) ?></td>
@@ -495,14 +533,10 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                         <th width="30%">Valor do Ingresso:</th>
                                         <?php
                                         if ($oco['retirada_ingresso_id'] != 2) { ?>
-
                                             <td><?= "R$" . dinheiroParaBr($oco['valor_ingresso']) ?></td>
-
                                         <?php } else {
                                             ?>
-
                                             <td><?= "Ingresso Gratuito" ?></td>
-
                                         <?php } ?>
                                     </tr>
 
@@ -534,16 +568,16 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                         <th width="30%">Local:</th>
                                         <td><?= $local ?></td>
                                     </tr>
-                                    <?php if ($oco['espaco_id'] != 0) { ?>
-                                        <tr>
-                                            <th width="30 % ">Espaço:</th>
-                                            <td><?= $espaco['espaco'] ?? NULL ?></td>
-                                        </tr>
-                                    <?php } ?>
+
+                                    <tr>
+                                        <th width="30 % ">Espaço:</th>
+                                        <td><?= $espaco ?></td>
+                                    </tr>
 
                                     <tr>
                                         <th width="30% ">Observação:</th>
-                                        <td><?= $oco['observacao'] ? "" : "Não cadastrado" ?></td>
+                                        <td><?= checaCampo($oco['observacao']) ?></td>
+
                                     </tr>
 
                                     <tr>
@@ -574,8 +608,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                         <thead>
                                             <tr class='bg-info text-bold'>
                                                 <td>Nome do documento</td>
-                                                <td>Data de envio</td>
-                                                <td width='15%'></td>
+                                                <td width='10%'>Data de envio</td>>
                                             </tr>
                                         </thead>
                                         <tbody>";
@@ -614,7 +647,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                         </tr>
                         <tr>
                             <th width="30%">Valor:</th>
-                            <td><?= "R$" . $evento['valor_total'] ?></td>
+                            <td><?= "R$" . dinheiroParaBr($evento['valor_total']) ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Forma de Pagamento:</th>
@@ -626,31 +659,19 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                         </tr>
                         <tr>
                             <th width="30%">Data de Emissão da N.E:</th>
-                            <td><?php
-                                if ($pagamento['emissao_nota_empenho'] = 'null') {
-                                    echo "Não cadastrado";
-                                } else $pagamento['emissao_nota_empenho']
-                                ?></td>
+                            <td><?=  checaCampo($dataEmissao) ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Data de Entrega da N.E:</th>
-                            <td><?php
-                                if ($pagamento['entrega_nota_empenho'] = 'null') {
-                                    echo "Não cadastrado";
-                                } else $pagamento['entrega_nota_empenho']
-                                ?></td>
+                            <td><?= checaCampo($dataEntrega) ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Dotação Orçamentária:</th>
-                            <td><?php
-                                if ($dotacao['dotacao'] = 'null') {
-                                    echo "Não cadastrado";
-                                } else $dotacao['dotacao']
-                                ?></td>
+                            <td><?= checaCampo($dotacao) ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Observação:</th>
-                            <td><?= $evento['observacao'] ? "" : "Não cadastrado" ?></td>
+                            <td><?= checaCampo($evento['observacao']) ?></td>
                         </tr>
                         <tr>
                             <th width="30%">Último status do Pedido:</th>

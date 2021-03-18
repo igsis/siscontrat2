@@ -105,9 +105,9 @@ $atracao = $con->query("SELECT valor_individual FROM atracoes WHERE evento_id = 
                                                value="<?= $documento ?>" readonly>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <label for="ccm">CCM:</label>
-                                        <input type="text" name="ccm" id="ccm" class="form-control"
-                                               placeholder="Digite o CCM" maxlength="11">
+                                        <label for="pis_nit">PIS / NIT: *</label>
+                                        <input type="text" name="pis_nit" id="pis_nit" class="form-control"
+                                               placeholder="Digite PIS ou NIT" maxlength="11" required>
                                     </div>
                                     <?php
                                 } else {

@@ -19,7 +19,7 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
                 <form method="POST" action="?perfil=evento&p=evento_cinema_edita" role="form">
                     <div class="box-body">
                         <div class="form-group">
-                            <label for="tituloFilme">Título do filme *:</label>
+                            <label for="tituloFilme">Título do filme: *</label>
                             <input type="text" class="form-control" id="tituloFilme" name="tituloFilme" placeholder="Digite o título do filme" maxlength="100" required value="<?= $nomeFilme ?>" <?= isset($nomeFilme) ? "readonly" : NULL ?>>
                         </div>
                         <div class="form-group">
@@ -28,8 +28,7 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
                         </div>
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label
-                                >País de origem*:</label>
+                                <label>País de origem: *</label>
                                 <select required class="form-control" name="paisOrigem" id="paisOrigem" >
                                     <option value="">Selecione uma opção...</option>
                                     <?php
@@ -39,7 +38,7 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label>País de origem (co-produção)* :</label>
+                                <label>País de origem (co-produção): *</label>
                                 <select required class="form-control" name="paisCoProducao" id="paisCoProducao">
                                     <option value="">Selecione uma opção...</option>
                                     <?php
@@ -63,7 +62,7 @@ $nomeFilme = $_POST['nomeFilme'] ?? NULL;
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="direcao">Direção *:</label>
+                            <label for="direcao">Direção: *</label>
                             <textarea class="form-control" name="direcao" id="direcao" rows="5" required></textarea>
                         </div>
                         <div class="row">

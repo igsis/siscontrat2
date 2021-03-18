@@ -25,7 +25,7 @@ class PDF extends FPDF
 }
 
 //CONSULTA  (copia inteira em todos os docs)
-if(isset($_POST['idPf'])){
+if (isset($_POST['idPf'])) {
     $idPf = $_POST['idPf'];
 }
 
@@ -38,7 +38,7 @@ $testaEnderecos = $con->query("SELECT * FROM pf_enderecos WHERE pessoa_fisica_id
 
 if ($testaEnderecos->num_rows > 0) {
     while ($enderecoArray = mysqli_fetch_array($testaEnderecos)) {
-        $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " .$enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
+        $endereco = $enderecoArray['logradouro'] . ", " . $enderecoArray['numero'] . " " . $enderecoArray['complemento'] . " / - " . $enderecoArray['bairro'] . " - " . $enderecoArray['cidade'] . " / " . $enderecoArray['uf'];
     }
 } else {
     $endereco = "Não cadastrado";
@@ -64,17 +64,16 @@ $numTelefone = mysqli_num_rows($telefones);
 $nome = $pessoa["nome"];
 $nomeArtistico = $pessoa["nome_artistico"];
 
-if($pessoa["data_nascimento"] == "0000-00-00"){
+if ($pessoa["data_nascimento"] == "0000-00-00") {
     $dataNascimento = "Não cadastrado";
-}else{
+} else {
     $dataNascimento = exibirDataBr($pessoa["data_nascimento"]);
 }
 
-if ($pessoa['passaporte'] == ""){
+if ($pessoa['passaporte'] == "") {
     $documento = $pessoa['rg'];
     $cpf = $pessoa['cpf'];
-}
-else{
+} else {
     $documento = $pessoa['passaporte'];
 }
 
@@ -132,13 +131,17 @@ $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(180, $l, utf8_decode($endereco));
 
 $count = 1;
-foreach ($telefones as $row) {
-    $pdf->SetX($x);
-    $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(20, $l, utf8_decode('Telefone ' . $count . ':'), 0, 0, 'L');
-    $pdf->SetFont('Arial', '', 10);
-    $pdf->Cell(87, $l, utf8_decode($row['telefone']), 0, 1, 'L');
-    $count++;
+if ($numTelefone > 0) {
+    foreach ($telefones as $row) {
+        if ($row['telefone'] != "") {
+            $pdf->SetX($x);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(20, $l, utf8_decode('Telefone ' . $count . ':'), 0, 0, 'L');
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(87, $l, utf8_decode($row['telefone']), 0, 1, 'L');
+            $count++;
+        }
+    }
 }
 
 $pdf->SetX($x);

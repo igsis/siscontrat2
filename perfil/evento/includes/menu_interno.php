@@ -105,7 +105,7 @@ if (!$eventoNovo) {
                                     Pagamento</a></li>
                             <li><a href="<?= $pasta ?>pedido_proponente"><i class="fa fa-circle-o"></i> Cadastro de
                                     Proponente</a></li>
-                            <?php if ($tipoPedido == 2): ?>
+                            <?php if ($tipoPedido == 2 && $evento['tipo_evento_id'] != 2): ?>
                                 <li><a href="<?= $pasta ?>pedido_lideres"><i class="fa fa-circle-o"></i> Líderes</a>
                                 </li>
                             <?php endif ?>

@@ -2,7 +2,6 @@
 $con = bancoMysqli();
 
 
-
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $idAtracao = $_POST['idAtracao'];
     $modalidade = $_POST['modalidade'];
@@ -149,7 +148,10 @@ include "includes/menu_interno.php";
                         <div class="box-body">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="modalidade">Modalidade: *</label> <button class='btn btn-default btn-sm' type='button' data-toggle='modal' data-target='#infoModalidade' style="border-radius: 15px;"><i class="fa fa-question-circle"></i></button>
+                                    <label for="modalidade">Modalidade: *</label>
+                                    <button class='btn btn-default btn-sm' type='button' data-toggle='modal'
+                                            data-target='#infoModalidade' style="border-radius: 15px;"><i
+                                                class="fa fa-question-circle"></i></button>
                                     <select id="modalidade" name="modalidade" required class="form-control">
                                         <option value="">Selecione uma opção...</option>
                                         <?php geraOpcao('modalidades', $oficina['modalidade_id']); ?>
@@ -157,26 +159,27 @@ include "includes/menu_interno.php";
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                <div class="col-md-3">
                                     <label for="valor_hora">Valor hora/aula: *</label><br>
-                                    <input class="form-control" style="max-width: 175px;" type="tel" name="valor_hora" required
-                                           onkeypress="return(moeda(this, '.', ',', event))"
+                                    <input class="form-control" style="max-width: 175px;" type="text" name="valor_hora"
+                                           required
+                                           id="valor_hora"
                                            value="<?= dinheiroParaBr($oficina['valor_hora']) ?>">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="col-md-3">
                                     <label for="carga_horaria">Carga Horária (em horas): *</label><br>
                                     <input class="form-control" style="max-width: 175px;" type="number" required
                                            name="carga_horaria" min="1" value="<?= $oficina['carga_horaria'] ?>">
                                 </div>
 
-                                <div class="form-group col-md-3">
+                                <div class="col-md-3">
                                     <label for="data_inicio">Início de inscrição: *</label> <br/>
                                     <input class="form-control semana" style="max-width: 175px;" type="date"
                                            name="data_inicio" required
                                            value="<?= $oficina['data_inicio'] ?>"
                                            onkeyup="barraData(this);" onblur="validate()" id="datepicker10">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="col-md-3">
                                     <label for="data_fim">Encerramento de inscrição: *</label> <br>
                                     <input class="form-control semana" style="max-width: 175px;" type="date"
                                            name="data_fim" required
@@ -196,7 +199,7 @@ include "includes/menu_interno.php";
                                     <label>Selecione o primeiro dia de execução: *</label>
                                     <select required name="idDia1" id="dia1" class="form-control">
                                         <?php
-                                            geraOpcaoParcelas('execucao_dias', $oficina['execucao_dia1_id'])
+                                        geraOpcaoParcelas('execucao_dias', $oficina['execucao_dia1_id'])
                                         ?>
                                     </select>
                                 </div>
@@ -205,7 +208,7 @@ include "includes/menu_interno.php";
                                     <label>Selecione o segundo dia de execução: *</label>
                                     <select required name="idDia2" id="dia2" class="form-control">
                                         <?php
-                                            geraOpcaoParcelas('execucao_dias', $oficina['execucao_dia2_id'])
+                                        geraOpcaoParcelas('execucao_dias', $oficina['execucao_dia2_id'])
                                         ?>
                                     </select>
                                 </div>
@@ -232,7 +235,8 @@ include "includes/menu_interno.php";
             </div>
         </div>
 
-        <div class="modal fade" id="infoModalidade" role="dialog" aria-labelledby="infoModalidadeLabel" aria-hidden="true">
+        <div class="modal fade" id="infoModalidade" role="dialog" aria-labelledby="infoModalidadeLabel"
+             aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -256,6 +260,7 @@ include "includes/menu_interno.php";
 </div>
 
 <script>
+    let valor = $('#valor_hora');
     let dia1 = $('#dia1');
     let dia2 = $('#dia2');
     let botao = $('#cadastra');
@@ -281,4 +286,9 @@ include "includes/menu_interno.php";
     dia1.on('change', igual);
 
     $(document).ready(igual)
+
+    $(document).ready(function () {
+        valor.mask('00.000,00', {reverse: true});
+        valor.text(this.toLocaleString('pt-br', {minimumFractionDigits: 2}));
+    });
 </script>

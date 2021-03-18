@@ -8,7 +8,7 @@ if (isset($_POST['cadastra'])) {
     $sql = "INSERT INTO coordenadorias (coordenadoria) VALUES ('$coordenadoria')";
 
     if (mysqli_query($con, $sql)) {
-        $mensagem = mensagem("success", "Coordenadoria cadastrado com sucesso");
+        $mensagem = mensagem("success", "Coordenadoria cadastrada com sucesso");
         $idCoordenadoria = recuperaUltimo('coordenadorias');
         gravarLog($sql);
     } else {

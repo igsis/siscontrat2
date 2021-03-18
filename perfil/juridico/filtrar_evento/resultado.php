@@ -76,6 +76,7 @@ e.projeto_especial_id
                         <th>Tipo</th>
                         <th>Objeto</th>
                         <th>Status</th>
+                        <th>Chamados</th>
                         <th>Pendências</th>
                     </tr>
                     </thead>
@@ -118,6 +119,7 @@ e.projeto_especial_id
                                 <td><?= $tipo ?></td>
                                 <td><?= $objeto ?></td>
                                 <td><?= $evento['status'] ?></td>
+                                <?= retornaChamadosTD($evento['id']) ?>
                                 <td>
                                     <?php
                                     // verifica pendencia do evento cadastrado //
@@ -148,6 +150,7 @@ e.projeto_especial_id
                         <th>Tipo</th>
                         <th>Objeto</th>
                         <th>Status</th>
+                        <th>Chamados</th>
                         <th>Pendências</th>
                     </tr>
                     </tfoot>
