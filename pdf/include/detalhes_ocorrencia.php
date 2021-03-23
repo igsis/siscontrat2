@@ -15,24 +15,20 @@ foreach ($ocorrencias as $ocorrencia){
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial','', $f);
-    $pdf->Cell(10, $l, utf8_decode("Data:"), 0, 0, 'L');
-    $pdf->SetFont('Arial','', $f);
-    $pdf->Cell(21, $l, date('d/m/Y',strtotime($ocorrencia->data_inicio)), 0, 0, 'L');
+    $pdf->Cell(28, $l, "Data: ".date('d/m/Y',strtotime($ocorrencia->data_inicio)), 0, 0, 'L');
     if ($ocorrencia->data_fim != "0000-00-00"){
-        $pdf->Cell(27, $l, utf8_decode("até ".date('d/m/Y', strtotime($ocorrencia->data_fim))), 0, 0, 'L');
+        $pdf->Cell(22, $l, utf8_decode("à ".date('d/m/Y', strtotime($ocorrencia->data_fim))), 0, 0, 'L');
     }
-    $pdf->Cell(45, $l, utf8_decode("das ".$ocorrencia->horario_inicio." às ".$ocorrencia->horario_fim), 0, 0, 'L');
+    $pdf->Cell(31, $l, utf8_decode("das ".substr($ocorrencia->horario_inicio,0,-3)." às ".substr($ocorrencia->horario_fim,0,-3)), 0, 0, 'L');
     $pdf->Cell(21,$l,utf8_decode("(".$eventoObj->diadasemanaocorrencia($ocorrencia->id).")"),0,1,'L');
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial','', $f);
-    $pdf->Cell(12, $l, utf8_decode("Local:"), 0, 0, 'L');
-    $pdf->SetFont('Arial','', $f);
-    $pdf->MultiCell(158,$l,utf8_decode("($ocorrencia->sigla) {$ocorrencia->local}"));
+    $pdf->MultiCell(180,$l,utf8_decode("Local: ($ocorrencia->sigla) {$ocorrencia->local}"));
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial','', $f);
-    $pdf->Cell(170, $l, utf8_decode("Subprefeitura: ".$ocorrencia->subprefeitura), 0, 1, 'L');
+    $pdf->Cell(180, $l, utf8_decode("Subprefeitura: ".$ocorrencia->subprefeitura), 0, 1, 'L');
 
     if($ocorrencia->libras == 1 || $ocorrencia->audiodescricao == 1){
         if($ocorrencia->libras == 1){
@@ -56,22 +52,19 @@ foreach ($ocorrencias as $ocorrencia){
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial','', $f);
-    $pdf->Cell(170, $l, utf8_decode("Observação: ".$ocorrencia->observacao), 0, 1, 'L');
+    $pdf->Cell(180, $l, utf8_decode("Observação: ".$ocorrencia->observacao), 0, 1, 'L');
 
     $pdf->Ln();
 }
 
-
 if ($evento->tipo_evento_id == 1){
     $atracoes = $eventoObj->recuperaAtracao($idEvento);
     foreach ($atracoes as $atracao) {
-
-
         $excecao = $eventoObj->recuperaOcorrenciaExcecao($atracao->id);
         if ($excecao){
             $pdf->SetX($x);
             $pdf->SetFont('Arial', 'B', $f);
-            $pdf->Cell(26, 6, utf8_decode("EXCEÇÕES em ".$atracao->nome_atracao), 0, 1, 'L');
+            $pdf->Cell(26, 6, utf8_decode("EXCEÇÕES EM ".$atracao->nome_atracao), 0, 1, 'L');
 
             $pdf->SetX($x);
             $pdf->SetFont('Arial','', $f);

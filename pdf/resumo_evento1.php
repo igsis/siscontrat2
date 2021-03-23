@@ -27,7 +27,7 @@ $pdf->AddPage();
 
 $x=20;
 $l=5; //DEFINE A ALTURA DA LINHA
-$f=11; //DEFINE TAMANHO DA FONTE
+$f=10; //DEFINE TAMANHO DA FONTE
 
 $pdf->SetXY( $x , 25 );// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
 
@@ -56,7 +56,7 @@ include_once "include/detalhes_ocorrencia.php";
 // arquivo comunicação produção
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 12);
-$pdf->Cell(180, $l, utf8_decode("Arquivos para Comunicação/Produção"), 'B', 1, 'C');
+$pdf->Cell(180, $l, utf8_decode("ARQUIVOS PARA COMUNICAÇÃO/PRODUÇÃO"), 'B', 1, 'C');
 $arquivosComProd = $eventoObj->recuperaArquivoComProd($idEvento);
 foreach ($arquivosComProd as $arquivo){
     $pdf->SetX($x);

@@ -121,13 +121,61 @@ class Controllers extends MainModel
     public function recuperaPedido($idEvento)
     {
         return DbModel::consultaSimples("
-            SELECT p.id, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, p.numero_processo, l.extrato_liquidacao, l.retencoes_inss, l.retencoes_iss, l.retencoes_irrf, pf.*, pj.* 
+            SELECT p.* , v.verba, ps.status
             FROM pedidos AS p 
-                INNER JOIN eventos AS e ON p.origem_id = e.id 
-                LEFT JOIN liquidacao l on p.id = l.pedido_id 
-                LEFT JOIN pessoa_fisicas pf on p.pessoa_fisica_id = pf.id
-                LEFT JOIN pessoa_juridicas pj on p.pessoa_juridica_id = pj.id 
-            WHERE e.publicado = 1 AND p.publicado = 1 AND p.origem_id = '$idEvento'")->fetchObject();
+                LEFT JOIN verbas v on p.verba_id = v.id
+                LEFT JOIN pedido_status ps on ps.id = p.status_pedido_id
+            WHERE p.publicado = 1 AND p.origem_id = '$idEvento'")->fetchObject();
+    }
+
+    public function recuperaPessoaFisica($id) {
+        //$id = MainModel::decryption($id);
+        $pf = DbModel::consultaSimples(
+            "SELECT pf.*, pe.*, pb.*, d.*, n.*, n2.nacionalidade, b.banco, b.codigo, pd.*, e.descricao, gi.grau_instrucao
+            FROM pessoa_fisicas AS pf
+            LEFT JOIN pf_enderecos pe on pf.id = pe.pessoa_fisica_id
+            LEFT JOIN pf_bancos pb on pf.id = pb.pessoa_fisica_id
+            LEFT JOIN drts d on pf.id = d.pessoa_fisica_id
+            LEFT JOIN nits n on pf.id = n.pessoa_fisica_id
+            LEFT JOIN nacionalidades n2 on pf.nacionalidade_id = n2.id
+            LEFT JOIN bancos b on pb.banco_id = b.id
+            LEFT JOIN pf_detalhes pd on pf.id = pd.pessoa_fisica_id
+            LEFT JOIN etnias e on pd.etnia_id = e.id
+            LEFT JOIN grau_instrucoes gi on pd.grau_instrucao_id = gi.id
+            WHERE pf.id = '$id'");
+
+        $pf = $pf->fetch(PDO::FETCH_ASSOC);
+        $telefones = DbModel::consultaSimples("SELECT * FROM pf_telefones WHERE pessoa_fisica_id = '$id'")->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($telefones as $key => $telefone) {
+            $pf['telefones']['tel_'.$key] = $telefone['telefone'];
+        }
+        return $pf;
+    }
+
+    public function recuperaPessoaJuridica($id)
+    {
+        //$id = MainModel::decryption($id);
+        $pj = DbModel::consultaSimples(
+            "SELECT * FROM pessoa_juridicas AS pj
+            LEFT JOIN pj_enderecos pe on pj.id = pe.pessoa_juridica_id
+            LEFT JOIN pj_bancos pb on pj.id = pb.pessoa_juridica_id
+            LEFT JOIN bancos bc on pb.banco_id = bc.id
+            WHERE pj.id = '$id'
+        ");
+        $pj = $pj->fetch(PDO::FETCH_ASSOC);
+        $telefones = DbModel::consultaSimples("SELECT * FROM pj_telefones WHERE pessoa_juridica_id = '$id'")->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($telefones as $key => $telefone) {
+            $pj['telefones']['tel_' . $key] = $telefone['telefone'];
+        }
+
+        return $pj;
+    }
+
+    public function recuperaRepresentante($id) {
+        //$id = MainModel::decryption($id);
+        return DbModel::getInfo('representante_legais',$id);
     }
 
 }
