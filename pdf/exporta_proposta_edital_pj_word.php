@@ -115,17 +115,18 @@ echo
     "<p>&nbsp;</p>" .
     "<p>&nbsp;</p>" .
     "<p>(C)</p>" .
-    "<p align='center'><strong>OBSERVAÇÃO</strong></p>" .
-    "<p>As idéias e opiniões expressas durante as apresentações artísticas e culturais não representam a posição da Secretaria Municipal de Cultura, sendo os artistas e seus representantes os únicos e exclusivos responsáveis pelo conteúdo de suas manifestações, ficando a Municipalidade de São Paulo com direito de regresso sobre os mesmos, inclusive em caso de indenização por dano material, moral ou à imagem de terceiros.</p>" .
-    "<p>Os registros das atividades e ações poderão ser utilizados para fins institucionais de divulgação, promoção e difusão do Programa e da Secretaria Municipal de Cultura.</p>" .
-    "<p>&nbsp;</p>" .
-    "<p align='center'><strong>DECLARAÇÕES</strong></p>" .
-    "<p>Declaramos que não temos débitos perante as Fazendas Públicas, Federal, Estadual e, em especial perante a Prefeitura do Município de São Paulo.</p>" .
-    "<p>Declaramos que estamos cientes e de acordo com todas as regras do [INSIRA O TÍTULO DO EDITAL AQUI. Ex: Edital de Concurso Programa de Exposições 2016].</p>" .
-    "<p>Declaramos que estamos cientes da aplicação das penalidades previstas [INSIRA A CLÁUSULA DA PENALIDADE AQUI. Ex: na cláusula 10 do Edital de Concurso Programa de Exposições 2016.]</p>" .
-    "<p>As penalidades serão aplicadas sem prejuízo das demais sanções previstas na legislação que rege a matéria.</p>" .
-    "<p>Declaramos que estamos cientes que do valor do serviço serão descontados os impostos cabíveis." .
-    "<p>Todas as informações precedentes são formadas sob as penas da Lei.</p>" .
+    "<p align='center'><strong>OBSERVAÇÃO</strong></p>".
+    "<p>As idéias e opiniões expressas durante as apresentações artísticas e culturais não representam a posição da Secretaria Municipal de Cultura, sendo os artistas e seus representantes os únicos e exclusivos responsáveis pelo conteúdo de suas manifestações, ficando a Municipalidade de São Paulo com direito de regresso sobre os mesmos, inclusive em caso de indenização por dano material, moral ou à imagem de terceiros.</p>".
+    "<p>Os registros das atividades e ações poderão ser utilizados para fins institucionais de divulgação, promoção e difusão do Programa e da Secretaria Municipal de Cultura.</p>".
+    "<p>&nbsp;</p>".
+    "<p align='center'><strong>DECLARAÇÕES</strong></p>".
+    "<p>Declaramos que não temos débitos perante as Fazendas Públicas, Federal, Estadual e, em especial perante a Prefeitura do Município de São Paulo.</p>".
+    "<p>Declaramos que estamos cientes e de acordo com todas as regras do [INSIRA O TÍTULO DO EDITAL AQUI. Ex: Edital de Concurso Programa de Exposições 2016].</p>".
+    "<p>Declaramos que estamos cientes da aplicação das penalidades previstas [INSIRA A CLÁUSULA DA PENALIDADE AQUI. Ex: na cláusula 10 do Edital de Concurso Programa de Exposições 2016.]</p>".
+    "<p>As penalidades serão aplicadas sem prejuízo das demais sanções previstas na legislação que rege a matéria.</p>".
+    "<p>Declaramos que estamos cientes que do valor do serviço serão descontados os impostos cabíveis.".
+    "<p>Todas as informações precedentes são formadas sob as penas da Lei.</p>".
+    "<p>&nbsp;</p>".
     "<p>&nbsp;</p>" .
     "<p>Data: ____ / ____ / " . $ano . "</p>" .
     "<p>&nbsp;</p>" .
