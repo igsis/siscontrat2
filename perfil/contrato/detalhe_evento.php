@@ -188,6 +188,7 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                         $a = 1;
                         while ($atracao = mysqli_fetch_array($sqlAtracao)) {
                             $acoes = $con->query("SELECT a.acao FROM acoes AS a INNER JOIN acao_atracao AS at ON at.acao_id = a.id WHERE at.atracao_id = " . $atracao['id'])->fetch_array();
+
                             ?>
                             <tr>
                                 <th width="30%">Atração #<?= $a ?>: <?= $atracao['nome_atracao'] ?></th>
@@ -336,6 +337,15 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                             $periodo = recuperaDados('periodos', 'id', $ocorrencia['periodo_id']);
                             $nomeAtracao = recuperaDados('atracoes', 'id', $ocorrencia['atracao_id'])['nome_atracao'];
                             $produtor = recuperaDados('produtores', 'id', $ocorrencia['produtor_id'])['nome'];
+
+                            $datas = "";
+                            $testaExcecao = $con->query("SELECT * FROM ocorrencia_excecoes WHERE atracao_id = " . $ocorrencia['id']);
+                            if ($testaExcecao->num_rows > 0) {
+                                while ($excessoesArray = mysqli_fetch_array($testaExcecao)) {
+                                    $datas = $datas . exibirDataBr($excessoesArray['data_excecao']) . ", ";
+                                }
+                                $datas = substr($datas, 0, -2);
+                            }
                             ?>
                             <tr>
                                 <th>Atração:</th>
@@ -364,7 +374,15 @@ $statusPedido = recuperaDados('pedido_status', 'id', $evento['status_pedido_id']
                                     <th width="30%">Hora de Encerramento:</th>
                                     <td><?= date("H:i", strtotime($ocorrencia['horario_fim'])) ?></td>
                                 </tr>
-                            <?php } ?>
+                            <?php }
+                            if ($datas != '') { ?>
+                            <tr>
+                                <th width="30 % ">Data Excessão:</th>
+                                <td><?= $datas ?></td>
+                            </tr>
+                            <?php
+                                }
+                            ?>
                             <tr>
                                 <th width="30 % ">Período:</th>
                                 <td><?= $periodo['periodo'] ?></td>

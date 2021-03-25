@@ -263,18 +263,12 @@ include "includes/validacoes.php";
                 <form action="?perfil=evento&p=resumo_evento_enviado" method="post">
                     <input type="hidden" name="idEvento" id="idEvento" value="<?= $idEvento ?>">
                     <input type="hidden" name="fora" value="<?= $fora ?? 0 ?>">
-                    <?php 
-                        
-
-
+                    <?php
                         if(count($erros) != 0 || count($errosArqs) != 0/* || $ocorrencias_rept == true*/){
                             $disabled =  "disabled";
                         }else{
                             $disabled = "";
                         }
-                    ?>
-                    
-                    <?php
                     if ($evento['tipo_evento_id'] == 1) {
                         ?>
                         <button class="btn btn-success" name="enviar" type="submit" <?=$disabled?>>                                
