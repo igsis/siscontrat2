@@ -178,4 +178,24 @@ class Controllers extends MainModel
         return DbModel::getInfo('representante_legais',$id);
     }
 
+    public function recuperaArquivoPedido($idPedido)
+    {
+        return DbModel::consultaSimples("SELECT * FROM lista_documentos as list
+            INNER JOIN arquivos as arq ON arq.lista_documento_id = list.id
+            WHERE arq.origem_id = '$idPedido' AND list.tipo_documento_id = 3
+            AND arq.publicado = '1' ORDER BY arq.id")->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function recuperaValorLocal($idPedido)
+    {
+        return DbModel::consultaSimples("SELECT l.local, ve.valor FROM valor_equipamentos AS ve
+            INNER JOIN locais l on ve.local_id = l.id
+            WHERE pedido_id = '$idPedido'")->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function recuperaParecer($idPedido)
+    {
+        return DbModel::consultaSimples("SELECT * FROM parecer_artisticos WHERE pedido_id = '$idPedido'")->fetchObject();
+    }
+
 }

@@ -1,11 +1,13 @@
 <?php
 $pedido = $eventoObj->recuperaPedido($idEvento);
+$anexos = $eventoObj->recuperaArquivoPedido($pedido->id);
+$valoresPorEquipamento = $eventoObj->recuperaValorLocal($pedido->id);
+$parecer = $eventoObj->recuperaParecer($pedido->id);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 12);
 $pdf->Cell(180, $l, utf8_decode("PEDIDO DE CONTRATAÇÃO"), 'B', 1, 'C');
 $pdf->Ln();
-
 
 if ($pedido->pessoa_tipo_id == 1){
     $pf = $eventoObj->recuperaPessoaFisica($pedido->pessoa_fisica_id);
@@ -111,3 +113,115 @@ else {
             $pdf->SetFont('Arial','', 11);
             $pdf->Cell(143,$l,utf8_decode($rep2['nome']),0,1,'L');*/
 }
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', $f);
+$pdf->Cell(11, $l, 'Valor:', '0', '0', 'L');
+$pdf->SetFont('Arial', '', $f);
+$pdf->MultiCell(168, $l, utf8_decode("R$ " . $eventoObj->dinheiroBr($pedido->valor_total) . " (" .  $eventoObj->valorPorExtenso($pedido->valor_total) . " )"), 0, 'L', 0);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', $f);
+$pdf->Cell(12, $l, utf8_decode('Verba:'), 0, 0, 'L');
+$pdf->SetFont('Arial','', 11);
+$pdf->Cell(150,$l,utf8_decode($pedido->verba),0,1,'L');
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', $f);
+$pdf->Cell(38, $l, 'Forma de Pagamento:', 0, 1, 'L');
+$pdf->SetX($x);
+$pdf->SetFont('Arial', '', $f);
+$pdf->MultiCell(180, $l, utf8_decode($pedido->forma_pagamento));
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', $f);
+$pdf->Cell(22, $l, utf8_decode('Justificativa:'), '0', '1', 'L');
+$pdf->SetX($x);
+$pdf->SetFont('Arial', '', $f);
+$pdf->MultiCell(180, $l, utf8_decode($pedido->justificativa));
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', $f);
+$pdf->Cell(22, $l, utf8_decode('Observação:'), '0', '1', 'L');
+$pdf->SetX($x);
+$pdf->SetFont('Arial', '', $f);
+$pdf->MultiCell(180, $l, utf8_decode($pedido->observacao));
+
+$pdf->Ln();
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', $f);
+$pdf->Cell(11, $l,  utf8_decode('Arquivos do Pedido:'), '0', '1', 'L');
+
+// Column headings
+$pdf->SetX($x);
+$pdf->SetFont('Arial','',$f);
+$header = array('Tipo de arquivo', 'Nome do documento', 'Data de envio');
+$pdf->Cabecalho($header);
+
+$data =[];
+foreach ($anexos as $anexo){
+    $data = array(utf8_decode($anexo->documento), $anexo->arquivo, $anexo->data);
+    $pdf->SetX($x);
+    $pdf->Tabela($data);
+}
+
+/*
+ * anexos do pedido
+ */
+
+$pdf->Ln();
+
+if ($valoresPorEquipamento){
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $pdf->Cell(11, $l,  utf8_decode('Valores por Equipamento:'), '0', '1', 'L');
+   foreach ($valoresPorEquipamento as $valor){
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', '', $f);
+        $pdf->MultiCell(168, $l, utf8_decode($valor->local . ": R$ " .  $eventoObj->dinheiroBr($valor->valor)), 0, 'L', 0);
+   }
+} else{
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $pdf->Cell(180, $l, utf8_decode('Valores por equipamento não cadastrados'), '0', '1', 'L');
+}
+
+$pdf->Ln();
+
+if ($parecer){
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $pdf->Cell(11, $l,  utf8_decode('Parecer Artístico:'), '0', '1', 'L');
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $pdf->Cell(22, $l, utf8_decode('1º Tópico:'), '0', '1', 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', $f);
+    $pdf->MultiCell(180, $l, utf8_decode($parecer->topico1));
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $pdf->Cell(22, $l, utf8_decode('2º Tópico:'), '0', '1', 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', $f);
+    $pdf->MultiCell(180, $l, utf8_decode($parecer->topico2 ?? null));
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $pdf->Cell(22, $l, utf8_decode('3º Tópico:'), '0', '1', 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', $f);
+    $pdf->MultiCell(180, $l, utf8_decode($parecer->topico3 ?? null));
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $pdf->Cell(22, $l, utf8_decode('4º Tópico:'), '0', '1', 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', '', $f);
+    $pdf->MultiCell(180, $l, utf8_decode($parecer->topico4));
+}
+
+$pdf->Ln();
+

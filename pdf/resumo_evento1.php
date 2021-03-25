@@ -17,6 +17,24 @@ class PDF extends FPDF
         $this->Image('../visual/images/cultura_principal-horizontal.png', 20, 10);
         $this->Ln(20);
     }
+
+    // Simple table
+    function Cabecalho($header)
+    {
+        $w = array(90,50,40);
+        foreach($header as $key => $col)
+            $this->Cell($w[$key],7,$col,1);
+        $this->Ln();
+    }
+
+    // Simple table
+    function Tabela($data)
+    {
+        $w = array(90,50,40);
+        foreach($data as $key => $col)
+            $this->Cell($w[$key],7,$col,1);
+        $this->Ln();
+    }
 }
 
 // GERANDO O PDF:
@@ -71,4 +89,4 @@ if ($evento->contratacao = 1){
     include_once "include/detalhes_pedido.php";
 }
 
-$pdf->Output();
+$pdf->Output("detalhes_evento","I");
