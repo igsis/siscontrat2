@@ -95,4 +95,22 @@ class MainModel extends DbModel
             return $campo;
         }
     }
+
+    public function validaData($data, $hora = false):string
+    {
+        if ($hora == true){
+            if ($data == "0000-00-00 00:00:00" || $data == null){
+                $retornaData = "não cadastrado";
+            } else{
+                $retornaData = date('d/m/Y H:i:s', strtotime($data));
+            }
+        } else{
+            if ($data == "0000-00-00" || $data == null){
+                $retornaData = "não cadastrado";
+            } else{
+                $retornaData = date('d/m/Y', strtotime($data));
+            }
+        }
+        return $retornaData;
+    }
 }

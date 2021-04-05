@@ -198,4 +198,9 @@ class Controllers extends MainModel
         return DbModel::consultaSimples("SELECT * FROM parecer_artisticos WHERE pedido_id = '$idPedido'")->fetchObject();
     }
 
+    public function recuperaPedidoEtapas($idPedido)
+    {
+        return DbModel::consultaSimples("SELECT * FROM pedido_etapas WHERE pedido_id = '$idPedido'")->fetchAll(PDO::FETCH_OBJ);
+    }
+
 }

@@ -89,4 +89,10 @@ if ($evento->contratacao = 1){
     include_once "include/detalhes_pedido.php";
 }
 
+/*
+ * Chamados
+ * Histórico de reabertura
+ * Histórico de envio
+ */
+
 $pdf->Output("detalhes_evento","I");

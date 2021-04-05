@@ -3,6 +3,7 @@ $pedido = $eventoObj->recuperaPedido($idEvento);
 $anexos = $eventoObj->recuperaArquivoPedido($pedido->id);
 $valoresPorEquipamento = $eventoObj->recuperaValorLocal($pedido->id);
 $parecer = $eventoObj->recuperaParecer($pedido->id);
+$dataEtapas = $eventoObj->recuperaPedidoEtapas($pedido->id);
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 12);
@@ -80,29 +81,82 @@ if ($pedido->pessoa_tipo_id == 1){
     $pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
     $pdf->SetFont('Arial', '', $f);
     $pdf->MultiCell(168, $l, utf8_decode($pf['email']), 0, 'L', 0);
+
+    if ($pf['banco']){
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', $f);
+        $pdf->Cell(13, $l, utf8_decode("Banco:"), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', $f);
+        $pdf->Cell(67, $l, utf8_decode($pf['banco']), 0, 0, 'L');
+        $pdf->SetFont('Arial', 'B', $f);
+        $pdf->Cell(16, $l, utf8_decode("Agência:"), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', $f);
+        $pdf->Cell(44, $l, utf8_decode($pf['agencia']), 0, 0, 'L');
+        $pdf->SetFont('Arial', 'B', $f);
+        $pdf->Cell(12, $l, utf8_decode("Conta:"), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', $f);
+        $pdf->Cell(20, $l, utf8_decode($pf['conta']), 0, 1, 'L');
+    }
 }
 else {
     $pj = $eventoObj->recuperaPessoaJuridica($pedido->pessoa_juridica_id);
-    $pdf->SetX($x);
-    $pdf->SetFont('Arial','B', 11);
-    $pdf->Cell(27,$l,utf8_decode('Razão Social:'),0,0,'L');
-    $pdf->SetFont('Arial','', 11);
-    $pdf->Cell(150,$l,utf8_decode($pj->razao_social),0,1,'L');
 
     $pdf->SetX($x);
-    $pdf->SetFont('Arial','B', 11);
-    $pdf->Cell(14,$l,utf8_decode('CNPJ:'),0,0,'L');
-    $pdf->SetFont('Arial','', 11);
-    $pdf->Cell(150,$l,utf8_decode($pj->cnpj),0,1,'L');
+    $pdf->SetFont('Arial','B', $f);
+    $pdf->Cell(24,$l,utf8_decode('Razão Social:'),0,0,'L');
+    $pdf->SetFont('Arial','', $f);
+    $pdf->Cell(150,$l,utf8_decode($pj['razao_social']),0,1,'L');
 
     $pdf->SetX($x);
-    $pdf->SetFont('Arial','B', 11);
-    $pdf->Cell(12,$l,utf8_decode('CCM:'),0,0,'L');
-    $pdf->SetFont('Arial','', 11);
-    $pdf->Cell(150,$l,utf8_decode($pj->ccm),0,1,'L');
+    $pdf->SetFont('Arial','B', $f);
+    $pdf->Cell(12,$l,utf8_decode('CNPJ:'),0,0,'L');
+    $pdf->SetFont('Arial','', $f);
+    $pdf->Cell(150,$l,utf8_decode($pj['cnpj']),0,1,'L');
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial','B', $f);
+    $pdf->Cell(10,$l,utf8_decode('CCM:'),0,0,'L');
+    $pdf->SetFont('Arial','', $f);
+    $pdf->Cell(150,$l,utf8_decode($pj['ccm']),0,1,'L');
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $pdf->Cell(18, $l, utf8_decode("Endereço:"), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', $f);
+    $pdf->MultiCell(160, $l, utf8_decode($pj['logradouro'].", ".$pj['numero']." ".$pj['complemento']." - ".$pj['bairro'].", ".$pj['cidade']." - ".$pj['uf'].", ".$pj['cep']), 0, 'L', 0);
+
+    if ($pj['telefones']){
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', $f);
+        $pdf->Cell(21, $l, 'Telefone(s):', '0', '0', 'L');
+        $pdf->SetFont('Arial', '', $f);
+        $pdf->MultiCell(168, $l, utf8_decode($pj['telefones']['tel_0'] ?? null . " " .$pj['telefones']['tel_1'] ?? null. " ".$pj['telefones']['tel_2'] ?? null), 0, 'L', 0);
+    }
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $pdf->Cell(11, $l, 'Email:', 0, 0, 'L');
+    $pdf->SetFont('Arial', '', $f);
+    $pdf->MultiCell(168, $l, utf8_decode($pj['email']), 0, 'L', 0);
+
+    if ($pj['banco']){
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', 'B', $f);
+        $pdf->Cell(13, $l, utf8_decode("Banco:"), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', $f);
+        $pdf->Cell(67, $l, utf8_decode($pj['banco']), 0, 0, 'L');
+        $pdf->SetFont('Arial', 'B', $f);
+        $pdf->Cell(16, $l, utf8_decode("Agência:"), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', $f);
+        $pdf->Cell(44, $l, utf8_decode($pj['agencia']), 0, 0, 'L');
+        $pdf->SetFont('Arial', 'B', $f);
+        $pdf->Cell(12, $l, utf8_decode("Conta:"), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', $f);
+        $pdf->Cell(20, $l, utf8_decode($pj['conta']), 0, 1, 'L');
+    }
 /*
             $pdf->SetX($x);
-            $pdf->SetFont('Arial','B', 11);
+            $pdf->SetFont('Arial','B', $f);
             $pdf->Cell(37,$l,utf8_decode('Responsável (eis):'),0,0,'L');
             $pdf->SetFont('Arial','', 11);
             $pdf->Cell(143,$l,utf8_decode($rep1['nome']),0,1,'L');
@@ -225,3 +279,31 @@ if ($parecer){
 
 $pdf->Ln();
 
+// Data das etapas
+if ($dataEtapas){
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $pdf->Cell(180, $l,  utf8_decode('Data de recebimento pelos setores:'), '0', '1', 'L');
+
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial','B',$f);
+    $pdf->Cell(30, $l,  utf8_decode('Contrato'), '1', '0', 'L');
+    $pdf->Cell(30, $l,  utf8_decode('Proposta'), '1', '0', 'L');
+    $pdf->Cell(30, $l,  utf8_decode('Reserva'), '1', '0', 'L');
+    $pdf->Cell(30, $l,  utf8_decode('Jurídico'), '1', '0', 'L');
+    $pdf->Cell(30, $l,  utf8_decode('Contabilidade'), '1', '0', 'L');
+    $pdf->Cell(30, $l,  utf8_decode('Pagamento'), '1', '1', 'L');
+
+    $f = 8;
+    foreach ($dataEtapas as $data){
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', '', $f);
+        $pdf->Cell(30, $l, utf8_decode($eventoObj->validaData($data->data_contrato,true)), '1', '0', 'L');
+        $pdf->Cell(30, $l, utf8_decode($eventoObj->validaData($data->data_proposta,true)), '1', '0', 'L');
+        $pdf->Cell(30, $l, utf8_decode($eventoObj->validaData($data->data_reserva,true)), '1', '0', 'L');
+        $pdf->Cell(30, $l, utf8_decode($eventoObj->validaData($data->data_juridico,true)), '1', '0', 'L');
+        $pdf->Cell(30, $l, utf8_decode($eventoObj->validaData($data->data_contabilidade,true)), '1', '0', 'L');
+        $pdf->Cell(30, $l, utf8_decode($eventoObj->validaData($data->data_pagamento,true)), '1', '0', 'L');
+        $pdf->Ln();
+    }
+}
