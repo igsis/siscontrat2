@@ -62,8 +62,6 @@ if (isset($_POST['busca'])) {
 
     $resultado = $con->query($sql);
 }
-
-$http = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2/pdf/resumo_evento.php?id=";
 ?>
 <div class="content-wrapper">
     <section class="content">

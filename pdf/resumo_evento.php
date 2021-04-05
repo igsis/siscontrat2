@@ -21,7 +21,7 @@ class PDF extends FPDF
 $idEvento = $_GET['id'];
 
 $con = bancoMysqli();
-$evento = $con->query("SELECT  e.protocolo, e.tipo_evento_id, e.nome_evento, e.espaco_publico, e.fomento, f.fomento AS fomento_nome, rj.relacao_juridica, pe.projeto_especial, e.sinopse, uf.nome_completo AS fiscal_nome, us.nome_completo AS suplente_nome, uf.nome_completo AS user_nome, e.nome_responsavel, e.tel_responsavel
+$evento = $con->query("SELECT  e.protocolo, e.tipo_evento_id, e.nome_evento, e.espaco_publico, e.fomento, f.fomento AS fomento_nome, rj.relacao_juridica, pe.projeto_especial, e.sinopse, uf.nome_completo AS fiscal_nome, us.nome_completo AS suplente_nome, uf.nome_completo AS user_nome
     FROM eventos AS e
     LEFT JOIN fomentos f on e.fomento = f.fomento
     INNER JOIN relacao_juridicas rj on e.relacao_juridica_id = rj.id
@@ -34,43 +34,10 @@ $evento = $con->query("SELECT  e.protocolo, e.tipo_evento_id, e.nome_evento, e.e
 if ($evento['espaco_publico'] == 1) $espaco = "Sim"; else $espaco = "Não";
 if ($evento['fomento'] == 1) $fomento = $evento['fomento_nome']; else $fomento = "Não";
 
-$sql_publico = $con->query("SELECT p.publico FROM evento_publico AS ep INNER JOIN publicos p on ep.publico_id = p.id WHERE evento_id='$idEvento'");
-$publicos = "";
-while ($publico = mysqli_fetch_array($sql_publico)){
-    $publicos .= $publico['publico'] . '; ';
-}
 
-$sql_arqcomprod = $con->query("SELECT * FROM arquivos as arq INNER JOIN lista_documentos AS ld ON arq.lista_documento_id = ld.id  WHERE arq.origem_id = '$idEvento' AND arq.publicado = '1' ORDER BY arq.id");
 
 $pedido = $con->query("SELECT p.id, p.pessoa_tipo_id, p.pessoa_fisica_id, p.pessoa_juridica_id, p.numero_processo, l.extrato_liquidacao, l.retencoes_inss, l.retencoes_iss, l.retencoes_irrf FROM pedidos AS p INNER JOIN eventos AS e ON p.origem_id = e.id LEFT JOIN liquidacao l on p.id = l.pedido_id WHERE e.publicado = 1 AND p.publicado = 1 AND p.origem_id = '$idEvento'")->fetch_array();
 
-function diadasemanaocorrencia($idOcorrencia){
-    $array = [];
-    $con = bancoMysqli();
-    $ocorrencia = $con->query("SELECT segunda,terca,quarta,quinta,sexta,sabado,domingo FROM ocorrencias WHERE id = '$idOcorrencia'")->fetch_assoc();
-    if($ocorrencia['domingo'] == 1){
-        array_push($array, "domingo");
-    }
-    if($ocorrencia['segunda'] == 1){
-        array_push($array,"segunda");
-    }
-    if($ocorrencia['terca'] == 1){
-        array_push($array, "terça");
-    }
-    if($ocorrencia['quarta'] == 1){
-        array_push($array, "quarta");
-    }
-    if($ocorrencia['quinta'] == 1){
-        array_push($array,"quinta");
-    }
-    if($ocorrencia['sexta'] == 1){
-        array_push($array, "sexta");
-    }
-    if($ocorrencia['sabado'] == 1){
-        array_push($array, "sábado");
-    }
-    return implode(", ",$array);
-}
 
 // GERANDO O PDF:
 $pdf = new PDF('P','mm','A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
@@ -119,25 +86,9 @@ $pdf->Cell(115, $l, utf8_decode($evento['projeto_especial']), 0, 1, 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 11);
-$pdf->Cell(17, $l, utf8_decode("Público:"), 0, 0, 'L');
-$pdf->SetFont('Arial','', 11);
-$pdf->MultiCell(163  , $l, utf8_decode($publicos));
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial','B', 11);
 $pdf->Cell(17, $l, utf8_decode("Sinopse:"), 0, 0, 'L');
 $pdf->SetFont('Arial','', 11);
 $pdf->MultiCell(163,$l,utf8_decode($evento['sinopse']));
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial','B', 11);
-$pdf->Cell(57, $l, utf8_decode("Nome do responsável interno:"), 0, 0, 'L');
-$pdf->SetFont('Arial','', 11);
-$pdf->Cell(75, $l, utf8_decode($evento['nome_responsavel']), 0, 0, 'L');
-$pdf->SetFont('Arial','B', 11);
-$pdf->Cell(19, $l, utf8_decode("Telefone:"), 0, 0, 'L');
-$pdf->SetFont('Arial','', 11);
-$pdf->Cell(20, $l, utf8_decode($evento['tel_responsavel']), 0, 1, 'L');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','B', 11);
@@ -179,7 +130,7 @@ if ($evento['tipo_evento_id'] == 1) {
         $pdf->SetFont('Arial','B', 11);
         $pdf->Cell(17, $l, utf8_decode("Atração:"), 'B', 0, 'L');
         $pdf->SetFont('Arial','', 11);
-        $pdf->Cell(163, $l, utf8_decode($atracao['nome_atracao']), 'B', 1, 'L');
+        $pdf->Cell(155, $l, utf8_decode($atracao['nome_atracao']), 'B', 1, 'L');
 
         $pdf->SetX($x);
         $pdf->SetFont('Arial', 'B', 11);
@@ -262,7 +213,6 @@ if ($evento['tipo_evento_id'] == 1) {
             $retirada_ingresso = recuperaDados('retirada_ingressos', 'id', $ocorrencia['retirada_ingresso_id']) ?? NULL;
             $instituicao = recuperaDados('instituicoes', 'id', $ocorrencia['instituicao_id'])['sigla'] ?? NULL;
             $espaco = recuperaDados('espacos', 'id', $ocorrencia['espaco_id'])['espaco'] ?? NULL;
-            $subprefeitura = recuperaDados("subprefeituras","id",$ocorrencia['subprefeitura_id']);
 
             $pdf->SetX($x);
             $pdf->SetFont('Arial','', 11);
@@ -270,42 +220,24 @@ if ($evento['tipo_evento_id'] == 1) {
             $pdf->SetFont('Arial','', 11);
             $pdf->Cell(21, $l, utf8_decode(exibirDataBr($ocorrencia['data_inicio'])), 0, 0, 'L');
             if ($ocorrencia['data_fim'] != "0000-00-00"){
-                $pdf->Cell(28, $l, utf8_decode("até ".exibirDataBr($ocorrencia['data_fim'])), 0, 0, 'L');
+                $pdf->Cell(21, $l, utf8_decode("até ".exibirDataBr($ocorrencia['data_fim'])), 0, 0, 'L');
             }
-            $pdf->Cell(34, $l, utf8_decode("das ".exibirHora($ocorrencia['horario_inicio'])." às ".exibirHora($ocorrencia['horario_fim'])), 0, 0, 'L');
-            $pdf->Cell(21,$l,utf8_decode("(".diadasemanaocorrencia($ocorrencia['id']).")"),0,1,'L');
-
-            $pdf->SetX($x);
-            $pdf->SetFont('Arial','', 11);
-            $pdf->Cell(12, $l, utf8_decode("Local:"), 0, 0, 'L');
-            $pdf->SetFont('Arial','', 11);
-            $pdf->MultiCell(158,$l,utf8_decode("($instituicao) {$local['local']}"));
-
-            $pdf->SetX($x);
-            $pdf->SetFont('Arial','', 11);
-            $pdf->Cell(170, $l, utf8_decode("Subprefeitura: ".$subprefeitura['subprefeitura']), 0, 1, 'L');
-
-            if($ocorrencia['libras'] == 1 || $ocorrencia['audiodescricao'] == 1){
-                if($ocorrencia['libras'] == 1){
-                    $libras = "Libras";
-                } else {
-                    $libras = "";
-                }
-                if($ocorrencia['audiodescricao'] == 1){
-                    $audio = "Audiodescrição";
-                } else {
-                    $audio = "";
-                }
-                $pdf->SetX($x);
-                $pdf->Cell(130, $l, utf8_decode("Especial: ".$libras." ".$audio), 0, 1, 'L');
-            }
-
-            $pdf->SetX($x);
-            $pdf->SetFont('Arial','', 11);
-            $pdf->Cell(145, $l, utf8_decode("Retirada de ingresso: ".$retirada_ingresso['retirada_ingresso']), 0, 0, 'L');
-            $pdf->Cell(80,$l,utf8_decode("Valor: R$ ".dinheiroParaBr($ocorrencia['valor_ingresso'])),0,1,'L');
-
             $pdf->Ln();
+
+            $pdf->SetX($x);
+            $pdf->SetFont('Arial','', 11);
+            $pdf->Cell(15, $l, utf8_decode("Horário:"), 0, 0, 'L');
+            $pdf->SetFont('Arial','', 11);
+            $pdf->Cell(21, $l, utf8_decode("das ".exibirHora($ocorrencia['horario_inicio'])." às ".exibirHora($ocorrencia['horario_fim'])), 0, 1, 'L');
+
+            $pdf->SetX($x);
+            $pdf->SetFont('Arial','', 11);
+            $pdf->Cell(13, $l, utf8_decode("Local:"), 0, 0, 'L');
+            $pdf->SetFont('Arial','', 11);
+            $pdf->MultiCell(160,$l,utf8_decode("($instituicao) {$local['local']}"));
+
+            //var_dump($ocorrencia);
+
         }
 
         $pdf->Ln(10);
@@ -313,22 +245,17 @@ if ($evento['tipo_evento_id'] == 1) {
 }
 // fim atração
 
-// arquivo comunicação produção
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(180, $l, utf8_decode('Arquivos para Comunicação/Produção'), 'B', 1, 'L');
-while ($arquivo = mysqli_fetch_array($sql_arqcomprod)) {
-    $pdf->SetX($x);
-    $pdf->SetFont('Arial', 'U', 11);
-    $pdf->Cell(150, $l, utf8_decode(mb_strimwidth($arquivo['arquivo'], 15, 25, "...")), 0, 1, 'L', false,"../uploadsdocs/" . $arquivo['arquivo']);
-}
-// fim aqrquivo comunicação produção
-$pdf->Ln(15);
+$pdf->Ln();
 
-// pedido de contratação
 $pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(180, $l, utf8_decode('Pedido de Contratação'), 'B', 1, 'L');
+$pdf->SetFont('Arial','', 11);
+$pdf->MultiCell(160,$l,utf8_decode("Em, ______ de _______________________ de ".date('Y')."."));
+
+$pdf->Ln();
+$pdf->Ln();
+$pdf->Ln();
+$pdf->Ln();
+$pdf->Ln();
 
 if($pedido['pessoa_tipo_id'] == 1) {
     $idPf = $pedido['pessoa_fisica_id'];
