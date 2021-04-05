@@ -43,11 +43,11 @@ $pdf->AliasNbPages();
 $pdf->AddPage();
 
 
-$x=20;
+$x=20; //DEFINE A MARGEM SUPERIOR
 $l=5; //DEFINE A ALTURA DA LINHA
 $f=10; //DEFINE TAMANHO DA FONTE
 
-$pdf->SetXY( $x , 25 );// SetXY - DEFINE O X (largura) E O Y (altura) NA PÁGINA
+$pdf->SetXY( $x , 25 );// SetXY - DEFINE O X (altura) E O Y (largura) NA PÁGINA
 
 // Detalhes do evento
 include_once "include/detalhes_evento.php";

@@ -153,22 +153,22 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', $f);
 $pdf->Cell(11, $l,  utf8_decode('Arquivos do Pedido:'), '0', '1', 'L');
 
-// Column headings
 $pdf->SetX($x);
-$pdf->SetFont('Arial','',$f);
-$header = array('Tipo de arquivo', 'Nome do documento', 'Data de envio');
-$pdf->Cabecalho($header);
+$pdf->SetFont('Arial','B',$f);
+$pdf->Cell(90, 8,  utf8_decode('Tipo de arquivo'), '1', '0', 'L');
+$pdf->Cell(50, 8,  utf8_decode('Nome do documento'), '1', '0', 'L');
+$pdf->Cell(40, 8,  utf8_decode('Data de envio'), '1', '1', 'L');
 
-$data =[];
 foreach ($anexos as $anexo){
-    $data = array(utf8_decode($anexo->documento), $anexo->arquivo, $anexo->data);
     $pdf->SetX($x);
-    $pdf->Tabela($data);
+    $pdf->SetFont('Arial','',$f);
+    $pdf->Cell(90, 8,  utf8_decode(mb_strimwidth($anexo->documento,0,50,'...')), '1', '0', 'L');
+    $pdf->SetFont('Arial','U',$f);
+    $pdf->Cell(50, 8,  utf8_decode(mb_strimwidth($anexo->arquivo,15,25,'...')), '1', '0', 'L',false,"../uploadsdocs/" . $anexo->arquivo);
+    $pdf->SetFont('Arial','',$f);
+    $pdf->Cell(40, 8,  date('d/m/Y H:i:s', strtotime($anexo->data)), '1', '0', 'L');
+    $pdf->Ln();
 }
-
-/*
- * anexos do pedido
- */
 
 $pdf->Ln();
 
