@@ -17,7 +17,7 @@ foreach ($atracoes as $atracao) {
     $pdf->Cell(11, $l, utf8_decode("Ação:"), 0, 0, 'L');
     $pdf->SetFont('Arial', '', $f);
     $pdf->Cell(115, $l, utf8_decode($acao), 0, 1, 'L');
-
+/*
     $pdf->SetX($x);
     $pdf->SetFont('Arial', 'B', $f);
     $pdf->Cell(27, $l, utf8_decode("Ficha técnica:"), 0, 1, 'L');
@@ -31,6 +31,25 @@ foreach ($atracoes as $atracao) {
     $pdf->SetX($x);
     $pdf->SetFont('Arial', '', $f);
     $pdf->MultiCell(180, $l, utf8_decode($atracao->integrantes));
+*/
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $pdf->Cell(23, $l, utf8_decode("Integrantes:"), 0, 1, 'L');
+    $pdf->SetX($x);
+    $pdf->SetFont('Arial', 'B', $f);
+    $integrantes = $eventoObj->recuperaIntegrante($atracao->id);
+    $pdf->Cell(80, $l, utf8_decode("Nome"), 1, 0, 'L');
+    $pdf->Cell(30, $l, utf8_decode("RG"), 1, 0, 'L');
+    $pdf->Cell(30, $l, utf8_decode("CPF/Passaporte"), 1, 0, 'L');
+    $pdf->Cell(40, $l, utf8_decode("Função"), 1, 1, 'L');
+    foreach ($integrantes as $integrante) {
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', '', $f);
+        $pdf->Cell(80, $l, utf8_decode($integrante->nome), 1, 0, 'L');
+        $pdf->Cell(30, $l, utf8_decode($integrante->rg), 1, 0, 'L');
+        $pdf->Cell(30, $l, utf8_decode($integrante->cpf_passaporte), 1, 0, 'L');
+        $pdf->Cell(40, $l, utf8_decode($integrante->funcao), 1, 1, 'L');
+    }
 
     $pdf->SetX($x);
     $pdf->SetFont('Arial', 'B', $f);

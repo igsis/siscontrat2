@@ -48,7 +48,13 @@ class Controllers extends MainModel
         return substr($lista,0,-2);
     }
 
-    public function recuperaFilme($idEvento){
+    public function recuperaIntegrante($idAtracao)
+    {
+        return DbModel::consultaSimples("SELECT * FROM integrantes i INNER JOIN atracao_integrante ai on i.id = ai.integrante_id WHERE atracao_id = '$idAtracao'")->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function recuperaFilme($idEvento)
+    {
         return DbModel::consultaSimples("SELECT * FROM filme_eventos fe INNER JOIN filmes f on fe.filme_id = f.id WHERE evento_id = '$idEvento'")->fetchAll(PDO::FETCH_OBJ);
     }
 
