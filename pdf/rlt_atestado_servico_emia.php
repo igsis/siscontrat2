@@ -63,7 +63,7 @@ $dataFim = date("d/m/Y", strtotime($parcela['data_fim']));
         "<p>&nbsp;</p>" .
         "<p><strong>Recebimento de material e/ou serviços</strong>" .
         "<p>Atesto:</p>" .
-        "<p>( X ) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados a <b>contento</b> nos termos previstos no instrumento contratual (ou documento equivalente) no dia ___/___/_____, dentro do prazo previsto.</p>" .
+        "<p>( X ) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados a <b>contento</b> nos termos previstos no instrumento contratual (ou documento equivalente) no dia {$dataInicio} a {$dataFim}, dentro do prazo previsto.</p>" .
         "<p>O prazo contratual é do dia {$dataInicio} até o dia {$dataFim}.</p>" .
         "<p>&nbsp;</p>" .
         "<p>(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) que os materiais/serviços prestados discriminados no documento fiscal [INSERIR NÚMERO SEI DA NOTA FISCAL] foram entregues e/ou executados <b>parcialmente</b>, nos termos previstos no instrumento contratual (ou documentos equivalente), do dia ___/___/_____, dentro do prazo previsto.</p>" .

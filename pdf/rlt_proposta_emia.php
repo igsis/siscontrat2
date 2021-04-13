@@ -98,6 +98,26 @@ $Observacao = "Todas as atividades dos programas da Supervisão de Formação s�
 $sqlPenalidade = "SELECT texto FROM penalidades WHERE id = 31";
 $penalidades = $con->query($sqlPenalidade)->fetch_array();
 
+function addFooter($pdf, $pessoa){
+    $ano = date('Y');
+    $pdf->SetXY(20, 268);
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(80, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
+
+    $pdf->SetX(20);
+    $pdf->SetFont('Arial', '', 10);
+    if ($pessoa['passaporte'] != NULL) {
+        $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
+    } else {
+        $rg = "RG: " . checaCampo($pessoa['rg']);
+        $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
+    }
+
+    $pdf->SetXY(90, 265);
+    $pdf->SetFont('Arial', '', 8);
+    $pdf->Cell(180, 5, utf8_decode("Data: ______ / ______ / " . $ano) . ".", 0, 0, 'C');
+}
+
 $pdf = new PDF('P', 'mm', 'A4'); //CRIA UM NOVO ARQUIVO PDF NO TAMANHO A4
 $pdf->AliasNbPages();
 $pdf->AddPage();
@@ -224,6 +244,12 @@ $pdf->Cell(10, 10, utf8_decode($contratacao['protocolo']), 0, 1, 'R');
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(11, $l, 'Valor:', '0', '0', 'L');
+$pdf->SetFont('Arial', '', 10);
+$pdf->MultiCell(168, $l, utf8_decode("R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " ) "), 0, 'L', 0);
+
+$pdf->SetX($x);
+$pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(14, $l, 'Objeto:', 0, 0, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(50, $l, utf8_decode($objeto), 0, 1, 'L');
@@ -241,12 +267,6 @@ $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(11, $l, 'Local:', '0', '0', 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(60, $l, utf8_decode($local['local']), 0, '1', 'L');
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(11, $l, 'Valor:', '0', '0', 'L');
-$pdf->SetFont('Arial', '', 10);
-$pdf->MultiCell(168, $l, utf8_decode("R$ " . dinheiroParaBr($pedido['valor_total']) . " (" . valorPorExtenso($pedido['valor_total']) . " ) "), 0, 'L', 0);
 
 $pdf->Ln();
 
@@ -266,19 +286,8 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(180, 4, utf8_decode(checaCampo($pedido['justificativa'])));
 
-//RODAPÉ PERSONALIZADO
-$pdf->SetXY($x, 268);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-if ($pessoa['passaporte'] != NULL) {
-    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
-} else {
-    $rg = "RG: " . checaCampo($pessoa['rg']);
-    $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
-}
+//RODAPÉ
+addFooter($pdf, $pessoa);
 
 $pdf->AddPage('', '');
 
@@ -292,24 +301,8 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 8);
 $pdf->MultiCell(0, 4, utf8_decode($penalidades['texto']), 0, 'J', 0);
 
-$pdf->Ln();
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 8);
-$pdf->Cell(180, $l, utf8_decode("Data: _________ / _________ / " . $ano) . ".", 0, 0, 'C');
-
-$pdf->SetXY($x, 268);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-if ($pessoa['passaporte'] != NULL) {
-    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
-} else {
-    $rg = "RG: " . checaCampo($pessoa['rg']);
-    $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
-}
+//RODAPÉ
+addFooter($pdf, $pessoa);
 
 $pdf->AddPage('', '');
 
@@ -321,18 +314,8 @@ $pdf->SetX($x);
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(180, $l, str_replace("?", "-", utf8_decode($contratacao['cronograma'])), 0, 'J', 0);
 
-$pdf->SetXY($x, 262);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(100, 4, utf8_decode($pessoa['nome']), 'T', 1, 'L');
-
-$pdf->SetX($x);
-$pdf->SetFont('Arial', '', 10);
-if ($pessoa['passaporte'] != NULL) {
-    $pdf->Cell(100, 4, "Passaporte: " . $pessoa['passaporte'], 0, 1, 'L');
-} else {
-    $rg = "RG: " . checaCampo($pessoa['rg']);
-    $pdf->Cell(100, 4, utf8_decode($rg), 0, 1, 'L');
-}
+//RODAPÉ
+addFooter($pdf, $pessoa);
 
 $pdf->Output();
 ?>
