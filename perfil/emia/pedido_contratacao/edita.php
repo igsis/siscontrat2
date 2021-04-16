@@ -191,6 +191,7 @@ $ec = $con->query($sql)->fetch_array();
 $server = "http://" . $_SERVER['SERVER_NAME'] . "/siscontrat2"; //mudar para pasta do igsis
 $http = $server . "/pdf/";
 $link_proposta = $http . "rlt_proposta_emia.php";
+$txtJustificativa = "A EMIA - Escola Municipal de Iniciação Artística existe desde 1980 e passou a ser organizada de acordo com a Lei 15.372 em 03 de maio de 2011. Atende em média 1000 (mil) alunos, entre 5 e 13 anos, em cursos regulares e integrados nas áreas de artes visuais, dança, música e teatro. As crianças ingressam com idade entre 5 e 7 anos, por meio de sorteio público, e podem permanecer por um período de seis a oito anos. Para suprir essa demanda de alunos (distribuídos entre os cursos regulares, e paralelamente, a partir dos 7 anos, com opção de participação em cursos Optativos, Corais, Orquestra e Oficinas,) a escola necessita de um corpo docente constituído por artistas oficineiros, profissionais com formação nas quatro áreas artísticas oferecidas pela escola: Teatro, Dança, Música e Artes Visuais (Artes Plásticas). Na EMIA, o oficineiro é também um artista dentro da linguagem que trabalha com a criança. O seu projeto de trabalho com o grupo de crianças está intimamente ligado com o que ele, naquele momento, acredita e deseja realizar artisticamente. Trata-se, portanto, de um ato criador que instigará o aprendizado da criança. Diante do Decreto nº 59.283 de 16/03/2020 e Portaria 31/SMC/2020, a EMIA tem mantido suas atividades de formação artístico-pedagógicas de forma remota, propondo atividades online, na forma de produção de conteúdo para os canais da escola e da supervisão de formação e também no formato de lives, onde são ministradas atividades ao vivo por meio de plataformas de teleconferência. Quando autorizadas pela municipalidade e pelas autoridades sanitárias, as atividades presenciais poderão ser retomadas paulatinamente."
 ?>
 
 <div class="content-wrapper">
@@ -345,13 +346,13 @@ $link_proposta = $http . "rlt_proposta_emia.php";
                         <div class="form-group col-md-6">
                             <label for="justificativa">Justificativa: </label>
                             <textarea id="justificativa" name="justificativa" class="form-control"
-                                      rows="8"><?= $ec['justificativa'] ?></textarea>
+                                      rows="8"><?= $ec['justificativa'] ?? $txtJustificativa?></textarea>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="justificativa">Observação: </label>
+                            <label for="observacao">Observação: </label>
                             <textarea id="observacao" name="observacao" class="form-control"
                                       rows="8"><?= $ec['observacao'] ?></textarea>
                         </div>
