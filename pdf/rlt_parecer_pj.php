@@ -64,7 +64,7 @@ if ($parecer) {
         "<p>&nbsp;</p>".
         "<p>&nbsp;</p>".
         "<p align='center'><strong>PARECER DA COMISSÃO TÉCNICA DE ATIVIDADES ARTÍSTICAS E CULTURAIS<br/> 
-							(Instituído pela Portaria nº 168/2019-SMC-G e nº 050/2019-SMC.G)</strong></p>".
+							(Instituído pela Portaria nº 030/2020-SMC-G que altera a Portaria nº 168/2019-SMC.G)</strong></p>".
         "<p>&nbsp;</p>".
 
         "<p align='justify'>".$parecer."</p>".
