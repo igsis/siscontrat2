@@ -226,6 +226,10 @@ $datas = substr($datas, 0, -2);
                                                 $idAtracao = $atracao['id'];
                                                 $sql_ocorrencia = "SELECT * FROM ocorrencias WHERE origem_ocorrencia_id = '$idEvento' AND atracao_id = $idAtracao AND publicado = 1";
 
+                                                $sqlIntegrantes = "SELECT i.*, ai.funcao FROM atracao_integrante AS ai
+                                                                    INNER JOIN integrantes AS i ON ai.integrante_id = i.id
+                                                                    WHERE atracao_id = '{$atracao['id']}'";
+                                                $integrantes = $con->query($sqlIntegrantes)->fetch_all(MYSQLI_ASSOC);
                                                 ?>
                                                 <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                                                 <div class="form-group col-md-12">
@@ -251,12 +255,6 @@ $datas = substr($datas, 0, -2);
                                                         echo $acao['acao'] . '; ';
                                                     }
                                                     ?>
-                                                </div>
-                                                <div class="form-group col-md-12">
-                                                    <strong>Ficha técnica: </strong><?= $atracao['ficha_tecnica']; ?>
-                                                </div>
-                                                <div class="form-group col-md-12">
-                                                    <strong>Integrantes: </strong><?= $atracao['integrantes']; ?>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     <strong>Classificação
@@ -326,6 +324,28 @@ $datas = substr($datas, 0, -2);
                                                         <strong>Observação:</strong><?= checaCampo($produtor['observacao']) ?>
                                                     </div>
                                                 <?php } ?>
+                                                <div class="form-group col-md-12">
+                                                    <div align="center">
+                                                        <h3>Informações sobre os Integrantes</h3>
+                                                        <hr>
+                                                    </div>
+                                                </div>
+                                                <?php foreach ($integrantes as $integrante): ?>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Nome: </strong><?= $integrante['nome']; ?>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>CPF: </strong><?= $integrante['cpf_passaporte']; ?>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>RG: </strong><?= $integrante['rg']; ?>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <strong>Função: </strong><?= $integrante['funcao']; ?>
+                                                        <hr>
+                                                    </div>
+                                                <?php endforeach; ?>
+
                                                 <?php
                                                 $query_ocorrencia = mysqli_query($con, $sql_ocorrencia);
                                                 while ($ocorrencia = mysqli_fetch_array($query_ocorrencia)) {
@@ -477,7 +497,7 @@ $datas = substr($datas, 0, -2);
                                             }
                                         } ?>
                                         <div class="box-footer" align="center">
-                                            <button type="button" class="btn btn-default" onclick="window.history.back()">Voltar</button>
+                                            <a href="?perfil=evento" class="btn btn-default">Voltar</a>
                                         </div>
                                     </div>
                                 </div>

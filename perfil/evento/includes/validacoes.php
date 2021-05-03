@@ -31,10 +31,11 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
         $foraPrazo = false;
         while ($atracao = mysqli_fetch_array($atracoes)) {
             $valorTotalAtracoes += $atracao['valor_individual'];
+
+            // VERIFICA PRODUTOR
             if (($atracao['produtor_id'] == "") || ($atracao['produtor_id'] == NULL)) {
                 array_push($erros, "Produtor não cadastrado na atração <b> " . $atracao['nome_atracao'] . "</b>");
             }
-
 
             if ($tipoPessoa == 2) {
                 $idPedidoLider = $pedido['id'];
@@ -114,6 +115,12 @@ if ($evento['tipo_evento_id'] == 1 && $pedidos != NULL) {
                 if ($numEspecificidade == 0) {
                     array_push($erros, "Não há especificidade cadastrada para a atração <b> " . $atracao['nome_atracao'] . " </b>");
                 }
+            }
+
+            // VERIFICA SE TEM INTEGRANTES CADASTRADOS
+            $integrantes = $con->query("SELECT atracao_id FROM atracao_integrante WHERE atracao_id = '{$atracao['id']}'")->num_rows;
+            if ($integrantes == 0) {
+                array_push($erros, "Não há integrantes cadastrados para a atração <b> " . $atracao['nome_atracao'] . " </b>");
             }
 
             // VERIFICA SE TEM OCORRENCIAS CADASTRADAS

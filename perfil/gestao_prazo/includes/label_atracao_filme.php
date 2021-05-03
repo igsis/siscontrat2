@@ -1,6 +1,9 @@
 <?php
 /**
  * Conteúdo da label "#atracao" do arquivo "detalhes_gestao.php"
+ * @var array $evento
+ * @var mysqli $con
+ * @var int $idEvento
  */
 
 if ($evento['tipo_evento_id'] == 2) {
@@ -72,6 +75,10 @@ if ($evento['tipo_evento_id'] == 2) {
                     $categoria = recuperaDados('acoes', 'id', $acaoId)['acao'];
                     $classificacao = recuperaDados('classificacao_indicativas', 'id', $atracao['classificacao_indicativa_id'])['classificacao_indicativa'];
                     $produtor = recuperaDados('produtores', 'id', $atracao['produtor_id']);
+                    $sqlIntegrantes = "SELECT i.*, ai.funcao FROM atracao_integrante AS ai
+                                        INNER JOIN integrantes AS i ON ai.integrante_id = i.id
+                                        WHERE atracao_id = '{$atracao['id']}'";
+                    $integrantes = $con->query($sqlIntegrantes)->fetch_all(MYSQLI_ASSOC);
                     $idAtracao = $atracao['id'];
                     ?>
                     <div class="panel box box-primary">
@@ -95,14 +102,6 @@ if ($evento['tipo_evento_id'] == 2) {
                                         <tr>
                                             <th width="30%">Categoria da Atração:</th>
                                             <td><?= $categoria ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th width="30%">Ficha Técnica:</th>
-                                            <td><?= $atracao['ficha_tecnica'] ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th width="30%">Integrantes:</th>
-                                            <td><?= $atracao['integrantes'] ?></td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Classificação Indicativa:</th>
@@ -142,6 +141,30 @@ if ($evento['tipo_evento_id'] == 2) {
                                             <th width="30%">Observação:</th>
                                             <td><?= checaCampo($produtor['observacao']) ?></td>
                                         </tr>
+                                        <tr>
+                                            <th class="text-center bg-primary" colspan="2">Dados dos Integrantes</th>
+                                        </tr>
+                                        <?php foreach ($integrantes as $key => $integrante): ?>
+                                            <tr>
+                                                <th colspan="2" class="bg-gray-light"><?= "#".($key+1) ?></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Nome:</th>
+                                                <td><?= $integrante['nome'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>CPF:</th>
+                                                <td><?= $integrante['cpf_passaporte'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>RG:</th>
+                                                <td><?= $integrante['rg'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Função:</th>
+                                                <td><?= $integrante['funcao'] ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     </table>
                                 </div>
                             </div>

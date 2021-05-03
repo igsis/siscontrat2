@@ -15,8 +15,11 @@ if (isset($_POST['adicionar']) || $_POST['adicionaLider'] || $_POST['adicionarLi
     <section class="content">
         <!-- START FORM-->
         <h2 class="page-header">ARTISTA - Líder do Grupo ou Artista Solo</h2>
-        <h4>No caso de espetáculos de teatro, dança e circo, este deve ser do elenco ou o diretor do espetáculo e deve
-            ter DRT. No caso espetáculo de música, este deve ser um músico do espetáculo</h4>
+        <div class="alert alert-warning">
+            <h4><i class="icon fa fa-warning"></i> Atenção!</h4>
+            No caso de espetáculos de teatro, dança e circo, este deve ser do elenco ou o diretor do espetáculo e deve
+            ter DRT. No caso espetáculo de música, este deve ser um músico do espetáculo
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
