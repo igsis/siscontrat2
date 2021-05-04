@@ -12,15 +12,15 @@ include "includes/menu_interno.php";
 
 if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
 
-    // origem_ocorrencia_id = idEvento
-    // atracao_id = idAtracao/idOrigem/idFilme
+//     origem_ocorrencia_id = idEvento
+//     atracao_id = idAtracao/idOrigem/idFilme
 
     $tipo_evento_id = $evento['tipo_evento_id'];
     $origem_ocorrencia_id = $idEvento;
     $atracao_id = $idOrigem;
     $instituicao_id = $_POST['instituicao'];
     $local_id = $_POST['local'];
-    $espaco_id = $_POST['espaco'] ?? NULL;
+    $espaco_id = $_POST['espaco'] == "" ? NULL: $_POST['espaco'];
     $data_inicio = $_POST['data_inicio'];
     $data_fim = $_POST['data_fim'] ?? NULL;
     $segunda = $_POST['segunda'] ?? 0;
