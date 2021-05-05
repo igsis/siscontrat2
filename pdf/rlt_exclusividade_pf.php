@@ -75,7 +75,13 @@ $pdf->Ln();
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 11);
-$pdf->MultiCell(170,$l,utf8_decode("Integrantes do grupo: ".$atracao['integrantes']));
+$pdf->MultiCell(170,$l,utf8_decode("Integrantes do grupo: "));
+$sql = "SELECT i.* FROM integrantes AS i JOIN atracao_integrante AS a ON i.id = a.integrante_id WHERE a.atracao_id = {$atracao['id']}";
+$query = mysqli_query($con, $sql);
+while ($integrante = mysqli_fetch_array($query)){
+    $pdf->SetFont('Arial','', 11);
+    $pdf->MultiCell(170,$l,utf8_decode("Nome: {$integrante['nome']} RG: {$integrante['rg']} CPF: {$integrante['cpf_passaporte']}"));
+}
 
 $pdf->SetX($x);
 $pdf->SetFont('Arial','', 11);
