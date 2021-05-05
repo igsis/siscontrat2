@@ -22,7 +22,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $local_id = $_POST['local'];
     $espaco_id = $_POST['espaco'] == "" ? NULL: $_POST['espaco'];
     $data_inicio = $_POST['data_inicio'];
-    $data_fim = $_POST['data_fim'] ?? NULL;
+    $data_fim = $_POST['data_fim'] == "" ? NULL : $_POST['espaco'];
     $segunda = $_POST['segunda'] ?? 0;
     $terca = $_POST['terca'] ?? 0;
     $quarta = $_POST['quarta'] ?? 0;
@@ -34,7 +34,7 @@ if (isset($_POST['cadastra']) || isset($_POST['edita'])) {
     $horario_fim = $_POST['horaFim'];
     $retirada_ingresso_id = $_POST['retiradaIngresso'];
     $valor_ingresso = dinheiroDeBr($_POST['valor_ingresso']);
-    $observacao = trim(addslashes($_POST['observacao'])) ?? NULL;
+    $observacao = $_POST['observacao'] ==  "" ? NULL : trim(addslashes($_POST['observacao']));
     $idOcorrencia = $_POST['idOcorrencia'] ?? NULL;
     $periodo_id = $_POST['periodo'];
     $subprefeitura_id = $_POST['subprefeitura'];
@@ -137,10 +137,10 @@ if (isset($_POST['edita'])) {
 
     if (mysqli_query($con, $sql)) {
         $mensagem = mensagem("success", "Gravado com sucesso!");
-        //gravarLog($sql);
+        gravarLog($sql);
     } else {
         $mensagem = mensagem("danger", "Erro ao gravar! Tente novamente.");
-        //gravarLog($sql);
+        gravarLog($sql);
     }
 }
 
