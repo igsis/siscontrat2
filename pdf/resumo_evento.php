@@ -147,9 +147,28 @@ if ($evento['tipo_evento_id'] == 1) {
         $pdf->SetX($x);
         $pdf->SetFont('Arial','B', 11);
         $pdf->Cell(23, $l, utf8_decode("Integrantes:"), 0, 0, 'L');
-        $pdf->SetFont('Arial','', 11);
-        $pdf->MultiCell(163,$l,utf8_decode($atracao['integrantes']));
 
+        $sqlIntegrantes = $con->query("SELECT i.* FROM integrantes AS i JOIN atracao_integrante AS a ON i.id = a.integrante_id WHERE a.atracao_id = {$atracao['id']}");
+        while ($integrante = mysqli_fetch_array($sqlIntegrantes)) {
+            $pdf->SetX($x);
+            $pdf->SetFont('Arial','B', 11);
+            $pdf->MultiCell(163,$l,utf8_decode("Nome:"));
+
+            $pdf->SetFont('Arial','', 11);
+            $pdf->MultiCell(163,$l,utf8_decode($integrante['nome']));
+
+            $pdf->SetFont('Arial','B', 11);
+            $pdf->MultiCell(163,$l,utf8_decode("RG:"));
+
+            $pdf->SetFont('Arial','', 11);
+            $pdf->MultiCell(163,$l,utf8_decode($integrante['rg']));
+
+            $pdf->SetFont('Arial','B', 11);
+            $pdf->MultiCell(163,$l,utf8_decode("Função:"));
+
+            $pdf->SetFont('Arial','', 11);
+            $pdf->MultiCell(163,$l,utf8_decode($integrante['funcao']));
+        }
         $pdf->SetX($x);
         $pdf->SetFont('Arial', 'B', 11);
         $pdf->Cell(46, $l, utf8_decode("Classificação indicativa:"), 0, 0, 'L');
