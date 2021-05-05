@@ -109,7 +109,15 @@ if ($evento['tipo_evento_id'] == 2) {
                                         </tr>
                                         <tr>
                                             <th width="30%">Integrantes:</th>
-                                            <td><?= $atracao['integrantes'] ?></td>
+                                            <td>
+                                                <?php
+                                                $sql = "SELECT i.* FROM integrantes AS i JOIN atracao_integrante AS a ON i.id = a.integrante_id WHERE a.atracao_id = {$atracao['id']}";
+                                                $query = mysqli_query($con, $sql);
+                                                while ($integrante = mysqli_fetch_array($query)){
+                                                    echo "Nome: {$integrante['nome']} RG: {$integrante['rg']} CPF: {$integrante['cpf_passaporte']} <br>";
+                                                }
+                                                ?>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th width="30%">Classificação Indicativa:</th>
