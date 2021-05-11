@@ -132,6 +132,7 @@ $query = mysqli_query($con, $sql);
                             <tr>
                                 <th>Local</th>
                                 <th>Logradouro</th>
+                                <th>Subprefeitura</th>
                                 <th width="5%">Editar</th>
                             </tr>
                             </thead>
@@ -139,9 +140,11 @@ $query = mysqli_query($con, $sql);
                             <?php
                             echo "<tbody>";
                             while ($local = mysqli_fetch_array($query)) {
+                                $subprefeitura = $local['subprefeitura_id'] != 0 ? recuperaDados('subprefeituras', 'id',$local['subprefeitura_id'])['subprefeitura'] : '';
                                 echo "<tr>";
                                 echo "<td>" . $local['local'] . "</td>";
                                 echo "<td>" . $local['logradouro'] . "</td>";
+                                echo "<td>". $subprefeitura ."</td>";
                                 echo "<td>
                                     <form method=\"POST\" action=\"?perfil=administrativo&p=instituicao&sp=edita_local\" role=\"form\">
                                     <input type='hidden' name='idLocal' value='" . $local['id'] . "'>
@@ -154,6 +157,7 @@ $query = mysqli_query($con, $sql);
                             <tr>
                                 <th>Local</th>
                                 <th>Logradouro</th>
+                                <th>Subprefeitura</th>
                                 <th>Editar</th>
                             </tr>
                             </tfoot>
